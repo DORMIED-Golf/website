@@ -1,0 +1,19 @@
+{
+  "name": "dormied-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DORMIED \u2014 Golf brand intelligence. 122 brands. 11 markets. Ranked monthly.",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "generate-explanations": "node scripts/generate-explanations.js",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "rss-parser": "^3.13.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

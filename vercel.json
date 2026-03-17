@@ -1,0 +1,41 @@
+{
+  "rewrites": [
+    { "source": "/feed",          "destination": "/feed/index.html" },
+    { "source": "/feed/",         "destination": "/feed/index.html" },
+    { "source": "/brands/",       "destination": "/brands/index.html" },
+    { "source": "/brands/:slug",  "destination": "/brands/brand.html" },
+    { "source": "/brands/:slug/", "destination": "/brands/brand.html" },
+    { "source": "/rankings",      "destination": "/rankings/index.html" },
+    { "source": "/rankings/",     "destination": "/rankings/index.html" }
+  ],
+  "functions": {
+    "api/feed.js":      { "maxDuration": 15 },
+    "api/subscribe.js": { "maxDuration": 10 }
+  },
+  "headers": [
+    {
+      "source": "/js/data.js",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=3600" }]
+    },
+    {
+      "source": "/js/(.*)\\.js",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+    },
+    {
+      "source": "/css/(.*)\\.css",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+    },
+    {
+      "source": "/images/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, immutable" }]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options",  "value": "nosniff" },
+        { "key": "X-Frame-Options",         "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy",         "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

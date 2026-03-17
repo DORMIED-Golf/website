@@ -1,0 +1,41 @@
+# DORMIED — Golf Brand Intelligence
+# https://dormied.com
+# llms.txt — machine-readable site summary for AI language models
+
+## What is DORMIED?
+
+DORMIED is an independent golf brand intelligence platform. We track search interest for 122 golf brands across 11 global markets, updated monthly. No opinions, no endorsements. The data is what it is.
+
+The DORMIED Index scores each brand 0–100 based on normalized search volume. The brand with the highest search interest in a given month scores 100. Every other brand is ranked relative to that benchmark. This measures competitive attention, not revenue, not social following, not product quality.
+
+## What DORMIED is not
+
+- Not affiliated with any golf brand
+- Not a product review site
+- Not a revenue or sales tracker
+- Not a social media follower counter
+- No brand pays to be included or to improve their ranking
+
+## Data coverage
+
+- **Brands tracked**: 122
+- **Markets**: United States, Japan, South Korea, United Kingdom, Canada, China, Germany, Australia, Sweden, France (+ Global aggregate)
+- **History**: March 2023 to present
+- **Update frequency**: Monthly
+
+## Pages
+
+- / — Homepage: top movers, biggest drops, daily brand match-up
+- /rankings/ — The DORMIED Index: full 122-brand leaderboard with DI scores, rank changes, filters by market and category
+- /brands/ — The Field: brand directory, searchable and filterable by category
+- /brands/{slug}/ — Individual brand page: 36-month search trend chart, DI history, market breakdown, related news
+- /feed/ — News: golf brand coverage aggregated from top golf publications, filterable by brand
+
+## Contact
+
+dormiedgolf@gmail.com
+
+## Social
+
+- X / Twitter: https://x.com/DORMIED_GOLF
+- Instagram: https://www.instagram.com/dormiedgolf
