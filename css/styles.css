@@ -2889,6 +2889,38 @@ details[open] .faq-question::after { content: '−'; }
 
 /* Feed list container */
 .feed-list { display: flex; flex-direction: column; gap: 8px; padding: 12px 0; }
+
+/* ── Feed pagination ──────────────────────────────────────────────────────── */
+.feed-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px 0 16px;
+  flex-wrap: wrap;
+}
+.feed-page-btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.feed-page-btn:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+.feed-page-btn--active {
+  background: var(--green);
+  border-color: var(--green);
+  color: #060b06;
+}
+
 .feed-empty {
   padding: 40px 0;
   text-align: center;

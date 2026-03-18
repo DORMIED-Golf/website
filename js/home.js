@@ -391,10 +391,6 @@
       +     '<div class="h2h-brand-hd-rank">Rank #' + b2.rank + '</div>'
       +   '</a>'
       + '</div>'
-      + '<div class="h2h-insights">'
-      +   '<div class="h2h-insight-box" data-h2h-insight-for="' + esc(b1.id) + '"><span class="h2h-insight-label">' + esc(b1.name) + '</span><div class="h2h-insight-text"></div></div>'
-      +   '<div class="h2h-insight-box h2h-insight-box--right" data-h2h-insight-for="' + esc(b2.id) + '"><span class="h2h-insight-label">' + esc(b2.name) + '</span><div class="h2h-insight-text"></div></div>'
-      + '</div>'
       + '<div class="h2h-stat-grid">'
       +   diRow()
       +   pctRow(mm1, 'M/M Change', mm2)
@@ -402,6 +398,10 @@
       +   infoRow(mkts1, 'Top Markets', mkts2)
       +   infoRow(fd1, 'Founded', fd2)
       +   infoRow(hq1, 'HQ', hq2)
+      + '</div>'
+      + '<div class="h2h-insights">'
+      +   '<div class="h2h-insight-box" data-h2h-insight-for="' + esc(b1.id) + '"><span class="h2h-insight-label">' + esc(b1.name) + '</span><div class="h2h-insight-text"></div></div>'
+      +   '<div class="h2h-insight-box h2h-insight-box--right" data-h2h-insight-for="' + esc(b2.id) + '"><span class="h2h-insight-label">' + esc(b2.name) + '</span><div class="h2h-insight-text"></div></div>'
       + '</div>'
       + '<div class="h2h-footer">'
       +   '<a href="/brands/' + esc(b1.id) + '/" class="h2h-cta">' + esc(b1.name) + ' →</a>'
@@ -439,11 +439,12 @@
       if (whySection && whyList) {
         if (whyMonth) whyMonth.textContent = monthLabel;
 
-        // Collect movers + drops with real (non-fallback) explanations
+        // Collect top 3 biggest movers with real (non-fallback) explanations
         var seen = {};
         var items = [];
-        var cards = document.querySelectorAll('#sb-movers .sb-card, #sb-drops .sb-card');
+        var cards = document.querySelectorAll('#sb-movers .sb-card');
         cards.forEach(function (card) {
+          if (items.length >= 3) return;
           var brandId = card.dataset.brandId;
           if (!brandId || seen[brandId]) return;
           seen[brandId] = true;

@@ -14,11 +14,14 @@
   var TOP_BRANDS_COUNT = 10;
   var AD_EVERY = 10;                          // insert ad every N articles
 
+  var PAGE_SIZE = 30;
+
   var state = {
     articles:    [],
     filtered:    [],
     sort:        'newest',
-    brandFilter: ''
+    brandFilter: '',
+    page:        1
   };
 
   var csBrand = null;   // handle to custom select widget for the brand filter
@@ -358,9 +361,46 @@
     el.innerHTML = html;
   }
 
+  /* ── Render pagination controls ────────────────────────────────────────── */
+  function renderPagination() {
+    var el = document.getElementById('feed-pagination');
+    if (!el) return;
+    var total = state.filtered.length;
+    var pages = Math.ceil(total / PAGE_SIZE);
+    if (pages <= 1) { el.innerHTML = ''; return; }
+
+    var html = '';
+    if (state.page > 1) {
+      html += '<button class="feed-page-btn" data-page="' + (state.page - 1) + '">← Prev</button>';
+    }
+    // Show up to 5 page buttons around current page
+    var start = Math.max(1, state.page - 2);
+    var end   = Math.min(pages, state.page + 2);
+    for (var p = start; p <= end; p++) {
+      var active = p === state.page ? ' feed-page-btn--active' : '';
+      html += '<button class="feed-page-btn' + active + '" data-page="' + p + '">' + p + '</button>';
+    }
+    if (state.page < pages) {
+      html += '<button class="feed-page-btn" data-page="' + (state.page + 1) + '">Next →</button>';
+    }
+    el.innerHTML = html;
+
+    el.querySelectorAll('.feed-page-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        state.page = parseInt(this.dataset.page, 10);
+        renderFeedList(state.filtered.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE));
+        renderPagination();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
   /* ── Apply filters + sort, then render ─────────────────────────────────── */
   function applyAndRender() {
-    var filtered = state.articles;
+    // Always filter to brand-tagged articles only
+    var filtered = state.articles.filter(function(a) {
+      return a.brandIds && a.brandIds.length > 0;
+    });
 
     if (state.brandFilter) {
       filtered = filtered.filter(function(a) {
@@ -376,11 +416,13 @@
     /* newest is already sorted by the API */
 
     state.filtered = filtered;
+    state.page = 1;  // reset to first page on any filter/sort change
 
     var countEl = document.getElementById('feed-count');
     if (countEl) countEl.textContent = filtered.length + ' article' + (filtered.length !== 1 ? 's' : '');
 
-    renderFeedList(filtered);
+    renderFeedList(filtered.slice(0, PAGE_SIZE));
+    renderPagination();
   }
 
   /* ── Wire up controls ───────────────────────────────────────────────────── */

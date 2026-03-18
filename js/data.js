@@ -1119,7 +1119,7 @@ window.DORMIED_DATA = {
     {
       id: "j-lindeberg",
       name: "J.Lindeberg",
-      logo: "/images/logos/irange-sports.jpg",
+      logo: "/images/logos/irange-sports.jpg?v=2",
       website: "https://www.jlindeberg.com",
       headquarters: "Stockholm, Sweden",
       founded: 1996,
