@@ -412,16 +412,22 @@
     tr.innerHTML = `
       <td colspan="7">
         <div class="ad-in-table desktop-ad">
-          <div class="ad-placeholder" data-ad-size="728x90">
-            <span class="ad-label">Advertisement</span>
-          </div>
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:728px;height:90px"
+               data-ad-client="ca-pub-5259693727609263"
+               data-ad-slot="2308921645"></ins>
         </div>
         <div class="ad-in-table mobile-ad">
-          <div class="ad-placeholder" data-ad-size="300x250">
-            <span class="ad-label">Advertisement</span>
-          </div>
+          <ins class="adsbygoogle"
+               style="display:inline-block;width:300px;height:250px"
+               data-ad-client="ca-pub-5259693727609263"
+               data-ad-slot="9821280850"></ins>
         </div>
       </td>`;
+    // Push ads after inserting into DOM
+    tr.querySelectorAll('.adsbygoogle').forEach(() => {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    });
     return tr;
   }
 
