@@ -14,8 +14,8 @@
   // Fill these in once your Supabase project is created.
   // Both values are safe to commit — the anon key is read-only public access.
   // Find them in: Supabase dashboard → Project Settings → API
-  var SUPABASE_URL      = 'YOUR_SUPABASE_URL';       // e.g. https://abcdefgh.supabase.co
-  var SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';  // starts with eyJ...
+  var SUPABASE_URL      = 'https://cimmmmnapdthqvtifpzr.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
 
   var FALLBACK_TEXT =
     'No single catalyst is obvious from available coverage this month. ' +
