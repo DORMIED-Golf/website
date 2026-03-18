@@ -391,6 +391,11 @@
       +     '<div class="h2h-brand-hd-rank">Rank #' + b2.rank + '</div>'
       +   '</a>'
       + '</div>'
+      + '<div class="h2h-footer">'
+      +   '<a href="/brands/' + esc(b1.id) + '/" class="h2h-cta">' + esc(b1.name) + ' →</a>'
+      +   '<a href="/rankings/" class="h2h-cta h2h-cta--center">Full Index →</a>'
+      +   '<a href="/brands/' + esc(b2.id) + '/" class="h2h-cta h2h-cta--right">' + esc(b2.name) + ' →</a>'
+      + '</div>'
       + '<div class="h2h-stat-grid">'
       +   diRow()
       +   pctRow(mm1, 'M/M Change', mm2)
@@ -402,11 +407,6 @@
       + '<div class="h2h-insights">'
       +   '<div class="h2h-insight-box" data-h2h-insight-for="' + esc(b1.id) + '"><span class="h2h-insight-label">' + esc(b1.name) + '</span><div class="h2h-insight-text"></div></div>'
       +   '<div class="h2h-insight-box h2h-insight-box--right" data-h2h-insight-for="' + esc(b2.id) + '"><span class="h2h-insight-label">' + esc(b2.name) + '</span><div class="h2h-insight-text"></div></div>'
-      + '</div>'
-      + '<div class="h2h-footer">'
-      +   '<a href="/brands/' + esc(b1.id) + '/" class="h2h-cta">' + esc(b1.name) + ' →</a>'
-      +   '<a href="/rankings/" class="h2h-cta h2h-cta--center">Full Index →</a>'
-      +   '<a href="/brands/' + esc(b2.id) + '/" class="h2h-cta h2h-cta--right">' + esc(b2.name) + ' →</a>'
       + '</div>';
   }
 
