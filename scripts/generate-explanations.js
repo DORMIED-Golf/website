@@ -16,6 +16,8 @@
 
 'use strict';
 
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
 const fs   = require('fs');
 const path = require('path');
 const vm   = require('vm');
@@ -28,20 +30,6 @@ const { createClient } = require('@supabase/supabase-js');
 const MOVEMENT_THRESHOLD = 15; // minimum absolute % change to trigger
 
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-const MARKET_LABELS = {
-  global: 'Global',
-  us:     'United States',
-  jp:     'Japan',
-  kr:     'South Korea',
-  uk:     'United Kingdom',
-  ca:     'Canada',
-  cn:     'China',
-  au:     'Australia',
-  de:     'Germany',
-  se:     'Sweden',
-  fr:     'France',
-};
 
 const FALLBACK_TEXT =
   'No single catalyst is obvious from available coverage this month. ' +
@@ -77,27 +65,13 @@ function getMoMPct(brand, curLabel, prevLabel) {
   return (cur - prev) / prev * 100;
 }
 
-function getTopMarket(brand, curLabel, prevLabel) {
-  let bestKey = 'global';
-  let bestAbs = 0;
-  for (const key of Object.keys(MARKET_LABELS)) {
-    const m    = (brand.searchesByMarket && brand.searchesByMarket[key]) || {};
-    const cur  = m[curLabel]  || 0;
-    const prev = m[prevLabel] || 0;
-    if (prev === 0) continue;
-    const abs = Math.abs((cur - prev) / prev * 100);
-    if (abs > bestAbs) { bestAbs = abs; bestKey = key; }
-  }
-  return MARKET_LABELS[bestKey] || 'Global';
-}
-
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // ── Anthropic call ───────────────────────────────────────────────────────────
 
-async function generateExplanation(anthropic, brand, pct, topMarket, monthLabel) {
+async function generateExplanation(anthropic, brand, pct, monthLabel) {
   const sign = pct > 0 ? '+' : '';
 
   const systemPrompt =
@@ -107,9 +81,8 @@ async function generateExplanation(anthropic, brand, pct, topMarket, monthLabel)
     'No em dashes. No bullet points. Write in tight prose.';
 
   const userPrompt =
-    `A golf brand called ${brand.name} has shown a significant change in search interest on the DORMIED Index. ` +
-    `DI Score change: ${sign}${pct.toFixed(1)}% month over month. ` +
-    `Market where the change was strongest: ${topMarket}. ` +
+    `A golf brand called ${brand.name} has shown a significant change in global search interest on the DORMIED Index. ` +
+    `DI Score change: ${sign}${pct.toFixed(1)}% month over month globally. ` +
     `Time period: ${monthLabel}. ` +
     `Brand category: ${brand.category}.\n\n` +
     `Search the web for recent news, tour activity, product launches, viral moments, player equipment changes, ` +
@@ -193,13 +166,12 @@ async function main() {
       continue;
     }
 
-    const topMarket = getTopMarket(brand, curLabel, prevLabel);
-    const sign      = pct > 0 ? '+' : '';
-    console.log(`  GEN   ${brand.name}  ${sign}${pct.toFixed(1)}%  (${topMarket})`);
+    const sign = pct > 0 ? '+' : '';
+    console.log(`  GEN   ${brand.name}  ${sign}${pct.toFixed(1)}%`);
 
     try {
       const explanation = await generateExplanation(
-        anthropic, brand, pct, topMarket, curLabel
+        anthropic, brand, pct, curLabel
       );
 
       const { error } = await supabase.from('brand_explanations').insert({
@@ -208,7 +180,6 @@ async function main() {
         month:             targetYYYYMM,
         explanation,
         change_percentage: parseFloat(pct.toFixed(2)),
-        top_market:        topMarket,
       });
 
       if (error) {
