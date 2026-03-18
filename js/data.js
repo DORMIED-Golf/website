@@ -1093,7 +1093,7 @@ window.DORMIED_DATA = {
     {
       id: "irange-sports",
       name: "iRange Sports",
-      logo: null,
+      logo: "/images/logos/irange-sports-logo.jpg",
       website: "https://www.irangesports.com",
       headquarters: "California, USA",
       founded: 2017,
