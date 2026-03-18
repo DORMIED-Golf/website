@@ -256,7 +256,9 @@
   function renderLatestIndex(articles, allBrands) {
     var el = document.getElementById('latest-feed-list');
     if (!el) return;
-    var slice = articles.slice(0, INDEX_LIMIT);
+    var slice = articles.filter(function (a) {
+      return a.brandIds && a.brandIds.length > 0;
+    }).slice(0, INDEX_LIMIT);
     if (!slice.length) {
       el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
       return;
@@ -331,7 +333,9 @@
   function renderHomeStories(articles, allBrands) {
     var el = document.getElementById('home-stories-list');
     if (!el) return;
-    var slice = articles.slice(0, HOME_LIMIT);
+    var slice = articles.filter(function (a) {
+      return a.brandIds && a.brandIds.length > 0;
+    }).slice(0, HOME_LIMIT);
     if (!slice.length) {
       el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
       return;
