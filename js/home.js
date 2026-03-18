@@ -171,7 +171,6 @@
          +   logoImg(brand, 'sb-card-logo', 20)
          +   '<div class="sb-card-info">'
          +     '<div class="sb-card-name">' + esc(brand.name) + '</div>'
-         +     '<div class="sb-card-explanation" data-explanation-for="' + esc(brand.id) + '"></div>'
          +   '</div>'
          + '</a>';
   }
@@ -380,19 +379,21 @@
     el.innerHTML =
         '<span class="h2h-category">' + esc(matchup.category) + '</span>'
       + '<div class="h2h-vs-row">'
-      +   '<a href="/brands/' + esc(b1.id) + '/" class="h2h-brand-hd" data-brand-id="' + esc(b1.id) + '" data-mom="' + (mm1 !== null ? mm1.toFixed(2) : '') + '">'
+      +   '<a href="/brands/' + esc(b1.id) + '/" class="h2h-brand-hd" data-brand-id="' + esc(b1.id) + '">'
       +     logoImg(b1, 'h2h-logo', 40)
       +     '<div class="h2h-brand-hd-name">' + esc(b1.name) + '</div>'
       +     '<div class="h2h-brand-hd-rank">Rank #' + b1.rank + '</div>'
-      +     '<div class="h2h-brand-explanation" data-h2h-explanation-for="' + esc(b1.id) + '"></div>'
       +   '</a>'
       +   '<div class="h2h-vs-badge">VS</div>'
-      +   '<a href="/brands/' + esc(b2.id) + '/" class="h2h-brand-hd h2h-brand-hd--right" data-brand-id="' + esc(b2.id) + '" data-mom="' + (mm2 !== null ? mm2.toFixed(2) : '') + '">'
+      +   '<a href="/brands/' + esc(b2.id) + '/" class="h2h-brand-hd h2h-brand-hd--right" data-brand-id="' + esc(b2.id) + '">'
       +     logoImg(b2, 'h2h-logo', 40)
       +     '<div class="h2h-brand-hd-name">' + esc(b2.name) + '</div>'
       +     '<div class="h2h-brand-hd-rank">Rank #' + b2.rank + '</div>'
-      +     '<div class="h2h-brand-explanation" data-h2h-explanation-for="' + esc(b2.id) + '"></div>'
       +   '</a>'
+      + '</div>'
+      + '<div class="h2h-insights">'
+      +   '<div class="h2h-insight-box" data-h2h-insight-for="' + esc(b1.id) + '"><span class="h2h-insight-label">' + esc(b1.name) + '</span><div class="h2h-insight-text"></div></div>'
+      +   '<div class="h2h-insight-box h2h-insight-box--right" data-h2h-insight-for="' + esc(b2.id) + '"><span class="h2h-insight-label">' + esc(b2.name) + '</span><div class="h2h-insight-text"></div></div>'
       + '</div>'
       + '<div class="h2h-stat-grid">'
       +   diRow()
@@ -422,41 +423,64 @@
   /* ── EXPLANATIONS PATCH ────────────────────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────────────── */
 
-  // After the DOM is rendered, asynchronously fill explanation slots.
+  // After the DOM is rendered, asynchronously fill explanation sections.
   function patchExplanations(monthLabel) {
     if (!window.DORMIED_EXPLANATIONS) return;
-    var EXP = window.DORMIED_EXPLANATIONS;
+    var EXP   = window.DORMIED_EXPLANATIONS;
+    var toBullets = (window.DORMIED_UTILS && window.DORMIED_UTILS.explanationToBullets) || function (t) { return '<p>' + t + '</p>'; };
 
     EXP.preload(monthLabel).then(function () {
-      // ── Biggest Movers: top 3 only, never show fallback ───────────────
-      var moverCards = document.querySelectorAll('#sb-movers .sb-card');
-      var count = 0;
-      moverCards.forEach(function (card) {
-        if (count >= 3) return;
-        count++;
-        var brandId = card.dataset.brandId;
-        if (!brandId) return;
-        var row = EXP.getCached(brandId, monthLabel);
-        if (!row || EXP.isFallback(row.explanation)) return;
-        var slot = card.querySelector('[data-explanation-for="' + brandId + '"]');
-        if (slot) {
-          slot.textContent = row.explanation;
-          slot.classList.add('sb-card-explanation--visible');
-        }
-      });
 
-      // ── H2H: show explanation only when |MoM| > 20% ──────────────────
-      document.querySelectorAll('.h2h-brand-hd[data-brand-id]').forEach(function (hd) {
-        var brandId = hd.dataset.brandId;
-        var mom     = parseFloat(hd.dataset.mom);
-        if (!brandId || isNaN(mom) || Math.abs(mom) <= 20) return;
-        var row = EXP.getCached(brandId, monthLabel);
-        if (!row || EXP.isFallback(row.explanation)) return;
-        var slot = hd.querySelector('[data-h2h-explanation-for="' + brandId + '"]');
-        if (slot) {
-          slot.textContent = row.explanation;
-          slot.classList.add('h2h-brand-explanation--visible');
+      // ── "Why This Month Moved" section ────────────────────────────────
+      var whySection = document.getElementById('why-moved-section');
+      var whyList    = document.getElementById('why-moved-list');
+      var whyMonth   = document.getElementById('why-moved-month');
+
+      if (whySection && whyList) {
+        if (whyMonth) whyMonth.textContent = monthLabel;
+
+        // Collect movers + drops with real (non-fallback) explanations
+        var seen = {};
+        var items = [];
+        var cards = document.querySelectorAll('#sb-movers .sb-card, #sb-drops .sb-card');
+        cards.forEach(function (card) {
+          var brandId = card.dataset.brandId;
+          if (!brandId || seen[brandId]) return;
+          seen[brandId] = true;
+          var row = EXP.getCached(brandId, monthLabel);
+          if (!row || EXP.isFallback(row.explanation)) return;
+          var nameEl = card.querySelector('.sb-card-name');
+          var name   = nameEl ? nameEl.textContent : brandId;
+          var pctEl  = card.querySelector('.sb-card-rank');
+          var badge  = pctEl ? pctEl.textContent : '';
+          items.push({ brandId: brandId, name: name, badge: badge, explanation: row.explanation });
+        });
+
+        if (items.length > 0) {
+          whyList.innerHTML = items.map(function (item) {
+            return '<div class="why-moved-item">'
+              + '<div class="why-moved-brand-row">'
+              +   '<span class="why-moved-name">' + esc(item.name) + '</span>'
+              +   '<span class="why-moved-badge">' + esc(item.badge) + '</span>'
+              + '</div>'
+              + '<div class="why-moved-bullets">' + toBullets(item.explanation) + '</div>'
+              + '</div>';
+          }).join('');
+          whySection.hidden = false;
         }
+      }
+
+      // ── H2H insight boxes (always shown, fallback if no data) ─────────
+      document.querySelectorAll('[data-h2h-insight-for]').forEach(function (box) {
+        var brandId  = box.dataset.h2hInsightFor;
+        var row      = EXP.getCached(brandId, monthLabel);
+        var textDiv  = box.querySelector('.h2h-insight-text');
+        if (!textDiv) return;
+        var text = (row && !EXP.isFallback(row.explanation))
+          ? row.explanation
+          : EXP.FALLBACK_TEXT;
+        textDiv.innerHTML = toBullets(text);
+        box.classList.add('h2h-insight-box--loaded');
       });
     });
   }

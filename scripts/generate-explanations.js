@@ -77,21 +77,21 @@ async function generateExplanation(anthropic, brand, pct, monthLabel) {
   const systemPrompt =
     'You are a golf industry analyst writing for DORMIED, a golf brand intelligence platform. ' +
     'Your tone is knowledgeable, direct, and dry. You write for gear-obsessed golf enthusiasts ' +
-    'who follow brand culture closely and use insider terminology. No filler language. ' +
-    'No em dashes. No bullet points. Write in tight prose.';
+    'who follow brand culture closely and use insider terminology. ' +
+    'Never explain your search process. Never say "Based on my search results", "Based on my research", ' +
+    '"I found", "it appears", "it seems", or any similar meta-commentary. ' +
+    'Go directly to the facts. Write in tight, production-ready prose.';
 
   const userPrompt =
-    `A golf brand called ${brand.name} has shown a significant change in global search interest on the DORMIED Index. ` +
-    `DI Score change: ${sign}${pct.toFixed(1)}% month over month globally. ` +
-    `Time period: ${monthLabel}. ` +
+    `${brand.name} saw a ${sign}${pct.toFixed(1)}% change in global search interest on the DORMIED Index in ${monthLabel}. ` +
     `Brand category: ${brand.category}.\n\n` +
-    `Search the web for recent news, tour activity, product launches, viral moments, player equipment changes, ` +
-    `or media coverage involving ${brand.name} during or just before ${monthLabel} that could explain this change ` +
-    `in search interest. Write 2 sentences maximum explaining the most likely reason behind this movement. ` +
-    `Be specific. If a tour player switched to this brand, name them. If a product launched, name it. ` +
-    `If a viral moment drove attention, describe it. Do not start with the brand name. ` +
-    `Do not use phrases like it appears or it seems. State what happened and why it likely drove search interest. ` +
-    `If no specific cause can be identified from available sources, write exactly this and nothing else: ` +
+    `Search the web for news, tour activity, product launches, viral moments, player equipment changes, ` +
+    `or media coverage involving ${brand.name} during or just before ${monthLabel} that explains this movement.\n\n` +
+    `Output exactly 2–3 bullet points starting with the • character. ` +
+    `Each bullet is one sentence. No intro text. No outro text. No preamble. Start directly with •.\n` +
+    `Each bullet must state a specific fact — name the player, product, or event. ` +
+    `Do not start any bullet with the brand name. Do not use "it appears" or "it seems".\n\n` +
+    `If no specific cause can be identified from available sources, output exactly this and nothing else:\n` +
     `${FALLBACK_TEXT}`;
 
   const response = await anthropic.messages.create({

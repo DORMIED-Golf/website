@@ -114,17 +114,38 @@
     return MONTH_NAMES[newMon] + ' ' + newYear;
   }
 
+  // ── Explanation → bullet list ──────────────────────────────────────────────
+  // Converts stored explanation text to an HTML <ul> bullet list.
+  // Handles two formats:
+  //   • New format: text contains "•" separators → split on "•"
+  //   • Old format: plain paragraph → split on sentence boundaries
+  function explanationToBullets(text) {
+    if (!text) return '';
+    var items;
+    if (text.indexOf('\u2022') !== -1) {
+      items = text.split('\u2022').map(function (s) { return s.trim(); }).filter(Boolean);
+    } else {
+      var sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+      items = sentences.map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 15; });
+    }
+    if (!items.length) return '<p>' + escHtml(text) + '</p>';
+    return '<ul class="exp-bullets">'
+      + items.map(function (s) { return '<li>' + escHtml(s) + '</li>'; }).join('')
+      + '</ul>';
+  }
+
   // ── Export ─────────────────────────────────────────────────────────────────
   window.DORMIED_UTILS = {
-    escHtml:      escHtml,
-    getBgColor:   getBgColor,
-    getInitials:  getInitials,
-    buildLogoImg: buildLogoImg,
-    formatNum:    formatNum,
-    labelToYYYYMM: labelToYYYYMM,
-    offsetMonth:  offsetMonth,
-    MONTH_NAMES:  MONTH_NAMES,
-    MONTH_MAP:    MONTH_MAP,
+    escHtml:               escHtml,
+    getBgColor:            getBgColor,
+    getInitials:           getInitials,
+    buildLogoImg:          buildLogoImg,
+    formatNum:             formatNum,
+    labelToYYYYMM:         labelToYYYYMM,
+    offsetMonth:           offsetMonth,
+    explanationToBullets:  explanationToBullets,
+    MONTH_NAMES:           MONTH_NAMES,
+    MONTH_MAP:             MONTH_MAP,
   };
 
 }());

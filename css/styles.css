@@ -3095,19 +3095,153 @@ details[open] .faq-question::after { content: '−'; }
   display: block;
 }
 
-/* ── H2H brand explanation ────────────────────────────────────────────────── */
-.h2h-brand-explanation {
-  display: none;
-  font-size: 10px;
-  line-height: 1.4;
-  color: #6b8f6b;
-  font-style: italic;
-  margin-top: 4px;
-  font-family: Inter, sans-serif;
-  max-width: 180px;
+/* ── Why This Month Moved (home page section) ──────────────────────────────── */
+.why-moved-section {
+  padding: 32px 0 8px;
 }
-.h2h-brand-explanation--visible {
+.why-moved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.why-moved-item {
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+}
+.why-moved-item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+.why-moved-brand-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.why-moved-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.why-moved-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+}
+.why-moved-bullets .exp-bullets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.why-moved-bullets .exp-bullets li {
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  padding-left: 14px;
+  position: relative;
+}
+.why-moved-bullets .exp-bullets li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+}
+
+/* ── H2H insight boxes ────────────────────────────────────────────────────── */
+.h2h-insights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.h2h-insight-box {
+  background: #0a1a0a;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  min-height: 60px;
+}
+.h2h-insight-label {
   display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.h2h-insight-text .exp-bullets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.h2h-insight-text .exp-bullets li {
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  padding-left: 12px;
+  position: relative;
+}
+.h2h-insight-text .exp-bullets li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  opacity: 0.6;
+}
+.h2h-insight-text p {
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .h2h-insights {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Shared bullet list for brand pages ───────────────────────────────────── */
+.bp-exp-current .exp-bullets,
+.bp-exp-timeline-text .exp-bullets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bp-exp-current .exp-bullets li,
+.bp-exp-timeline-text .exp-bullets li {
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  padding-left: 16px;
+  position: relative;
+}
+.bp-exp-current .exp-bullets li::before,
+.bp-exp-timeline-text .exp-bullets li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--green);
 }
 
 /* ── Brand page: WHY THIS MONTH MOVED ────────────────────────────────────── */

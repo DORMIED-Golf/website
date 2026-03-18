@@ -887,6 +887,8 @@
     // Use timeline when: period tab is 3M+ AND there are at least 2 stored months
     const useTimeline = chartMonths > 0 && rows.length >= 2;
 
+    const toBullets = (window.DORMIED_UTILS && window.DORMIED_UTILS.explanationToBullets) || (t => `<p>${t}</p>`);
+
     if (useTimeline) {
       // Chronological list of all stored months
       const items = rows.map(row => {
@@ -895,13 +897,13 @@
         const label  = `${MONTHS[parseInt(m,10)-1]} ${y}`;
         return `<div class="bp-exp-timeline-item">
           <span class="bp-exp-timeline-month">${label}</span>
-          <p class="bp-exp-timeline-text">${row.explanation}</p>
+          <div class="bp-exp-timeline-text">${toBullets(row.explanation)}</div>
         </div>`;
       }).join('');
       body.innerHTML = `<div class="bp-exp-timeline">${items}</div>`;
       section.hidden = false;
     } else if (curRow) {
-      body.innerHTML = `<p class="bp-exp-current">${curRow.explanation}</p>`;
+      body.innerHTML = `<div class="bp-exp-current">${toBullets(curRow.explanation)}</div>`;
       section.hidden = false;
     } else {
       section.hidden = true;
