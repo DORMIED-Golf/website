@@ -405,7 +405,7 @@
     return tr;
   }
 
-  function createAdRow(isMobile) {
+  function createAdRow() {
     const tr = document.createElement('tr');
     tr.className = 'ad-row';
     tr.setAttribute('aria-hidden', 'true');
@@ -424,10 +424,8 @@
                data-ad-slot="9821280850"></ins>
         </div>
       </td>`;
-    // Push ads after inserting into DOM
-    tr.querySelectorAll('.adsbygoogle').forEach(() => {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    });
+    // Do NOT push here — ins elements must be in the DOM first.
+    // renderTable() pushes after tbody.appendChild().
     return tr;
   }
 
@@ -443,6 +441,10 @@
     if (badge) badge.hidden = !isProj;
 
     const sorted   = sortFiltered(state.filtered);
+
+    // Clear first so the loading spinner is always removed before building rows.
+    tbody.innerHTML = '';
+
     const fragment = document.createDocumentFragment();
     let dataRowCount = 0;
 
@@ -454,8 +456,12 @@
       dataRowCount++;
     });
 
-    tbody.innerHTML = '';
     tbody.appendChild(fragment);
+
+    // Push in-table ads now that the ins elements are in the DOM.
+    tbody.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])').forEach(() => {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    });
 
     // Update count
     const countEl = document.getElementById('results-count');
