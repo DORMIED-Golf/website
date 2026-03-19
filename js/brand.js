@@ -921,6 +921,82 @@
     renderExplanationForPeriod();
   }
 
+  // ─── The Take ─────────────────────────────────────────────────────────────
+
+  async function loadTake(globalRank, metrics, allTimeStats) {
+    const section = document.getElementById('bp-take-section');
+    const textEl  = document.getElementById('bp-take-text');
+    if (!section || !textEl) return;
+
+    const data = window.DORMIED_DATA;
+    const r    = rankings.find(b => b.id === brand.id);
+    const di   = r ? r.diScore.toFixed(1) : '—';
+
+    // Determine strongest market by current DI
+    const markets = data.meta.markets || [];
+    const cm      = data.meta.currentMonth;
+    let topMarket = 'Global';
+    let topVal    = 0;
+    markets.forEach(mkt => {
+      if (mkt.key === 'global') return;
+      const v = brand.searchesByMarket?.[mkt.key]?.[cm] || 0;
+      if (v > topVal) { topVal = v; topMarket = mkt.label || mkt.key; }
+    });
+
+    // Cache key: brand + current month so it refreshes each new data cycle
+    const cacheKey = `dormied_take_${brand.id}_${cm}`;
+    const cached   = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      textEl.textContent = cached;
+      section.hidden = false;
+      return;
+    }
+
+    // Set month label
+    const monthEl = document.getElementById('bp-take-month');
+    if (monthEl) monthEl.textContent = data.meta.currentMonth;
+
+    // Show shimmer while loading
+    textEl.className = 'bp-take-text is-loading';
+    textEl.textContent = 'Generating editorial take…';
+    section.hidden = false;
+
+    const fmtChange = v => v != null ? (v >= 0 ? '+' : '') + v.toFixed(1) + '%' : '—';
+
+    try {
+      const resp = await fetch('/api/take', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:      brand.name,
+          rank:      globalRank,
+          di:        di,
+          vsMonth:   fmtChange(metrics.vsMonth),
+          mom:       fmtChange(metrics.mom),
+          yoy:       fmtChange(metrics.yoy),
+          bestRank:  allTimeStats.bestRank || '—',
+          bestMonth: allTimeStats.bestMonth || '—',
+          category:  brand.category || '—',
+          topMarket: topMarket,
+        }),
+      });
+
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const { take } = await resp.json();
+
+      if (take) {
+        textEl.className   = 'bp-take-text';
+        textEl.textContent = take;
+        sessionStorage.setItem(cacheKey, take);
+      } else {
+        section.hidden = true;
+      }
+    } catch (e) {
+      console.warn('[take] Failed to load editorial take:', e.message);
+      section.hidden = true;
+    }
+  }
+
   // ─── SEO ──────────────────────────────────────────────────────────────────
 
   function updateSEO(globalRank, di) {
@@ -1043,6 +1119,7 @@
     renderSimilarBrands(similar);
     renderPrevNext(globalRank);
     loadExplanations(); // async — fills explanation section after fetch
+    loadTake(globalRank, metrics, allTimeStats); // async — generates AI editorial take
   }
 
   function showError() {

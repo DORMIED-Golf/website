@@ -405,8 +405,8 @@
       +   infoRow(hq1, 'HQ', hq2)
       + '</div>'
       + '<div class="h2h-insights">'
-      +   '<div class="h2h-insight-box" data-h2h-insight-for="' + esc(b1.id) + '"><span class="h2h-insight-label">' + esc(b1.name) + '</span><div class="h2h-insight-text"></div></div>'
-      +   '<div class="h2h-insight-box h2h-insight-box--right" data-h2h-insight-for="' + esc(b2.id) + '"><span class="h2h-insight-label">' + esc(b2.name) + '</span><div class="h2h-insight-text"></div></div>'
+      +   '<div class="h2h-insight-box" data-h2h-insight-for="' + esc(b1.id) + '"><div class="h2h-insight-header"><span class="h2h-insight-label">' + esc(b1.name) + '</span><span class="h2h-read-tag">THE READ <span class="h2h-read-month">' + esc(cur) + '</span></span></div><div class="h2h-insight-text"></div></div>'
+      +   '<div class="h2h-insight-box h2h-insight-box--right" data-h2h-insight-for="' + esc(b2.id) + '"><div class="h2h-insight-header"><span class="h2h-insight-label">' + esc(b2.name) + '</span><span class="h2h-read-tag">THE READ <span class="h2h-read-month">' + esc(cur) + '</span></span></div><div class="h2h-insight-text"></div></div>'
       + '</div>';
   }
 
@@ -471,18 +471,133 @@
         }
       }
 
-      // ── H2H insight boxes (always shown, fallback if no data) ─────────
-      document.querySelectorAll('[data-h2h-insight-for]').forEach(function (box) {
-        var brandId  = box.dataset.h2hInsightFor;
-        var row      = EXP.getCached(brandId, monthLabel);
-        var textDiv  = box.querySelector('.h2h-insight-text');
-        if (!textDiv) return;
-        var text = (row && !EXP.isFallback(row.explanation))
-          ? row.explanation
-          : EXP.FALLBACK_TEXT;
-        textDiv.innerHTML = toBullets(text);
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────── */
+  /* ── THE READ: H2H ────────────────────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────────────── */
+
+  var MONTH_NAMES_READ = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function shiftMonthRead(label, delta) {
+    var parts = label.split(' ');
+    var total = parseInt(parts[1]) * 12 + MONTH_NAMES_READ.indexOf(parts[0]) + delta;
+    return MONTH_NAMES_READ[((total % 12) + 12) % 12] + ' ' + Math.floor(total / 12);
+  }
+
+  function computeH2HBrandStats(brandId, rankedBrand) {
+    var data  = window.DORMIED_DATA;
+    var meta  = data.meta;
+    var cur   = meta.currentMonth;
+    var brand = data.brands.find(function (b) { return b.id === brandId; });
+    if (!brand) return null;
+
+    var g = (brand.searchesByMarket && brand.searchesByMarket.global) || {};
+    var curV  = g[cur] || 0;
+    var prevM = shiftMonthRead(cur, -1);
+    var prevV = g[prevM] || 0;
+    var vsMonth = prevV > 0 ? (curV - prevV) / prevV * 100 : null;
+
+    // Year-over-year
+    var yoyM = shiftMonthRead(cur, -12);
+    var yoyV = g[yoyM] || 0;
+    var yoy  = yoyV > 0 ? (curV - yoyV) / yoyV * 100 : null;
+
+    // 3-month trend
+    var last3  = [shiftMonthRead(cur, -2), shiftMonthRead(cur, -1), cur];
+    var prior3 = [shiftMonthRead(cur, -5), shiftMonthRead(cur, -4), shiftMonthRead(cur, -3)];
+    var l3avg  = last3.reduce(function (s, m) { return s + (g[m] || 0); }, 0) / 3;
+    var p3avg  = prior3.reduce(function (s, m) { return s + (g[m] || 0); }, 0) / 3;
+    var mom    = p3avg > 0 ? (l3avg - p3avg) / p3avg * 100 : null;
+
+    // Best rank: find month with highest volume, compute rank in that month
+    var bestMonth = cur;
+    var bestVol   = 0;
+    Object.keys(g).forEach(function (m) { if ((g[m] || 0) > bestVol) { bestVol = g[m]; bestMonth = m; } });
+    var bestRank = 1;
+    data.brands.forEach(function (other) {
+      if (other.id === brandId) return;
+      var ov = (other.searchesByMarket && other.searchesByMarket.global && other.searchesByMarket.global[bestMonth]) || 0;
+      if (ov > bestVol) bestRank++;
+    });
+
+    // Top market
+    var topMarket = 'Global';
+    var topVal    = 0;
+    (meta.markets || []).forEach(function (mkt) {
+      if (mkt.key === 'global') return;
+      var v = (brand.searchesByMarket && brand.searchesByMarket[mkt.key] && brand.searchesByMarket[mkt.key][cur]) || 0;
+      if (v > topVal) { topVal = v; topMarket = mkt.label || mkt.key; }
+    });
+
+    return {
+      name:      brand.name,
+      category:  brand.category || '—',
+      vsMonth:   vsMonth,
+      yoy:       yoy,
+      mom:       mom,
+      bestRank:  bestRank,
+      bestMonth: bestMonth,
+      topMarket: topMarket,
+    };
+  }
+
+  function patchH2HWithReads(b1, b2) {
+    var meta    = window.DORMIED_DATA.meta;
+    var cm      = meta.currentMonth;
+    var fmtChg  = function (v) { return v != null ? (v >= 0 ? '+' : '') + v.toFixed(1) + '%' : '—'; };
+
+    [b1, b2].forEach(function (b) {
+      var box     = document.querySelector('[data-h2h-insight-for="' + b.id + '"]');
+      if (!box) return;
+      var textDiv = box.querySelector('.h2h-insight-text');
+      if (!textDiv) return;
+
+      var cacheKey = 'dormied_take_' + b.id + '_' + cm;
+      var cached   = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        textDiv.innerHTML = '<p class="h2h-take-text">' + cached + '</p>';
         box.classList.add('h2h-insight-box--loaded');
-      });
+        return;
+      }
+
+      // Show shimmer while loading
+      textDiv.innerHTML = '<p class="h2h-take-loading"></p>';
+      box.classList.add('h2h-insight-box--loaded');
+
+      var stats = computeH2HBrandStats(b.id, b);
+      if (!stats) return;
+
+      fetch('/api/take', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:      b.name,
+          rank:      b.rank,
+          di:        b.di.toFixed(1),
+          vsMonth:   fmtChg(stats.vsMonth),
+          mom:       fmtChg(stats.mom),
+          yoy:       fmtChg(stats.yoy),
+          bestRank:  stats.bestRank,
+          bestMonth: stats.bestMonth,
+          category:  stats.category,
+          topMarket: stats.topMarket,
+        }),
+      })
+        .then(function (resp) { if (!resp.ok) throw new Error('HTTP ' + resp.status); return resp.json(); })
+        .then(function (data) {
+          if (data.take) {
+            sessionStorage.setItem(cacheKey, data.take);
+            textDiv.innerHTML = '<p class="h2h-take-text">' + data.take + '</p>';
+          } else {
+            textDiv.innerHTML = '';
+          }
+        })
+        .catch(function (e) {
+          console.warn('[take] H2H fetch failed for ' + b.name + ':', e.message);
+          textDiv.innerHTML = '';
+        });
     });
   }
 
@@ -504,8 +619,11 @@
     renderScoreboard(ranked);
     renderH2H(matchup);
 
-    // Async: patch explanation text into movers and H2H
+    // Async: patch explanation text into movers section
     patchExplanations(window.DORMIED_DATA.meta.currentMonth);
+
+    // Async: fill H2H insight boxes with THE READ editorial takes
+    if (matchup) patchH2HWithReads(matchup.brand1, matchup.brand2);
   }
 
   if (document.readyState === 'loading') {

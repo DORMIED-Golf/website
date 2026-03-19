@@ -10,7 +10,8 @@
   ],
   "functions": {
     "api/feed.js":      { "maxDuration": 15 },
-    "api/subscribe.js": { "maxDuration": 10 }
+    "api/subscribe.js": { "maxDuration": 10 },
+    "api/take.js":      { "maxDuration": 30 }
   },
   "headers": [
     {

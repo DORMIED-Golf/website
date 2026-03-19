@@ -1788,6 +1788,62 @@ details[open] .faq-question::after { content: '−'; }
 }
 
 /* ── Key Metrics Strip ───────────────────────────────────────────────────── */
+/* ── The Take ─────────────────────────────────────────────────────────────── */
+.bp-take-section {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+.bp-take-inner {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.bp-take-label-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.bp-take-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.bp-take-month {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.bp-take-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin: 0;
+}
+.bp-take-text.is-loading {
+  color: transparent;
+  background: linear-gradient(90deg, var(--border) 25%, var(--border-light, #2a3d2a) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: bp-take-shimmer 1.4s infinite;
+  border-radius: 3px;
+  min-height: 1.65em;
+  min-width: 260px;
+}
+@keyframes bp-take-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Metrics ───────────────────────────────────────────────────────────────── */
 .bp-metrics-section {
   padding: 16px 0;
   background: var(--bg);
@@ -3202,8 +3258,13 @@ details[open] .faq-question::after { content: '−'; }
   padding: 14px 16px;
   min-height: 60px;
 }
+.h2h-insight-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
 .h2h-insight-label {
-  display: block;
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 11px;
   font-weight: 700;
@@ -3211,7 +3272,39 @@ details[open] .faq-question::after { content: '−'; }
   color: var(--green);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 8px;
+}
+.h2h-read-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.h2h-read-month {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+.h2h-take-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.h2h-take-loading {
+  margin: 0;
+  min-height: 3.3em;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--border) 25%, #2a3d2a 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: bp-take-shimmer 1.4s infinite;
 }
 .h2h-insight-text .exp-bullets {
   margin: 0;
