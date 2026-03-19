@@ -455,6 +455,10 @@
         state.brandFilter = this.value;
         syncWidgetActive();
         applyAndRender();
+        if (window.DORMIED_TRACK && state.brandFilter) {
+          var selOpt = sel.options[sel.selectedIndex];
+          window.DORMIED_TRACK('news_brand_filter', { brand: selOpt ? selOpt.text : state.brandFilter });
+        }
       });
     }
 

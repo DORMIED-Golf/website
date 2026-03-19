@@ -353,7 +353,10 @@
         a.className = 'see-why-link';
         a.href = '/brands/' + brandId + '/#bp-explanation-section';
         a.textContent = 'See Why →';
-        a.addEventListener('click', function (e) { e.stopPropagation(); });
+        a.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (window.DORMIED_TRACK) window.DORMIED_TRACK('see_why_click', { brand: exp.explanation ? brandId : brandId });
+        });
         cell.appendChild(a);
       });
     });
@@ -534,21 +537,31 @@
     const clearBtn   = document.getElementById('clear-filters');
 
     if (searchEl) {
+      let _searchTimer;
       searchEl.addEventListener('input', e => {
         state.searchQuery = e.target.value.trim();
         applyFilters();
+        // Debounce: fire after user stops typing for 800ms
+        clearTimeout(_searchTimer);
+        if (state.searchQuery) {
+          _searchTimer = setTimeout(() => {
+            if (window.DORMIED_TRACK) window.DORMIED_TRACK('index_search', { search_term: state.searchQuery });
+          }, 800);
+        }
       });
     }
     if (catEl) {
       catEl.addEventListener('change', e => {
         state.category = e.target.value;
         applyFilters();
+        if (window.DORMIED_TRACK && state.category) window.DORMIED_TRACK('index_category', { category: state.category });
       });
     }
     if (subcatEl) {
       subcatEl.addEventListener('change', e => {
         state.subCategory = e.target.value;
         applyFilters();
+        if (window.DORMIED_TRACK && state.subCategory) window.DORMIED_TRACK('index_subcategory', { subcategory: state.subCategory });
       });
     }
     if (clearBtn) {
@@ -631,6 +644,7 @@
     el.addEventListener('change', e => {
       state.period = buildPeriod(e.target.value);
       rerank();
+      if (window.DORMIED_TRACK) window.DORMIED_TRACK('index_date', { period: el.options[el.selectedIndex]?.text || e.target.value });
     });
   }
 
@@ -682,6 +696,7 @@
 
         // Re-rank using country-specific data
         rerank();
+        if (window.DORMIED_TRACK) window.DORMIED_TRACK('index_country', { country: tab.dataset.country });
       });
     });
   }
@@ -712,6 +727,7 @@
         th.appendChild(arrow);
 
         renderTable();
+        if (window.DORMIED_TRACK) window.DORMIED_TRACK('index_sort', { column: col, direction: state.sortDir });
       });
     });
   }

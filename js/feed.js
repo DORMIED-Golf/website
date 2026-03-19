@@ -144,7 +144,8 @@
           '<span class="feed-time">'   + escHtml(timeAgo(article.pubDate)) + '</span>' +
         '</div>' +
         '<a href="' + escHtml(addUTM(article.url)) + '" ' +
-           'target="_blank" rel="noopener noreferrer" class="feed-card-title">' +
+           'target="_blank" rel="noopener noreferrer" class="feed-card-title"' +
+           ' onclick="if(window.DORMIED_TRACK)window.DORMIED_TRACK(\'article_click\',{article_title:' + JSON.stringify(article.title) + ',source:' + JSON.stringify(article.sourceName) + '})">' +
           escHtml(article.title) +
         '</a>' +
         tags +

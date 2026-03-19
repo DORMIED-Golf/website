@@ -68,6 +68,7 @@
         email, btn,
         function () { // success
           form.innerHTML = '<p class="footer-signup-success">' + SUCCESS_MSG + '</p>';
+          if (window.DORMIED_TRACK) window.DORMIED_TRACK('scorecard_signup', { source: 'footer' });
         },
         function (err) { // error
           showMsg(msg, err || ERROR_MSG, false);
@@ -175,6 +176,7 @@
           var popup = document.querySelector('.signup-popup');
           popup.innerHTML = '<p class="signup-popup-success">' + SUCCESS_MSG + '</p>';
           setTimeout(function () { closePopup(false); }, 3000);
+          if (window.DORMIED_TRACK) window.DORMIED_TRACK('scorecard_signup', { source: 'popup' });
         },
         function (err) { // error
           errEl.textContent   = err || ERROR_MSG;

@@ -624,7 +624,13 @@
     patchExplanations(window.DORMIED_DATA.meta.currentMonth);
 
     // Async: fill H2H insight boxes with THE READ editorial takes
-    if (matchup) patchH2HWithReads(matchup.brand1, matchup.brand2);
+    if (matchup) {
+      patchH2HWithReads(matchup.brand1, matchup.brand2);
+      if (window.DORMIED_TRACK) window.DORMIED_TRACK('h2h_comparison', {
+        brand_a: matchup.brand1.name,
+        brand_b: matchup.brand2.name,
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

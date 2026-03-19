@@ -718,7 +718,8 @@
     const websiteHtml = brand.website
       ? `<div class="bp-metric-card bp-metric-link">
            <a href="${brand.website}?utm_source=dormied&utm_medium=referral&utm_campaign=brand-index"
-              target="_blank" rel="noopener noreferrer" class="bp-visit-link">
+              target="_blank" rel="noopener noreferrer" class="bp-visit-link"
+              onclick="if(window.DORMIED_TRACK)window.DORMIED_TRACK('brand_outbound',{brand:'${brand.name.replace(/'/g,"\\'")}',url:'${brand.website}'})">
              Visit ${brand.name}
              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
            </a>
@@ -847,6 +848,7 @@
           b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
         });
         renderChart();
+        if (window.DORMIED_TRACK) window.DORMIED_TRACK('brand_country', { brand: brand.name, country: chartMarket });
       });
     });
   }
@@ -861,6 +863,7 @@
         });
         renderChart();
         renderExplanationForPeriod();
+        if (window.DORMIED_TRACK) window.DORMIED_TRACK('brand_date_range', { brand: brand.name, period: btn.textContent.trim() });
       });
     });
   }
@@ -1121,6 +1124,13 @@
     renderPrevNext(globalRank);
     loadExplanations(); // async — fills explanation section after fetch
     loadTake(globalRank, metrics, allTimeStats); // async — generates AI editorial take
+
+    // Analytics: brand page view
+    if (window.DORMIED_TRACK) window.DORMIED_TRACK('brand_view', {
+      brand: brand.name,
+      rank:  globalRank,
+      di:    di,
+    });
   }
 
   function showError() {
