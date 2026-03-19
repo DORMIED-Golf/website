@@ -29,6 +29,7 @@ const FEEDS = [
   { id: 'pluggedin',    name: 'Plugged In Golf',   url: 'https://www.pluggedingolf.com/feed' },
   { id: 'hackerspar',   name: "Hacker's Paradise", url: 'https://www.thehackersparadise.com/feed' },
   { id: 'golfmonthly',  name: 'Golf Monthly',      url: 'https://www.golfmonthly.com/feed' },
+  { id: 'hypebeast',    name: 'Hypebeast',         url: 'https://hypebeast.com/feed' },
 ];
 
 // ── Validation ────────────────────────────────────────────────────────────────
