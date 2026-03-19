@@ -3383,13 +3383,11 @@ details[open] .faq-question::after { content: '−'; }
   line-height: 1.6;
   color: #a3c4a3;
   margin: 0;
-  max-width: 680px;
 }
 .bp-exp-timeline {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 680px;
 }
 .bp-exp-timeline-item {
   border-left: 2px solid #22c55e;
