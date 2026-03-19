@@ -1,17 +1,34 @@
-const Anthropic = require('@anthropic-ai/sdk');
-const Parser    = require('rss-parser');
+const Anthropic        = require('@anthropic-ai/sdk');
+const Parser           = require('rss-parser');
+const { createClient } = require('@supabase/supabase-js');
+
+// ── Supabase ──────────────────────────────────────────────────────────────────
+
+function getSupabase() {
+  const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) return null;
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+}
+
+// Convert "Feb 2026" → "2026-02" for consistent DB storage
+function monthToYYYYMM(label) {
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const [mon, year] = label.split(' ');
+  const m = MONTHS.indexOf(mon) + 1;
+  return `${year}-${String(m).padStart(2, '0')}`;
+}
 
 // ── RSS feeds to scan for brand mentions ─────────────────────────────────────
 
 const FEEDS = [
-  { id: 'mygolfspy',    name: 'MyGolfSpy',       url: 'https://feeds.feedburner.com/Mygolfspy' },
-  { id: 'golfwrx',      name: 'GolfWRX',          url: 'https://www.golfwrx.com/feed' },
-  { id: 'golfdigest',   name: 'Golf Digest',      url: 'https://www.golfdigest.com/rss/rss.xml' },
-  { id: 'golfcom',      name: 'Golf.com',         url: 'https://golf.com/feed' },
-  { id: 'golfweek',     name: 'Golfweek',         url: 'https://golfweek.usatoday.com/feed' },
-  { id: 'pluggedin',    name: 'Plugged In Golf',  url: 'https://www.pluggedingolf.com/feed' },
+  { id: 'mygolfspy',    name: 'MyGolfSpy',        url: 'https://feeds.feedburner.com/Mygolfspy' },
+  { id: 'golfwrx',      name: 'GolfWRX',           url: 'https://www.golfwrx.com/feed' },
+  { id: 'golfdigest',   name: 'Golf Digest',       url: 'https://www.golfdigest.com/rss/rss.xml' },
+  { id: 'golfcom',      name: 'Golf.com',          url: 'https://golf.com/feed' },
+  { id: 'golfweek',     name: 'Golfweek',          url: 'https://golfweek.usatoday.com/feed' },
+  { id: 'pluggedin',    name: 'Plugged In Golf',   url: 'https://www.pluggedingolf.com/feed' },
   { id: 'hackerspar',   name: "Hacker's Paradise", url: 'https://www.thehackersparadise.com/feed' },
-  { id: 'golfmonthly',  name: 'Golf Monthly',     url: 'https://www.golfmonthly.com/feed' },
+  { id: 'golfmonthly',  name: 'Golf Monthly',      url: 'https://www.golfmonthly.com/feed' },
 ];
 
 // ── Validation ────────────────────────────────────────────────────────────────
@@ -31,7 +48,7 @@ function startsWithDisallowed(text, brandName) {
 async function fetchRecentArticles(brandName) {
   const parser     = new Parser({ timeout: 5000, maxRedirects: 3 });
   const brandLower = brandName.toLowerCase();
-  const cutoff     = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000); // 60 days ago
+  const cutoff     = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
 
   const results = await Promise.allSettled(
     FEEDS.map(f => parser.parseURL(f.url).then(feed => ({ name: f.name, items: feed.items || [] })))
@@ -118,7 +135,83 @@ module.exports = async (req, res) => {
   const { name, rank, di, vsMonth, mom, yoy, bestRank, bestMonth, category, topMarket } = req.body || {};
   if (!name) return res.status(400).json({ error: 'Missing required field: name' });
 
-  // Fetch recent RSS articles mentioning this brand (best-effort; don't fail on error)
+  // Derive brand_id from name (matches data.js id convention)
+  const brandId = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const monthYM = monthToYYYYMM(bestMonth || ''); // use currentMonth passed as bestMonth context
+  // Use the month from the request — frontend passes currentMonth as part of the data
+  // We'll derive it from the data: rank/di are current-month values
+  // Store by brand_id + a stable month key derived from the request
+  // The frontend caches by currentMonth already; we use the same key here
+  const supabase = getSupabase();
+
+  // ── 1. Check Supabase cache ───────────────────────────────────────────────
+  if (supabase) {
+    // We need the current month — frontend doesn't send it explicitly, so we
+    // store takes keyed by brand_id only within a month. We'll add currentMonth
+    // to the request body. For now derive from today's data cycle.
+    // The frontend sends `bestMonth` as the all-time best — we need currentMonth.
+    // Add it as an optional param; fall back to current calendar month.
+    const cm = req.body.currentMonth
+      ? monthToYYYYMM(req.body.currentMonth)
+      : `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+
+    const { data: cached } = await supabase
+      .from('brand_takes')
+      .select('take')
+      .eq('brand_id', brandId)
+      .eq('month', cm)
+      .maybeSingle();
+
+    if (cached?.take) {
+      console.log(`[take] Cache hit for "${name}" (${cm})`);
+      return res.json({ take: cached.take });
+    }
+
+    // ── 2. Generate with Claude ─────────────────────────────────────────────
+    let articles = [];
+    try {
+      articles = await fetchRecentArticles(name);
+    } catch (e) {
+      console.warn(`[take] RSS fetch failed for "${name}":`, e.message);
+    }
+
+    const newsContext = articles.length > 0
+      ? `\nRecent news articles mentioning ${name} (last 60 days):\n${articles.map((a, i) => `${i + 1}. ${a}`).join('\n')}`
+      : `\nNo recent articles mentioning ${name} were found in golf media feeds.`;
+
+    const params = { name, rank, di, vsMonth, mom, yoy, bestRank, bestMonth, category, topMarket };
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+    let take = await callClaude(client, buildUserPrompt(params, newsContext, false));
+
+    if (startsWithDisallowed(take, name)) {
+      console.warn(`[take] First response for "${name}" started with disallowed phrase. Retrying.`);
+      take = await callClaude(client, buildUserPrompt(params, newsContext, true));
+      if (startsWithDisallowed(take, name)) {
+        console.warn(`[take] Second response for "${name}" also started with disallowed phrase. Returning anyway.`);
+      }
+    }
+
+    // ── 3. Store in Supabase ────────────────────────────────────────────────
+    const { error } = await supabase.from('brand_takes').insert({
+      brand_id:   brandId,
+      brand_name: name,
+      month:      cm,
+      take,
+    });
+
+    if (error) {
+      console.warn(`[take] Supabase insert failed for "${name}":`, error.message);
+    } else {
+      console.log(`[take] Stored take for "${name}" (${cm})`);
+    }
+
+    return res.json({ take });
+  }
+
+  // ── Supabase not configured — generate without caching ───────────────────
+  console.warn('[take] Supabase not configured — generating without DB cache.');
+
   let articles = [];
   try {
     articles = await fetchRecentArticles(name);
@@ -133,17 +226,11 @@ module.exports = async (req, res) => {
   const params = { name, rank, di, vsMonth, mom, yoy, bestRank, bestMonth, category, topMarket };
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-  // First attempt
-  const firstPrompt = buildUserPrompt(params, newsContext, false);
-  let take = await callClaude(client, firstPrompt);
+  let take = await callClaude(client, buildUserPrompt(params, newsContext, false));
 
   if (startsWithDisallowed(take, name)) {
     console.warn(`[take] First response for "${name}" started with disallowed phrase. Retrying.`);
-
-    // Second attempt
-    const retryPrompt = buildUserPrompt(params, newsContext, true);
-    take = await callClaude(client, retryPrompt);
-
+    take = await callClaude(client, buildUserPrompt(params, newsContext, true));
     if (startsWithDisallowed(take, name)) {
       console.warn(`[take] Second response for "${name}" also started with disallowed phrase. Returning anyway.`);
     }
