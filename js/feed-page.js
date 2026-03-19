@@ -352,7 +352,7 @@
     var allBrands = getAllBrands();
     var renderer  = window.renderFeedPageCard || function(a) {
       return '<article class="feed-card"><div class="feed-card-body"><a href="' + escHtml(a.url) +
-             '" class="feed-card-title">' + escHtml(a.title) + '</a></div></article>';
+             '" class="feed-card-title" data-track-title="' + escHtml(a.title) + '" data-track-source="' + escHtml(a.sourceName || '') + '">' + escHtml(a.title) + '</a></div></article>';
     };
 
     var html = '';

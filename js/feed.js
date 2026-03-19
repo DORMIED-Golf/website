@@ -242,7 +242,9 @@
           '<span class="feed-time">'   + escHtml(timeAgo(article.pubDate)) + '</span>' +
         '</div>' +
         '<a href="' + escHtml(addUTM(article.url)) + '" ' +
-           'target="_blank" rel="noopener noreferrer" class="feed-card-title feed-card-title--lg">' +
+           'target="_blank" rel="noopener noreferrer" class="feed-card-title feed-card-title--lg"' +
+           ' data-track-title="' + escHtml(article.title) + '"' +
+           ' data-track-source="' + escHtml(article.sourceName) + '">' +
           escHtml(article.title) +
         '</a>' +
         excerpt +
