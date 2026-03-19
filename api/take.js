@@ -132,6 +132,8 @@ module.exports = async (req, res) => {
 
   res.setHeader('Cache-Control', 'no-store');
 
+  try {
+
   const { name, rank, di, vsMonth, mom, yoy, bestRank, bestMonth, category, topMarket } = req.body || {};
   if (!name) return res.status(400).json({ error: 'Missing required field: name' });
 
@@ -237,4 +239,9 @@ module.exports = async (req, res) => {
   }
 
   res.json({ take });
+
+  } catch (err) {
+    console.error('[take] Unhandled error:', err.message, err.stack);
+    return res.status(500).json({ error: err.message });
+  }
 };
