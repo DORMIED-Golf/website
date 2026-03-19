@@ -335,6 +335,30 @@
     return `<span class="change-val change-flat">0.0%</span>`;
   }
 
+  // After the table is in the DOM, inject "See Why →" links for brands
+  // that have a real (non-fallback) explanation for the current month.
+  function patchSeeWhyLinks() {
+    const EXP = window.DORMIED_EXPLANATIONS;
+    if (!EXP) return;
+    const curMonth = window.DORMIED_DATA.meta.currentMonth;
+    EXP.preload(curMonth).then(function (byBrand) {
+      Object.keys(byBrand).forEach(function (brandId) {
+        const exp = byBrand[brandId];
+        if (!exp || EXP.isFallback(exp.explanation)) return;
+        const row = document.querySelector('tbody tr.brand-row[data-id="' + brandId + '"]');
+        if (!row) return;
+        const cell = row.querySelector('.col-change');
+        if (!cell || cell.querySelector('.see-why-link')) return;
+        const a = document.createElement('a');
+        a.className = 'see-why-link';
+        a.href = '/brands/' + brandId + '/#bp-explanation-section';
+        a.textContent = 'See Why →';
+        a.addEventListener('click', function (e) { e.stopPropagation(); });
+        cell.appendChild(a);
+      });
+    });
+  }
+
   function buildDiHtml(diScore) {
     const pct = Math.min(diScore, 100);
     return `
@@ -468,6 +492,8 @@
     if (countEl) {
       countEl.textContent = `${sorted.length} brand${sorted.length !== 1 ? 's' : ''}`;
     }
+
+    patchSeeWhyLinks();
   }
 
   // ─── Filter/Search Controls ────────────────────────────────────────────────

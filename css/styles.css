@@ -1041,6 +1041,21 @@ button, select, input {
 .change-down { color: var(--red); }
 .change-flat { color: var(--text-muted); }
 
+/* "See Why →" inline link in change cell — desktop only */
+.see-why-link {
+  display: block;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: rgba(82, 196, 120, 0.45);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+.see-why-link:hover { color: var(--green); }
+@media (max-width: 639px) { .see-why-link { display: none; } }
+
 /* Category column */
 .cat-badge {
   display: inline-block;
