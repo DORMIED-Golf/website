@@ -61,4 +61,24 @@
     track('social_click', { platform: platform });
   });
 
+  // ── Article clicks (news feed — data attrs avoid inline quote-escaping issues) ──
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest('a.feed-card-title[data-track-title]');
+    if (!link) return;
+    track('article_click', {
+      article_title: link.getAttribute('data-track-title'),
+      source:        link.getAttribute('data-track-source'),
+    });
+  });
+
+  // ── Brand outbound link (Visit Brand button on brand pages) ────────────────
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest('a.bp-visit-link[data-track-brand]');
+    if (!link) return;
+    track('brand_outbound', {
+      brand: link.getAttribute('data-track-brand'),
+      url:   link.getAttribute('data-track-url'),
+    });
+  });
+
 })();
