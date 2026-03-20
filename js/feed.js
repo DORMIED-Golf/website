@@ -243,7 +243,8 @@
         '</div>' +
         '<a href="' + escHtml(addUTM(article.url)) + '" ' +
            'target="_blank" rel="noopener noreferrer" class="feed-card-title feed-card-title--lg"' +
-           ' onclick="if(window.DORMIED_TRACK)window.DORMIED_TRACK(\'article_click\',{article_title:' + JSON.stringify(article.title) + ',source:' + JSON.stringify(article.sourceName) + '})">' +
+           ' data-track-title="' + escHtml(article.title) + '"' +
+           ' data-track-source="' + escHtml(article.sourceName) + '">' +
           escHtml(article.title) +
         '</a>' +
         excerpt +
