@@ -15,7 +15,6 @@ const FEEDS = [
   { id: 'ncg',          name: 'National Club Golfer',  url: 'https://www.nationalclubgolfer.com/feed' },
   { id: 'hackerspar',   name: "Hacker's Paradise",     url: 'https://www.thehackersparadise.com/feed' },
   { id: 'skratch',      name: 'Skratch Golf',          url: 'https://www.skratch.golf/feed' },
-  { id: 'hypebeast',    name: 'Hypebeast',             url: 'https://hypebeast.com/feed' },
 ];
 
 function tagArticle(title, snippet) {
