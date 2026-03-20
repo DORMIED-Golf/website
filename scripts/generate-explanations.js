@@ -69,28 +69,68 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// ── Top market helper ─────────────────────────────────────────────────────────
+
+const MARKET_LABELS = {
+  us: 'United States', jp: 'Japan', kr: 'South Korea', uk: 'United Kingdom',
+  ca: 'Canada',        cn: 'China', au: 'Australia',   de: 'Germany',
+  se: 'Sweden',        fr: 'France',
+};
+
+function getTopMarket(brand, monthLabel) {
+  const g = (brand.searchesByMarket) || {};
+  let topKey = null;
+  let topVal = -Infinity;
+  for (const [key, history] of Object.entries(g)) {
+    if (key === 'global') continue;
+    const val = (history && history[monthLabel]) || 0;
+    if (val > topVal) { topVal = val; topKey = key; }
+  }
+  return topKey ? (MARKET_LABELS[topKey] || topKey.toUpperCase()) : null;
+}
+
 // ── Anthropic call ───────────────────────────────────────────────────────────
 
 async function generateExplanation(anthropic, brand, pct, monthLabel) {
-  const sign = pct > 0 ? '+' : '';
+  const sign      = pct > 0 ? '+' : '';
+  const topMarket = getTopMarket(brand, monthLabel) || brand.headquarters || 'United States';
 
   const systemPrompt =
-    'You are a golf industry analyst writing for DORMIED, a golf brand intelligence platform. ' +
-    'Your tone is knowledgeable, direct, and dry. You write for gear-obsessed golf enthusiasts ' +
-    'who follow brand culture closely and use insider terminology. ' +
-    'Never explain your search process. Never say "Based on my search results", "Based on my research", ' +
-    '"I found", "it appears", "it seems", or any similar meta-commentary. ' +
-    'Go directly to the facts. Write in tight, production-ready prose.';
+    'You are a sharp, opinionated golf industry analyst writing for DORMIED, a golf brand intelligence platform. ' +
+    'Your audience is gear-obsessed golf enthusiasts who follow brand culture closely and use insider terminology. ' +
+    'You are direct, specific, and factual. You report what happened, not what you searched for. ' +
+    'Never explain your research process. ' +
+    'Never open with or include phrases like "Based on my search results", "Based on my research", ' +
+    '"Based on available information", "I found", "it appears", "it seems", "it is worth noting", ' +
+    'or any similar meta-commentary. Never reference the search process at all. ' +
+    'Go directly to the facts as if you already know them. ' +
+    'If you cannot find a specific fact do not speculate and do not explain why. Just report what you know.';
 
   const userPrompt =
     `${brand.name} saw a ${sign}${pct.toFixed(1)}% change in global search interest on the DORMIED Index in ${monthLabel}. ` +
-    `Brand category: ${brand.category}.\n\n` +
+    `Brand category: ${brand.category}. Strongest market: ${topMarket}.\n\n` +
     `Search the web for news, tour activity, product launches, viral moments, player equipment changes, ` +
     `or media coverage involving ${brand.name} during or just before ${monthLabel} that explains this movement.\n\n` +
-    `Output exactly 2–3 bullet points starting with the • character. ` +
-    `Each bullet is one sentence. No intro text. No outro text. No preamble. Start directly with •.\n` +
-    `Each bullet must state a specific fact — name the player, product, or event. ` +
-    `Do not start any bullet with the brand name. Do not use "it appears" or "it seems".\n\n` +
+    `Output exactly 2 to 3 bullet points. Each bullet is one tight sentence stating a specific fact. ` +
+    `Name the player, product, event, or publication where relevant. Do not be vague.\n\n` +
+    `Rules that must be followed without exception:\n` +
+    `• Start each bullet with •\n` +
+    `• No intro text before the first bullet\n` +
+    `• No outro text after the last bullet\n` +
+    `• No preamble of any kind\n` +
+    `• Do not start any bullet with the brand name\n` +
+    `• Do not start any bullet with "Based", "According", "From", "My", "It appears", "It seems", ` +
+    `"There was", "There has been", or any phrase that references your research process\n` +
+    `• Start each bullet directly with the fact\n` +
+    `• If no specific cause can be identified for a bullet write only what the data shows, ` +
+    `for example: Search interest climbed 40% in the US market with no single identifiable catalyst\n\n` +
+    `Tone examples:\n` +
+    `Good: • Cameron Smith switched to their Mezz.1 Max putter two weeks before the event, triggering a wave of coverage on GolfWRX and MyGolfSpy.\n` +
+    `Good: • The Qi35 iron launch generated more earned media coverage than any TaylorMade iron release in the past three years according to Golf Digest.\n` +
+    `Good: • Search interest rose 40% in the US market with no single identifiable catalyst, consistent with broader seasonal patterns heading into spring.\n` +
+    `Bad: • Based on my search results, it appears the brand had a strong month. (meta commentary, vague)\n` +
+    `Bad: • TaylorMade saw increased interest following recent tour activity. (too vague, no specifics)\n` +
+    `Bad: • According to Golf Digest, the brand launched a new product. (disallowed opening, no specifics)\n\n` +
     `If no specific cause can be identified from available sources, output exactly this and nothing else:\n` +
     `${FALLBACK_TEXT}`;
 
@@ -170,6 +210,7 @@ async function main() {
     console.log(`  GEN   ${brand.name}  ${sign}${pct.toFixed(1)}%`);
 
     try {
+      const topMarket   = getTopMarket(brand, curLabel) || null;
       const explanation = await generateExplanation(
         anthropic, brand, pct, curLabel
       );
@@ -180,6 +221,7 @@ async function main() {
         month:             targetYYYYMM,
         explanation,
         change_percentage: parseFloat(pct.toFixed(2)),
+        top_market:        topMarket,
       });
 
       if (error) {
