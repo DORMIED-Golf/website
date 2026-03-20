@@ -15,6 +15,10 @@
   var BRAND_LIMIT = 30;
   var HOME_LIMIT  = 5;
 
+  // Supabase — public anon key, read-only
+  var SB_URL  = 'https://cimmmmnapdthqvtifpzr.supabase.co';
+  var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
+
   /* ── Local dev detection ────────────────────────────────────────────────── */
   function isLocalDev() {
     var h = window.location.hostname;
@@ -145,8 +149,12 @@
         '</div>' +
         '<a href="' + escHtml(addUTM(article.url)) + '" ' +
            'target="_blank" rel="noopener noreferrer" class="feed-card-title"' +
-           ' data-track-title="' + escHtml(article.title) + '"' +
-           ' data-track-source="' + escHtml(article.sourceName) + '">' +
+           ' data-track-title="'   + escHtml(article.title) + '"' +
+           ' data-track-source="'  + escHtml(article.sourceName) + '"' +
+           ' data-track-url="'     + escHtml(article.url) + '"' +
+           ' data-track-brands="'  + escHtml(JSON.stringify(article.brandIds || [])) + '"' +
+           ' data-track-image="'   + escHtml(article.imageUrl  || '') + '"' +
+           ' data-track-pubdate="' + escHtml(article.pubDate   || '') + '">' +
           escHtml(article.title) +
         '</a>' +
         tags +
@@ -243,8 +251,12 @@
         '</div>' +
         '<a href="' + escHtml(addUTM(article.url)) + '" ' +
            'target="_blank" rel="noopener noreferrer" class="feed-card-title feed-card-title--lg"' +
-           ' data-track-title="' + escHtml(article.title) + '"' +
-           ' data-track-source="' + escHtml(article.sourceName) + '">' +
+           ' data-track-title="'   + escHtml(article.title) + '"' +
+           ' data-track-source="'  + escHtml(article.sourceName) + '"' +
+           ' data-track-url="'     + escHtml(article.url) + '"' +
+           ' data-track-brands="'  + escHtml(JSON.stringify(article.brandIds || [])) + '"' +
+           ' data-track-image="'   + escHtml(article.imageUrl  || '') + '"' +
+           ' data-track-pubdate="' + escHtml(article.pubDate   || '') + '">' +
           escHtml(article.title) +
         '</a>' +
         excerpt +
@@ -333,10 +345,52 @@
     }
   }
 
-  /* ── Render: homepage Top Stories ──────────────────────────────────────── */
-  function renderHomeStories(articles, allBrands) {
+  /* ── Render: homepage Top Stories (most-clicked in past 7 days) ────────── */
+  function renderHomeStories(feedArticles, allBrands) {
     var el = document.getElementById('home-stories-list');
     if (!el) return;
+
+    var cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+    fetch(SB_URL + '/rest/v1/article_clicks' +
+          '?select=url,title,source_name,image_url,brand_ids,pub_date,click_count,last_clicked' +
+          '&last_clicked=gte.' + encodeURIComponent(cutoff) +
+          '&order=click_count.desc' +
+          '&limit=' + HOME_LIMIT, {
+      headers: {
+        'apikey':        SB_ANON,
+        'Authorization': 'Bearer ' + SB_ANON,
+      }
+    })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (rows) {
+      if (rows && rows.length >= 3) {
+        // Got enough clicked articles — use them
+        var articles = rows.map(function (row) {
+          return {
+            title:      row.title,
+            url:        row.url,
+            sourceName: row.source_name || '',
+            pubDate:    row.pub_date    || row.last_clicked || '',
+            imageUrl:   row.image_url  || null,
+            brandIds:   row.brand_ids  || [],
+          };
+        });
+        el.innerHTML = articles.map(function (a) {
+          return renderArticleCard(a, true, allBrands);
+        }).join('');
+      } else {
+        // Fewer than 3 clicked articles — fall back to latest feed
+        renderHomeStoriesFallback(feedArticles, allBrands, el);
+      }
+    })
+    .catch(function () {
+      // Supabase unavailable — fall back to latest feed
+      renderHomeStoriesFallback(feedArticles, allBrands, el);
+    });
+  }
+
+  function renderHomeStoriesFallback(articles, allBrands, el) {
     var slice = articles.filter(function (a) {
       return a.brandIds && a.brandIds.length > 0;
     }).slice(0, HOME_LIMIT);

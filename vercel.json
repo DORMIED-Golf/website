@@ -11,7 +11,8 @@
   "functions": {
     "api/feed.js":      { "maxDuration": 15 },
     "api/subscribe.js": { "maxDuration": 10 },
-    "api/take.js":      { "maxDuration": 30 }
+    "api/take.js":      { "maxDuration": 30 },
+    "api/click.js":     { "maxDuration": 10 }
   },
   "headers": [
     {

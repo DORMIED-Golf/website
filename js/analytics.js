@@ -65,10 +65,34 @@
   document.addEventListener('click', function (e) {
     var link = e.target.closest('a.feed-card-title[data-track-title]');
     if (!link) return;
-    track('article_click', {
-      article_title: link.getAttribute('data-track-title'),
-      source:        link.getAttribute('data-track-source'),
-    });
+
+    var title    = link.getAttribute('data-track-title')  || '';
+    var source   = link.getAttribute('data-track-source') || '';
+    var url      = link.getAttribute('data-track-url')    || link.href;
+    var imageUrl = link.getAttribute('data-track-image')  || '';
+    var pubDate  = link.getAttribute('data-track-pubdate')|| '';
+    var brandIds = [];
+    try { brandIds = JSON.parse(link.getAttribute('data-track-brands') || '[]'); } catch (x) {}
+
+    // GA4 event
+    track('article_click', { article_title: title, source: source });
+
+    // Record click in Supabase (fire-and-forget)
+    try {
+      fetch('/api/click', {
+        method:   'POST',
+        keepalive: true,
+        headers:  { 'Content-Type': 'application/json' },
+        body:     JSON.stringify({
+          url:         url,
+          title:       title,
+          source_name: source,
+          image_url:   imageUrl || null,
+          brand_ids:   brandIds,
+          pub_date:    pubDate  || null,
+        }),
+      }).catch(function () { /* ignore errors */ });
+    } catch (ex) { /* ignore */ }
   });
 
   // ── Brand outbound link (Visit Brand button on brand pages) ────────────────
