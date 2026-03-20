@@ -69,31 +69,10 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// ── Top market helper ─────────────────────────────────────────────────────────
-
-const MARKET_LABELS = {
-  us: 'United States', jp: 'Japan', kr: 'South Korea', uk: 'United Kingdom',
-  ca: 'Canada',        cn: 'China', au: 'Australia',   de: 'Germany',
-  se: 'Sweden',        fr: 'France',
-};
-
-function getTopMarket(brand, monthLabel) {
-  const g = (brand.searchesByMarket) || {};
-  let topKey = null;
-  let topVal = -Infinity;
-  for (const [key, history] of Object.entries(g)) {
-    if (key === 'global') continue;
-    const val = (history && history[monthLabel]) || 0;
-    if (val > topVal) { topVal = val; topKey = key; }
-  }
-  return topKey ? (MARKET_LABELS[topKey] || topKey.toUpperCase()) : null;
-}
-
 // ── Anthropic call ───────────────────────────────────────────────────────────
 
 async function generateExplanation(anthropic, brand, pct, monthLabel) {
-  const sign      = pct > 0 ? '+' : '';
-  const topMarket = getTopMarket(brand, monthLabel) || brand.headquarters || 'United States';
+  const sign = pct > 0 ? '+' : '';
 
   const systemPrompt =
     'You are a sharp, opinionated golf industry analyst writing for DORMIED, a golf brand intelligence platform. ' +
@@ -108,7 +87,7 @@ async function generateExplanation(anthropic, brand, pct, monthLabel) {
 
   const userPrompt =
     `${brand.name} saw a ${sign}${pct.toFixed(1)}% change in global search interest on the DORMIED Index in ${monthLabel}. ` +
-    `Brand category: ${brand.category}. Strongest market: ${topMarket}.\n\n` +
+    `Brand category: ${brand.category}.\n\n` +
     `Search the web for news, tour activity, product launches, viral moments, player equipment changes, ` +
     `or media coverage involving ${brand.name} during or just before ${monthLabel} that explains this movement.\n\n` +
     `Output exactly 2 to 3 bullet points. Each bullet is one tight sentence stating a specific fact. ` +
@@ -210,7 +189,6 @@ async function main() {
     console.log(`  GEN   ${brand.name}  ${sign}${pct.toFixed(1)}%`);
 
     try {
-      const topMarket   = getTopMarket(brand, curLabel) || null;
       const explanation = await generateExplanation(
         anthropic, brand, pct, curLabel
       );
@@ -221,7 +199,6 @@ async function main() {
         month:             targetYYYYMM,
         explanation,
         change_percentage: parseFloat(pct.toFixed(2)),
-        top_market:        topMarket,
       });
 
       if (error) {
