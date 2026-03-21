@@ -3800,6 +3800,23 @@ details[open] .faq-question::after { content: '−'; }
   color: var(--green);
   text-decoration: none;
 }
+.h2h-share-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.h2h-share-btns {
+  display: flex;
+  gap: 6px;
+}
+.h2h-share-label {
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1;
+}
 .h2h-share-icon {
   width: 12px;
   height: 12px;
