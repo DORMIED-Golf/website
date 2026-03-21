@@ -3757,14 +3757,19 @@ details[open] .faq-question::after { content: '−'; }
 
 /* ── H2H: result panel ───────────────────────────────────────────────────── */
 .h2h-result {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-lite);
   margin-top: 14px;
-  padding-top: 14px;
+  padding: 14px 14px 12px;
+  background: var(--bg-raised);
+  border-radius: 0 0 var(--radius) var(--radius);
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-bottom: -20px;
 }
 .h2h-result-score-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 8px;
 }
 .h2h-result-score {
@@ -3779,14 +3784,16 @@ details[open] .faq-question::after { content: '−'; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border: 1px solid var(--border-lite);
   border-radius: 4px;
   color: var(--text-muted);
   text-decoration: none;
   flex-shrink: 0;
   transition: border-color 0.15s, color 0.15s;
+  cursor: pointer;
+  background: transparent;
 }
 .h2h-share-btn:hover {
   border-color: var(--green);
@@ -3794,11 +3801,12 @@ details[open] .faq-question::after { content: '−'; }
   text-decoration: none;
 }
 .h2h-share-icon {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
 }
 .h2h-result-writeup {
   min-height: 18px;
+  margin-bottom: 12px;
 }
 .h2h-writeup-text {
   font-family: Inter, sans-serif;
@@ -3811,10 +3819,21 @@ details[open] .faq-question::after { content: '−'; }
   display: block;
   height: 14px;
   width: 85%;
-  background: var(--bg-raised);
+  background: var(--bg-surface);
   border-radius: 3px;
   animation: bp-take-shimmer 1.4s infinite;
 }
+/* Result footer: Full Index + Past Matches links */
+.h2h-result-footer {
+  display: flex;
+  gap: 16px;
+  padding-top: 4px;
+}
+.h2h-result-footer .h2h-cta {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+.h2h-result-footer .h2h-cta:hover { color: var(--green); }
 
 /* ── Matchups archive page ───────────────────────────────────────────────── */
 .matchups-page { max-width: 740px; margin: 0 auto; padding: 32px 20px 64px; }

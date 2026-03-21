@@ -417,6 +417,9 @@
            + '</a>';
     }
 
+    // Copy-link URL for this match-up
+    var copyUrl = 'https://dormied.com/matchups/' + todayStr + '/';
+
     // ── Assemble ──────────────────────────────────────────────────────────
     el.innerHTML =
         '<span class="h2h-category">' + esc(matchup.category) + '</span>'
@@ -433,13 +436,17 @@
       + '</div>'
       + '<div class="h2h-footer">'
       +   '<a href="/brands/' + esc(b1.id) + '/" class="h2h-cta">' + esc(b1.name) + ' \u2192</a>'
-      +   '<a href="/rankings/" class="h2h-cta h2h-cta--center">Full Index \u2192</a>'
-      +   '<a href="/matchups/" class="h2h-cta h2h-cta--center">Archive \u2192</a>'
       +   '<a href="/brands/' + esc(b2.id) + '/" class="h2h-cta h2h-cta--right">' + esc(b2.name) + ' \u2192</a>'
       + '</div>'
       + '<div class="h2h-result" id="h2h-result-panel">'
       +   '<div class="h2h-result-score-row">'
       +     '<div class="h2h-result-score">' + resultDisplay + '</div>'
+      +     '<button class="h2h-share-btn" id="h2h-copy-btn" aria-label="Copy link to this match-up">'
+      +       '<svg class="h2h-share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+      +         '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>'
+      +         '<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'
+      +       '</svg>'
+      +     '</button>'
       +     '<a href="' + esc(shareHref) + '" class="h2h-share-btn" target="_blank" rel="noopener noreferrer" aria-label="Share result on X">'
       +       '<svg class="h2h-share-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
       +         '<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>'
@@ -449,7 +456,33 @@
       +   '<div class="h2h-result-writeup" id="h2h-result-writeup">'
       +     '<span class="h2h-writeup-loading"></span>'
       +   '</div>'
+      +   '<div class="h2h-result-footer">'
+      +     '<a href="/rankings/" class="h2h-cta">Full Index \u2192</a>'
+      +     '<a href="/matchups/" class="h2h-cta">Past Matches \u2192</a>'
+      +   '</div>'
       + '</div>';
+
+    // Copy-link button behaviour
+    var copyBtn = document.getElementById('h2h-copy-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        var btn = this;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(copyUrl).then(function () {
+            btn.innerHTML =
+              '<svg class="h2h-share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+            btn.style.borderColor = 'var(--green)';
+            btn.style.color = 'var(--green)';
+            setTimeout(function () {
+              btn.innerHTML =
+                '<svg class="h2h-share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+              btn.style.borderColor = '';
+              btn.style.color = '';
+            }, 2000);
+          }).catch(function () { /* clipboard unavailable — silent fail */ });
+        }
+      });
+    }
 
     // ── Fetch result writeup (async) ──────────────────────────────────────
     fetchMatchupResult({
