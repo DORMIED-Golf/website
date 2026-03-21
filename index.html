@@ -52,7 +52,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="css/styles.css?v=20260320d">
+  <link rel="stylesheet" href="css/styles.css?v=20260321c">
 
   <!-- ── Structured Data: Organization ── -->
   <script type="application/ld+json">
@@ -127,7 +127,7 @@
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/" class="site-nav-link">Index</a>
         <a href="/feed/" class="site-nav-link">News</a>
-        <a href="/brands/" class="site-nav-link">Field</a>
+        <a href="/brands/" class="site-nav-link">Brands</a>
       </nav>
     </div>
   </header>
@@ -142,7 +142,7 @@
         <!-- ── HERO ─────────────────────────────────────────────────────── -->
         <section class="home-hero" aria-labelledby="home-headline">
           <h1 id="home-headline" class="home-hero-headline">Golf Has Enough Hot Takes. We Have Data.</h1>
-          <p class="home-hero-sub">122 brands. 11 markets. Ranked by real data, not hype.</p>
+          <p class="home-hero-sub">Our game's culture has changed. DORMIED tracks which brands are defining it, which are chasing it, and which have already lost it.</p>
 
           <!-- Market Pulse Strip -->
           <div id="market-pulse" class="market-pulse" aria-label="Market changes this month">
@@ -158,6 +158,7 @@
             <h2 id="h2h-heading" class="section-title">Today's Match-Up</h2>
             <span class="h2h-date" id="h2h-date"></span>
           </div>
+          <p class="h2h-description">Every day two brands from the same category go head to head. We compare their momentum across four metrics and let the data declare a winner. The brand capturing more attention in our game, right now, wins the match.</p>
           <div id="h2h-content">
             <!-- Populated by home.js -->
           </div>
@@ -184,9 +185,10 @@
         <!-- ── SCOREBOARD ────────────────────────────────────────────────── -->
         <section class="scoreboard-section" aria-labelledby="scoreboard-heading">
           <div class="section-header">
-            <h2 id="scoreboard-heading" class="section-title">This Month</h2>
+            <h2 id="scoreboard-heading" class="section-title">Current Month</h2>
             <span class="section-month" id="hero-month-2"></span>
           </div>
+          <p class="h2h-description">The monthly snapshot of our game's brand landscape. Who is sitting at the top, who just made a move worth paying attention to, and who is trending in the wrong direction.</p>
           <div class="scoreboard-grid">
             <div class="sb-col" id="sb-top"></div>
             <div class="sb-col" id="sb-movers"></div>
@@ -200,8 +202,27 @@
             <h2 id="why-moved-heading" class="section-title">What Drove The Change</h2>
             <span class="section-month" id="why-moved-month"></span>
           </div>
+          <p class="h2h-description">Behind every significant move in the index is a reason. A product launch, a tour moment, a viral clip, a collaboration nobody saw coming. This is what drove the biggest changes in our game's brand landscape this month.</p>
           <div id="why-moved-list" class="why-moved-list"></div>
         </section>
+
+        <!-- ── AD ───────────────────────────────────────────────────────────── -->
+        <div class="ad-mid-home" aria-hidden="true">
+          <div class="ad-leaderboard tablet-ad">
+            <ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-5259693727609263"
+     data-ad-slot="2868292443"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+          </div>
+          <div class="ad-in-table mobile-ad">
+            <ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:250px"
+     data-ad-client="ca-pub-5259693727609263"
+     data-ad-slot="2676720754"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+          </div>
+        </div>
 
         <!-- ── TOP STORIES ─────────────────────────────────────────────────── -->
         <section class="home-stories-section" aria-labelledby="stories-heading">
@@ -247,7 +268,6 @@
     <div class="container footer-inner">
       <div class="footer-brand">
         <a href="/" class="footer-logo" aria-label="DORMIED home">DORMIED</a>
-        <p class="footer-tagline">Built for the gear obsessed.</p>
         <div class="footer-social">
           <a href="https://x.com/DORMIED_GOLF" class="footer-social-link" target="_blank" rel="noopener" aria-label="DORMIED on X">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -260,7 +280,7 @@
       <nav class="footer-nav" aria-label="Footer navigation">
         <a href="/rankings/">Index</a>
         <a href="/feed/">News</a>
-        <a href="/brands/">Field</a>
+        <a href="/brands/">Brands</a>
         <a href="mailto:dormiedgolf@gmail.com">Contact</a>
         <a href="/sitemap.xml">Sitemap</a>
       </nav>
@@ -288,7 +308,7 @@
   <script src="js/data.js?v=20260317"></script>
   <script src="js/take-preview.js"></script>
   <script src="js/explanations.js?v=20260318"></script>
-  <script src="js/home.js?v=20260320d"></script>
+  <script src="js/home.js?v=20260321g"></script>
   <script src="js/feed.js?v=20260320a"></script>
   <script src="js/analytics.js?v=20260320a"></script>
   <script src="js/signup.js?v=20260319"></script>

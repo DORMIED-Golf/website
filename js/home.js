@@ -65,28 +65,58 @@
     var prev    = meta.previousMonth;
     var brands  = data.brands;
 
-    var stats = brands.map(function (b) {
-      var g    = (b.searchesByMarket && b.searchesByMarket.global) || {};
-      var curV = g[cur]  || 0;
-      var preV = g[prev] || 0;
-      var pct  = preV > 0 ? (curV - preV) / preV * 100 : null;
-      return {
-        id:       b.id,
-        name:     b.name,
-        logo:     b.logo || '',
-        category: b.category || '',
-        curV:     curV,
-        preV:     preV,
-        pct:      pct
-      };
-    }).filter(function (b) { return b.curV > 0; });
+    var ago3 = shiftMonth(cur, -3); // 3 months before current (matches app.js ago3Months)
 
-    var maxV = 0;
-    stats.forEach(function (b) { if (b.curV > maxV) maxV = b.curV; });
-    stats.forEach(function (b) { b.di = maxV > 0 ? Math.round(b.curV / maxV * 100) : 0; });
+    // Compute over ALL brands (matching app.js — filter for display later)
+    var all = brands.map(function (b) {
+      var g     = (b.searchesByMarket && b.searchesByMarket.global) || {};
+      var curV  = g[cur]  || 0;
+      var preV  = g[prev] || 0;
+      var ago3V = g[ago3] || 0;
+      var pct   = preV > 0 ? (curV - preV) / preV * 100 : null;
+      return { id: b.id, name: b.name, logo: b.logo || '', category: b.category || '',
+               curV: curV, preV: preV, ago3V: ago3V, pct: pct };
+    });
 
-    stats.sort(function (a, b) { return b.di - a.di; });
-    stats.forEach(function (b, i) { b.rank = i + 1; });
+    var maxV = 0, maxPreV = 0, maxAgo3V = 0;
+    all.forEach(function (b) {
+      if (b.curV  > maxV)     maxV     = b.curV;
+      if (b.preV  > maxPreV)  maxPreV  = b.preV;
+      if (b.ago3V > maxAgo3V) maxAgo3V = b.ago3V;
+    });
+    all.forEach(function (b) {
+      b.di     = maxV     > 0 ? b.curV  / maxV     * 100 : 0;
+      b.prevDI = maxPreV  > 0 ? b.preV  / maxPreV  * 100 : 0;
+      b.ago3DI = maxAgo3V > 0 ? b.ago3V / maxAgo3V * 100 : 0;
+    });
+
+    // Previous rank over all brands — sort from original order (matches app.js)
+    var prevSorted = all.slice().sort(function (a, b) {
+      var d = b.prevDI - a.prevDI;
+      if (Math.abs(d) > 0.0001) return d;
+      return b.ago3DI - a.ago3DI;
+    });
+    var prevRankMap = {};
+    prevSorted.forEach(function (b, i) { prevRankMap[b.id] = i + 1; });
+
+    // Sort current: DI desc with prevDI/ago3DI tiebreaks (matches app.js)
+    all.sort(function (a, b) {
+      var d = b.di - a.di;
+      if (Math.abs(d) > 0.0001) return d;
+      var pd = b.prevDI - a.prevDI;
+      if (Math.abs(pd) > 0.0001) return pd;
+      return b.ago3DI - a.ago3DI;
+    });
+    all.forEach(function (b, i) { b.rank = i + 1; });
+
+    all.forEach(function (b) {
+      var pr = prevRankMap[b.id];
+      b.rankChange = (pr != null && b.preV > 0) ? pr - b.rank : null;
+      b.di = parseFloat(b.di.toFixed(1));
+    });
+
+    // Filter to brands with current data for display
+    var stats = all.filter(function (b) { return b.curV > 0; });
 
     return stats;
   }
@@ -174,6 +204,12 @@
          +   '<div class="sb-card-info">'
          +     '<div class="sb-card-name">' + esc(brand.name) + '</div>'
          +   '</div>'
+         +   (brand.rankChange != null && brand.rankChange !== 0
+               ? '<div class="sb-card-rc ' + (brand.rankChange > 0 ? 'sb-card-rc--up' : 'sb-card-rc--down') + '">'
+                 + (brand.rankChange > 0 ? '▲' : '▼') + Math.abs(brand.rankChange)
+                 + '</div>'
+               : (brand.rankChange === 0 ? '<div class="sb-card-rc sb-card-rc--flat">—</div>' : ''))
+         +   '<div class="sb-card-di">' + (brand.di != null ? brand.di.toFixed(1) : '—') + '</div>'
          + '</a>';
   }
 
@@ -548,6 +584,8 @@
     var meta    = window.DORMIED_DATA.meta;
     var monthEl = document.getElementById('hero-month');
     if (monthEl) monthEl.textContent = meta.currentMonth;
+    var monthEl2 = document.getElementById('hero-month-2');
+    if (monthEl2) monthEl2.textContent = meta.currentMonth;
   }
 
   /* ─────────────────────────────────────────────────────────────────────── */

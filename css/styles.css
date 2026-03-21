@@ -2646,6 +2646,22 @@ details[open] .faq-question::after { content: '−'; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.sb-card-rc {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.sb-card-rc--up   { color: var(--green); }
+.sb-card-rc--down { color: var(--red); }
+.sb-card-rc--flat { color: var(--text-muted); }
+.sb-card-di {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-left: 6px;
+  flex-shrink: 0;
+}
 .sb-empty {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -2756,6 +2772,13 @@ details[open] .faq-question::after { content: '−'; }
   font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--text-muted);
+}
+.h2h-description {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 14px 0 14px;
 }
 
 /* H2H: brand header row (name + logo + rank, on each side of VS) */
@@ -3200,7 +3223,7 @@ details[open] .faq-question::after { content: '−'; }
 
 /* ── Why This Month Moved (home page section) ──────────────────────────────── */
 .why-moved-section {
-  padding: 32px 0 8px;
+  padding: 0 0 8px;
 }
 .why-moved-list {
   display: flex;
