@@ -35,7 +35,7 @@
   /* ── Logo img HTML (with initials fallback) ───────────────────────────── */
   function logoImg(brand, cls, size) {
     size = size || 20;
-    var ini = esc(initials(brand.name));
+    var ini      = esc(initials(brand.name));
     var fallback = 'this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'';
     if (brand.logo) {
       return '<img class="' + cls + '" src="' + esc(brand.logo) + '" alt="" '
@@ -44,6 +44,15 @@
            + '<span class="brand-initials-fallback ' + cls + '-fallback" style="display:none">' + ini + '</span>';
     }
     return '<span class="brand-initials-fallback ' + cls + '-fallback">' + ini + '</span>';
+  }
+
+  /* ── Month shift helper ("Feb 2026" + delta → "Nov 2025") ────────────── */
+  var MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function shiftMonth(label, delta) {
+    var parts = label.split(' ');
+    var total = parseInt(parts[1], 10) * 12 + MONTH_NAMES.indexOf(parts[0]) + delta;
+    return MONTH_NAMES[((total % 12) + 12) % 12] + ' ' + Math.floor(total / 12);
   }
 
   /* ─────────────────────────────────────────────────────────────────────── */
@@ -56,7 +65,6 @@
     var prev    = meta.previousMonth;
     var brands  = data.brands;
 
-    // Gather stats for each brand (global market only)
     var stats = brands.map(function (b) {
       var g    = (b.searchesByMarket && b.searchesByMarket.global) || {};
       var curV = g[cur]  || 0;
@@ -73,12 +81,10 @@
       };
     }).filter(function (b) { return b.curV > 0; });
 
-    // Normalise to DI (0–100 relative to max)
     var maxV = 0;
     stats.forEach(function (b) { if (b.curV > maxV) maxV = b.curV; });
     stats.forEach(function (b) { b.di = maxV > 0 ? Math.round(b.curV / maxV * 100) : 0; });
 
-    // Sort by DI desc → assign rank
     stats.sort(function (a, b) { return b.di - a.di; });
     stats.forEach(function (b, i) { b.rank = i + 1; });
 
@@ -115,7 +121,6 @@
     var d    = new Date();
     var seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
 
-    // Group by category — use only primary (first semicolon-delimited) category
     var bycat = {};
     ranked.forEach(function (b) {
       var cat = (b.category || '').split(';')[0].trim();
@@ -124,16 +129,13 @@
       bycat[cat].push(b);
     });
 
-    // Only categories with 2+ brands
     var cats = Object.keys(bycat).filter(function (c) { return bycat[c].length >= 2; });
     if (!cats.length) return null;
 
-    // Pick category deterministically from date seed
-    var catIdx   = seed % cats.length;
-    var cat      = cats[catIdx];
-    var catBrands = bycat[cat]; // already sorted by DI desc from computeHomeRankings
+    var catIdx    = seed % cats.length;
+    var cat       = cats[catIdx];
+    var catBrands = bycat[cat];
 
-    // Pick two adjacent brands — offset shifts within valid range
     var maxOffset = catBrands.length - 2;
     var offset    = Math.floor(((seed * 31337) % (maxOffset + 1)));
     offset        = Math.max(0, Math.min(offset, maxOffset));
@@ -176,7 +178,6 @@
   }
 
   function renderScoreboard(ranked) {
-    // Top 5
     var topEl = document.getElementById('sb-top');
     if (topEl) {
       topEl.innerHTML = '<div class="sb-col-title">Top 5</div>'
@@ -185,7 +186,6 @@
           }).join('');
     }
 
-    // Biggest movers (top 5 by % gain, must have prev data)
     var moversEl = document.getElementById('sb-movers');
     if (moversEl) {
       var movers = ranked.filter(function (b) { return b.pct !== null && b.pct > 0; })
@@ -199,7 +199,6 @@
             : '<p class="sb-empty">No data</p>');
     }
 
-    // Biggest drops (top 5 by % fall)
     var dropsEl = document.getElementById('sb-drops');
     if (dropsEl) {
       var drops = ranked.filter(function (b) { return b.pct !== null && b.pct < 0; })
@@ -217,30 +216,29 @@
   /* ─────────────────────────────────────────────────────────────────────── */
   /* ── RENDER: DAILY H2H ────────────────────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────────────── */
-  function renderH2H(matchup) {
+  function renderH2H(matchup, ranked) {
     var el = document.getElementById('h2h-content');
     if (!el || !matchup) {
       if (el) el.innerHTML = '<p class="sb-empty">No match-up available today.</p>';
       return;
     }
 
-    // Date label
-    var dateEl = document.getElementById('h2h-date');
+    // Date label + ISO string
+    var d       = new Date();
+    var dateEl  = document.getElementById('h2h-date');
     if (dateEl) {
-      var d = new Date();
       dateEl.textContent = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     }
+    var todayStr = d.getFullYear() + '-'
+      + String(d.getMonth() + 1).padStart(2, '0') + '-'
+      + String(d.getDate()).padStart(2, '0');
 
     var meta      = window.DORMIED_DATA.meta;
     var rawBrands = window.DORMIED_DATA.brands;
     var cur       = meta.currentMonth;
     var prev      = meta.previousMonth;
+    var mo12ago   = shiftMonth(cur, -12);
 
-    // 12-months-ago key: parse "Feb 2026" → "Feb 2025"
-    var curParts = cur.split(' ');
-    var mo12ago  = curParts[0] + ' ' + (parseInt(curParts[1], 10) - 1);
-
-    // Find raw brand object by id
     function findRaw(id) {
       for (var i = 0; i < rawBrands.length; i++) {
         if (rawBrands[i].id === id) return rawBrands[i];
@@ -248,166 +246,261 @@
       return null;
     }
 
-    // Get global search value for a given month
     function gVal(raw, month) {
       var g = (raw && raw.searchesByMarket && raw.searchesByMarket.global) || {};
       return g[month] || 0;
     }
 
-    // % change helper
     function pctChange(curV, preV) {
       return preV > 0 ? (curV - preV) / preV * 100 : null;
     }
 
-    // Build a map of { marketKey → maxSearchVolume } across all brands for cur month
-    // Used to normalise per-market DI (how dominant this brand is in each country)
-    function buildMarketMaxMap() {
-      var brands = window.DORMIED_DATA.brands;
-      var maxMap = {};
-      meta.markets.forEach(function (mkt) {
-        if (mkt.key === 'global') return;
-        var maxV = 0;
-        brands.forEach(function (b) {
-          var g = (b.searchesByMarket && b.searchesByMarket[mkt.key]) || {};
-          var v = g[cur] || 0;
-          if (v > maxV) maxV = v;
-        });
-        maxMap[mkt.key] = maxV;
-      });
-      return maxMap;
+    // 3-month trend: avg(cur, cur-1, cur-2) vs avg(cur-3, cur-4, cur-5)
+    function threeMoTrend(raw) {
+      var g      = (raw && raw.searchesByMarket && raw.searchesByMarket.global) || {};
+      var last3  = [shiftMonth(cur, -2), shiftMonth(cur, -1), cur];
+      var prior3 = [shiftMonth(cur, -5), shiftMonth(cur, -4), shiftMonth(cur, -3)];
+      var l3avg  = last3.reduce(function (s, m) { return s + (g[m] || 0); }, 0) / 3;
+      var p3avg  = prior3.reduce(function (s, m) { return s + (g[m] || 0); }, 0) / 3;
+      return p3avg > 0 ? (l3avg - p3avg) / p3avg * 100 : null;
     }
 
-    // Return top N markets for a brand as [{ flag, label, di }] sorted by di desc
-    function topMarkets(raw, maxMap, n) {
-      var results = [];
-      meta.markets.forEach(function (mkt) {
-        if (mkt.key === 'global') return;
-        var maxV = maxMap[mkt.key] || 0;
-        var g = (raw && raw.searchesByMarket && raw.searchesByMarket[mkt.key]) || {};
-        var v = g[cur] || 0;
-        if (maxV > 0 && v > 0) {
-          results.push({ flag: mkt.flag, label: mkt.label, di: Math.round(v / maxV * 100) });
+    // Category rank within sorted ranked list
+    function getCatRank(b) {
+      var cat = (b.category || '').split(';')[0].trim();
+      if (!cat) return null;
+      var catBrands = ranked.filter(function (r) {
+        return (r.category || '').split(';')[0].trim() === cat;
+      });
+      for (var i = 0; i < catBrands.length; i++) {
+        if (catBrands[i].id === b.id) {
+          return { rank: i + 1, category: cat, total: catBrands.length };
         }
-      });
-      results.sort(function (a, b) { return b.di - a.di; });
-      return results.slice(0, n || 3);
+      }
+      return null;
     }
 
-    // Format top markets as "🇺🇸 95 · 🇨🇦 87 · 🇦🇺 72"
-    function fmtTopMarkets(mkts) {
-      if (!mkts.length) return '—';
-      return mkts.map(function (m) { return m.flag + '\u202f' + m.di.toFixed(1); }).join(' · ');
-    }
-
-    var b1 = matchup.brand1, b2 = matchup.brand2;
+    var b1   = matchup.brand1, b2 = matchup.brand2;
     var raw1 = findRaw(b1.id), raw2 = findRaw(b2.id);
 
     var cur1 = gVal(raw1, cur),     cur2 = gVal(raw2, cur);
     var pre1 = gVal(raw1, prev),    pre2 = gVal(raw2, prev);
     var y1   = gVal(raw1, mo12ago), y2   = gVal(raw2, mo12ago);
 
-    var mm1  = pctChange(cur1, pre1), mm2  = pctChange(cur2, pre2);
-    var yr1  = pctChange(cur1, y1),   yr2  = pctChange(cur2, y2);
+    var mm1 = pctChange(cur1, pre1), mm2 = pctChange(cur2, pre2);
+    var tm1 = threeMoTrend(raw1),    tm2 = threeMoTrend(raw2);
+    var yr1 = pctChange(cur1, y1),   yr2 = pctChange(cur2, y2);
 
-    var maxMap   = buildMarketMaxMap();
-    var mkts1    = fmtTopMarkets(topMarkets(raw1, maxMap, 3));
-    var mkts2    = fmtTopMarkets(topMarkets(raw2, maxMap, 3));
+    var fd1 = (raw1 && raw1.founded)      ? String(raw1.founded)      : null;
+    var fd2 = (raw2 && raw2.founded)      ? String(raw2.founded)      : null;
+    var hq1 = (raw1 && raw1.headquarters) ? raw1.headquarters          : null;
+    var hq2 = (raw2 && raw2.headquarters) ? raw2.headquarters          : null;
 
-    var fd1 = (raw1 && raw1.founded)      ? String(raw1.founded)      : '—';
-    var fd2 = (raw2 && raw2.founded)      ? String(raw2.founded)      : '—';
-    var hq1 = (raw1 && raw1.headquarters) ? raw1.headquarters         : '—';
-    var hq2 = (raw2 && raw2.headquarters) ? raw2.headquarters         : '—';
+    var cr1 = getCatRank(b1);
+    var cr2 = getCatRank(b2);
 
-    // ── Row builders ──────────────────────────────────────────────────────
+    // ── Match result calculation ─────────────────────────────────────────
+    // Award 1 pt to higher numeric value per stat (higher = better, even for negatives)
+    var pts1 = 0, pts2 = 0;
 
-    // DI bar row — bars fill proportionally to each other
+    function awardPt(v1, v2) {
+      if (v1 === null || v2 === null) return;
+      if (v1 > v2) pts1++;
+      else if (v2 > v1) pts2++;
+    }
+
+    awardPt(b1.di, b2.di);
+    awardPt(mm1, mm2);
+    awardPt(tm1, tm2);
+    awardPt(yr1, yr2);
+
+    var resultScore, resultWinner, resultDisplay;
+    if (pts1 > pts2) {
+      resultWinner  = b1.name;
+      resultScore   = pts1 + 'UP';
+      resultDisplay = esc(b1.name) + ' def. ' + esc(b2.name) + ' ' + resultScore;
+    } else if (pts2 > pts1) {
+      resultWinner  = b2.name;
+      resultScore   = pts2 + 'UP';
+      resultDisplay = esc(b2.name) + ' def. ' + esc(b1.name) + ' ' + resultScore;
+    } else {
+      resultWinner  = null;
+      resultScore   = 'EVEN';
+      resultDisplay = 'EVEN';
+    }
+
+    // Share to X
+    var shareUrl, shareTweet;
+    if (resultWinner) {
+      var loserName = resultWinner === b1.name ? b2.name : b1.name;
+      shareUrl   = 'https://dormied.com/matchups/' + todayStr;
+      shareTweet = resultWinner + ' def. ' + loserName + ' ' + resultScore +
+                   ' on the DORMIED Index. ' + shareUrl;
+    } else {
+      shareUrl   = 'https://dormied.com/matchups/' + todayStr;
+      shareTweet = b1.name + ' vs ' + b2.name + ' — EVEN on the DORMIED Index. ' + shareUrl;
+    }
+    var shareHref = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareTweet);
+
+    // ── Row builders ─────────────────────────────────────────────────────
+    var CK = '<span class="h2h-check" aria-hidden="true">&#10003;</span>';
+
+    // DI bar row with checkmark
     function diRow() {
-      var hi = Math.max(b1.di, b2.di) || 1;
-      var p1 = Math.round(b1.di / hi * 100);
-      var p2 = Math.round(b2.di / hi * 100);
-      var win1 = b1.di >= b2.di ? ' h2h-val--win' : '';
-      var win2 = b2.di >= b1.di ? ' h2h-val--win' : '';
+      var hi   = Math.max(b1.di, b2.di) || 1;
+      var p1   = Math.round(b1.di / hi * 100);
+      var p2   = Math.round(b2.di / hi * 100);
+      var win1 = b1.di > b2.di;
+      var win2 = b2.di > b1.di;
+      var cls1 = ' h2h-di-num' + (win1 ? ' h2h-val--win' : '');
+      var cls2 = ' h2h-di-num' + (win2 ? ' h2h-val--win' : '');
       return '<div class="h2h-stat-row h2h-stat-row--di">'
            +   '<div class="h2h-di-cell">'
-           +     '<span class="h2h-di-num' + win1 + '">' + b1.di.toFixed(1) + '</span>'
+           +     '<div class="h2h-di-top">'
+           +       '<span class="' + cls1.trim() + '">' + b1.di.toFixed(1) + '</span>'
+           +       (win1 ? CK : '')
+           +     '</div>'
            +     '<div class="h2h-bar-track"><div class="h2h-bar-fill" style="width:' + p1 + '%"></div></div>'
            +   '</div>'
            +   '<div class="h2h-stat-label">DI Score</div>'
            +   '<div class="h2h-di-cell h2h-di-cell--right">'
            +     '<div class="h2h-bar-track"><div class="h2h-bar-fill" style="width:' + p2 + '%"></div></div>'
-           +     '<span class="h2h-di-num' + win2 + '">' + b2.di.toFixed(1) + '</span>'
+           +     '<div class="h2h-di-top h2h-di-top--right">'
+           +       (win2 ? CK : '')
+           +       '<span class="' + cls2.trim() + '">' + b2.di.toFixed(1) + '</span>'
+           +     '</div>'
            +   '</div>'
            + '</div>';
     }
 
-    // % change row — red/green colour + bold winner
-    function pctRow(p1, label, p2) {
-      var c1 = p1 === null ? '' : p1 > 0 ? 'h2h-val--up' : p1 < 0 ? 'h2h-val--down' : '';
-      var c2 = p2 === null ? '' : p2 > 0 ? 'h2h-val--up' : p2 < 0 ? 'h2h-val--down' : '';
-      if (p1 !== null && p2 !== null && p1 > p2) c1 += ' h2h-val--win';
-      if (p1 !== null && p2 !== null && p2 > p1) c2 += ' h2h-val--win';
-      var s1 = p1 !== null ? fmtPct(p1) : '—';
-      var s2 = p2 !== null ? fmtPct(p2) : '—';
+    // % change row with optional checkmark for scored stats
+    function pctRow(p1, label, p2, scored) {
+      var c1   = p1 === null ? '' : p1 > 0 ? 'h2h-val--up' : p1 < 0 ? 'h2h-val--down' : '';
+      var c2   = p2 === null ? '' : p2 > 0 ? 'h2h-val--up' : p2 < 0 ? 'h2h-val--down' : '';
+      var win1 = scored && p1 !== null && p2 !== null && p1 > p2;
+      var win2 = scored && p1 !== null && p2 !== null && p2 > p1;
+      if (win1) c1 += ' h2h-val--win';
+      if (win2) c2 += ' h2h-val--win';
+      var s1 = p1 !== null ? fmtPct(p1) : '\u2014';
+      var s2 = p2 !== null ? fmtPct(p2) : '\u2014';
       return '<div class="h2h-stat-row">'
-           +   '<div class="h2h-val ' + c1.trim() + '">' + esc(s1) + '</div>'
+           +   '<div class="h2h-val-wrap">'
+           +     '<div class="h2h-val ' + c1.trim() + '">' + esc(s1) + '</div>'
+           +     (win1 ? CK : '')
+           +   '</div>'
            +   '<div class="h2h-stat-label">' + esc(label) + '</div>'
-           +   '<div class="h2h-val h2h-val--right ' + c2.trim() + '">' + esc(s2) + '</div>'
+           +   '<div class="h2h-val-wrap h2h-val-wrap--right">'
+           +     (win2 ? CK : '')
+           +     '<div class="h2h-val h2h-val--right ' + c2.trim() + '">' + esc(s2) + '</div>'
+           +   '</div>'
            + '</div>';
     }
 
-    // Numeric row — bold the higher value
-    function numRow(n1, label, n2, fmtFn) {
-      var c1 = n1 > n2 ? 'h2h-val--win' : '';
-      var c2 = n2 > n1 ? 'h2h-val--win' : '';
-      return '<div class="h2h-stat-row">'
-           +   '<div class="h2h-val ' + c1 + '">' + esc(fmtFn(n1)) + '</div>'
-           +   '<div class="h2h-stat-label">' + esc(label) + '</div>'
-           +   '<div class="h2h-val h2h-val--right ' + c2 + '">' + esc(fmtFn(n2)) + '</div>'
-           + '</div>';
-    }
-
-    // Plain info row — no highlighting
-    function infoRow(v1, label, v2) {
-      return '<div class="h2h-stat-row">'
-           +   '<div class="h2h-val">' + esc(v1) + '</div>'
-           +   '<div class="h2h-stat-label">' + esc(label) + '</div>'
-           +   '<div class="h2h-val h2h-val--right">' + esc(v2) + '</div>'
-           + '</div>';
+    // ── Brand header with rank, cat rank, and founded/HQ context ─────────
+    function brandHd(b, cr, fd, hq, isRight) {
+      var cls    = 'h2h-brand-hd' + (isRight ? ' h2h-brand-hd--right' : '');
+      var crHtml = cr
+        ? '<div class="h2h-brand-hd-catrank">Rank ' + cr.rank + ' in ' + esc(cr.category) + '</div>'
+        : '';
+      var ctxParts = [];
+      if (fd) ctxParts.push(esc(fd));
+      if (hq) ctxParts.push(esc(hq));
+      var ctxHtml = ctxParts.length
+        ? '<div class="h2h-brand-hd-context">' + ctxParts.join(' &middot; ') + '</div>'
+        : '';
+      return '<a href="/brands/' + esc(b.id) + '/" class="' + cls + '" data-brand-id="' + esc(b.id) + '">'
+           +   logoImg(b, 'h2h-logo', 40)
+           +   '<div class="h2h-brand-hd-name">' + esc(b.name) + '</div>'
+           +   '<div class="h2h-brand-hd-rank">Rank #' + b.rank + '</div>'
+           +   crHtml
+           +   ctxHtml
+           + '</a>';
     }
 
     // ── Assemble ──────────────────────────────────────────────────────────
     el.innerHTML =
         '<span class="h2h-category">' + esc(matchup.category) + '</span>'
       + '<div class="h2h-vs-row">'
-      +   '<a href="/brands/' + esc(b1.id) + '/" class="h2h-brand-hd" data-brand-id="' + esc(b1.id) + '">'
-      +     logoImg(b1, 'h2h-logo', 40)
-      +     '<div class="h2h-brand-hd-name">' + esc(b1.name) + '</div>'
-      +     '<div class="h2h-brand-hd-rank">Rank #' + b1.rank + '</div>'
-      +   '</a>'
+      +   brandHd(b1, cr1, fd1, hq1, false)
       +   '<div class="h2h-vs-badge">VS</div>'
-      +   '<a href="/brands/' + esc(b2.id) + '/" class="h2h-brand-hd h2h-brand-hd--right" data-brand-id="' + esc(b2.id) + '">'
-      +     logoImg(b2, 'h2h-logo', 40)
-      +     '<div class="h2h-brand-hd-name">' + esc(b2.name) + '</div>'
-      +     '<div class="h2h-brand-hd-rank">Rank #' + b2.rank + '</div>'
-      +   '</a>'
-      + '</div>'
-      + '<div class="h2h-footer">'
-      +   '<a href="/brands/' + esc(b1.id) + '/" class="h2h-cta">' + esc(b1.name) + ' →</a>'
-      +   '<a href="/rankings/" class="h2h-cta h2h-cta--center">Full Index →</a>'
-      +   '<a href="/brands/' + esc(b2.id) + '/" class="h2h-cta h2h-cta--right">' + esc(b2.name) + ' →</a>'
+      +   brandHd(b2, cr2, fd2, hq2, true)
       + '</div>'
       + '<div class="h2h-stat-grid">'
       +   diRow()
-      +   pctRow(mm1, 'M/M Change', mm2)
-      +   pctRow(yr1, '12-Month Trend', yr2)
-      +   infoRow(mkts1, 'Top Markets', mkts2)
-      +   infoRow(fd1, 'Founded', fd2)
-      +   infoRow(hq1, 'HQ', hq2)
+      +   pctRow(mm1, 'M/M Change',    mm2, true)
+      +   pctRow(tm1, '3M Trend',      tm2, true)
+      +   pctRow(yr1, '12M Trend',     yr2, true)
       + '</div>'
-      + '<div class="h2h-insights">'
-      +   '<div class="h2h-insight-box" data-h2h-insight-for="' + esc(b1.id) + '"><div class="h2h-insight-header"><span class="h2h-insight-label">' + esc(b1.name) + '</span><span class="h2h-read-tag">THE READ <span class="h2h-read-month">' + esc(cur) + '</span></span></div><div class="h2h-insight-text"></div></div>'
-      +   '<div class="h2h-insight-box h2h-insight-box--right" data-h2h-insight-for="' + esc(b2.id) + '"><div class="h2h-insight-header"><span class="h2h-insight-label">' + esc(b2.name) + '</span><span class="h2h-read-tag">THE READ <span class="h2h-read-month">' + esc(cur) + '</span></span></div><div class="h2h-insight-text"></div></div>'
+      + '<div class="h2h-footer">'
+      +   '<a href="/brands/' + esc(b1.id) + '/" class="h2h-cta">' + esc(b1.name) + ' \u2192</a>'
+      +   '<a href="/rankings/" class="h2h-cta h2h-cta--center">Full Index \u2192</a>'
+      +   '<a href="/matchups/" class="h2h-cta h2h-cta--center">Archive \u2192</a>'
+      +   '<a href="/brands/' + esc(b2.id) + '/" class="h2h-cta h2h-cta--right">' + esc(b2.name) + ' \u2192</a>'
+      + '</div>'
+      + '<div class="h2h-result" id="h2h-result-panel">'
+      +   '<div class="h2h-result-score-row">'
+      +     '<div class="h2h-result-score">' + resultDisplay + '</div>'
+      +     '<a href="' + esc(shareHref) + '" class="h2h-share-btn" target="_blank" rel="noopener noreferrer" aria-label="Share result on X">'
+      +       '<svg class="h2h-share-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
+      +         '<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>'
+      +       '</svg>'
+      +     '</a>'
+      +   '</div>'
+      +   '<div class="h2h-result-writeup" id="h2h-result-writeup">'
+      +     '<span class="h2h-writeup-loading"></span>'
+      +   '</div>'
       + '</div>';
+
+    // ── Fetch result writeup (async) ──────────────────────────────────────
+    fetchMatchupResult({
+      brand_a_id:   b1.id,   brand_a_name: b1.name,  brand_a_logo: b1.logo || '',
+      brand_b_id:   b2.id,   brand_b_name: b2.name,  brand_b_logo: b2.logo || '',
+      brand_a_di:   b1.di,   brand_b_di:   b2.di,
+      brand_a_mom:  mm1,     brand_b_mom:  mm2,
+      brand_a_3m:   tm1,     brand_b_3m:   tm2,
+      brand_a_12m:  yr1,     brand_b_12m:  yr2,
+      result_score: resultScore,
+      result_winner: resultWinner,
+      pts_a: pts1, pts_b: pts2,
+      category: matchup.category,
+      date: todayStr,
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────── */
+  /* ── FETCH MATCH-UP RESULT WRITE-UP ──────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  function fetchMatchupResult(payload) {
+    var cacheKey  = 'dormied_matchup_result_' + payload.date;
+    var writeupEl = document.getElementById('h2h-result-writeup');
+    if (!writeupEl) return;
+
+    var cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      writeupEl.innerHTML = '<p class="h2h-writeup-text">' + esc(cached) + '</p>';
+      return;
+    }
+
+    fetch('/api/matchup-result', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (data) {
+      if (data.writeup) {
+        sessionStorage.setItem(cacheKey, data.writeup);
+        if (writeupEl) {
+          writeupEl.innerHTML = '<p class="h2h-writeup-text">' + esc(data.writeup) + '</p>';
+        }
+      } else {
+        if (writeupEl) writeupEl.innerHTML = '';
+      }
+    })
+    .catch(function (err) {
+      console.warn('[matchup-result] fetch failed:', err.message);
+      if (writeupEl) writeupEl.innerHTML = '';
+    });
   }
 
   /* ─────────────────────────────────────────────────────────────────────── */
@@ -422,16 +515,13 @@
   /* ─────────────────────────────────────────────────────────────────────── */
   /* ── EXPLANATIONS PATCH ────────────────────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────────────── */
-
-  // After the DOM is rendered, asynchronously fill explanation sections.
   function patchExplanations(monthLabel) {
     if (!window.DORMIED_EXPLANATIONS) return;
-    var EXP   = window.DORMIED_EXPLANATIONS;
-    var toBullets = (window.DORMIED_UTILS && window.DORMIED_UTILS.explanationToBullets) || function (t) { return '<p>' + t + '</p>'; };
+    var EXP        = window.DORMIED_EXPLANATIONS;
+    var toBullets  = (window.DORMIED_UTILS && window.DORMIED_UTILS.explanationToBullets)
+                     || function (t) { return '<p>' + t + '</p>'; };
 
     EXP.preload(monthLabel).then(function () {
-
-      // ── "Why This Month Moved" section ────────────────────────────────
       var whySection = document.getElementById('why-moved-section');
       var whyList    = document.getElementById('why-moved-list');
       var whyMonth   = document.getElementById('why-moved-month');
@@ -439,8 +529,7 @@
       if (whySection && whyList) {
         if (whyMonth) whyMonth.textContent = monthLabel;
 
-        // Collect top 3 biggest movers with real (non-fallback) explanations
-        var seen = {};
+        var seen  = {};
         var items = [];
         var cards = document.querySelectorAll('#sb-movers .sb-card');
         cards.forEach(function (card) {
@@ -470,135 +559,6 @@
           whySection.hidden = false;
         }
       }
-
-    });
-  }
-
-  /* ─────────────────────────────────────────────────────────────────────── */
-  /* ── THE READ: H2H ────────────────────────────────────────────────────── */
-  /* ─────────────────────────────────────────────────────────────────────── */
-
-  var MONTH_NAMES_READ = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-  function shiftMonthRead(label, delta) {
-    var parts = label.split(' ');
-    var total = parseInt(parts[1]) * 12 + MONTH_NAMES_READ.indexOf(parts[0]) + delta;
-    return MONTH_NAMES_READ[((total % 12) + 12) % 12] + ' ' + Math.floor(total / 12);
-  }
-
-  function computeH2HBrandStats(brandId, rankedBrand) {
-    var data  = window.DORMIED_DATA;
-    var meta  = data.meta;
-    var cur   = meta.currentMonth;
-    var brand = data.brands.find(function (b) { return b.id === brandId; });
-    if (!brand) return null;
-
-    var g = (brand.searchesByMarket && brand.searchesByMarket.global) || {};
-    var curV  = g[cur] || 0;
-    var prevM = shiftMonthRead(cur, -1);
-    var prevV = g[prevM] || 0;
-    var vsMonth = prevV > 0 ? (curV - prevV) / prevV * 100 : null;
-
-    // Year-over-year
-    var yoyM = shiftMonthRead(cur, -12);
-    var yoyV = g[yoyM] || 0;
-    var yoy  = yoyV > 0 ? (curV - yoyV) / yoyV * 100 : null;
-
-    // 3-month trend
-    var last3  = [shiftMonthRead(cur, -2), shiftMonthRead(cur, -1), cur];
-    var prior3 = [shiftMonthRead(cur, -5), shiftMonthRead(cur, -4), shiftMonthRead(cur, -3)];
-    var l3avg  = last3.reduce(function (s, m) { return s + (g[m] || 0); }, 0) / 3;
-    var p3avg  = prior3.reduce(function (s, m) { return s + (g[m] || 0); }, 0) / 3;
-    var mom    = p3avg > 0 ? (l3avg - p3avg) / p3avg * 100 : null;
-
-    // Best rank: find month with highest volume, compute rank in that month
-    var bestMonth = cur;
-    var bestVol   = 0;
-    Object.keys(g).forEach(function (m) { if ((g[m] || 0) > bestVol) { bestVol = g[m]; bestMonth = m; } });
-    var bestRank = 1;
-    data.brands.forEach(function (other) {
-      if (other.id === brandId) return;
-      var ov = (other.searchesByMarket && other.searchesByMarket.global && other.searchesByMarket.global[bestMonth]) || 0;
-      if (ov > bestVol) bestRank++;
-    });
-
-    // Top market
-    var topMarket = 'Global';
-    var topVal    = 0;
-    (meta.markets || []).forEach(function (mkt) {
-      if (mkt.key === 'global') return;
-      var v = (brand.searchesByMarket && brand.searchesByMarket[mkt.key] && brand.searchesByMarket[mkt.key][cur]) || 0;
-      if (v > topVal) { topVal = v; topMarket = mkt.label || mkt.key; }
-    });
-
-    return {
-      name:      brand.name,
-      category:  brand.category || '—',
-      vsMonth:   vsMonth,
-      yoy:       yoy,
-      mom:       mom,
-      bestRank:  bestRank,
-      bestMonth: bestMonth,
-      topMarket: topMarket,
-    };
-  }
-
-  function patchH2HWithReads(b1, b2) {
-    var meta    = window.DORMIED_DATA.meta;
-    var cm      = meta.currentMonth;
-    var fmtChg  = function (v) { return v != null ? (v >= 0 ? '+' : '') + v.toFixed(1) + '%' : '—'; };
-
-    [b1, b2].forEach(function (b) {
-      var box     = document.querySelector('[data-h2h-insight-for="' + b.id + '"]');
-      if (!box) return;
-      var textDiv = box.querySelector('.h2h-insight-text');
-      if (!textDiv) return;
-
-      var cacheKey = 'dormied_take_' + b.id + '_' + cm;
-      var cached   = sessionStorage.getItem(cacheKey);
-      if (cached) {
-        textDiv.innerHTML = '<p class="h2h-take-text">' + cached + '</p>';
-        box.classList.add('h2h-insight-box--loaded');
-        return;
-      }
-
-      // Show shimmer while loading
-      textDiv.innerHTML = '<p class="h2h-take-loading"></p>';
-      box.classList.add('h2h-insight-box--loaded');
-
-      var stats = computeH2HBrandStats(b.id, b);
-      if (!stats) return;
-
-      fetch('/api/take', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name:         b.name,
-          rank:         b.rank,
-          di:           b.di.toFixed(1),
-          vsMonth:      fmtChg(stats.vsMonth),
-          mom:          fmtChg(stats.mom),
-          yoy:          fmtChg(stats.yoy),
-          bestRank:     stats.bestRank,
-          bestMonth:    stats.bestMonth,
-          category:     stats.category,
-          topMarket:    stats.topMarket,
-          currentMonth: cm,
-        }),
-      })
-        .then(function (resp) { if (!resp.ok) throw new Error('HTTP ' + resp.status); return resp.json(); })
-        .then(function (data) {
-          if (data.take) {
-            sessionStorage.setItem(cacheKey, data.take);
-            textDiv.innerHTML = '<p class="h2h-take-text">' + data.take + '</p>';
-          } else {
-            textDiv.innerHTML = '';
-          }
-        })
-        .catch(function (e) {
-          console.warn('[take] H2H fetch failed for ' + b.name + ':', e.message);
-          textDiv.innerHTML = '';
-        });
     });
   }
 
@@ -618,15 +578,12 @@
     renderHeroMeta();
     renderMarketPulse(markets);
     renderScoreboard(ranked);
-    renderH2H(matchup);
+    renderH2H(matchup, ranked);
 
-    // Async: patch explanation text into movers section
     patchExplanations(window.DORMIED_DATA.meta.currentMonth);
 
-    // Async: fill H2H insight boxes with THE READ editorial takes
-    if (matchup) {
-      patchH2HWithReads(matchup.brand1, matchup.brand2);
-      if (window.DORMIED_TRACK) window.DORMIED_TRACK('h2h_comparison', {
+    if (matchup && window.DORMIED_TRACK) {
+      window.DORMIED_TRACK('h2h_comparison', {
         brand_a: matchup.brand1.name,
         brand_b: matchup.brand2.name,
       });

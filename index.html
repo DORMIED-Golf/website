@@ -52,7 +52,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="css/styles.css?v=20260319c">
+  <link rel="stylesheet" href="css/styles.css?v=20260320b">
 
   <!-- ── Structured Data: Organization ── -->
   <script type="application/ld+json">
@@ -128,6 +128,7 @@
         <a href="/rankings/" class="site-nav-link">Index</a>
         <a href="/feed/" class="site-nav-link">News</a>
         <a href="/brands/" class="site-nav-link">Field</a>
+        <a href="/matchups/" class="site-nav-link">Match-Ups</a>
       </nav>
     </div>
   </header>
@@ -152,26 +153,15 @@
           <a href="/rankings/" class="hero-cta">View Full Index →</a>
         </section>
 
-        <!-- ── SCOREBOARD ────────────────────────────────────────────────── -->
-        <section class="scoreboard-section" aria-labelledby="scoreboard-heading">
+        <!-- ── DAILY HEAD-TO-HEAD ─────────────────────────────────────────── -->
+        <section class="h2h-section" aria-labelledby="h2h-heading">
           <div class="section-header">
-            <h2 id="scoreboard-heading" class="section-title">This Month</h2>
-            <span class="section-month" id="hero-month-2"></span>
+            <h2 id="h2h-heading" class="section-title">Today's Match-Up</h2>
+            <span class="h2h-date" id="h2h-date"></span>
           </div>
-          <div class="scoreboard-grid">
-            <div class="sb-col" id="sb-top"></div>
-            <div class="sb-col" id="sb-movers"></div>
-            <div class="sb-col" id="sb-drops"></div>
+          <div id="h2h-content">
+            <!-- Populated by home.js -->
           </div>
-        </section>
-
-        <!-- ── WHY THIS MONTH MOVED ──────────────────────────────────────── -->
-        <section class="why-moved-section" id="why-moved-section" aria-labelledby="why-moved-heading" hidden>
-          <div class="section-header">
-            <h2 id="why-moved-heading" class="section-title">What Drove The Change</h2>
-            <span class="section-month" id="why-moved-month"></span>
-          </div>
-          <div id="why-moved-list" class="why-moved-list"></div>
         </section>
 
         <!-- ── MID AD ────────────────────────────────────────────────────── -->
@@ -192,34 +182,27 @@
           </div>
         </div>
 
-        <!-- ── DAILY HEAD-TO-HEAD ─────────────────────────────────────────── -->
-        <section class="h2h-section" aria-labelledby="h2h-heading">
+        <!-- ── SCOREBOARD ────────────────────────────────────────────────── -->
+        <section class="scoreboard-section" aria-labelledby="scoreboard-heading">
           <div class="section-header">
-            <h2 id="h2h-heading" class="section-title">Today's Match-Up</h2>
-            <span class="h2h-date" id="h2h-date"></span>
+            <h2 id="scoreboard-heading" class="section-title">This Month</h2>
+            <span class="section-month" id="hero-month-2"></span>
           </div>
-          <div id="h2h-content">
-            <!-- Populated by home.js -->
+          <div class="scoreboard-grid">
+            <div class="sb-col" id="sb-top"></div>
+            <div class="sb-col" id="sb-movers"></div>
+            <div class="sb-col" id="sb-drops"></div>
           </div>
         </section>
 
-        <!-- ── MID AD 2 ───────────────────────────────────────────────────── -->
-        <div class="ad-mid-home" aria-hidden="true">
-          <div class="ad-leaderboard tablet-ad">
-            <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="2868292443"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <!-- ── WHAT DROVE THE CHANGE ──────────────────────────────────────── -->
+        <section class="why-moved-section" id="why-moved-section" aria-labelledby="why-moved-heading" hidden>
+          <div class="section-header">
+            <h2 id="why-moved-heading" class="section-title">What Drove The Change</h2>
+            <span class="section-month" id="why-moved-month"></span>
           </div>
-          <div class="ad-in-table mobile-ad">
-            <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="2676720754"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-          </div>
-        </div>
+          <div id="why-moved-list" class="why-moved-list"></div>
+        </section>
 
         <!-- ── TOP STORIES ─────────────────────────────────────────────────── -->
         <section class="home-stories-section" aria-labelledby="stories-heading">
@@ -306,7 +289,7 @@
   <script src="js/data.js?v=20260317"></script>
   <script src="js/take-preview.js"></script>
   <script src="js/explanations.js?v=20260318"></script>
-  <script src="js/home.js?v=20260319d"></script>
+  <script src="js/home.js?v=20260320b"></script>
   <script src="js/feed.js?v=20260320a"></script>
   <script src="js/analytics.js?v=20260320a"></script>
   <script src="js/signup.js?v=20260319"></script>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Title and description injected by matchup-day.js after fetching data -->
+  <title>Match-Up | DORMIED</title>
+  <meta name="description" content="Daily brand match-up from the DORMIED Index.">
+
+  <!-- ── Fonts ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ── Styles ── -->
+  <link rel="stylesheet" href="/css/styles.css?v=20260320b">
+
+  <!-- ── GTM ── -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-N4Q8J6L3');</script>
+</head>
+<body>
+
+  <!-- ══ GTM NOSCRIPT ═════════════════════════════════════════════════════════ -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N4Q8J6L3" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <!-- ══ SITE HEADER ══════════════════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="/" class="site-logo" aria-label="DORMIED home">
+        <img src="/images/dormied-logo-colour.png" alt="DORMIED" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <span class="logo-text-fallback" style="display:none">DORMIED</span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/rankings/" class="site-nav-link">Index</a>
+        <a href="/feed/" class="site-nav-link">News</a>
+        <a href="/brands/" class="site-nav-link">Field</a>
+        <a href="/matchups/" class="site-nav-link site-nav-link--active">Match-Ups</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
+  <main id="main-content">
+    <div class="matchup-day-page">
+      <a href="/matchups/" class="matchup-day-back">← All Match-Ups</a>
+      <div id="matchup-day-card" class="matchup-day-card">
+        <p class="matchup-day-loading">Loading match-up…</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo" aria-label="DORMIED home">DORMIED</a>
+        <p class="footer-tagline">Built for the gear obsessed.</p>
+        <div class="footer-social">
+          <a href="https://x.com/DORMIED_GOLF" class="footer-social-link" target="_blank" rel="noopener" aria-label="DORMIED on X">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/dormiedgolf" class="footer-social-link" target="_blank" rel="noopener" aria-label="DORMIED on Instagram">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+        </div>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="/rankings/">Index</a>
+        <a href="/feed/">News</a>
+        <a href="/brands/">Field</a>
+        <a href="/matchups/">Match-Ups</a>
+        <a href="mailto:dormiedgolf@gmail.com">Contact</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- ══ SCRIPTS ══════════════════════════════════════════════════════════════ -->
+  <script src="/js/matchup-day.js?v=20260320a"></script>
+  <script src="/js/analytics.js?v=20260320a"></script>
+
+</body>
+</html>

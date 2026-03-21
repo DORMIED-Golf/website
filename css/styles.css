@@ -3709,6 +3709,259 @@ details[open] .faq-question::after { content: '−'; }
   margin: 0;
 }
 
+/* ── H2H: checkmark indicator ────────────────────────────────────────────── */
+.h2h-check {
+  font-size: 0.65rem;
+  color: var(--green);
+  margin: 0 3px;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+
+/* ── H2H: value wrapper (value + optional checkmark) ─────────────────────── */
+.h2h-val-wrap {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.h2h-val-wrap--right {
+  justify-content: flex-end;
+}
+
+/* ── H2H: DI top row (number + checkmark) ────────────────────────────────── */
+.h2h-di-top {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.h2h-di-top--right {
+  justify-content: flex-end;
+}
+
+/* ── H2H: category rank under global rank ────────────────────────────────── */
+.h2h-brand-hd-catrank {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+/* ── H2H: founded / HQ context beneath rank ──────────────────────────────── */
+.h2h-brand-hd-context {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+  margin-top: 1px;
+}
+
+/* ── H2H: result panel ───────────────────────────────────────────────────── */
+.h2h-result {
+  border-top: 1px solid var(--border);
+  margin-top: 14px;
+  padding-top: 14px;
+}
+.h2h-result-score-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.h2h-result-score {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+.h2h-share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-lite);
+  border-radius: 4px;
+  color: var(--text-muted);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+}
+.h2h-share-btn:hover {
+  border-color: var(--green);
+  color: var(--green);
+  text-decoration: none;
+}
+.h2h-share-icon {
+  width: 13px;
+  height: 13px;
+}
+.h2h-result-writeup {
+  min-height: 18px;
+}
+.h2h-writeup-text {
+  font-family: Inter, sans-serif;
+  font-size: 0.72rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0;
+}
+.h2h-writeup-loading {
+  display: block;
+  height: 14px;
+  width: 85%;
+  background: var(--bg-raised);
+  border-radius: 3px;
+  animation: bp-take-shimmer 1.4s infinite;
+}
+
+/* ── Matchups archive page ───────────────────────────────────────────────── */
+.matchups-page { max-width: 740px; margin: 0 auto; padding: 32px 20px 64px; }
+.matchups-page-title {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin: 0 0 24px;
+}
+.matchup-archive-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.matchup-archive-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  text-decoration: none;
+  display: block;
+  transition: border-color 0.15s;
+}
+.matchup-archive-card:hover {
+  border-color: var(--border-lite);
+  text-decoration: none;
+}
+.matchup-archive-date {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.matchup-archive-brands {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.matchup-archive-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  object-fit: contain;
+  background: var(--bg-raised);
+  flex-shrink: 0;
+}
+.matchup-archive-logo-initial {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: var(--bg-raised);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.matchup-archive-brand-name {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.matchup-archive-vs {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--border-lite);
+  font-weight: 900;
+}
+.matchup-archive-result {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 5px;
+}
+.matchup-archive-writeup {
+  font-family: Inter, sans-serif;
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0;
+}
+.matchup-archive-cat {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.matchups-empty {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 48px 0;
+}
+.matchups-loading {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 48px 0;
+}
+
+/* ── Match-up day page ───────────────────────────────────────────────────── */
+.matchup-day-page { max-width: 560px; margin: 0 auto; padding: 32px 20px 64px; }
+.matchup-day-back {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+.matchup-day-back:hover { color: var(--green); text-decoration: none; }
+.matchup-day-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.matchup-day-loading {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 48px 0;
+}
+.matchup-day-error {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 48px 0;
+}
+
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 700px) {
   .footer-inner {
