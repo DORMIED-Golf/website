@@ -2597,14 +2597,24 @@ details[open] .faq-question::after { content: '−'; }
   .scoreboard-grid { grid-template-columns: 1fr; }
 }
 
+/* each column is its own panel */
+.sb-col {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 12px 10px;
+}
+
 .sb-col-title {
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin-bottom: 8px;
+  color: var(--green);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
 }
 .sb-card {
   display: flex;
@@ -2612,7 +2622,7 @@ details[open] .faq-question::after { content: '−'; }
   gap: 8px;
   padding: 8px 10px;
   background: var(--bg-surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-lite, var(--border));
   border-radius: var(--radius-sm);
   text-decoration: none;
   margin-bottom: 6px;
