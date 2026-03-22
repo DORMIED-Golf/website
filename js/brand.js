@@ -127,17 +127,43 @@
 
   // Returns array of brand objects sorted by global DI for currentMonth,
   // each augmented with { rank, diScore }.
+  // Tiebreaker mirrors app.js calculateRankings(): prev-month DI → 3-months-ago DI.
   function computeGlobalRankings() {
-    const data = window.DORMIED_DATA;
-    const cm   = data.meta.currentMonth;
-    const pm   = data.meta.previousMonth;
-    const vals = data.brands.map(b => ({
+    const data  = window.DORMIED_DATA;
+    const cm    = data.meta.currentMonth;
+    const pm    = data.meta.previousMonth;
+    const ago3m = shiftMonth(cm, -3);
+    const vals  = data.brands.map(b => ({
       ...b,
-      cur:  b.searchesByMarket?.global?.[cm] || 0,
-      prev: b.searchesByMarket?.global?.[pm] || 0,
+      cur:   b.searchesByMarket?.global?.[cm]    || 0,
+      prev:  b.searchesByMarket?.global?.[pm]    || 0,
+      ago3:  b.searchesByMarket?.global?.[ago3m] || 0,
     }));
-    const max = Math.max(...vals.map(v => v.cur));
-    const sorted = [...vals].sort((a, b) => b.cur - a.cur);
+    const max      = Math.max(...vals.map(v => v.cur));
+    const prevMax  = Math.max(...vals.map(v => v.prev));
+    const ago3Max  = Math.max(...vals.map(v => v.ago3));
+
+    // Build previous-period rank map for tiebreaking (same logic as app.js)
+    const prevSorted = [...vals].sort((a, b) => {
+      const diff = b.prev - a.prev;
+      if (Math.abs(diff) > 0.0001) return diff;
+      return b.ago3 - a.ago3;
+    });
+    const prevRankMap = new Map();
+    prevSorted.forEach((b, i) => prevRankMap.set(b.id, i + 1));
+
+    const ago3Sorted = [...vals].sort((a, b) => b.ago3 - a.ago3);
+    const ago3RankMap = new Map();
+    ago3Sorted.forEach((b, i) => ago3RankMap.set(b.id, i + 1));
+
+    const sorted = [...vals].sort((a, b) => {
+      const diff = b.cur - a.cur;
+      if (Math.abs(diff) > 0.0001) return diff;
+      const prevDiff = (prevRankMap.get(a.id) || 9999) - (prevRankMap.get(b.id) || 9999);
+      if (prevDiff !== 0) return prevDiff;
+      return (ago3RankMap.get(a.id) || 9999) - (ago3RankMap.get(b.id) || 9999);
+    });
+
     return sorted.map((b, i) => ({
       ...b,
       rank:    i + 1,
