@@ -10,6 +10,14 @@
 
   var AD_EVERY = 24;   // insert ad every N brand cards
 
+  /* ── shiftMonth: "Feb 2026", -3 → "Nov 2025" ───────────────────────────── */
+  var MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function shiftMonth(label, delta) {
+    var parts = label.split(' ');
+    var total = MONTH_NAMES.indexOf(parts[0]) + parseInt(parts[1], 10) * 12 + delta;
+    return MONTH_NAMES[((total % 12) + 12) % 12] + ' ' + Math.floor(total / 12);
+  }
+
   var state = {
     query:    '',
     category: '',
