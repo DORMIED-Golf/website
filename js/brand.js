@@ -174,10 +174,11 @@
   // Compute per-market stats for the current brand.
   // Returns array of { market, rank, di, vsMonth, vsYear } for all 11 markets.
   function computeMarketStats() {
-    const data = window.DORMIED_DATA;
-    const cm  = data.meta.currentMonth;
-    const pm  = data.meta.previousMonth;
-    const yam = shiftMonth(cm, -12);
+    const data  = window.DORMIED_DATA;
+    const cm    = data.meta.currentMonth;
+    const pm    = data.meta.previousMonth;
+    const ago3m = shiftMonth(cm, -3);
+    const yam   = shiftMonth(cm, -12);
     return data.meta.markets.map(mkt => {
       const key = mkt.key;
       const mktSearches = brand.searchesByMarket?.[key] || {};
@@ -186,9 +187,29 @@
       const cur  = mktSearches[cm]  || 0;
       const prev = mktSearches[pm]  || 0;
       const ya   = mktSearches[yam] || 0;
-      const sorted = [...data.brands].sort((a, b) =>
-        (b.searchesByMarket?.[key]?.[cm] || 0) - (a.searchesByMarket?.[key]?.[cm] || 0)
+
+      // Build prev-month rank map for tiebreaking — mirrors app.js calculateRankings()
+      const prevSortedMkt = [...data.brands].sort((a, b) => {
+        const diff = (b.searchesByMarket?.[key]?.[pm] || 0) - (a.searchesByMarket?.[key]?.[pm] || 0);
+        if (Math.abs(diff) > 0.0001) return diff;
+        return (b.searchesByMarket?.[key]?.[ago3m] || 0) - (a.searchesByMarket?.[key]?.[ago3m] || 0);
+      });
+      const prevRankMkt = new Map();
+      prevSortedMkt.forEach((b, i) => prevRankMkt.set(b.id, i + 1));
+
+      const ago3SortedMkt = [...data.brands].sort((a, b) =>
+        (b.searchesByMarket?.[key]?.[ago3m] || 0) - (a.searchesByMarket?.[key]?.[ago3m] || 0)
       );
+      const ago3RankMkt = new Map();
+      ago3SortedMkt.forEach((b, i) => ago3RankMkt.set(b.id, i + 1));
+
+      const sorted = [...data.brands].sort((a, b) => {
+        const diff = (b.searchesByMarket?.[key]?.[cm] || 0) - (a.searchesByMarket?.[key]?.[cm] || 0);
+        if (Math.abs(diff) > 0.0001) return diff;
+        const prevDiff = (prevRankMkt.get(a.id) || 9999) - (prevRankMkt.get(b.id) || 9999);
+        if (prevDiff !== 0) return prevDiff;
+        return (ago3RankMkt.get(a.id) || 9999) - (ago3RankMkt.get(b.id) || 9999);
+      });
       const rank         = sorted.findIndex(b => b.id === brand.id) + 1;
       const di           = max > 0 ? parseFloat((cur / max * 100).toFixed(1)) : 0;
       const totalSearches = data.brands.reduce((s, b) => s + (b.searchesByMarket?.[key]?.[cm] || 0), 0);
