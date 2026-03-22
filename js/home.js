@@ -99,13 +99,18 @@
     var prevRankMap = {};
     prevSorted.forEach(function (b, i) { prevRankMap[b.id] = i + 1; });
 
-    // Sort current: DI desc with prevDI/ago3DI tiebreaks (matches app.js)
+    // Build ago3 rank map for second tiebreak
+    var ago3Sorted = all.slice().sort(function (a, b) { return b.ago3DI - a.ago3DI; });
+    var ago3RankMap = {};
+    ago3Sorted.forEach(function (b, i) { ago3RankMap[b.id] = i + 1; });
+
+    // Sort current: DI desc, tiebreak by prevRank pos then ago3Rank pos (mirrors app.js exactly)
     all.sort(function (a, b) {
       var d = b.di - a.di;
       if (Math.abs(d) > 0.0001) return d;
-      var pd = b.prevDI - a.prevDI;
-      if (Math.abs(pd) > 0.0001) return pd;
-      return b.ago3DI - a.ago3DI;
+      var pd = (prevRankMap[a.id] || 9999) - (prevRankMap[b.id] || 9999);
+      if (pd !== 0) return pd;
+      return (ago3RankMap[a.id] || 9999) - (ago3RankMap[b.id] || 9999);
     });
     all.forEach(function (b, i) { b.rank = i + 1; });
 

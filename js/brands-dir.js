@@ -155,37 +155,54 @@
   }
 
   /* ── Compute DI rankings from DORMIED_DATA ──────────────────────────────── */
+  /* Tiebreaker mirrors app.js calculateRankings(): prev-month rank → ago3 rank */
   function computeRankings() {
     var data = window.DORMIED_DATA;
     if (!data || !data.brands || !data.meta) return [];
 
-    var curMonth = data.meta.currentMonth;
-    var brands   = data.brands;
+    var curMonth  = data.meta.currentMonth;
+    var prevMonth = data.meta.previousMonth;
+    var ago3Month = shiftMonth(curMonth, -3);
+    var brands    = data.brands;
 
-    /* Find max search volume for normalisation */
-    var max = 0;
-    brands.forEach(function(b) {
-      var g = b.searchesByMarket && b.searchesByMarket.global;
-      var v = (g && g[curMonth]) || 0;
-      if (v > max) max = v;
+    /* Score each brand with cur / prev / ago3 values */
+    var scored = brands.map(function(b) {
+      var g    = b.searchesByMarket && b.searchesByMarket.global;
+      var cur  = (g && g[curMonth])  || 0;
+      var prev = (g && g[prevMonth]) || 0;
+      var ago3 = (g && g[ago3Month]) || 0;
+      return { brand: b, cur: cur, prev: prev, ago3: ago3 };
     });
+
+    /* Find max for normalisation */
+    var max = 0;
+    scored.forEach(function(s) { if (s.cur > s.cur) max = s.cur; if (s.cur > max) max = s.cur; });
     if (!max) max = 1;
 
-    /* Score each brand */
-    var scored = brands.map(function(b) {
-      var g  = b.searchesByMarket && b.searchesByMarket.global;
-      var v  = (g && g[curMonth]) || 0;
-      var di = Math.round(v / max * 100);
-      return { brand: b, di: di, searches: v };
+    /* Build prev-month rank map for tiebreaking */
+    var prevSorted = scored.slice().sort(function(a, b) {
+      var d = b.prev - a.prev;
+      if (Math.abs(d) > 0.0001) return d;
+      return b.ago3 - a.ago3;
     });
+    var prevRankMap = {};
+    prevSorted.forEach(function(s, i) { prevRankMap[s.brand.id] = i + 1; });
 
-    /* Sort by DI desc, then by brand name for ties */
+    /* Build ago3 rank map for second tiebreak */
+    var ago3Sorted = scored.slice().sort(function(a, b) { return b.ago3 - a.ago3; });
+    var ago3RankMap = {};
+    ago3Sorted.forEach(function(s, i) { ago3RankMap[s.brand.id] = i + 1; });
+
+    /* Sort: cur desc → prevRank asc → ago3Rank asc */
     scored.sort(function(a, b) {
-      if (b.di !== a.di) return b.di - a.di;
-      return (a.brand.name || '').localeCompare(b.brand.name || '');
+      var d = b.cur - a.cur;
+      if (Math.abs(d) > 0.0001) return d;
+      var pd = (prevRankMap[a.brand.id] || 9999) - (prevRankMap[b.brand.id] || 9999);
+      if (pd !== 0) return pd;
+      return (ago3RankMap[a.brand.id] || 9999) - (ago3RankMap[b.brand.id] || 9999);
     });
 
-    /* Assign rank */
+    /* Assign rank and normalise DI (1 decimal, matching app.js) */
     return scored.map(function(item, i) {
       return {
         id:       item.brand.id,
@@ -194,7 +211,7 @@
         category: item.brand.category || '',
         hq:       item.brand.hq || '',
         rank:     i + 1,
-        di:       item.di
+        di:       parseFloat((item.cur / max * 100).toFixed(1))
       };
     });
   }

@@ -280,20 +280,39 @@
   }
 
   // Category rank for this brand in its primary category.
+  // Tiebreaker mirrors app.js: prev-month rank → ago3 rank.
   function computeCategoryRank() {
     const data    = window.DORMIED_DATA;
     const cm      = data.meta.currentMonth;
+    const pm      = data.meta.previousMonth;
+    const ago3m   = shiftMonth(cm, -3);
     const primary = brand.category;
-    const inCat   = data.brands
-      .filter(b => b.category === primary)
-      .sort((a, b) => (b.searchesByMarket?.global?.[cm] || 0) - (a.searchesByMarket?.global?.[cm] || 0));
+
+    function canonicalSort(list) {
+      const prevS = [...list].sort((a, b) => {
+        const d = (b.searchesByMarket?.global?.[pm] || 0) - (a.searchesByMarket?.global?.[pm] || 0);
+        if (Math.abs(d) > 0.0001) return d;
+        return (b.searchesByMarket?.global?.[ago3m] || 0) - (a.searchesByMarket?.global?.[ago3m] || 0);
+      });
+      const prevRank = new Map(prevS.map((b, i) => [b.id, i + 1]));
+      const ago3S = [...list].sort((a, b) =>
+        (b.searchesByMarket?.global?.[ago3m] || 0) - (a.searchesByMarket?.global?.[ago3m] || 0));
+      const ago3Rank = new Map(ago3S.map((b, i) => [b.id, i + 1]));
+      return [...list].sort((a, b) => {
+        const d = (b.searchesByMarket?.global?.[cm] || 0) - (a.searchesByMarket?.global?.[cm] || 0);
+        if (Math.abs(d) > 0.0001) return d;
+        const pd = (prevRank.get(a.id) || 9999) - (prevRank.get(b.id) || 9999);
+        if (pd !== 0) return pd;
+        return (ago3Rank.get(a.id) || 9999) - (ago3Rank.get(b.id) || 9999);
+      });
+    }
+
+    const inCat   = canonicalSort(data.brands.filter(b => b.category === primary));
     const catRank = inCat.findIndex(b => b.id === brand.id) + 1;
 
     // Also compute per-subcategory rank
     const subcatRanks = (brand.subCategories || []).map(sc => {
-      const inSC = data.brands
-        .filter(b => (b.subCategories || []).includes(sc))
-        .sort((a, b) => (b.searchesByMarket?.global?.[cm] || 0) - (a.searchesByMarket?.global?.[cm] || 0));
+      const inSC = canonicalSort(data.brands.filter(b => (b.subCategories || []).includes(sc)));
       return { name: sc, rank: inSC.findIndex(b => b.id === brand.id) + 1, total: inSC.length };
     });
 
