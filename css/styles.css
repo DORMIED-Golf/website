@@ -1551,7 +1551,7 @@ details[open] .faq-question::after { content: '−'; }
 .footer-nav {
   grid-area: nav;
   display: grid;
-  grid-template-columns: repeat(2, max-content);
+  grid-template-columns: repeat(3, max-content);
   gap: 6px 32px;
   margin-top: 16px;
 }
