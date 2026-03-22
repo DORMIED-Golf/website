@@ -1012,8 +1012,9 @@
       if (v > topVal) { topVal = v; topMarket = mkt.label || mkt.key; }
     });
 
-    // Cache key: brand + current month so it refreshes each new data cycle
-    const cacheKey = `dormied_take_${brand.id}_${cm}`;
+    // Cache key: brand + current month + version so it refreshes each new data cycle
+    // v2: bumped to invalidate takes generated with incorrect rank data
+    const cacheKey = `dormied_take_v2_${brand.id}_${cm}`;
     const cached   = sessionStorage.getItem(cacheKey);
     if (cached) {
       textEl.textContent = cached;
