@@ -729,7 +729,7 @@ window.DORMIED_DATA = {
     {
       id: "footjoy",
       name: "Footjoy",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=footjoy.com&sz=64",
+      logo: "/images/logos/footjoy.jpg",
       website: "https://www.footjoy.com",
       headquarters: "Fairhaven, Massachusetts, USA",
       founded: null,
@@ -1119,7 +1119,7 @@ window.DORMIED_DATA = {
     {
       id: "j-lindeberg",
       name: "J.Lindeberg",
-      logo: "/images/logos/irange-sports.jpg?v=2",
+      logo: "/images/logos/j-lindeberg.jpg",
       website: "https://www.jlindeberg.com",
       headquarters: "Stockholm, Sweden",
       founded: 1996,
@@ -2289,7 +2289,7 @@ window.DORMIED_DATA = {
     {
       id: "scotty-cameron",
       name: "Scotty Cameron",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=scottycameron.com&sz=64",
+      logo: "/images/logos/scotty-cameron.jpg",
       website: "https://www.scottycameron.com",
       headquarters: "San Marcos, California, USA",
       founded: 1991,
@@ -2549,7 +2549,7 @@ window.DORMIED_DATA = {
     {
       id: "sun-day-red",
       name: "Sun Day Red",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=sundayred.com&sz=64",
+      logo: "/images/logos/sun-day-red.jpg",
       website: "https://www.sundayred.com",
       headquarters: "San Clemente USA",
       founded: 2024,
@@ -2653,7 +2653,7 @@ window.DORMIED_DATA = {
     {
       id: "takomo-golf",
       name: "Takomo Golf",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=takomogolf.com&sz=64",
+      logo: "/images/logos/takomo-golf.jpg",
       website: "https://www.takomogolf.com",
       headquarters: "Helsinki, Finland",
       founded: 2021,
@@ -2679,7 +2679,7 @@ window.DORMIED_DATA = {
     {
       id: "taylormade",
       name: "TaylorMade",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=taylormadegolf.com&sz=64",
+      logo: "/images/logos/taylormade.jpg",
       website: "https://www.taylormadegolf.com",
       headquarters: "Carlsbad, California, USA",
       founded: 1979,
@@ -2861,7 +2861,7 @@ window.DORMIED_DATA = {
     {
       id: "trackman",
       name: "Trackman",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=trackman.com&sz=64",
+      logo: "/images/logos/trackman.jpg",
       website: "https://www.trackman.com/golf",
       headquarters: "Vedb\u00e6k, Denmark",
       founded: 2003,

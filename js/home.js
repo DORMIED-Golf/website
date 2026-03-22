@@ -641,6 +641,60 @@
   /* ─────────────────────────────────────────────────────────────────────── */
   /* ── BOOT ─────────────────────────────────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  /* ── MOST VIEWED BRANDS ───────────────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  var SUPABASE_URL      = 'https://cimmmmnapdthqvtifpzr.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
+
+  function fetchMostViewedBrands() {
+    return fetch(SUPABASE_URL + '/rest/v1/brand_views_7d?limit=20', {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+      }
+    })
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .catch(function () { return []; });
+  }
+
+  function renderMostViewed(viewData, ranked) {
+    var el = document.getElementById('most-viewed-list');
+    var section = document.querySelector('.most-viewed-section');
+    if (!el) return;
+
+    // Build a lookup from ranked for DI + pct
+    var rankMap = {};
+    ranked.forEach(function (b) { rankMap[b.id] = b; });
+
+    // Fall back to top 15 by DI when no view data yet
+    var displayData;
+    if (!viewData || viewData.length < 3) {
+      displayData = ranked.slice(0, 15).map(function (b) { return { brand_id: b.id }; });
+    } else {
+      displayData = viewData;
+    }
+
+    var cards = displayData.map(function (v, i) {
+      var r = rankMap[v.brand_id];
+      if (!r) return '';
+      var pct = r.pct !== null ? fmtPct(r.pct) : null;
+      var pctCls = r.pct > 0 ? 'mv-pct--up' : r.pct < 0 ? 'mv-pct--down' : 'mv-pct--flat';
+      return '<a href="/brands/' + esc(r.id) + '/" class="mv-card">'
+        + logoImg(r, 'mv-logo', 100)
+        + '<div class="mv-name">' + esc(r.name) + '</div>'
+        + '<div class="mv-stats">'
+        +   '<span class="mv-rank">#' + (i + 1) + '</span>'
+        +   '<span class="mv-dot">·</span>'
+        +   '<span class="mv-di">' + r.di.toFixed(1) + '</span>'
+        +   (pct ? '<span class="mv-dot">·</span><span class="mv-pct ' + pctCls + '">' + pct + '</span>' : '')
+        + '</div>'
+        + '</a>';
+    }).join('');
+
+    el.innerHTML = cards;
+  }
+
   function init() {
     if (!window.DORMIED_DATA) {
       console.warn('[home.js] DORMIED_DATA not found');
@@ -655,6 +709,11 @@
     renderMarketPulse(markets);
     renderScoreboard(ranked);
     renderH2H(matchup, ranked);
+
+    // Most viewed brands — async, non-blocking
+    fetchMostViewedBrands().then(function (data) {
+      renderMostViewed(data, ranked);
+    });
 
     patchExplanations(window.DORMIED_DATA.meta.currentMonth);
 
