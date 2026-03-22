@@ -2655,7 +2655,7 @@ window.DORMIED_DATA = {
       name: "Takomo Golf",
       logo: "/images/logos/takomo-golf.jpg",
       website: "https://www.takomogolf.com",
-      headquarters: "Helsinki, Finland",
+      headquarters: "Turku, Finland",
       founded: 2021,
       parentCompany: "Independent",
       category: "Clubs & Balls",
