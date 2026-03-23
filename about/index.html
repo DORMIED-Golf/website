@@ -114,30 +114,6 @@
       margin-top: 8px;
     }
 
-    /* ── About page ad placeholders ── */
-    .ad-about-desktop,
-    .ad-about-tablet,
-    .ad-about-mobile {
-      border: 1px dashed var(--border-lite);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.08em;
-    }
-
-    .ad-about-desktop.ad-loaded,
-    .ad-about-tablet.ad-loaded,
-    .ad-about-mobile.ad-loaded {
-      border: none;
-    }
-
-    .ad-about-desktop { width: 970px; max-width: 100%; height: 250px; }
-    .ad-about-tablet  { width: 728px; max-width: 100%; height: 90px; }
-    .ad-about-mobile  { width: 320px; max-width: 100%; height: 50px; }
-
     /* Mobile padding */
     @media (max-width: 600px) {
       .about-section {
@@ -155,13 +131,25 @@
   <!-- ══ TOP AD ZONE ══════════════════════════════════════════════════════════ -->
   <div class="ad-top-zone" aria-hidden="true">
     <div class="ad-billboard desktop-ad">
-      <div class="ad-about-desktop">970×250</div>
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:970px;height:250px"
+           data-ad-client="ca-pub-5259693727609263"
+           data-ad-slot="8874672872"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
     <div class="ad-leaderboard tablet-ad">
-      <div class="ad-about-tablet">728×90</div>
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:728px;height:90px"
+           data-ad-client="ca-pub-5259693727609263"
+           data-ad-slot="3709709202"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
     <div class="ad-mobile-banner mobile-ad">
-      <div class="ad-about-mobile">320×50</div>
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:320px;height:50px"
+           data-ad-client="ca-pub-5259693727609263"
+           data-ad-slot="4212538987"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
   </div>
 
