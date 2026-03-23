@@ -189,11 +189,13 @@
         var cur  = g[curKey]  || 0;
         var prev = g[prevKey] || 0;
         if (!prev) return null;
-        var pct  = (cur - prev) / prev * 100;
-        var sign = pct >= 0 ? '+' : '\u2212';   // + or −
+        var pct     = (cur - prev) / prev * 100;
+        var rounded = parseFloat(Math.abs(pct).toFixed(1));
+        var sign    = rounded === 0 ? '' : pct > 0 ? '+' : '\u2212';
+        var cls     = rounded === 0 ? 'feed-brand-tag--flat' : pct > 0 ? 'feed-brand-tag--up' : 'feed-brand-tag--down';
         return {
-          pct: sign + Math.abs(pct).toFixed(1) + '%',
-          cls: pct >= 0 ? 'feed-brand-tag--up' : 'feed-brand-tag--down'
+          pct: sign + rounded.toFixed(1) + '%',
+          cls: cls
         };
       }
     } catch (e) {}

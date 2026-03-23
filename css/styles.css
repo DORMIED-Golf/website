@@ -2449,6 +2449,8 @@ details[open] .faq-question::after { content: '−'; }
 .feed-brand-tag--up:hover { background: rgba(34, 197, 94, .25); }
 .feed-brand-tag--down  { color: #f87171; border-color: rgba(248, 113, 113, .35); background: rgba(248, 113, 113, .08); }
 .feed-brand-tag--down:hover { background: rgba(248, 113, 113, .18); }
+.feed-brand-tag--flat  { color: #4d6b4d; border-color: rgba(77, 107, 77, .35); background: rgba(77, 107, 77, .08); }
+.feed-brand-tag--flat:hover { background: rgba(77, 107, 77, .18); }
 .feed-tag-pct          { opacity: .85; margin-left: 1px; }
 
 /* ── Feed cards inside narrow sidebar column (desktop only) ─────────────────── */
