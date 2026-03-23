@@ -21,6 +21,7 @@
     filtered:    [],
     sort:        'newest',
     brandFilter: '',
+    searchQuery: '',
     page:        1
   };
 
@@ -415,6 +416,15 @@
       });
     }
 
+    if (state.searchQuery) {
+      var q = state.searchQuery.toLowerCase();
+      filtered = filtered.filter(function(a) {
+        return (a.title       || '').toLowerCase().includes(q)
+            || (a.description || '').toLowerCase().includes(q)
+            || (a.sourceName  || '').toLowerCase().includes(q);
+      });
+    }
+
     if (state.sort === 'oldest') {
       filtered = filtered.slice().sort(function(a, b) {
         return new Date(a.pubDate || 0) - new Date(b.pubDate || 0);
@@ -462,12 +472,29 @@
       });
     }
 
+    /* Search input */
+    var srch = document.getElementById('feed-search');
+    if (srch) {
+      var searchTimer;
+      srch.addEventListener('input', function() {
+        clearTimeout(searchTimer);
+        var val = this.value;
+        searchTimer = setTimeout(function() {
+          state.searchQuery = val.trim();
+          applyAndRender();
+        }, 250);
+      });
+    }
+
     /* Clear button */
     var clr = document.getElementById('feed-clear');
     if (clr) {
       clr.addEventListener('click', function() {
         state.brandFilter = '';
+        state.searchQuery = '';
         state.sort        = 'newest';
+        var srch = document.getElementById('feed-search');
+        if (srch) srch.value = '';
         if (csBrand) { csBrand.setValue(''); } else {
           var sel = document.getElementById('feed-brand-filter');
           if (sel) sel.value = '';

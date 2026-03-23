@@ -3046,6 +3046,23 @@ details[open] .faq-question::after { content: '−'; }
   z-index: 90;
   background: var(--bg);
 }
+.feed-search-input {
+  flex: 1 1 180px;
+  min-width: 140px;
+  max-width: 280px;
+  padding: 6px 10px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  outline: none;
+  transition: border-color .15s;
+}
+.feed-search-input::placeholder { color: var(--text-muted); }
+.feed-search-input:focus { border-color: var(--green); }
+.feed-search-input::-webkit-search-cancel-button { cursor: pointer; }
 .feed-sort-btns { display: inline-flex; gap: 4px; }
 .feed-sort-btn {
   padding: 6px 12px;
