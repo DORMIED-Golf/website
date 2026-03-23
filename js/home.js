@@ -20,8 +20,9 @@
   /* ── Format % change ──────────────────────────────────────────────────── */
   function fmtPct(v) {
     if (v === null || v === undefined) return null;
-    var sign = v > 0 ? '+' : v < 0 ? '\u2212' : '';
-    return sign + Math.abs(v).toFixed(1) + '%';
+    var rounded = parseFloat(Math.abs(v).toFixed(1));
+    var sign = rounded === 0 ? '' : v > 0 ? '+' : '\u2212';
+    return sign + rounded.toFixed(1) + '%';
   }
 
   /* ── Logo initials fallback ───────────────────────────────────────────── */
@@ -191,7 +192,7 @@
 
     el.innerHTML = markets.map(function (m) {
       var pctStr = fmtPct(m.pct);
-      var cls    = m.pct === null ? '' : m.pct > 0 ? 'mp-delta--up' : m.pct < 0 ? 'mp-delta--down' : 'mp-delta--flat';
+      var cls    = m.pct === null ? '' : parseFloat(Math.abs(m.pct).toFixed(1)) === 0 ? 'mp-delta--flat' : m.pct > 0 ? 'mp-delta--up' : 'mp-delta--down';
       var delta  = pctStr
         ? '<span class="mp-delta ' + cls + '">' + esc(pctStr) + '</span>'
         : '';
