@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────────────────────────────────────
    home.js  —  DORMIED Homepage
    Self-contained — depends only on window.DORMIED_DATA (data.js).
-   Computes: top 3, biggest movers, biggest drops, market pulse, daily H2H.
+   Computes: top 5, biggest movers, biggest drops, market pulse, daily H2H.
    ───────────────────────────────────────────────────────────────────────── */
 
 (function () {
@@ -572,7 +572,7 @@
         var items = [];
         var cards = document.querySelectorAll('#sb-movers .sb-card');
         cards.forEach(function (card) {
-          if (items.length >= 3) return;
+          if (items.length >= 5) return;
           var brandId = card.dataset.brandId;
           if (!brandId || seen[brandId]) return;
           seen[brandId] = true;
