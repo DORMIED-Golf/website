@@ -282,6 +282,16 @@
     el.innerHTML = slice.map(function (a) {
       return renderArticleCard(a, true, allBrands);
     }).join('');
+
+    // "See All News" link below sidebar feed
+    var seeAll = document.getElementById('latest-feed-see-all');
+    if (!seeAll) {
+      seeAll = document.createElement('div');
+      seeAll.id = 'latest-feed-see-all';
+      seeAll.className = 'bp-latest-see-all';
+      seeAll.innerHTML = '<a href="/news/">See All News</a>';
+      el.parentNode.appendChild(seeAll);
+    }
   }
 
   /* ── Render: brand page ────────────────────────────────────────────────── */

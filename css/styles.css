@@ -2352,6 +2352,7 @@ details[open] .faq-question::after { content: '−'; }
 /* ── Latest Feed ─────────────────────────────────────────────────────────────── */
 .latest-feed-section {
   margin-top: 0;
+  padding-bottom: 32px;
 }
 .latest-feed-heading {
   font-family: var(--font-display);
