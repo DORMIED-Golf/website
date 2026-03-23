@@ -4,17 +4,12 @@ const brands = require('./_brands.json');
 const FEEDS = [
   { id: 'mygolfspy',    name: 'MyGolfSpy',            url: 'https://feeds.feedburner.com/Mygolfspy' },
   { id: 'golfwrx',      name: 'GolfWRX',              url: 'https://www.golfwrx.com/feed' },
-  { id: 'golfdigest',   name: 'Golf Digest',           url: 'https://www.golfdigest.com/rss/rss.xml' },
   { id: 'golfcom',      name: 'Golf.com',              url: 'https://golf.com/feed' },
-  { id: 'golfmonthly',  name: 'Golf Monthly',          url: 'https://www.golfmonthly.com/feed' },
-  { id: 'todaysgolfer', name: "Today's Golfer",        url: 'https://www.todays-golfer.com/feed' },
   { id: 'pluggedin',    name: 'Plugged In Golf',       url: 'https://www.pluggedingolf.com/feed' },
-  { id: 'golfweek',     name: 'Golfweek',              url: 'https://golfweek.usatoday.com/feed' },
   { id: 'bunkered',     name: 'Bunkered',              url: 'https://www.bunkered.co.uk/feed' },
   { id: 'gbm',          name: 'Golf Business Monitor', url: 'https://www.golfbusinessmonitor.com/feed' },
   { id: 'ncg',          name: 'National Club Golfer',  url: 'https://www.nationalclubgolfer.com/feed' },
   { id: 'hackerspar',   name: "Hacker's Paradise",     url: 'https://www.thehackersparadise.com/feed' },
-  { id: 'skratch',      name: 'Skratch Golf',          url: 'https://www.skratch.golf/feed' },
 ];
 
 function tagArticle(title, snippet) {
@@ -25,10 +20,24 @@ function tagArticle(title, snippet) {
 }
 
 function extractImage(item) {
-  return (item['media:content'] && item['media:content'].$ && item['media:content'].$.url)
-      || (item['media:thumbnail'] && item['media:thumbnail'].$ && item['media:thumbnail'].$.url)
-      || (item.enclosure && item.enclosure.url)
-      || null;
+  // 1. media:content or media:thumbnail (standard media RSS)
+  const mediaUrl = (item['media:content'] && item['media:content'].$ && item['media:content'].$.url)
+                || (item['media:thumbnail'] && item['media:thumbnail'].$ && item['media:thumbnail'].$.url);
+  if (mediaUrl) return mediaUrl;
+
+  // 2. enclosure (podcasts / some WordPress feeds)
+  if (item.enclosure && item.enclosure.url && /\.(jpe?g|png|webp|gif)(\?|$)/i.test(item.enclosure.url)) {
+    return item.enclosure.url;
+  }
+
+  // 3. First <img src="..."> inside content:encoded HTML (GolfWRX, Plugged In, NCG, Hacker's Paradise etc.)
+  const html = item['content:encoded'] || item.content || '';
+  if (html) {
+    const m = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+    if (m && m[1] && !/data:image/i.test(m[1])) return m[1];
+  }
+
+  return null;
 }
 
 module.exports = async (req, res) => {
@@ -41,7 +50,8 @@ module.exports = async (req, res) => {
     customFields: {
       item: [
         ['media:content',   'media:content',   { keepArray: false }],
-        ['media:thumbnail', 'media:thumbnail', { keepArray: false }]
+        ['media:thumbnail', 'media:thumbnail', { keepArray: false }],
+        ['content:encoded', 'content:encoded', { keepArray: false }],
       ]
     }
   });
