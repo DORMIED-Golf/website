@@ -178,6 +178,7 @@ button, select, input {
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
 }
+.bp-mid-ad { background: transparent; border-bottom: none; }
 
 /* In-table ads — no display property here (handled by visibility rules above) */
 .ad-row td { padding: 12px 0; background: var(--bg) !important; }
