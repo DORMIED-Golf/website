@@ -545,7 +545,7 @@
       return;
     }
 
-    fetch(FEED_API + '?since=2026-01-01')
+    fetch(FEED_API)
       .then(function(r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();

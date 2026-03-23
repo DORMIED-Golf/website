@@ -15,7 +15,7 @@
 
   <!-- ── Primary SEO ── -->
   <title>Golf Brand Rankings — The DORMIED Index</title>
-  <meta name="description" content="122 golf brands. 11 global markets. Ranked monthly by real search data. No opinions, no hype.">
+  <meta name="description" content="144 golf brands. 11 global markets. Ranked monthly by real search data. No opinions, no hype.">
   <meta name="keywords" content="golf brand rankings, golf brand index, golf trends 2026, dormied index, golf brand tracker, trending golf brands, golf equipment rankings, golf apparel brands, best golf brands">
   <meta name="author" content="DORMIED">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -29,8 +29,8 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://dormied.com/rankings/">
   <meta property="og:title" content="Golf Brand Rankings — The DORMIED Index">
-  <meta property="og:description" content="122 golf brands. 11 global markets. Ranked monthly by real search data. No opinions, no hype.">
-  <meta property="og:image" content="https://dormied.com/images/dormied-icon.png">
+  <meta property="og:description" content="144 golf brands. 11 global markets. Ranked monthly by real search data. No opinions, no hype.">
+  <meta property="og:image" content="https://dormied.com/images/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="DORMIED">
@@ -40,7 +40,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@DORMIED_GOLF">
   <meta name="twitter:title" content="Golf Brand Rankings — The DORMIED Index">
-  <meta name="twitter:description" content="122 golf brands. 11 global markets. Ranked monthly by real search data. No opinions, no hype.">
+  <meta name="twitter:description" content="144 golf brands. 11 global markets. Ranked monthly by real search data. No opinions, no hype.">
   <meta name="twitter:image" content="https://dormied.com/images/og-image.png">
 
   <!-- ── Sitemap ── -->
@@ -62,7 +62,7 @@
     "name": "DORMIED",
     "url": "https://dormied.com",
     "logo": "https://dormied.com/images/logo.png",
-    "description": "DORMIED is an independent golf brand intelligence platform. We track search interest for 122 golf brands across 11 global markets, updated monthly. No opinions, no endorsements — just data.",
+    "description": "DORMIED is an independent golf brand intelligence platform. We track search interest for 144 golf brands across 11 global markets, updated monthly. No opinions, no endorsements — just data.",
     "email": "dormiedgolf@gmail.com",
     "sameAs": ["https://x.com/DORMIED_GOLF", "https://www.instagram.com/dormiedgolf"]
   }
@@ -97,7 +97,7 @@
     "@context": "https://schema.org",
     "@type": "Dataset",
     "name": "DORMIED Index — Golf Brand Search Interest Rankings",
-    "description": "Monthly ranking of 122 golf brands by search interest across 11 global golf markets: US, Japan, South Korea, UK, Canada, China, Germany, Australia, Sweden, and France.",
+    "description": "Monthly ranking of 144 golf brands by search interest across 11 global golf markets: US, Japan, South Korea, UK, Canada, China, Germany, Australia, Sweden, and France.",
     "url": "https://dormied.com/rankings/",
     "creator": { "@type": "Organization", "name": "DORMIED" },
     "temporalCoverage": "2023/2026",
@@ -209,7 +209,7 @@
           </div>
           <div class="hero-stats" aria-label="Index statistics">
             <div class="stat-item">
-              <span class="stat-value" id="stat-brands">122</span>
+              <span class="stat-value" id="stat-brands">144</span>
               <span class="stat-label">Brands Tracked</span>
             </div>
             <div class="stat-divider"></div>
@@ -241,7 +241,7 @@
           </div>
           <div class="hot-take">
             <span class="hot-take-label">📅 Current Period</span>
-            <span class="hot-take-val">February 2026</span>
+            <span class="hot-take-val" id="stat-current-period">February 2026</span>
           </div>
         </div>
       </div>
@@ -330,7 +330,7 @@
                 id="rankings-table"
                 role="grid"
                 aria-label="DORMIED Index brand rankings"
-                aria-rowcount="122"
+                aria-rowcount="144"
               >
                 <colgroup>
                   <col class="col-rank">
@@ -447,7 +447,7 @@
           <details class="faq-item">
             <summary class="faq-question">How do I get a brand added?</summary>
             <div class="faq-answer">
-              <p>We currently track 122 brands. To make the index a brand needs meaningful search presence in at least one of our 11 markets. We add brands periodically as new players emerge and the category evolves.</p>
+              <p>We currently track 144 brands. To make the index a brand needs meaningful search presence in at least one of our 11 markets. We add brands periodically as new players emerge and the category evolves.</p>
               <p>If you think a brand belongs on the index and is not there yet, email us at <a href="mailto:dormiedgolf@gmail.com">dormiedgolf@gmail.com</a>. We take every suggestion seriously.</p>
             </div>
           </details>
@@ -507,12 +507,25 @@
     document.getElementById('footer-year').textContent = new Date().getFullYear();
   </script>
   <script src="/js/utils.js?v=20260318"></script>
-  <script src="/js/data.js?v=20260322"></script>
+  <script src="/js/data.js?v=20260323d"></script>
   <script src="/js/explanations.js?v=20260318"></script>
   <script src="/js/app.js?v=20260319d"></script>
-  <script src="/js/feed.js?v=20260323c"></script>
+  <script src="/js/feed.js?v=20260323i"></script>
   <script src="/js/analytics.js?v=20260320a"></script>
   <script src="/js/signup.js?v=20260319"></script>
+  <script>
+    (function () {
+      var meta = window.DORMIED_DATA && window.DORMIED_DATA.meta;
+      if (!meta || !meta.currentMonth) return;
+      var MONTHS = { Jan:'January', Feb:'February', Mar:'March', Apr:'April', May:'May', Jun:'June', Jul:'July', Aug:'August', Sep:'September', Oct:'October', Nov:'November', Dec:'December' };
+      var parts = meta.currentMonth.split(' ');
+      var full  = (MONTHS[parts[0]] || parts[0]) + ' ' + parts[1];
+      var period = document.getElementById('stat-current-period');
+      if (period) period.textContent = full;
+      var h2 = document.getElementById('rankings-heading');
+      if (h2) h2.textContent = 'DORMIED Index Rankings \u2014 ' + full;
+    })();
+  </script>
 
 </body>
 </html>

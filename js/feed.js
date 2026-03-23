@@ -9,8 +9,8 @@
 
   /* ── Constants ─────────────────────────────────────────────────────────── */
   var FEED_API    = '/api/feed';
-  var CACHE_KEY   = 'dormied_feed_v2';
-  var CACHE_TTL   = 6 * 60 * 60 * 1000;   // 6 hours
+  var CACHE_KEY   = 'dormied_feed_v3';
+  var CACHE_TTL   = 30 * 60 * 1000;        // 30 minutes
   var INDEX_LIMIT = 10;
   var BRAND_LIMIT = 10;
   var HOME_LIMIT  = 5;

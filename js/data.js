@@ -157,7 +157,7 @@ window.DORMIED_DATA = {
     {
       id: "asher-golf",
       name: "Asher Golf",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=ashergolf.com&sz=64",
+      logo: "/images/logos/asher-golf.jpg",
       website: "https://www.ashergolf.com",
       headquarters: "Draper, Utah, USA",
       founded: 2018,
@@ -391,7 +391,7 @@ window.DORMIED_DATA = {
     {
       id: "bridgestone-golf",
       name: "Bridgestone Golf",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=bridgestonegolf.com&sz=64",
+      logo: "/images/logos/bridgestone-golf.jpg",
       website: "https://www.bridgestonegolf.com",
       headquarters: "Covington, Georgia, USA",
       founded: 2005,
@@ -807,7 +807,7 @@ window.DORMIED_DATA = {
     {
       id: "full-swing",
       name: "Full Swing",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=fullswinggolf.com&sz=64",
+      logo: "/images/logos/full-swing.jpg",
       website: "https://www.fullswinggolf.com",
       headquarters: "Carlsbad, California, USA",
       founded: 1986,
@@ -859,7 +859,7 @@ window.DORMIED_DATA = {
     {
       id: "garmin-golf",
       name: "Garmin Golf",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=garmin.com&sz=64",
+      logo: "/images/logos/garmin-golf.jpg",
       website: "https://www.garmin.com/golf",
       headquarters: "Olathe, Kansas, USA",
       founded: 1989,
@@ -989,7 +989,7 @@ window.DORMIED_DATA = {
     {
       id: "hackmotion",
       name: "HackMotion",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=hackmotion.com&sz=64",
+      logo: "/images/logos/hackmotion.jpg",
       website: "https://www.hackmotion.com",
       headquarters: "Tallinn, Estonia",
       founded: 2017,
@@ -1067,7 +1067,7 @@ window.DORMIED_DATA = {
     {
       id: "honma",
       name: "Honma",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=honmagolf.com&sz=64",
+      logo: "/images/logos/honma.jpg",
       website: "https://www.honmagolf.com",
       headquarters: "Sakata, Japan",
       founded: 1959,
@@ -1613,7 +1613,7 @@ window.DORMIED_DATA = {
     {
       id: "municipal",
       name: "Municipal",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=municipal.com&sz=64",
+      logo: "/images/logos/municipal.jpg",
       website: "https://www.municipal.com",
       headquarters: "Carlsbad, California, USA",
       founded: 2020,
@@ -1977,7 +1977,7 @@ window.DORMIED_DATA = {
     {
       id: "project-x",
       name: "Project X",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=project-x-golf.com&sz=64",
+      logo: "/images/logos/project-x.jpg",
       website: "https://www.projectxshafts.com",
       headquarters: "Memphis, Tennessee, USA",
       founded: 1992,
@@ -2029,7 +2029,7 @@ window.DORMIED_DATA = {
     {
       id: "public-drip",
       name: "Public Drip",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=publicdrip.com&sz=64",
+      logo: "/images/logos/public-drip.jpg",
       website: "https://www.publicdrip.com",
       headquarters: "Los Angeles, California, USA",
       founded: 2020,
@@ -2055,7 +2055,7 @@ window.DORMIED_DATA = {
     {
       id: "puma-golf",
       name: "Puma Golf",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=puma.com&sz=64",
+      logo: "/images/logos/puma-golf.jpg",
       website: "https://www.puma.com/golf",
       headquarters: "Herzogenaurach, Germany",
       founded: 1948,
@@ -2315,7 +2315,7 @@ window.DORMIED_DATA = {
     {
       id: "seamus-golf",
       name: "Seamus Golf",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=seamusgolf.com&sz=64",
+      logo: "/images/logos/seamus-golf.jpg",
       website: "https://www.seamusgolf.com",
       headquarters: "Portland, Oregon, USA",
       founded: 2010,
@@ -2367,7 +2367,7 @@ window.DORMIED_DATA = {
     {
       id: "slazenger",
       name: "Slazenger",
-      logo: "https://s2.googleusercontent.com/s2/favicons?domain=slazenger.com&sz=64",
+      logo: "/images/logos/slazenger.jpg",
       website: "https://www.slazenger.com",
       headquarters: "London, United Kingdom",
       founded: null,

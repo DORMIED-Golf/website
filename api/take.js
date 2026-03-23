@@ -46,7 +46,7 @@ function startsWithDisallowed(text, brandName) {
 // ── News fetcher ──────────────────────────────────────────────────────────────
 
 async function fetchRecentArticles(brandName) {
-  const parser     = new Parser({ timeout: 5000, maxRedirects: 3 });
+  const parser     = new Parser({ timeout: 3000, maxRedirects: 3 });
   const brandLower = brandName.toLowerCase();
   const cutoff     = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
 
@@ -80,7 +80,7 @@ function buildUserPrompt(params, newsContext, retry = false) {
   const base = `Write a 1 to 3 sentence editorial take on the current state of ${name} based on the following data and any recent news you can find about the brand.
 
 Data context:
-* Current global rank: ${rank} out of 122
+* Current global rank: ${rank} out of 144
 * DI Score: ${di}
 * Month over month change: ${vsMonth}
 * 3 month trend: ${mom}
