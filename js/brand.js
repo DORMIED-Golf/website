@@ -406,25 +406,19 @@
     const allM    = getAllMonths(); // includes projected
     const mktS    = brand.searchesByMarket?.[chartMarket] || {};
 
-    // Slice based on period
-    let months = allM;
-    if (chartMonths > 0) months = allM.slice(-chartMonths);
+    // Exclude projected month — only show real data on brand charts
+    const actualM = allM.filter(m => m !== projM);
 
-    // If chartMonths slices into actual range, always include the projected month at the end
-    const projIdx = months.indexOf(projM);
-    if (chartMonths > 0 && projIdx === -1 && months.length > 0) {
-      months = [...months, projM];
-    }
+    // Slice based on period
+    let months = actualM;
+    if (chartMonths > 0) months = actualM.slice(-chartMonths);
 
     const labels    = months;
     const brandRaw  = months.map(m => mktS[m] || 0);
 
     // ── Normalise to 0–100 index (brand's own all-time peak = 100) ──────────
-    // Peak is derived from actual months only (not the projection) so the
-    // scale stays stable regardless of which period tab is selected.
-    const actualVals = months.filter(m => m !== projM).map(m => mktS[m] || 0);
-    const peakBrand  = Math.max(...actualVals, 1);
-    const brandData  = brandRaw.map(v => parseFloat((v / peakBrand * 100).toFixed(1)));
+    const peakBrand = Math.max(...brandRaw, 1);
+    const brandData = brandRaw.map(v => parseFloat((v / peakBrand * 100).toFixed(1)));
 
     // Global index average: each month's avg across all brands, normalised to
     // that average's own peak so it sits on the same 0–100 y-axis.
@@ -436,14 +430,9 @@
     const peakAvg       = Math.max(...globalAvgRaw, 1);
     const globalAvgData = globalAvgRaw.map(v => parseFloat((v / peakAvg * 100).toFixed(1)));
 
-    // Split brand index into actual vs projected segments
-    const projDataActual = months.map((m, i) => m !== projM ? brandData[i] : null);
-    const projDataProj   = months.map((m, i) => {
-      if (m === projM) return brandData[i];
-      // bridge: connect last real point → projected point
-      if (i === months.indexOf(projM) - 1) return brandData[i];
-      return null;
-    });
+    // All data is real — no projected segment needed
+    const projDataActual = brandData;
+    const projDataProj   = months.map(() => null);
 
     return { labels, projDataActual, projDataProj, globalAvgData, projM, months };
   }
