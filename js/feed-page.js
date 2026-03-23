@@ -476,14 +476,18 @@
     var srch = document.getElementById('feed-search');
     if (srch) {
       var searchTimer;
-      srch.addEventListener('input', function() {
+      function onSearchChange() {
         clearTimeout(searchTimer);
-        var val = this.value;
+        var val = srch.value;
         searchTimer = setTimeout(function() {
-          state.searchQuery = val.trim();
+          var q = val.trim();
+          if (q === state.searchQuery) return;
+          state.searchQuery = q;
           applyAndRender();
-        }, 250);
-      });
+        }, 200);
+      }
+      srch.addEventListener('input', onSearchChange);
+      srch.addEventListener('keyup', onSearchChange);
     }
 
     /* Clear button */
