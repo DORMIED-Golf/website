@@ -406,19 +406,25 @@
     const allM    = getAllMonths(); // includes projected
     const mktS    = brand.searchesByMarket?.[chartMarket] || {};
 
-    // Exclude projected month — only show real data on brand charts
-    const actualM = allM.filter(m => m !== projM);
-
     // Slice based on period
-    let months = actualM;
-    if (chartMonths > 0) months = actualM.slice(-chartMonths);
+    let months = allM;
+    if (chartMonths > 0) months = allM.slice(-chartMonths);
+
+    // If chartMonths slices into actual range, always include the projected month at the end
+    const projIdx = months.indexOf(projM);
+    if (chartMonths > 0 && projIdx === -1 && months.length > 0) {
+      months = [...months, projM];
+    }
 
     const labels    = months;
     const brandRaw  = months.map(m => mktS[m] || 0);
 
     // ── Normalise to 0–100 index (brand's own all-time peak = 100) ──────────
-    const peakBrand = Math.max(...brandRaw, 1);
-    const brandData = brandRaw.map(v => parseFloat((v / peakBrand * 100).toFixed(1)));
+    // Peak is derived from actual months only (not the projection) so the
+    // scale stays stable regardless of which period tab is selected.
+    const actualVals = months.filter(m => m !== projM).map(m => mktS[m] || 0);
+    const peakBrand  = Math.max(...actualVals, 1);
+    const brandData  = brandRaw.map(v => parseFloat((v / peakBrand * 100).toFixed(1)));
 
     // Global index average: each month's avg across all brands, normalised to
     // that average's own peak so it sits on the same 0–100 y-axis.
@@ -430,11 +436,20 @@
     const peakAvg       = Math.max(...globalAvgRaw, 1);
     const globalAvgData = globalAvgRaw.map(v => parseFloat((v / peakAvg * 100).toFixed(1)));
 
-    // All data is real — no projected segment needed
-    const projDataActual = brandData;
-    const projDataProj   = months.map(() => null);
+    // Split brand index into actual vs projected segments
+    const projDataActual = months.map((m, i) => m !== projM ? brandData[i] : null);
+    const projProjIdx    = months.indexOf(projM);
+    const projDataProj   = months.map((m, i) => {
+      if (m === projM) return brandData[i];
+      // bridge: connect last real point → projected point (visual only, not a tooltip point)
+      if (i === projProjIdx - 1) return brandData[i];
+      return null;
+    });
+    // Per-point radii: only the projected month dot is visible/hoverable
+    const projPointRadius      = months.map(m => m === projM ? 5 : 0);
+    const projPointHoverRadius = months.map(m => m === projM ? 7 : 0);
 
-    return { labels, projDataActual, projDataProj, globalAvgData, projM, months };
+    return { labels, projDataActual, projDataProj, projPointRadius, projPointHoverRadius, globalAvgData, projM, months };
   }
 
   // Plugin: draw vertical dashed lines + rotated 3-char abbreviations for tournament events.
@@ -533,7 +548,7 @@
   }
 
   function renderChart() {
-    const { labels, projDataActual, projDataProj, globalAvgData, projM } = buildChartData();
+    const { labels, projDataActual, projDataProj, projPointRadius, projPointHoverRadius, globalAvgData, projM } = buildChartData();
     const canvas = document.getElementById('bp-chart');
     if (!canvas) return;
 
@@ -571,7 +586,8 @@
             fill: false,
             tension: 0.35,
             borderDash: [8, 4],
-            pointRadius: 4,
+            pointRadius: projPointRadius,
+            pointHoverRadius: projPointHoverRadius,
             pointBackgroundColor: '#f59e0b',
             borderWidth: 2,
             spanGaps: false,
