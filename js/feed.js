@@ -12,7 +12,7 @@
   var CACHE_KEY   = 'dormied_feed_v2';
   var CACHE_TTL   = 6 * 60 * 60 * 1000;   // 6 hours
   var INDEX_LIMIT = 10;
-  var BRAND_LIMIT = 30;
+  var BRAND_LIMIT = 10;
   var HOME_LIMIT  = 5;
 
   // Supabase — public anon key, read-only
@@ -304,6 +304,16 @@
     listEl.innerHTML = filtered.map(function (a) {
       return renderArticleCard(a, true, allBrands);
     }).join('');
+
+    // "See All News" link below the capped list
+    var seeAll = document.getElementById('bp-latest-see-all');
+    if (!seeAll) {
+      seeAll = document.createElement('div');
+      seeAll.id = 'bp-latest-see-all';
+      seeAll.className = 'bp-latest-see-all';
+      seeAll.innerHTML = '<a href="/news/">See All News</a>';
+      listEl.parentNode.appendChild(seeAll);
+    }
   }
 
   /* ── localStorage cache ────────────────────────────────────────────────── */

@@ -2375,6 +2375,24 @@ details[open] .faq-question::after { content: '−'; }
   font-family: var(--font-mono);
   margin: 0;
 }
+.bp-latest-see-all {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  padding-bottom: 32px;
+}
+.bp-latest-see-all a {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+  text-decoration: none;
+}
+.bp-latest-see-all a:hover {
+  text-decoration: underline;
+}
 .feed-card {
   padding: 10px;
   background: var(--surface);
