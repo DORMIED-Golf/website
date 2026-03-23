@@ -2892,7 +2892,7 @@ details[open] .faq-question::after { content: '−'; }
   text-decoration: none;
 }
 .h2h-brand-hd:hover { text-decoration: none; }
-.h2h-brand-hd--right { align-items: flex-end; }
+.h2h-brand-hd--right { align-items: flex-end; text-align: right; }
 .h2h-brand-hd-name {
   font-family: var(--font-mono);
   font-size: 0.8rem;
