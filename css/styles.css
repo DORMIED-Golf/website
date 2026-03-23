@@ -2503,6 +2503,13 @@ details[open] .faq-question::after { content: '−'; }
   padding: 0 16px;
 }
 .home-main { flex: 1; min-width: 0; padding: 0 0 48px; }
+@media (max-width: 1199px) {
+  /* On mobile the sidebar (Latest) stacks below home-main (Top Stories).
+     Remove the excess bottom padding and section margin so the gap is ~24px. */
+  .home-main { padding-bottom: 0; }
+  .home-stories-section { margin-bottom: 0; }
+  .latest-feed-heading { margin-top: 24px; }
+}
 @media (min-width: 1200px) {
   .home-layout {
     flex-direction: row;
