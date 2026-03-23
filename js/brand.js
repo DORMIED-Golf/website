@@ -620,6 +620,13 @@
             bodyColor:   '#8aa88a',
             titleFont:   { family: 'JetBrains Mono', size: 11 },
             bodyFont:    { family: 'JetBrains Mono', size: 11 },
+            filter(tooltipItem) {
+              // Hide the Projected dataset entry unless we're hovering the actual projected month
+              if (tooltipItem.dataset.label === 'Projected') {
+                return tooltipItem.label === projM;
+              }
+              return true;
+            },
             callbacks: {
               title(items) { return items[0].label; },
               label(item) {
