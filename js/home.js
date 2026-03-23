@@ -664,6 +664,12 @@
       return;
     }
 
+    // Update CTA button with live brand count from data
+    var ctaBtn = document.getElementById('home-cta-brands-btn');
+    if (ctaBtn && window.DORMIED_DATA.meta && window.DORMIED_DATA.meta.totalBrands) {
+      ctaBtn.textContent = 'See all ' + window.DORMIED_DATA.meta.totalBrands + ' brands in the full Index →';
+    }
+
     var ranked  = computeHomeRankings();
     var markets = computeMarketPulse();
     var matchup = getDailyMatchup(ranked);
