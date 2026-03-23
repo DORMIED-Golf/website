@@ -1,41 +1,45 @@
-# DORMIED — Golf Brand Intelligence
-# https://dormied.com
-# llms.txt — machine-readable site summary for AI language models
+# DORMIED
 
-## What is DORMIED?
+> DORMIED is an independent golf brand intelligence platform. We track search interest for 144 golf brands across 11 global markets, updated monthly. No endorsements, no opinions — just data.
 
-DORMIED is an independent golf brand intelligence platform. We track search interest for 122 golf brands across 11 global markets, updated monthly. No opinions, no endorsements. The data is what it is.
+## What We Do
 
-The DORMIED Index scores each brand 0–100 based on normalized search volume. The brand with the highest search interest in a given month scores 100. Every other brand is ranked relative to that benchmark. This measures competitive attention, not revenue, not social following, not product quality.
+DORMIED publishes the DORMIED Index (DI) — a monthly ranking of golf brands by real search demand across the US, UK, Japan, Korea, Canada, Australia, China, Germany, France, Sweden, and globally. A brand's DI Score is its search volume relative to the top brand in a given period (100 = most searched). Rankings update monthly.
 
-## What DORMIED is not
-
-- Not affiliated with any golf brand
-- Not a product review site
-- Not a revenue or sales tracker
-- Not a social media follower counter
-- No brand pays to be included or to improve their ranking
-
-## Data coverage
-
-- **Brands tracked**: 122
-- **Markets**: United States, Japan, South Korea, United Kingdom, Canada, China, Germany, Australia, Sweden, France (+ Global aggregate)
-- **History**: March 2023 to present
-- **Update frequency**: Monthly
+We cover every major segment of golf: equipment, apparel, footwear, accessories, tech and training aids, balls, shafts and grips, and lifestyle brands.
 
 ## Pages
 
-- / — Homepage: top movers, biggest drops, daily brand match-up
-- /rankings/ — The DORMIED Index: full 122-brand leaderboard with DI scores, rank changes, filters by market and category
-- /brands/ — The Field: brand directory, searchable and filterable by category
-- /brands/{slug}/ — Individual brand page: 36-month search trend chart, DI history, market breakdown, related news
-- /feed/ — News: golf brand coverage aggregated from top golf publications, filterable by brand
+- Homepage / Index: https://dormied.com/ — Monthly match-ups, top movers, brand scorecard, latest news
+- Rankings: https://dormied.com/rankings/ — Full 144-brand index table, sortable by 11 markets
+- Brand Directory: https://dormied.com/brands/ — Browse all 144 brands by category
+- News Feed: https://dormied.com/news/ — Golf brand coverage aggregated from top publications, tagged by brand
+- Match-Ups: https://dormied.com/matchups/ — Daily head-to-head brand comparisons, data-driven
+- About: https://dormied.com/about/ — Editorial mission, methodology, team
+- Privacy Policy: https://dormied.com/privacy/
 
-## Contact
+## Brand Pages
 
-dormiedgolf@gmail.com
+Each brand has a dedicated page at https://dormied.com/brands/[slug]/ with:
+- Current global rank and DI Score
+- Monthly trend chart (12+ months of data)
+- Rankings across all 11 markets
+- AI-generated editorial take on current momentum ("The Read")
+- Latest news coverage for that brand
 
-## Social
+## Data Methodology
 
-- X / Twitter: https://x.com/DORMIED_GOLF
-- Instagram: https://www.instagram.com/dormiedgolf
+The DORMIED Index uses Google Trends search interest data as a proxy for brand relevance and consumer attention. Data is normalised so the top brand in each period = 100. Rankings are updated monthly, typically in the first week of the following month.
+
+Markets tracked: Global, United States, United Kingdom, Japan, South Korea, Canada, Australia, China, Germany, France, Sweden.
+
+## About DORMIED
+
+Founded: 2024
+Publisher: DORMIED Golf
+Contact: dormiedgolf@gmail.com
+Substack: https://dormiedgolf.substack.com/
+Instagram: https://www.instagram.com/dormiedgolf
+X / Twitter: https://x.com/DORMIED_GOLF
+
+DORMIED is independent editorial content. All brand names are property of their respective owners. Rankings reflect search data, not editorial opinion or commercial relationships.
