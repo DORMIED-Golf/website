@@ -399,6 +399,7 @@
         el.innerHTML = articles.map(function (a) {
           return renderArticleCard(a, true, allBrands);
         }).join('');
+        appendHomeStoriesSeeAll(el);
       } else {
         // Fewer than 3 clicked articles — fall back to latest feed
         renderHomeStoriesFallback(feedArticles, allBrands, el);
@@ -408,6 +409,15 @@
       // Supabase unavailable — fall back to latest feed
       renderHomeStoriesFallback(feedArticles, allBrands, el);
     });
+  }
+
+  function appendHomeStoriesSeeAll(el) {
+    if (document.getElementById('home-stories-see-all')) return;
+    var div = document.createElement('div');
+    div.id = 'home-stories-see-all';
+    div.className = 'bp-latest-see-all';
+    div.innerHTML = '<a href="/news/">See All News</a>';
+    el.parentNode.appendChild(div);
   }
 
   function renderHomeStoriesFallback(articles, allBrands, el) {
@@ -421,6 +431,7 @@
     el.innerHTML = slice.map(function (a) {
       return renderArticleCard(a, true, allBrands);
     }).join('');
+    appendHomeStoriesSeeAll(el);
   }
 
   /* ── Main init ─────────────────────────────────────────────────────────── */
