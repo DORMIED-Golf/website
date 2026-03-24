@@ -3756,20 +3756,28 @@ details[open] .faq-question::after { content: '−'; }
   border: 1px solid #1a3a1a;
   border-top: 3px solid #22c55e;
   border-radius: 6px;
-  max-width: 480px;
+  max-width: 640px;
   width: 100%;
   padding: 36px 32px 28px;
   box-sizing: border-box;
   transform: translateY(12px);
   transition: transform 0.3s ease;
 }
+.signup-popup-inner {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
 .signup-popup-img {
-  display: block;
-  width: 100%;
-  max-height: 120px;
-  object-fit: cover;
+  flex-shrink: 0;
+  width: 180px;
   border-radius: 4px;
-  margin: 16px 0;
+  object-fit: cover;
+  display: block;
+}
+.signup-popup-content {
+  flex: 1;
+  min-width: 0;
 }
 .signup-overlay--visible .signup-popup {
   transform: translateY(0);
