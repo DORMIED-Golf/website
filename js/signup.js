@@ -93,7 +93,10 @@
   var POPUP_HTML =
     '<div id="signup-overlay" class="signup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-heading">'
   +   '<div class="signup-popup">'
-  +     '<button class="signup-popup-close" id="popup-close" aria-label="Close">&times;</button>'
+  +     '<div class="signup-popup-img-wrap">'
+  +       '<img class="signup-popup-img" src="/images/og-image.png" alt="DORMIED — The Scorecard" loading="lazy">'
+  +       '<button class="signup-popup-close" id="popup-close" aria-label="Close">&times;</button>'
+  +     '</div>'
   +     '<h2 class="signup-popup-heading" id="popup-heading">Built for the Gear Obsessed.</h2>'
   +     '<p class="signup-popup-body">Every month, The Scorecard tracks which golf brands are defining our game, who just made a move worth paying attention to, and who the data says is fading before anyone else notices. One email. No fluff.</p>'
   +     '<form class="signup-popup-form" id="popup-form" novalidate>'
