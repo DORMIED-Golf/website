@@ -94,7 +94,7 @@
     '<div id="signup-overlay" class="signup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-heading">'
   +   '<div class="signup-popup">'
   +     '<div class="signup-popup-img-wrap">'
-  +       '<img class="signup-popup-img" src="/images/og-image.png" alt="DORMIED — The Scorecard" loading="lazy">'
+  +       '<img class="signup-popup-img" src="/images/scorecard-cover.jpg" alt="DORMIED — The Scorecard" loading="lazy">'
   +       '<button class="signup-popup-close" id="popup-close" aria-label="Close">&times;</button>'
   +     '</div>'
   +     '<h2 class="signup-popup-heading" id="popup-heading">Built for the Gear Obsessed.</h2>'
