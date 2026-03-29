@@ -12,11 +12,21 @@ const FEEDS = [
   { id: 'hackerspar',   name: "Hacker's Paradise",     url: 'https://www.thehackersparadise.com/feed' },
 ];
 
+// Pre-compile a word-boundary regex for each brand to avoid false positives
+// e.g. "PING" must not match inside "groupings", "shipping", etc.
+const brandPatterns = brands.map(b => {
+  const term    = b.name.toLowerCase();
+  const escaped = term.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&').replace(/\s+/g, '\\s+');
+  const start   = /^\w/.test(term) ? '\\b' : '';
+  const end     = /\w$/.test(term) ? '\\b' : '';
+  return { id: b.id, re: new RegExp(start + escaped + end, 'i') };
+});
+
 function tagArticle(title, snippet) {
   const text = (title + ' ' + (snippet || '')).toLowerCase();
-  return brands
-    .filter(b => text.includes(b.name.toLowerCase()))
-    .map(b => b.id);
+  return brandPatterns
+    .filter(p => p.re.test(text))
+    .map(p => p.id);
 }
 
 function extractImage(item) {

@@ -1,124 +1,578 @@
 [
-  { "id": "2undr", "name": "2UNDR" },
-  { "id": "adams-golf", "name": "Adams Golf" },
-  { "id": "adidas-golf", "name": "Adidas Golf" },
-  { "id": "aldila", "name": "Aldila" },
-  { "id": "arccos-golf", "name": "Arccos Golf" },
-  { "id": "asher-golf", "name": "Asher Golf" },
-  { "id": "bad-birdie", "name": "Bad Birdie" },
-  { "id": "barstool-golf", "name": "Barstool Golf" },
-  { "id": "ben-hogan-golf", "name": "Ben Hogan Golf" },
-  { "id": "bettinardi", "name": "Bettinardi" },
-  { "id": "blue-tees", "name": "Blue Tees" },
-  { "id": "bogey-boys", "name": "Bogey Boys" },
-  { "id": "bonobos-golf", "name": "Bonobos Golf" },
-  { "id": "breezy-golf", "name": "Breezy Golf" },
-  { "id": "bridgestone-golf", "name": "Bridgestone Golf" },
-  { "id": "bushnell-golf", "name": "Bushnell Golf" },
-  { "id": "callaway", "name": "Callaway" },
-  { "id": "cleveland-golf", "name": "Cleveland Golf" },
-  { "id": "clicgear", "name": "Clicgear" },
-  { "id": "cobra", "name": "Cobra" },
-  { "id": "cut-golf-balls", "name": "Cut Golf Balls" },
-  { "id": "devereux-golf", "name": "Devereux Golf" },
-  { "id": "eastside-golf", "name": "Eastside Golf" },
-  { "id": "ecco", "name": "Ecco" },
-  { "id": "edel-golf", "name": "Edel Golf" },
-  { "id": "evnroll", "name": "Evnroll" },
-  { "id": "flightscope", "name": "FlightScope" },
-  { "id": "footjoy", "name": "Footjoy" },
-  { "id": "foresight-sports", "name": "Foresight Sports" },
-  { "id": "fujikura", "name": "Fujikura" },
-  { "id": "full-swing", "name": "Full Swing" },
-  { "id": "g-fore", "name": "G/Fore" },
-  { "id": "garmin-golf", "name": "Garmin Golf" },
-  { "id": "ghost-golf", "name": "Ghost Golf" },
-  { "id": "golf-pride", "name": "Golf Pride" },
-  { "id": "good-good-golf", "name": "Good Good Golf" },
-  { "id": "greyson", "name": "Greyson" },
-  { "id": "hackmotion", "name": "HackMotion" },
-  { "id": "haywood-golf", "name": "Haywood Golf" },
-  { "id": "holderness-bourne", "name": "Holderness & Bourne" },
-  { "id": "honma", "name": "Honma" },
-  { "id": "irange-sports", "name": "iRange Sports" },
-  { "id": "j-lindeberg", "name": "J.Lindeberg" },
-  { "id": "jones-sports-co", "name": "Jones Sports Co" },
-  { "id": "kadet-golf", "name": "Kadet Golf" },
-  { "id": "kbs-golf", "name": "KBS Golf" },
-  { "id": "kirkland-golf", "name": "Kirkland Golf" },
-  { "id": "l-a-b-golf", "name": "L.A.B. Golf" },
-  { "id": "la-golf", "name": "LA Golf" },
-  { "id": "lamkin", "name": "Lamkin" },
-  { "id": "linksoul", "name": "Linksoul" },
-  { "id": "lululemon-golf", "name": "Lululemon Golf" },
-  { "id": "macade-golf", "name": "Macade Golf" },
-  { "id": "macgregor", "name": "MacGregor" },
-  { "id": "malbon", "name": "Malbon" },
-  { "id": "manors-golf", "name": "Manors Golf" },
-  { "id": "maxfli", "name": "Maxfli" },
-  { "id": "metalwood-studio", "name": "Metalwood Studio" },
-  { "id": "mitsubishi-golf", "name": "Mitsubishi Golf" },
-  { "id": "miura-golf", "name": "Miura Golf" },
-  { "id": "mizuno", "name": "Mizuno" },
-  { "id": "municipal", "name": "Municipal" },
-  { "id": "new-balance-golf", "name": "New Balance Golf" },
-  { "id": "nike-golf", "name": "Nike Golf" },
-  { "id": "odyssey-golf", "name": "Odyssey Golf" },
-  { "id": "ogio-golf", "name": "Ogio Golf" },
-  { "id": "olukai", "name": "OluKai" },
-  { "id": "original-penguin", "name": "Original Penguin" },
-  { "id": "perfect-practice", "name": "Perfect Practice" },
-  { "id": "peter-millar", "name": "Peter Millar" },
-  { "id": "ping", "name": "PING" },
-  { "id": "pinnacle", "name": "Pinnacle" },
-  { "id": "pins-and-aces", "name": "Pins and Aces" },
-  { "id": "precision-pro-golf", "name": "Precision Pro Golf" },
-  { "id": "primo-golf-apparel", "name": "Primo Golf Apparel" },
-  { "id": "project-x", "name": "Project X" },
-  { "id": "prosendr", "name": "ProSENDR" },
-  { "id": "public-drip", "name": "Public Drip" },
-  { "id": "puma-golf", "name": "Puma Golf" },
-  { "id": "puttout", "name": "PuttOut" },
-  { "id": "pxg", "name": "PXG" },
-  { "id": "quiet-golf", "name": "Quiet Golf" },
-  { "id": "random-golf-club", "name": "Random Golf Club" },
-  { "id": "rapsodo", "name": "Rapsodo" },
-  { "id": "reigning-champ", "name": "Reigning Champ" },
-  { "id": "rhoback", "name": "Rhoback" },
-  { "id": "rlx-golf", "name": "RLX Golf" },
-  { "id": "scotty-cameron", "name": "Scotty Cameron" },
-  { "id": "seamus-golf", "name": "Seamus Golf" },
-  { "id": "shot-scope", "name": "Shot Scope" },
-  { "id": "slazenger", "name": "Slazenger" },
-  { "id": "snell-golf", "name": "Snell Golf" },
-  { "id": "srixon", "name": "Srixon" },
-  { "id": "stitch-golf", "name": "Stitch Golf" },
-  { "id": "students-golf", "name": "Students Golf" },
-  { "id": "sub-70", "name": "Sub 70" },
-  { "id": "sugar-loaf-social-club", "name": "Sugar Loaf Social Club" },
-  { "id": "sun-day-red", "name": "Sun Day Red" },
-  { "id": "sun-mountain", "name": "Sun Mountain" },
-  { "id": "sunday-golf", "name": "Sunday Golf" },
-  { "id": "superstroke", "name": "SuperStroke" },
-  { "id": "takomo-golf", "name": "Takomo Golf" },
-  { "id": "taylormade", "name": "TaylorMade" },
-  { "id": "tectectec", "name": "TecTecTec" },
-  { "id": "the-stack-system", "name": "The Stack System" },
-  { "id": "titleist", "name": "Titleist" },
-  { "id": "tommy-armour", "name": "Tommy Armour" },
-  { "id": "top-flite", "name": "Top Flite" },
-  { "id": "tour-edge", "name": "Tour Edge" },
-  { "id": "trackman", "name": "Trackman" },
-  { "id": "travismatthew", "name": "TravisMatthew" },
-  { "id": "true-linkswear", "name": "TRUE linkswear" },
-  { "id": "true-temper", "name": "True Temper" },
-  { "id": "under-armour-golf", "name": "Under Armour Golf" },
-  { "id": "vessel", "name": "Vessel" },
-  { "id": "vice-golf", "name": "Vice Golf" },
-  { "id": "voice-caddie", "name": "Voice Caddie" },
-  { "id": "volvik", "name": "Volvik" },
-  { "id": "william-murray-golf", "name": "William Murray Golf" },
-  { "id": "wilson", "name": "Wilson" },
-  { "id": "xxio", "name": "XXIO" },
-  { "id": "zire-golf", "name": "Zire Golf" }
+  {
+    "id": "2undr",
+    "name": "2UNDR"
+  },
+  {
+    "id": "a-putnam",
+    "name": "A.Putnam"
+  },
+  {
+    "id": "abacus-sportswear",
+    "name": "Abacus Sportswear"
+  },
+  {
+    "id": "adams-golf",
+    "name": "Adams Golf"
+  },
+  {
+    "id": "adidas-golf",
+    "name": "Adidas Golf"
+  },
+  {
+    "id": "aldila",
+    "name": "Aldila"
+  },
+  {
+    "id": "arccos-golf",
+    "name": "Arccos Golf"
+  },
+  {
+    "id": "asher-golf",
+    "name": "Asher Golf"
+  },
+  {
+    "id": "avoda-golf",
+    "name": "Avoda Golf"
+  },
+  {
+    "id": "bad-birdie",
+    "name": "Bad Birdie"
+  },
+  {
+    "id": "barstool-golf",
+    "name": "Barstool Golf"
+  },
+  {
+    "id": "ben-hogan-golf",
+    "name": "Ben Hogan Golf"
+  },
+  {
+    "id": "bettinardi",
+    "name": "Bettinardi"
+  },
+  {
+    "id": "birdie-and-ace",
+    "name": "Birdie & Ace"
+  },
+  {
+    "id": "blue-tees",
+    "name": "Blue Tees"
+  },
+  {
+    "id": "bogey-boys",
+    "name": "Bogey Boys"
+  },
+  {
+    "id": "bonobos-golf",
+    "name": "Bonobos Golf"
+  },
+  {
+    "id": "breezy-golf",
+    "name": "Breezy Golf"
+  },
+  {
+    "id": "bridgestone-golf",
+    "name": "Bridgestone Golf"
+  },
+  {
+    "id": "bushnell-golf",
+    "name": "Bushnell Golf"
+  },
+  {
+    "id": "byrdie-golf",
+    "name": "Byrdie Golf Social Wear"
+  },
+  {
+    "id": "callaway",
+    "name": "Callaway"
+  },
+  {
+    "id": "calliope-golf",
+    "name": "Calliope Golf"
+  },
+  {
+    "id": "cleveland-golf",
+    "name": "Cleveland Golf"
+  },
+  {
+    "id": "clicgear",
+    "name": "Clicgear"
+  },
+  {
+    "id": "cobra",
+    "name": "Cobra"
+  },
+  {
+    "id": "cut-golf-balls",
+    "name": "Cut Golf Balls"
+  },
+  {
+    "id": "daily-sports",
+    "name": "Daily Sports"
+  },
+  {
+    "id": "devereux-golf",
+    "name": "Devereux Golf"
+  },
+  {
+    "id": "eastside-golf",
+    "name": "Eastside Golf"
+  },
+  {
+    "id": "ecco",
+    "name": "Ecco"
+  },
+  {
+    "id": "edel-golf",
+    "name": "Edel Golf"
+  },
+  {
+    "id": "ep-ny",
+    "name": "EP NY"
+  },
+  {
+    "id": "evnroll",
+    "name": "Evnroll"
+  },
+  {
+    "id": "flightscope",
+    "name": "FlightScope"
+  },
+  {
+    "id": "footjoy",
+    "name": "Footjoy"
+  },
+  {
+    "id": "fore-all",
+    "name": "Fore All"
+  },
+  {
+    "id": "foresight-sports",
+    "name": "Foresight Sports"
+  },
+  {
+    "id": "fujikura",
+    "name": "Fujikura"
+  },
+  {
+    "id": "full-swing",
+    "name": "Full Swing"
+  },
+  {
+    "id": "g-fore",
+    "name": "G/Fore"
+  },
+  {
+    "id": "garmin-golf",
+    "name": "Garmin Golf"
+  },
+  {
+    "id": "ghost-golf",
+    "name": "Ghost Golf"
+  },
+  {
+    "id": "golf-pride",
+    "name": "Golf Pride"
+  },
+  {
+    "id": "golftini",
+    "name": "Golftini"
+  },
+  {
+    "id": "good-good-golf",
+    "name": "Good Good Golf"
+  },
+  {
+    "id": "greyson",
+    "name": "Greyson"
+  },
+  {
+    "id": "hackmotion",
+    "name": "HackMotion"
+  },
+  {
+    "id": "haywood-golf",
+    "name": "Haywood Golf"
+  },
+  {
+    "id": "holderness-bourne",
+    "name": "Holderness & Bourne"
+  },
+  {
+    "id": "honma",
+    "name": "Honma"
+  },
+  {
+    "id": "ibkul",
+    "name": "IBKUL"
+  },
+  {
+    "id": "irange-sports",
+    "name": "iRange Sports"
+  },
+  {
+    "id": "j-lindeberg",
+    "name": "J.Lindeberg"
+  },
+  {
+    "id": "jofit",
+    "name": "Jofit"
+  },
+  {
+    "id": "jones-sports-co",
+    "name": "Jones Sports Co"
+  },
+  {
+    "id": "kadet-golf",
+    "name": "Kadet Golf"
+  },
+  {
+    "id": "kastel-denmark",
+    "name": "Kastel Denmark"
+  },
+  {
+    "id": "kbs-golf",
+    "name": "KBS Golf"
+  },
+  {
+    "id": "kirkland-golf",
+    "name": "Kirkland Golf"
+  },
+  {
+    "id": "krank-golf",
+    "name": "Krank Golf"
+  },
+  {
+    "id": "l-a-b-golf",
+    "name": "L.A.B. Golf"
+  },
+  {
+    "id": "la-golf",
+    "name": "LA Golf"
+  },
+  {
+    "id": "lamkin",
+    "name": "Lamkin"
+  },
+  {
+    "id": "lija",
+    "name": "LIJA"
+  },
+  {
+    "id": "linksoul",
+    "name": "Linksoul"
+  },
+  {
+    "id": "lululemon-golf",
+    "name": "Lululemon Golf"
+  },
+  {
+    "id": "macade-golf",
+    "name": "Macade Golf"
+  },
+  {
+    "id": "macgregor",
+    "name": "MacGregor"
+  },
+  {
+    "id": "malbon",
+    "name": "Malbon"
+  },
+  {
+    "id": "manors-golf",
+    "name": "Manors Golf"
+  },
+  {
+    "id": "maxfli",
+    "name": "Maxfli"
+  },
+  {
+    "id": "metalwood-studio",
+    "name": "Metalwood Studio"
+  },
+  {
+    "id": "mitsubishi-golf",
+    "name": "Mitsubishi Golf"
+  },
+  {
+    "id": "miura-golf",
+    "name": "Miura Golf"
+  },
+  {
+    "id": "mizuno",
+    "name": "Mizuno"
+  },
+  {
+    "id": "municipal",
+    "name": "Municipal"
+  },
+  {
+    "id": "new-balance-golf",
+    "name": "New Balance Golf"
+  },
+  {
+    "id": "nike-golf",
+    "name": "Nike Golf"
+  },
+  {
+    "id": "odyssey-golf",
+    "name": "Odyssey Golf"
+  },
+  {
+    "id": "ogio-golf",
+    "name": "Ogio Golf"
+  },
+  {
+    "id": "olukai",
+    "name": "OluKai"
+  },
+  {
+    "id": "original-penguin",
+    "name": "Original Penguin"
+  },
+  {
+    "id": "perfect-practice",
+    "name": "Perfect Practice"
+  },
+  {
+    "id": "peter-millar",
+    "name": "Peter Millar"
+  },
+  {
+    "id": "ping",
+    "name": "PING"
+  },
+  {
+    "id": "pinnacle",
+    "name": "Pinnacle"
+  },
+  {
+    "id": "pins-and-aces",
+    "name": "Pins and Aces"
+  },
+  {
+    "id": "precision-pro-golf",
+    "name": "Precision Pro Golf"
+  },
+  {
+    "id": "primo-golf-apparel",
+    "name": "Primo Golf Apparel"
+  },
+  {
+    "id": "project-x",
+    "name": "Project X"
+  },
+  {
+    "id": "prosendr",
+    "name": "ProSENDR"
+  },
+  {
+    "id": "public-drip",
+    "name": "Public Drip"
+  },
+  {
+    "id": "puma-golf",
+    "name": "Puma Golf"
+  },
+  {
+    "id": "puttout",
+    "name": "PuttOut"
+  },
+  {
+    "id": "pxg",
+    "name": "PXG"
+  },
+  {
+    "id": "quiet-golf",
+    "name": "Quiet Golf"
+  },
+  {
+    "id": "random-golf-club",
+    "name": "Random Golf Club"
+  },
+  {
+    "id": "rapsodo",
+    "name": "Rapsodo"
+  },
+  {
+    "id": "reigning-champ",
+    "name": "Reigning Champ"
+  },
+  {
+    "id": "rhoback",
+    "name": "Rhoback"
+  },
+  {
+    "id": "rlx-golf",
+    "name": "RLX Golf"
+  },
+  {
+    "id": "rohnisch",
+    "name": "Rohnisch"
+  },
+  {
+    "id": "scotty-cameron",
+    "name": "Scotty Cameron"
+  },
+  {
+    "id": "seamus-golf",
+    "name": "Seamus Golf"
+  },
+  {
+    "id": "shot-scope",
+    "name": "Shot Scope"
+  },
+  {
+    "id": "slazenger",
+    "name": "Slazenger"
+  },
+  {
+    "id": "snell-golf",
+    "name": "Snell Golf"
+  },
+  {
+    "id": "srixon",
+    "name": "Srixon"
+  },
+  {
+    "id": "stitch-golf",
+    "name": "Stitch Golf"
+  },
+  {
+    "id": "students-golf",
+    "name": "Students Golf"
+  },
+  {
+    "id": "sub-70",
+    "name": "Sub 70"
+  },
+  {
+    "id": "sugar-loaf-social-club",
+    "name": "Sugar Loaf Social Club"
+  },
+  {
+    "id": "sun-day-red",
+    "name": "Sun Day Red"
+  },
+  {
+    "id": "sun-mountain",
+    "name": "Sun Mountain"
+  },
+  {
+    "id": "sunday-golf",
+    "name": "Sunday Golf"
+  },
+  {
+    "id": "superstroke",
+    "name": "SuperStroke"
+  },
+  {
+    "id": "swag-golf",
+    "name": "Swag Golf"
+  },
+  {
+    "id": "swingdish",
+    "name": "SwingDish"
+  },
+  {
+    "id": "tail-activewear",
+    "name": "Tail Activewear"
+  },
+  {
+    "id": "takomo-golf",
+    "name": "Takomo Golf"
+  },
+  {
+    "id": "taylormade",
+    "name": "TaylorMade"
+  },
+  {
+    "id": "tectectec",
+    "name": "TecTecTec"
+  },
+  {
+    "id": "the-stack-system",
+    "name": "The Stack System"
+  },
+  {
+    "id": "titleist",
+    "name": "Titleist"
+  },
+  {
+    "id": "tommy-armour",
+    "name": "Tommy Armour"
+  },
+  {
+    "id": "top-flite",
+    "name": "Top Flite"
+  },
+  {
+    "id": "tory-burch-sport",
+    "name": "Tory Burch Sport"
+  },
+  {
+    "id": "tour-edge",
+    "name": "Tour Edge"
+  },
+  {
+    "id": "trackman",
+    "name": "Trackman"
+  },
+  {
+    "id": "travismatthew",
+    "name": "TravisMatthew"
+  },
+  {
+    "id": "true-linkswear",
+    "name": "TRUE linkswear"
+  },
+  {
+    "id": "true-temper",
+    "name": "True Temper"
+  },
+  {
+    "id": "under-armour-golf",
+    "name": "Under Armour Golf"
+  },
+  {
+    "id": "vessel",
+    "name": "Vessel"
+  },
+  {
+    "id": "vice-golf",
+    "name": "Vice Golf"
+  },
+  {
+    "id": "voice-caddie",
+    "name": "Voice Caddie"
+  },
+  {
+    "id": "volvik",
+    "name": "Volvik"
+  },
+  {
+    "id": "vuori",
+    "name": "Vuori"
+  },
+  {
+    "id": "william-murray-golf",
+    "name": "William Murray Golf"
+  },
+  {
+    "id": "williams-athletic-club",
+    "name": "Williams Athletic Club"
+  },
+  {
+    "id": "wilson",
+    "name": "Wilson"
+  },
+  {
+    "id": "xxio",
+    "name": "XXIO"
+  },
+  {
+    "id": "zire-golf",
+    "name": "Zire Golf"
+  }
 ]
