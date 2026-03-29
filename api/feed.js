@@ -12,20 +12,25 @@ const FEEDS = [
   { id: 'hackerspar',   name: "Hacker's Paradise",     url: 'https://www.thehackersparadise.com/feed' },
 ];
 
-// Pre-compile a word-boundary regex for each brand to avoid false positives
-// e.g. "PING" must not match inside "groupings", "shipping", etc.
-const brandPatterns = brands.map(b => {
-  const term    = b.name.toLowerCase();
+// Pre-compile word-boundary regexes for each brand name + aliases.
+// Prevents false positives (e.g. "PING" inside "groupings") while
+// allowing common alternate spellings (e.g. "LAB Golf" for "L.A.B. Golf").
+function makeRe(term) {
   const escaped = term.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&').replace(/\s+/g, '\\s+');
   const start   = /^\w/.test(term) ? '\\b' : '';
   const end     = /\w$/.test(term) ? '\\b' : '';
-  return { id: b.id, re: new RegExp(start + escaped + end, 'i') };
+  return new RegExp(start + escaped + end, 'i');
+}
+
+const brandPatterns = brands.map(b => {
+  const terms = [b.name].concat(b.aliases || []);
+  return { id: b.id, res: terms.map(makeRe) };
 });
 
 function tagArticle(title, snippet) {
   const text = (title + ' ' + (snippet || '')).toLowerCase();
   return brandPatterns
-    .filter(p => p.re.test(text))
+    .filter(p => p.res.some(re => re.test(text)))
     .map(p => p.id);
 }
 

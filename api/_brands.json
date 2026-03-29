@@ -93,7 +93,10 @@
   },
   {
     "id": "cleveland-golf",
-    "name": "Cleveland Golf"
+    "name": "Cleveland Golf",
+    "aliases": [
+      "Cleveland"
+    ]
   },
   {
     "id": "clicgear",
@@ -129,7 +132,12 @@
   },
   {
     "id": "ep-ny",
-    "name": "EP NY"
+    "name": "EP NY",
+    "aliases": [
+      "EP/NY",
+      "EP-NY",
+      "Extreme Performance"
+    ]
   },
   {
     "id": "evnroll",
@@ -141,7 +149,11 @@
   },
   {
     "id": "footjoy",
-    "name": "Footjoy"
+    "name": "Footjoy",
+    "aliases": [
+      "FootJoy",
+      "Foot Joy"
+    ]
   },
   {
     "id": "fore-all",
@@ -161,7 +173,12 @@
   },
   {
     "id": "g-fore",
-    "name": "G/Fore"
+    "name": "G/Fore",
+    "aliases": [
+      "G/Fore",
+      "GFORE",
+      "G Fore"
+    ]
   },
   {
     "id": "garmin-golf",
@@ -213,7 +230,11 @@
   },
   {
     "id": "j-lindeberg",
-    "name": "J.Lindeberg"
+    "name": "J.Lindeberg",
+    "aliases": [
+      "J Lindeberg",
+      "JLindeberg"
+    ]
   },
   {
     "id": "jofit",
@@ -245,7 +266,12 @@
   },
   {
     "id": "l-a-b-golf",
-    "name": "L.A.B. Golf"
+    "name": "L.A.B. Golf",
+    "aliases": [
+      "LAB Golf",
+      "L.A.B Golf",
+      "LAB Putter"
+    ]
   },
   {
     "id": "la-golf",
@@ -309,7 +335,10 @@
   },
   {
     "id": "new-balance-golf",
-    "name": "New Balance Golf"
+    "name": "New Balance Golf",
+    "aliases": [
+      "New Balance"
+    ]
   },
   {
     "id": "nike-golf",
@@ -381,7 +410,10 @@
   },
   {
     "id": "pxg",
-    "name": "PXG"
+    "name": "PXG",
+    "aliases": [
+      "Parsons Xtreme Golf"
+    ]
   },
   {
     "id": "quiet-golf",
@@ -413,7 +445,10 @@
   },
   {
     "id": "scotty-cameron",
-    "name": "Scotty Cameron"
+    "name": "Scotty Cameron",
+    "aliases": [
+      "Scotty Cameron"
+    ]
   },
   {
     "id": "seamus-golf",
@@ -485,7 +520,10 @@
   },
   {
     "id": "taylormade",
-    "name": "TaylorMade"
+    "name": "TaylorMade",
+    "aliases": [
+      "Taylor Made"
+    ]
   },
   {
     "id": "tectectec",
@@ -521,11 +559,19 @@
   },
   {
     "id": "travismatthew",
-    "name": "TravisMatthew"
+    "name": "TravisMatthew",
+    "aliases": [
+      "Travis Mathew",
+      "Travis Matthew"
+    ]
   },
   {
     "id": "true-linkswear",
-    "name": "TRUE linkswear"
+    "name": "TRUE linkswear",
+    "aliases": [
+      "True Linkswear",
+      "TRUE linkswear"
+    ]
   },
   {
     "id": "true-temper",
@@ -533,7 +579,10 @@
   },
   {
     "id": "under-armour-golf",
-    "name": "Under Armour Golf"
+    "name": "Under Armour Golf",
+    "aliases": [
+      "Under Armour"
+    ]
   },
   {
     "id": "vessel",
