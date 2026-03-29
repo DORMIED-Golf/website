@@ -25,7 +25,10 @@
   },
   {
     "id": "arccos-golf",
-    "name": "Arccos Golf"
+    "name": "Arccos Golf",
+    "aliases": [
+      "Arccos"
+    ]
   },
   {
     "id": "asher-golf",
@@ -81,7 +84,10 @@
   },
   {
     "id": "bushnell-golf",
-    "name": "Bushnell Golf"
+    "name": "Bushnell Golf",
+    "aliases": [
+      "Bushnell"
+    ]
   },
   {
     "id": "byrdie-golf",
@@ -109,7 +115,15 @@
   },
   {
     "id": "cut-golf-balls",
-    "name": "Cut Golf Balls"
+    "name": "Cut Golf Balls",
+    "aliases": [
+      "Cut Golf",
+      "Cut Blue",
+      "Cut DC",
+      "Cut Matte",
+      "Cut Grey",
+      "Cut ball"
+    ]
   },
   {
     "id": "daily-sports",
@@ -126,7 +140,10 @@
   },
   {
     "id": "eastside-golf",
-    "name": "Eastside Golf"
+    "name": "Eastside Golf",
+    "aliases": [
+      "Eastside"
+    ]
   },
   {
     "id": "ecco",
@@ -134,7 +151,10 @@
   },
   {
     "id": "edel-golf",
-    "name": "Edel Golf"
+    "name": "Edel Golf",
+    "aliases": [
+      "Edel"
+    ]
   },
   {
     "id": "ep-ny",
@@ -151,7 +171,10 @@
   },
   {
     "id": "flightscope",
-    "name": "FlightScope"
+    "name": "FlightScope",
+    "aliases": [
+      "Flight Scope"
+    ]
   },
   {
     "id": "footjoy",
@@ -167,7 +190,11 @@
   },
   {
     "id": "foresight-sports",
-    "name": "Foresight Sports"
+    "name": "Foresight Sports",
+    "aliases": [
+      "Foresight",
+      "Foresight GC"
+    ]
   },
   {
     "id": "fujikura",
@@ -188,7 +215,10 @@
   },
   {
     "id": "garmin-golf",
-    "name": "Garmin Golf"
+    "name": "Garmin Golf",
+    "aliases": [
+      "Garmin"
+    ]
   },
   {
     "id": "ghost-golf",
@@ -204,7 +234,10 @@
   },
   {
     "id": "good-good-golf",
-    "name": "Good Good Golf"
+    "name": "Good Good Golf",
+    "aliases": [
+      "Good Good"
+    ]
   },
   {
     "id": "greyson",
@@ -212,7 +245,10 @@
   },
   {
     "id": "hackmotion",
-    "name": "HackMotion"
+    "name": "HackMotion",
+    "aliases": [
+      "Hack Motion"
+    ]
   },
   {
     "id": "haywood-golf",
@@ -220,7 +256,10 @@
   },
   {
     "id": "holderness-bourne",
-    "name": "Holderness & Bourne"
+    "name": "Holderness & Bourne",
+    "aliases": [
+      "Holderness and Bourne"
+    ]
   },
   {
     "id": "honma",
@@ -239,7 +278,8 @@
     "name": "J.Lindeberg",
     "aliases": [
       "J Lindeberg",
-      "JLindeberg"
+      "JLindeberg",
+      "J. Lindeberg"
     ]
   },
   {
@@ -260,11 +300,18 @@
   },
   {
     "id": "kbs-golf",
-    "name": "KBS Golf"
+    "name": "KBS Golf",
+    "aliases": [
+      "KBS"
+    ]
   },
   {
     "id": "kirkland-golf",
-    "name": "Kirkland Golf"
+    "name": "Kirkland Golf",
+    "aliases": [
+      "Kirkland Signature",
+      "Kirkland ball"
+    ]
   },
   {
     "id": "krank-golf",
@@ -309,7 +356,10 @@
   },
   {
     "id": "malbon",
-    "name": "Malbon"
+    "name": "Malbon",
+    "aliases": [
+      "Malbon Golf"
+    ]
   },
   {
     "id": "manors-golf",
@@ -325,11 +375,20 @@
   },
   {
     "id": "mitsubishi-golf",
-    "name": "Mitsubishi Golf"
+    "name": "Mitsubishi Golf",
+    "aliases": [
+      "Mitsubishi",
+      "Mitsubishi Chemical",
+      "Mitsubishi Tensei",
+      "Mitsubishi Diamana"
+    ]
   },
   {
     "id": "miura-golf",
-    "name": "Miura Golf"
+    "name": "Miura Golf",
+    "aliases": [
+      "Miura"
+    ]
   },
   {
     "id": "mizuno",
@@ -359,11 +418,17 @@
   },
   {
     "id": "odyssey-golf",
-    "name": "Odyssey Golf"
+    "name": "Odyssey Golf",
+    "aliases": [
+      "Odyssey"
+    ]
   },
   {
     "id": "ogio-golf",
-    "name": "Ogio Golf"
+    "name": "Ogio Golf",
+    "aliases": [
+      "OGIO"
+    ]
   },
   {
     "id": "olukai",
@@ -391,11 +456,17 @@
   },
   {
     "id": "pins-and-aces",
-    "name": "Pins and Aces"
+    "name": "Pins and Aces",
+    "aliases": [
+      "Pins & Aces"
+    ]
   },
   {
     "id": "precision-pro-golf",
-    "name": "Precision Pro Golf"
+    "name": "Precision Pro Golf",
+    "aliases": [
+      "Precision Pro"
+    ]
   },
   {
     "id": "primo-golf-apparel",
@@ -419,7 +490,11 @@
   },
   {
     "id": "puttout",
-    "name": "PuttOut"
+    "name": "PuttOut",
+    "aliases": [
+      "Putt-Out",
+      "Putt Out"
+    ]
   },
   {
     "id": "pxg",
@@ -469,7 +544,10 @@
   },
   {
     "id": "shot-scope",
-    "name": "Shot Scope"
+    "name": "Shot Scope",
+    "aliases": [
+      "ShotScope"
+    ]
   },
   {
     "id": "slazenger",
@@ -477,7 +555,11 @@
   },
   {
     "id": "snell-golf",
-    "name": "Snell Golf"
+    "name": "Snell Golf",
+    "aliases": [
+      "Snell",
+      "Snell MTB"
+    ]
   },
   {
     "id": "srixon",
@@ -485,7 +567,10 @@
   },
   {
     "id": "stitch-golf",
-    "name": "Stitch Golf"
+    "name": "Stitch Golf",
+    "aliases": [
+      "Stitch"
+    ]
   },
   {
     "id": "students-golf",
@@ -514,7 +599,10 @@
   },
   {
     "id": "sun-mountain",
-    "name": "Sun Mountain"
+    "name": "Sun Mountain",
+    "aliases": [
+      "Sun Mountain Sports"
+    ]
   },
   {
     "id": "sunday-golf",
@@ -570,7 +658,11 @@
   },
   {
     "id": "top-flite",
-    "name": "Top Flite"
+    "name": "Top Flite",
+    "aliases": [
+      "Top-Flite",
+      "Topflite"
+    ]
   },
   {
     "id": "tory-burch-sport",
@@ -621,7 +713,10 @@
   },
   {
     "id": "voice-caddie",
-    "name": "Voice Caddie"
+    "name": "Voice Caddie",
+    "aliases": [
+      "VoiceCaddie"
+    ]
   },
   {
     "id": "volvik",
