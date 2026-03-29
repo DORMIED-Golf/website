@@ -57,7 +57,11 @@
   },
   {
     "id": "blue-tees",
-    "name": "Blue Tees"
+    "name": "Blue Tees",
+    "aliases": [
+      "Blue Tees Golf",
+      "Blue Tees rangefinder"
+    ]
   },
   {
     "id": "bogey-boys",
@@ -93,10 +97,7 @@
   },
   {
     "id": "cleveland-golf",
-    "name": "Cleveland Golf",
-    "aliases": [
-      "Cleveland"
-    ]
+    "name": "Cleveland Golf"
   },
   {
     "id": "clicgear",
@@ -112,7 +113,12 @@
   },
   {
     "id": "daily-sports",
-    "name": "Daily Sports"
+    "name": "Daily Sports",
+    "matchTerms": [
+      "Daily Sports Golf",
+      "Daily Sports apparel",
+      "Daily Sports brand"
+    ]
   },
   {
     "id": "devereux-golf",
@@ -331,7 +337,14 @@
   },
   {
     "id": "municipal",
-    "name": "Municipal"
+    "name": "Municipal",
+    "matchTerms": [
+      "The Municipal",
+      "Municipal brand",
+      "Municipal apparel",
+      "Municipal x ",
+      "Municipal drop"
+    ]
   },
   {
     "id": "new-balance-golf",
@@ -476,11 +489,20 @@
   },
   {
     "id": "students-golf",
-    "name": "Students Golf"
+    "name": "Students Golf",
+    "matchTerms": [
+      "Students Golf Co",
+      "studentsgolf"
+    ]
   },
   {
     "id": "sub-70",
-    "name": "Sub 70"
+    "name": "Sub 70",
+    "matchTerms": [
+      "Sub70",
+      "Sub 70 Golf",
+      "sub70golf"
+    ]
   },
   {
     "id": "sugar-loaf-social-club",
@@ -496,7 +518,12 @@
   },
   {
     "id": "sunday-golf",
-    "name": "Sunday Golf"
+    "name": "Sunday Golf",
+    "matchTerms": [
+      "Sunday Golf Co",
+      "Sunday Golf bag",
+      "sunday golf brand"
+    ]
   },
   {
     "id": "superstroke",
@@ -522,7 +549,7 @@
     "id": "taylormade",
     "name": "TaylorMade",
     "aliases": [
-      "Taylor Made"
+      "TaylorMade Golf"
     ]
   },
   {
@@ -562,7 +589,7 @@
     "name": "TravisMatthew",
     "aliases": [
       "Travis Mathew",
-      "Travis Matthew"
+      "TravisMathew"
     ]
   },
   {
@@ -581,7 +608,7 @@
     "id": "under-armour-golf",
     "name": "Under Armour Golf",
     "aliases": [
-      "Under Armour"
+      "Under Armour Golf"
     ]
   },
   {
@@ -614,7 +641,12 @@
   },
   {
     "id": "wilson",
-    "name": "Wilson"
+    "name": "Wilson",
+    "matchTerms": [
+      "Wilson Staff",
+      "Wilson Golf",
+      "Wilson sporting goods golf"
+    ]
   },
   {
     "id": "xxio",

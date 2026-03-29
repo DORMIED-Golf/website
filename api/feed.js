@@ -23,7 +23,9 @@ function makeRe(term) {
 }
 
 const brandPatterns = brands.map(b => {
-  const terms = [b.name].concat(b.aliases || []);
+  // matchTerms overrides name+aliases for brands whose canonical name
+  // is a common English word or phrase (e.g. "Municipal", "Vessel", "Sub 70")
+  const terms = b.matchTerms || [b.name].concat(b.aliases || []);
   return { id: b.id, res: terms.map(makeRe) };
 });
 
