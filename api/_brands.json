@@ -750,5 +750,128 @@
   {
     "id": "zire-golf",
     "name": "Zire Golf"
+  },
+  {
+    "id": "accra",
+    "name": "ACCRA",
+    "matchTerms": ["ACCRA shaft", "ACCRA shafts", "ACCRA Golf", "ACCRA graphite"]
+  },
+  {
+    "id": "aerotech",
+    "name": "Aerotech",
+    "aliases": ["SteelFiber", "Aerotech Golf", "Aerotech shaft"]
+  },
+  {
+    "id": "aretera",
+    "name": "Aretera"
+  },
+  {
+    "id": "autoflex",
+    "name": "AutoFlex",
+    "aliases": ["Auto Flex shaft", "AutoFlex shaft"]
+  },
+  {
+    "id": "bgt",
+    "name": "BGT",
+    "matchTerms": ["BGT shaft", "BGT putter shaft", "Breakthrough Golf Technology", "BGT Stability"]
+  },
+  {
+    "id": "donald-ross",
+    "name": "Donald Ross Sportswear",
+    "matchTerms": ["Donald Ross Sportswear", "Donald Ross Collection", "Donald Ross apparel", "Donald Ross golf clothing"]
+  },
+  {
+    "id": "dormie-workshop",
+    "name": "Dormie Workshop",
+    "aliases": ["Dormie Workshop headcover"]
+  },
+  {
+    "id": "fairway-and-greene",
+    "name": "Fairway & Greene",
+    "matchTerms": ["Fairway & Greene", "Fairway and Greene", "Fairway &amp; Greene"]
+  },
+  {
+    "id": "freeflex",
+    "name": "FreeFlex",
+    "aliases": ["Free Flex shaft", "FreeFlex shaft"]
+  },
+  {
+    "id": "graphite-design",
+    "name": "Graphite Design",
+    "matchTerms": ["Graphite Design shaft", "Graphite Design shafts", "Tour AD shaft", "Tour AD shafts", "GD shaft"]
+  },
+  {
+    "id": "greg-norman-collection",
+    "name": "Greg Norman Collection",
+    "matchTerms": ["Greg Norman Collection", "Norman Collection golf", "Greg Norman apparel", "Greg Norman clothing"]
+  },
+  {
+    "id": "khalhon",
+    "name": "Khalhon"
+  },
+  {
+    "id": "kjus",
+    "name": "KJUS",
+    "aliases": ["KJUS Golf", "KJUS apparel"]
+  },
+  {
+    "id": "new-level-golf",
+    "name": "New Level Golf",
+    "aliases": ["New Level irons", "New Level Golf irons"]
+  },
+  {
+    "id": "newton-golf",
+    "name": "Newton Golf",
+    "aliases": ["Newton shaft", "Newton shafts", "Newton putter shaft"]
+  },
+  {
+    "id": "nippon-shaft",
+    "name": "Nippon Shaft",
+    "aliases": ["Nippon shafts", "NS Pro shaft", "NS Pro"]
+  },
+  {
+    "id": "oban",
+    "name": "Oban",
+    "matchTerms": ["Oban shaft", "Oban shafts", "Oban Golf", "Oban graphite"]
+  },
+  {
+    "id": "palm-golf-co",
+    "name": "Palm Golf Co.",
+    "aliases": ["Palm Golf", "Palm Golf Co"]
+  },
+  {
+    "id": "payntr-golf",
+    "name": "Payntr Golf",
+    "aliases": ["PAYNTR", "Payntr shoes", "Payntr footwear"]
+  },
+  {
+    "id": "rhone",
+    "name": "Rhone",
+    "matchTerms": ["Rhone Golf", "Rhone apparel", "Rhone golf apparel", "Rhone LPGA"]
+  },
+  {
+    "id": "stix-golf",
+    "name": "Stix Golf",
+    "aliases": ["Stix clubs", "Stix golf clubs"]
+  },
+  {
+    "id": "tpt-golf",
+    "name": "TPT Golf",
+    "matchTerms": ["TPT Golf", "TPT shaft", "TPT shafts", "TPT carbon shaft"]
+  },
+  {
+    "id": "unrl",
+    "name": "UNRL",
+    "aliases": ["UNRL Golf", "UNRL apparel"]
+  },
+  {
+    "id": "ust-mamiya",
+    "name": "UST Mamiya",
+    "aliases": ["UST shaft", "UST shafts", "Mamiya shaft", "UST Helium", "UST Recoil"]
+  },
+  {
+    "id": "va-composites",
+    "name": "VA Composites",
+    "aliases": ["VA shaft", "VA shafts", "Victor Afable shaft"]
   }
 ]
