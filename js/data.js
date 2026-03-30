@@ -8,7 +8,7 @@ window.DORMIED_DATA = {
     previousMonth: "Jan 2026",
     threeMonthsAgo: "Nov 2025",
     scorecardUrl: "",  // Set to e.g. "/scorecard/2026-02/" when the post is live
-    totalBrands: 170,
+    totalBrands: 169,
     markets: [
       { key: "global", label: "Global", flag: "🌎" },
       { key: "us", label: "United States", flag: "🇺🇸" },
