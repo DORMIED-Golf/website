@@ -19,13 +19,15 @@
   }
 
   var state = {
-    query:    '',
-    category: '',
-    brands:   [],
-    filtered: []
+    query:       '',
+    category:    '',
+    subCategory: '',
+    brands:      [],
+    filtered:    []
   };
 
-  var csCat = null;   // handle to custom select widget for the category filter
+  var csCat    = null;   // handle to custom select widget for the category filter
+  var csSubCat = null;   // handle to custom select widget for the subcategory filter
 
   /* ── Helpers ────────────────────────────────────────────────────────────── */
   function escHtml(str) {
@@ -213,13 +215,15 @@
     /* Assign rank and normalise DI (1 decimal, matching app.js) */
     return scored.map(function(item, i) {
       return {
-        id:       item.brand.id,
-        name:     item.brand.name,
-        logo:     item.brand.logo || null,
-        category: item.brand.category || '',
-        hq:       item.brand.hq || '',
-        rank:     i + 1,
-        di:       parseFloat((item.cur / max * 100).toFixed(1))
+        id:            item.brand.id,
+        name:          item.brand.name,
+        logo:          item.brand.logo || null,
+        category:      item.brand.category || '',
+        allCategories: item.brand.allCategories || [],
+        subCategories: item.brand.subCategories || [],
+        hq:            item.brand.hq || '',
+        rank:          i + 1,
+        di:            parseFloat((item.cur / max * 100).toFixed(1))
       };
     });
   }
@@ -229,7 +233,14 @@
     var sel = document.getElementById('brands-cat-filter');
     if (!sel) return;
     var cats = {};
-    brands.forEach(function(b) { if (b.category) cats[b.category] = true; });
+    brands.forEach(function(b) {
+      (b.allCategories || []).forEach(function(c) {
+        c.split(';').forEach(function(s) {
+          var t = s.trim();
+          if (t) cats[t] = true;
+        });
+      });
+    });
     var sorted = Object.keys(cats).sort();
     var opts = '<option value="">All categories</option>';
     sorted.forEach(function(c) {
@@ -237,12 +248,25 @@
     });
     sel.innerHTML = opts;
 
-    /* Build (or rebuild) the custom dropdown widget */
-    if (csCat) {
-      csCat.refresh();
-    } else {
-      csCat = buildCustomSelect(sel);
-    }
+    if (csCat) { csCat.refresh(); } else { csCat = buildCustomSelect(sel); }
+  }
+
+  /* ── Populate subcategory dropdown ──────────────────────────────────────── */
+  function populateSubCatFilter(brands) {
+    var sel = document.getElementById('brands-subcat-filter');
+    if (!sel) return;
+    var subcats = {};
+    brands.forEach(function(b) {
+      (b.subCategories || []).forEach(function(s) { if (s) subcats[s] = true; });
+    });
+    var sorted = Object.keys(subcats).sort();
+    var opts = '<option value="">All subcategories</option>';
+    sorted.forEach(function(s) {
+      opts += '<option value="' + escHtml(s) + '">' + escHtml(s) + '</option>';
+    });
+    sel.innerHTML = opts;
+
+    if (csSubCat) { csSubCat.refresh(); } else { csSubCat = buildCustomSelect(sel); }
   }
 
   /* ── Ad slot HTML ───────────────────────────────────────────────────────── */
@@ -313,12 +337,24 @@
 
   /* ── Apply filters + render ─────────────────────────────────────────────── */
   function applyAndRender() {
-    var q   = state.query.toLowerCase().trim();
-    var cat = state.category;
+    var q      = state.query.toLowerCase().trim();
+    var cat    = state.category;
+    var subcat = state.subCategory.toLowerCase();
 
     var filtered = state.brands.filter(function(b) {
       if (q && b.name.toLowerCase().indexOf(q) === -1) return false;
-      if (cat && b.category !== cat) return false;
+      if (cat) {
+        var brandCats = (b.allCategories || []).flatMap(function(c) {
+          return c.split(';').map(function(s) { return s.trim(); });
+        });
+        if (brandCats.indexOf(cat) === -1) return false;
+      }
+      if (subcat) {
+        var match = (b.subCategories || []).some(function(s) {
+          return s.toLowerCase().indexOf(subcat) !== -1;
+        });
+        if (!match) return false;
+      }
       return true;
     });
 
@@ -351,17 +387,24 @@
       });
     }
 
+    var subcatEl = document.getElementById('brands-subcat-filter');
+    if (subcatEl) {
+      subcatEl.addEventListener('change', function() {
+        state.subCategory = this.value;
+        applyAndRender();
+      });
+    }
+
     var clrEl = document.getElementById('brands-clear');
     if (clrEl) {
       clrEl.addEventListener('click', function() {
-        state.query    = '';
-        state.category = '';
+        state.query       = '';
+        state.category    = '';
+        state.subCategory = '';
         var searchEl = document.getElementById('brands-search');
         if (searchEl) searchEl.value = '';
-        if (csCat) { csCat.setValue(''); } else {
-          var catEl = document.getElementById('brands-cat-filter');
-          if (catEl) catEl.value = '';
-        }
+        if (csCat)    { csCat.setValue(''); }    else { var ce = document.getElementById('brands-cat-filter');    if (ce) ce.value = ''; }
+        if (csSubCat) { csSubCat.setValue(''); } else { var se = document.getElementById('brands-subcat-filter'); if (se) se.value = ''; }
         applyAndRender();
       });
     }
@@ -382,6 +425,7 @@
     }
 
     populateCatFilter(state.brands);
+    populateSubCatFilter(state.brands);
     applyAndRender();
   }
 
