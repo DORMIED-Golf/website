@@ -309,7 +309,7 @@
     return '<a href="/brands/' + escHtml(b.id) + '/" class="brand-dir-card">' +
              logoHtml +
              '<div class="brand-dir-name">' + escHtml(b.name) + '</div>' +
-             '<div class="brand-dir-cat">'  + escHtml(b.category) + '</div>' +
+             '<div class="brand-dir-cat">'  + escHtml((b.category || '').replace(/\s*;\s*/g, ' · ')) + '</div>' +
              '<div class="brand-dir-stats">' +
                '<span class="brand-dir-rank">' + escHtml(rank) + '</span>' +
                '<span class="brand-dir-di">DI&nbsp;' + escHtml(String(di)) + '</span>' +
