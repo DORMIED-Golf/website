@@ -80,7 +80,7 @@ function buildUserPrompt(params, newsContext, retry = false) {
   const base = `Write a 1 to 3 sentence editorial take on the current state of ${name} based on the following data and any recent news you can find about the brand.
 
 Data context:
-* Current global rank: ${rank} out of 144
+* Current global rank: ${rank} out of 169
 * DI Score: ${di}
 * Month over month change: ${vsMonth}
 * 3 month trend: ${mom}
