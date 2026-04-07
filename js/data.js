@@ -682,8 +682,8 @@ window.DORMIED_DATA = {
       headquarters: "Halifax, Nova Scotia, Canada",
       founded: 2014,
       parentCompany: "Independent",
-      category: "Bags, Accessories & Headcovers",
-      allCategories: ["Bags, Accessories & Headcovers"],
+      category: "Bags & Accessories",
+      allCategories: ["Bags & Accessories"],
       subCategories: ["Headcovers", "Luxury/High-End"],
       description: "Dormie Workshop produces handcrafted premium leather headcovers and accessories. Known for customization and craftsmanship, the brand blends luxury with golf culture.",
       searchesByMarket: {
@@ -2190,8 +2190,8 @@ window.DORMIED_DATA = {
       headquarters: "Huntington Beach, California, USA",
       founded: 2017,
       parentCompany: "Independent",
-      category: "Bags, Accessories & Headcovers",
-      allCategories: ["Bags, Accessories & Headcovers"],
+      category: "Bags & Accessories",
+      allCategories: ["Bags & Accessories"],
       subCategories: ["Gloves", "Trendy/Lifestyle"],
       description: "Palm Golf Co. is a lifestyle-driven golf brand inspired by surf and coastal culture. It focuses on gloves, apparel, and accessories designed for on- and off-course wear.",
       searchesByMarket: {
@@ -4272,8 +4272,8 @@ window.DORMIED_DATA = {
       headquarters: "Northbrook, Illinois, USA",
       founded: 2018,
       parentCompany: "Independent",
-      category: "Bags, Accessories & Headcovers",
-      allCategories: ["Bags, Accessories & Headcovers", "Clubs & Balls"],
+      category: "Bags & Accessories",
+      allCategories: ["Bags & Accessories", "Clubs & Balls"],
       subCategories: ["Headcovers", "Putters", "Trendy/Lifestyle"],
       description: "Swag Golf is a Chicago-based golf brand built around bold design and limited-edition drops. Known for collectible headcovers, putters, and accessories, it has created a cult following by blending premium craftsmanship with streetwear-style scarcity and pop culture collaborations.",
       searchesByMarket: {
