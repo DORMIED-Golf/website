@@ -424,7 +424,7 @@
     // scale stays stable regardless of which period tab is selected.
     const actualVals = months.filter(m => m !== projM).map(m => mktS[m] || 0);
     const peakBrand  = Math.max(...actualVals, 1);
-    const brandData  = brandRaw.map(v => parseFloat((v / peakBrand * 100).toFixed(1)));
+    const brandData  = brandRaw.map(v => parseFloat((Math.min(100, v / peakBrand * 100)).toFixed(1)));
 
     // Global index average: each month's avg across all brands, normalised to
     // that average's own peak so it sits on the same 0–100 y-axis.
