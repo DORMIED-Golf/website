@@ -10,7 +10,11 @@
     { "source": "/matchups",          "destination": "/matchups/index.html" },
     { "source": "/matchups/",         "destination": "/matchups/index.html" },
     { "source": "/matchups/:date",    "destination": "/matchups/day.html" },
-    { "source": "/matchups/:date/",   "destination": "/matchups/day.html" }
+    { "source": "/matchups/:date/",   "destination": "/matchups/day.html" },
+    { "source": "/scorecard",         "destination": "/scorecard/index.html" },
+    { "source": "/scorecard/",        "destination": "/scorecard/index.html" },
+    { "source": "/scorecard/:slug",   "destination": "/scorecard/article.html" },
+    { "source": "/scorecard/:slug/",  "destination": "/scorecard/article.html" }
   ],
   "functions": {
     "api/feed.js":            { "maxDuration": 15 },
