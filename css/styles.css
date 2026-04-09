@@ -204,6 +204,7 @@ button, select, input {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   height: 56px;
 }
 
@@ -2481,6 +2482,9 @@ details[open] .faq-question::after { content: '−'; }
 
 /* ── Site Nav ────────────────────────────────────────────────────────────────── */
 .site-nav { display: flex; gap: 20px; align-items: center; }
+@media (max-width: 480px) {
+  .site-nav { gap: 12px; }
+}
 .site-nav-link {
   font-family: var(--font-mono);
   font-size: 0.72rem;
