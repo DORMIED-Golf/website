@@ -193,7 +193,7 @@
     if (twDesc) twDesc.content = desc;
 
     // Dynamic OG / Twitter image — use first strip image or hero if available
-    var articleImg = 'https://dormied.com/images/og-image.png';
+    var articleImg = 'https://dormied.com/images/og-image.jpg';
     if (issue.images) {
       var strip = issue.images.strip || [];
       if (strip.length > 0 && strip[0].src) {
