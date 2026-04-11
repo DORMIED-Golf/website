@@ -554,8 +554,21 @@ async function main() {
   const dormiedData = loadDormiedData();
   loadBrands(); // validate file exists
 
+  // Fetch IDs of matched articles that have already been generated
+  const { data: existing, error: existErr } = await supabase
+    .from('dormied_articles')
+    .select('matched_article_id')
+    .not('matched_article_id', 'is', null);
+
+  if (existErr) {
+    console.error('[generate] Failed to fetch existing articles:', existErr.message);
+    process.exit(1);
+  }
+
+  const alreadyGenerated = (existing || []).map(r => r.matched_article_id);
+
   // Find matched articles that don't yet have a generated article
-  const { data: matched, error: fetchErr } = await supabase
+  let query = supabase
     .from('golf_wire_matched')
     .select(`
       id,
@@ -565,16 +578,24 @@ async function main() {
         id, title, body, image_url, source_url, category, published_at
       )
     `)
-    .not('id', 'in', `(
-      SELECT matched_article_id FROM dormied_articles WHERE matched_article_id IS NOT NULL
-    )`)
     .order('matched_at', { ascending: false })
-    .limit(MAX_ARTICLES_PER_RUN);
+    .limit(MAX_ARTICLES_PER_RUN + alreadyGenerated.length);
+
+  if (alreadyGenerated.length > 0) {
+    query = query.not('id', 'in', `(${alreadyGenerated.map(id => `'${id}'`).join(',')})`);
+  }
+
+  const { data: matchedRaw, error: fetchErr } = await query;
 
   if (fetchErr) {
     console.error('[generate] Failed to fetch matched articles:', fetchErr.message);
     process.exit(1);
   }
+
+  // Filter out already-generated in JS as a safety net, then cap at MAX
+  const matched = (matchedRaw || [])
+    .filter(m => !alreadyGenerated.includes(m.id))
+    .slice(0, MAX_ARTICLES_PER_RUN);
 
   console.log(`[generate] ${matched.length} articles to generate (max ${MAX_ARTICLES_PER_RUN}/run)`);
 
