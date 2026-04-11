@@ -16,13 +16,16 @@
 
   var PAGE_SIZE = 30;
 
+  var DORMIED_API = '/api/dormied-articles';
+
   var state = {
-    articles:    [],
-    filtered:    [],
-    sort:        'newest',
-    brandFilter: '',
-    searchQuery: '',
-    page:        1
+    articles:     [],
+    filtered:     [],
+    sort:         'newest',
+    brandFilter:  '',
+    sourceFilter: '',   // '' = all, 'dormied' = originals only, 'external' = external only
+    searchQuery:  '',
+    page:         1
   };
 
   var csBrand = null;   // handle to custom select widget for the brand filter
@@ -410,6 +413,12 @@
       return a.brandIds && a.brandIds.length > 0;
     });
 
+    if (state.sourceFilter === 'dormied') {
+      filtered = filtered.filter(function(a) { return !!a.isDormied; });
+    } else if (state.sourceFilter === 'external') {
+      filtered = filtered.filter(function(a) { return !a.isDormied; });
+    }
+
     if (state.brandFilter) {
       filtered = filtered.filter(function(a) {
         return a.brandIds && a.brandIds.indexOf(state.brandFilter) !== -1;
@@ -444,6 +453,20 @@
 
   /* ── Wire up controls ───────────────────────────────────────────────────── */
   function bindControls() {
+    /* Source filter buttons */
+    document.querySelectorAll('.feed-source-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.feed-source-btn').forEach(function(b) {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-pressed', 'true');
+        state.sourceFilter = this.getAttribute('data-source');
+        applyAndRender();
+      });
+    });
+
     /* Sort buttons */
     document.querySelectorAll('.feed-sort-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -494,9 +517,10 @@
     var clr = document.getElementById('feed-clear');
     if (clr) {
       clr.addEventListener('click', function() {
-        state.brandFilter = '';
-        state.searchQuery = '';
-        state.sort        = 'newest';
+        state.brandFilter  = '';
+        state.searchQuery  = '';
+        state.sort         = 'newest';
+        state.sourceFilter = '';
         var srch = document.getElementById('feed-search');
         if (srch) srch.value = '';
         if (csBrand) { csBrand.setValue(''); } else {
@@ -506,6 +530,11 @@
         document.querySelectorAll('.feed-sort-btn').forEach(function(b) {
           b.classList.toggle('active', b.getAttribute('data-sort') === 'newest');
           b.setAttribute('aria-pressed', b.getAttribute('data-sort') === 'newest' ? 'true' : 'false');
+        });
+        document.querySelectorAll('.feed-source-btn').forEach(function(b) {
+          var isAll = b.getAttribute('data-source') === '';
+          b.classList.toggle('active', isAll);
+          b.setAttribute('aria-pressed', isAll ? 'true' : 'false');
         });
         syncWidgetActive();
         applyAndRender();
@@ -533,26 +562,33 @@
     var el = document.getElementById('feed-list');
     if (el) el.innerHTML = '<p class="feed-empty">Loading articles…</p>';
 
-    /* Try cache first */
-    var cached = getCached();
-    if (cached) {
-      state.articles = (cached.articles || []);
-      var allBrands  = getAllBrands();
-      var top        = computeTopBrands(state.articles);
-      renderTopBrandsWidget(top);
-      populateBrandDropdown(top, allBrands);
-      applyAndRender();
-      return;
-    }
+    /* Fetch both external feed and DORMIED originals in parallel */
+    var externalPromise = (function() {
+      var cached = getCached();
+      if (cached) return Promise.resolve(cached);
+      return fetch(FEED_API)
+        .then(function(r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function(data) { setCache(data); return data; });
+    })();
 
-    fetch(FEED_API)
-      .then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function(data) {
-        setCache(data);
-        state.articles = (data.articles || []);
+    var dormiedPromise = fetch(DORMIED_API)
+      .then(function(r) { return r.ok ? r.json() : { articles: [] }; })
+      .catch(function() { return { articles: [] }; });
+
+    Promise.all([externalPromise, dormiedPromise])
+      .then(function(results) {
+        var external = (results[0] && results[0].articles) || [];
+        var dormied  = (results[1] && results[1].articles) || [];
+
+        // Merge: DORMIED first, then external; sort by pubDate
+        var merged = dormied.concat(external).sort(function(a, b) {
+          return new Date(b.pubDate || 0) - new Date(a.pubDate || 0);
+        });
+
+        state.articles = merged;
         var allBrands  = getAllBrands();
         var top        = computeTopBrands(state.articles);
         renderTopBrandsWidget(top);

@@ -149,6 +149,11 @@
             <!-- Filter Bar -->
             <div class="feed-filter-bar" role="search" aria-label="Filter and sort articles">
               <span id="feed-count" class="results-count" aria-live="polite" aria-atomic="true"></span>
+              <div class="feed-source-btns" role="group" aria-label="Filter by source">
+                <button class="feed-source-btn active" data-source="" aria-pressed="true">All</button>
+                <button class="feed-source-btn" data-source="dormied" aria-pressed="false">DORMIED</button>
+                <button class="feed-source-btn" data-source="external" aria-pressed="false">External</button>
+              </div>
               <input type="search" id="feed-search" class="feed-search-input" placeholder="Search articles…" aria-label="Search articles by keyword" autocomplete="off">
               <div class="feed-sort-btns" role="group" aria-label="Sort order">
                 <button class="feed-sort-btn active" data-sort="newest" aria-pressed="true">Newest</button>

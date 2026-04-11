@@ -140,15 +140,20 @@
       if (chips) tags = '<div class="feed-card-tags">' + chips + '</div>';
     }
 
+    var srcClass  = article.isDormied ? 'feed-source feed-source--dormied' : 'feed-source';
+    var cardHref  = article.isDormied ? escHtml(article.url) : escHtml(addUTM(article.url));
+    var cardAttrs = article.isDormied
+      ? 'class="feed-card-title"'
+      : 'target="_blank" rel="noopener noreferrer" class="feed-card-title"';
+
     return '<article class="feed-card">' +
       thumb +
       '<div class="feed-card-body">' +
         '<div class="feed-card-meta">' +
-          '<span class="feed-source">' + escHtml(article.sourceName) + '</span>' +
+          '<span class="' + srcClass + '">' + escHtml(article.sourceName) + '</span>' +
           '<span class="feed-time">'   + escHtml(timeAgo(article.pubDate)) + '</span>' +
         '</div>' +
-        '<a href="' + escHtml(addUTM(article.url)) + '" ' +
-           'target="_blank" rel="noopener noreferrer" class="feed-card-title"' +
+        '<a href="' + cardHref + '" ' + cardAttrs +
            ' data-track-title="'   + escHtml(article.title) + '"' +
            ' data-track-source="'  + escHtml(article.sourceName) + '"' +
            ' data-track-url="'     + escHtml(article.url) + '"' +
@@ -244,15 +249,20 @@
       if (chips) tags = '<div class="feed-card-tags">' + chips + '</div>';
     }
 
+    var srcClass2  = article.isDormied ? 'feed-source feed-source--dormied' : 'feed-source';
+    var cardHref2  = article.isDormied ? escHtml(article.url) : escHtml(addUTM(article.url));
+    var cardAttrs2 = article.isDormied
+      ? 'class="feed-card-title feed-card-title--lg"'
+      : 'target="_blank" rel="noopener noreferrer" class="feed-card-title feed-card-title--lg"';
+
     return '<article class="feed-card feed-card--full">' +
       thumb +
       '<div class="feed-card-body">' +
         '<div class="feed-card-meta">' +
-          '<span class="feed-source">' + escHtml(article.sourceName) + '</span>' +
+          '<span class="' + srcClass2 + '">' + escHtml(article.sourceName) + '</span>' +
           '<span class="feed-time">'   + escHtml(timeAgo(article.pubDate)) + '</span>' +
         '</div>' +
-        '<a href="' + escHtml(addUTM(article.url)) + '" ' +
-           'target="_blank" rel="noopener noreferrer" class="feed-card-title feed-card-title--lg"' +
+        '<a href="' + cardHref2 + '" ' + cardAttrs2 +
            ' data-track-title="'   + escHtml(article.title) + '"' +
            ' data-track-source="'  + escHtml(article.sourceName) + '"' +
            ' data-track-url="'     + escHtml(article.url) + '"' +
@@ -270,30 +280,105 @@
   /* expose globally for feed-page.js */
   window.renderFeedPageCard = renderFeedPageCard;
 
-  /* ── Render: index page ────────────────────────────────────────────────── */
-  function renderLatestIndex(articles, allBrands) {
+  /* ── Fetch DORMIED originals from Supabase (public anon read) ──────────── */
+  function fetchDormiedArticles(brandSlug, cb) {
+    var url = SB_URL + '/rest/v1/dormied_articles' +
+      '?select=id,brand_slug,title,meta_description,image_url,slug,category,published_at' +
+      '&status=eq.published' +
+      '&order=published_at.desc' +
+      (brandSlug ? '&brand_slug=eq.' + encodeURIComponent(brandSlug) : '') +
+      '&limit=10';
+
+    fetch(url, {
+      headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON }
+    })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (rows) {
+      var articles = (rows || []).map(function (a) {
+        return {
+          id:          a.id,
+          title:       a.title,
+          url:         '/news/' + a.slug + '/',
+          sourceName:  'DORMIED',
+          sourceId:    'dormied',
+          pubDate:     a.published_at,
+          description: a.meta_description || '',
+          imageUrl:    a.image_url || null,
+          brandIds:    [a.brand_slug],
+          isDormied:   true,
+          category:    a.category || '',
+          slug:        a.slug,
+        };
+      });
+      cb(articles);
+    })
+    .catch(function () { cb([]); });
+  }
+
+  /* ── Render: index page (sidebar "Around the Game") ────────────────────── */
+  function renderLatestIndex(externalArticles, allBrands) {
     var el = document.getElementById('latest-feed-list');
     if (!el) return;
-    var slice = articles.filter(function (a) {
-      return a.brandIds && a.brandIds.length > 0;
-    }).slice(0, INDEX_LIMIT);
-    if (!slice.length) {
-      el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
-      return;
-    }
-    el.innerHTML = slice.map(function (a) {
-      return renderArticleCard(a, true, allBrands);
-    }).join('');
 
-    // "See All News" link below sidebar feed
-    var seeAll = document.getElementById('latest-feed-see-all');
-    if (!seeAll) {
-      seeAll = document.createElement('div');
-      seeAll.id = 'latest-feed-see-all';
-      seeAll.className = 'bp-latest-see-all';
-      seeAll.innerHTML = '<a href="/news/">See All News</a>';
-      el.parentNode.appendChild(seeAll);
-    }
+    var external = externalArticles.filter(function (a) {
+      return a.brandIds && a.brandIds.length > 0;
+    });
+
+    fetchDormiedArticles(null, function (dormied) {
+      // Merge and sort by pubDate descending
+      var combined = dormied.concat(external).sort(function (a, b) {
+        return new Date(b.pubDate || 0) - new Date(a.pubDate || 0);
+      }).slice(0, INDEX_LIMIT);
+
+      if (!combined.length) {
+        el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
+        return;
+      }
+      el.innerHTML = combined.map(function (a) {
+        return renderArticleCard(a, true, allBrands);
+      }).join('');
+
+      var seeAll = document.getElementById('latest-feed-see-all');
+      if (!seeAll) {
+        seeAll = document.createElement('div');
+        seeAll.id = 'latest-feed-see-all';
+        seeAll.className = 'bp-latest-see-all';
+        seeAll.innerHTML = '<a href="/news/">See All News</a>';
+        el.parentNode.appendChild(seeAll);
+      }
+    });
+  }
+
+  /* ── Render: brand page DORMIED coverage section ────────────────────────── */
+  function renderDormiedBrand(brandId, brandDisplayName) {
+    var listEl = document.getElementById('bp-dormied-list');
+    if (!listEl) return;
+
+    // Set brand name in section header
+    var nameEl = document.getElementById('bp-dormied-brand-name');
+    if (nameEl) nameEl.textContent = brandDisplayName || brandId;
+
+    fetchDormiedArticles(brandId, function (articles) {
+      var section = document.getElementById('bp-dormied-section');
+      if (!articles.length) {
+        if (section) section.hidden = true;
+        return;
+      }
+      if (section) section.hidden = false;
+      var allBrands = getAllBrands();
+      listEl.innerHTML = articles.slice(0, 5).map(function (a) {
+        return renderArticleCard(a, false, allBrands);
+      }).join('');
+
+      var seeAll = document.getElementById('bp-dormied-see-all');
+      if (!seeAll) {
+        seeAll = document.createElement('div');
+        seeAll.id = 'bp-dormied-see-all';
+        seeAll.className = 'bp-latest-see-all';
+        seeAll.innerHTML = '<a href="/news/">More from DORMIED</a>';
+        listEl.parentNode.appendChild(seeAll);
+      }
+    });
   }
 
   /* ── Render: brand page ────────────────────────────────────────────────── */
@@ -438,10 +523,18 @@
 
   /* ── Main init ─────────────────────────────────────────────────────────── */
   function initFeed() {
-    var isIndex = !!document.getElementById('latest-feed-list');
-    var isBrand = !!document.getElementById('bp-latest-list');
-    var isHome  = !!document.getElementById('home-stories-list');
+    var isIndex   = !!document.getElementById('latest-feed-list');
+    var isBrand   = !!document.getElementById('bp-latest-list');
+    var isHome    = !!document.getElementById('home-stories-list');
+    var hasDormied = !!document.getElementById('bp-dormied-list');
     if (!isIndex && !isBrand && !isHome) return;  // no container found
+
+    // Kick off DORMIED brand coverage independently (doesn't need external feed)
+    if (hasDormied) {
+      var slug = window.__BRAND_SLUG__ || '';
+      var displayName = getBrandDisplayName(slug);
+      renderDormiedBrand(slug, displayName);
+    }
 
     // Use mock data on local dev so sections are visible without deploying
     if (isLocalDev()) {

@@ -4747,6 +4747,45 @@ details[open] .faq-question::after { content: '−'; }
   .sc-rankings-banner { flex-direction: column; align-items: flex-start; }
 }
 
+/* ── DORMIED source badge (feed cards) ───────────────────────────────────── */
+.feed-source--dormied {
+  background: var(--green);
+  color: #000;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ── News page source filter buttons ─────────────────────────────────────── */
+.feed-source-btns {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.feed-source-btn {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-lite);
+  border-radius: 3px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.feed-source-btn:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+.feed-source-btn.active {
+  background: var(--green);
+  border-color: var(--green);
+  color: #000;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    DORMIED ARTICLES  (generated Golf Wire originals at /news/[slug]/)
    ═══════════════════════════════════════════════════════════════════════════ */
