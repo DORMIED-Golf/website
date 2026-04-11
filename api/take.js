@@ -33,14 +33,52 @@ const FEEDS = [
 
 // ── Validation ────────────────────────────────────────────────────────────────
 
-const DISALLOWED_STARTS = ['Based', 'According', 'From', 'My', 'It appears', 'It seems'];
+// Must not appear at the start of the response
+const DISALLOWED_STARTS = [
+  'Based on',
+  'According to',
+  'From my',
+  'From the',
+  'Looking at',
+  'After reviewing',
+  'Having reviewed',
+  'The search results',
+  'The news',
+  'The data shows',
+  'It appears',
+  'It seems',
+];
+
+// Must not appear anywhere in the body
+const DISALLOWED_BODY = [
+  'my search',
+  'search results',
+  'from my research',
+  'the articles suggest',
+  'the coverage indicates',
+  'from what I found',
+  'my research shows',
+  'the data shows',
+  'available information',
+];
 
 function startsWithDisallowed(text, brandName) {
   if (!text) return true;
   const trimmed = text.trim();
-  if (DISALLOWED_STARTS.some(phrase => trimmed.startsWith(phrase))) return true;
-  if (trimmed.toLowerCase().startsWith(brandName.toLowerCase())) return true;
+  const lower   = trimmed.toLowerCase();
+  if (DISALLOWED_STARTS.some(p => lower.startsWith(p.toLowerCase()))) return true;
+  if (lower.startsWith(brandName.toLowerCase())) return true;
   return false;
+}
+
+function containsDisallowedPhrase(text) {
+  if (!text) return false;
+  const lower = text.toLowerCase();
+  return DISALLOWED_BODY.some(p => lower.includes(p.toLowerCase()));
+}
+
+function isInvalid(text, brandName) {
+  return startsWithDisallowed(text, brandName) || containsDisallowedPhrase(text);
 }
 
 // ── News fetcher ──────────────────────────────────────────────────────────────
@@ -102,7 +140,7 @@ Bad: Interesting to note that search interest has declined. (filler)
 Bad: Based on recent data and news coverage... (disallowed)`;
 
   if (retry) {
-    return base + '\n\nYour previous response began with a disallowed phrase. Rewrite it starting directly with the editorial observation. No preamble. No meta commentary.';
+    return base + '\n\nYour previous response contained a disallowed phrase either at the start or in the body. Rewrite it starting directly with the editorial observation. Do not reference your research, search results, available information, or analysis process anywhere in the response. No preamble. No meta commentary.';
   }
 
   return base;
@@ -186,11 +224,11 @@ module.exports = async (req, res) => {
 
     let take = await callClaude(client, buildUserPrompt(params, newsContext, false));
 
-    if (startsWithDisallowed(take, name)) {
-      console.warn(`[take] First response for "${name}" started with disallowed phrase. Retrying.`);
+    if (isInvalid(take, name)) {
+      console.warn(`[take] First response for "${name}" contained disallowed phrase. Retrying.`);
       take = await callClaude(client, buildUserPrompt(params, newsContext, true));
-      if (startsWithDisallowed(take, name)) {
-        console.warn(`[take] Second response for "${name}" also started with disallowed phrase. Returning anyway.`);
+      if (isInvalid(take, name)) {
+        console.warn(`[take] Second response for "${name}" also contained disallowed phrase. Returning anyway.`);
       }
     }
 
