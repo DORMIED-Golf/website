@@ -1,0 +1,683 @@
+#!/usr/bin/env node
+/**
+ * DORMIED Content Pipeline — Step 3: Article Generator
+ *
+ * Reads ungenerated golf_wire_matched articles, calls Claude Opus to
+ * produce original DORMIED editorial content, writes a static HTML file
+ * to news/[slug]/index.html, and stores the record in dormied_articles.
+ *
+ * Usage:
+ *   node scripts/generate-article.js
+ *
+ * Required env vars:
+ *   ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY
+ */
+
+'use strict';
+
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
+const fs               = require('fs');
+const path             = require('path');
+const vm               = require('vm');
+const Anthropic        = require('@anthropic-ai/sdk');
+const { createClient } = require('@supabase/supabase-js');
+
+// ── Config ────────────────────────────────────────────────────────────────────
+
+const MAX_ARTICLES_PER_RUN = 5;
+const MODEL                = 'claude-opus-4-5';
+const SITE_ROOT            = path.resolve(__dirname, '..');
+
+// Disallowed opening phrases
+const DISALLOWED_STARTS = [
+  'based on', 'according to', 'from my', 'from the',
+  'looking at', 'after reviewing', 'having reviewed',
+  'the search results', 'the news', 'the data shows',
+  'it appears', 'it seems',
+];
+
+// Disallowed anywhere in body
+const DISALLOWED_BODY = [
+  'my search', 'search results', 'from my research',
+  'the articles suggest', 'the coverage indicates',
+  'from what i found', 'my research shows',
+  'available information',
+];
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function getSupabase() {
+  const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_KEY');
+  }
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+}
+
+function loadDormiedData() {
+  const raw = fs.readFileSync(path.join(SITE_ROOT, 'js/data.js'), 'utf8');
+  const ctx = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(raw, ctx);
+  return ctx.window.DORMIED_DATA;
+}
+
+function loadBrands() {
+  const raw = fs.readFileSync(path.join(SITE_ROOT, 'api/_brands.json'), 'utf8');
+  return JSON.parse(raw);
+}
+
+function getBrandInfo(dormiedData, brandSlug) {
+  const brand = dormiedData.brands.find(b => b.id === brandSlug);
+  if (!brand) return null;
+
+  const currentMonth  = dormiedData.meta.currentMonth;
+  const previousMonth = dormiedData.meta.previousMonth;
+
+  const globalData = brand.searchesByMarket?.global || {};
+  const curSearches = globalData[currentMonth]  || 0;
+  const prevSearches = globalData[previousMonth] || 0;
+
+  // Compute DI score (0–100 relative to top brand)
+  const maxSearches = Math.max(
+    ...dormiedData.brands.map(b => b.searchesByMarket?.global?.[currentMonth] || 0)
+  );
+  const di = maxSearches > 0 ? Math.min(100, Math.round((curSearches / maxSearches) * 100)) : 0;
+
+  // Compute global rank
+  const sorted = dormiedData.brands
+    .map(b => ({ id: b.id, s: b.searchesByMarket?.global?.[currentMonth] || 0 }))
+    .sort((a, b) => b.s - a.s);
+  const rank = sorted.findIndex(b => b.id === brandSlug) + 1;
+
+  // Month-over-month change
+  const momPct = prevSearches > 0
+    ? Math.round(((curSearches - prevSearches) / prevSearches) * 100)
+    : 0;
+  const momStr = momPct > 0 ? `+${momPct}%` : momPct < 0 ? `${momPct}%` : 'flat';
+
+  return { brand, rank, di, momPct, momStr, currentMonth };
+}
+
+function makeSlug(title, dateStr) {
+  const datePart = dateStr.slice(0, 10); // YYYY-MM-DD
+  const titlePart = title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 60)
+    .replace(/-$/, '');
+  return `${titlePart}-${datePart}`;
+}
+
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function estimateReadTime(text) {
+  const words = text.trim().split(/\s+/).length;
+  const mins  = Math.max(1, Math.round(words / 200));
+  return `${mins} min read`;
+}
+
+function formatDate(isoDate) {
+  const d = new Date(isoDate);
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function bodyToHtml(plainText, brandSlug, brandName) {
+  const paras = plainText.split(/\n\n+/).filter(p => p.trim());
+  return paras.map(p => {
+    // Auto-link brand name in body
+    const escaped = brandName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`(?<![\\w/"])${escaped}(?![\\w"])`, 'g');
+    const linked = p.replace(re, `<a href="/brands/${brandSlug}/" class="da-brand-link">${brandName}</a>`);
+    return `<p>${linked}</p>`;
+  }).join('\n');
+}
+
+// ── Validation ────────────────────────────────────────────────────────────────
+
+function isInvalid(text) {
+  if (!text) return true;
+  const lower = text.trim().toLowerCase();
+  if (DISALLOWED_STARTS.some(p => lower.startsWith(p))) return true;
+  if (DISALLOWED_BODY.some(p => lower.includes(p))) return true;
+  return false;
+}
+
+// ── Opus ──────────────────────────────────────────────────────────────────────
+
+const SYSTEM_PROMPT = `You are the editorial voice of DORMIED, a golf brand intelligence platform that tracks brand momentum across 11 global markets.
+
+Rewrite the following press release as a short, sharp original article (150-250 words). Write in DORMIED's voice: direct, dry, opinionated, informed. No filler. No em dashes. No exclamation points. No "exciting news" language. No preamble.
+
+This article will appear alongside headlines from MyGolfSpy, GolfWRX, and Golf Digest. The headline must be competitive and click-worthy, not press-release-shaped.
+
+Frame the news through the lens of brand momentum. What does this move mean for the brand's position in the market? Reference the brand's current DORMIED Index ranking and trend naturally in the body (do not force it).
+
+Structure:
+- Lead with the news in one sentence
+- 1-2 paragraphs of context and editorial analysis
+- Close with a forward-looking observation
+
+DISALLOWED opening phrases (auto-rejected):
+"Based on", "According to", "From my", "From the", "Looking at", "After reviewing", "Having reviewed", "The search results", "The news", "The data shows", "It appears", "It seems", "[Brand name]" as the first word.
+
+DISALLOWED anywhere in body:
+"my search", "search results", "exciting news", "thrilled to", "proud to announce", "we are pleased", "from my research", "the articles suggest"
+
+Return valid JSON only — no markdown fences, no preamble, exactly this structure:
+{
+  "title": "the headline",
+  "body": "paragraph one\\n\\nparagraph two\\n\\nparagraph three",
+  "meta_description": "120-155 character SEO description including brand name",
+  "seo_keywords": ["keyword1", "keyword2", "keyword3", "keyword4"]
+}`;
+
+async function callOpus(client, pressRelease, brandInfo, retry = false) {
+  const { brand, rank, di, momStr, currentMonth } = brandInfo;
+
+  const userMsg = `Brand: ${brand.name}
+Current DORMIED global rank: #${rank} of 169
+DI score: ${di}/100
+Month-over-month: ${momStr}
+Month: ${currentMonth}
+Category: ${brand.category}
+
+Press release:
+${pressRelease}${retry ? '\n\nYour previous response contained a disallowed phrase or invalid JSON. Rewrite starting directly with the editorial observation. Return valid JSON only.' : ''}`;
+
+  const res = await client.messages.create({
+    model:      MODEL,
+    max_tokens: 900,
+    system:     SYSTEM_PROMPT,
+    messages:   [{ role: 'user', content: userMsg }],
+  });
+
+  return (res.content[0]?.text || '').trim();
+}
+
+function parseOpusResponse(raw) {
+  // Strip any accidental markdown fences
+  const cleaned = raw.replace(/^```(?:json)?\n?/m, '').replace(/\n?```$/m, '').trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    return null;
+  }
+}
+
+// ── Image handling ────────────────────────────────────────────────────────────
+
+async function uploadImageToSupabase(supabase, imageUrl, slug) {
+  if (!imageUrl) return null;
+
+  try {
+    const res = await fetch(imageUrl, {
+      signal: AbortSignal.timeout(10000),
+      headers: { 'User-Agent': 'DORMIED-Bot/1.0' },
+    });
+    if (!res.ok) return null;
+
+    const buffer      = Buffer.from(await res.arrayBuffer());
+    const contentType = res.headers.get('content-type') || 'image/jpeg';
+    const ext         = contentType.includes('png') ? 'png' : 'jpg';
+    const storagePath = `articles/${slug}-hero.${ext}`;
+
+    const { error } = await supabase.storage
+      .from('dormied-articles')
+      .upload(storagePath, buffer, { contentType, upsert: true });
+
+    if (error) {
+      console.warn(`[generate] Image upload failed:`, error.message);
+      return null;
+    }
+
+    const { data } = supabase.storage
+      .from('dormied-articles')
+      .getPublicUrl(storagePath);
+
+    return data?.publicUrl || null;
+  } catch (err) {
+    console.warn(`[generate] Image fetch failed:`, err.message);
+    return null;
+  }
+}
+
+// ── Static HTML generation ────────────────────────────────────────────────────
+
+function generateArticleHtml(opts) {
+  const {
+    title, bodyHtml, imageUrl, imageAlt, slug, category,
+    published_at, source_url, meta_description, seo_keywords,
+    brandSlug, brandName, brandRank, brandDI, brandMom,
+    readTime,
+  } = opts;
+
+  const dateFormatted  = formatDate(published_at);
+  const dateISO        = new Date(published_at).toISOString();
+  const canonicalUrl   = `https://dormied.com/news/${slug}/`;
+  const ogImage        = imageUrl || 'https://dormied.com/images/og-image.jpg';
+  const titleTag       = `${title} | DORMIED`;
+  const momClass       = brandMom > 0 ? 'da-mom-up' : brandMom < 0 ? 'da-mom-down' : 'da-mom-flat';
+  const momDisplay     = brandMom > 0 ? `+${brandMom}%` : brandMom < 0 ? `${brandMom}%` : 'flat';
+  const keywordsStr    = (seo_keywords || []).join(', ');
+
+  const imageHtml = imageUrl
+    ? `<div class="da-article-image-wrap">
+        <img class="da-article-hero-img" src="${escHtml(imageUrl)}" alt="${escHtml(imageAlt)}" loading="eager">
+        <span class="da-image-credit">Image: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">The Golf Wire</a></span>
+      </div>`
+    : '';
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-N4Q8J6L3');</script>
+  <!-- End Google Tag Manager -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── Primary SEO ── -->
+  <title>${escHtml(titleTag)}</title>
+  <meta name="description" content="${escHtml(meta_description)}">
+  <meta name="keywords" content="${escHtml(keywordsStr)}">
+  <meta name="author" content="DORMIED">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="${canonicalUrl}">
+
+  <!-- ── Favicon ── -->
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/dormied-icon.png">
+
+  <!-- ── Open Graph ── -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="${escHtml(title)}">
+  <meta property="og:description" content="${escHtml(meta_description)}">
+  <meta property="og:image" content="${escHtml(ogImage)}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="DORMIED">
+  <meta property="og:locale" content="en_US">
+  <meta property="article:published_time" content="${dateISO}">
+  <meta property="article:author" content="DORMIED">
+
+  <!-- ── Twitter Card ── -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@DORMIED_GOLF">
+  <meta name="twitter:title" content="${escHtml(title)}">
+  <meta name="twitter:description" content="${escHtml(meta_description)}">
+  <meta name="twitter:image" content="${escHtml(ogImage)}">
+
+  <!-- ── Sitemap ── -->
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+
+  <!-- ── Fonts ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ── Styles ── -->
+  <link rel="stylesheet" href="/css/styles.css?v=20260409">
+
+  <!-- ── Structured Data ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "${escHtml(title)}",
+    "description": "${escHtml(meta_description)}",
+    "image": "${escHtml(ogImage)}",
+    "datePublished": "${dateISO}",
+    "author": { "@type": "Organization", "name": "DORMIED" },
+    "publisher": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com" },
+    "url": "${canonicalUrl}",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home",  "item": "https://dormied.com/" },
+        { "@type": "ListItem", "position": 2, "name": "News",  "item": "https://dormied.com/news/" },
+        { "@type": "ListItem", "position": 3, "name": "${escHtml(title)}", "item": "${canonicalUrl}" }
+      ]
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N4Q8J6L3" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <!-- ══ TOP AD ════════════════════════════════════════════════════════════ -->
+  <div class="ad-top-zone" aria-hidden="true">
+    <div class="ad-leaderboard tablet-ad">
+      <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px"
+           data-ad-client="ca-pub-5259693727609263" data-ad-slot="2855716557"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    <div class="ad-mobile-banner mobile-ad">
+      <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px"
+           data-ad-client="ca-pub-5259693727609263" data-ad-slot="6216377061"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+
+  <!-- ══ SITE HEADER ═══════════════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="/" class="site-logo" aria-label="DORMIED home">
+        <img src="/images/dormied-logo-colour.png" alt="DORMIED" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <span class="logo-text-fallback" style="display:none">DORMIED</span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/rankings/"  class="site-nav-link">Index</a>
+        <a href="/scorecard/" class="site-nav-link">Scorecard</a>
+        <a href="/news/"      class="site-nav-link site-nav-link--active">News</a>
+        <a href="/brands/"    class="site-nav-link">Brands</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
+  <main id="main-content">
+
+    <!-- ── Page Hero ── -->
+    <section class="hero-section" aria-label="News">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-text">
+            <nav class="da-breadcrumb" aria-label="Breadcrumb">
+              <a href="/">Home</a>
+              <span aria-hidden="true">›</span>
+              <a href="/news/">News</a>
+              <span aria-hidden="true">›</span>
+              <span>${escHtml(category)}</span>
+            </nav>
+            <h1 class="hero-title">News</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ ARTICLE ════════════════════════════════════════════════════════════ -->
+    <section class="da-article-section">
+      <div class="container">
+        <div class="table-layout">
+
+          <!-- ── Main Content ── -->
+          <div class="da-article-main">
+
+            ${imageHtml}
+
+            <div class="da-article-meta">
+              <span class="da-source-label">DORMIED</span>
+              <span class="da-meta-sep">·</span>
+              <time datetime="${dateISO}">${escHtml(dateFormatted)}</time>
+              <span class="da-meta-sep">·</span>
+              <span class="da-category-tag">${escHtml(category)}</span>
+              <span class="da-meta-sep">·</span>
+              <span class="da-read-time">${escHtml(readTime)}</span>
+            </div>
+
+            <h2 class="da-article-title">${escHtml(title)}</h2>
+
+            <div class="da-article-body">
+              ${bodyHtml}
+            </div>
+
+            <!-- Brand card -->
+            <div class="da-brand-card">
+              <div class="da-brand-card-inner">
+                <div class="da-brand-card-info">
+                  <span class="da-brand-card-label">DORMIED INDEX</span>
+                  <a href="/brands/${escHtml(brandSlug)}/" class="da-brand-card-name">${escHtml(brandName)}</a>
+                  <div class="da-brand-card-stats">
+                    <span class="da-stat">#${brandRank} Global</span>
+                    <span class="da-stat">DI ${brandDI}</span>
+                    <span class="da-stat ${momClass}">${momDisplay} M/M</span>
+                  </div>
+                </div>
+                <a href="/brands/${escHtml(brandSlug)}/" class="da-brand-card-cta">View Brand →</a>
+              </div>
+            </div>
+
+            <!-- Source attribution -->
+            <p class="da-article-source">
+              Source: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">The Golf Wire</a>
+            </p>
+
+          </div><!-- /da-article-main -->
+
+          <!-- ── Sidebar: 160×600 ad ── -->
+          <aside class="sidebar-ad-col">
+            <div class="sidebar-sticky-zone" aria-hidden="true">
+              <div class="ad-skyscraper">
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:160px;height:600px"
+                     data-ad-client="ca-pub-5259693727609263"
+                     data-ad-slot="6935529969"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+              </div>
+            </div>
+          </aside>
+
+        </div><!-- /table-layout -->
+      </div><!-- /container -->
+    </section>
+
+  </main>
+
+  <!-- ══ FOOTER ════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo" aria-label="DORMIED home">DORMIED</a>
+        <div class="footer-social">
+          <a href="https://x.com/DORMIED_GOLF" class="footer-social-link" target="_blank" rel="noopener" aria-label="DORMIED on X">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/dormiedgolf" class="footer-social-link" target="_blank" rel="noopener" aria-label="DORMIED on Instagram">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://dormiedgolf.substack.com/" class="footer-social-link" target="_blank" rel="noopener" aria-label="DORMIED on Substack">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+          </a>
+        </div>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="/rankings/">Index</a>
+        <a href="/scorecard/">Scorecard</a>
+        <a href="/news/">News</a>
+        <a href="/brands/">Brands</a>
+        <a href="/about/">About</a>
+        <a href="mailto:dormiedgolf@gmail.com">Contact</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </nav>
+      <div class="footer-signup">
+        <div class="footer-signup-header">
+          <p class="footer-signup-label">THE SCORECARD</p>
+          <p class="footer-signup-sub">Where golf culture, brand, and marketing collide, once a month in your inbox.</p>
+        </div>
+        <form class="footer-signup-form" novalidate>
+          <div class="footer-signup-row">
+            <input class="footer-signup-input" type="email" placeholder="Your email" required autocomplete="email" aria-label="Email address">
+            <button class="footer-signup-btn" type="submit">Get The Scorecard</button>
+          </div>
+          <p class="footer-signup-msg" style="display:none"></p>
+        </form>
+      </div>
+      <p class="footer-legal">© <span id="footer-year"></span> DORMIED. Rankings are independent editorial content. All brand names and logos are property of their respective owners.</p>
+    </div>
+  </footer>
+
+  <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
+  <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
+  <script src="/js/analytics.js?v=20260320a"></script>
+  <script src="/js/signup.js?v=20260324d"></script>
+
+</body>
+</html>`;
+}
+
+// ── Sitemap updater ───────────────────────────────────────────────────────────
+
+function addToSitemap(slug, publishedAt) {
+  const sitemapPath = path.join(SITE_ROOT, 'sitemap.xml');
+  let sitemap = fs.readFileSync(sitemapPath, 'utf8');
+
+  const dateStr = publishedAt.slice(0, 10);
+  const entry   = `\n  <url>\n    <loc>https://dormied.com/news/${slug}/</loc>\n    <lastmod>${dateStr}</lastmod>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>\n  </url>`;
+
+  // Insert before the closing </urlset>
+  sitemap = sitemap.replace('</urlset>', entry + '\n</urlset>');
+  fs.writeFileSync(sitemapPath, sitemap, 'utf8');
+  console.log(`[generate] Added /news/${slug}/ to sitemap`);
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
+
+async function main() {
+  const supabase    = getSupabase();
+  const anthropic   = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const dormiedData = loadDormiedData();
+  loadBrands(); // validate file exists
+
+  // Find matched articles that don't yet have a generated article
+  const { data: matched, error: fetchErr } = await supabase
+    .from('golf_wire_matched')
+    .select(`
+      id,
+      primary_brand_slug,
+      all_brand_slugs,
+      golf_wire_raw (
+        id, title, body, image_url, source_url, category, published_at
+      )
+    `)
+    .not('id', 'in', `(
+      SELECT matched_article_id FROM dormied_articles WHERE matched_article_id IS NOT NULL
+    )`)
+    .order('matched_at', { ascending: false })
+    .limit(MAX_ARTICLES_PER_RUN);
+
+  if (fetchErr) {
+    console.error('[generate] Failed to fetch matched articles:', fetchErr.message);
+    process.exit(1);
+  }
+
+  console.log(`[generate] ${matched.length} articles to generate (max ${MAX_ARTICLES_PER_RUN}/run)`);
+
+  let generated = 0;
+
+  for (const match of matched) {
+    const raw = match.golf_wire_raw;
+    if (!raw) { console.warn('[generate] No raw article for match:', match.id); continue; }
+
+    const brandSlug = match.primary_brand_slug;
+    const brandInfo = getBrandInfo(dormiedData, brandSlug);
+
+    if (!brandInfo) {
+      console.warn(`[generate] Brand not found in data.js: ${brandSlug}`);
+      continue;
+    }
+
+    console.log(`[generate] Generating: "${raw.title}" → ${brandSlug}`);
+
+    // ── Call Opus ──
+    let rawResponse = await callOpus(anthropic, raw.body, brandInfo, false);
+    let parsed      = parseOpusResponse(rawResponse);
+
+    if (!parsed || isInvalid(parsed.body)) {
+      console.warn(`[generate] First response invalid for "${raw.title}" — retrying`);
+      rawResponse = await callOpus(anthropic, raw.body, brandInfo, true);
+      parsed      = parseOpusResponse(rawResponse);
+      if (!parsed) {
+        console.warn(`[generate] Second response also unparseable — skipping`);
+        continue;
+      }
+    }
+
+    const { title, body, meta_description, seo_keywords } = parsed;
+    const publishedAt = raw.published_at || new Date().toISOString();
+    const slug        = makeSlug(title, publishedAt);
+    const readTime    = estimateReadTime(body);
+    const bodyHtml    = bodyToHtml(body, brandSlug, brandInfo.brand.name);
+
+    // ── Upload image to Supabase Storage ──
+    const storedImageUrl = await uploadImageToSupabase(supabase, raw.image_url, slug);
+    const imageUrl       = storedImageUrl || raw.image_url;
+
+    // ── Write static HTML file ──
+    const articleDir = path.join(SITE_ROOT, 'news', slug);
+    fs.mkdirSync(articleDir, { recursive: true });
+
+    const html = generateArticleHtml({
+      title, bodyHtml, imageUrl,
+      imageAlt:        `${brandInfo.brand.name} — ${raw.category || 'Golf'}`,
+      slug, category:  raw.category || 'Business',
+      published_at:    publishedAt,
+      source_url:      raw.source_url,
+      meta_description,
+      seo_keywords,
+      brandSlug,
+      brandName:  brandInfo.brand.name,
+      brandRank:  brandInfo.rank,
+      brandDI:    brandInfo.di,
+      brandMom:   brandInfo.momPct,
+      readTime,
+    });
+
+    fs.writeFileSync(path.join(articleDir, 'index.html'), html, 'utf8');
+    console.log(`[generate] ✓ Wrote news/${slug}/index.html`);
+
+    // ── Store in Supabase ──
+    const { error: insertErr } = await supabase
+      .from('dormied_articles')
+      .insert({
+        matched_article_id: match.id,
+        brand_slug:         brandSlug,
+        title,
+        body,
+        image_url:          imageUrl,
+        source_url:         raw.source_url,
+        source_name:        'The Golf Wire',
+        meta_description,
+        seo_keywords:       seo_keywords || [],
+        published_at:       publishedAt,
+        status:             'published',
+        slug,
+        category:           raw.category || 'Business',
+      });
+
+    if (insertErr) {
+      console.warn(`[generate] Supabase insert failed for "${title}":`, insertErr.message);
+    }
+
+    // ── Update sitemap ──
+    addToSitemap(slug, publishedAt);
+
+    generated++;
+    console.log(`[generate] ✓ Published: "${title}"`);
+
+    // Rate limit — be kind to Anthropic API
+    await new Promise(r => setTimeout(r, 2000));
+  }
+
+  console.log(`[generate] Done. Generated: ${generated}`);
+}
+
+main().catch(err => {
+  console.error('[generate] Fatal error:', err.message);
+  process.exit(1);
+});

@@ -14,7 +14,9 @@
     { "source": "/scorecard",         "destination": "/scorecard/index.html" },
     { "source": "/scorecard/",        "destination": "/scorecard/index.html" },
     { "source": "/scorecard/:slug",   "destination": "/scorecard/article.html" },
-    { "source": "/scorecard/:slug/",  "destination": "/scorecard/article.html" }
+    { "source": "/scorecard/:slug/",  "destination": "/scorecard/article.html" },
+    { "source": "/news/:slug",        "destination": "/news/:slug/index.html" },
+    { "source": "/news/:slug/",       "destination": "/news/:slug/index.html" }
   ],
   "functions": {
     "api/feed.js":            { "maxDuration": 15 },

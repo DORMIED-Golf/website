@@ -4746,3 +4746,167 @@ details[open] .faq-question::after { content: '−'; }
   .sc-prevnext-next { align-items: flex-start; text-align: left; }
   .sc-rankings-banner { flex-direction: column; align-items: flex-start; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DORMIED ARTICLES  (generated Golf Wire originals at /news/[slug]/)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Breadcrumb ──────────────────────────────────────────────────────────── */
+.da-breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.da-breadcrumb a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.da-breadcrumb a:hover { color: var(--green); }
+.da-breadcrumb-sep { margin: 0 4px; }
+
+/* ── Article main column ─────────────────────────────────────────────────── */
+.da-article-main { min-width: 0; }
+
+/* ── Hero image ──────────────────────────────────────────────────────────── */
+.da-article-image {
+  width: 100%;
+  border-radius: var(--radius);
+  display: block;
+  margin-bottom: 20px;
+  background: var(--bg-raised);
+}
+
+/* ── Meta line (category · date · source) ────────────────────────────────── */
+.da-article-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.da-article-category {
+  background: var(--green);
+  color: #000;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.da-article-sep { opacity: 0.4; }
+
+/* ── Article title ───────────────────────────────────────────────────────── */
+.da-article-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.2;
+  margin: 0 0 20px;
+}
+
+/* ── Body copy ───────────────────────────────────────────────────────────── */
+.da-article-body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text);
+  margin-bottom: 28px;
+}
+.da-article-body p { margin: 0 0 18px; }
+.da-article-body p:last-child { margin-bottom: 0; }
+.da-article-body a {
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+.da-article-body a:hover { border-color: var(--green); }
+
+/* ── Brand card ──────────────────────────────────────────────────────────── */
+.da-brand-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-lite);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin: 28px 0;
+}
+.da-brand-card-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.da-brand-card-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.da-brand-card-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.da-brand-stat { display: flex; flex-direction: column; gap: 2px; }
+.da-brand-stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+.da-brand-stat-value {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.da-brand-stat-value.positive { color: var(--green); }
+.da-brand-stat-value.negative { color: #e05a5a; }
+.da-brand-card-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--green);
+  text-decoration: none;
+  border: 1px solid var(--green);
+  border-radius: 3px;
+  padding: 5px 12px;
+  transition: background 0.15s, color 0.15s;
+}
+.da-brand-card-link:hover {
+  background: var(--green);
+  color: #000;
+}
+
+/* ── Source attribution ──────────────────────────────────────────────────── */
+.da-article-source {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-lite);
+  padding-top: 14px;
+  margin-top: 14px;
+}
+.da-article-source a {
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+.da-article-source a:hover { color: var(--green); }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .da-article-title { font-size: 1.35rem; }
+  .da-brand-card-stats { gap: 14px; }
+}
