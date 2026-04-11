@@ -15,8 +15,6 @@
 
 'use strict';
 
-console.log('[generate] SCRIPT VERSION: v4-fetch-filter');
-
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 const fs               = require('fs');
