@@ -55,6 +55,7 @@ module.exports = async (req, res) => {
     isDormied:   true,
     category:    a.category || '',
     slug:        a.slug,
+    sourceUrl:   a.source_url || null,
   }));
 
   res.setHeader('Cache-Control', 'public, max-age=900, stale-while-revalidate=300');

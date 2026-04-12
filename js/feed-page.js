@@ -600,11 +600,19 @@
         var external = (results[0] && results[0].articles) || [];
         var dormied  = (results[1] && results[1].articles) || [];
 
-        // Merge: DORMIED first, then external (dedup by title to prevent RSS duplication)
-        var dormiedTitles = {};
-        dormied.forEach(function(a) { dormiedTitles[a.title.toLowerCase().trim()] = true; });
+        // Merge: DORMIED first, then external
+        // Dedup by: (1) source URL match, (2) first 60 chars of title match
+        var dormiedSourceUrls = {};
+        var dormiedTitlePrefixes = {};
+        dormied.forEach(function(a) {
+          if (a.sourceUrl) dormiedSourceUrls[a.sourceUrl] = true;
+          var prefix = (a.title || '').toLowerCase().trim().slice(0, 60);
+          if (prefix) dormiedTitlePrefixes[prefix] = true;
+        });
         var externalDeduped = external.filter(function(a) {
-          return !dormiedTitles[a.title.toLowerCase().trim()];
+          if (a.url && dormiedSourceUrls[a.url]) return false;
+          var prefix = (a.title || '').toLowerCase().trim().slice(0, 60);
+          return !dormiedTitlePrefixes[prefix];
         });
         var merged = dormied.concat(externalDeduped).sort(function(a, b) {
           return new Date(b.pubDate || 0) - new Date(a.pubDate || 0);
