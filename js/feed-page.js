@@ -9,7 +9,7 @@
   'use strict';
 
   var FEED_API  = '/api/feed';
-  var CACHE_KEY = 'dormied_feed_v3';          // shared cache key with feed.js
+  var CACHE_KEY = 'dormied_feed_v4';          // shared cache key with feed.js
   var CACHE_TTL = 30 * 60 * 1000;             // 30 minutes
   var TOP_BRANDS_COUNT = 10;
   var AD_EVERY = 10;                          // insert ad every N articles
