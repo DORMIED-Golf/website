@@ -474,24 +474,20 @@
     .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function (rows) {
       if (rows && rows.length >= 3) {
-        // Got enough clicked articles — prepend most recent DORMIED article
-        fetchDormiedArticles(null, function (dormied) {
-          var external = rows.map(function (row) {
-            return {
-              title:      row.title,
-              url:        row.url,
-              sourceName: row.source_name || '',
-              pubDate:    row.pub_date    || row.last_clicked || '',
-              imageUrl:   row.image_url  || null,
-              brandIds:   row.brand_ids  || [],
-            };
-          });
-          var combined = (dormied.length ? [dormied[0]] : []).concat(external).slice(0, HOME_LIMIT + 1);
-          el.innerHTML = combined.map(function (a) {
-            return renderArticleCard(a, true, allBrands);
-          }).join('');
-          appendHomeStoriesSeeAll(el);
+        var external = rows.map(function (row) {
+          return {
+            title:      row.title,
+            url:        row.url,
+            sourceName: row.source_name || '',
+            pubDate:    row.pub_date    || row.last_clicked || '',
+            imageUrl:   row.image_url  || null,
+            brandIds:   row.brand_ids  || [],
+          };
         });
+        el.innerHTML = external.slice(0, HOME_LIMIT).map(function (a) {
+          return renderArticleCard(a, true, allBrands);
+        }).join('');
+        appendHomeStoriesSeeAll(el);
       } else {
         // Fewer than 3 clicked articles — fall back to latest feed
         renderHomeStoriesFallback(feedArticles, allBrands, el);
@@ -516,17 +512,14 @@
     var external = articles.filter(function (a) {
       return a.brandIds && a.brandIds.length > 0;
     }).slice(0, HOME_LIMIT);
-    fetchDormiedArticles(null, function (dormied) {
-      var combined = (dormied.length ? [dormied[0]] : []).concat(external).slice(0, HOME_LIMIT + 1);
-      if (!combined.length) {
-        el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
-        return;
-      }
-      el.innerHTML = combined.map(function (a) {
-        return renderArticleCard(a, true, allBrands);
-      }).join('');
-      appendHomeStoriesSeeAll(el);
-    });
+    if (!external.length) {
+      el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
+      return;
+    }
+    el.innerHTML = external.map(function (a) {
+      return renderArticleCard(a, true, allBrands);
+    }).join('');
+    appendHomeStoriesSeeAll(el);
   }
 
   /* ── Main init ─────────────────────────────────────────────────────────── */
