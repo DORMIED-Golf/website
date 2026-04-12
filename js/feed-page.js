@@ -600,8 +600,13 @@
         var external = (results[0] && results[0].articles) || [];
         var dormied  = (results[1] && results[1].articles) || [];
 
-        // Merge: DORMIED first, then external; sort by pubDate
-        var merged = dormied.concat(external).sort(function(a, b) {
+        // Merge: DORMIED first, then external (dedup by title to prevent RSS duplication)
+        var dormiedTitles = {};
+        dormied.forEach(function(a) { dormiedTitles[a.title.toLowerCase().trim()] = true; });
+        var externalDeduped = external.filter(function(a) {
+          return !dormiedTitles[a.title.toLowerCase().trim()];
+        });
+        var merged = dormied.concat(externalDeduped).sort(function(a, b) {
           return new Date(b.pubDate || 0) - new Date(a.pubDate || 0);
         });
 
