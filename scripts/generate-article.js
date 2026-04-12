@@ -68,16 +68,36 @@ function loadBrands() {
   return JSON.parse(raw);
 }
 
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function shiftMonth(label, delta) {
+  const [mon, year] = label.split(' ');
+  const total = parseInt(year) * 12 + MONTH_NAMES.indexOf(mon) + delta;
+  const y = Math.floor(total / 12);
+  const m = ((total % 12) + 12) % 12;
+  return `${MONTH_NAMES[m]} ${y}`;
+}
+
+function trendStr(cur, base) {
+  if (!base) return '—';
+  const pct = Math.round(((cur - base) / base) * 100);
+  return pct > 0 ? `+${pct}%` : pct < 0 ? `${pct}%` : 'flat';
+}
+
 function getBrandInfo(dormiedData, brandSlug) {
   const brand = dormiedData.brands.find(b => b.id === brandSlug);
   if (!brand) return null;
 
   const currentMonth  = dormiedData.meta.currentMonth;
   const previousMonth = dormiedData.meta.previousMonth;
+  const month3ago     = shiftMonth(currentMonth, -3);
+  const month12ago    = shiftMonth(currentMonth, -12);
 
   const globalData = brand.searchesByMarket?.global || {};
-  const curSearches = globalData[currentMonth]  || 0;
+  const curSearches  = globalData[currentMonth]  || 0;
   const prevSearches = globalData[previousMonth] || 0;
+  const s3ago        = globalData[month3ago]     || 0;
+  const s12ago       = globalData[month12ago]    || 0;
 
   // Compute DI score (0–100 relative to top brand)
   const maxSearches = Math.max(
@@ -97,7 +117,11 @@ function getBrandInfo(dormiedData, brandSlug) {
     : 0;
   const momStr = momPct > 0 ? `+${momPct}%` : momPct < 0 ? `${momPct}%` : 'flat';
 
-  return { brand, rank, di, momPct, momStr, currentMonth };
+  // 3-month and 12-month trends
+  const trend3mStr  = trendStr(curSearches, s3ago);
+  const trend12mStr = trendStr(curSearches, s12ago);
+
+  return { brand, rank, di, momPct, momStr, trend3mStr, trend12mStr, currentMonth };
 }
 
 function makeSlug(title, dateStr) {
@@ -257,7 +281,8 @@ function generateArticleHtml(opts) {
   const {
     title, bodyHtml, imageUrl, imageAlt, slug, category,
     published_at, source_url, meta_description, seo_keywords,
-    brandSlug, brandName, brandRank, brandDI, brandMom,
+    brandSlug, brandName, brandLogo, brandRank, brandDI, brandMom,
+    brandTrend3m, brandTrend12m,
     readTime,
   } = opts;
 
@@ -270,9 +295,15 @@ function generateArticleHtml(opts) {
   const momDisplay     = brandMom > 0 ? `+${brandMom}%` : brandMom < 0 ? `${brandMom}%` : 'flat';
   const keywordsStr    = (seo_keywords || []).join(', ');
 
+  const initials       = brandName.split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
+  const logoFallback   = `<span class=&quot;bp-logo-initials&quot; style=&quot;background:#1a2a1a;width:48px;height:48px;font-size:1rem&quot;>${escHtml(initials)}</span>`;
+  const logoHtml       = brandLogo
+    ? `<img src="${escHtml(brandLogo.replace(/sz=\d+/, 'sz=48'))}" alt="${escHtml(brandName)}" class="bp-logo-img" width="48" height="48" style="width:48px;height:48px" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${logoFallback}')">`
+    : `<span class="bp-logo-initials" style="background:#1a2a1a;width:48px;height:48px;font-size:1rem">${escHtml(initials)}</span>`;
+
   const imageHtml = imageUrl
-    ? `<div class="da-article-image-wrap">
-        <img class="da-article-hero-img" src="${escHtml(imageUrl)}" alt="${escHtml(imageAlt)}" loading="eager">
+    ? `<div class="sc-article-image">
+        <img class="sc-article-hero-img" src="${escHtml(imageUrl)}" alt="${escHtml(imageAlt)}" loading="eager">
         <span class="da-image-credit">Image: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">The Golf Wire</a></span>
       </div>`
     : '';
@@ -392,23 +423,13 @@ function generateArticleHtml(opts) {
   <!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
   <main id="main-content">
 
-    <!-- ── Page Hero ── -->
-    <section class="hero-section" aria-label="News">
-      <div class="container">
-        <div class="hero-content">
-          <div class="hero-text">
-            <nav class="da-breadcrumb" aria-label="Breadcrumb">
-              <a href="/">Home</a>
-              <span aria-hidden="true">›</span>
-              <a href="/news/">News</a>
-              <span aria-hidden="true">›</span>
-              <span>${escHtml(category)}</span>
-            </nav>
-            <h1 class="hero-title">News</h1>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- ── Article Header (matches Scorecard layout) ── -->
+    <header class="da-article-header container">
+      <a href="/news/" class="sc-label sc-label--link">News</a>
+      <h1 class="sc-article-title">${escHtml(title)}</h1>
+      <p class="sc-article-subtitle">${escHtml(meta_description)}</p>
+      <p class="sc-article-byline">DORMIED &nbsp;·&nbsp; <time datetime="${dateISO}">${escHtml(dateFormatted)}</time> &nbsp;·&nbsp; ${escHtml(category)} &nbsp;·&nbsp; ${escHtml(readTime)}</p>
+    </header>
 
     <!-- ══ ARTICLE ════════════════════════════════════════════════════════════ -->
     <section class="da-article-section">
@@ -416,21 +437,9 @@ function generateArticleHtml(opts) {
         <div class="table-layout">
 
           <!-- ── Main Content ── -->
-          <div class="da-article-main">
+          <div class="sc-article-main">
 
             ${imageHtml}
-
-            <div class="da-article-meta">
-              <span class="da-source-label">DORMIED</span>
-              <span class="da-meta-sep">·</span>
-              <time datetime="${dateISO}">${escHtml(dateFormatted)}</time>
-              <span class="da-meta-sep">·</span>
-              <span class="da-category-tag">${escHtml(category)}</span>
-              <span class="da-meta-sep">·</span>
-              <span class="da-read-time">${escHtml(readTime)}</span>
-            </div>
-
-            <h2 class="da-article-title">${escHtml(title)}</h2>
 
             <div class="da-article-body">
               ${bodyHtml}
@@ -438,17 +447,22 @@ function generateArticleHtml(opts) {
 
             <!-- Brand card -->
             <div class="da-brand-card">
-              <div class="da-brand-card-inner">
-                <div class="da-brand-card-info">
-                  <span class="da-brand-card-label">DORMIED INDEX</span>
-                  <a href="/brands/${escHtml(brandSlug)}/" class="da-brand-card-name">${escHtml(brandName)}</a>
-                  <div class="da-brand-card-stats">
-                    <span class="da-stat">#${brandRank} Global</span>
-                    <span class="da-stat">DI ${brandDI}</span>
-                    <span class="da-stat ${momClass}">${momDisplay} M/M</span>
-                  </div>
-                </div>
+              <div class="da-brand-card-header">
+                <span class="da-brand-card-label">DORMIED INDEX</span>
                 <a href="/brands/${escHtml(brandSlug)}/" class="da-brand-card-cta">View Brand →</a>
+              </div>
+              <div class="da-brand-card-main">
+                <div class="da-brand-card-identity">
+                  <div class="da-brand-card-logo">${logoHtml}</div>
+                  <a href="/brands/${escHtml(brandSlug)}/" class="da-brand-card-name">${escHtml(brandName)}</a>
+                </div>
+                <div class="da-brand-card-stats">
+                  <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">#${brandRank}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">${brandDI}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val ${momClass}">${momDisplay}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val">${escHtml(brandTrend3m || '—')}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val">${escHtml(brandTrend12m || '—')}</span></div>
+                </div>
               </div>
             </div>
 
@@ -457,7 +471,19 @@ function generateArticleHtml(opts) {
               Source: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">The Golf Wire</a>
             </p>
 
-          </div><!-- /da-article-main -->
+            <!-- More on [Brand] -->
+            <section class="da-bottom-section" id="da-more-brand-section" aria-labelledby="da-more-brand-heading" hidden>
+              <h3 class="da-bottom-heading" id="da-more-brand-heading">More on ${escHtml(brandName)}</h3>
+              <div id="da-more-brand-list" class="da-bottom-cards"></div>
+            </section>
+
+            <!-- Latest from DORMIED -->
+            <section class="da-bottom-section" id="da-latest-dormied-section" aria-labelledby="da-latest-dormied-heading" hidden>
+              <h3 class="da-bottom-heading" id="da-latest-dormied-heading">Latest from DORMIED</h3>
+              <div id="da-latest-dormied-list" class="da-bottom-cards"></div>
+            </section>
+
+          </div><!-- /sc-article-main -->
 
           <!-- ── Sidebar: 160×600 ad ── -->
           <aside class="sidebar-ad-col">
@@ -523,9 +549,14 @@ function generateArticleHtml(opts) {
   </footer>
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
-  <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    window.__DA_BRAND_SLUG__   = '${escHtml(brandSlug)}';
+    window.__DA_ARTICLE_SLUG__ = '${escHtml(slug)}';
+  </script>
   <script src="/js/analytics.js?v=20260320a"></script>
   <script src="/js/signup.js?v=20260324d"></script>
+  <script src="/js/da-article.js?v=20260411"></script>
 
 </body>
 </html>`;
@@ -646,9 +677,12 @@ async function main() {
       seo_keywords,
       brandSlug,
       brandName:  brandInfo.brand.name,
+      brandLogo:  brandInfo.brand.logo || '',
       brandRank:  brandInfo.rank,
       brandDI:    brandInfo.di,
-      brandMom:   brandInfo.momPct,
+      brandMom:      brandInfo.momPct,
+      brandTrend3m:  brandInfo.trend3mStr,
+      brandTrend12m: brandInfo.trend12mStr,
       readTime,
     });
 

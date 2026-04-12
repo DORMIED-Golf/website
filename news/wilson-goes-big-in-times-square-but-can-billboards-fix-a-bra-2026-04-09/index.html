@@ -113,23 +113,14 @@
   <!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
   <main id="main-content">
 
-    <!-- ── Page Hero ── -->
-    <section class="hero-section" aria-label="News">
-      <div class="container">
-        <div class="hero-content">
-          <div class="hero-text">
-            <nav class="da-breadcrumb" aria-label="Breadcrumb">
-              <a href="/">Home</a>
-              <span aria-hidden="true">›</span>
-              <a href="/news/">News</a>
-              <span aria-hidden="true">›</span>
-              <span>Apparel</span>
-            </nav>
-            <h1 class="hero-title">News</h1>
-          </div>
-        </div>
-      </div>
-    </section>
+
+    <!-- ── Article Header ── -->
+    <header class="da-article-header container">
+      <a href="/news/" class="sc-label sc-label--link">News</a>
+      <h1 class="sc-article-title">Wilson Goes Big in Times Square, But Can Billboards Fix a Brand Problem?</h1>
+      <p class="sc-article-subtitle">Wilson Golf launches Times Square billboard campaign as brand momentum rises 23%. Can visibility translate to equipment consideration?</p>
+      <p class="sc-article-byline">DORMIED &nbsp;&middot;&nbsp; <time datetime="2026-04-09T20:30:33.000Z">April 9, 2026</time> &nbsp;&middot;&nbsp; Business &nbsp;&middot;&nbsp; 1 min read</p>
+    </header>
 
     <!-- ══ ARTICLE ════════════════════════════════════════════════════════════ -->
     <section class="da-article-section">
@@ -137,24 +128,14 @@
         <div class="table-layout">
 
           <!-- ── Main Content ── -->
-          <div class="da-article-main">
+          <div class="sc-article-main">
 
-            <div class="da-article-image-wrap">
-        <img class="da-article-hero-img" src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09-hero.jpg" alt="Wilson — Apparel" loading="eager">
+            <div class="sc-article-image">
+        <img class="sc-article-hero-img" src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09-hero.jpg" alt="Wilson — Apparel" loading="eager">
         <span class="da-image-credit">Image: <a href="https://thegolfwire.com/wilson-golf-times-square/" target="_blank" rel="noopener noreferrer">The Golf Wire</a></span>
       </div>
 
-            <div class="da-article-meta">
-              <span class="da-source-label">DORMIED</span>
-              <span class="da-meta-sep">·</span>
-              <time datetime="2026-04-09T20:30:33.000Z">April 9, 2026</time>
-              <span class="da-meta-sep">·</span>
-              <span class="da-category-tag">Apparel</span>
-              <span class="da-meta-sep">·</span>
-              <span class="da-read-time">1 min read</span>
-            </div>
-
-            <h2 class="da-article-title">Wilson Goes Big in Times Square, But Can Billboards Fix a Brand Problem?</h2>
+            
 
             <div class="da-article-body">
               <p><a href="/brands/wilson/" class="da-brand-link">Wilson</a> Golf is now plastered across the largest LED screen in Times Square, running its Play Original campaign throughout April on a nine-story wraparound display that sees 360,000 pedestrians daily.</p>
@@ -164,17 +145,22 @@
 
             <!-- Brand card -->
             <div class="da-brand-card">
-              <div class="da-brand-card-inner">
-                <div class="da-brand-card-info">
-                  <span class="da-brand-card-label">DORMIED INDEX</span>
+              <div class="da-brand-card-header">
+                <span class="da-brand-card-label">DORMIED INDEX</span>
+                <a href="/brands/wilson/" class="da-brand-card-cta">View Brand &rarr;</a>
+              </div>
+              <div class="da-brand-card-main">
+                <div class="da-brand-card-identity">
+                  <div class="da-brand-card-logo"><img src="/images/logos/wilson.jpg" alt="" class="bp-logo-img" width="48" height="48" style="width:48px;height:48px" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span class=&quot;bp-logo-initials&quot; style=&quot;background:#1a2a1a;width:48px;height:48px;font-size:1rem&quot;>WI</span>')"></div>
                   <a href="/brands/wilson/" class="da-brand-card-name">Wilson</a>
-                  <div class="da-brand-card-stats">
-                    <span class="da-stat">#39 Global</span>
-                    <span class="da-stat">DI 7</span>
-                    <span class="da-stat da-mom-up">+23% M/M</span>
-                  </div>
                 </div>
-                <a href="/brands/wilson/" class="da-brand-card-cta">View Brand →</a>
+                <div class="da-brand-card-stats">
+                  <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">#39</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">7</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val da-mom-up">+23%</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val">+124%</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val">+23%</span></div>
+                </div>
               </div>
             </div>
 
@@ -183,7 +169,20 @@
               Source: <a href="https://thegolfwire.com/wilson-golf-times-square/" target="_blank" rel="noopener noreferrer">The Golf Wire</a>
             </p>
 
-          </div><!-- /da-article-main -->
+
+            <!-- More on [Brand] -->
+            <section class="da-bottom-section" id="da-more-brand-section" aria-labelledby="da-more-brand-heading" hidden>
+              <h3 class="da-bottom-heading" id="da-more-brand-heading">More on Wilson</h3>
+              <div id="da-more-brand-list" class="da-bottom-cards"></div>
+            </section>
+
+            <!-- Latest from DORMIED -->
+            <section class="da-bottom-section" id="da-latest-dormied-section" aria-labelledby="da-latest-dormied-heading" hidden>
+              <h3 class="da-bottom-heading" id="da-latest-dormied-heading">Latest from DORMIED</h3>
+              <div id="da-latest-dormied-list" class="da-bottom-cards"></div>
+            </section>
+
+          </div><!-- /sc-article-main -->
 
           <!-- ── Sidebar: 160×600 ad ── -->
           <aside class="sidebar-ad-col">
@@ -249,9 +248,14 @@
   </footer>
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
-  <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    window.__DA_BRAND_SLUG__   = 'wilson';
+    window.__DA_ARTICLE_SLUG__ = 'wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09';
+  </script>
   <script src="/js/analytics.js?v=20260320a"></script>
   <script src="/js/signup.js?v=20260324d"></script>
+  <script src="/js/da-article.js?v=20260411"></script>
 
 </body>
 </html>

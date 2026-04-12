@@ -546,7 +546,24 @@
   function init() {
     if (!document.getElementById('feed-list')) return;
 
+    // Pre-set source filter from URL param (?source=dormied)
+    try {
+      var urlSource = new URLSearchParams(window.location.search).get('source');
+      if (urlSource === 'dormied' || urlSource === 'external') {
+        state.sourceFilter = urlSource;
+      }
+    } catch (e) {}
+
     bindControls();
+
+    // Sync source filter buttons to match pre-set state
+    if (state.sourceFilter) {
+      document.querySelectorAll('.feed-source-btn').forEach(function(b) {
+        var isActive = b.getAttribute('data-source') === state.sourceFilter;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
 
     if (isLocalDev()) {
       state.articles = MOCK_ARTICLES;

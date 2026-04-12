@@ -113,23 +113,14 @@
   <!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
   <main id="main-content">
 
-    <!-- ── Page Hero ── -->
-    <section class="hero-section" aria-label="News">
-      <div class="container">
-        <div class="hero-content">
-          <div class="hero-text">
-            <nav class="da-breadcrumb" aria-label="Breadcrumb">
-              <a href="/">Home</a>
-              <span aria-hidden="true">›</span>
-              <a href="/news/">News</a>
-              <span aria-hidden="true">›</span>
-              <span>Apparel</span>
-            </nav>
-            <h1 class="hero-title">News</h1>
-          </div>
-        </div>
-      </div>
-    </section>
+
+    <!-- ── Article Header ── -->
+    <header class="da-article-header container">
+      <a href="/news/" class="sc-label sc-label--link">News</a>
+      <h1 class="sc-article-title">Rory McIlroy's $500K Youth Golf Donation Puts Municipal Courses in the Spotlight</h1>
+      <p class="sc-article-subtitle">Rory McIlroy donates $500K to Youth on Course as Bank of America's Golf with Us returns, expanding municipal golf access for 150,000 junior golfers.</p>
+      <p class="sc-article-byline">DORMIED &nbsp;&middot;&nbsp; <time datetime="2026-04-08T20:41:29.000Z">April 8, 2026</time> &nbsp;&middot;&nbsp; Business &nbsp;&middot;&nbsp; 1 min read</p>
+    </header>
 
     <!-- ══ ARTICLE ════════════════════════════════════════════════════════════ -->
     <section class="da-article-section">
@@ -137,24 +128,14 @@
         <div class="table-layout">
 
           <!-- ── Main Content ── -->
-          <div class="da-article-main">
+          <div class="sc-article-main">
 
-            <div class="da-article-image-wrap">
-        <img class="da-article-hero-img" src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/rory-mcilroys-500k-youth-golf-donation-puts-municipal-course-2026-04-08-hero.jpg" alt="Municipal — Apparel" loading="eager">
+            <div class="sc-article-image">
+        <img class="sc-article-hero-img" src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/rory-mcilroys-500k-youth-golf-donation-puts-municipal-course-2026-04-08-hero.jpg" alt="Municipal — Apparel" loading="eager">
         <span class="da-image-credit">Image: <a href="https://thegolfwire.com/bofas-golf-with-us-returns/" target="_blank" rel="noopener noreferrer">The Golf Wire</a></span>
       </div>
 
-            <div class="da-article-meta">
-              <span class="da-source-label">DORMIED</span>
-              <span class="da-meta-sep">·</span>
-              <time datetime="2026-04-08T20:41:29.000Z">April 8, 2026</time>
-              <span class="da-meta-sep">·</span>
-              <span class="da-category-tag">Apparel</span>
-              <span class="da-meta-sep">·</span>
-              <span class="da-read-time">1 min read</span>
-            </div>
-
-            <h2 class="da-article-title">Rory McIlroy's $500K Youth Golf Donation Puts Municipal Courses in the Spotlight</h2>
+            
 
             <div class="da-article-body">
               <p>The reigning Masters champion is putting his money where the municipal tees are, donating $500,000 to Youth on Course to fund 70,000 rounds for junior golfers through Bank of America's returning Golf with Us program.</p>
@@ -164,17 +145,22 @@
 
             <!-- Brand card -->
             <div class="da-brand-card">
-              <div class="da-brand-card-inner">
-                <div class="da-brand-card-info">
-                  <span class="da-brand-card-label">DORMIED INDEX</span>
+              <div class="da-brand-card-header">
+                <span class="da-brand-card-label">DORMIED INDEX</span>
+                <a href="/brands/municipal/" class="da-brand-card-cta">View Brand &rarr;</a>
+              </div>
+              <div class="da-brand-card-main">
+                <div class="da-brand-card-identity">
+                  <div class="da-brand-card-logo"><img src="/images/logos/municipal.jpg" alt="" class="bp-logo-img" width="48" height="48" style="width:48px;height:48px" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span class=&quot;bp-logo-initials&quot; style=&quot;background:#1a2a1a;width:48px;height:48px;font-size:1rem&quot;>MU</span>')"></div>
                   <a href="/brands/municipal/" class="da-brand-card-name">Municipal</a>
-                  <div class="da-brand-card-stats">
-                    <span class="da-stat">#76 Global</span>
-                    <span class="da-stat">DI 2</span>
-                    <span class="da-stat da-mom-up">+22% M/M</span>
-                  </div>
                 </div>
-                <a href="/brands/municipal/" class="da-brand-card-cta">View Brand →</a>
+                <div class="da-brand-card-stats">
+                  <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">#76</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">2</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val da-mom-up">+22%</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val">+22%</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val da-mom-down">-45%</span></div>
+                </div>
               </div>
             </div>
 
@@ -183,7 +169,20 @@
               Source: <a href="https://thegolfwire.com/bofas-golf-with-us-returns/" target="_blank" rel="noopener noreferrer">The Golf Wire</a>
             </p>
 
-          </div><!-- /da-article-main -->
+
+            <!-- More on [Brand] -->
+            <section class="da-bottom-section" id="da-more-brand-section" aria-labelledby="da-more-brand-heading" hidden>
+              <h3 class="da-bottom-heading" id="da-more-brand-heading">More on Municipal</h3>
+              <div id="da-more-brand-list" class="da-bottom-cards"></div>
+            </section>
+
+            <!-- Latest from DORMIED -->
+            <section class="da-bottom-section" id="da-latest-dormied-section" aria-labelledby="da-latest-dormied-heading" hidden>
+              <h3 class="da-bottom-heading" id="da-latest-dormied-heading">Latest from DORMIED</h3>
+              <div id="da-latest-dormied-list" class="da-bottom-cards"></div>
+            </section>
+
+          </div><!-- /sc-article-main -->
 
           <!-- ── Sidebar: 160×600 ad ── -->
           <aside class="sidebar-ad-col">
@@ -249,9 +248,14 @@
   </footer>
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
-  <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    window.__DA_BRAND_SLUG__   = 'municipal';
+    window.__DA_ARTICLE_SLUG__ = 'rory-mcilroys-500k-youth-golf-donation-puts-municipal-course-2026-04-08';
+  </script>
   <script src="/js/analytics.js?v=20260320a"></script>
   <script src="/js/signup.js?v=20260324d"></script>
+  <script src="/js/da-article.js?v=20260411"></script>
 
 </body>
 </html>

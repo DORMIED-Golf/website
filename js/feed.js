@@ -146,7 +146,8 @@
       ? 'class="feed-card-title"'
       : 'target="_blank" rel="noopener noreferrer" class="feed-card-title"';
 
-    return '<article class="feed-card">' +
+    var dormClass = article.isDormied ? ' feed-card--dormied' : '';
+    return '<article class="feed-card' + dormClass + '">' +
       thumb +
       '<div class="feed-card-body">' +
         '<div class="feed-card-meta">' +
@@ -255,7 +256,8 @@
       ? 'class="feed-card-title feed-card-title--lg"'
       : 'target="_blank" rel="noopener noreferrer" class="feed-card-title feed-card-title--lg"';
 
-    return '<article class="feed-card feed-card--full">' +
+    var dormClass2 = article.isDormied ? ' feed-card--dormied' : '';
+    return '<article class="feed-card feed-card--full' + dormClass2 + '">' +
       thumb +
       '<div class="feed-card-body">' +
         '<div class="feed-card-meta">' +
@@ -315,102 +317,102 @@
     .catch(function () { cb([]); });
   }
 
-  /* ── Render: index page (sidebar "Around the Game") ────────────────────── */
-  function renderLatestIndex(externalArticles, allBrands) {
+  /* ── Render: index page sidebar "Around the Game" (RSS only) ────────────── */
+  function renderLatestIndex(articles, allBrands) {
     var el = document.getElementById('latest-feed-list');
     if (!el) return;
-
-    var external = externalArticles.filter(function (a) {
+    var slice = articles.filter(function (a) {
       return a.brandIds && a.brandIds.length > 0;
-    });
+    }).slice(0, INDEX_LIMIT);
+    if (!slice.length) {
+      el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
+      return;
+    }
+    el.innerHTML = slice.map(function (a) {
+      return renderArticleCard(a, true, allBrands);
+    }).join('');
 
-    fetchDormiedArticles(null, function (dormied) {
-      // Merge and sort by pubDate descending
-      var combined = dormied.concat(external).sort(function (a, b) {
-        return new Date(b.pubDate || 0) - new Date(a.pubDate || 0);
-      }).slice(0, INDEX_LIMIT);
-
-      if (!combined.length) {
-        el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
-        return;
-      }
-      el.innerHTML = combined.map(function (a) {
-        return renderArticleCard(a, true, allBrands);
-      }).join('');
-
-      var seeAll = document.getElementById('latest-feed-see-all');
-      if (!seeAll) {
-        seeAll = document.createElement('div');
-        seeAll.id = 'latest-feed-see-all';
-        seeAll.className = 'bp-latest-see-all';
-        seeAll.innerHTML = '<a href="/news/">See All News</a>';
-        el.parentNode.appendChild(seeAll);
-      }
-    });
+    var seeAll = document.getElementById('latest-feed-see-all');
+    if (!seeAll) {
+      seeAll = document.createElement('div');
+      seeAll.id = 'latest-feed-see-all';
+      seeAll.className = 'bp-latest-see-all';
+      seeAll.innerHTML = '<a href="/news/">See All News</a>';
+      el.parentNode.appendChild(seeAll);
+    }
   }
 
-  /* ── Render: brand page DORMIED coverage section ────────────────────────── */
-  function renderDormiedBrand(brandId, brandDisplayName) {
-    var listEl = document.getElementById('bp-dormied-list');
+  /* ── Render: homepage "Latest from DORMIED" hero section ───────────────── */
+  function renderLatestFromDormied() {
+    var listEl  = document.getElementById('home-dormied-list');
+    var section = document.getElementById('home-dormied-section');
     if (!listEl) return;
 
-    // Set brand name in section header
-    var nameEl = document.getElementById('bp-dormied-brand-name');
-    if (nameEl) nameEl.textContent = brandDisplayName || brandId;
-
-    fetchDormiedArticles(brandId, function (articles) {
-      var section = document.getElementById('bp-dormied-section');
+    fetchDormiedArticles(null, function (articles) {
       if (!articles.length) {
         if (section) section.hidden = true;
         return;
       }
       if (section) section.hidden = false;
-      var allBrands = getAllBrands();
-      listEl.innerHTML = articles.slice(0, 5).map(function (a) {
-        return renderArticleCard(a, false, allBrands);
-      }).join('');
 
-      var seeAll = document.getElementById('bp-dormied-see-all');
-      if (!seeAll) {
-        seeAll = document.createElement('div');
-        seeAll.id = 'bp-dormied-see-all';
-        seeAll.className = 'bp-latest-see-all';
-        seeAll.innerHTML = '<a href="/news/">More from DORMIED</a>';
-        listEl.parentNode.appendChild(seeAll);
-      }
+      var allBrands  = getAllBrands();
+      var hero       = articles[0];
+      var supporting = articles.slice(1, 3);
+
+      /* Hero uses the full-width feed card; supporting use standard cards */
+      listEl.innerHTML =
+        renderFeedPageCard(hero, allBrands) +
+        supporting.map(function (a) { return renderArticleCard(a, true, allBrands); }).join('');
     });
   }
 
-  /* ── Render: brand page ────────────────────────────────────────────────── */
-  function renderLatestBrand(articles, brandId, brandDisplayName) {
+  /* ── Helper: get current brand slug from window var or URL path ─────────── */
+  function getCurrentBrandSlug() {
+    var forced = window.__BRAND_SLUG__ || '';
+    if (forced) return forced;
+    var parts = window.location.pathname.replace(/\/$/, '').split('/');
+    var last  = parts[parts.length - 1];
+    return (last && last !== 'brand.html' && last !== 'brands') ? last : '';
+  }
+
+  /* ── Render: brand page (RSS + DORMIED originals merged) ─────────────────── */
+  function renderLatestBrand(rssArticles, brandId, brandDisplayName) {
     var listEl  = document.getElementById('bp-latest-list');
     var nameEl  = document.getElementById('bp-latest-brand-name');
     if (!listEl) return;
     if (nameEl) nameEl.textContent = brandDisplayName || brandId;
 
-    var filtered = articles.filter(function (a) {
+    var rssFiltered = rssArticles.filter(function (a) {
       return a.brandIds && a.brandIds.indexOf(brandId) !== -1;
     }).slice(0, BRAND_LIMIT);
 
-    if (!filtered.length) {
-      listEl.innerHTML = '<p class="latest-feed-loading">No recent articles mentioning ' +
-                         escHtml(brandDisplayName || brandId) + '.</p>';
-      return;
-    }
     var allBrands = getAllBrands();
-    listEl.innerHTML = filtered.map(function (a) {
-      return renderArticleCard(a, true, allBrands);
-    }).join('');
 
-    // "See All News" link below the capped list
-    var seeAll = document.getElementById('bp-latest-see-all');
-    if (!seeAll) {
-      seeAll = document.createElement('div');
-      seeAll.id = 'bp-latest-see-all';
-      seeAll.className = 'bp-latest-see-all';
-      seeAll.innerHTML = '<a href="/news/">See All News</a>';
-      listEl.parentNode.appendChild(seeAll);
-    }
+    fetchDormiedArticles(brandId, function (dormiedArticles) {
+      var combined = dormiedArticles.concat(rssFiltered);
+      combined.sort(function (a, b) {
+        return new Date(b.pubDate) - new Date(a.pubDate);
+      });
+
+      if (!combined.length) {
+        listEl.innerHTML = '<p class="latest-feed-loading">No recent articles mentioning ' +
+                           escHtml(brandDisplayName || brandId) + '.</p>';
+        return;
+      }
+
+      listEl.innerHTML = combined.map(function (a) {
+        return renderArticleCard(a, true, allBrands);
+      }).join('');
+
+      var seeAll = document.getElementById('bp-latest-see-all');
+      if (!seeAll) {
+        seeAll = document.createElement('div');
+        seeAll.id = 'bp-latest-see-all';
+        seeAll.className = 'bp-latest-see-all';
+        seeAll.innerHTML = '<a href="/news/">See All News</a>';
+        listEl.parentNode.appendChild(seeAll);
+      }
+    });
   }
 
   /* ── localStorage cache ────────────────────────────────────────────────── */
@@ -452,7 +454,7 @@
     }
   }
 
-  /* ── Render: homepage Top Stories (most-clicked in past 7 days) ────────── */
+  /* ── Render: homepage Top Stories (DORMIED prepended + click-ranked RSS) ── */
   function renderHomeStories(feedArticles, allBrands) {
     var el = document.getElementById('home-stories-list');
     if (!el) return;
@@ -472,21 +474,24 @@
     .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function (rows) {
       if (rows && rows.length >= 3) {
-        // Got enough clicked articles — use them
-        var articles = rows.map(function (row) {
-          return {
-            title:      row.title,
-            url:        row.url,
-            sourceName: row.source_name || '',
-            pubDate:    row.pub_date    || row.last_clicked || '',
-            imageUrl:   row.image_url  || null,
-            brandIds:   row.brand_ids  || [],
-          };
+        // Got enough clicked articles — prepend most recent DORMIED article
+        fetchDormiedArticles(null, function (dormied) {
+          var external = rows.map(function (row) {
+            return {
+              title:      row.title,
+              url:        row.url,
+              sourceName: row.source_name || '',
+              pubDate:    row.pub_date    || row.last_clicked || '',
+              imageUrl:   row.image_url  || null,
+              brandIds:   row.brand_ids  || [],
+            };
+          });
+          var combined = (dormied.length ? [dormied[0]] : []).concat(external).slice(0, HOME_LIMIT + 1);
+          el.innerHTML = combined.map(function (a) {
+            return renderArticleCard(a, true, allBrands);
+          }).join('');
+          appendHomeStoriesSeeAll(el);
         });
-        el.innerHTML = articles.map(function (a) {
-          return renderArticleCard(a, true, allBrands);
-        }).join('');
-        appendHomeStoriesSeeAll(el);
       } else {
         // Fewer than 3 clicked articles — fall back to latest feed
         renderHomeStoriesFallback(feedArticles, allBrands, el);
@@ -508,32 +513,33 @@
   }
 
   function renderHomeStoriesFallback(articles, allBrands, el) {
-    var slice = articles.filter(function (a) {
+    var external = articles.filter(function (a) {
       return a.brandIds && a.brandIds.length > 0;
     }).slice(0, HOME_LIMIT);
-    if (!slice.length) {
-      el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
-      return;
-    }
-    el.innerHTML = slice.map(function (a) {
-      return renderArticleCard(a, true, allBrands);
-    }).join('');
-    appendHomeStoriesSeeAll(el);
+    fetchDormiedArticles(null, function (dormied) {
+      var combined = (dormied.length ? [dormied[0]] : []).concat(external).slice(0, HOME_LIMIT + 1);
+      if (!combined.length) {
+        el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
+        return;
+      }
+      el.innerHTML = combined.map(function (a) {
+        return renderArticleCard(a, true, allBrands);
+      }).join('');
+      appendHomeStoriesSeeAll(el);
+    });
   }
 
   /* ── Main init ─────────────────────────────────────────────────────────── */
   function initFeed() {
-    var isIndex   = !!document.getElementById('latest-feed-list');
-    var isBrand   = !!document.getElementById('bp-latest-list');
-    var isHome    = !!document.getElementById('home-stories-list');
-    var hasDormied = !!document.getElementById('bp-dormied-list');
-    if (!isIndex && !isBrand && !isHome) return;  // no container found
+    var isIndex    = !!document.getElementById('latest-feed-list');
+    var isBrand    = !!document.getElementById('bp-latest-list');
+    var isHome     = !!document.getElementById('home-stories-list');
+    var hasHomeDormied = !!document.getElementById('home-dormied-list');
+    if (!isIndex && !isBrand && !isHome && !hasHomeDormied) return;
 
-    // Kick off DORMIED brand coverage independently (doesn't need external feed)
-    if (hasDormied) {
-      var slug = window.__BRAND_SLUG__ || '';
-      var displayName = getBrandDisplayName(slug);
-      renderDormiedBrand(slug, displayName);
+    // Kick off "Latest from DORMIED" homepage section independently
+    if (hasHomeDormied) {
+      renderLatestFromDormied();
     }
 
     // Use mock data on local dev so sections are visible without deploying
@@ -581,7 +587,7 @@
       renderLatestIndex(articles, getAllBrands());
     }
     if (isBrand) {
-      var slug = window.__BRAND_SLUG__ || '';
+      var slug = getCurrentBrandSlug();
       var displayName = getBrandDisplayName(slug);
       renderLatestBrand(articles, slug, displayName);
     }
