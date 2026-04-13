@@ -3,13 +3,13 @@ const brands = require('./_brands.json');
 
 const FEEDS = [
   { id: 'mygolfspy',    name: 'MyGolfSpy',            url: 'https://feeds.feedburner.com/Mygolfspy' },
-  { id: 'golfwrx',      name: 'GolfWRX',              url: 'https://www.golfwrx.com/feed?posts_per_rss=100' },
-  { id: 'golfcom',      name: 'Golf.com',              url: 'https://golf.com/feed?posts_per_rss=100' },
-  { id: 'pluggedin',    name: 'Plugged In Golf',       url: 'https://www.pluggedingolf.com/feed?posts_per_rss=100' },
-  { id: 'bunkered',     name: 'Bunkered',              url: 'https://www.bunkered.co.uk/feed?posts_per_rss=100' },
-  { id: 'gbm',          name: 'Golf Business Monitor', url: 'https://www.golfbusinessmonitor.com/feed?posts_per_rss=100' },
-  { id: 'ncg',          name: 'National Club Golfer',  url: 'https://www.nationalclubgolfer.com/feed?posts_per_rss=100' },
-  { id: 'hackerspar',   name: "Hacker's Paradise",     url: 'https://www.thehackersparadise.com/feed?posts_per_rss=100' },
+  { id: 'golfwrx',      name: 'GolfWRX',              url: 'https://www.golfwrx.com/feed?posts_per_rss=500' },
+  { id: 'golfcom',      name: 'Golf.com',              url: 'https://golf.com/feed?posts_per_rss=500' },
+  { id: 'pluggedin',    name: 'Plugged In Golf',       url: 'https://www.pluggedingolf.com/feed?posts_per_rss=500' },
+  { id: 'bunkered',     name: 'Bunkered',              url: 'https://www.bunkered.co.uk/feed?posts_per_rss=500' },
+  { id: 'gbm',          name: 'Golf Business Monitor', url: 'https://www.golfbusinessmonitor.com/feed?posts_per_rss=500' },
+  { id: 'ncg',          name: 'National Club Golfer',  url: 'https://www.nationalclubgolfer.com/feed?posts_per_rss=500' },
+  { id: 'hackerspar',   name: "Hacker's Paradise",     url: 'https://www.thehackersparadise.com/feed?posts_per_rss=500' },
 ];
 
 // Pre-compile word-boundary regexes for each brand name + aliases.
@@ -87,7 +87,7 @@ module.exports = async (req, res) => {
       if (r.status === 'rejected') { failed++; return; }
       loaded++;
       const { feed, items } = r.value;
-      items.slice(0, 100).forEach(item => {
+      items.forEach(item => {
         const title   = (item.title || '').trim();
         const snippet = (item.contentSnippet || '').slice(0, 500);
         articles.push({
