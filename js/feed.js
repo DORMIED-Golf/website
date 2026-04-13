@@ -475,13 +475,16 @@
     .then(function (rows) {
       if (rows && rows.length >= 3) {
         var external = rows.map(function (row) {
+          var isDormied = row.url && row.url.indexOf('/news/') === 0;
           return {
             title:      row.title,
             url:        row.url,
-            sourceName: row.source_name || '',
+            sourceName: isDormied ? 'DORMIED' : (row.source_name || ''),
+            sourceId:   isDormied ? 'dormied' : '',
             pubDate:    row.pub_date    || row.last_clicked || '',
             imageUrl:   row.image_url  || null,
             brandIds:   row.brand_ids  || [],
+            isDormied:  isDormied,
           };
         });
         el.innerHTML = external.slice(0, HOME_LIMIT).map(function (a) {
