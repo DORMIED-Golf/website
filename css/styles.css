@@ -2520,11 +2520,11 @@ details[open] .faq-question::after { content: '−'; }
     flex-wrap: wrap;
     gap: 32px;
   }
+  /* Hero spans both columns full-width */
+  .home-layout .home-hero       { order: 0; flex-basis: 100%; }
   .home-layout .home-main       { order: 1; }
   .home-layout .sidebar-ad-col  { order: 2; }
   .home-layout .home-footer-cta { order: 3; flex-basis: 100%; }
-  /* Push sidebar ad down so it aligns with the scoreboard section */
-  .home-page .sidebar-ad-col { padding-top: 430px; }
 }
 
 /* ── Homepage Hero ───────────────────────────────────────────────────────────── */

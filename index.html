@@ -52,7 +52,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="css/styles.css?v=20260412">
+  <link rel="stylesheet" href="css/styles.css?v=20260413d">
 
   <!-- ── Structured Data: Organization ── -->
   <script type="application/ld+json">
@@ -137,21 +137,21 @@
   <main id="main-content">
     <div class="home-layout">
 
+      <!-- ── HERO — full-width, spans both columns ─────────────────────────── -->
+      <section class="home-hero" aria-labelledby="home-headline">
+        <h1 id="home-headline" class="home-hero-headline">Where Golf Culture, Brands, and Marketing Collide.</h1>
+        <p class="home-hero-sub">Our game has changed. DORMIED tracks the brands transforming it and those getting left behind.</p>
+
+        <!-- Market Pulse Strip -->
+        <div id="market-pulse" class="market-pulse" aria-label="Market changes this month">
+          <!-- Populated by home.js -->
+        </div>
+
+        <a href="/rankings/" class="hero-cta">View Full Index →</a>
+      </section>
+
       <!-- ── Main Content Column ── -->
       <div class="home-main">
-
-        <!-- ── HERO ─────────────────────────────────────────────────────── -->
-        <section class="home-hero" aria-labelledby="home-headline">
-          <h1 id="home-headline" class="home-hero-headline">Where Golf Culture, Brands, and Marketing Collide.</h1>
-          <p class="home-hero-sub">Our game has changed. DORMIED tracks the brands transforming it and those getting left behind.</p>
-
-          <!-- Market Pulse Strip -->
-          <div id="market-pulse" class="market-pulse" aria-label="Market changes this month">
-            <!-- Populated by home.js -->
-          </div>
-
-          <a href="/rankings/" class="hero-cta">View Full Index →</a>
-        </section>
 
         <!-- ── THE SCORECARD ─────────────────────────────────────────────── -->
         <section id="scorecard-home-card" hidden></section>
@@ -250,12 +250,10 @@
           </div>
         </div>
 
-        <!-- ── TOP STORIES ─────────────────────────────────────────────────── -->
-        <section class="home-stories-section" aria-labelledby="stories-heading">
-          <div class="section-header">
-            <h2 id="stories-heading" class="section-title">Top Stories</h2>
-          </div>
-          <div id="home-stories-list" class="latest-feed-list">
+        <!-- ── AROUND THE GAME ────────────────────────────────────────────── -->
+        <section class="latest-feed-section" aria-label="Around the game">
+          <h2 class="latest-feed-heading">Around the Game</h2>
+          <div id="latest-feed-list" class="latest-feed-list">
             <p class="latest-feed-loading">Loading…</p>
           </div>
         </section>
@@ -273,9 +271,9 @@
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
           </div>
         </div>
-        <section class="latest-feed-section" aria-label="Around the game">
-          <h2 class="latest-feed-heading">Around the Game</h2>
-          <div id="latest-feed-list" class="latest-feed-list">
+        <section class="home-stories-section latest-feed-section" aria-labelledby="stories-heading">
+          <h2 class="latest-feed-heading" id="stories-heading">Top Stories</h2>
+          <div id="home-stories-list" class="latest-feed-list">
             <p class="latest-feed-loading">Loading…</p>
           </div>
         </section>

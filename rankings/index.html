@@ -52,7 +52,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260324c">
+  <link rel="stylesheet" href="/css/styles.css?v=20260413d">
 
   <!-- ── Structured Data: Organization ── -->
   <script type="application/ld+json">
@@ -370,7 +370,7 @@
 
           </div><!-- /table-main -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Latest Feed ── -->
+          <!-- ── Sidebar: Skyscraper Ad + Top Stories + Around the Game ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -381,8 +381,14 @@
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
               </div>
             </div>
-            <section id="latest-feed" class="latest-feed-section" aria-label="Latest golf news">
-              <h2 class="latest-feed-heading">Latest</h2>
+            <section class="home-stories-section latest-feed-section" aria-labelledby="rankings-stories-heading">
+              <h2 class="latest-feed-heading" id="rankings-stories-heading">Top Stories</h2>
+              <div id="home-stories-list" class="latest-feed-list">
+                <p class="latest-feed-loading">Loading…</p>
+              </div>
+            </section>
+            <section id="latest-feed" class="latest-feed-section" aria-label="Around the game">
+              <h2 class="latest-feed-heading">Around the Game</h2>
               <div id="latest-feed-list" class="latest-feed-list">
                 <p class="latest-feed-loading">Loading…</p>
               </div>
