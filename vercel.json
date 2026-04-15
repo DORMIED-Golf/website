@@ -18,6 +18,9 @@
     { "source": "/news/:slug",        "destination": "/news/:slug/index.html" },
     { "source": "/news/:slug/",       "destination": "/news/:slug/index.html" }
   ],
+  "crons": [
+    { "path": "/api/post-to-x", "schedule": "*/30 * * * *" }
+  ],
   "functions": {
     "api/feed.js":              { "maxDuration": 15 },
     "api/subscribe.js":         { "maxDuration": 10 },
@@ -25,7 +28,8 @@
     "api/click.js":             { "maxDuration": 10 },
     "api/matchup-result.js":    { "maxDuration": 30 },
     "api/dormied-articles.js":  { "maxDuration": 10 },
-    "api/originals-feed.js":    { "maxDuration": 10 }
+    "api/originals-feed.js":    { "maxDuration": 10 },
+    "api/post-to-x.js":         { "maxDuration": 30 }
   },
   "headers": [
     {

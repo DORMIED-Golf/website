@@ -43,6 +43,9 @@ const DISALLOWED_BODY = [
   'the articles suggest', 'the coverage indicates',
   'from what i found', 'my research shows',
   'available information',
+  'the index shows', 'the data suggests',
+  'according to the dormied index',
+  'exciting news', 'thrilled to', 'proud to announce',
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -202,13 +205,20 @@ Start with the editorial observation. Write like a columnist, not a press office
 Also generate:
 - A meta description (120-155 characters) for SEO
 - 3-5 SEO keywords relevant to the article
+- An X/Twitter post (under 250 characters — leave room for the URL which takes ~23 characters). Write it as a standalone observation or take that makes someone want to click. It should feel like something a sharp golf industry insider would post, not a brand account promoting its own content. Do not start with the brand name. Do not use hashtags. Do not use "check out", "read more", "new article", "we wrote about", or "link in bio" language. No em dashes. No exclamation points. The post should work on its own as a hot take even if someone never clicks.
+
+Examples of good X posts:
+"Wilson just bought the biggest screen in Times Square for a month. That is not a company acting like a mid-tier brand."
+"Nippon Shaft making a luxury play with blacked-out steel is the kind of quiet flex that sells to the right 2% of golfers."
+"XXIO and Vessel doing a collab tells you exactly where the women's premium market is headed."
 
 Return valid JSON only — no markdown fences, no preamble, exactly this structure:
 {
   "title": "the headline",
   "body": "paragraph one\\n\\nparagraph two\\n\\nparagraph three",
   "meta_description": "120-155 character SEO description including brand name",
-  "seo_keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"]
+  "seo_keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
+  "x_post": "under 250 chars, no hashtags, hot take voice"
 }`;
 
 async function callOpus(client, pressRelease, brandInfo, retry = false) {
@@ -222,11 +232,11 @@ Month: ${currentMonth}
 Category: ${brand.category}
 
 Press release:
-${pressRelease}${retry ? '\n\nYour previous response contained a disallowed phrase or invalid JSON. Rewrite starting directly with the editorial observation. Return valid JSON only.' : ''}`;
+${pressRelease}${retry ? '\n\nYour previous response contained a disallowed phrase or invalid JSON. Rewrite starting directly with the editorial observation. Include all fields (title, body, meta_description, seo_keywords, x_post). Return valid JSON only.' : ''}`;
 
   const res = await client.messages.create({
     model:      MODEL,
-    max_tokens: 900,
+    max_tokens: 1200,
     system:     SYSTEM_PROMPT,
     messages:   [{ role: 'user', content: userMsg }],
   });
@@ -659,7 +669,7 @@ async function main() {
       }
     }
 
-    const { title, body, meta_description, seo_keywords } = parsed;
+    const { title, body, meta_description, seo_keywords, x_post } = parsed;
     const publishedAt = raw.published_at || new Date().toISOString();
     const slug        = makeSlug(title, publishedAt);
     const readTime    = estimateReadTime(body);
@@ -712,6 +722,7 @@ async function main() {
         status:             'published',
         slug,
         category:           raw.category || 'Business',
+        x_post_text:        x_post || null,
       });
 
     if (insertErr) {
