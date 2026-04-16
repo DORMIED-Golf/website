@@ -205,12 +205,14 @@ Start with the editorial observation. Write like a columnist, not a press office
 Also generate:
 - A meta description (120-155 characters) for SEO
 - 3-5 SEO keywords relevant to the article
-- An X/Twitter post (under 250 characters — leave room for the URL which takes ~23 characters). Write it as a standalone observation or take that makes someone want to click. It should feel like something a sharp golf industry insider would post, not a brand account promoting its own content. Do not start with the brand name. Do not use hashtags. Do not use "check out", "read more", "new article", "we wrote about", or "link in bio" language. No em dashes. No exclamation points. The post should work on its own as a hot take even if someone never clicks.
+- An X/Twitter post (under 250 characters — leave room for the URL which takes ~23 characters). Write it as a standalone observation or take that makes someone want to click. It should feel like something a sharp golf industry insider would post, not a brand account promoting its own content. CRITICAL: Do NOT start with the brand name — the first word must not be the brand name or any word from the brand name. Start with a different angle: a number, an action verb, a descriptor, or an industry observation. Do not use hashtags. Do not use "check out", "read more", "new article", "we wrote about", or "link in bio" language. No em dashes. No exclamation points. The post should work on its own as a hot take even if someone never clicks.
 
-Examples of good X posts:
-"Wilson just bought the biggest screen in Times Square for a month. That is not a company acting like a mid-tier brand."
-"Nippon Shaft making a luxury play with blacked-out steel is the kind of quiet flex that sells to the right 2% of golfers."
-"XXIO and Vessel doing a collab tells you exactly where the women's premium market is headed."
+Examples of good X posts (notice none start with the brand name):
+"Buying the biggest screen in Times Square for a month is not something a mid-tier brand does. Wilson is playing a different game."
+"Blacked-out steel with a luxury price tag is the kind of quiet flex that sells to the right 2% of golfers. Nippon Shaft gets that."
+"A collab between XXIO and Vessel tells you exactly where the women's premium market is headed."
+"Two straight travel bag wins from MyGolfSpy and still ranked 45th globally. Sometimes the best product has nothing to do with marketing spend."
+"Showing up in a rewards app alongside Miura and Bettinardi is a volume play disguised as a premium move."
 
 Return valid JSON only — no markdown fences, no preamble, exactly this structure:
 {
