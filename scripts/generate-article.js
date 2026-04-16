@@ -259,37 +259,45 @@ function parseOpusResponse(raw) {
 // ── Image handling ────────────────────────────────────────────────────────────
 
 async function uploadImageToSupabase(supabase, imageUrl, slug) {
-  if (!imageUrl) return null;
+  if (!imageUrl) return { supabaseUrl: null, localUrl: null };
 
   try {
     const res = await fetch(imageUrl, {
       signal: AbortSignal.timeout(10000),
       headers: { 'User-Agent': 'DORMIED-Bot/1.0' },
     });
-    if (!res.ok) return null;
+    if (!res.ok) return { supabaseUrl: null, localUrl: null };
 
     const buffer      = Buffer.from(await res.arrayBuffer());
     const contentType = res.headers.get('content-type') || 'image/jpeg';
     const ext         = contentType.includes('png') ? 'png' : 'jpg';
     const storagePath = `articles/${slug}-hero.${ext}`;
+    const localPath   = path.join(SITE_ROOT, 'images', 'articles', `${slug}-hero.${ext}`);
 
+    // Save locally for Vercel CDN (proper caching, fast for Twitter card scrapers)
+    fs.mkdirSync(path.dirname(localPath), { recursive: true });
+    fs.writeFileSync(localPath, buffer);
+    const localUrl = `https://dormied.com/images/articles/${slug}-hero.${ext}`;
+    console.log(`[generate] Image saved locally: ${localPath}`);
+
+    // Also upload to Supabase (used for in-article <img> display)
     const { error } = await supabase.storage
       .from('dormied-articles')
       .upload(storagePath, buffer, { contentType, upsert: true });
 
     if (error) {
-      console.warn(`[generate] Image upload failed:`, error.message);
-      return null;
+      console.warn(`[generate] Supabase image upload failed (local copy still saved):`, error.message);
+      return { supabaseUrl: null, localUrl };
     }
 
     const { data } = supabase.storage
       .from('dormied-articles')
       .getPublicUrl(storagePath);
 
-    return data?.publicUrl || null;
+    return { supabaseUrl: data?.publicUrl || null, localUrl };
   } catch (err) {
     console.warn(`[generate] Image fetch failed:`, err.message);
-    return null;
+    return { supabaseUrl: null, localUrl: null };
   }
 }
 
@@ -297,7 +305,7 @@ async function uploadImageToSupabase(supabase, imageUrl, slug) {
 
 function generateArticleHtml(opts) {
   const {
-    title, bodyHtml, imageUrl, imageAlt, slug, category,
+    title, bodyHtml, imageUrl, ogImageUrl, imageAlt, slug, category,
     published_at, source_url, meta_description, seo_keywords,
     brandSlug, brandName, brandLogo, brandRank, brandDI, brandMom,
     brandTrend3m, brandTrend12m,
@@ -307,7 +315,7 @@ function generateArticleHtml(opts) {
   const dateFormatted  = formatDate(published_at);
   const dateISO        = new Date(published_at).toISOString();
   const canonicalUrl   = `https://dormied.com/news/${slug}/`;
-  const ogImage        = imageUrl || 'https://dormied.com/images/og-image.jpg';
+  const ogImage        = ogImageUrl || imageUrl || 'https://dormied.com/images/og-image.jpg';
   const titleTag       = `${title} | DORMIED`;
   const momClass       = brandMom > 0 ? 'da-mom-up' : brandMom < 0 ? 'da-mom-down' : 'da-mom-flat';
   const momDisplay     = brandMom > 0 ? `+${brandMom}%` : brandMom < 0 ? `${brandMom}%` : 'flat';
@@ -677,16 +685,19 @@ async function main() {
     const readTime    = estimateReadTime(body);
     const bodyHtml    = bodyToHtml(body, brandSlug, brandInfo.brand.name);
 
-    // ── Upload image to Supabase Storage ──
-    const storedImageUrl = await uploadImageToSupabase(supabase, raw.image_url, slug);
-    const imageUrl       = storedImageUrl || raw.image_url;
+    // ── Upload image to Supabase Storage + save locally ──
+    const { supabaseUrl, localUrl } = await uploadImageToSupabase(supabase, raw.image_url, slug);
+    // localUrl (Vercel CDN) used for og:image — proper caching for Twitter cards
+    // supabaseUrl (or source URL) used for article body <img>
+    const imageUrl    = supabaseUrl || raw.image_url;
+    const ogImageUrl  = localUrl || imageUrl;
 
     // ── Write static HTML file ──
     const articleDir = path.join(SITE_ROOT, 'news', slug);
     fs.mkdirSync(articleDir, { recursive: true });
 
     const html = generateArticleHtml({
-      title, bodyHtml, imageUrl,
+      title, bodyHtml, imageUrl, ogImageUrl,
       imageAlt:        `${brandInfo.brand.name} — ${raw.category || 'Golf'}`,
       slug, category:  raw.category || 'Business',
       published_at:    publishedAt,
