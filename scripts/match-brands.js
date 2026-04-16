@@ -31,9 +31,10 @@ const { createClient } = require('@supabase/supabase-js');
 
 // Words that look like brand names but should not trigger a match on their own
 const EXCLUSION_LIST = [
-  'cobra',   // too generic without "Cobra Golf" context — keep if title mentions it
-  'ping',    // same
-  'wilson',  // same
+  'cobra',       // too generic without "Cobra Golf" context — keep if title mentions it
+  'ping',        // same
+  'wilson',      // same
+  'full swing',  // common generic phrase in golf instruction; only match if in title
 ];
 
 // ── Supabase ──────────────────────────────────────────────────────────────────
