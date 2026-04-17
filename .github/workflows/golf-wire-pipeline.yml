@@ -33,8 +33,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Step 1 — Scrape Golf Wire RSS
+      - name: Step 1a — Scrape Golf Wire RSS
         run: node scripts/scrape-golfwire.js
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Step 1b — Scrape brand press rooms
+        run: node scripts/scrape-pressrooms.js
         env:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
@@ -57,15 +63,15 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Stage new article pages and the updated sitemap
-          git add news/ sitemap.xml
+          # Stage new article pages, hero images, and the updated sitemap
+          git add news/ images/articles/ sitemap.xml
 
           # Only commit if there are staged changes
           if git diff --cached --quiet; then
             echo "No new articles generated — nothing to commit."
           else
             ARTICLE_COUNT=$(git diff --cached --name-only | grep "^news/" | grep "index.html" | wc -l | tr -d ' ')
-            git commit -m "feat: add ${ARTICLE_COUNT} Golf Wire article(s) [skip ci]"
+            git commit -m "feat: add ${ARTICLE_COUNT} article(s) [skip ci]"
             git push
             echo "Committed and pushed ${ARTICLE_COUNT} new article(s)."
           fi

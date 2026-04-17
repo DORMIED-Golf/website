@@ -1,0 +1,494 @@
+#!/usr/bin/env node
+/**
+ * DORMIED Content Pipeline — Step 1b: Press Room Scraper
+ *
+ * Fetches articles from brand press rooms (RSS/Atom feeds + HTML sources)
+ * and stores them in the golf_wire_raw table alongside Golf Wire content.
+ *
+ * Sources:
+ *   RSS/Atom: Titleist, Good Good Golf, Holderness & Bourne, Miura, Mizuno,
+ *             Takomo, PXG, Adidas Golf, LA Golf (PRNewswire), Cobra
+ *   HTML:     TravisMathew (Shorefire), First Call Golf
+ *
+ * Usage:
+ *   node scripts/scrape-pressrooms.js
+ *
+ * Required env vars:
+ *   SUPABASE_URL, SUPABASE_SERVICE_KEY
+ */
+
+'use strict';
+
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
+const Parser           = require('rss-parser');
+const { createClient } = require('@supabase/supabase-js');
+
+// ── Config ────────────────────────────────────────────────────────────────────
+
+const MAX_AGE_MS        = 14 * 24 * 60 * 60 * 1000; // 14 days
+const FETCH_TIMEOUT_MS  = 12000;
+const DELAY_MS          = 500; // polite delay between requests
+
+// ── Sources ───────────────────────────────────────────────────────────────────
+
+const RSS_SOURCES = [
+  {
+    id:   'titleist',
+    name: 'Titleist',
+    url:  'https://mediacenter.titleist.com/en-US/press_releases.atom',
+    type: 'atom',
+  },
+  {
+    id:   'good-good-golf',
+    name: 'Good Good Golf',
+    url:  'https://goodgoodgolf.com/blogs/press-releases.atom',
+    type: 'atom',
+  },
+  {
+    id:   'holderness-bourne',
+    name: 'Holderness & Bourne',
+    url:  'https://holdernessandbourne.com/blogs/press.atom',
+    type: 'atom',
+  },
+  {
+    id:   'miura',
+    name: 'Miura Golf',
+    url:  'https://miuragolf.com/blogs/in-the-news.atom',
+    type: 'atom',
+  },
+  {
+    id:   'mizuno',
+    name: 'Mizuno Golf',
+    url:  'https://mizunogolf.com/us/blog/category/news/feed/',
+    type: 'rss',
+  },
+  {
+    id:   'takomo',
+    name: 'Takomo Golf',
+    url:  'https://takomogolf.com/blogs/news.atom',
+    type: 'atom',
+  },
+  {
+    id:   'pxg',
+    name: 'PXG',
+    url:  'https://www.pxg.com/blogs/the-range.atom',
+    type: 'atom',
+  },
+  {
+    id:   'adidas-golf',
+    name: 'Adidas Golf',
+    url:  'https://news.adidas.com/RSS/sports/golf',
+    type: 'rss',
+  },
+  {
+    id:   'la-golf',
+    name: 'LA Golf',
+    url:  'https://www.prnewswire.com/rss/news-releases-list.rss?box=la-golf',
+    type: 'rss',
+  },
+  {
+    id:   'cobra',
+    name: 'COBRA Golf',
+    url:  'https://www.cobragolf.com/blogs/news.atom',
+    type: 'atom',
+    // Cobra's atom entries have no body — fetch each article for content
+    fetchBodyFromUrl: true,
+  },
+];
+// Note: Breezy Golf excluded (blog is gift guides, not press releases)
+
+// HTML sources: scrape a listing page for article links, then visit each
+const HTML_SOURCES = [
+  {
+    id:           'travismathew',
+    name:         'TravisMathew',
+    listingUrl:   'https://shorefire.com/roster/travismathew',
+    baseUrl:      'https://shorefire.com',
+    // Find links matching /releases/entry/ pattern
+    linkPattern:  /\/releases\/entry\/[a-z0-9-]+/i,
+    // How to extract content from an individual article page
+    extractor:    'shorefire',
+  },
+  {
+    id:           'first-call-golf',
+    name:         'First Call Golf',
+    listingUrl:   'https://www.firstcallgolf.com/industry-news',
+    baseUrl:      'https://www.firstcallgolf.com',
+    // Find links matching /industry-news/release/YYYY-MM-DD/slug
+    linkPattern:  /\/industry-news\/release\/\d{4}-\d{2}-\d{2}\//i,
+    extractor:    'firstcall',
+  },
+];
+
+// ── Supabase ──────────────────────────────────────────────────────────────────
+
+function getSupabase() {
+  const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_KEY');
+  }
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function delay(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+function stripHtml(html) {
+  return (html || '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#8217;/g, "'")
+    .replace(/&#8216;/g, "'")
+    .replace(/&#8220;/g, '"')
+    .replace(/&#8221;/g, '"')
+    .replace(/&#8211;/g, '-')
+    .replace(/&#8212;/g, '-')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function extractFirstImage(html) {
+  if (!html) return null;
+  let m = html.match(/<img[^>]+src="(https?:[^"]+)"/i);
+  if (m) return m[1];
+  m = html.match(/<img[^>]+src='(https?:[^']+)'/i);
+  if (m) return m[1];
+  return null;
+}
+
+async function fetchPage(url, { timeout = FETCH_TIMEOUT_MS } = {}) {
+  try {
+    const res = await fetch(url, {
+      signal:  AbortSignal.timeout(timeout),
+      headers: {
+        'User-Agent': 'DORMIED-Bot/1.0 (dormied.com)',
+        'Accept':     'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      },
+    });
+    if (!res.ok) return null;
+    return await res.text();
+  } catch {
+    return null;
+  }
+}
+
+async function fetchOgMeta(url) {
+  const html = await fetchPage(url);
+  if (!html) return {};
+
+  const ogImage = (
+    (html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i) ||
+     html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:image"/i) || [])[1]
+  ) || null;
+
+  const ogDesc = (
+    (html.match(/<meta[^>]+property="og:description"[^>]+content="([^"]+)"/i) ||
+     html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:description"/i) ||
+     html.match(/<meta[^>]+name="description"[^>]+content="([^"]+)"/i) ||
+     html.match(/<meta[^>]+content="([^"]+)"[^>]+name="description"/i) || [])[1]
+  ) || null;
+
+  return { ogImage, ogDesc };
+}
+
+function inferCategory(title, content) {
+  const text = (title + ' ' + content).toLowerCase();
+  if (/apparel|clothing|shirt|polo|jacket|shoe|footwear|glove|hat|cap|vest|wear/.test(text))
+    return 'Apparel';
+  if (/driver|iron|wedge|putter|wood|hybrid|club|shaft|grip|ball|equipment/.test(text))
+    return 'Equipment';
+  if (/rangefinder|gps|launch monitor|simulator|training|tech|app|technology/.test(text))
+    return 'Tech';
+  if (/bag|cart|trolley|caddie|accessory|accessories/.test(text))
+    return 'Accessories';
+  return 'Business';
+}
+
+async function insertRecord(supabase, record, sourceName) {
+  const { error } = await supabase.from('golf_wire_raw').insert(record);
+  if (error) {
+    if (error.code === '23505') return 'duplicate';
+    console.warn(`[pressrooms:${sourceName}] Insert failed for "${record.title}":`, error.message);
+    return 'error';
+  }
+  return 'ok';
+}
+
+// ── RSS/Atom Scraper ──────────────────────────────────────────────────────────
+
+async function scrapeRssSource(supabase, source, parser) {
+  console.log(`\n[pressrooms] Fetching ${source.name} (${source.type.toUpperCase()})…`);
+
+  let feed;
+  try {
+    feed = await parser.parseURL(source.url);
+  } catch (err) {
+    console.warn(`[pressrooms:${source.id}] Failed to fetch feed:`, err.message);
+    return;
+  }
+
+  console.log(`[pressrooms:${source.id}] ${feed.items.length} items found`);
+
+  const cutoff = new Date(Date.now() - MAX_AGE_MS);
+  let ingested = 0;
+  let skipped  = 0;
+
+  for (const item of feed.items) {
+    const pubDate = item.isoDate ? new Date(item.isoDate) : null;
+    if (pubDate && pubDate < cutoff) { skipped++; continue; }
+
+    const sourceUrl = (item.link || '').trim();
+    if (!sourceUrl) { skipped++; continue; }
+
+    // Get body text from feed
+    const rawContent = item['content:encoded'] || item.content || item.contentSnippet || item.summary || '';
+    let bodyText = stripHtml(rawContent);
+
+    // If body is missing (e.g. Cobra) or too short, fetch from article URL
+    if ((!bodyText || bodyText.length < 80) && sourceUrl) {
+      const { ogDesc, ogImage: fetchedImage } = await fetchOgMeta(sourceUrl);
+      if (ogDesc) bodyText = ogDesc;
+      if (!bodyText || bodyText.length < 30) { skipped++; await delay(DELAY_MS); continue; }
+    }
+
+    // Extract image
+    let imageUrl = extractFirstImage(rawContent);
+    if (!imageUrl) {
+      // Try media:content or enclosure from parsed feed
+      imageUrl = item['media:content']?.$ ?.url || item.enclosure?.url || null;
+    }
+    if (!imageUrl && sourceUrl) {
+      const { ogImage } = await fetchOgMeta(sourceUrl);
+      imageUrl = ogImage;
+      await delay(DELAY_MS);
+    }
+
+    const title    = (item.title || '').trim();
+    const category = inferCategory(title, bodyText);
+
+    const result = await insertRecord(supabase, {
+      source_url:   sourceUrl,
+      title,
+      body:         bodyText,
+      image_url:    imageUrl || null,
+      category,
+      published_at: pubDate ? pubDate.toISOString() : new Date().toISOString(),
+      processed:    false,
+    }, source.id);
+
+    if (result === 'ok') {
+      console.log(`[pressrooms:${source.id}] ✓ "${title}"`);
+      ingested++;
+    } else if (result === 'duplicate') {
+      skipped++;
+    }
+
+    await delay(DELAY_MS);
+  }
+
+  console.log(`[pressrooms:${source.id}] Done — ingested: ${ingested}, skipped/dup: ${skipped}`);
+}
+
+// ── HTML Scraper — Shorefire ──────────────────────────────────────────────────
+
+async function extractShorefireArticle(url) {
+  const html = await fetchPage(url);
+  if (!html) return null;
+
+  // Title from og:title or <h1>
+  let title = (html.match(/<meta[^>]+property="og:title"[^>]+content="([^"]+)"/i) ||
+               html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:title"/i) || [])[1] || '';
+  if (!title) {
+    const h1 = html.match(/<h1[^>]*>([^<]+)<\/h1>/i);
+    title = h1 ? stripHtml(h1[1]) : '';
+  }
+  title = title.replace(/\s*\|\s*Shore Fire.*$/i, '').trim();
+  if (!title) return null;
+
+  // Date: look for date pattern in page
+  let pubDate = null;
+  const dateMatch = html.match(/(\d{1,2}\s+\w+,?\s+\d{4})/);
+  if (dateMatch) {
+    const parsed = new Date(dateMatch[1]);
+    if (!isNaN(parsed)) pubDate = parsed.toISOString();
+  }
+
+  // Body: og:description + article text
+  const ogDesc = (html.match(/<meta[^>]+property="og:description"[^>]+content="([^"]+)"/i) ||
+                  html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:description"/i) || [])[1] || '';
+
+  // Try to get article body text
+  let bodyText = ogDesc;
+  // Shorefire wraps content in .release-body or similar
+  const bodyMatch = html.match(/class="[^"]*(?:release|press|content|body)[^"]*"[^>]*>([\s\S]{200,}?)<\/(?:div|section|article)>/i);
+  if (bodyMatch) {
+    const extracted = stripHtml(bodyMatch[1]);
+    if (extracted.length > bodyText.length) bodyText = extracted.slice(0, 3000);
+  }
+  if (!bodyText || bodyText.length < 50) return null;
+
+  const ogImage = (html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i) ||
+                   html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:image"/i) || [])[1] || null;
+
+  return { title, body: bodyText, imageUrl: ogImage, pubDate };
+}
+
+// ── HTML Scraper — First Call Golf ───────────────────────────────────────────
+
+async function extractFirstCallArticle(url) {
+  const html = await fetchPage(url);
+  if (!html) return null;
+
+  // Title
+  let title = (html.match(/<meta[^>]+property="og:title"[^>]+content="([^"]+)"/i) ||
+               html.match(/<h1[^>]*>([^<]+)<\/h1>/i) || [])[1] || '';
+  title = stripHtml(title).replace(/\s*[-|].*First Call.*/i, '').trim();
+  if (!title) return null;
+
+  // Date from URL: /industry-news/release/YYYY-MM-DD/
+  let pubDate = null;
+  const urlDate = url.match(/\/(\d{4}-\d{2}-\d{2})\//);
+  if (urlDate) pubDate = new Date(urlDate[1]).toISOString();
+
+  // Body
+  const ogDesc = (html.match(/<meta[^>]+name="description"[^>]+content="([^"]+)"/i) ||
+                  html.match(/<meta[^>]+content="([^"]+)"[^>]+name="description"/i) || [])[1] || '';
+
+  // Try article body — First Call wraps in .press-release, .entry-content, etc.
+  let bodyText = ogDesc;
+  const patterns = [
+    /class="[^"]*(?:press-release|article-body|entry-content|release-content|content-body)[^"]*"[^>]*>([\s\S]{300,}?)<\/(?:div|section|article)>/i,
+    /<article[^>]*>([\s\S]{300,}?)<\/article>/i,
+  ];
+  for (const pat of patterns) {
+    const m = html.match(pat);
+    if (m) {
+      const extracted = stripHtml(m[1]);
+      if (extracted.length > bodyText.length) { bodyText = extracted.slice(0, 3000); break; }
+    }
+  }
+  if (!bodyText || bodyText.length < 50) return null;
+
+  const ogImage = (html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i) ||
+                   html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:image"/i) || [])[1] || null;
+
+  return { title, body: bodyText, imageUrl: ogImage, pubDate };
+}
+
+// ── HTML Source Dispatcher ────────────────────────────────────────────────────
+
+async function scrapeHtmlSource(supabase, source) {
+  console.log(`\n[pressrooms] Fetching ${source.name} (HTML)…`);
+
+  const html = await fetchPage(source.listingUrl);
+  if (!html) {
+    console.warn(`[pressrooms:${source.id}] Failed to fetch listing page`);
+    return;
+  }
+
+  // Extract unique article links matching the pattern
+  const linkSet = new Set();
+  const re      = new RegExp(`href="(${source.linkPattern.source})"`, 'gi');
+  let   match;
+  while ((match = re.exec(html)) !== null) {
+    let href = match[1];
+    if (!href.startsWith('http')) href = source.baseUrl + href;
+    linkSet.add(href);
+  }
+
+  const links = [...linkSet].slice(0, 20); // cap at 20 per run
+  console.log(`[pressrooms:${source.id}] Found ${links.length} article links`);
+
+  const cutoff = new Date(Date.now() - MAX_AGE_MS);
+  let ingested = 0;
+  let skipped  = 0;
+
+  for (const articleUrl of links) {
+    await delay(DELAY_MS);
+
+    let extracted;
+    if (source.extractor === 'shorefire') {
+      extracted = await extractShorefireArticle(articleUrl);
+    } else if (source.extractor === 'firstcall') {
+      extracted = await extractFirstCallArticle(articleUrl);
+    }
+
+    if (!extracted || !extracted.title || !extracted.body) { skipped++; continue; }
+
+    const { title, body, imageUrl, pubDate } = extracted;
+
+    // Age filter
+    if (pubDate && new Date(pubDate) < cutoff) { skipped++; continue; }
+
+    const category = inferCategory(title, body);
+    const result   = await insertRecord(supabase, {
+      source_url:   articleUrl,
+      title,
+      body,
+      image_url:    imageUrl || null,
+      category,
+      published_at: pubDate || new Date().toISOString(),
+      processed:    false,
+    }, source.id);
+
+    if (result === 'ok') {
+      console.log(`[pressrooms:${source.id}] ✓ "${title}"`);
+      ingested++;
+    } else if (result === 'duplicate') {
+      skipped++;
+    }
+  }
+
+  console.log(`[pressrooms:${source.id}] Done — ingested: ${ingested}, skipped/dup: ${skipped}`);
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
+
+async function main() {
+  const supabase = getSupabase();
+
+  const parser = new Parser({
+    customFields: {
+      item: ['content:encoded', 'summary', ['media:content', 'media:content', { keepArray: false }]],
+    },
+    timeout: FETCH_TIMEOUT_MS,
+    headers: { 'User-Agent': 'DORMIED-Bot/1.0 (dormied.com)' },
+  });
+
+  // RSS/Atom sources
+  for (const source of RSS_SOURCES) {
+    try {
+      await scrapeRssSource(supabase, source, parser);
+    } catch (err) {
+      console.error(`[pressrooms:${source.id}] Fatal error:`, err.message);
+    }
+    await delay(DELAY_MS * 2);
+  }
+
+  // HTML sources
+  for (const source of HTML_SOURCES) {
+    try {
+      await scrapeHtmlSource(supabase, source);
+    } catch (err) {
+      console.error(`[pressrooms:${source.id}] Fatal error:`, err.message);
+    }
+    await delay(DELAY_MS * 2);
+  }
+
+  console.log('\n[pressrooms] All sources complete.');
+}
+
+main().catch(err => {
+  console.error('[pressrooms] Fatal error:', err.message);
+  process.exit(1);
+});
