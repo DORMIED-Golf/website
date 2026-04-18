@@ -132,10 +132,16 @@ const RSS_SOURCES = [
     url:  'https://golfonemedia.com/feed/',
     type: 'rss',
   },
+  {
+    id:   'mygolfspy',
+    name: 'MyGolfSpy',
+    url:  'https://feeds.feedburner.com/Mygolfspy',
+    type: 'rss',
+  },
 ];
 // Note: Breezy Golf excluded per request (blog is gift guides, not press releases)
 // Skipped (broken): TaylorMade (redirect loop), Scotty Cameron/FootJoy/Golf Pride/Wilson (403)
-// Skipped (403 on all feeds): MyGolfSpy
+// MyGolfSpy: direct feed 403, use FeedBurner mirror instead
 
 // HTML sources: scrape a listing page for article links, then visit each
 const HTML_SOURCES = [
