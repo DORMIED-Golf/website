@@ -7,8 +7,9 @@
  *
  * Sources:
  *   RSS/Atom: Titleist, Good Good Golf, Holderness & Bourne, Miura, Mizuno,
- *             Takomo, PXG, Adidas Golf, LA Golf (PRNewswire), Cobra
- *   HTML:     TravisMathew (Shorefire), First Call Golf
+ *             Takomo, PXG, Adidas Golf, LA Golf (PRNewswire), Cobra, Malbon,
+ *             SWAG Golf, Greyson Clothiers, Bettinardi, Sun Mountain
+ *   HTML:     Callaway Golf, Ping, First Call Golf
  *
  * Usage:
  *   node scripts/scrape-pressrooms.js
@@ -127,20 +128,27 @@ const RSS_SOURCES = [
   },
 ];
 // Note: Breezy Golf excluded per request (blog is gift guides, not press releases)
-// Skipped (broken): TaylorMade Clubhouse (JS), Callaway IR (timeout),
-//   Scotty Cameron/FootJoy/Golf Pride/Wilson (403), Ping/PXG press-releases (404)
+// Skipped (broken): TaylorMade (redirect loop), Scotty Cameron/FootJoy/Golf Pride/Wilson (403)
 
 // HTML sources: scrape a listing page for article links, then visit each
 const HTML_SOURCES = [
   {
-    id:           'travismathew',
-    name:         'TravisMathew',
-    listingUrl:   'https://shorefire.com/roster/travismathew',
-    baseUrl:      'https://shorefire.com',
-    // Find links matching /releases/entry/ pattern
-    linkPattern:  /\/releases\/entry\/[a-z0-9-]+/i,
-    // How to extract content from an individual article page
-    extractor:    'shorefire',
+    id:           'callaway',
+    name:         'Callaway Golf',
+    listingUrl:   'https://www.callawaygolf.com/press',
+    baseUrl:      'https://www.callawaygolf.com',
+    // Links like /press/callaway-golf-announces-quantum-mini-driver...
+    linkPattern:  /\/press\/[a-z0-9-]{10,}/i,
+    extractor:    'generic',
+  },
+  {
+    id:           'ping',
+    name:         'Ping',
+    listingUrl:   'https://ping.com/en-us/discover-ping/news',
+    baseUrl:      'https://ping.com',
+    // Links like /en-us/discover-ping/news/i540-irons-deliver-speed...
+    linkPattern:  /\/en-us\/discover-ping\/news\/[a-z0-9-]{5,}/i,
+    extractor:    'generic',
   },
   {
     id:           'first-call-golf',
@@ -375,6 +383,85 @@ async function extractShorefireArticle(url) {
   return { title, body: bodyText, imageUrl: ogImage, pubDate };
 }
 
+// ── HTML Scraper — Generic ────────────────────────────────────────────────────
+// Works for any site that renders full HTML with og: meta tags.
+// Falls back to heuristic body extraction when og:description is sparse.
+
+async function extractGenericArticle(url) {
+  const html = await fetchPage(url);
+  if (!html) return null;
+
+  // Title: og:title → <h1>
+  let title = (
+    (html.match(/<meta[^>]+property="og:title"[^>]+content="([^"]+)"/i) ||
+     html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:title"/i) || [])[1] || ''
+  );
+  if (!title) {
+    const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+    if (h1) title = stripHtml(h1[1]);
+  }
+  // Strip common site-name suffixes like " | Callaway Golf"
+  title = title.replace(/\s*[|\-–—].*$/, '').trim();
+  if (!title) return null;
+
+  // Date: og:article:published_time → datetime attr → URL date → today
+  let pubDate = null;
+  const dateMeta = (
+    html.match(/<meta[^>]+property="article:published_time"[^>]+content="([^"]+)"/i) ||
+    html.match(/<meta[^>]+content="([^"]+)"[^>]+property="article:published_time"/i) ||
+    html.match(/<time[^>]+datetime="([^"]+)"/i)
+  );
+  if (dateMeta) {
+    const parsed = new Date(dateMeta[1]);
+    if (!isNaN(parsed)) pubDate = parsed.toISOString();
+  }
+  if (!pubDate) {
+    // Try to find YYYY-MM-DD in the URL
+    const urlDate = url.match(/\/(\d{4})[\/\-](\d{2})[\/\-](\d{2})/);
+    if (urlDate) {
+      const parsed = new Date(`${urlDate[1]}-${urlDate[2]}-${urlDate[3]}`);
+      if (!isNaN(parsed)) pubDate = parsed.toISOString();
+    }
+  }
+
+  // Body: og:description first, then try common content wrappers
+  const ogDesc = (
+    (html.match(/<meta[^>]+property="og:description"[^>]+content="([^"]+)"/i) ||
+     html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:description"/i) ||
+     html.match(/<meta[^>]+name="description"[^>]+content="([^"]+)"/i) ||
+     html.match(/<meta[^>]+content="([^"]+)"[^>]+name="description"/i) || [])[1] || ''
+  );
+
+  let bodyText = ogDesc;
+
+  // Try common article body selectors
+  const bodyPatterns = [
+    /<article[^>]*>([\s\S]{300,}?)<\/article>/i,
+    /class="[^"]*(?:press-release|article-body|entry-content|post-content|page-content|release-content|content-body|main-content|rte|rich-text)[^"]*"[^>]*>([\s\S]{300,}?)<\/(?:div|section|article)>/i,
+    /<main[^>]*>([\s\S]{300,}?)<\/main>/i,
+  ];
+  for (const pat of bodyPatterns) {
+    const m = html.match(pat);
+    if (m) {
+      const extracted = stripHtml(m[1]);
+      if (extracted.length > bodyText.length) {
+        bodyText = extracted.slice(0, 3000);
+        break;
+      }
+    }
+  }
+
+  if (!bodyText || bodyText.length < 50) return null;
+
+  // Image: og:image
+  const ogImage = (
+    (html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i) ||
+     html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:image"/i) || [])[1] || null
+  );
+
+  return { title, body: bodyText, imageUrl: ogImage, pubDate };
+}
+
 // ── HTML Scraper — First Call Golf ───────────────────────────────────────────
 
 async function extractFirstCallArticle(url) {
@@ -453,6 +540,8 @@ async function scrapeHtmlSource(supabase, source) {
       extracted = await extractShorefireArticle(articleUrl);
     } else if (source.extractor === 'firstcall') {
       extracted = await extractFirstCallArticle(articleUrl);
+    } else if (source.extractor === 'generic') {
+      extracted = await extractGenericArticle(articleUrl);
     }
 
     if (!extracted || !extracted.title || !extracted.body) { skipped++; continue; }
