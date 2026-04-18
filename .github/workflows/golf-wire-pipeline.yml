@@ -75,3 +75,18 @@ jobs:
             git push
             echo "Committed and pushed ${ARTICLE_COUNT} new article(s)."
           fi
+
+      - name: Ping search engines
+        if: success()
+        run: |
+          SITEMAP_URL="https://dormied.com/sitemap.xml"
+
+          # Ping Google
+          GOOGLE_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://www.google.com/ping?sitemap=${SITEMAP_URL}")
+          echo "Google ping: HTTP ${GOOGLE_STATUS}"
+
+          # Ping Bing
+          BING_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://www.bing.com/ping?sitemap=${SITEMAP_URL}")
+          echo "Bing ping: HTTP ${BING_STATUS}"

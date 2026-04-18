@@ -654,17 +654,37 @@ function generateArticleHtml(opts) {
 
 // ── Sitemap updater ───────────────────────────────────────────────────────────
 
-function addToSitemap(slug, publishedAt) {
+function xmlEscSitemap(str) {
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function addToSitemap(slug, publishedAt, imageUrl, imageTitle) {
   const sitemapPath = path.join(SITE_ROOT, 'sitemap.xml');
   let sitemap = fs.readFileSync(sitemapPath, 'utf8');
 
-  const dateStr = publishedAt.slice(0, 10);
-  const entry   = `\n  <url>\n    <loc>https://dormied.com/news/${slug}/</loc>\n    <lastmod>${dateStr}</lastmod>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>\n  </url>`;
+  const dateStr    = publishedAt.slice(0, 10);
+  const today      = new Date().toISOString().slice(0, 10);
+
+  // Build image block (include only if we have an actual hero image — not the og-image fallback)
+  const hasImage = imageUrl && !imageUrl.includes('og-image.jpg');
+  const imageBlock = hasImage
+    ? `\n    <image:image>\n      <image:loc>${xmlEscSitemap(imageUrl)}</image:loc>\n      <image:title>${xmlEscSitemap(imageTitle)}</image:title>\n    </image:image>`
+    : '';
+
+  // Article entry with image tag
+  const entry = `\n  <url>\n    <loc>https://dormied.com/news/${slug}/</loc>\n    <lastmod>${dateStr}</lastmod>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>${imageBlock}\n  </url>`;
 
   // Insert before the closing </urlset>
   sitemap = sitemap.replace('</urlset>', entry + '\n</urlset>');
+
+  // Also bump the /news/ index lastmod so Google knows to re-crawl the listing
+  sitemap = sitemap.replace(
+    /(<loc>https:\/\/dormied\.com\/news\/<\/loc>\n\s*<lastmod>)[^<]+(<\/lastmod>)/,
+    `$1${today}$2`,
+  );
+
   fs.writeFileSync(sitemapPath, sitemap, 'utf8');
-  console.log(`[generate] Added /news/${slug}/ to sitemap`);
+  console.log(`[generate] Added /news/${slug}/ to sitemap (image: ${hasImage ? 'yes' : 'no'})`);
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -855,8 +875,8 @@ async function main() {
       console.warn(`[generate] Supabase insert failed for "${title}":`, insertErr.message);
     }
 
-    // ── Update sitemap ──
-    addToSitemap(slug, publishedAt);
+    // ── Update sitemap (with image tags for Google Image Search + Discover) ──
+    addToSitemap(slug, publishedAt, ogImageUrl, title);
 
     // ── Update in-memory maps so this run doesn't double-generate same brand/story ──
     brandLastPublished[brandSlug] = publishedAt;
