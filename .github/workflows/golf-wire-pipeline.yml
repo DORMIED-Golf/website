@@ -2,8 +2,8 @@ name: Golf Wire Content Pipeline
 
 on:
   schedule:
-    # Runs every 6 hours
-    - cron: '0 */6 * * *'
+    # Runs every 3 hours (8 runs/day → more content, more X posts)
+    - cron: '0 */3 * * *'
   workflow_dispatch:
     inputs:
       max_articles:

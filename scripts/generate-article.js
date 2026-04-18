@@ -205,6 +205,9 @@ function getSourceName(sourceUrl) {
       'callawaygolf.com':           'Callaway Golf',
       'ping.com':                   'Ping',
       'firstcallgolf.com':          'First Call Golf',
+      'golfonemedia.com':           'Golf One Media',
+      'mygolfspy.com':              'MyGolfSpy',
+      'feeds.feedburner.com':       'MyGolfSpy',
     };
     return MAP[hostname] || hostname;
   } catch {
@@ -335,7 +338,7 @@ async function uploadImageToSupabase(supabase, imageUrl, slug) {
 
     const buffer      = Buffer.from(await res.arrayBuffer());
     const contentType = res.headers.get('content-type') || 'image/jpeg';
-    const ext         = contentType.includes('png') ? 'png' : 'jpg';
+    const ext         = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
     const storagePath = `articles/${slug}-hero.${ext}`;
     const localPath   = path.join(SITE_ROOT, 'images', 'articles', `${slug}-hero.${ext}`);
 
@@ -797,7 +800,9 @@ async function main() {
     // localUrl (Vercel CDN) used for og:image — proper caching for Twitter cards
     // supabaseUrl (or source URL) used for article body <img>
     const imageUrl    = supabaseUrl || raw.image_url;
-    const ogImageUrl  = localUrl || imageUrl;
+    // Use Vercel CDN path for og:image (reliable for Twitter Card + X direct upload).
+    // Fall back to the DORMIED default rather than a raw source URL, which may block hotlinking.
+    const ogImageUrl  = localUrl || 'https://dormied.com/images/og-image.jpg';
 
     // ── Write static HTML file ──
     const articleDir = path.join(SITE_ROOT, 'news', slug);

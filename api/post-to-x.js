@@ -9,6 +9,9 @@
  * Protected by CRON_SECRET env var (set in Vercel project settings).
  * Articles must be at least 30 minutes old before posting (preview window).
  *
+ * Images are uploaded directly via the X v1.1 media upload API so they
+ * always appear inline on X — not relying on Twitter Card scraping.
+ *
  * Note: x-client and validate-x-post logic is inlined here so Vercel's
  * file tracer can bundle this single file without needing ../lib/ resolution.
  */
@@ -16,8 +19,9 @@
 const { createClient } = require('@supabase/supabase-js');
 const { TwitterApi }   = require('twitter-api-v2');
 
-const POST_DELAY_MS   = 5000;  // 5 s between posts if multiple are queued
-const MIN_AGE_MINUTES = 30;    // Wait this long after publish before posting
+const POST_DELAY_MS     = 5000;  // 5 s between posts if multiple are queued
+const MIN_AGE_MINUTES   = 30;    // Wait this long after publish before posting
+const MAX_POSTS_PER_CALL = 5;    // Never post more than this per cron invocation
 
 // ---------------------------------------------------------------------------
 // Inlined: lib/x-client.js
@@ -36,10 +40,74 @@ function getXClient() {
   });
 }
 
-async function postTweet(text) {
+// ---------------------------------------------------------------------------
+// Image fetching — tries Vercel CDN first, then Supabase URL fallback
+// ---------------------------------------------------------------------------
+
+async function fetchImageBuffer(slug, imageUrl) {
+  // 1. Try the locally-committed hero image served via Vercel CDN
+  //    (committed to images/articles/ by the GitHub Actions pipeline)
+  const exts = ['jpg', 'png', 'webp'];
+  for (const ext of exts) {
+    const cdnUrl = `https://dormied.com/images/articles/${slug}-hero.${ext}`;
+    try {
+      const res = await fetch(cdnUrl, {
+        signal:  AbortSignal.timeout(8000),
+        headers: { 'User-Agent': 'DORMIED-Bot/1.0' },
+      });
+      if (res.ok) {
+        const buffer   = Buffer.from(await res.arrayBuffer());
+        const mimeType = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg';
+        console.log(`[post-to-x] Image fetched from CDN: ${cdnUrl}`);
+        return { buffer, mimeType };
+      }
+    } catch { /* try next extension */ }
+  }
+
+  // 2. Fallback: try image_url stored in Supabase (original source or Supabase storage)
+  if (imageUrl) {
+    try {
+      const res = await fetch(imageUrl, {
+        signal:  AbortSignal.timeout(8000),
+        headers: { 'User-Agent': 'DORMIED-Bot/1.0' },
+      });
+      if (res.ok) {
+        const buffer   = Buffer.from(await res.arrayBuffer());
+        const ct       = res.headers.get('content-type') || 'image/jpeg';
+        const mimeType = ct.includes('png') ? 'image/png' : ct.includes('webp') ? 'image/webp' : 'image/jpeg';
+        console.log(`[post-to-x] Image fetched from Supabase URL: ${imageUrl}`);
+        return { buffer, mimeType };
+      }
+    } catch (err) {
+      console.warn(`[post-to-x] Image fallback fetch failed: ${err.message}`);
+    }
+  }
+
+  console.warn(`[post-to-x] No image available for slug: ${slug}`);
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// Tweet posting — with direct media upload when image is available
+// ---------------------------------------------------------------------------
+
+async function postTweet(text, imageBuffer, mimeType) {
   const client = getXClient();
+
+  if (imageBuffer) {
+    try {
+      const mediaId    = await client.v1.uploadMedia(imageBuffer, { mimeType });
+      const { data }   = await client.v2.tweet({ text, media: { media_ids: [mediaId] } });
+      console.log(`[post-to-x] Posted with image (media_id: ${mediaId})`);
+      return data; // { id: '...', text: '...' }
+    } catch (imgErr) {
+      // If image upload fails (e.g. size limit, format issue) fall back to text-only
+      console.warn(`[post-to-x] Image upload failed — falling back to text-only: ${imgErr.message}`);
+    }
+  }
+
   const { data } = await client.v2.tweet(text);
-  return data; // { id: '...', text: '...' }
+  return data;
 }
 
 // ---------------------------------------------------------------------------
@@ -76,11 +144,11 @@ function fitCopy(copy, slug) {
 }
 
 function validateXPost(postText, article) {
-  const { slug, brand_slug, x_post_id } = article;
+  const { slug, brand_slug, x_posted_at } = article;
 
-  // 1. Duplicate check
-  if (x_post_id) {
-    return { valid: false, reason: `Already posted (X post ID: ${x_post_id})` };
+  // 1. Duplicate check (defensive — query already filters by x_posted_at IS NULL)
+  if (x_posted_at) {
+    return { valid: false, reason: `Already posted at ${x_posted_at}` };
   }
 
   // 2. Non-empty
@@ -153,13 +221,15 @@ module.exports = async (req, res) => {
   const cutoff = new Date(Date.now() - MIN_AGE_MINUTES * 60 * 1000).toISOString();
 
   // Fetch eligible articles: published, not yet posted, old enough
+  // Cap at MAX_POSTS_PER_CALL so we never dump an entire backlog in one cron run
   const { data: articles, error: queryErr } = await supabase
     .from('dormied_articles')
-    .select('id, slug, title, brand_slug, x_post_text, x_post_id')
+    .select('id, slug, title, brand_slug, x_post_text, x_posted_at, image_url')
     .eq('status', 'published')
-    .is('x_post_id', null)
+    .is('x_posted_at', null)
     .lte('published_at', cutoff)
-    .order('published_at', { ascending: true });
+    .order('published_at', { ascending: true })
+    .limit(MAX_POSTS_PER_CALL);
 
   if (queryErr) {
     console.error('[post-to-x] Supabase query error:', queryErr.message);
@@ -171,7 +241,7 @@ module.exports = async (req, res) => {
     return res.status(200).json({ posted: 0, skipped: 0, errors: 0, message: 'Nothing to post' });
   }
 
-  console.log(`[post-to-x] ${articles.length} article(s) eligible`);
+  console.log(`[post-to-x] ${articles.length} article(s) eligible (max ${MAX_POSTS_PER_CALL}/run)`);
   const results = { posted: 0, skipped: 0, errors: 0 };
 
   for (let i = 0; i < articles.length; i++) {
@@ -193,9 +263,16 @@ module.exports = async (req, res) => {
       continue;
     }
 
+    // Fetch image for direct upload (guarantees it appears on X, not just Twitter Card)
+    const imgResult = await fetchImageBuffer(article.slug, article.image_url);
+
     // Post to X
     try {
-      const tweet = await postTweet(validation.text);
+      const tweet = await postTweet(
+        validation.text,
+        imgResult?.buffer  || null,
+        imgResult?.mimeType || null,
+      );
       console.log(`[post-to-x] ✓ Posted: "${article.title}" → X post ID ${tweet.id}`);
 
       // Record the result in Supabase
