@@ -147,6 +147,38 @@ function escHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+// Maps a source URL's hostname to a human-readable source name
+function getSourceName(sourceUrl) {
+  try {
+    const hostname = new URL(sourceUrl).hostname.toLowerCase().replace(/^www\./, '');
+    const MAP = {
+      'thegolfwire.com':            'The Golf Wire',
+      'pxg.com':                    'PXG',
+      'mediacenter.titleist.com':   'Titleist',
+      'titleist.com':               'Titleist',
+      'cobragolf.com':              'COBRA Golf',
+      'goodgoodgolf.com':           'Good Good Golf',
+      'holdernessandbourne.com':    'Holderness & Bourne',
+      'miuragolf.com':              'Miura Golf',
+      'mizunogolf.com':             'Mizuno Golf',
+      'takomogolf.com':             'Takomo Golf',
+      'news.adidas.com':            'Adidas',
+      'prnewswire.com':             'PR Newswire',
+      'malbon.com':                 'Malbon Golf',
+      'swag.golf':                  'SWAG Golf',
+      'greysonclothiers.com':       'Greyson Clothiers',
+      'bettinardi.com':             'Bettinardi Golf',
+      'sunmountain.com':            'Sun Mountain',
+      'callawaygolf.com':           'Callaway Golf',
+      'ping.com':                   'Ping',
+      'firstcallgolf.com':          'First Call Golf',
+    };
+    return MAP[hostname] || hostname;
+  } catch {
+    return 'The Golf Wire';
+  }
+}
+
 function estimateReadTime(text) {
   const words = text.trim().split(/\s+/).length;
   const mins  = Math.max(1, Math.round(words / 200));
@@ -306,7 +338,7 @@ async function uploadImageToSupabase(supabase, imageUrl, slug) {
 function generateArticleHtml(opts) {
   const {
     title, bodyHtml, imageUrl, ogImageUrl, imageAlt, slug, category,
-    published_at, source_url, meta_description, seo_keywords,
+    published_at, source_url, source_name, meta_description, seo_keywords,
     brandSlug, brandName, brandLogo, brandRank, brandDI, brandMom,
     brandTrend3m, brandTrend12m,
     readTime,
@@ -330,7 +362,7 @@ function generateArticleHtml(opts) {
   const imageHtml = imageUrl
     ? `<div class="sc-article-image">
         <img class="sc-article-hero-img" src="${escHtml(imageUrl)}" alt="${escHtml(imageAlt)}" loading="eager">
-        <span class="da-image-credit">Image: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">The Golf Wire</a></span>
+        <span class="da-image-credit">Image: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">${escHtml(source_name)}</a></span>
       </div>`
     : '';
 
@@ -494,7 +526,7 @@ function generateArticleHtml(opts) {
 
             <!-- Source attribution -->
             <p class="da-article-source">
-              Source: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">The Golf Wire</a>
+              Source: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">${escHtml(source_name)}</a>
             </p>
 
             <!-- More on [Brand] -->
@@ -630,10 +662,10 @@ async function main() {
     process.exit(1);
   }
 
-  // Step B: fetch IDs already generated
+  // Step B: fetch IDs already generated (+ brand + date for cooldown check)
   const { data: existing, error: existErr } = await supabase
     .from('dormied_articles')
-    .select('matched_article_id');
+    .select('matched_article_id, brand_slug, published_at');
 
   if (existErr) {
     console.error('[generate] Failed to fetch existing articles:', existErr.message);
@@ -642,9 +674,31 @@ async function main() {
 
   const alreadyGenerated = new Set((existing || []).map(r => r.matched_article_id).filter(Boolean));
 
+  // Build a map of brand_slug → most recent published_at among already-generated articles
+  // so we can skip generating another article for the same brand within 3 days
+  const brandLastPublished = {};
+  for (const row of existing || []) {
+    if (row.brand_slug && row.published_at) {
+      const prev = brandLastPublished[row.brand_slug];
+      if (!prev || new Date(row.published_at) > new Date(prev)) {
+        brandLastPublished[row.brand_slug] = row.published_at;
+      }
+    }
+  }
+
   // Step C: filter in JS, cap at MAX
+  const BRAND_COOLDOWN_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
   const matched = (allMatched || [])
-    .filter(m => !alreadyGenerated.has(m.id))
+    .filter(m => {
+      if (alreadyGenerated.has(m.id)) return false;
+      // Skip if we already generated an article for this brand in the last 3 days
+      const lastPub = brandLastPublished[m.primary_brand_slug];
+      if (lastPub && (Date.now() - new Date(lastPub)) < BRAND_COOLDOWN_MS) {
+        console.log(`[generate] Skipping duplicate: brand "${m.primary_brand_slug}" already has article from ${lastPub.slice(0,10)}`);
+        return false;
+      }
+      return true;
+    })
     .slice(0, MAX_ARTICLES_PER_RUN);
 
   console.log(`[generate] ${matched.length} articles to generate (max ${MAX_ARTICLES_PER_RUN}/run)`);
@@ -685,6 +739,9 @@ async function main() {
     const readTime    = estimateReadTime(body);
     const bodyHtml    = bodyToHtml(body, brandSlug, brandInfo.brand.name);
 
+    // ── Derive source name from URL ──
+    const sourceName = getSourceName(raw.source_url);
+
     // ── Upload image to Supabase Storage + save locally ──
     const { supabaseUrl, localUrl } = await uploadImageToSupabase(supabase, raw.image_url, slug);
     // localUrl (Vercel CDN) used for og:image — proper caching for Twitter cards
@@ -702,6 +759,7 @@ async function main() {
       slug, category:  raw.category || 'Business',
       published_at:    publishedAt,
       source_url:      raw.source_url,
+      source_name:     sourceName,
       meta_description,
       seo_keywords,
       brandSlug,
@@ -728,7 +786,7 @@ async function main() {
         body,
         image_url:          imageUrl,
         source_url:         raw.source_url,
-        source_name:        'The Golf Wire',
+        source_name:        sourceName,
         meta_description,
         seo_keywords:       seo_keywords || [],
         published_at:       publishedAt,
@@ -744,6 +802,9 @@ async function main() {
 
     // ── Update sitemap ──
     addToSitemap(slug, publishedAt);
+
+    // ── Update in-memory cooldown map so this run doesn't double-generate same brand ──
+    brandLastPublished[brandSlug] = publishedAt;
 
     generated++;
     console.log(`[generate] ✓ Published: "${title}"`);
