@@ -339,50 +339,6 @@ async function scrapeRssSource(supabase, source, parser) {
   console.log(`[pressrooms:${source.id}] Done — ingested: ${ingested}, skipped/dup: ${skipped}`);
 }
 
-// ── HTML Scraper — Shorefire ──────────────────────────────────────────────────
-
-async function extractShorefireArticle(url) {
-  const html = await fetchPage(url);
-  if (!html) return null;
-
-  // Title from og:title or <h1>
-  let title = (html.match(/<meta[^>]+property="og:title"[^>]+content="([^"]+)"/i) ||
-               html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:title"/i) || [])[1] || '';
-  if (!title) {
-    const h1 = html.match(/<h1[^>]*>([^<]+)<\/h1>/i);
-    title = h1 ? stripHtml(h1[1]) : '';
-  }
-  title = title.replace(/\s*\|\s*Shore Fire.*$/i, '').trim();
-  if (!title) return null;
-
-  // Date: look for date pattern in page
-  let pubDate = null;
-  const dateMatch = html.match(/(\d{1,2}\s+\w+,?\s+\d{4})/);
-  if (dateMatch) {
-    const parsed = new Date(dateMatch[1]);
-    if (!isNaN(parsed)) pubDate = parsed.toISOString();
-  }
-
-  // Body: og:description + article text
-  const ogDesc = (html.match(/<meta[^>]+property="og:description"[^>]+content="([^"]+)"/i) ||
-                  html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:description"/i) || [])[1] || '';
-
-  // Try to get article body text
-  let bodyText = ogDesc;
-  // Shorefire wraps content in .release-body or similar
-  const bodyMatch = html.match(/class="[^"]*(?:release|press|content|body)[^"]*"[^>]*>([\s\S]{200,}?)<\/(?:div|section|article)>/i);
-  if (bodyMatch) {
-    const extracted = stripHtml(bodyMatch[1]);
-    if (extracted.length > bodyText.length) bodyText = extracted.slice(0, 3000);
-  }
-  if (!bodyText || bodyText.length < 50) return null;
-
-  const ogImage = (html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i) ||
-                   html.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:image"/i) || [])[1] || null;
-
-  return { title, body: bodyText, imageUrl: ogImage, pubDate };
-}
-
 // ── HTML Scraper — Generic ────────────────────────────────────────────────────
 // Works for any site that renders full HTML with og: meta tags.
 // Falls back to heuristic body extraction when og:description is sparse.
@@ -536,9 +492,7 @@ async function scrapeHtmlSource(supabase, source) {
     await delay(DELAY_MS);
 
     let extracted;
-    if (source.extractor === 'shorefire') {
-      extracted = await extractShorefireArticle(articleUrl);
-    } else if (source.extractor === 'firstcall') {
+    if (source.extractor === 'firstcall') {
       extracted = await extractFirstCallArticle(articleUrl);
     } else if (source.extractor === 'generic') {
       extracted = await extractGenericArticle(articleUrl);
