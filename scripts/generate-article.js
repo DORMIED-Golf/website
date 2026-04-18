@@ -29,6 +29,12 @@ const MAX_ARTICLES_PER_RUN = 5;
 const MODEL                = 'claude-opus-4-5';
 const SITE_ROOT            = path.resolve(__dirname, '..');
 
+// Brands permanently excluded from article generation
+// (stale sources, off-topic content, or owner request)
+const BRAND_DENYLIST = new Set([
+  'travismathew', // press releases are years old; stale content in Golf Wire
+]);
+
 // Disallowed opening phrases
 const DISALLOWED_STARTS = [
   'based on', 'according to', 'from my', 'from the',
@@ -691,6 +697,10 @@ async function main() {
   const matched = (allMatched || [])
     .filter(m => {
       if (alreadyGenerated.has(m.id)) return false;
+      if (BRAND_DENYLIST.has(m.primary_brand_slug)) {
+        console.log(`[generate] Skipping denylisted brand: ${m.primary_brand_slug}`);
+        return false;
+      }
       // Skip if we already generated an article for this brand in the last 3 days
       const lastPub = brandLastPublished[m.primary_brand_slug];
       if (lastPub && (Date.now() - new Date(lastPub)) < BRAND_COOLDOWN_MS) {
