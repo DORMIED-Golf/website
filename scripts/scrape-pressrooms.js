@@ -95,8 +95,40 @@ const RSS_SOURCES = [
     // Cobra's atom entries have no body — fetch each article for content
     fetchBodyFromUrl: true,
   },
+  {
+    id:   'malbon',
+    name: 'Malbon Golf',
+    url:  'https://malbon.com/blogs/news.atom',
+    type: 'atom',
+  },
+  {
+    id:   'swag-golf',
+    name: 'SWAG Golf',
+    url:  'https://swag.golf/blogs/news.atom',
+    type: 'atom',
+  },
+  {
+    id:   'greyson',
+    name: 'Greyson Clothiers',
+    url:  'https://greysonclothiers.com/blogs/news.atom',
+    type: 'atom',
+  },
+  {
+    id:   'bettinardi',
+    name: 'Bettinardi Golf',
+    url:  'https://bettinardi.com/blogs/news.atom',
+    type: 'atom',
+  },
+  {
+    id:   'sun-mountain',
+    name: 'Sun Mountain',
+    url:  'https://www.sunmountain.com/blogs/blog.atom',
+    type: 'atom',
+  },
 ];
-// Note: Breezy Golf excluded (blog is gift guides, not press releases)
+// Note: Breezy Golf excluded per request (blog is gift guides, not press releases)
+// Skipped (broken): TaylorMade Clubhouse (JS), Callaway IR (timeout),
+//   Scotty Cameron/FootJoy/Golf Pride/Wilson (403), Ping/PXG press-releases (404)
 
 // HTML sources: scrape a listing page for article links, then visit each
 const HTML_SOURCES = [
