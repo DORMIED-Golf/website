@@ -153,6 +153,33 @@ function escHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+// ── Title deduplication ───────────────────────────────────────────────────────
+
+const TITLE_STOP_WORDS = new Set([
+  'a','an','the','and','or','but','in','on','at','to','for','of','with','by',
+  'from','is','are','was','were','be','been','its','it','as','this','that',
+  'has','have','had','will','can','new','golf','golfers','golfer','brand',
+  'brands','now','how','why','what','when','just','more','out','up','into',
+]);
+
+function titleKeywords(title) {
+  return new Set(
+    (title || '').toLowerCase()
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length > 2 && !TITLE_STOP_WORDS.has(w))
+  );
+}
+
+function titleSimilarity(a, b) {
+  const wa = titleKeywords(a);
+  const wb = titleKeywords(b);
+  if (wa.size === 0 || wb.size === 0) return 0;
+  let shared = 0;
+  for (const w of wa) if (wb.has(w)) shared++;
+  return shared / (wa.size + wb.size - shared); // Jaccard
+}
+
 // Maps a source URL's hostname to a human-readable source name
 function getSourceName(sourceUrl) {
   try {
@@ -492,7 +519,7 @@ function generateArticleHtml(opts) {
       <a href="/news/" class="sc-label sc-label--link">News</a>
       <h1 class="sc-article-title">${escHtml(title)}</h1>
       <p class="sc-article-subtitle">${escHtml(meta_description)}</p>
-      <p class="sc-article-byline">DORMIED &nbsp;·&nbsp; <time datetime="${dateISO}">${escHtml(dateFormatted)}</time> &nbsp;·&nbsp; ${escHtml(category)} &nbsp;·&nbsp; ${escHtml(readTime)}</p>
+      <p class="sc-article-byline">DORMIED Staff &nbsp;·&nbsp; <time datetime="${dateISO}">${escHtml(dateFormatted)}</time> &nbsp;·&nbsp; ${escHtml(category)} &nbsp;·&nbsp; ${escHtml(readTime)}</p>
     </header>
 
     <!-- ══ ARTICLE ════════════════════════════════════════════════════════════ -->
@@ -530,10 +557,6 @@ function generateArticleHtml(opts) {
               </div>
             </div>
 
-            <!-- Source attribution -->
-            <p class="da-article-source">
-              Source: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">${escHtml(source_name)}</a>
-            </p>
 
             <!-- More on [Brand] -->
             <section class="da-bottom-section" id="da-more-brand-section" aria-labelledby="da-more-brand-heading" hidden>
@@ -668,10 +691,10 @@ async function main() {
     process.exit(1);
   }
 
-  // Step B: fetch IDs already generated (+ brand + date for cooldown check)
+  // Step B: fetch IDs already generated (+ brand + date + title for dedup checks)
   const { data: existing, error: existErr } = await supabase
     .from('dormied_articles')
-    .select('matched_article_id, brand_slug, published_at');
+    .select('matched_article_id, brand_slug, published_at, title');
 
   if (existErr) {
     console.error('[generate] Failed to fetch existing articles:', existErr.message);
@@ -679,6 +702,13 @@ async function main() {
   }
 
   const alreadyGenerated = new Set((existing || []).map(r => r.matched_article_id).filter(Boolean));
+
+  // Build a list of recently generated article titles (last 14 days) for similarity check
+  const TITLE_WINDOW_MS    = 14 * 24 * 60 * 60 * 1000;
+  const recentTitles = (existing || [])
+    .filter(r => r.title && r.published_at &&
+      (Date.now() - new Date(r.published_at)) < TITLE_WINDOW_MS)
+    .map(r => r.title);
 
   // Build a map of brand_slug → most recent published_at among already-generated articles
   // so we can skip generating another article for the same brand within 3 days
@@ -706,6 +736,16 @@ async function main() {
       if (lastPub && (Date.now() - new Date(lastPub)) < BRAND_COOLDOWN_MS) {
         console.log(`[generate] Skipping duplicate: brand "${m.primary_brand_slug}" already has article from ${lastPub.slice(0,10)}`);
         return false;
+      }
+      // Skip if the raw press release title is too similar to a recently generated article
+      // (catches same story covered by multiple sources — Golf Wire, Golf One Media, First Call, etc.)
+      const rawTitle = m.golf_wire_raw?.title || '';
+      if (rawTitle) {
+        const similar = recentTitles.find(t => titleSimilarity(rawTitle, t) >= 0.5);
+        if (similar) {
+          console.log(`[generate] Skipping similar story: "${rawTitle}" ≈ "${similar}"`);
+          return false;
+        }
       }
       return true;
     })
@@ -813,8 +853,9 @@ async function main() {
     // ── Update sitemap ──
     addToSitemap(slug, publishedAt);
 
-    // ── Update in-memory cooldown map so this run doesn't double-generate same brand ──
+    // ── Update in-memory maps so this run doesn't double-generate same brand/story ──
     brandLastPublished[brandSlug] = publishedAt;
+    recentTitles.push(title); // use the generated title for future similarity checks
 
     generated++;
     console.log(`[generate] ✓ Published: "${title}"`);

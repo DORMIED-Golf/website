@@ -126,9 +126,16 @@ const RSS_SOURCES = [
     url:  'https://www.sunmountain.com/blogs/blog.atom',
     type: 'atom',
   },
+  {
+    id:   'golf-one-media',
+    name: 'Golf One Media',
+    url:  'https://golfonemedia.com/feed/',
+    type: 'rss',
+  },
 ];
 // Note: Breezy Golf excluded per request (blog is gift guides, not press releases)
 // Skipped (broken): TaylorMade (redirect loop), Scotty Cameron/FootJoy/Golf Pride/Wilson (403)
+// Skipped (403 on all feeds): MyGolfSpy
 
 // HTML sources: scrape a listing page for article links, then visit each
 const HTML_SOURCES = [
