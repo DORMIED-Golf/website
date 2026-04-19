@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
 
   let query = supabase
     .from('dormied_articles')
-    .select('id, brand_slug, title, meta_description, image_url, source_url, source_name, slug, category, published_at')
+    .select('id, brand_slug, title, meta_description, image_url, source_url, source_name, slug, category, published_at, author')
     .eq('status', 'published')
     .order('published_at', { ascending: false })
     .limit(limit);
@@ -41,11 +41,19 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 
-  // Normalise to the same shape as /api/feed articles
+  // Derive author from category when not explicitly set
+  function authorFromCategory(category) {
+    const cat = (category || '').toLowerCase();
+    if (cat === 'apparel & footwear' || cat === 'bags & accessories') return 'Adam';
+    return 'Travis';
+  }
+
+  // Normalise to article shape used by the frontend
   const articles = (data || []).map(a => ({
     id:          a.id,
     title:       a.title,
     url:         `/news/${a.slug}/`,
+    author:      a.author || authorFromCategory(a.category),
     sourceName:  'DORMIED',
     sourceId:    'dormied',
     pubDate:     a.published_at,

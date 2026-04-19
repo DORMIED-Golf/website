@@ -1,7 +1,19 @@
-const Parser = require('rss-parser');
+// ── RSS AGGREGATION DISABLED ─────────────────────────────────────────────────
+// Disabled for AdSense compliance: dormied.com now shows only original content.
+// Re-enable by restoring the module.exports handler below and removing the
+// early-return stub. The FEEDS + brand-tagging logic is preserved for future use.
+
+const Parser = require('rss-parser');   // kept so npm dep stays in package.json
 const brands = require('./_brands.json');
 
-const FEEDS = [
+module.exports = async (_req, res) => {
+  res.setHeader('Cache-Control', 's-maxage=1800, stale-while-revalidate=60');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  return res.json({ articles: [], lastUpdated: new Date().toISOString(), feedsLoaded: 0, feedsFailed: 0 });
+};
+
+/* ── DISABLED FEEDS (preserved for re-enable) ────────────────────────────────
+const FEEDS_DISABLED = [
   { id: 'mygolfspy',    name: 'MyGolfSpy',            url: 'https://feeds.feedburner.com/Mygolfspy' },
   { id: 'golfwrx',      name: 'GolfWRX',              url: 'https://www.golfwrx.com/feed?posts_per_rss=500' },
   { id: 'golfcom',      name: 'Golf.com',              url: 'https://golf.com/feed?posts_per_rss=500' },
@@ -10,9 +22,10 @@ const FEEDS = [
   { id: 'gbm',          name: 'Golf Business Monitor', url: 'https://www.golfbusinessmonitor.com/feed?posts_per_rss=500' },
   { id: 'ncg',          name: 'National Club Golfer',  url: 'https://www.nationalclubgolfer.com/feed?posts_per_rss=500' },
   { id: 'hackerspar',   name: "Hacker's Paradise",     url: 'https://www.thehackersparadise.com/feed?posts_per_rss=500' },
-];
+]; // end FEEDS_DISABLED
 
 // Pre-compile word-boundary regexes for each brand name + aliases.
+/* DISABLED_HANDLER_START
 // Prevents false positives (e.g. "PING" inside "groupings") while
 // allowing common alternate spellings (e.g. "LAB Golf" for "L.A.B. Golf").
 function makeRe(term) {
@@ -134,3 +147,4 @@ module.exports = async (req, res) => {
     });
   }
 };
+DISABLED_HANDLER_END */

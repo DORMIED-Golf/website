@@ -221,6 +221,12 @@ function estimateReadTime(text) {
   return `${mins} min read`;
 }
 
+function authorFromCategory(category) {
+  const cat = (category || '').toLowerCase();
+  if (cat === 'apparel & footwear' || cat === 'bags & accessories') return 'Adam';
+  return 'Travis';
+}
+
 function formatDate(isoDate) {
   const d = new Date(isoDate);
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -249,18 +255,18 @@ function isInvalid(text) {
 
 // ── Opus ──────────────────────────────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You are the editorial voice of DORMIED, a golf brand intelligence platform. Rewrite the following press release as a short, sharp original article (150-250 words). Write in DORMIED's voice: direct, dry, opinionated, informed. No filler. No em dashes. No exclamation points. No "exciting news" language. No preamble.
+const SYSTEM_PROMPT = `You are the editorial voice of DORMIED, a golf brand intelligence platform. Rewrite the following press release as a substantial original article (400-600 words). Write in DORMIED's voice: direct, dry, opinionated, informed. No filler. No em dashes. No exclamation points. No "exciting news" language. No preamble. No bullet points.
 
-Lead with the story. What happened, why it matters, and what it says about where this brand is headed. Write like a columnist covering a beat, not like a data platform summarizing metrics. The reader should walk away understanding the news and your take on it.
+Lead with the story. What happened, why it matters, what it says about where this brand is headed, and what it means for the broader golf market. Write like a columnist covering a beat, not like a data platform summarizing metrics. The reader should walk away understanding the news, your take on it, and why it matters to them as a golfer or someone following the industry.
 
-The brand's DORMIED Index ranking and trend data are provided for context. You may reference them once, briefly, if they support or contradict the story. Do not build the article around the data. Do not lead with the ranking. Do not mention the DORMIED Index by name more than once. If the data does not add anything meaningful to the story, leave it out entirely.
+The brand's DORMIED Index ranking and trend data are provided for context. You may reference them once or twice, briefly, if they support or contradict the story. Do not build the article around the data. Do not lead with the ranking. Do not mention the DORMIED Index by name more than once. If the data does not add anything meaningful to the story, leave it out entirely.
 
 This article will appear alongside headlines from MyGolfSpy, GolfWRX, and Golf Digest. The headline must be competitive and click-worthy, not press-release-shaped. Write a headline that a gear-obsessed golfer would click over those sources.
 
 Structure:
-- Lead with the news in one sentence
-- 1-2 paragraphs of context, opinion, and editorial analysis
-- Close with a forward-looking observation
+- Lead sentence: the news, stated plainly and with authority
+- Body (3-5 paragraphs): context, history, editorial analysis, and industry implications
+- Closing paragraph: a forward-looking observation about this brand's trajectory
 
 DISALLOWED opening phrases (will be auto-rejected):
 "Based on", "According to", "From my", "From the", "Looking at", "After reviewing", "Having reviewed", "The search results", "The news", "The data shows", "It appears", "It seems", "[Brand name]" as the first word.
@@ -306,7 +312,7 @@ ${pressRelease}${retry ? '\n\nYour previous response contained a disallowed phra
 
   const res = await client.messages.create({
     model:      MODEL,
-    max_tokens: 1200,
+    max_tokens: 2000,
     system:     SYSTEM_PROMPT,
     messages:   [{ role: 'user', content: userMsg }],
   });
@@ -377,7 +383,7 @@ function generateArticleHtml(opts) {
     published_at, source_url, source_name, meta_description, seo_keywords,
     brandSlug, brandName, brandLogo, brandRank, brandDI, brandMom,
     brandTrend3m, brandTrend12m,
-    readTime,
+    readTime, author,
   } = opts;
 
   const dateFormatted  = formatDate(published_at);
@@ -416,7 +422,7 @@ function generateArticleHtml(opts) {
   <title>${escHtml(titleTag)}</title>
   <meta name="description" content="${escHtml(meta_description)}">
   <meta name="keywords" content="${escHtml(keywordsStr)}">
-  <meta name="author" content="DORMIED">
+  <meta name="author" content="${escHtml(author)}">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="${canonicalUrl}">
 
@@ -436,7 +442,7 @@ function generateArticleHtml(opts) {
   <meta property="og:site_name" content="DORMIED">
   <meta property="og:locale" content="en_US">
   <meta property="article:published_time" content="${dateISO}">
-  <meta property="article:author" content="DORMIED">
+  <meta property="article:author" content="${escHtml(author)}">
 
   <!-- ── Twitter Card ── -->
   <meta name="twitter:card" content="summary_large_image">
@@ -465,7 +471,7 @@ function generateArticleHtml(opts) {
     "description": "${escHtml(meta_description)}",
     "image": "${escHtml(ogImage)}",
     "datePublished": "${dateISO}",
-    "author": { "@type": "Organization", "name": "DORMIED" },
+    "author": { "@type": "Person", "name": "${escHtml(author)}", "url": "https://dormied.com/about/" },
     "publisher": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com" },
     "url": "${canonicalUrl}",
     "breadcrumb": {
@@ -522,7 +528,7 @@ function generateArticleHtml(opts) {
       <a href="/news/" class="sc-label sc-label--link">News</a>
       <h1 class="sc-article-title">${escHtml(title)}</h1>
       <p class="sc-article-subtitle">${escHtml(meta_description)}</p>
-      <p class="sc-article-byline">DORMIED Staff &nbsp;·&nbsp; <time datetime="${dateISO}">${escHtml(dateFormatted)}</time> &nbsp;·&nbsp; ${escHtml(category)} &nbsp;·&nbsp; ${escHtml(readTime)}</p>
+      <p class="sc-article-byline">By ${escHtml(author)} &nbsp;·&nbsp; <time datetime="${dateISO}">${escHtml(dateFormatted)}</time> &nbsp;·&nbsp; ${escHtml(category)} &nbsp;·&nbsp; ${escHtml(readTime)}</p>
     </header>
 
     <!-- ══ ARTICLE ════════════════════════════════════════════════════════════ -->
@@ -617,7 +623,7 @@ function generateArticleHtml(opts) {
         <a href="/news/">News</a>
         <a href="/brands/">Brands</a>
         <a href="/about/">About</a>
-        <a href="mailto:dormiedgolf@gmail.com">Contact</a>
+        <a href="/contact/">Contact</a>
         <a href="/privacy/">Privacy</a>
         <a href="/sitemap.xml">Sitemap</a>
       </nav>
@@ -811,6 +817,7 @@ async function main() {
     const slug        = makeSlug(title, publishedAt);
     const readTime    = estimateReadTime(body);
     const bodyHtml    = bodyToHtml(body, brandSlug, brandInfo.brand.name);
+    const author      = authorFromCategory(raw.category || brandInfo.brand.category);
 
     // ── Derive source name from URL ──
     const sourceName = getSourceName(raw.source_url);
@@ -846,6 +853,7 @@ async function main() {
       brandTrend3m:  brandInfo.trend3mStr,
       brandTrend12m: brandInfo.trend12mStr,
       readTime,
+      author,
     });
 
     fs.writeFileSync(path.join(articleDir, 'index.html'), html, 'utf8');
@@ -869,6 +877,7 @@ async function main() {
         slug,
         category:           raw.category || 'Business',
         x_post_text:        x_post || null,
+        author,
       });
 
     if (insertErr) {

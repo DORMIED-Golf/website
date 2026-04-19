@@ -63,6 +63,14 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- ── Contact ── -->
+  <url>
+    <loc>https://dormied.com/contact/</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
   <!-- ── Privacy ── -->
   <url>
     <loc>https://dormied.com/privacy/</loc>

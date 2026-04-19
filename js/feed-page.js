@@ -1,36 +1,37 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   feed-page.js  —  DORMIED Feed Page
-   Handles the /feed/ page: fetches articles, renders full feed with
-   sort/filter controls and Most Mentioned brands widget.
+   feed-page.js  —  DORMIED News Page (/news/)
+   Fetches DORMIED original articles from /api/dormied-articles, renders
+   full feed with sort/filter controls and Most Mentioned brands widget.
    Depends on: data.js (window.DORMIED_DATA), feed.js (window.renderFeedPageCard)
    ───────────────────────────────────────────────────────────────────────── */
 
 (function () {
   'use strict';
 
-  var FEED_API  = '/api/feed';
-  var CACHE_KEY = 'dormied_feed_v4';          // shared cache key with feed.js
-  var CACHE_TTL = 30 * 60 * 1000;             // 30 minutes
+  var DORMIED_API      = '/api/dormied-articles?limit=100';
   var TOP_BRANDS_COUNT = 10;
-  var AD_EVERY = 10;                          // insert ad every N articles
-
-  var PAGE_SIZE = 30;
-
-  var DORMIED_API = '/api/dormied-articles';
+  var AD_EVERY         = 10;   // insert ad every N articles
+  var PAGE_SIZE        = 30;
 
   var state = {
-    articles:     [],
-    filtered:     [],
-    sort:         'newest',
-    brandFilter:  '',
-    sourceFilter: '',   // '' = all, 'dormied' = originals only, 'external' = external only
-    searchQuery:  '',
-    page:         1
+    articles:    [],
+    filtered:    [],
+    sort:        'newest',
+    brandFilter: '',
+    searchQuery: '',
+    page:        1
   };
 
-  var csBrand = null;   // handle to custom select widget for the brand filter
+  var csBrand = null;   // handle to custom select widget
 
-  /* ── Custom Select Component (mirrors app.js buildCustomSelect) ─────────── */
+  /* ── Author derivation (mirrors api/dormied-articles.js) ───────────────── */
+  function authorFromCategory(category) {
+    var cat = (category || '').toLowerCase();
+    if (cat === 'apparel & footwear' || cat === 'bags & accessories') return 'Adam';
+    return 'Travis';
+  }
+
+  /* ── Custom Select Component ─────────────────────────────────────────────── */
   function buildCustomSelect(selectEl) {
     if (!selectEl) return null;
 
@@ -159,48 +160,9 @@
     };
   }
 
-  /* ── Local dev detection ────────────────────────────────────────────────── */
-  function isLocalDev() {
-    var h = window.location.hostname;
-    return h === 'localhost' || h === '127.0.0.1' || h === '' || window.location.protocol === 'file:';
-  }
-
-  /* ── Mock data for local preview ────────────────────────────────────────── */
-  var MOCK_ARTICLES = [
-    { id:'m1', title:'TaylorMade Qi35 Irons: The Most Forgiving Clubs We\'ve Ever Tested', url:'#', sourceName:'MyGolfSpy', pubDate: new Date(Date.now()-2*3600000).toISOString(), description:'We put the new Qi35 irons through a full robot and player testing protocol. The numbers are impressive across every handicap bracket we tested.', imageUrl:'https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=400&q=80', brandIds:['taylormade'] },
-    { id:'m2', title:'Titleist Pro V1 vs Pro V1x: Which Ball Is Right for Your Game in 2026?', url:'#', sourceName:'Golf Digest', pubDate: new Date(Date.now()-5*3600000).toISOString(), description:'Both balls have been updated for 2026. Here\'s how to decide which one belongs in your bag based on your swing speed, spin preferences and playing style.', imageUrl:'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400&q=80', brandIds:['titleist'] },
-    { id:'m3', title:'Callaway Paradym Ai Smoke vs PING G440: Head-to-Head Driver Test', url:'#', sourceName:'GolfWRX', pubDate: new Date(Date.now()-22*3600000).toISOString(), description:'Two of the best performing drivers on tour go head to head on a launch monitor. We compared ball speed, spin rate, forgiveness and sound at impact.', imageUrl:null, brandIds:['callaway','ping'] },
-    { id:'m4', title:'The Masters 2026: Every Brand Worn by the Top 10 Finishers', url:'#', sourceName:'Golf.com', pubDate: new Date(Date.now()-2*86400000).toISOString(), description:'Augusta always delivers a brand showcase. We tracked every club, ball, glove, and shoe worn by the top finishers across all four rounds.', imageUrl:'https://images.unsplash.com/photo-1510674671809-8d72abc8b01e?w=400&q=80', brandIds:['taylormade','titleist','footjoy','under-armour-golf'] },
-    { id:'m5', title:'Scotty Cameron Special Select vs Bettinardi QB6: Premium Putter Shootout', url:'#', sourceName:'Plugged In Golf', pubDate: new Date(Date.now()-3*86400000).toISOString(), description:'Two of the most sought-after putters on the market. Which one rolls it better? We took both to the putting green for an extended comparison test.', imageUrl:null, brandIds:['scotty-cameron','bettinardi'] },
-    { id:'m6', title:'PING G440 Max Driver Review: More Distance, Less Drama', url:'#', sourceName:'MyGolfSpy', pubDate: new Date(Date.now()-4*86400000).toISOString(), description:'PING continues to refine the G series. The G440 Max delivers consistent distance with a forgiving profile that suits a wide range of swing types.', imageUrl:'https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=400&q=80', brandIds:['ping'] },
-    { id:'m7', title:'Footjoy HyperFlex Carbon Review: The Most Responsive Golf Shoe Yet?', url:'#', sourceName:'Golf Monthly', pubDate: new Date(Date.now()-5*86400000).toISOString(), description:'FootJoy\'s flagship performance shoe gets a carbon fibre plate for 2026. We tested it across 10 rounds in wet and dry conditions.', imageUrl:null, brandIds:['footjoy'] },
-    { id:'m8', title:'Callaway Chrome Soft X vs Pro V1: Which Ball Should You Game?', url:'#', sourceName:'Golf Digest', pubDate: new Date(Date.now()-6*86400000).toISOString(), description:'The eternal battle between two of the most popular tour balls. New data from our robot testing lab reveals some surprising results.', imageUrl:'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400&q=80', brandIds:['callaway','titleist'] },
-    { id:'m9', title:'Cobra AEROJET LS Driver: Distance Without the Penalties', url:'#', sourceName:'GolfWRX', pubDate: new Date(Date.now()-7*86400000).toISOString(), description:'Cobra\'s low-spin iteration of the AEROJET family promises distance for faster swingers without sacrificing too much forgiveness.', imageUrl:null, brandIds:['cobra'] },
-    { id:'m10', title:'Mizuno JPX925 Hot Metal Pro Irons: The Workhorses Return', url:'#', sourceName:'Bunkered', pubDate: new Date(Date.now()-8*86400000).toISOString(), description:'Mizuno\'s evergreen player\'s distance iron gets a refresh for 2026. Better feel, more stability — and still the same trusted Mizuno forge quality.', imageUrl:'https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=400&q=80', brandIds:['mizuno'] },
-    { id:'m11', title:'TaylorMade Stealth 2 vs Qi35: Which Driver Is Right for You?', url:'#', sourceName:'Golf.com', pubDate: new Date(Date.now()-9*86400000).toISOString(), description:'TaylorMade has two very different drivers on shelves this year. We break down who each one is designed for.', imageUrl:null, brandIds:['taylormade'] },
-    { id:'m12', title:'Srixon ZX5 Mk2 Irons: Tour Validated, Amateur Friendly', url:'#', sourceName:'Today\'s Golfer', pubDate: new Date(Date.now()-10*86400000).toISOString(), description:'Srixon\'s mid-handicapper iron blends compact shaping with forgiving technology. Players who prioritise look and feel will love these.', imageUrl:'https://images.unsplash.com/photo-1510674671809-8d72abc8b01e?w=400&q=80', brandIds:['srixon'] }
-  ];
-
-  /* ── Cache helpers (shared key with feed.js) ────────────────────────────── */
-  function getCached() {
-    try {
-      var raw = localStorage.getItem(CACHE_KEY);
-      if (!raw) return null;
-      var obj = JSON.parse(raw);
-      if (Date.now() - obj.timestamp > CACHE_TTL) return null;
-      return obj.data;
-    } catch (e) { return null; }
-  }
-
-  function setCache(data) {
-    try {
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: Date.now(), data: data }));
-    } catch (e) {}
-  }
-
   /* ── Helpers ────────────────────────────────────────────────────────────── */
   function getAllBrands() {
-    try { return (window.DORMIED_DATA && window.DORMIED_DATA.brands) || []; } catch(e) { return []; }
+    try { return (window.DORMIED_DATA && window.DORMIED_DATA.brands) || []; } catch (e) { return []; }
   }
 
   function brandName(id, allBrands) {
@@ -222,20 +184,20 @@
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
 
-  /* ── Compute top 10 most-mentioned brands ───────────────────────────────── */
+  /* ── Compute top N most-mentioned brands ────────────────────────────────── */
   function computeTopBrands(articles) {
     var counts = {};
-    articles.forEach(function(a) {
+    articles.forEach(function (a) {
       if (!a.brandIds) return;
-      a.brandIds.forEach(function(bid) {
+      a.brandIds.forEach(function (bid) {
         counts[bid] = (counts[bid] || 0) + 1;
       });
     });
     var allBrands = getAllBrands();
     return Object.keys(counts)
-      .sort(function(a, b) { return counts[b] - counts[a]; })
+      .sort(function (a, b) { return counts[b] - counts[a]; })
       .slice(0, TOP_BRANDS_COUNT)
-      .map(function(bid) {
+      .map(function (bid) {
         return {
           id:    bid,
           name:  brandName(bid, allBrands),
@@ -251,7 +213,7 @@
     if (!el) return;
     if (!topBrands.length) { el.innerHTML = '<p class="latest-feed-loading">No data yet.</p>'; return; }
 
-    el.innerHTML = topBrands.map(function(b) {
+    el.innerHTML = topBrands.map(function (b) {
       var logoHtml;
       if (b.logo) {
         logoHtml = '<img class="top-brand-logo" src="' + escHtml(b.logo) + '" alt="" ' +
@@ -267,13 +229,11 @@
              '</a>';
     }).join('');
 
-    /* Click on widget row → set filter */
-    el.querySelectorAll('.top-brand-row').forEach(function(row) {
-      row.addEventListener('click', function(e) {
+    el.querySelectorAll('.top-brand-row').forEach(function (row) {
+      row.addEventListener('click', function (e) {
         e.preventDefault();
         var bid = this.getAttribute('data-brand-id');
         if (state.brandFilter === bid) {
-          /* toggle off */
           state.brandFilter = '';
           if (csBrand) { csBrand.setValue(''); } else {
             var s = document.getElementById('feed-brand-filter');
@@ -293,31 +253,30 @@
   }
 
   function syncWidgetActive() {
-    document.querySelectorAll('.top-brand-row').forEach(function(row) {
+    document.querySelectorAll('.top-brand-row').forEach(function (row) {
       row.classList.toggle('active', row.getAttribute('data-brand-id') === state.brandFilter);
     });
   }
 
-  /* ── Populate brand dropdown + build custom select ─────────────────────── */
-  function populateBrandDropdown(topBrands, allBrands) {
+  /* ── Populate brand dropdown + build custom select ──────────────────────── */
+  function populateBrandDropdown(allBrands) {
     var sel = document.getElementById('feed-brand-filter');
     if (!sel) return;
-    /* Collect all brand IDs that appear in any article */
+
     var seen = {};
-    state.articles.forEach(function(a) {
-      if (a.brandIds) a.brandIds.forEach(function(bid) { seen[bid] = true; });
+    state.articles.forEach(function (a) {
+      if (a.brandIds) a.brandIds.forEach(function (bid) { seen[bid] = true; });
     });
     var brandList = Object.keys(seen)
-      .map(function(bid) { return { id: bid, name: brandName(bid, allBrands) }; })
-      .sort(function(a, b) { return a.name.localeCompare(b.name); });
+      .map(function (bid) { return { id: bid, name: brandName(bid, allBrands) }; })
+      .sort(function (a, b) { return a.name.localeCompare(b.name); });
 
     var opts = '<option value="">All brands</option>';
-    brandList.forEach(function(b) {
+    brandList.forEach(function (b) {
       opts += '<option value="' + escHtml(b.id) + '">' + escHtml(b.name) + '</option>';
     });
     sel.innerHTML = opts;
 
-    /* Build (or rebuild) the custom dropdown widget */
     if (csBrand) {
       csBrand.refresh();
     } else {
@@ -354,25 +313,26 @@
     }
 
     var allBrands = getAllBrands();
-    var renderer  = window.renderFeedPageCard || function(a) {
-      return '<article class="feed-card"><div class="feed-card-body"><a href="' + escHtml(a.url) +
-             '" class="feed-card-title" data-track-title="' + escHtml(a.title) + '" data-track-source="' + escHtml(a.sourceName || '') + '">' + escHtml(a.title) + '</a></div></article>';
+    var renderer  = window.renderFeedPageCard || function (a) {
+      return '<article class="feed-card feed-card--dormied"><div class="feed-card-body">' +
+             '<a href="' + escHtml(a.url) + '" class="feed-card-title">' + escHtml(a.title) + '</a>' +
+             '</div></article>';
     };
 
     var html = '';
-    articles.forEach(function(a, i) {
+    articles.forEach(function (a, i) {
       if (i > 0 && i % AD_EVERY === 0) html += adSlotHtml();
       html += renderer(a, allBrands);
     });
     el.innerHTML = html;
 
     // Push in-feed ads after DOM insertion
-    el.querySelectorAll('.adsbygoogle').forEach(function() {
+    el.querySelectorAll('.adsbygoogle').forEach(function () {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     });
   }
 
-  /* ── Render pagination controls ────────────────────────────────────────── */
+  /* ── Render pagination controls ─────────────────────────────────────────── */
   function renderPagination() {
     var el = document.getElementById('feed-pagination');
     if (!el) return;
@@ -382,9 +342,8 @@
 
     var html = '';
     if (state.page > 1) {
-      html += '<button class="feed-page-btn" data-page="' + (state.page - 1) + '">← Prev</button>';
+      html += '<button class="feed-page-btn" data-page="' + (state.page - 1) + '">\u2190 Prev</button>';
     }
-    // Show up to 5 page buttons around current page
     var start = Math.max(1, state.page - 2);
     var end   = Math.min(pages, state.page + 2);
     for (var p = start; p <= end; p++) {
@@ -392,12 +351,12 @@
       html += '<button class="feed-page-btn' + active + '" data-page="' + p + '">' + p + '</button>';
     }
     if (state.page < pages) {
-      html += '<button class="feed-page-btn" data-page="' + (state.page + 1) + '">Next →</button>';
+      html += '<button class="feed-page-btn" data-page="' + (state.page + 1) + '">Next \u2192</button>';
     }
     el.innerHTML = html;
 
-    el.querySelectorAll('.feed-page-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+    el.querySelectorAll('.feed-page-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
         state.page = parseInt(this.dataset.page, 10);
         renderFeedList(state.filtered.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE));
         renderPagination();
@@ -406,43 +365,36 @@
     });
   }
 
-  /* ── Apply filters + sort, then render ─────────────────────────────────── */
+  /* ── Apply filters + sort, then render ──────────────────────────────────── */
   function applyAndRender() {
-    // Always filter to brand-tagged articles only
-    var filtered = state.articles.filter(function(a) {
+    var filtered = state.articles.filter(function (a) {
       return a.brandIds && a.brandIds.length > 0;
     });
 
-    if (state.sourceFilter === 'dormied') {
-      filtered = filtered.filter(function(a) { return !!a.isDormied; });
-    } else if (state.sourceFilter === 'external') {
-      filtered = filtered.filter(function(a) { return !a.isDormied; });
-    }
-
     if (state.brandFilter) {
-      filtered = filtered.filter(function(a) {
+      filtered = filtered.filter(function (a) {
         return a.brandIds && a.brandIds.indexOf(state.brandFilter) !== -1;
       });
     }
 
     if (state.searchQuery) {
       var q = state.searchQuery.toLowerCase();
-      filtered = filtered.filter(function(a) {
-        return (a.title       || '').toLowerCase().includes(q)
-            || (a.description || '').toLowerCase().includes(q)
-            || (a.sourceName  || '').toLowerCase().includes(q);
+      filtered = filtered.filter(function (a) {
+        return (a.title       || '').toLowerCase().indexOf(q) !== -1
+            || (a.description || '').toLowerCase().indexOf(q) !== -1
+            || (a.author      || '').toLowerCase().indexOf(q) !== -1;
       });
     }
 
     if (state.sort === 'oldest') {
-      filtered = filtered.slice().sort(function(a, b) {
+      filtered = filtered.slice().sort(function (a, b) {
         return new Date(a.pubDate || 0) - new Date(b.pubDate || 0);
       });
     }
     /* newest is already sorted by the API */
 
     state.filtered = filtered;
-    state.page = 1;  // reset to first page on any filter/sort change
+    state.page = 1;
 
     var countEl = document.getElementById('feed-count');
     if (countEl) countEl.textContent = filtered.length + ' article' + (filtered.length !== 1 ? 's' : '');
@@ -453,24 +405,10 @@
 
   /* ── Wire up controls ───────────────────────────────────────────────────── */
   function bindControls() {
-    /* Source filter buttons */
-    document.querySelectorAll('.feed-source-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.feed-source-btn').forEach(function(b) {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
-        });
-        this.classList.add('active');
-        this.setAttribute('aria-pressed', 'true');
-        state.sourceFilter = this.getAttribute('data-source');
-        applyAndRender();
-      });
-    });
-
     /* Sort buttons */
-    document.querySelectorAll('.feed-sort-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.feed-sort-btn').forEach(function(b) {
+    document.querySelectorAll('.feed-sort-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.feed-sort-btn').forEach(function (b) {
           b.classList.remove('active');
           b.setAttribute('aria-pressed', 'false');
         });
@@ -484,7 +422,7 @@
     /* Brand dropdown */
     var sel = document.getElementById('feed-brand-filter');
     if (sel) {
-      sel.addEventListener('change', function() {
+      sel.addEventListener('change', function () {
         state.brandFilter = this.value;
         syncWidgetActive();
         applyAndRender();
@@ -502,7 +440,7 @@
       function onSearchChange() {
         clearTimeout(searchTimer);
         var val = srch.value;
-        searchTimer = setTimeout(function() {
+        searchTimer = setTimeout(function () {
           var q = val.trim();
           if (q === state.searchQuery) return;
           state.searchQuery = q;
@@ -516,25 +454,20 @@
     /* Clear button */
     var clr = document.getElementById('feed-clear');
     if (clr) {
-      clr.addEventListener('click', function() {
-        state.brandFilter  = '';
-        state.searchQuery  = '';
-        state.sort         = 'newest';
-        state.sourceFilter = '';
+      clr.addEventListener('click', function () {
+        state.brandFilter = '';
+        state.searchQuery = '';
+        state.sort        = 'newest';
         var srch = document.getElementById('feed-search');
         if (srch) srch.value = '';
         if (csBrand) { csBrand.setValue(''); } else {
-          var sel = document.getElementById('feed-brand-filter');
-          if (sel) sel.value = '';
+          var s = document.getElementById('feed-brand-filter');
+          if (s) s.value = '';
         }
-        document.querySelectorAll('.feed-sort-btn').forEach(function(b) {
-          b.classList.toggle('active', b.getAttribute('data-sort') === 'newest');
-          b.setAttribute('aria-pressed', b.getAttribute('data-sort') === 'newest' ? 'true' : 'false');
-        });
-        document.querySelectorAll('.feed-source-btn').forEach(function(b) {
-          var isAll = b.getAttribute('data-source') === '';
-          b.classList.toggle('active', isAll);
-          b.setAttribute('aria-pressed', isAll ? 'true' : 'false');
+        document.querySelectorAll('.feed-sort-btn').forEach(function (b) {
+          var isNewest = b.getAttribute('data-sort') === 'newest';
+          b.classList.toggle('active', isNewest);
+          b.setAttribute('aria-pressed', isNewest ? 'true' : 'false');
         });
         syncWidgetActive();
         applyAndRender();
@@ -546,87 +479,31 @@
   function init() {
     if (!document.getElementById('feed-list')) return;
 
-    // Pre-set source filter from URL param (?source=dormied)
-    try {
-      var urlSource = new URLSearchParams(window.location.search).get('source');
-      if (urlSource === 'dormied' || urlSource === 'external') {
-        state.sourceFilter = urlSource;
-      }
-    } catch (e) {}
-
     bindControls();
 
-    // Sync source filter buttons to match pre-set state
-    if (state.sourceFilter) {
-      document.querySelectorAll('.feed-source-btn').forEach(function(b) {
-        var isActive = b.getAttribute('data-source') === state.sourceFilter;
-        b.classList.toggle('active', isActive);
-        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-      });
-    }
-
-    if (isLocalDev()) {
-      state.articles = MOCK_ARTICLES;
-      var allBrands  = getAllBrands();
-      var top        = computeTopBrands(state.articles);
-      renderTopBrandsWidget(top);
-      populateBrandDropdown(top, allBrands);
-      applyAndRender();
-      return;
-    }
-
-    /* Show loading state */
     var el = document.getElementById('feed-list');
-    if (el) el.innerHTML = '<p class="feed-empty">Loading articles…</p>';
+    if (el) el.innerHTML = '<p class="feed-empty">Loading articles\u2026</p>';
 
-    /* Fetch both external feed and DORMIED originals in parallel */
-    var externalPromise = (function() {
-      var cached = getCached();
-      if (cached) return Promise.resolve(cached);
-      return fetch(FEED_API)
-        .then(function(r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        })
-        .then(function(data) { setCache(data); return data; });
-    })();
+    fetch(DORMIED_API)
+      .then(function (r) { return r.ok ? r.json() : Promise.reject('HTTP ' + r.status); })
+      .then(function (data) {
+        var raw = (data && data.articles) || [];
 
-    var dormiedPromise = fetch(DORMIED_API)
-      .then(function(r) { return r.ok ? r.json() : { articles: [] }; })
-      .catch(function() { return { articles: [] }; });
-
-    Promise.all([externalPromise, dormiedPromise])
-      .then(function(results) {
-        var external = (results[0] && results[0].articles) || [];
-        var dormied  = (results[1] && results[1].articles) || [];
-
-        // Merge: DORMIED first, then external
-        // Dedup by: (1) source URL match, (2) first 60 chars of title match
-        var dormiedSourceUrls = {};
-        var dormiedTitlePrefixes = {};
-        dormied.forEach(function(a) {
-          if (a.sourceUrl) dormiedSourceUrls[a.sourceUrl] = true;
-          var prefix = (a.title || '').toLowerCase().trim().slice(0, 60);
-          if (prefix) dormiedTitlePrefixes[prefix] = true;
-        });
-        var externalDeduped = external.filter(function(a) {
-          if (a.url && dormiedSourceUrls[a.url]) return false;
-          var prefix = (a.title || '').toLowerCase().trim().slice(0, 60);
-          return !dormiedTitlePrefixes[prefix];
-        });
-        var merged = dormied.concat(externalDeduped).sort(function(a, b) {
-          return new Date(b.pubDate || 0) - new Date(a.pubDate || 0);
+        // Ensure author is populated
+        state.articles = raw.map(function (a) {
+          return Object.assign({}, a, {
+            author: a.author || authorFromCategory(a.category)
+          });
         });
 
-        state.articles = merged;
-        var allBrands  = getAllBrands();
-        var top        = computeTopBrands(state.articles);
+        var allBrands = getAllBrands();
+        var top       = computeTopBrands(state.articles);
         renderTopBrandsWidget(top);
-        populateBrandDropdown(top, allBrands);
+        populateBrandDropdown(allBrands);
         applyAndRender();
       })
-      .catch(function(err) {
-        console.warn('[feed-page.js] Could not load feed:', err);
+      .catch(function (err) {
+        console.warn('[feed-page.js] Could not load articles:', err);
         var el = document.getElementById('feed-list');
         if (el) el.innerHTML = '<p class="feed-empty">Could not load articles. Please try again later.</p>';
       });

@@ -115,7 +115,7 @@ const SYSTEM_PROMPT = `You are a sharp, opinionated golf industry analyst writin
 function buildUserPrompt(params, newsContext, retry = false) {
   const { name, rank, di, vsMonth, mom, yoy, bestRank, bestMonth, category, topMarket } = params;
 
-  const base = `Write a 1 to 3 sentence editorial take on the current state of ${name} based on the following data and any recent news you can find about the brand.
+  const base = `Write a 300 to 500 word editorial analysis of the current state of ${name} based on the following data and any recent news you can find about the brand. This will appear as "The Read" — a substantive brand intelligence take that gives readers something worth reading, not just a one-liner.
 
 Data context:
 * Current global rank: ${rank} out of 169
@@ -128,16 +128,15 @@ Data context:
 * Strongest market: ${topMarket}
 ${newsContext}
 
-Write your response as a direct editorial statement. Start with the most interesting or telling observation about this brand right now. Be specific where the data or news supports it. Be opinionated. If a brand is clearly on a sustained decline say so. If a brand is quietly building momentum say so. If a brand is stubbornly holding the same position month after month say that too. A dry one liner is welcome when the situation genuinely calls for it, but do not reach for a joke when a straight observation is sharper. One to three sentences maximum. No preamble. No meta commentary. Just the take.
+Write your response as a substantive editorial analysis. Start with the most interesting or telling observation about this brand right now. Then expand on it: what has driven their current position, what the trend data says about where they are headed, how they compare to their category, and what it means for golfers who follow this brand or play their products. Be specific where the data or news supports it. Be opinionated. Do not sit on the fence.
 
-A few examples of the tone you are going for:
-Good: Still the most searched putter brand in golf. Scotty Cameron does not need to do much to stay relevant, which is either a tribute to the brand or an indictment of how little the putter market moves.
-Good: Jumped 174% in February and the data is not subtle about why. One viral putting clip and a wave of GolfWRX threads later, the waitlist is longer than ever.
-Good: Holding steady at 43rd for the third consecutive month. Not falling, not rising, just existing. There are worse places to be.
-Good: The apparel side is clearly carrying this brand right now. The equipment numbers have not kept pace with the hoodie.
-Bad: Wow, what a month for this brand! (forced enthusiasm)
-Bad: Interesting to note that search interest has declined. (filler)
-Bad: Based on recent data and news coverage... (disallowed)`;
+Structure (3-5 paragraphs, no headers, no bullet points):
+- Open with the sharpest observation you have about this brand right now
+- Develop the context: what explains their current position and recent trajectory
+- Analyse the trend: what the data says about where they are headed
+- Close with a forward-looking observation about what to watch
+
+A dry observation is welcome when it earns it, but never reach for a joke when a straight read is sharper. No preamble. No meta commentary. Write as if you already know this brand cold and are stating what you see plainly.`;
 
   if (retry) {
     return base + '\n\nYour previous response contained a disallowed phrase either at the start or in the body. Rewrite it starting directly with the editorial observation. Do not reference your research, search results, available information, or analysis process anywhere in the response. No preamble. No meta commentary.';
@@ -151,7 +150,7 @@ Bad: Based on recent data and news coverage... (disallowed)`;
 async function callClaude(client, userPrompt) {
   const response = await client.messages.create({
     model:      'claude-opus-4-5',
-    max_tokens: 300,
+    max_tokens: 1000,
     system:     SYSTEM_PROMPT,
     messages:   [{ role: 'user', content: userPrompt }],
   });
