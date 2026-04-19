@@ -368,8 +368,9 @@
 
     fetchDormiedArticles(brandId, BRAND_LIMIT, function (articles) {
       if (!articles.length) {
-        listEl.innerHTML = '<p class="latest-feed-loading">No recent articles about ' +
-                           escHtml(brandDisplayName || brandId) + '.</p>';
+        listEl.innerHTML = '<p class="latest-feed-loading">No DORMIED coverage yet for ' +
+                           escHtml(brandDisplayName || brandId) +
+                           '. Check back soon or <a href="/news/" style="color:inherit">browse all coverage</a> on the News page.</p>';
         return;
       }
 

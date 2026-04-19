@@ -682,6 +682,10 @@
     const nameEl = document.getElementById('bp-name');
     nameEl.textContent = brand.name;
 
+    // Breadcrumb
+    const bcName = document.getElementById('bp-breadcrumb-name');
+    if (bcName) bcName.textContent = brand.name;
+
     // Heat icon (≥±5 rank movement)
     const prevRankMap = (() => {
       const vals = data.brands.map(b => ({
@@ -1027,9 +1031,13 @@
     // Cache key: brand + current month + version so it refreshes each new data cycle
     // v2: bumped to invalidate takes generated with incorrect rank data
     const cacheKey = `dormied_take_v2_${brand.id}_${cm}`;
+    const takeAuthor = (brand.category === 'Apparel & Footwear' || brand.category === 'Bags & Accessories') ? 'Adam' : 'Travis';
+    const attrEl     = document.getElementById('bp-take-attribution');
+
     const cached   = sessionStorage.getItem(cacheKey);
     if (cached) {
       textEl.textContent = cached;
+      if (attrEl) attrEl.textContent = `— ${takeAuthor}, DORMIED`;
       section.hidden = false;
       return;
     }
@@ -1070,6 +1078,7 @@
       if (take) {
         textEl.className   = 'bp-take-text';
         textEl.textContent = take;
+        if (attrEl) attrEl.textContent = `— ${takeAuthor}, DORMIED`;
         sessionStorage.setItem(cacheKey, take);
       } else {
         section.hidden = true;

@@ -358,6 +358,12 @@
     el.querySelectorAll('.feed-page-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         state.page = parseInt(this.dataset.page, 10);
+        var from = (state.page - 1) * PAGE_SIZE + 1;
+        var to   = Math.min(state.page * PAGE_SIZE, state.filtered.length);
+        var countEl = document.getElementById('feed-count');
+        if (countEl && state.filtered.length > PAGE_SIZE) {
+          countEl.textContent = 'Showing ' + from + '\u2013' + to + ' of ' + state.filtered.length + ' articles';
+        }
         renderFeedList(state.filtered.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE));
         renderPagination();
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -397,7 +403,16 @@
     state.page = 1;
 
     var countEl = document.getElementById('feed-count');
-    if (countEl) countEl.textContent = filtered.length + ' article' + (filtered.length !== 1 ? 's' : '');
+    if (countEl) {
+      var total = filtered.length;
+      if (total === 0) {
+        countEl.textContent = '0 articles';
+      } else if (total <= PAGE_SIZE) {
+        countEl.textContent = total + ' article' + (total !== 1 ? 's' : '');
+      } else {
+        countEl.textContent = 'Showing 1\u2013' + PAGE_SIZE + ' of ' + total + ' articles';
+      }
+    }
 
     renderFeedList(filtered.slice(0, PAGE_SIZE));
     renderPagination();

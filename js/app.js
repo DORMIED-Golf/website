@@ -750,6 +750,42 @@
     return rankMap;
   }
 
+  // ─── Category Leaders ─────────────────────────────────────────────────────
+  function renderCategoryLeaders(rankings) {
+    const el = document.getElementById('cat-leaders-grid');
+    if (!el) return;
+
+    // Find top-ranked brand per category
+    const seen = {};
+    const leaders = [];
+    rankings.forEach(function (b) {
+      const cat = b.category || 'Other';
+      if (!seen[cat]) {
+        seen[cat] = true;
+        leaders.push(b);
+      }
+    });
+
+    if (!leaders.length) return;
+
+    el.innerHTML = leaders.map(function (b) {
+      const momSign  = b.interestChange > 0 ? '+' : '';
+      const momClass = b.interestChange > 0 ? 'color:#4a7c4a' : b.interestChange < 0 ? 'color:#a04040' : 'color:#6b7a6b';
+      const momStr   = b.interestChange != null ? momSign + b.interestChange.toFixed(1) + '%' : '—';
+      const logoHtml = b.logo
+        ? `<img src="${b.logo.replace(/sz=\d+/, 'sz=32')}" alt="" style="width:32px;height:32px;object-fit:contain" loading="lazy" onerror="this.style.display='none'">`
+        : `<span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;background:rgba(255,255,255,.08);border-radius:4px">${(b.name||'').slice(0,2).toUpperCase()}</span>`;
+      return `<a href="/brands/${b.id}/" style="display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;text-decoration:none;color:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(255,255,255,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+        ${logoHtml}
+        <div style="min-width:0">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:var(--clr-muted,#6b7a6b);line-height:1;margin-bottom:.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.category || 'Other'}</div>
+          <div style="font-weight:600;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.name}</div>
+          <div style="font-size:.75rem;margin-top:.1rem"><span style="color:var(--clr-muted,#6b7a6b)">#${b.globalRank} &nbsp;</span><span style="${momClass}">${momStr}</span></div>
+        </div>
+      </a>`;
+    }).join('');
+  }
+
   // ─── Stats in hero ────────────────────────────────────────────────────────
   function updateHeroStats(rankings) {
     const totalEl = document.getElementById('stat-brands');
@@ -981,6 +1017,7 @@
     renderTable();
     updateHeroStats(state.rankings);
     renderScorecardBanner(state.rankings);
+    renderCategoryLeaders(state.rankings);
 
     // Expose for debugging
     window._dormied = state;

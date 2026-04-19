@@ -217,7 +217,11 @@
         "description":    issue.subtitle,
         "datePublished":  issue.dateISO,
         "image":          articleImg,
-        "publisher":      { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com" },
+        "author": [
+          { "@type": "Person", "name": "Travis", "url": "https://dormied.com/about/" },
+          { "@type": "Person", "name": "Adam",   "url": "https://dormied.com/about/" }
+        ],
+        "publisher":      { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com", "logo": { "@type": "ImageObject", "url": "https://dormied.com/images/dormied-logo-colour.png" } },
         "url":            "https://dormied.com/scorecard/" + issue.slug + "/",
         "breadcrumb": {
           "@type": "BreadcrumbList",
@@ -260,7 +264,7 @@
     if (subEl) subEl.textContent = issue.subtitle;
 
     var bylineEl = document.getElementById('sc-article-byline');
-    if (bylineEl) bylineEl.textContent = 'DORMIED  ·  ' + issue.date;
+    if (bylineEl) bylineEl.textContent = 'Adam & Travis  ·  ' + issue.date;
 
     // Populate image
     var imgEl = document.getElementById('sc-article-image');
