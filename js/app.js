@@ -780,7 +780,7 @@
         <div style="min-width:0">
           <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:var(--clr-muted,#6b7a6b);line-height:1;margin-bottom:.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.category || 'Other'}</div>
           <div style="font-weight:600;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.name}</div>
-          <div style="font-size:.75rem;margin-top:.1rem"><span style="color:var(--clr-muted,#6b7a6b)">#${b.globalRank} &nbsp;</span><span style="${momClass}">${momStr}</span></div>
+          <div style="font-size:.75rem;margin-top:.1rem"><span style="color:var(--clr-muted,#6b7a6b)">#${b.rank} &nbsp;</span><span style="${momClass}">${momStr}</span></div>
         </div>
       </a>`;
     }).join('');
