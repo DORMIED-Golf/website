@@ -1089,6 +1089,49 @@
     }
   }
 
+  // ─── Methodology note (below chart) ──────────────────────────────────────
+
+  function renderMethodologyNote(globalRank, di) {
+    const el = document.getElementById('bp-methodology-note');
+    if (!el) return;
+
+    const data     = window.DORMIED_DATA;
+    const cm       = data.meta.currentMonth;
+    const pm       = data.meta.previousMonth;
+
+    // Compute previous rank for MoM movement
+    const prevVals = data.brands.map(function (b) {
+      return { id: b.id, v: b.searchesByMarket && b.searchesByMarket.global && b.searchesByMarket.global[pm] || 0 };
+    }).sort(function (a, b) { return b.v - a.v; });
+    var prevRank = globalRank;
+    for (var i = 0; i < prevVals.length; i++) {
+      if (prevVals[i].id === brand.id) { prevRank = i + 1; break; }
+    }
+    const movement = prevRank - globalRank; // positive = moved up
+
+    // Movement phrase
+    var movPhrase;
+    if      (movement > 0) movPhrase = 'up ' + movement + ' spot' + (movement > 1 ? 's' : '') + ' from last month';
+    else if (movement < 0) movPhrase = 'down ' + Math.abs(movement) + ' spot' + (Math.abs(movement) > 1 ? 's' : '') + ' from last month';
+    else                   movPhrase = 'unchanged from last month';
+
+    // DI score context
+    var diContext;
+    if      (di >= 80) diContext = 'among the highest scores on the Index';
+    else if (di >= 50) diContext = 'placing it in the top half of the Index';
+    else if (di >= 20) diContext = 'a mid-tier position on the Index';
+    else               diContext = 'a smaller share of total golf search volume';
+
+    el.textContent = brand.name + ' holds a DORMIED Index (DI) Score of ' + di.toFixed(1) +
+      ' for ' + cm + ', ' + diContext + '. Its global rank of #' + globalRank + ' is ' +
+      movPhrase + '. DI Scores are calculated monthly from Google Trends data across 11 markets, ' +
+      'indexed to the highest-searched brand in each measurement window (= 100). ' +
+      'A score of ' + di.toFixed(1) + ' means ' + brand.name +
+      ' captures roughly ' + di.toFixed(0) + '% of the search volume of the most-searched brand in the current period.';
+
+    el.style.display = 'block';
+  }
+
   // ─── SEO ──────────────────────────────────────────────────────────────────
 
   function updateSEO(globalRank, di) {
@@ -1217,6 +1260,7 @@
     renderMarketTabs(marketStats);
     bindPeriodTabs();
     renderChart();
+    renderMethodologyNote(globalRank, di);
     renderCountryTable(marketStats);
     renderDominance(dominance);
     renderCategoryStanding(catData);

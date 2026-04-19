@@ -40,3 +40,6 @@ build/
 .htaccess
 _redirects
 .claude/
+
+# ── Script state files ────────────────────────────────────────────────────────
+.expand-descriptions-state.json

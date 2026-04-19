@@ -114,6 +114,46 @@
       margin-top: 8px;
     }
 
+    .about-team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2.5rem 0;
+      max-width: 720px;
+    }
+    @media (max-width: 560px) {
+      .about-team-grid { grid-template-columns: 1fr; }
+    }
+    .about-team-card {
+      background: #1a2218;
+      border: 1px solid #2a3528;
+      border-radius: 6px;
+      padding: 1.25rem;
+    }
+    .about-team-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--text);
+      margin: 0 0 .2rem;
+    }
+    .about-team-role {
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      color: var(--clr-green, #4a7c4a);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin: 0 0 .75rem;
+    }
+    .about-team-bio {
+      font-family: var(--font-body);
+      font-size: .85rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin: 0;
+    }
+
     /* Mobile padding */
     @media (max-width: 600px) {
       .about-section {
@@ -121,6 +161,28 @@
       }
     }
   </style>
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Travis",
+      "jobTitle": "Co-Founder",
+      "worksFor": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com/" },
+      "url": "https://dormied.com/about/",
+      "description": "Co-founder of DORMIED. Covers golf brand rankings, search trends, and equipment across 11 global markets."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Adam",
+      "jobTitle": "Co-Founder",
+      "worksFor": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com/" },
+      "url": "https://dormied.com/about/",
+      "description": "Co-founder of DORMIED. Covers golf apparel, footwear, bags, and accessories."
+    }
+  ]
+  </script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -261,9 +323,22 @@
 
           <p class="about-p">However you use it the idea is the same. Golf's brand story is one of the most interesting stories in sports right now. The legacy titans, the insurgent upstarts, the streetwear crossovers, the direct to consumer disruptors, the brands that have not launched yet but are coming. DORMIED is where that story gets told with actual data behind it.</p>
 
-          <p class="about-p">If there is a brand, market, or data point you want to see tracked, we want to hear about it. Reach out at <a href="mailto:dormiedgolf@gmail.com">dormiedgolf@gmail.com</a></p>
+          <p class="about-p">If there is a brand, market, or data point you want to see tracked, we want to hear about it. Reach out via the <a href="/contact/">contact page</a></p>
 
           <p class="about-closing">Our game has always rewarded the people who pay attention. We built this for them.</p>
+
+          <div class="about-team-grid">
+            <div class="about-team-card" itemscope itemtype="https://schema.org/Person">
+              <p class="about-team-name" itemprop="name">Travis</p>
+              <p class="about-team-role" itemprop="jobTitle">Co-Founder · Rankings &amp; Data</p>
+              <p class="about-team-bio" itemprop="description">Travis built the DORMIED Index and oversees the monthly rankings methodology, market data, and equipment coverage. He has tracked golf brand search trends since 2023 across 11 global markets.</p>
+            </div>
+            <div class="about-team-card" itemscope itemtype="https://schema.org/Person">
+              <p class="about-team-name" itemprop="name">Adam</p>
+              <p class="about-team-role" itemprop="jobTitle">Co-Founder · Apparel &amp; Culture</p>
+              <p class="about-team-bio" itemprop="description">Adam leads coverage of golf apparel, footwear, bags, and accessories. He writes about where golf style intersects with broader cultural trends — from heritage brands to streetwear crossovers.</p>
+            </div>
+          </div>
 
           <p class="about-sig">Adam &amp; Travis<br>DORMIED</p>
 
