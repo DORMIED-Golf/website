@@ -32,34 +32,83 @@ function loadBrands() {
   return data;
 }
 
-// ── Write updated descriptions back to data.js ────────────────────────────────
+// ── Write updated descriptions back to data.js via Python (safe for any content) ──
 function saveDescriptions(descMap) {
-  let content = fs.readFileSync(DATA_JS, 'utf8');
+  const { execFileSync } = require('child_process');
 
-  for (const [id, newDesc] of Object.entries(descMap)) {
-    // Match:  description: "...",
-    // We'll do a targeted replacement by looking for the brand id context
-    // Strategy: find the brand block via its id, then replace the description field
-    // This is safe because brand ids are unique slugs
-    const escaped = newDesc.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
+  // Build a JSON payload: {id: newDesc, ...}
+  const payload = JSON.stringify(descMap);
 
-    // Pattern: look for   id: "brand-id",  ...  description: "OLD",
-    // We'll use a simple line-by-line replacement approach
-    // Find the description line that appears after the brand id
-    const idPattern = new RegExp(
-      '(id:\\s*"' + escapeRegex(id) + '"[\\s\\S]*?description:\\s*")([^"]*(?:\\\\"[^"]*)*?)(")',
-      'g'
-    );
-    const before = content;
-    content = content.replace(idPattern, (match, pre, _old, post) => {
-      return pre + escaped + post;
+  // Use Python to do safe JS-string-aware replacements
+  const pyScript = `
+import sys, json, re
+
+data_js = sys.argv[1]
+desc_map = json.loads(sys.argv[2])
+
+with open(data_js, 'r', encoding='utf-8') as f:
+    content = f.read()
+
+def parse_js_string_end(s, start):
+    """Walk past the content of a JS string starting at 'start' (after opening quote).
+    Returns the index of the closing (unescaped) quote."""
+    i = start
+    while i < len(s):
+        c = s[i]
+        if c == '\\\\' and i + 1 < len(s):
+            i += 2
+        elif c == '"':
+            return i
+        else:
+            i += 1
+    return len(s)
+
+fixed = 0
+for brand_id, new_desc in desc_map.items():
+    # Find the brand's id field
+    id_marker = 'id: "' + brand_id + '"'
+    brand_pos = content.find(id_marker)
+    if brand_pos == -1:
+        print(f"  WARN: brand not found: {brand_id}", file=sys.stderr)
+        continue
+
+    # Find description: " after this brand
+    desc_marker = 'description: "'
+    desc_pos = content.find(desc_marker, brand_pos)
+    if desc_pos == -1:
+        print(f"  WARN: description not found for: {brand_id}", file=sys.stderr)
+        continue
+
+    desc_value_start = desc_pos + len(desc_marker)
+    closing_q = parse_js_string_end(content, desc_value_start)
+
+    # Escape the new description for JS string literal
+    escaped = (new_desc
+        .replace('\\\\', '\\\\\\\\')
+        .replace('"', '\\\\"')
+        .replace('\\n', '\\\\n'))
+
+    # Replace: keep everything up to and including 'description: "',
+    # insert new desc, then closing " and whatever follows (should be ,)
+    content = content[:desc_value_start] + escaped + content[closing_q:]
+    fixed += 1
+
+print(f"  Saved {fixed}/{len(desc_map)} descriptions", file=sys.stderr)
+
+with open(data_js, 'w', encoding='utf-8') as f:
+    f.write(content)
+`;
+
+  try {
+    execFileSync('python3', ['-c', pyScript, DATA_JS, payload], {
+      stdio: ['ignore', 'ignore', 'pipe'],
+      encoding: 'utf8',
     });
-    if (content === before) {
-      console.warn(`  ⚠️  Could not replace description for brand: ${id}`);
-    }
+  } catch (err) {
+    const stderr = err.stderr || '';
+    stderr.split('\n').filter(Boolean).forEach(l => process.stderr.write(l + '\n'));
+    throw new Error('saveDescriptions python3 failed: ' + err.message);
   }
-
-  fs.writeFileSync(DATA_JS, content, 'utf8');
 }
 
 function escapeRegex(s) {
@@ -170,8 +219,6 @@ async function main() {
 
   console.log(`Processing ${batches.length} batches of up to ${BATCH_SIZE} brands each\n`);
 
-  const descMap = {};
-
   for (let bi = 0; bi < batches.length; bi++) {
     const batch = batches[bi];
     console.log(`\n[Batch ${bi + 1}/${batches.length}] Processing: ${batch.map(b => b.name).join(', ')}`);
@@ -180,9 +227,11 @@ async function main() {
     while (attempts < 3) {
       try {
         const results = await callClaude(batch);
+        // Only save THIS batch's descriptions (not accumulated)
+        const batchDescMap = {};
         for (const r of results) {
           if (r.id && r.description) {
-            descMap[r.id] = r.description;
+            batchDescMap[r.id] = r.description;
             state.completed.push(r.id);
             console.log(`  ✓ ${r.id} — ${r.description.split(' ').length} words`);
           }
@@ -190,7 +239,7 @@ async function main() {
 
         // Save progress after each successful batch
         saveState(state);
-        saveDescriptions(descMap);
+        saveDescriptions(batchDescMap);
         console.log(`  ✅ Batch ${bi + 1} saved to data.js`);
         break;
 
