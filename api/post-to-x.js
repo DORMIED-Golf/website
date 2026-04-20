@@ -22,6 +22,7 @@ const { TwitterApi }   = require('twitter-api-v2');
 const POST_DELAY_MS     = 5000;  // 5 s between posts if multiple are queued
 const MIN_AGE_MINUTES   = 30;    // Wait this long after publish before posting
 const MAX_POSTS_PER_CALL = 5;    // Never post more than this per cron invocation
+const SITE_BASE_URL     = 'https://dormied.com';
 
 // ---------------------------------------------------------------------------
 // Inlined: lib/x-client.js
@@ -38,6 +39,28 @@ function getXClient() {
     accessToken:  X_ACCESS_TOKEN,
     accessSecret: X_ACCESS_TOKEN_SECRET,
   });
+}
+
+// ---------------------------------------------------------------------------
+// Page-live check — verify the article HTML is deployed before tweeting
+// ---------------------------------------------------------------------------
+
+async function isArticleLive(slug) {
+  const url = `${SITE_BASE_URL}/news/${slug}/`;
+  try {
+    const res = await fetch(url, {
+      method:  'HEAD',
+      signal:  AbortSignal.timeout(8000),
+      headers: { 'User-Agent': 'DORMIED-Bot/1.0' },
+      redirect: 'follow',
+    });
+    if (res.ok) return true;
+    console.warn(`[post-to-x] Page not live for "${slug}": HTTP ${res.status}`);
+    return false;
+  } catch (err) {
+    console.warn(`[post-to-x] Page-live check failed for "${slug}": ${err.message}`);
+    return false;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -259,6 +282,16 @@ module.exports = async (req, res) => {
     const validation = validateXPost(copySource, article);
     if (!validation.valid) {
       console.warn(`[post-to-x] Skipped "${article.title}": ${validation.reason}`);
+      results.skipped++;
+      continue;
+    }
+
+    // Safety check: confirm the article HTML page is actually live before tweeting.
+    // If the GitHub Actions push failed the HTML won't be deployed yet — skip for now
+    // and the next cron run will retry once the page is live.
+    const live = await isArticleLive(article.slug);
+    if (!live) {
+      console.warn(`[post-to-x] Skipped "${article.title}": page not yet live at /news/${article.slug}/`);
       results.skipped++;
       continue;
     }
