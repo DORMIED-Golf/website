@@ -53,7 +53,8 @@ module.exports = async (req, res) => {
     id:          a.id,
     title:       a.title,
     url:         `/news/${a.slug}/`,
-    author:      a.author || authorFromCategory(a.category),
+    // Always derive from category — the DB default ('Travis') is unreliable for existing rows
+    author:      authorFromCategory(a.category),
     sourceName:  'DORMIED',
     sourceId:    'dormied',
     pubDate:     a.published_at,
