@@ -958,7 +958,7 @@ async function main() {
         meta_description,
         seo_keywords:       seo_keywords || [],
         published_at:       publishedAt,
-        status:             'published',
+        status:             'draft', // promoted → 'published' by publish-articles.js after git push
         slug,
         category:           raw.category || 'Business',
         x_post_text:        x_post || null,

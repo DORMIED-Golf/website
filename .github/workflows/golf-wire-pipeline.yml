@@ -60,6 +60,8 @@ jobs:
 
       - name: Commit generated articles
         run: |
+          set -e  # Any failure in this step aborts it — publish step is skipped on failure
+
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -73,14 +75,24 @@ jobs:
             ARTICLE_COUNT=$(git diff --cached --name-only | grep "^news/" | grep "index.html" | wc -l | tr -d ' ')
             git commit -m "feat: add ${ARTICLE_COUNT} article(s) [skip ci]"
 
-            # Rebase onto latest remote before pushing — prevents push failures
-            # when local commits were made concurrently. New-file-only commits
-            # (news/ images/ sitemap.xml) have zero merge conflict risk.
-            git pull --rebase origin main
+            # Rebase onto latest remote before pushing.
+            # -X theirs auto-resolves add/add conflicts (identical new files from
+            # concurrent runs) without manual intervention.
+            git pull --rebase -X theirs origin main
 
             git push
             echo "Committed and pushed ${ARTICLE_COUNT} new article(s)."
           fi
+
+      - name: Publish articles (draft → published in Supabase)
+        # Runs only when the commit step succeeds (set -e ensures push failures
+        # cause the commit step to fail, which skips this step automatically).
+        # Only promotes articles whose HTML is confirmed committed to git,
+        # so articles can never appear in the feed before their page is live.
+        run: node scripts/publish-articles.js
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
       - name: Ping search engines
         if: success()
