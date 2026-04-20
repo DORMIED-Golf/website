@@ -42,7 +42,7 @@
   <!-- ── News Page ── -->
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-04-19</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1405,5 +1405,55 @@
       <image:loc>https://dormied.com/images/articles/foresight-sports-locks-down-another-tour-deal-while-its-cons-2026-04-19-hero.png</image:loc>
       <image:title>Foresight Sports Locks Down Another Tour Deal While Its Consumer Brand Flatlines</image:title>
     </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/full-swings-disappearing-act-from-tigers-garage-to-marriotts-2026-04-13/</loc>
+    <lastmod>2026-04-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/full-swings-disappearing-act-from-tigers-garage-to-marriotts-2026-04-13-hero.png</image:loc>
+      <image:title>Full Swing's Disappearing Act: From Tiger's Garage to Marriott's Marketing Copy</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/rory-mcilroy-puts-500k-behind-youth-golf-access-but-the-real-2026-04-08/</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/rory-mcilroy-puts-500k-behind-youth-golf-access-but-the-real-2026-04-08-hero.jpg</image:loc>
+      <image:title>Rory McIlroy Puts $500K Behind Youth Golf Access, But the Real Story Is Municipal Course Expansion</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/reggie-bushs-third-travismathew-drop-signals-the-brands-long-2026-04-17/</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/travismathew-and-peloton-team-up-to-chase-the-athleisure-cro-2026-04-17/</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/travismatthew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
