@@ -72,6 +72,12 @@ jobs:
           else
             ARTICLE_COUNT=$(git diff --cached --name-only | grep "^news/" | grep "index.html" | wc -l | tr -d ' ')
             git commit -m "feat: add ${ARTICLE_COUNT} article(s) [skip ci]"
+
+            # Rebase onto latest remote before pushing — prevents push failures
+            # when local commits were made concurrently. New-file-only commits
+            # (news/ images/ sitemap.xml) have zero merge conflict risk.
+            git pull --rebase origin main
+
             git push
             echo "Committed and pushed ${ARTICLE_COUNT} new article(s)."
           fi
