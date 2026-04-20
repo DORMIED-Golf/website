@@ -732,7 +732,7 @@ async function main() {
   // Step B: fetch IDs already generated (+ brand + date + title for dedup checks)
   const { data: existing, error: existErr } = await supabase
     .from('dormied_articles')
-    .select('matched_article_id, brand_slug, published_at, title');
+    .select('matched_article_id, brand_slug, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author');
 
   if (existErr) {
     console.error('[generate] Failed to fetch existing articles:', existErr.message);
@@ -740,6 +740,63 @@ async function main() {
   }
 
   const alreadyGenerated = new Set((existing || []).map(r => r.matched_article_id).filter(Boolean));
+
+  // ── Step B1: Backfill — regenerate HTML for any published article missing its file ──
+  // Catches cases where Supabase has the record but the HTML was never written to disk
+  // (e.g. script crashed after DB insert, or article was inserted manually).
+  const brandsMap = new Map((dormiedData.brands || []).map(b => [b.id, b]));
+  let backfilled = 0;
+  for (const row of existing || []) {
+    if (!row.slug || !row.body) continue;
+    const articlePath = path.join(SITE_ROOT, 'news', row.slug, 'index.html');
+    if (fs.existsSync(articlePath)) continue;
+
+    console.log(`[generate] Backfilling missing HTML: news/${row.slug}/index.html`);
+    try {
+      const bSlug    = row.brand_slug || '';
+      const brand    = brandsMap.get(bSlug) || {};
+      const bName    = brand.name || bSlug;
+      const bLogo    = brand.logo || '';
+      const author   = row.author || authorFromCategory(row.category);
+      const srcName  = row.source_name || getSourceName(row.source_url || '');
+      const bHtml    = bodyToHtml(row.body, bSlug, bName);
+      const rTime    = estimateReadTime(row.body);
+
+      const html = generateArticleHtml({
+        title:           row.title,
+        bodyHtml:        bHtml,
+        imageUrl:        row.image_url || '',
+        ogImageUrl:      row.image_url || 'https://dormied.com/images/og-image.jpg',
+        imageAlt:        `${bName} — ${row.category || 'Golf'}`,
+        slug:            row.slug,
+        category:        row.category || 'Business',
+        published_at:    row.published_at,
+        source_url:      row.source_url || '',
+        source_name:     srcName,
+        meta_description: row.meta_description || '',
+        seo_keywords:    row.seo_keywords || [],
+        brandSlug:       bSlug,
+        brandName:       bName,
+        brandLogo:       bLogo,
+        brandRank:       0,
+        brandDI:         0,
+        brandMom:        0,
+        brandTrend3m:    '—',
+        brandTrend12m:   '—',
+        readTime:        rTime,
+        author,
+      });
+
+      fs.mkdirSync(path.join(SITE_ROOT, 'news', row.slug), { recursive: true });
+      fs.writeFileSync(articlePath, html, 'utf8');
+      addToSitemap(row.slug, row.published_at, row.image_url || '', row.title || '');
+      console.log(`[generate] ✓ Backfilled: news/${row.slug}/index.html`);
+      backfilled++;
+    } catch (err) {
+      console.warn(`[generate] Backfill failed for "${row.slug}": ${err.message}`);
+    }
+  }
+  if (backfilled > 0) console.log(`[generate] Backfilled ${backfilled} missing article(s).`);
 
   // Build a list of recently generated article titles (last 14 days) for similarity check
   const TITLE_WINDOW_MS    = 14 * 24 * 60 * 60 * 1000;
