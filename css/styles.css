@@ -1812,8 +1812,15 @@ details[open] .faq-question::after { content: '−'; }
 }
 .bp-take-inner {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: 16px;
+}
+.bp-take-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
 }
 .bp-take-label-wrap {
   display: flex;
@@ -1840,9 +1847,9 @@ details[open] .faq-question::after { content: '−'; }
   white-space: nowrap;
 }
 .bp-take-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  line-height: 1.65;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
   color: var(--text-muted);
   margin: 0;
 }
@@ -3105,6 +3112,13 @@ details[open] .faq-question::after { content: '−'; }
 .feed-card-title--lg {
   font-size: .85rem;
   font-weight: 600;
+}
+.feed-card-byline {
+  font-size: .66rem;
+  line-height: 1.4;
+  color: var(--text-muted, #6b7a6b);
+  font-family: var(--font-mono);
+  margin: 2px 0 0;
 }
 .feed-card-excerpt {
   font-size: .72rem;
@@ -4929,6 +4943,7 @@ details[open] .faq-question::after { content: '−'; }
 }
 .da-mom-up   { color: var(--green) !important; }
 .da-mom-down { color: #e05a5a !important; }
+.da-mom-flat { color: var(--text-muted, #6b7a6b); }
 .da-brand-card-cta {
   display: inline-block;
   font-family: var(--font-mono);

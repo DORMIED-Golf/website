@@ -115,13 +115,12 @@
     }
 
     // All articles are DORMIED originals — always internal links
-    var byline = article.author ? 'By ' + escHtml(article.author) : 'DORMIED';
+    var byline = 'By ' + escHtml(article.author || 'Travis');
 
     return '<article class="feed-card feed-card--dormied">' +
       thumb +
       '<div class="feed-card-body">' +
         '<div class="feed-card-meta">' +
-          '<span class="feed-source feed-source--dormied">' + byline + '</span>' +
           '<span class="feed-time">' + escHtml(timeAgo(article.pubDate)) + '</span>' +
         '</div>' +
         '<a href="' + escHtml(article.url) + '" class="feed-card-title"' +
@@ -133,6 +132,7 @@
            ' data-track-pubdate="' + escHtml(article.pubDate   || '') + '">' +
           escHtml(article.title) +
         '</a>' +
+        '<p class="feed-card-byline">' + byline + '</p>' +
         tags +
       '</div>' +
     '</article>';
@@ -170,13 +170,12 @@
     }
 
     // All articles are DORMIED originals — always internal links
-    var byline2 = article.author ? 'By ' + escHtml(article.author) : 'DORMIED';
+    var byline2 = 'By ' + escHtml(article.author || 'Travis');
 
     return '<article class="feed-card feed-card--full feed-card--dormied">' +
       thumb +
       '<div class="feed-card-body">' +
         '<div class="feed-card-meta">' +
-          '<span class="feed-source feed-source--dormied">' + byline2 + '</span>' +
           '<span class="feed-time">' + escHtml(timeAgo(article.pubDate)) + '</span>' +
         '</div>' +
         '<a href="' + escHtml(article.url) + '" class="feed-card-title feed-card-title--lg"' +
@@ -188,6 +187,7 @@
            ' data-track-pubdate="' + escHtml(article.pubDate   || '') + '">' +
           escHtml(article.title) +
         '</a>' +
+        '<p class="feed-card-byline">' + byline2 + '</p>' +
         excerpt +
         tags +
       '</div>' +
@@ -310,10 +310,17 @@
       if (dormied.length >= 3) {
         var allBrands = getAllBrands();
         var articles  = dormied.slice(0, HOME_LIMIT).map(function (row) {
+          // Derive author from the primary brand's category
+          var firstBrandId = row.brand_ids && row.brand_ids[0] || '';
+          var firstBrand   = null;
+          for (var j = 0; j < allBrands.length; j++) {
+            if (allBrands[j].id === firstBrandId) { firstBrand = allBrands[j]; break; }
+          }
+          var derivedAuthor = firstBrand ? authorFromCategory(firstBrand.category) : 'Travis';
           return {
             title:     row.title,
             url:       row.url,
-            author:    null,   // article_clicks has no author field; fallback to "DORMIED" byline
+            author:    derivedAuthor,
             pubDate:   row.pub_date || row.last_clicked || '',
             imageUrl:  row.image_url || null,
             brandIds:  row.brand_ids || [],

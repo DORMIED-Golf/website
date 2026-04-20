@@ -755,11 +755,14 @@
     const el = document.getElementById('cat-leaders-grid');
     if (!el) return;
 
-    // Find top-ranked brand per category
+    // Only show the 4 pure single-category leaders — no multi-category brands
+    const PURE_CATS = ['Clubs & Balls', 'Apparel & Footwear', 'Bags & Accessories', 'Tech & Training Aids'];
     const seen = {};
     const leaders = [];
     rankings.forEach(function (b) {
-      const cat = b.category || 'Other';
+      const cat = b.category || '';
+      // Skip multi-category brands (contain semicolons) or unmapped categories
+      if (!PURE_CATS.includes(cat)) return;
       if (!seen[cat]) {
         seen[cat] = true;
         leaders.push(b);

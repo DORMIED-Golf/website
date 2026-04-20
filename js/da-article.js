@@ -1,9 +1,10 @@
 /* ─────────────────────────────────────────────────────────────────────────
    da-article.js  —  DORMIED Article Page Enhancements
    Populates "More on [Brand]" and "Latest from DORMIED" bottom sections,
-   and injects the brand logo into the brand card.
+   injects the brand logo, and dynamically populates the brand stats widget.
    Depends on: window.__DA_BRAND_SLUG__ and window.__DA_ARTICLE_SLUG__
    set inline by the article page template.
+   Also depends on: window.DORMIED_DATA (loaded via data.js) for brand stats.
    ───────────────────────────────────────────────────────────────────────── */
 
 (function () {
@@ -56,7 +57,6 @@
       thumb +
       '<div class="feed-card-body">' +
         '<div class="feed-card-meta">' +
-          '<span class="feed-source feed-source--dormied">DORMIED</span>' +
           '<span class="feed-time">' + escHtml(timeAgo(a.published_at)) + '</span>' +
         '</div>' +
         '<a href="/news/' + escHtml(a.slug) + '/" class="feed-card-title">' + escHtml(a.title) + '</a>' +
@@ -91,12 +91,104 @@
     }
   }
 
+  /* ── Compute and populate brand stats widget from DORMIED_DATA ─────────── */
+  function populateBrandStats(brandSlug) {
+    var statsEl = document.querySelector('.da-brand-card-stats');
+    if (!statsEl || !brandSlug) return;
+
+    var data = window.DORMIED_DATA;
+    if (!data || !data.brands || !data.meta) return;
+
+    // Find brand
+    var brand = null;
+    for (var i = 0; i < data.brands.length; i++) {
+      if (data.brands[i].id === brandSlug) { brand = data.brands[i]; break; }
+    }
+    if (!brand) return;
+
+    var cm    = data.meta.currentMonth;
+    var pm    = data.meta.previousMonth;
+
+    // Helper: shift month label by delta months
+    var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    function shiftMonth(label, delta) {
+      var parts = label.split(' ');
+      var total = parseInt(parts[1]) * 12 + MONTHS.indexOf(parts[0]) + delta;
+      return MONTHS[((total % 12) + 12) % 12] + ' ' + Math.floor(total / 12);
+    }
+
+    var ago3m = shiftMonth(cm, -3);
+    var ya    = shiftMonth(cm, -12);
+
+    var g = (brand.searchesByMarket && brand.searchesByMarket.global) || {};
+    var cur  = g[cm]    || 0;
+    var prev = g[pm]    || 0;
+    var a3   = g[ago3m] || 0;
+    var a12  = g[ya]    || 0;
+
+    // Compute global rank and DI score
+    var allCur = data.brands.map(function(b) {
+      return { id: b.id, v: (b.searchesByMarket && b.searchesByMarket.global && b.searchesByMarket.global[cm]) || 0 };
+    });
+    var maxVal = 0;
+    allCur.forEach(function(x) { if (x.v > maxVal) maxVal = x.v; });
+
+    // Sort with tiebreaker (prev month) — same as brand.js
+    var allPrev = {};
+    data.brands.forEach(function(b) {
+      allPrev[b.id] = (b.searchesByMarket && b.searchesByMarket.global && b.searchesByMarket.global[pm]) || 0;
+    });
+    allCur.sort(function(a, b) {
+      var diff = b.v - a.v;
+      if (Math.abs(diff) > 0.0001) return diff;
+      return (allPrev[b.id] || 0) - (allPrev[a.id] || 0);
+    });
+
+    var rank = 1;
+    for (var j = 0; j < allCur.length; j++) {
+      if (allCur[j].id === brandSlug) { rank = j + 1; break; }
+    }
+
+    var di = maxVal > 0 ? (cur / maxVal * 100) : 0;
+
+    // M/M change
+    function fmtPct(val) {
+      if (val === null || val === undefined) return '—';
+      var sign = val >= 0 ? '+' : '';
+      return sign + val.toFixed(1) + '%';
+    }
+    function pctClass(val) {
+      if (val === null || val === undefined) return '';
+      if (val > 0.05) return 'da-mom-up';
+      if (val < -0.05) return 'da-mom-down';
+      return 'da-mom-flat';
+    }
+
+    var mom  = prev  > 0 ? (cur - prev) / prev * 100 : null;
+    var t3m  = a3    > 0 ? (cur - a3)   / a3   * 100 : null;
+    var t12m = a12   > 0 ? (cur - a12)  / a12  * 100 : null;
+
+    var momStr  = prev  > 0 ? fmtPct(mom)  : '—';
+    var t3mStr  = a3    > 0 ? fmtPct(t3m)  : '—';
+    var t12mStr = a12   > 0 ? fmtPct(t12m) : '—';
+
+    statsEl.innerHTML =
+      '<div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">#' + rank + '</span></div>' +
+      '<div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">' + di.toFixed(1) + '</span></div>' +
+      '<div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val ' + pctClass(mom) + '">' + escHtml(momStr) + '</span></div>' +
+      '<div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val">' + escHtml(t3mStr) + '</span></div>' +
+      '<div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val">' + escHtml(t12mStr) + '</span></div>';
+  }
+
   function init() {
     var brandSlug   = window.__DA_BRAND_SLUG__   || '';
     var articleSlug = window.__DA_ARTICLE_SLUG__ || '';
 
     /* ── Brand logo ── */
     injectBrandLogo(brandSlug);
+
+    /* ── Brand stats (dynamic from DORMIED_DATA) ── */
+    populateBrandStats(brandSlug);
 
     /* ── More on [Brand] ── */
     var moreEl      = document.getElementById('da-more-brand-list');
