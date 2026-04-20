@@ -781,7 +781,7 @@
       return `<a href="/brands/${b.id}/" style="display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;text-decoration:none;color:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(255,255,255,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
         ${logoHtml}
         <div style="min-width:0">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:var(--clr-muted,#6b7a6b);line-height:1;margin-bottom:.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.category || 'Other'}</div>
+          <div style="font-family:var(--font-mono,'JetBrains Mono',monospace);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted,#6b7a6b);line-height:1;margin-bottom:.25rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.category || 'Other'}</div>
           <div style="font-weight:600;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.name}</div>
           <div style="font-size:.75rem;margin-top:.1rem"><span style="color:var(--clr-muted,#6b7a6b)">#${b.rank} &nbsp;</span><span style="${momClass}">${momStr}</span></div>
         </div>
