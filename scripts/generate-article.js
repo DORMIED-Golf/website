@@ -798,12 +798,20 @@ async function main() {
   }
   if (backfilled > 0) console.log(`[generate] Backfilled ${backfilled} missing article(s).`);
 
-  // Build a list of recently generated article titles (last 14 days) for similarity check
-  const TITLE_WINDOW_MS    = 14 * 24 * 60 * 60 * 1000;
-  const recentTitles = (existing || [])
+  // Build a list of recently generated article titles (last 30 days) for similarity check
+  const TITLE_WINDOW_MS    = 30 * 24 * 60 * 60 * 1000;
+  const recentArticles = (existing || [])
     .filter(r => r.title && r.published_at &&
-      (Date.now() - new Date(r.published_at)) < TITLE_WINDOW_MS)
-    .map(r => r.title);
+      (Date.now() - new Date(r.published_at)) < TITLE_WINDOW_MS);
+  const recentTitles = recentArticles.map(r => r.title);
+
+  // Build brand → [keyword sets] map for same-brand topic dedup
+  const brandRecentKeywords = {};
+  for (const r of recentArticles) {
+    if (!r.brand_slug || !r.title) continue;
+    if (!brandRecentKeywords[r.brand_slug]) brandRecentKeywords[r.brand_slug] = [];
+    brandRecentKeywords[r.brand_slug].push(titleKeywords(r.title));
+  }
 
   // Build a map of brand_slug → most recent published_at among already-generated articles
   // so we can skip generating another article for the same brand within 3 days
@@ -818,7 +826,7 @@ async function main() {
   }
 
   // Step C: filter in JS, cap at MAX
-  const BRAND_COOLDOWN_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
+  const BRAND_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000; // 7 days — prevents same-brand dupes across runs
   const matched = (allMatched || [])
     .filter(m => {
       if (alreadyGenerated.has(m.id)) return false;
@@ -826,20 +834,31 @@ async function main() {
         console.log(`[generate] Skipping denylisted brand: ${m.primary_brand_slug}`);
         return false;
       }
-      // Skip if we already generated an article for this brand in the last 3 days
+      // Skip if we already generated an article for this brand in the last 7 days
       const lastPub = brandLastPublished[m.primary_brand_slug];
       if (lastPub && (Date.now() - new Date(lastPub)) < BRAND_COOLDOWN_MS) {
         console.log(`[generate] Skipping duplicate: brand "${m.primary_brand_slug}" already has article from ${lastPub.slice(0,10)}`);
         return false;
       }
-      // Skip if the raw press release title is too similar to a recently generated article
-      // (catches same story covered by multiple sources — Golf Wire, Golf One Media, First Call, etc.)
       const rawTitle = m.golf_wire_raw?.title || '';
       if (rawTitle) {
-        const similar = recentTitles.find(t => titleSimilarity(rawTitle, t) >= 0.5);
+        // Skip if title is too similar to any recent article (lowered from 0.5 → 0.35)
+        const similar = recentTitles.find(t => titleSimilarity(rawTitle, t) >= 0.35);
         if (similar) {
           console.log(`[generate] Skipping similar story: "${rawTitle}" ≈ "${similar}"`);
           return false;
+        }
+        // Skip if same brand AND 2+ shared keywords with any recent article for that brand
+        // Catches same-topic stories with different titles (e.g. multiple sources covering one product launch)
+        const incomingKW = titleKeywords(rawTitle);
+        const brandKWHistory = brandRecentKeywords[m.primary_brand_slug] || [];
+        for (const pastKW of brandKWHistory) {
+          let shared = 0;
+          for (const w of incomingKW) if (pastKW.has(w)) shared++;
+          if (shared >= 2) {
+            console.log(`[generate] Skipping same-brand topic overlap: "${rawTitle}" shares ${shared} keywords with recent article`);
+            return false;
+          }
         }
       }
       return true;

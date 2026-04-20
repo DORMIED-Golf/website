@@ -18,6 +18,9 @@
     { "source": "/news/:slug",        "destination": "/news/:slug/index.html" },
     { "source": "/news/:slug/",       "destination": "/news/:slug/index.html" }
   ],
+  "crons": [
+    { "path": "/api/post-to-x", "schedule": "*/30 * * * *" }
+  ],
   "functions": {
     "api/feed.js":              { "maxDuration": 15 },
     "api/subscribe.js":         { "maxDuration": 10 },
