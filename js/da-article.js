@@ -176,8 +176,8 @@
       '<div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">#' + rank + '</span></div>' +
       '<div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">' + di.toFixed(1) + '</span></div>' +
       '<div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val ' + pctClass(mom) + '">' + escHtml(momStr) + '</span></div>' +
-      '<div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val">' + escHtml(t3mStr) + '</span></div>' +
-      '<div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val">' + escHtml(t12mStr) + '</span></div>';
+      '<div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val ' + pctClass(t3m) + '">' + escHtml(t3mStr) + '</span></div>' +
+      '<div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val ' + pctClass(t12m) + '">' + escHtml(t12mStr) + '</span></div>';
   }
 
   function init() {
