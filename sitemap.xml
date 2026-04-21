@@ -1551,4 +1551,26 @@
     <changefreq>never</changefreq>
     <priority>0.7</priority>
   </url>
+
+  <url>
+    <loc>https://dormied.com/news/why-golfs-most-expensive-polo-might-actually-be-worth-it-2026-04-21/</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/why-golfs-most-expensive-polo-might-actually-be-worth-it-2026-04-21-hero.jpg</image:loc>
+      <image:title>Why Golf's Most Expensive Polo Might Actually Be Worth It</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/payntrs-min-woo-lee-signature-shoe-nearly-tops-mygolfspys-20-2026-04-21/</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/payntrs-min-woo-lee-signature-shoe-nearly-tops-mygolfspys-20-2026-04-21-hero.jpg</image:loc>
+      <image:title>PAYNTR's Min Woo Lee Signature Shoe Nearly Tops MyGolfSpy's 2026 Spiked Rankings</image:title>
+    </image:image>
+  </url>
 </urlset>
