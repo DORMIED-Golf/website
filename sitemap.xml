@@ -42,7 +42,7 @@
   <!-- ── News Page ── -->
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1543,5 +1543,12 @@
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/under-armour-golf-is-losing-its-territory-reps-to-brands-you-2026-04-20-hero.png</image:loc>
       <image:title>Under Armour Golf Is Losing Its Territory Reps to Brands You've Never Heard Of</image:title>
     </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/when-your-press-release-gets-hijacked-by-a-swedish-cybersecu-2026-04-21/</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
