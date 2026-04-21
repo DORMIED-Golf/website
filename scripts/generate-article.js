@@ -661,7 +661,8 @@ function generateArticleHtml(opts) {
   </script>
   <script src="/js/analytics.js?v=20260320a"></script>
   <script src="/js/signup.js?v=20260324d"></script>
-  <script src="/js/da-article.js?v=20260411"></script>
+  <script src="/js/data.js?v=20260419b"></script>
+  <script src="/js/da-article.js?v=20260419d"></script>
 
 </body>
 </html>`;
