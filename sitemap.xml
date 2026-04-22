@@ -42,7 +42,7 @@
   <!-- ── News Page ── -->
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1608,6 +1608,17 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/fitzpatricks-playoff-win-over-scheffler-is-the-best-ad-arcco-2026-04-21-hero.png</image:loc>
       <image:title>Fitzpatrick's Playoff Win Over Scheffler Is the Best Ad Arccos Could Buy</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/puma-golfs-gumtree-collab-is-a-bet-that-golfers-want-to-slow-2026-04-22/</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/puma-golfs-gumtree-collab-is-a-bet-that-golfers-want-to-slow-2026-04-22-hero.png</image:loc>
+      <image:title>Puma Golf's Gumtree Collab Is a Bet That Golfers Want to Slow Down</image:title>
     </image:image>
   </url>
 </urlset>
