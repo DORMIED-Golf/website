@@ -1708,4 +1708,15 @@
     <changefreq>never</changefreq>
     <priority>0.7</priority>
   </url>
+
+  <url>
+    <loc>https://dormied.com/news/cobras-optm-lineup-has-a-problem-no-one-is-talking-about-2026-04-23/</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/cobras-optm-lineup-has-a-problem-no-one-is-talking-about-2026-04-23-hero.jpg</image:loc>
+      <image:title>Cobra's OPTM Lineup Has a Problem No One Is Talking About</image:title>
+    </image:image>
+  </url>
 </urlset>
