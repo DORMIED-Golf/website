@@ -42,7 +42,7 @@
   <!-- ── News Page ── -->
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-04-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1674,6 +1674,17 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/pukkas-corduroy-play-signals-where-golf-headwear-is-headed-i-2026-04-22-hero.jpg</image:loc>
       <image:title>Pukka's Corduroy Play Signals Where Golf Headwear Is Headed in 2026</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/true-linkswear-is-banking-on-nhl-personality-over-golf-perfo-2026-04-22/</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/true-linkswear-is-banking-on-nhl-personality-over-golf-perfo-2026-04-22-hero.png</image:loc>
+      <image:title>TRUE Linkswear Is Banking on NHL Personality Over Golf Performance</image:title>
     </image:image>
   </url>
 </urlset>
