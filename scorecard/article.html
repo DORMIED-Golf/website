@@ -207,7 +207,6 @@
 
   <!-- ══ SCRIPTS ═══════════════════════════════════════════════════════════ -->
   <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263" crossorigin="anonymous"></script>
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/data.min.js?v=20260408"></script>
   <script defer src="/js/scorecard-data.min.js?v=20260408"></script>
@@ -217,7 +216,16 @@
 
 
   <script>
-    (function(){var s=document.querySelectorAll('.adsbygoogle');for(var i=0;i<s.length;i++){(adsbygoogle=window.adsbygoogle||[]).push({});}})();
+    window.addEventListener('load',function(){
+  var s=document.createElement('script');
+  s.async=true;s.crossOrigin='anonymous';
+  s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263';
+  document.head.appendChild(s);
+  s.onload=function(){
+    var ads=document.querySelectorAll('.adsbygoogle');
+    for(var i=0;i<ads.length;i++){(adsbygoogle=window.adsbygoogle||[]).push({});}
+  };
+});
   </script>
 </body>
 </html>

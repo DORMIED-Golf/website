@@ -35,4 +35,4 @@ Allow: /
 Sitemap: https://dormied.com/sitemap.xml
 
 # ── LLM context file ──────────────────────────────────────────────────────
-LLM-Info: https://dormied.com/llms.txt
+# LLM context file: https://dormied.com/llms.txt

@@ -481,7 +481,6 @@ function generateArticleHtml(opts) {
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-N4Q8J6L3');</script>
   <!-- End Google Tag Manager -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -560,12 +559,10 @@ function generateArticleHtml(opts) {
     <div class="ad-leaderboard tablet-ad">
       <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px"
            data-ad-client="ca-pub-5259693727609263" data-ad-slot="2855716557"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
     <div class="ad-mobile-banner mobile-ad">
       <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px"
            data-ad-client="ca-pub-5259693727609263" data-ad-slot="6216377061"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
   </div>
 
@@ -663,8 +660,7 @@ function generateArticleHtml(opts) {
                      style="display:inline-block;width:160px;height:600px"
                      data-ad-client="ca-pub-5259693727609263"
                      data-ad-slot="6935529969"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-              </div>
+                        </div>
             </div>
           </aside>
 
@@ -728,6 +724,18 @@ function generateArticleHtml(opts) {
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js"></script>
   <script src="/js/da-article.min.js?v=20260419d"></script>
+  <script>
+  window.addEventListener('load',function(){
+    var s=document.createElement('script');
+    s.async=true;s.crossOrigin='anonymous';
+    s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263';
+    document.head.appendChild(s);
+    s.onload=function(){
+      var ads=document.querySelectorAll('.adsbygoogle');
+      for(var i=0;i<ads.length;i++){(adsbygoogle=window.adsbygoogle||[]).push({});}
+    };
+  });
+  </script>
 
 </body>
 </html>`;

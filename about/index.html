@@ -381,7 +381,16 @@
   </script>
 
   <script>
-    (function(){var s=document.querySelectorAll('.adsbygoogle');for(var i=0;i<s.length;i++){(adsbygoogle=window.adsbygoogle||[]).push({});}})();
+    window.addEventListener('load',function(){
+  var s=document.createElement('script');
+  s.async=true;s.crossOrigin='anonymous';
+  s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263';
+  document.head.appendChild(s);
+  s.onload=function(){
+    var ads=document.querySelectorAll('.adsbygoogle');
+    for(var i=0;i<ads.length;i++){(adsbygoogle=window.adsbygoogle||[]).push({});}
+  };
+});
   </script>
 </body>
 </html>
