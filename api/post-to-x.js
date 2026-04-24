@@ -9,8 +9,7 @@
  * Protected by CRON_SECRET env var (set in Vercel project settings).
  * Articles must be at least 30 minutes old before posting (preview window).
  *
- * Images are uploaded directly via the X v1.1 media upload API so they
- * always appear inline on X — not relying on Twitter Card scraping.
+ * Posts text + URL only — Twitter Card scraping handles the image preview.
  *
  * Note: x-client and validate-x-post logic is inlined here so Vercel's
  * file tracer can bundle this single file without needing ../lib/ resolution.
@@ -64,71 +63,11 @@ async function isArticleLive(slug) {
 }
 
 // ---------------------------------------------------------------------------
-// Image fetching — tries Vercel CDN first, then Supabase URL fallback
+// Tweet posting — text + URL only (Twitter Card handles image preview)
 // ---------------------------------------------------------------------------
 
-async function fetchImageBuffer(slug, imageUrl) {
-  // 1. Try the locally-committed hero image served via Vercel CDN
-  //    (committed to images/articles/ by the GitHub Actions pipeline)
-  const exts = ['jpg', 'png', 'webp'];
-  for (const ext of exts) {
-    const cdnUrl = `https://dormied.com/images/articles/${slug}-hero.${ext}`;
-    try {
-      const res = await fetch(cdnUrl, {
-        signal:  AbortSignal.timeout(8000),
-        headers: { 'User-Agent': 'DORMIED-Bot/1.0' },
-      });
-      if (res.ok) {
-        const buffer   = Buffer.from(await res.arrayBuffer());
-        const mimeType = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg';
-        console.log(`[post-to-x] Image fetched from CDN: ${cdnUrl}`);
-        return { buffer, mimeType };
-      }
-    } catch { /* try next extension */ }
-  }
-
-  // 2. Fallback: try image_url stored in Supabase (original source or Supabase storage)
-  if (imageUrl) {
-    try {
-      const res = await fetch(imageUrl, {
-        signal:  AbortSignal.timeout(8000),
-        headers: { 'User-Agent': 'DORMIED-Bot/1.0' },
-      });
-      if (res.ok) {
-        const buffer   = Buffer.from(await res.arrayBuffer());
-        const ct       = res.headers.get('content-type') || 'image/jpeg';
-        const mimeType = ct.includes('png') ? 'image/png' : ct.includes('webp') ? 'image/webp' : 'image/jpeg';
-        console.log(`[post-to-x] Image fetched from Supabase URL: ${imageUrl}`);
-        return { buffer, mimeType };
-      }
-    } catch (err) {
-      console.warn(`[post-to-x] Image fallback fetch failed: ${err.message}`);
-    }
-  }
-
-  console.warn(`[post-to-x] No image available for slug: ${slug}`);
-  return null;
-}
-
-// ---------------------------------------------------------------------------
-// Tweet posting — with direct media upload when image is available
-// ---------------------------------------------------------------------------
-
-async function postTweet(text, imageBuffer, mimeType) {
+async function postTweet(text) {
   const client = getXClient();
-
-  if (imageBuffer) {
-    try {
-      const mediaId    = await client.v1.uploadMedia(imageBuffer, { mimeType });
-      const { data }   = await client.v2.tweet({ text, media: { media_ids: [mediaId] } });
-      console.log(`[post-to-x] Posted with image (media_id: ${mediaId})`);
-      return data; // { id: '...', text: '...' }
-    } catch (imgErr) {
-      // If image upload fails (e.g. size limit, format issue) fall back to text-only
-      console.warn(`[post-to-x] Image upload failed — falling back to text-only: ${imgErr.message}`);
-    }
-  }
-
   const { data } = await client.v2.tweet(text);
   return data;
 }
@@ -157,9 +96,14 @@ function assembleFinalPost(copy, slug) {
   return `${copy}\n\ndormied.com/news/${slug}`;
 }
 
-function fitCopy(copy, slug) {
-  const suffix  = `\n\ndormied.com/news/${slug}`;
-  const maxCopy = 280 - suffix.length;
+// Twitter wraps all URLs to t.co links counted as exactly 23 chars,
+// regardless of the actual URL length. Use that constant so the copy
+// budget is always correct, not based on the slug's real character count.
+const TWITTER_URL_LENGTH = 23;
+
+function fitCopy(copy, slug) { // eslint-disable-line no-unused-vars
+  // "\n\n" (2 chars) + t.co URL (23 chars) = 25 overhead → 255 chars for copy
+  const maxCopy = 280 - 2 - TWITTER_URL_LENGTH;
   if (copy.length <= maxCopy) return copy;
   const truncated = copy.slice(0, maxCopy).replace(/\s\S*$/, '');
   console.warn(`[validate-x-post] Truncated copy from ${copy.length} → ${truncated.length} chars`);
@@ -198,12 +142,15 @@ function validateXPost(postText, article) {
     }
   }
 
-  // 5. Length — fit within 280 chars
-  const fittedCopy = fitCopy(copy, slug);
-  const finalPost  = assembleFinalPost(fittedCopy, slug);
+  // 5. Length — fit within 280 Twitter-weighted chars
+  //    Twitter counts all URLs as 23 chars (t.co), so weighted length =
+  //    copy.length + 2 (\n\n) + 23 (t.co URL) — NOT finalPost.length
+  const fittedCopy    = fitCopy(copy, slug);
+  const finalPost     = assembleFinalPost(fittedCopy, slug);
+  const twitterLength = fittedCopy.length + 2 + TWITTER_URL_LENGTH;
 
-  if (finalPost.length > 280) {
-    return { valid: false, reason: `Post too long after truncation (${finalPost.length} chars)` };
+  if (twitterLength > 280) {
+    return { valid: false, reason: `Post too long after truncation (Twitter length: ${twitterLength} chars)` };
   }
 
   return { valid: true, text: finalPost };
@@ -247,7 +194,7 @@ module.exports = async (req, res) => {
   // Cap at MAX_POSTS_PER_CALL so we never dump an entire backlog in one cron run
   const { data: articles, error: queryErr } = await supabase
     .from('dormied_articles')
-    .select('id, slug, title, brand_slug, x_post_text, x_posted_at, image_url')
+    .select('id, slug, title, brand_slug, x_post_text, x_posted_at')
     .eq('status', 'published')
     .is('x_posted_at', null)
     .lte('published_at', cutoff)
@@ -296,16 +243,9 @@ module.exports = async (req, res) => {
       continue;
     }
 
-    // Fetch image for direct upload (guarantees it appears on X, not just Twitter Card)
-    const imgResult = await fetchImageBuffer(article.slug, article.image_url);
-
-    // Post to X
+    // Post to X — text + URL only; Twitter Card handles image preview
     try {
-      const tweet = await postTweet(
-        validation.text,
-        imgResult?.buffer  || null,
-        imgResult?.mimeType || null,
-      );
+      const tweet = await postTweet(validation.text);
       console.log(`[post-to-x] ✓ Posted: "${article.title}" → X post ID ${tweet.id}`);
 
       // Record the result in Supabase

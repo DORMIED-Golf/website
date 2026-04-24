@@ -135,13 +135,19 @@ function getBrandInfo(dormiedData, brandSlug) {
 
 function makeSlug(title, dateStr) {
   const datePart = dateStr.slice(0, 10); // YYYY-MM-DD
-  const titlePart = title
+  const MAX_TITLE = 75;
+  let titlePart = title
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .slice(0, 60)
-    .replace(/-$/, '');
+    .replace(/-+/g, '-');
+  if (titlePart.length > MAX_TITLE) {
+    titlePart = titlePart.slice(0, MAX_TITLE);
+    // Trim back to the last complete word — don't leave a partial word
+    const lastDash = titlePart.lastIndexOf('-');
+    if (lastDash > 0) titlePart = titlePart.slice(0, lastDash);
+  }
+  titlePart = titlePart.replace(/-$/, '');
   return `${titlePart}-${datePart}`;
 }
 

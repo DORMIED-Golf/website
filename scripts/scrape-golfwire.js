@@ -145,11 +145,20 @@ async function main() {
 
     if (!bodyText || bodyText.length < 50) { skipped++; continue; }
 
-    // Extract image: try content HTML first, then fetch og:image from source page
+    // Extract image: try content HTML first.
+    // If item.guid is a Golf Wire page URL (different from sourceUrl), try its og:image.
+    // We do NOT fall back to og:image from sourceUrl (the brand press release) because
+    // brand sites typically serve their logo as og:image, not the article's actual photo.
     let imageUrl = extractFirstImage(rawContent);
     if (!imageUrl) {
-      console.log(`[scrape] No image in RSS for "${item.title}" — fetching og:image…`);
-      imageUrl = await fetchOgImage(sourceUrl);
+      const guidUrl = (item.guid || '').trim();
+      if (guidUrl && guidUrl !== sourceUrl && guidUrl.includes('thegolfwire.com')) {
+        console.log(`[scrape] Trying og:image from Golf Wire page for "${item.title}"…`);
+        imageUrl = await fetchOgImage(guidUrl);
+      }
+    }
+    if (!imageUrl) {
+      console.log(`[scrape] No image found for "${item.title}" — will use default fallback`);
     }
 
     const category = inferCategory(item.title || '', bodyText);

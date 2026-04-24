@@ -117,14 +117,25 @@
       return MONTHS[((total % 12) + 12) % 12] + ' ' + Math.floor(total / 12);
     }
 
-    var ago3m = shiftMonth(cm, -3);
     var ya    = shiftMonth(cm, -12);
 
     var g = (brand.searchesByMarket && brand.searchesByMarket.global) || {};
     var cur  = g[cm]    || 0;
     var prev = g[pm]    || 0;
-    var a3   = g[ago3m] || 0;
     var a12  = g[ya]    || 0;
+
+    // 3M Trend: rolling avg of last 3 months vs prior 3 months — matches brand.js
+    var allMonthKeys = Object.keys(g).sort(function(a, b) {
+      var pa = parseInt(a.split(' ')[1]) * 12 + MONTHS.indexOf(a.split(' ')[0]);
+      var pb = parseInt(b.split(' ')[1]) * 12 + MONTHS.indexOf(b.split(' ')[0]);
+      return pa - pb;
+    });
+    var cmPos   = allMonthKeys.indexOf(cm);
+    var last3m  = allMonthKeys.slice(Math.max(0, cmPos - 2), cmPos + 1);
+    var prior3m = allMonthKeys.slice(Math.max(0, cmPos - 5), Math.max(0, cmPos - 2));
+    var l3avg   = last3m.length  > 0 ? last3m.reduce( function(s, m) { return s + (g[m] || 0); }, 0) / last3m.length  : 0;
+    var p3avg   = prior3m.length > 0 ? prior3m.reduce(function(s, m) { return s + (g[m] || 0); }, 0) / prior3m.length : 0;
+    var t3m     = p3avg > 0 ? (l3avg - p3avg) / p3avg * 100 : null;
 
     // Compute global rank and DI score
     var allCur = data.brands.map(function(b) {
@@ -164,13 +175,12 @@
       return 'da-mom-flat';
     }
 
-    var mom  = prev  > 0 ? (cur - prev) / prev * 100 : null;
-    var t3m  = a3    > 0 ? (cur - a3)   / a3   * 100 : null;
-    var t12m = a12   > 0 ? (cur - a12)  / a12  * 100 : null;
+    var mom  = prev > 0 ? (cur - prev) / prev * 100 : null;
+    var t12m = a12  > 0 ? (cur - a12)  / a12  * 100 : null;
 
-    var momStr  = prev  > 0 ? fmtPct(mom)  : '—';
-    var t3mStr  = a3    > 0 ? fmtPct(t3m)  : '—';
-    var t12mStr = a12   > 0 ? fmtPct(t12m) : '—';
+    var momStr  = prev > 0   ? fmtPct(mom)  : '—';
+    var t3mStr  = t3m !== null ? fmtPct(t3m) : '—';
+    var t12mStr = a12  > 0   ? fmtPct(t12m) : '—';
 
     statsEl.innerHTML =
       '<div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">#' + rank + '</span></div>' +
