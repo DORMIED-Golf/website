@@ -711,6 +711,10 @@ async function main() {
   const dormiedData = loadDormiedData();
   loadBrands(); // validate file exists
 
+  // --force-id=<golf_wire_matched uuid>  bypass all cooldown/dedup checks for one article
+  const forceArg = process.argv.find(a => a.startsWith('--force-id='));
+  const FORCE_IDS = forceArg ? new Set(forceArg.replace('--force-id=','').split(',')) : new Set();
+
   // Step A: fetch all matched articles (recent 50 is more than enough)
   const { data: allMatched, error: fetchErr } = await supabase
     .from('golf_wire_matched')
@@ -827,7 +831,7 @@ async function main() {
   }
 
   // Step C: filter in JS, cap at MAX
-  const BRAND_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000; // 7 days — prevents same-brand dupes across runs
+  const BRAND_COOLDOWN_MS = 2 * 24 * 60 * 60 * 1000; // 2 days — title similarity + keyword checks do the real dedup work
   const matched = (allMatched || [])
     .filter(m => {
       if (alreadyGenerated.has(m.id)) return false;
@@ -835,7 +839,12 @@ async function main() {
         console.log(`[generate] Skipping denylisted brand: ${m.primary_brand_slug}`);
         return false;
       }
-      // Skip if we already generated an article for this brand in the last 7 days
+      // --force-id bypasses all cooldown and dedup checks for specific articles
+      if (FORCE_IDS.has(m.id)) {
+        console.log(`[generate] Force-generating: ${m.id}`);
+        return true;
+      }
+      // Skip if we already generated an article for this brand in the last 2 days
       const lastPub = brandLastPublished[m.primary_brand_slug];
       if (lastPub && (Date.now() - new Date(lastPub)) < BRAND_COOLDOWN_MS) {
         console.log(`[generate] Skipping duplicate: brand "${m.primary_brand_slug}" already has article from ${lastPub.slice(0,10)}`);
@@ -866,11 +875,23 @@ async function main() {
     })
     .slice(0, MAX_ARTICLES_PER_RUN);
 
-  console.log(`[generate] ${matched.length} articles to generate (max ${MAX_ARTICLES_PER_RUN}/run)`);
+  // Deduplicate within this run: one article per brand (keeps first / highest-priority match)
+  const seenBrandsThisRun = new Set();
+  const matchedDeduped = matched.filter(m => {
+    if (FORCE_IDS.has(m.id)) return true; // forced articles always included
+    if (seenBrandsThisRun.has(m.primary_brand_slug)) {
+      console.log(`[generate] Skipping within-run duplicate brand: ${m.primary_brand_slug}`);
+      return false;
+    }
+    seenBrandsThisRun.add(m.primary_brand_slug);
+    return true;
+  });
+
+  console.log(`[generate] ${matchedDeduped.length} articles to generate (max ${MAX_ARTICLES_PER_RUN}/run)`);
 
   let generated = 0;
 
-  for (const match of matched) {
+  for (const match of matchedDeduped) {
     const raw = match.golf_wire_raw;
     if (!raw) { console.warn('[generate] No raw article for match:', match.id); continue; }
 

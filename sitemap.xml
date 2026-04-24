@@ -42,7 +42,7 @@
   <!-- ── News Page ── -->
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1691,6 +1691,61 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/odyssey-golfs-name-appears-in-film-streaming-news-but-the-br-2026-04-21-hero.jpg</image:loc>
       <image:title>Odyssey Golf's Name Appears in Film Streaming News, But the Brand Itself Remains Silent</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/titleists-quiet-play-becoming-the-authority-on-shaft-fitting-2026-04-23/</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/titleists-quiet-play-becoming-the-authority-on-shaft-fitting-2026-04-23-hero.jpg</image:loc>
+      <image:title>Titleist's Quiet Play: Becoming the Authority on Shaft Fitting Without Selling You a Shaft</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/the-best-golf-shoe-of-2026-is-a-collaboration-you-probably-c-2026-04-23/</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-best-golf-shoe-of-2026-is-a-collaboration-you-probably-c-2026-04-23-hero.jpg</image:loc>
+      <image:title>The Best Golf Shoe of 2026 Is a Collaboration You Probably Can't Buy</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/titleist-nearly-killed-its-best-golf-ball-heres-why-they-wal-2026-04-23/</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/titleist-nearly-killed-its-best-golf-ball-heres-why-they-wal-2026-04-23-hero.png</image:loc>
+      <image:title>Titleist Nearly Killed Its Best Golf Ball. Here's Why They Walked It Back.</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/why-pxg-is-quietly-building-a-retail-network-through-regiona-2026-04-22/</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/why-pxg-is-quietly-building-a-retail-network-through-regiona-2026-04-22-hero.jpg</image:loc>
+      <image:title>Why PXG Is Quietly Building a Retail Network Through Regional Fitters Instead of Big Box Stores</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/pxgs-quiet-expansion-into-regional-retail-reveals-a-brand-re-2026-04-22/</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/pxgs-quiet-expansion-into-regional-retail-reveals-a-brand-re-2026-04-22-hero.jpg</image:loc>
+      <image:title>PXG's Quiet Expansion Into Regional Retail Reveals a Brand Rethinking Its Distribution Playbook</image:title>
     </image:image>
   </url>
 </urlset>
