@@ -95,7 +95,7 @@
     var thumb = '';
     if (article.imageUrl) {
       thumb = '<img class="feed-card-thumb" src="' + escHtml(article.imageUrl) +
-              '" loading="lazy" alt="" onerror="this.remove()">';
+              '" width="400" height="250" loading="lazy" alt="" onerror="this.remove()">';
     }
 
     var tags = '';
@@ -143,7 +143,7 @@
     var thumb = '';
     if (article.imageUrl) {
       thumb = '<img class="feed-card-thumb feed-card-thumb--lg" src="' + escHtml(article.imageUrl) +
-              '" loading="lazy" alt="" onerror="this.remove()">';
+              '" width="600" height="375" loading="lazy" alt="" onerror="this.remove()">';
     }
 
     var excerpt = '';

@@ -45,7 +45,7 @@
   /* Render a card matching the site's feed-card style */
   function renderCard(a) {
     var thumb = a.image_url
-      ? '<img class="feed-card-thumb" src="' + escHtml(a.image_url) + '" loading="lazy" alt="" onerror="this.remove()">'
+      ? '<img class="feed-card-thumb" src="' + escHtml(a.image_url) + '" width="400" height="250" loading="lazy" alt="" onerror="this.remove()">'
       : '';
     var excerpt = '';
     if (a.meta_description) {

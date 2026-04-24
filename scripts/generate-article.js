@@ -22,6 +22,8 @@ const path             = require('path');
 const vm               = require('vm');
 const Anthropic        = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
+let   sharp;
+try { sharp = require('sharp'); } catch { sharp = null; }
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -400,6 +402,17 @@ async function uploadImageToSupabase(supabase, imageUrl, slug) {
     const localUrl = `https://dormied.com/images/articles/${slug}-hero.${ext}`;
     console.log(`[generate] Image saved locally: ${localPath}`);
 
+    // Generate WebP version for <picture> element (skip if source is already webp)
+    if (sharp && ext !== 'webp') {
+      try {
+        const webpPath = path.join(SITE_ROOT, 'images', 'articles', `${slug}-hero.webp`);
+        await sharp(buffer).resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 82 }).toFile(webpPath);
+        console.log(`[generate] WebP generated: ${webpPath}`);
+      } catch (webpErr) {
+        console.warn(`[generate] WebP conversion failed (continuing):`, webpErr.message);
+      }
+    }
+
     // Also upload to Supabase (used for in-article <img> display)
     const { error } = await supabase.storage
       .from('dormied-articles')
@@ -447,9 +460,17 @@ function generateArticleHtml(opts) {
     ? `<img src="${escHtml(brandLogo.replace(/sz=\d+/, 'sz=48'))}" alt="${escHtml(brandName)}" class="bp-logo-img" width="48" height="48" style="width:48px;height:48px" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${logoFallback}')">`
     : `<span class="bp-logo-initials" style="background:#1a2a1a;width:48px;height:48px;font-size:1rem">${escHtml(initials)}</span>`;
 
+  // Build WebP srcset path from local CDN URL (ogImageUrl = https://dormied.com/images/articles/{slug}-hero.{ext})
+  const webpSrcset = ogImageUrl
+    ? escHtml(ogImageUrl.replace(/https:\/\/dormied\.com/, '').replace(/\.(jpg|jpeg|png)$/i, '.webp'))
+    : null;
+
   const imageHtml = imageUrl
     ? `<div class="sc-article-image">
-        <img class="sc-article-hero-img" src="${escHtml(imageUrl)}" alt="${escHtml(imageAlt)}" loading="eager">
+        <picture>
+          ${webpSrcset ? `<source srcset="${webpSrcset}" type="image/webp">` : ''}
+          <img class="sc-article-hero-img" src="${escHtml(imageUrl)}" alt="${escHtml(imageAlt)}" width="1200" height="630" loading="eager">
+        </picture>
         <span class="da-image-credit">Image: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">${escHtml(source_name)}</a></span>
       </div>`
     : '';
@@ -501,9 +522,7 @@ function generateArticleHtml(opts) {
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
   <!-- ── Fonts ── -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
   <link rel="stylesheet" href="/css/styles.css?v=20260409">
@@ -705,10 +724,10 @@ function generateArticleHtml(opts) {
     window.__DA_BRAND_SLUG__   = '${escHtml(brandSlug)}';
     window.__DA_ARTICLE_SLUG__ = '${escHtml(slug)}';
   </script>
-  <script src="/js/analytics.js?v=20260320a"></script>
-  <script src="/js/signup.js?v=20260324d"></script>
-  <script src="/js/data.js?v=20260419b"></script>
-  <script src="/js/da-article.js?v=20260419d"></script>
+  <script src="/js/analytics.min.js?v=20260320a"></script>
+  <script src="/js/signup.min.js?v=20260324d"></script>
+  <script src="/js/brand-data/${escHtml(brandSlug)}.js"></script>
+  <script src="/js/da-article.min.js?v=20260419d"></script>
 
 </body>
 </html>`;

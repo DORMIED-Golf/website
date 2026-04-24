@@ -45,9 +45,7 @@
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
   <!-- ── Fonts ── -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
   <link rel="stylesheet" href="/css/styles.css?v=20260409">
@@ -85,12 +83,10 @@
     <div class="ad-leaderboard tablet-ad">
       <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px"
            data-ad-client="ca-pub-5259693727609263" data-ad-slot="2855716557"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
     <div class="ad-mobile-banner mobile-ad">
       <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px"
            data-ad-client="ca-pub-5259693727609263" data-ad-slot="6216377061"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
   </div>
 
@@ -139,7 +135,10 @@
           <div class="sc-article-main">
 
             <div class="sc-article-image">
-        <img class="sc-article-hero-img" src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21-hero.jpg" alt="Bridgestone Golf — Apparel" loading="eager">
+        <picture>
+          <source srcset="/images/articles/bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21-hero.webp" type="image/webp">
+          <img class="sc-article-hero-img" src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21-hero.jpg" alt="Bridgestone Golf — Apparel" width="1200" height="630" loading="eager">
+        </picture>
         <span class="da-image-credit">Image: <a href="https://thegolfwire.com/golf-ball-seminar-ing-spring-forum/" target="_blank" rel="noopener noreferrer">The Golf Wire</a></span>
       </div>
 
@@ -195,7 +194,6 @@
                      style="display:inline-block;width:160px;height:600px"
                      data-ad-client="ca-pub-5259693727609263"
                      data-ad-slot="6935529969"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
               </div>
             </div>
           </aside>
@@ -256,10 +254,14 @@
     window.__DA_BRAND_SLUG__   = 'bridgestone-golf';
     window.__DA_ARTICLE_SLUG__ = 'bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21';
   </script>
-  <script src="/js/analytics.js?v=20260320a"></script>
-  <script src="/js/signup.js?v=20260324d"></script>
-  <script src="/js/data.js?v=20260419b"></script>
-  <script src="/js/da-article.js?v=20260419d"></script>
+  <script defer src="/js/analytics.min.js?v=20260320a"></script>
+  <script defer src="/js/signup.min.js?v=20260324d"></script>
+  <script defer src="/js/brand-data/bridgestone-golf.js"></script>
+  <script defer src="/js/da-article.min.js?v=20260419d"></script>
 
+
+  <script>
+    (function(){var s=document.querySelectorAll('.adsbygoogle');for(var i=0;i<s.length;i++){(adsbygoogle=window.adsbygoogle||[]).push({});}})();
+  </script>
 </body>
 </html>
