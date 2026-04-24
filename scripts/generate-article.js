@@ -438,7 +438,7 @@ async function uploadImageToSupabase(supabase, imageUrl, slug) {
 
 function generateArticleHtml(opts) {
   const {
-    title, bodyHtml, imageUrl, ogImageUrl, imageAlt, slug, category,
+    title, bodyHtml, imageUrl, ogImageUrl, localUrl, imageAlt, slug, category,
     published_at, source_url, source_name, meta_description, seo_keywords,
     brandSlug, brandName, brandLogo, brandRank, brandDI, brandMom,
     brandTrend3m, brandTrend12m,
@@ -460,9 +460,11 @@ function generateArticleHtml(opts) {
     ? `<img src="${escHtml(brandLogo.replace(/sz=\d+/, 'sz=48'))}" alt="${escHtml(brandName)}" class="bp-logo-img" width="48" height="48" style="width:48px;height:48px" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${logoFallback}')">`
     : `<span class="bp-logo-initials" style="background:#1a2a1a;width:48px;height:48px;font-size:1rem">${escHtml(initials)}</span>`;
 
-  // Build WebP srcset path from local CDN URL (ogImageUrl = https://dormied.com/images/articles/{slug}-hero.{ext})
-  const webpSrcset = ogImageUrl
-    ? escHtml(ogImageUrl.replace(/https:\/\/dormied\.com/, '').replace(/\.(jpg|jpeg|png)$/i, '.webp'))
+  // Build WebP srcset path from local CDN URL only — WebP files are saved to
+  // dormied.com/images/articles/ but are NOT uploaded to Supabase Storage.
+  // Never derive webpSrcset from ogImageUrl, which may be a Supabase URL.
+  const webpSrcset = (localUrl && localUrl.startsWith('https://dormied.com'))
+    ? escHtml(localUrl.replace('https://dormied.com', '').replace(/\.(jpg|jpeg|png)$/i, '.webp'))
     : null;
 
   const imageHtml = imageUrl
@@ -1013,7 +1015,7 @@ async function main() {
     fs.mkdirSync(articleDir, { recursive: true });
 
     const html = generateArticleHtml({
-      title, bodyHtml, imageUrl, ogImageUrl,
+      title, bodyHtml, imageUrl, ogImageUrl, localUrl,
       imageAlt:        `${brandInfo.brand.name} — ${raw.category || 'Golf'}`,
       slug, category:  raw.category || 'Business',
       published_at:    publishedAt,
