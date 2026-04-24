@@ -1064,8 +1064,7 @@ async function main() {
     // ── Update sitemap (with image tags for Google Image Search + Discover) ──
     addToSitemap(slug, publishedAt, ogImageUrl, title);
 
-    // ── Update in-memory maps so this run doesn't double-generate same brand/story ──
-    brandLastPublished[brandSlug] = publishedAt;
+    // ── Update in-memory title index so this run doesn't double-generate same story ──
     recentTitles.push(title); // use the generated title for future similarity checks
 
     generated++;
