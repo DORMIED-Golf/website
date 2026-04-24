@@ -82,12 +82,8 @@ const RSS_SOURCES = [
     url:  'https://news.adidas.com/RSS/sports/golf',
     type: 'rss',
   },
-  {
-    id:   'la-golf',
-    name: 'LA Golf',
-    url:  'https://www.prnewswire.com/rss/news-releases-list.rss?box=la-golf',
-    type: 'rss',
-  },
+  // LA Golf via PRNewswire removed — PRNewswire feeds contain too much non-golf
+  // noise that incorrectly matches golf brand names (wrong Odyssey, wrong Ping, etc.)
   {
     id:   'cobra',
     name: 'COBRA Golf',

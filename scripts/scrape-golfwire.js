@@ -132,6 +132,14 @@ async function main() {
     const sourceUrl = (item.link || '').trim();
     if (!sourceUrl) { skipped++; continue; }
 
+    // Skip PR Newswire articles — they are almost never golf-specific and
+    // frequently match golf brand names by coincidence (wrong Odyssey, wrong
+    // Ping, wrong MacGregor, etc.), causing off-topic articles to be generated.
+    if (sourceUrl.includes('prnewswire.com')) {
+      skipped++;
+      continue;
+    }
+
     const rawContent = item['content:encoded'] || item.content || item.contentSnippet || '';
     const bodyText   = stripHtml(rawContent);
 
