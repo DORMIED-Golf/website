@@ -271,7 +271,8 @@ function estimateReadTime(text) {
 
 function authorFromCategory(category) {
   const cat = (category || '').toLowerCase();
-  if (cat === 'apparel & footwear' || cat === 'bags & accessories') return 'Adam';
+  // Match both full brand-category strings and short article-category labels
+  if (cat.includes('apparel') || cat.includes('footwear') || cat.includes('bag')) return 'Adam';
   return 'Travis';
 }
 
@@ -999,7 +1000,8 @@ async function main() {
     const slug        = makeSlug(title, publishedAt);
     const readTime    = estimateReadTime(body);
     const bodyHtml    = bodyToHtml(body, brandSlug, brandInfo.brand.name);
-    const author      = authorFromCategory(raw.category || brandInfo.brand.category);
+    // Use brand category first (reliable) — raw.category from the wire can be generic
+    const author      = authorFromCategory(brandInfo.brand.category || raw.category);
 
     // ── Derive source name from URL ──
     const sourceName = getSourceName(raw.source_url);
