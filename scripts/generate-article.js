@@ -524,8 +524,7 @@ function generateArticleHtml(opts) {
   <link rel="preconnect" href="https://pagead2.googlesyndication.com">
 
   <!-- ── Fonts ── -->
-  <link rel="preload" href="/css/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/fonts.css"></noscript>
+  <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
   <link rel="stylesheet" href="/css/styles.css?v=20260409">
