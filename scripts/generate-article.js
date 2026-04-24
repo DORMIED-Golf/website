@@ -153,7 +153,7 @@ function escHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-// ── Title deduplication ───────────────────────────────────────────────────────
+// ── Deduplication helpers ─────────────────────────────────────────────────────
 
 const TITLE_STOP_WORDS = new Set([
   'a','an','the','and','or','but','in','on','at','to','for','of','with','by',
@@ -178,6 +178,46 @@ function titleSimilarity(a, b) {
   let shared = 0;
   for (const w of wa) if (wb.has(w)) shared++;
   return shared / (wa.size + wb.size - shared); // Jaccard
+}
+
+// Body-level topic similarity — extracts distinctive 5+ char words from article
+// bodies and measures what fraction of the smaller body's terms appear in the
+// larger. Normalising by min (not union) makes short raw articles sensitive to
+// matches inside longer generated articles.
+//
+// Why body not title: DORMIED rewrites titles completely, so comparing a raw
+// source title ("ALD, FootJoy Team Up…") against a generated title ("The Best
+// Golf Shoe of 2026…") scores near zero even for the same story. Bodies retain
+// the specific product names, model numbers, and key facts that survive rewriting.
+const BODY_STOP_WORDS = new Set([
+  ...TITLE_STOP_WORDS,
+  'about','their','which','would','could','should','there','where',
+  'these','those','other','after','first','being','every','while',
+  'course','round','swing','player','players','shots','score','green',
+  'fairway','putting','market','product','company','business','industry',
+  'sales','price','year','years','season','launch','release','model',
+  'design','series','available','offer','including','according','said',
+  'also','will','still','already','than','then','they','them','through',
+]);
+
+function bodyKeywords(text) {
+  return new Set(
+    (text || '').toLowerCase()
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length >= 5 && !BODY_STOP_WORDS.has(w))
+  );
+}
+
+// Returns fraction of incoming article's body keywords found in the stored
+// article body. High (≥0.20) = same story; low = different story, same brand.
+function bodySimilarity(incomingBody, storedBody) {
+  const ka = bodyKeywords(incomingBody);
+  const kb = bodyKeywords(storedBody);
+  if (!ka.size || !kb.size) return 0;
+  let shared = 0;
+  for (const w of ka) if (kb.has(w)) shared++;
+  return shared / Math.min(ka.size, kb.size);
 }
 
 // Maps a source URL's hostname to a human-readable source name
@@ -803,35 +843,28 @@ async function main() {
   }
   if (backfilled > 0) console.log(`[generate] Backfilled ${backfilled} missing article(s).`);
 
-  // Build a list of recently generated article titles (last 30 days) for similarity check
-  const TITLE_WINDOW_MS    = 30 * 24 * 60 * 60 * 1000;
-  const recentArticles = (existing || [])
-    .filter(r => r.title && r.published_at &&
-      (Date.now() - new Date(r.published_at)) < TITLE_WINDOW_MS);
+  // Build dedup indexes over the last 30 days of generated articles.
+  // No brand cooldown — topic detection does all the work.
+  const TOPIC_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+  const recentArticles  = (existing || []).filter(r =>
+    r.title && r.published_at &&
+    (Date.now() - new Date(r.published_at)) < TOPIC_WINDOW_MS
+  );
+
+  // Global title index — raw source title vs every recent DORMIED title (Jaccard)
   const recentTitles = recentArticles.map(r => r.title);
 
-  // Build brand → [keyword sets] map for same-brand topic dedup
-  const brandRecentKeywords = {};
+  // Per-brand body index — raw source body vs recent same-brand generated bodies
+  // Body comparison survives DORMIED's title rewrites because specific product names,
+  // model numbers, and key facts appear in both raw and generated bodies.
+  const brandRecentBodies = {};
   for (const r of recentArticles) {
-    if (!r.brand_slug || !r.title) continue;
-    if (!brandRecentKeywords[r.brand_slug]) brandRecentKeywords[r.brand_slug] = [];
-    brandRecentKeywords[r.brand_slug].push(titleKeywords(r.title));
-  }
-
-  // Build a map of brand_slug → most recent published_at among already-generated articles
-  // so we can skip generating another article for the same brand within 3 days
-  const brandLastPublished = {};
-  for (const row of existing || []) {
-    if (row.brand_slug && row.published_at) {
-      const prev = brandLastPublished[row.brand_slug];
-      if (!prev || new Date(row.published_at) > new Date(prev)) {
-        brandLastPublished[row.brand_slug] = row.published_at;
-      }
-    }
+    if (!r.brand_slug || !r.body) continue;
+    if (!brandRecentBodies[r.brand_slug]) brandRecentBodies[r.brand_slug] = [];
+    brandRecentBodies[r.brand_slug].push(r.body);
   }
 
   // Step C: filter in JS, cap at MAX
-  const BRAND_COOLDOWN_MS = 2 * 24 * 60 * 60 * 1000; // 2 days — title similarity + keyword checks do the real dedup work
   const matched = (allMatched || [])
     .filter(m => {
       if (alreadyGenerated.has(m.id)) return false;
@@ -839,38 +872,39 @@ async function main() {
         console.log(`[generate] Skipping denylisted brand: ${m.primary_brand_slug}`);
         return false;
       }
-      // --force-id bypasses all cooldown and dedup checks for specific articles
+      // --force-id bypasses all dedup checks for a specific article
       if (FORCE_IDS.has(m.id)) {
         console.log(`[generate] Force-generating: ${m.id}`);
         return true;
       }
-      // Skip if we already generated an article for this brand in the last 2 days
-      const lastPub = brandLastPublished[m.primary_brand_slug];
-      if (lastPub && (Date.now() - new Date(lastPub)) < BRAND_COOLDOWN_MS) {
-        console.log(`[generate] Skipping duplicate: brand "${m.primary_brand_slug}" already has article from ${lastPub.slice(0,10)}`);
-        return false;
-      }
-      const rawTitle = m.golf_wire_raw?.title || '';
+
+      const raw      = m.golf_wire_raw;
+      const rawTitle = raw?.title || '';
+      const rawBody  = raw?.body  || '';
+
+      // ── Check 1: global title similarity (catches same story under different headline) ──
       if (rawTitle) {
-        // Skip if title is too similar to any recent article (lowered from 0.5 → 0.35)
         const similar = recentTitles.find(t => titleSimilarity(rawTitle, t) >= 0.35);
         if (similar) {
-          console.log(`[generate] Skipping similar story: "${rawTitle}" ≈ "${similar}"`);
+          console.log(`[generate] Skipping similar title: "${rawTitle}" ≈ "${similar}"`);
           return false;
         }
-        // Skip if same brand AND 2+ shared keywords with any recent article for that brand
-        // Catches same-topic stories with different titles (e.g. multiple sources covering one product launch)
-        const incomingKW = titleKeywords(rawTitle);
-        const brandKWHistory = brandRecentKeywords[m.primary_brand_slug] || [];
-        for (const pastKW of brandKWHistory) {
-          let shared = 0;
-          for (const w of incomingKW) if (pastKW.has(w)) shared++;
-          if (shared >= 2) {
-            console.log(`[generate] Skipping same-brand topic overlap: "${rawTitle}" shares ${shared} keywords with recent article`);
+      }
+
+      // ── Check 2: same-brand body similarity (catches same TOPIC even with different title) ──
+      // Compares incoming raw body keywords against stored generated bodies for the same brand.
+      // Threshold 0.20 → same story shares ~40-60% of body terms; different story shares ~5-15%.
+      if (rawBody) {
+        const brandBodies = brandRecentBodies[m.primary_brand_slug] || [];
+        for (const pastBody of brandBodies) {
+          const sim = bodySimilarity(rawBody, pastBody);
+          if (sim >= 0.20) {
+            console.log(`[generate] Skipping same-brand topic (body sim ${(sim * 100).toFixed(0)}%): "${rawTitle}"`);
             return false;
           }
         }
       }
+
       return true;
     })
     .slice(0, MAX_ARTICLES_PER_RUN);
