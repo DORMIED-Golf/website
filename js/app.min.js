@@ -802,7 +802,7 @@
       return `<a href="/brands/${b.id}/" style="display:flex;align-items:center;gap:.5rem;text-decoration:none;color:inherit;margin-top:4px">
         ${logoHtml}
         <span style="min-width:0">
-          <span style="display:block;font-weight:600;font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text,#e2f0de)">${b.name}</span>
+          <span style="display:block;font-weight:600;font-size:.85rem;color:var(--text,#e2f0de);line-height:1.3">${b.name}</span>
           <span style="display:block;font-size:.68rem;margin-top:.15rem;color:var(--text-muted,#6b8f6b);font-family:var(--font-mono,'JetBrains Mono',monospace)">${statLine}</span>
         </span>
       </a>`;
