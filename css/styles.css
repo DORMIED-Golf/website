@@ -2540,9 +2540,7 @@ details[open] .faq-question::after { content: '−'; }
 
 /* ── Homepage Hero ───────────────────────────────────────────────────────────── */
 .home-hero {
-  padding: 40px 16px 32px;
-  margin-left: -16px;
-  margin-right: -16px;
+  padding: 40px 0 32px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 32px;
   background:
