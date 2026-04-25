@@ -2531,8 +2531,7 @@ details[open] .faq-question::after { content: '−'; }
     flex-wrap: wrap;
     gap: 32px;
   }
-  /* Hero spans both columns full-width */
-  .home-layout .home-hero       { order: 0; flex-basis: 100%; }
+  /* Two-column layout: main content + sidebar, footer CTA spans full width */
   .home-layout .home-main       { order: 1; }
   .home-layout .sidebar-ad-col  { order: 2; }
   .home-layout .home-footer-cta { order: 3; flex-basis: 100%; }
@@ -2540,12 +2539,16 @@ details[open] .faq-question::after { content: '−'; }
 
 /* ── Homepage Hero ───────────────────────────────────────────────────────────── */
 .home-hero {
-  padding: 40px 0 32px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 32px;
   background:
     radial-gradient(circle at 85% 20%, var(--green-glow), transparent 50%),
     var(--bg);
+}
+.home-hero-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 40px 16px 32px;
 }
 .hero-eyebrow {
   display: flex;
