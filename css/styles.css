@@ -2543,6 +2543,9 @@ details[open] .faq-question::after { content: '−'; }
   padding: 40px 0 32px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 32px;
+  background:
+    radial-gradient(circle at 85% 20%, var(--green-glow), transparent 50%),
+    var(--bg);
 }
 .hero-eyebrow {
   display: flex;
