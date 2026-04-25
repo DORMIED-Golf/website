@@ -778,7 +778,7 @@
       const logoHtml = b.logo
         ? `<img src="${b.logo.replace(/sz=\d+/, 'sz=32')}" alt="" style="width:32px;height:32px;object-fit:contain" loading="lazy" onerror="this.style.display='none'">`
         : `<span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;background:rgba(255,255,255,.08);border-radius:4px">${(b.name||'').slice(0,2).toUpperCase()}</span>`;
-      return `<a href="/brands/${b.id}/" style="display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;text-decoration:none;color:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(255,255,255,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+      return `<a href="/brands/${b.id}/" style="display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .75rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;text-decoration:none;color:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(255,255,255,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
         ${logoHtml}
         <div style="min-width:0">
           <div style="font-family:var(--font-mono,'JetBrains Mono',monospace);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted,#6b7a6b);line-height:1;margin-bottom:.25rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.category || 'Other'}</div>
@@ -799,7 +799,7 @@
       const logoHtml = b.logo
         ? `<img src="${b.logo.replace(/sz=\d+/, 'sz=32')}" alt="" style="width:28px;height:28px;object-fit:contain;border-radius:3px;flex-shrink:0" loading="lazy" onerror="this.style.display='none'">`
         : `<span style="width:28px;height:28px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.75rem;background:rgba(255,255,255,.08);border-radius:3px">${(b.name||'').slice(0,2).toUpperCase()}</span>`;
-      return `<a href="/brands/${b.id}/" style="display:flex;align-items:center;gap:.5rem;text-decoration:none;color:inherit;margin-top:4px">
+      return `<a href="/brands/${b.id}/" style="display:flex;align-items:flex-start;gap:.5rem;text-decoration:none;color:inherit;margin-top:4px">
         ${logoHtml}
         <span style="min-width:0">
           <span style="display:block;font-weight:600;font-size:.85rem;color:var(--text,#e2f0de);line-height:1.3">${b.name}</span>
