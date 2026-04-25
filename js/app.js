@@ -794,26 +794,42 @@
     const totalEl = document.getElementById('stat-brands');
     if (totalEl) totalEl.textContent = rankings.length;
 
+    // Shared mini-card renderer — matches Category Leaders card style
+    function brandMiniCard(b, statLine) {
+      const logoHtml = b.logo
+        ? `<img src="${b.logo.replace(/sz=\d+/, 'sz=32')}" alt="" style="width:32px;height:32px;object-fit:contain;border-radius:4px;flex-shrink:0" loading="lazy" onerror="this.style.display='none'">`
+        : `<span style="width:32px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;background:rgba(255,255,255,.08);border-radius:4px">${(b.name||'').slice(0,2).toUpperCase()}</span>`;
+      return `<a href="/brands/${b.id}/" style="display:flex;align-items:center;gap:.6rem;padding:.5rem .6rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;text-decoration:none;color:inherit;transition:border-color .15s;margin-top:6px" onmouseover="this.style.borderColor='rgba(255,255,255,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+        ${logoHtml}
+        <div style="min-width:0">
+          <div style="font-weight:600;font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text,#e2f0de)">${b.name}</div>
+          <div style="font-size:.72rem;margin-top:.15rem;color:var(--text-muted,#6b8f6b)">${statLine}</div>
+        </div>
+      </a>`;
+    }
+
     // Top mover (biggest positive rank movement this period)
     const topMover = rankings.filter(b => b.movement > 0).sort((a, b) => b.movement - a.movement)[0];
     const moverEl  = document.getElementById('stat-top-mover');
     if (moverEl && topMover) {
-      moverEl.textContent = topMover.name;
+      const momSign = topMover.interestChange > 0 ? '+' : '';
+      const momStr  = topMover.interestChange != null ? ` · ${momSign}${topMover.interestChange.toFixed(1)}%` : '';
+      moverEl.innerHTML = brandMiniCard(topMover, `#${topMover.rank} · +${topMover.movement} spots${momStr}`);
     }
 
     // Biggest gainer (highest % interest change this period)
     const topGainer = rankings.filter(b => b.interestChange > 0).sort((a, b) => b.interestChange - a.interestChange)[0];
     const gainerEl  = document.getElementById('stat-top-gainer');
     if (gainerEl && topGainer) {
-      gainerEl.textContent = `${topGainer.name} +${topGainer.interestChange.toFixed(0)}%`;
+      gainerEl.innerHTML = brandMiniCard(topGainer, `#${topGainer.rank} · +${topGainer.interestChange.toFixed(0)}%`);
     }
 
     // YTD Climber — biggest positive rank move since Jan 1 of current year
     const ytdMoverEl = document.getElementById('stat-year-mover');
     if (ytdMoverEl) {
-      const currentYear   = window.DORMIED_DATA.meta.currentMonth.split(' ')[1]; // "2026"
+      const currentYear    = window.DORMIED_DATA.meta.currentMonth.split(' ')[1]; // "2026"
       const yearStartMonth = `Jan ${currentYear}`;
-      const ytdRankMap    = getRankMapForMonth(yearStartMonth);
+      const ytdRankMap     = getRankMapForMonth(yearStartMonth);
       if (ytdRankMap.size > 0) {
         const ytdMover = rankings
           .filter(b => ytdRankMap.has(b.id))
@@ -821,7 +837,7 @@
           .filter(b => b.ytdMove > 0)
           .sort((a, b) => b.ytdMove - a.ytdMove)[0];
         if (ytdMover) {
-          ytdMoverEl.textContent = `${ytdMover.name} +${ytdMover.ytdMove}`;
+          ytdMoverEl.innerHTML = brandMiniCard(ytdMover, `#${ytdMover.rank} · +${ytdMover.ytdMove} spots YTD`);
         } else {
           ytdMoverEl.textContent = '—';
         }
