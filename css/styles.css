@@ -2497,9 +2497,10 @@ details[open] .faq-question::after { content: '−'; }
   .site-nav { gap: 12px; }
 }
 .site-nav-link {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  font-style: italic;
   color: var(--text-dim);
   text-decoration: none;
   transition: color .15s;
