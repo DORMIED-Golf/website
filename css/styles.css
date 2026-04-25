@@ -339,35 +339,36 @@ button, select, input {
   flex-shrink: 0;
 }
 
-/* Hot takes strip */
+/* Hot takes strip — 4-col grid of individual cards, 2×2 on narrow */
 .hot-takes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
   margin-top: 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--bg);
+}
+
+@media (max-width: 600px) {
+  .hot-takes { grid-template-columns: repeat(2, 1fr); }
 }
 
 .hot-take {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 10px 20px;
-  border-right: 1px solid var(--border);
-  flex: 1;
-  min-width: 160px;
+  gap: 4px;
+  padding: 12px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 
-.hot-take:last-child { border-right: none; }
-
+/* Label matches .stat-label exactly */
 .hot-take-label {
-  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
 }
 
 .hot-take-val {
@@ -1169,13 +1170,7 @@ button, select, input {
     height: 1px;
   }
 
-  /* Hot takes — each card full width, separated by bottom borders */
-  .hot-take {
-    flex: 0 0 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-  .hot-take:last-child { border-bottom: none; }
+  /* Hot takes — handled by grid media query in .hot-takes block above */
 }
 
 /* ── Sidebar Ad ──────────────────────────────────────────────────────────────── */
