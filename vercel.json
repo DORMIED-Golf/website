@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/feed",              "destination": "/feed/index.html" },
     { "source": "/feed/",             "destination": "/feed/index.html" },
+    { "source": "/brands",            "destination": "/brands/index.html" },
     { "source": "/brands/",           "destination": "/brands/index.html" },
     { "source": "/brands/:slug",      "destination": "/brands/brand.html" },
     { "source": "/brands/:slug/",     "destination": "/brands/brand.html" },
@@ -15,8 +16,12 @@
     { "source": "/scorecard/",        "destination": "/scorecard/index.html" },
     { "source": "/scorecard/:slug",   "destination": "/scorecard/article.html" },
     { "source": "/scorecard/:slug/",  "destination": "/scorecard/article.html" },
+    { "source": "/news",              "destination": "/news/index.html" },
+    { "source": "/news/",             "destination": "/news/index.html" },
     { "source": "/news/:slug",        "destination": "/news/:slug/index.html" },
-    { "source": "/news/:slug/",       "destination": "/news/:slug/index.html" }
+    { "source": "/news/:slug/",       "destination": "/news/:slug/index.html" },
+    { "source": "/about",             "destination": "/about/index.html" },
+    { "source": "/about/",            "destination": "/about/index.html" }
   ],
   "functions": {
     "api/feed.js":              { "maxDuration": 15 },

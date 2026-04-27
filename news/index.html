@@ -12,8 +12,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- ── Primary SEO ── -->
-  <title>Golf Brand News & Coverage | DORMIED</title>
-  <meta name="description" content="Original editorial coverage of golf's brand landscape. Tagged by brand. Updated daily.">
+  <title>Golf Brand News — Daily Coverage from Golf's Brand Desk | DORMIED</title>
+  <meta name="description" content="Every meaningful piece of golf brand coverage from across the web, tagged by brand and updated daily. From the team behind the DORMIED Index.">
   <meta name="keywords" content="golf news, golf articles, golf brand news, latest golf, golf gear news, golf equipment news">
   <meta name="author" content="DORMIED">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -26,8 +26,8 @@
   <!-- ── Open Graph ── -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://dormied.com/news/">
-  <meta property="og:title" content="Golf Brand News &amp; Coverage | DORMIED">
-  <meta property="og:description" content="Original editorial coverage of golf's brand landscape. Tagged by brand. Updated daily.">
+  <meta property="og:title" content="Golf Brand News — Daily Coverage from Golf's Brand Desk | DORMIED">
+  <meta property="og:description" content="Every meaningful piece of golf brand coverage from across the web, tagged by brand and updated daily. From the team behind the DORMIED Index.">
   <meta property="og:image" content="https://dormied.com/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -37,8 +37,8 @@
   <!-- ── Twitter Card ── -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@DORMIED_GOLF">
-  <meta name="twitter:title" content="Golf Brand News &amp; Coverage | DORMIED">
-  <meta name="twitter:description" content="Original editorial coverage of golf's brand landscape. Tagged by brand. Updated daily.">
+  <meta name="twitter:title" content="Golf Brand News — Daily Coverage from Golf's Brand Desk | DORMIED">
+  <meta name="twitter:description" content="Every meaningful piece of golf brand coverage from across the web, tagged by brand and updated daily. From the team behind the DORMIED Index.">
   <meta name="twitter:image" content="https://dormied.com/images/og-image.jpg">
 
   <!-- ── Sitemap ── -->
@@ -53,6 +53,26 @@
 
   <!-- ── Styles ── -->
   <link rel="stylesheet" href="/css/styles.css?v=20260426a">
+
+  <!-- ── Structured Data: Organization ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://dormied.com/#organization",
+    "name": "DORMIED",
+    "alternateName": "Golf's Brand Desk",
+    "url": "https://dormied.com",
+    "logo": "https://dormied.com/images/dormied-logo-colour.png",
+    "description": "Golf's brand desk. Independent monthly rankings of 169 golf brands across 10 global markets, with editorial analysis of what is moving the game.",
+    "sameAs": ["https://x.com/DORMIED_GOLF"],
+    "founder": [
+      { "@type": "Person", "name": "Travis" },
+      { "@type": "Person", "name": "Adam" }
+    ],
+    "foundingDate": "2025-03"
+  }
+  </script>
 
   <!-- ── Structured Data: WebPage + BreadcrumbList ── -->
   <script type="application/ld+json">
@@ -69,7 +89,7 @@
         { "@type": "ListItem", "position": 2, "name": "News", "item": "https://dormied.com/news/" }
       ]
     },
-    "publisher": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com" }
+    "publisher": { "@id": "https://dormied.com/#organization" }
   }
   </script>
 </head>
@@ -107,7 +127,7 @@
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="site-logo" aria-label="DORMIED home">
-        <img src="/images/dormied-logo-colour.png" alt="DORMIED" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <img src="/images/dormied-logo-colour.png" alt="DORMIED — Golf's Brand Desk" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <span class="logo-text-fallback" style="display:none">DORMIED</span>
       </a>
       <nav class="site-nav" aria-label="Main navigation">
@@ -241,7 +261,7 @@
         <a href="/sitemap.xml">Sitemap</a>
       </nav>
       <div class="footer-signup">
-        <div class="footer-signup-header"><p class="footer-signup-label">THE SCORECARD</p><p class="footer-signup-sub">Where golf culture, brand, and marketing collide, once a month in your inbox. The biggest brand moments in our game, what drove them, and what they mean.</p></div>
+        <div class="footer-signup-header"><p class="footer-signup-label">THE SCORECARD</p><p class="footer-signup-sub">Golf's brand desk in your inbox. The biggest moves of the month, what drove them, and what they mean. Once a month.</p></div>
         <form class="footer-signup-form" novalidate>
           <div class="footer-signup-row">
             <input class="footer-signup-input" type="email" placeholder="Your email" required autocomplete="email" aria-label="Email address">
@@ -251,7 +271,7 @@
         </form>
       </div>
       <p class="footer-legal">
-        © <span id="footer-year"></span> DORMIED. Rankings are independent editorial content. All brand names and logos are property of their respective owners.
+        © DORMIED. Rankings are independent editorial content. No brand pays for placement or improved position on the DORMIED Index. All brand names and logos are property of their respective owners.
       </p>
     </div>
   </footer>

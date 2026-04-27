@@ -1,5 +1,5 @@
 // DORMIED Index — Brand Data
-// Generated 2026-03-13 — Full dataset with all 11 markets (36 months each)
+// Generated 2026-03-13 — Full dataset with all 10 markets (36 months each)
 
 window.DORMIED_DATA = {
   meta: {

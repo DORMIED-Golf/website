@@ -2,7 +2,7 @@
 
 ## Stack
 - **Frontend**: Vanilla HTML/CSS/JS, hosted on Vercel
-- **Data**: `js/data.js` — single source of truth for all 122 brands × 11 markets
+- **Data**: `js/data.js` — single source of truth for all 169 brands × 10 markets
 - **API**: Vercel serverless functions (`api/`)
 - **Database**: Supabase (`brand_explanations` table)
 - **Newsletter**: Beehiiv
@@ -31,7 +31,7 @@ meta: {
 }
 ```
 
-**b) Add new month search data for all 122 brands:**
+**b) Add new month search data for all 169 brands:**
 
 Each brand has `searchesByMarket: { global: {}, us: {}, jp: {}, ... }`.
 Add the new month key to every market object for every brand:
@@ -112,7 +112,7 @@ Copy `.env.example` to `.env` and fill in values for local development.
 
 1. Add a new brand object to the `brands` array in `js/data.js`
 2. Follow the existing brand object structure exactly
-3. Add 36 months of historical data for all 11 markets (or zeros for months with no data)
+3. Add 36 months of historical data for all 10 markets (or zeros for months with no data)
 4. Update `meta.totalBrands` count
 5. Add the brand logo to `images/logos/<brand-id>.jpg`
 6. Update `api/_brands.json` so the feed correctly tags articles mentioning this brand

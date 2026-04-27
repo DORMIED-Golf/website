@@ -1,6 +1,6 @@
 # DORMIED
 
-Golf brand intelligence. 122 brands. 11 markets. Ranked monthly by real search data.
+Golf's brand desk. 169 brands. 10 markets. Ranked monthly by real search data.
 
 **Live site:** [dormied.com](https://dormied.com)
 **Stack:** Vanilla HTML/CSS/JS · Vercel · Supabase · Beehiiv · Anthropic
@@ -143,7 +143,7 @@ Open `js/data.js`. Copy an existing brand entry (one full `{ id: ..., name: ...,
   searchesByMarket: {
     global: { "Mar 2023": 0, "Apr 2023": 0, ... "Feb 2026": 0 },
     us:     { "Mar 2023": 0, ... },
-    // repeat for all 11 markets: jp, kr, uk, ca, cn, au, de, se, fr
+    // repeat for all 10 markets: jp, kr, uk, ca, cn, au, de, se, fr
   }
 }
 ```
