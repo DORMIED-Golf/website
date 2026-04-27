@@ -27,7 +27,7 @@
   /* ── Author derivation (mirrors api/dormied-articles.js) ───────────────── */
   function authorFromCategory(category) {
     var cat = (category || '').toLowerCase();
-    if (cat === 'apparel & footwear' || cat === 'bags & accessories') return 'Adam';
+    if (cat.indexOf('apparel') !== -1 || cat.indexOf('footwear') !== -1 || cat.indexOf('bag') !== -1) return 'Adam';
     return 'Travis';
   }
 

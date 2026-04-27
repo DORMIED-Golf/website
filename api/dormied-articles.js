@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
   // Derive author from category when not explicitly set
   function authorFromCategory(category) {
     const cat = (category || '').toLowerCase();
-    if (cat === 'apparel & footwear' || cat === 'bags & accessories') return 'Adam';
+    if (cat.includes('apparel') || cat.includes('footwear') || cat.includes('bag')) return 'Adam';
     return 'Travis';
   }
 
@@ -53,8 +53,8 @@ module.exports = async (req, res) => {
     id:          a.id,
     title:       a.title,
     url:         `/news/${a.slug}/`,
-    // Always derive from category — the DB default ('Travis') is unreliable for existing rows
-    author:      authorFromCategory(a.category),
+    // Prefer explicit author from DB; fall back to category derivation
+    author:      a.author || authorFromCategory(a.category),
     sourceName:  'DORMIED',
     sourceId:    'dormied',
     pubDate:     a.published_at,
