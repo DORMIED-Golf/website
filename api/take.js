@@ -60,6 +60,9 @@ const DISALLOWED_BODY = [
   'my research shows',
   'the data shows',
   'available information',
+  'ranking platform',
+  'data tool',
+  'tracker',
 ];
 
 function startsWithDisallowed(text, brandName) {
@@ -110,12 +113,28 @@ async function fetchRecentArticles(brandName) {
 
 // ── Prompt builder ────────────────────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You are a sharp, opinionated golf industry analyst writing for DORMIED, a golf brand intelligence platform. Your audience is gear-obsessed golf enthusiasts who follow brand culture closely and take their equipment seriously, sometimes too seriously. Your tone is direct, dry, and confident. You have a point of view. You do not sit on the fence. You are not afraid to be witty or land a dry one liner when the data earns it, but you never force it. If a brand is coasting you might say so with a raised eyebrow. If a brand is having a moment you give them their due without gushing. If nothing interesting is happening you say that plainly and move on. Wit comes from the observation, not from trying to be funny. No filler language. No em dashes. No bullet points. Write in tight prose. Never start with the brand name. Never open with any phrase that references your research process, search results, available information, or analysis. Never use phrases like based on, according to, it appears, it seems, from what I found, my research shows, or any similar construction. Start directly with the observation. Write as if you already know this information and are stating it plainly.`;
+const SYSTEM_PROMPT = `You are The Read Agent for DORMIED, golf's brand desk.
+
+DORMIED is the monthly ranking and editorial home for golf brands. We track 169 brands across 10 global markets and publish independent rankings as the DORMIED Index. Every sport has a publication that covers the business and culture of its brands. Fashion has Lyst and Business of Fashion. Basketball has Boardroom. Golf has DORMIED.
+
+The Read is the editorial take on every brand's page. Where the standings show position and the explanation section covers the latest move, The Read steps back: how the brand is doing, what the trend says, what to watch.
+
+Audience: gear-obsessed golf enthusiasts who follow brand culture closely and take their equipment seriously, sometimes too seriously.
+
+Voice: direct, dry, confident. You have a point of view. You do not sit on the fence. You can land a dry one-liner when the data earns it but you never force it. If a brand is coasting, say so with a raised eyebrow. If a brand is having a moment, give them their due without gushing. If nothing interesting is happening, say that plainly. Wit comes from the observation, not from trying to be funny.
+
+Never describe DORMIED as a ranking platform, data tool, or tracker. The phrase is "golf's brand desk."
+Never use the words "popularity" or "buzz". Use "attention" or "momentum" or just describe the thing.
+No filler language. No em dashes. No bullet points. Write in tight prose.
+Never start with the brand name.
+Never open with any phrase that references your research process, search results, available information, or analysis.
+Never use phrases like "based on", "according to", "it appears", "it seems", "from what I found", "my research shows", or any similar construction.
+Start directly with the observation. Write as if you already know this information and are stating it plainly.`;
 
 function buildUserPrompt(params, newsContext, retry = false) {
   const { name, rank, di, vsMonth, mom, yoy, bestRank, bestMonth, category, topMarket } = params;
 
-  const base = `Write a 300 to 500 word editorial analysis of the current state of ${name} based on the following data and any recent news you can find about the brand. This will appear as "The Read" — a substantive brand intelligence take that gives readers something worth reading, not just a one-liner.
+  const base = `Write a 300 to 500 word editorial analysis of the current state of ${name}. This is "The Read" on the brand's DORMIED page. It is substantive editorial that gives the reader something worth reading, not a summary.
 
 Data context:
 * Current global rank: ${rank} out of 169
@@ -128,15 +147,15 @@ Data context:
 * Strongest market: ${topMarket}
 ${newsContext}
 
-Write your response as a substantive editorial analysis. Start with the most interesting or telling observation about this brand right now. Then expand on it: what has driven their current position, what the trend data says about where they are headed, how they compare to their category, and what it means for golfers who follow this brand or play their products. Be specific where the data or news supports it. Be opinionated. Do not sit on the fence.
+Open with the sharpest observation you have about this brand right now. Then develop the context: what explains their current position and recent trajectory. Analyse the trend: what the data says about where they are headed. Close with a forward-looking observation about what to watch.
 
-Structure (3-5 paragraphs, no headers, no bullet points):
-- Open with the sharpest observation you have about this brand right now
-- Develop the context: what explains their current position and recent trajectory
-- Analyse the trend: what the data says about where they are headed
-- Close with a forward-looking observation about what to watch
+Three to five paragraphs. No headers. No bullet points. Plain prose.
 
-A dry observation is welcome when it earns it, but never reach for a joke when a straight read is sharper. No preamble. No meta commentary. Write as if you already know this brand cold and are stating what you see plainly.`;
+Take a position. "Holding steady" is fine. "Quietly losing ground" is sharper than "experiencing decline." Never hedge for the sake of safety.
+
+Geography is often the most interesting angle. If a brand dominates one market and is invisible in another, that is the story. Category context is the second most interesting angle. Don't write a paragraph that's just a number-by-number recap of the data above. Synthesize.
+
+A dry observation is welcome when it earns it, but never reach for a joke when a straight read is sharper. No preamble. No meta commentary. Write as if you already know this brand cold.`;
 
   if (retry) {
     return base + '\n\nYour previous response contained a disallowed phrase either at the start or in the body. Rewrite it starting directly with the editorial observation. Do not reference your research, search results, available information, or analysis process anywhere in the response. No preamble. No meta commentary.';
@@ -267,11 +286,11 @@ module.exports = async (req, res) => {
 
   let take = await callClaude(client, buildUserPrompt(params, newsContext, false));
 
-  if (startsWithDisallowed(take, name)) {
-    console.warn(`[take] First response for "${name}" started with disallowed phrase. Retrying.`);
+  if (isInvalid(take, name)) {
+    console.warn(`[take] First response for "${name}" contained disallowed phrase. Retrying.`);
     take = await callClaude(client, buildUserPrompt(params, newsContext, true));
-    if (startsWithDisallowed(take, name)) {
-      console.warn(`[take] Second response for "${name}" also started with disallowed phrase. Returning anyway.`);
+    if (isInvalid(take, name)) {
+      console.warn(`[take] Second response for "${name}" also contained disallowed phrase. Returning anyway.`);
     }
   }
 
