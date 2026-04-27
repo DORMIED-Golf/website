@@ -123,7 +123,6 @@ function getBrandInfo(dormiedData, brandSlug) {
   const globalData    = brand.searchesByMarket?.global || {};
   const curSearches   = globalData[currentMonth]  || 0;
   const prevSearches  = globalData[previousMonth] || 0;
-  const s3ago         = globalData[month3ago]     || 0;
   const s12ago        = globalData[month12ago]    || 0;
   const maxSearches   = Math.max(...dormiedData.brands.map(b => b.searchesByMarket?.global?.[currentMonth] || 0));
   const di            = maxSearches > 0 ? Math.min(100, Math.round((curSearches / maxSearches) * 100)) : 0;
@@ -133,8 +132,19 @@ function getBrandInfo(dormiedData, brandSlug) {
   const rank          = sorted.findIndex(b => b.id === brandSlug) + 1;
   const momPct        = prevSearches > 0 ? Math.round(((curSearches - prevSearches) / prevSearches) * 100) : 0;
   const momStr        = momPct > 0 ? `+${momPct}%` : momPct < 0 ? `${momPct}%` : 'flat';
-  const trend3mStr    = trendStr(curSearches, s3ago);
-  const trend12mStr   = trendStr(curSearches, s12ago);
+  // 3M: rolling avg of last 3 months vs prior 3 months (matches da-article.js)
+  const MONTH_KEYS_SORTED = Object.keys(globalData).sort((a, b) => {
+    const [ma, ya] = a.split(' '); const [mb, yb] = b.split(' ');
+    return (parseInt(ya) * 12 + MONTH_NAMES.indexOf(ma)) - (parseInt(yb) * 12 + MONTH_NAMES.indexOf(mb));
+  });
+  const cmPos   = MONTH_KEYS_SORTED.indexOf(currentMonth);
+  const last3m  = MONTH_KEYS_SORTED.slice(Math.max(0, cmPos - 2), cmPos + 1);
+  const prior3m = MONTH_KEYS_SORTED.slice(Math.max(0, cmPos - 5), Math.max(0, cmPos - 2));
+  const l3avg   = last3m.length  ? last3m.reduce((s, m)  => s + (globalData[m] || 0), 0) / last3m.length  : 0;
+  const p3avg   = prior3m.length ? prior3m.reduce((s, m) => s + (globalData[m] || 0), 0) / prior3m.length : 0;
+  const t3m     = p3avg > 0 ? (l3avg - p3avg) / p3avg * 100 : null;
+  const trend3mStr  = t3m !== null ? (t3m > 0 ? `+${Math.round(t3m)}%` : t3m < 0 ? `${Math.round(t3m)}%` : 'flat') : '—';
+  const trend12mStr = trendStr(curSearches, s12ago);
   return { brand, rank, di, momPct, momStr, trend3mStr, trend12mStr, currentMonth };
 }
 
