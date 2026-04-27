@@ -1775,7 +1775,11 @@ details[open] .faq-question::after { content: '−'; }
   font-size: 0.875rem;
   color: var(--text-dim);
   line-height: 1.65;
-  max-width: 600px;
+  margin-top: 16px;
+}
+
+@media (min-width: 1200px) {
+  .bp-description { max-width: 72ch; }
 }
 
 .bp-rank-block {
