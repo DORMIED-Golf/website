@@ -32,8 +32,7 @@ const MOVEMENT_THRESHOLD = 15; // minimum absolute % change to trigger
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 const FALLBACK_TEXT =
-  'No single catalyst is obvious from available coverage this month. ' +
-  'The movement may reflect broader seasonal trends or organic brand momentum.';
+  '• No identifiable catalyst this month. The move is real but the why is not visible yet.';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -69,47 +68,86 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// ── DORMIED coverage fetcher ─────────────────────────────────────────────────
+
+async function fetchRecentDormiedCoverage(supabase, brandId, monthYYYYMM) {
+  const [year, month] = monthYYYYMM.split('-').map(Number);
+  const monthEnd = new Date(year, month, 0); // last day of the target month
+  const cutoff   = new Date(monthEnd);
+  cutoff.setDate(cutoff.getDate() - 60);
+
+  const { data, error } = await supabase
+    .from('dormied_articles')
+    .select('title, slug, published_at')
+    .eq('brand_slug', brandId)
+    .eq('status', 'published')
+    .gte('published_at', cutoff.toISOString())
+    .lte('published_at', monthEnd.toISOString())
+    .order('published_at', { ascending: false })
+    .limit(5);
+
+  if (error) {
+    console.warn(`  WARN  Failed to fetch DORMIED coverage for ${brandId}: ${error.message}`);
+    return [];
+  }
+
+  return (data || []).map(a => ({
+    title: a.title,
+    url:   `https://dormied.com/news/${a.slug}/`,
+    date:  a.published_at?.slice(0, 10) || '',
+  }));
+}
+
 // ── Anthropic call ───────────────────────────────────────────────────────────
 
-async function generateExplanation(anthropic, brand, pct, monthLabel) {
+async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCoverage) {
   const sign = pct > 0 ? '+' : '';
 
   const systemPrompt =
-    'You are a sharp, opinionated golf industry analyst writing for DORMIED, a golf brand intelligence platform. ' +
-    'Your audience is gear-obsessed golf enthusiasts who follow brand culture closely and use insider terminology. ' +
-    'You are direct, specific, and factual. You report what happened, not what you searched for. ' +
-    'Never explain your research process. ' +
-    'Never open with or include phrases like "Based on my search results", "Based on my research", ' +
-    '"Based on available information", "I found", "it appears", "it seems", "it is worth noting", ' +
-    'or any similar meta-commentary. Never reference the search process at all. ' +
-    'Go directly to the facts as if you already know them. ' +
+    'You are the Explanation Agent for DORMIED, golf\'s brand desk. ' +
+    'DORMIED is the monthly ranking and editorial home for golf brands. We track 169 brands across 10 global markets and publish independent rankings as the DORMIED Index. ' +
+    'Every sport has a publication that covers the business and culture of its brands. Fashion has Lyst and Business of Fashion. Basketball has Boardroom. Golf has DORMIED. ' +
+    'Your audience is gear-obsessed golf insiders who follow brand culture and equipment closely. ' +
+    'Voice: dry, direct, opinionated, knowledgeable but casual. You report what happened, never what you searched for. ' +
+    'Never explain your research process. Never open with or include phrases like "Based on my search results", "Based on my research", "Based on available information", "I found", "it appears", "it seems", "it is worth noting", "according to", or any similar meta-commentary. ' +
+    'Never reference the search process at all. Go directly to the facts as if you already know them. ' +
+    'Never describe DORMIED as a ranking platform, data tool, or tracker. ' +
+    'Never use the words "popularity" or "buzz". Use "attention" or "momentum" or just describe the thing. ' +
+    'Never use em dashes. Use periods, commas, or restructure. ' +
     'If you cannot find a specific fact do not speculate and do not explain why. Just report what you know.';
+
+  const dormiedCoverageBlock = dormiedCoverage && dormiedCoverage.length > 0
+    ? `\n\nRecent DORMIED coverage of ${brand.name}:\n` +
+      dormiedCoverage.map(a => `- "${a.title}" (${a.date}) — ${a.url}`).join('\n') +
+      `\n\nWhen a bullet relates to a moment DORMIED has covered, link the relevant phrase inline using markdown: [anchor text](url). Use natural anchor text, not "click here" or "read more." One internal link maximum per bullet. Skip the link if it does not fit naturally.`
+    : '';
 
   const userPrompt =
     `${brand.name} saw a ${sign}${pct.toFixed(1)}% change in global search interest on the DORMIED Index in ${monthLabel}. ` +
-    `Brand category: ${brand.category}.\n\n` +
+    `Brand category: ${brand.category}.${dormiedCoverageBlock}\n\n` +
     `Search the web for news, tour activity, product launches, viral moments, player equipment changes, ` +
     `or media coverage involving ${brand.name} during or just before ${monthLabel} that explains this movement.\n\n` +
-    `Output exactly 2 to 3 bullet points. Each bullet is one tight sentence stating a specific fact. ` +
-    `Name the player, product, event, or publication where relevant. Do not be vague.\n\n` +
+    `Output is a bullet list. One bullet per catalyst. One catalyst per bullet. ` +
+    `Most moves have one to three real catalysts. Do not pad the list to look thorough. ` +
+    `If there is one cause return one bullet. If there are three return three. Maximum five bullets.\n\n` +
+    `Each bullet is one tight sentence stating a specific fact. Name the player, product, event, or publication where relevant. Do not be vague.\n\n` +
     `Rules that must be followed without exception:\n` +
     `• Start each bullet with •\n` +
     `• No intro text before the first bullet\n` +
     `• No outro text after the last bullet\n` +
     `• No preamble of any kind\n` +
     `• Do not start any bullet with the brand name\n` +
-    `• Do not start any bullet with "Based", "According", "From", "My", "It appears", "It seems", ` +
-    `"There was", "There has been", or any phrase that references your research process\n` +
+    `• Do not start any bullet with "Based", "According", "From", "My", "It appears", "It seems", "There was", "There has been", or any phrase that references your research process\n` +
     `• Start each bullet directly with the fact\n` +
-    `• If no specific cause can be identified for a bullet write only what the data shows, ` +
-    `for example: Search interest climbed 40% in the US market with no single identifiable catalyst\n\n` +
+    `• 10 to 25 words per bullet (excluding any markdown link syntax)\n\n` +
     `Tone examples:\n` +
-    `Good: • Cameron Smith switched to their Mezz.1 Max putter two weeks before the event, triggering a wave of coverage on GolfWRX and MyGolfSpy.\n` +
-    `Good: • The Qi35 iron launch generated more earned media coverage than any TaylorMade iron release in the past three years according to Golf Digest.\n` +
-    `Good: • Search interest rose 40% in the US market with no single identifiable catalyst, consistent with broader seasonal patterns heading into spring.\n` +
+    `Good: • Cameron Smith switched to their Mezz.1 Max putter two weeks before the event, triggering coverage on GolfWRX and MyGolfSpy.\n` +
+    `Good: • The Qi35 iron launch generated more earned media than any TaylorMade iron release in three years.\n` +
+    `Good: • Hovland moved his bag to the brand mid-month and search interest tracked the news cycle almost to the day.\n` +
+    `Good (with internal link): • [Augusta capsule drop with Malbon](https://dormied.com/news/example-slug/) anchored the month.\n` +
     `Bad: • Based on my search results, it appears the brand had a strong month. (meta commentary, vague)\n` +
     `Bad: • TaylorMade saw increased interest following recent tour activity. (too vague, no specifics)\n` +
-    `Bad: • According to Golf Digest, the brand launched a new product. (disallowed opening, no specifics)\n\n` +
+    `Bad: • A combination of factors contributed to growth. (vague, hedging, filler)\n\n` +
     `If no specific cause can be identified from available sources, output exactly this and nothing else:\n` +
     `${FALLBACK_TEXT}`;
 
@@ -188,9 +226,19 @@ async function main() {
     const sign = pct > 0 ? '+' : '';
     console.log(`  GEN   ${brand.name}  ${sign}${pct.toFixed(1)}%`);
 
+    let dormiedCoverage = [];
+    try {
+      dormiedCoverage = await fetchRecentDormiedCoverage(supabase, brand.id, targetYYYYMM);
+      if (dormiedCoverage.length > 0) {
+        console.log(`        ${dormiedCoverage.length} DORMIED article(s) found for context`);
+      }
+    } catch (err) {
+      console.warn(`  WARN  DORMIED coverage fetch failed for ${brand.name}: ${err.message}`);
+    }
+
     try {
       const explanation = await generateExplanation(
-        anthropic, brand, pct, curLabel
+        anthropic, brand, pct, curLabel, dormiedCoverage
       );
 
       const { error } = await supabase.from('brand_explanations').insert({
