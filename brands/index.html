@@ -54,6 +54,26 @@
   <!-- ── Styles ── -->
   <link rel="stylesheet" href="/css/styles.css?v=20260426a">
 
+  <!-- ── Structured Data: Organization ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://dormied.com/#organization",
+    "name": "DORMIED",
+    "alternateName": "Golf's Brand Desk",
+    "url": "https://dormied.com",
+    "logo": "https://dormied.com/images/dormied-logo-colour.png",
+    "description": "Golf's brand desk. Independent monthly rankings of 169 golf brands across 10 global markets, with editorial analysis of what is moving the game.",
+    "sameAs": ["https://x.com/DORMIED_GOLF"],
+    "founder": [
+      { "@type": "Person", "name": "Travis" },
+      { "@type": "Person", "name": "Adam" }
+    ],
+    "foundingDate": "2025-03"
+  }
+  </script>
+
   <!-- ── Structured Data: CollectionPage ── -->
   <script type="application/ld+json">
   {
@@ -69,7 +89,7 @@
         { "@type": "ListItem", "position": 2, "name": "The Field", "item": "https://dormied.com/brands/" }
       ]
     },
-    "publisher": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com" }
+    "publisher": { "@id": "https://dormied.com/#organization" }
   }
   </script>
 </head>

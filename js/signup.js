@@ -105,7 +105,6 @@
   +           '<p class="signup-popup-error" id="popup-error"></p>'
   +         '</form>'
   +         '<p class="signup-popup-fine">Monthly. No spam. Unsubscribe anytime.</p>'
-  +         '<button class="signup-popup-dismiss" id="popup-dismiss">I\'ll just check GolfWRX like everyone else.</button>'
   +       '</div>'
   +     '</div>'
   +   '</div>'
@@ -151,9 +150,6 @@
 
     // Wire up close/dismiss
     document.getElementById('popup-close').addEventListener('click', function () {
-      closePopup(true);
-    });
-    document.getElementById('popup-dismiss').addEventListener('click', function () {
       closePopup(true);
     });
     document.getElementById('signup-overlay').addEventListener('click', function (e) {
