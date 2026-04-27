@@ -240,7 +240,7 @@
     var section = document.getElementById('home-dormied-section');
     if (!listEl) return;
 
-    fetchDormiedArticles(null, 5, function (articles) {
+    fetchDormiedArticles(null, 6, function (articles) {
       if (!articles.length) {
         if (section) section.hidden = true;
         return;
@@ -249,7 +249,7 @@
 
       var allBrands  = getAllBrands();
       var hero       = articles[0];
-      var supporting = articles.slice(1, 5);
+      var supporting = articles.slice(1, 6);
 
       listEl.innerHTML =
         renderFeedPageCard(hero, allBrands) +
