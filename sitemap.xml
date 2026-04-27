@@ -42,7 +42,7 @@
   <!-- ── News Page ── -->
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1864,5 +1864,16 @@
     <lastmod>2026-04-26</lastmod>
     <changefreq>never</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/the-qi4d-finishes-fourth-in-slow-swing-distance-testing-and-that-might-be-2026-04-27/</loc>
+    <lastmod>2026-04-27</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-qi4d-finishes-fourth-in-slow-swing-distance-testing-and-that-might-be-2026-04-27-hero.jpg</image:loc>
+      <image:title>The Qi4D Finishes Fourth in Slow-Swing Distance Testing, and That Might Be Exactly What TaylorMade Wanted</image:title>
+    </image:image>
   </url>
 </urlset>
