@@ -113,25 +113,37 @@ function trendStr(cur, base) {
   return pct > 0 ? `+${pct}%` : pct < 0 ? `${pct}%` : 'flat';
 }
 
+function pctClass(val) {
+  if (val === null || val === undefined) return '';
+  if (val > 0.05)  return 'da-mom-up';
+  if (val < -0.05) return 'da-mom-down';
+  return 'da-mom-flat';
+}
+function fmtPct(val) {
+  if (val === null || val === undefined) return '—';
+  return (val >= 0 ? '+' : '') + val.toFixed(1) + '%';
+}
+
 function getBrandInfo(dormiedData, brandSlug) {
   const brand = dormiedData.brands.find(b => b.id === brandSlug);
   if (!brand) return null;
   const currentMonth  = dormiedData.meta.currentMonth;
   const previousMonth = dormiedData.meta.previousMonth;
-  const month3ago     = shiftMonth(currentMonth, -3);
   const month12ago    = shiftMonth(currentMonth, -12);
   const globalData    = brand.searchesByMarket?.global || {};
   const curSearches   = globalData[currentMonth]  || 0;
   const prevSearches  = globalData[previousMonth] || 0;
   const s12ago        = globalData[month12ago]    || 0;
   const maxSearches   = Math.max(...dormiedData.brands.map(b => b.searchesByMarket?.global?.[currentMonth] || 0));
-  const di            = maxSearches > 0 ? Math.min(100, Math.round((curSearches / maxSearches) * 100)) : 0;
+  // DI: 1 decimal place, not rounded
+  const di            = maxSearches > 0 ? Math.min(100, (curSearches / maxSearches) * 100) : 0;
   const sorted        = dormiedData.brands
     .map(b => ({ id: b.id, s: b.searchesByMarket?.global?.[currentMonth] || 0 }))
     .sort((a, b) => b.s - a.s);
   const rank          = sorted.findIndex(b => b.id === brandSlug) + 1;
-  const momPct        = prevSearches > 0 ? Math.round(((curSearches - prevSearches) / prevSearches) * 100) : 0;
-  const momStr        = momPct > 0 ? `+${momPct}%` : momPct < 0 ? `${momPct}%` : 'flat';
+  // M/M: 1 decimal place float
+  const momPct        = prevSearches > 0 ? ((curSearches - prevSearches) / prevSearches) * 100 : null;
+  const momStr        = fmtPct(momPct);
   // 3M: rolling avg of last 3 months vs prior 3 months (matches da-article.js)
   const MONTH_KEYS_SORTED = Object.keys(globalData).sort((a, b) => {
     const [ma, ya] = a.split(' '); const [mb, yb] = b.split(' ');
@@ -143,9 +155,13 @@ function getBrandInfo(dormiedData, brandSlug) {
   const l3avg   = last3m.length  ? last3m.reduce((s, m)  => s + (globalData[m] || 0), 0) / last3m.length  : 0;
   const p3avg   = prior3m.length ? prior3m.reduce((s, m) => s + (globalData[m] || 0), 0) / prior3m.length : 0;
   const t3m     = p3avg > 0 ? (l3avg - p3avg) / p3avg * 100 : null;
-  const trend3mStr  = t3m !== null ? (t3m > 0 ? `+${Math.round(t3m)}%` : t3m < 0 ? `${Math.round(t3m)}%` : 'flat') : '—';
-  const trend12mStr = trendStr(curSearches, s12ago);
-  return { brand, rank, di, momPct, momStr, trend3mStr, trend12mStr, currentMonth };
+  const trend3mStr   = fmtPct(t3m);
+  const trend3mClass = pctClass(t3m);
+  // 12M: point-to-point (current vs same month last year — matches da-article.js)
+  const t12m         = s12ago > 0 ? (curSearches - s12ago) / s12ago * 100 : null;
+  const trend12mStr  = fmtPct(t12m);
+  const trend12mClass = pctClass(t12m);
+  return { brand, rank, di, momPct, momStr, trend3mStr, trend3mClass, trend12mStr, trend12mClass, currentMonth };
 }
 
 function makeSlug(title, dateStr) {
@@ -326,7 +342,7 @@ function generateArticleHtml(opts) {
     title, bodyHtml, imageUrl, ogImageUrl, localUrl, imageAlt, slug, category,
     published_at, source_url, source_name, meta_description, seo_keywords,
     brandSlug, brandName, brandLogo, brandRank, brandDI, brandMom,
-    brandTrend3m, brandTrend12m, readTime, author,
+    brandTrend3m, brandTrend3mClass, brandTrend12m, brandTrend12mClass, readTime, author,
   } = opts;
 
   const dateFormatted = formatDate(published_at);
@@ -334,8 +350,8 @@ function generateArticleHtml(opts) {
   const canonicalUrl  = `https://dormied.com/news/${slug}/`;
   const ogImage       = ogImageUrl || imageUrl || 'https://dormied.com/images/og-image.jpg';
   const titleTag      = `${title} | DORMIED`;
-  const momClass      = brandMom > 0 ? 'da-mom-up' : brandMom < 0 ? 'da-mom-down' : 'da-mom-flat';
-  const momDisplay    = brandMom > 0 ? `+${brandMom}%` : brandMom < 0 ? `${brandMom}%` : 'flat';
+  const momClass      = brandMom > 0.05 ? 'da-mom-up' : brandMom < -0.05 ? 'da-mom-down' : 'da-mom-flat';
+  const momDisplay    = fmtPct(brandMom);
   const keywordsStr   = (seo_keywords || []).join(', ');
   const initials      = brandName.split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
   const logoFallback  = `<span class=&quot;bp-logo-initials&quot; style=&quot;background:#1a2a1a;width:48px;height:48px;font-size:1rem&quot;>${escHtml(initials)}</span>`;
@@ -474,10 +490,10 @@ function generateArticleHtml(opts) {
                 </div>
                 <div class="da-brand-card-stats">
                   <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">#${brandRank}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">${brandDI}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">${brandDI.toFixed(1)}</span></div>
                   <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val ${momClass}">${momDisplay}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val">${escHtml(brandTrend3m || '—')}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val">${escHtml(brandTrend12m || '—')}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val ${brandTrend3mClass}">${escHtml(brandTrend3m || '—')}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val ${brandTrend12mClass}">${escHtml(brandTrend12m || '—')}</span></div>
                 </div>
               </div>
             </div>
@@ -640,10 +656,12 @@ async function main() {
     brandName:    brandInfo.brand.name,
     brandLogo:    brandInfo.brand.logo || '',
     brandRank:    brandInfo.rank,
-    brandDI:      brandInfo.di,
-    brandMom:     brandInfo.momPct,
-    brandTrend3m: brandInfo.trend3mStr,
-    brandTrend12m: brandInfo.trend12mStr,
+    brandDI:           brandInfo.di,
+    brandMom:          brandInfo.momPct,
+    brandTrend3m:      brandInfo.trend3mStr,
+    brandTrend3mClass: brandInfo.trend3mClass,
+    brandTrend12m:     brandInfo.trend12mStr,
+    brandTrend12mClass: brandInfo.trend12mClass,
     readTime, author,
   });
   fs.writeFileSync(path.join(articleDir, 'index.html'), html, 'utf8');
