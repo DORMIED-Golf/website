@@ -542,7 +542,7 @@ function generateArticleHtml(opts) {
   <script src="/js/analytics.min.js?v=20260320a"></script>
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js"></script>
-  <script src="/js/da-article.min.js?v=20260419d"></script>
+  <script src="/js/da-article.min.js?v=20260427b"></script>
   <script>
   window.addEventListener('load',function(){
     var s=document.createElement('script');
