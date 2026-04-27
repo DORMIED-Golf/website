@@ -1,17 +1,17 @@
 # DORMIED
 
-> DORMIED is an independent golf brand intelligence platform. We track search interest for 169 golf brands across 11 global markets, updated monthly. No endorsements, no opinions — just data.
+> DORMIED is golf's brand desk. We track search interest for 169 golf brands across 10 global markets, updated monthly. Independent rankings with editorial analysis of what is moving the game.
 
 ## What We Do
 
-DORMIED publishes the DORMIED Index (DI) — a monthly ranking of golf brands by real search demand across the US, UK, Japan, Korea, Canada, Australia, China, Germany, France, Sweden, and globally. A brand's DI Score is its search volume relative to the top brand in a given period (100 = most searched). Rankings update monthly.
+DORMIED publishes the DORMIED Index (DI) — a monthly ranking of golf brands by real search demand across the US, UK, Japan, Korea, Canada, Australia, China, Germany, France, and Sweden. A brand's DI Score is its search volume relative to the top brand in a given period (100 = most searched). Rankings update monthly.
 
 We cover every major segment of golf: equipment, apparel, footwear, accessories, tech and training aids, balls, shafts and grips, and lifestyle brands.
 
 ## Pages
 
 - Homepage / Index: https://dormied.com/ — Monthly match-ups, top movers, brand scorecard, latest news
-- Rankings: https://dormied.com/rankings/ — Full 169-brand index table, sortable by 11 markets
+- Rankings: https://dormied.com/rankings/ — Full 169-brand index table, sortable by 10 markets
 - The Scorecard: https://dormied.com/scorecard/ — Monthly editorial breakdown of what moved in golf brands, who is trending, who is fading, and why it matters
 - Brand Directory: https://dormied.com/brands/ — Browse all 169 brands by category
 - News Feed: https://dormied.com/news/ — Golf brand coverage aggregated from top publications, tagged by brand
@@ -24,7 +24,7 @@ We cover every major segment of golf: equipment, apparel, footwear, accessories,
 Each brand has a dedicated page at https://dormied.com/brands/[slug]/ with:
 - Current global rank and DI Score
 - Monthly trend chart (12+ months of data)
-- Rankings across all 11 markets
+- Rankings across all 10 markets
 - AI-generated editorial take on current momentum ("The Read")
 - Latest news coverage for that brand
 
@@ -32,7 +32,7 @@ Each brand has a dedicated page at https://dormied.com/brands/[slug]/ with:
 
 The DORMIED Index uses Google Trends search interest data as a proxy for brand relevance and consumer attention. Data is normalised so the top brand in each period = 100. Rankings are updated monthly, typically in the first week of the following month.
 
-Markets tracked: Global, United States, United Kingdom, Japan, South Korea, Canada, Australia, China, Germany, France, Sweden.
+Markets tracked: United States, United Kingdom, Japan, South Korea, Canada, Australia, China, Germany, France, Sweden.
 
 ## About DORMIED
 

@@ -172,7 +172,7 @@
   }
 
   // Compute per-market stats for the current brand.
-  // Returns array of { market, rank, di, vsMonth, vsYear } for all 11 markets.
+  // Returns array of { market, rank, di, vsMonth, vsYear } for all 10 markets.
   function computeMarketStats() {
     const data  = window.DORMIED_DATA;
     const cm    = data.meta.currentMonth;
@@ -1124,7 +1124,7 @@
 
     el.textContent = brand.name + ' holds a DORMIED Index (DI) Score of ' + di.toFixed(1) +
       ' for ' + cm + ', ' + diContext + '. Its global rank of #' + globalRank + ' is ' +
-      movPhrase + '. DI Scores are calculated monthly from Google Trends data across 11 markets, ' +
+      movPhrase + '. DI Scores are calculated monthly from Google Trends data across 10 markets, ' +
       'indexed to the highest-searched brand in each measurement window (= 100). ' +
       'A score of ' + di.toFixed(1) + ' means ' + brand.name +
       ' captures roughly ' + di.toFixed(0) + '% of the search volume of the most-searched brand in the current period.';

@@ -12,8 +12,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- ── Primary SEO ── -->
-  <title>DORMIED — Where Golf Culture, Brands, and Marketing Collide.</title>
-  <meta name="description" content="Monthly golf brand rankings based on real search data. 169 brands, 11 markets. See who's rising, who's falling, and what golfers are actually searching for.">
+  <title>DORMIED — Golf's Brand Desk</title>
+  <meta name="description" content="Golf's brand desk. Monthly rankings, analysis, and the stories behind the moves. The DORMIED Index tracks 169 brands across 10 global markets.">
   <meta name="keywords" content="golf brand rankings, golf brand index, golf trends 2026, best golf brands, golf brand tracker, trending golf brands, golf equipment rankings">
   <meta name="author" content="DORMIED">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -26,8 +26,8 @@
   <!-- ── Open Graph ── -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://dormied.com/">
-  <meta property="og:title" content="DORMIED — Where Golf Culture, Brands, and Marketing Collide.">
-  <meta property="og:description" content="169 golf brands ranked by real search data. 11 markets. Updated every month. See who's winning the attention game.">
+  <meta property="og:title" content="DORMIED — Golf's Brand Desk">
+  <meta property="og:description" content="Golf's brand desk. Monthly rankings, analysis, and the stories behind the moves. The DORMIED Index tracks 169 brands across 10 global markets.">
   <meta property="og:image" content="https://dormied.com/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -37,8 +37,8 @@
   <!-- ── Twitter Card ── -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@DORMIED_GOLF">
-  <meta name="twitter:title" content="DORMIED — Where Golf Culture, Brands, and Marketing Collide.">
-  <meta name="twitter:description" content="169 golf brands ranked by real search data. 11 markets. Updated monthly.">
+  <meta name="twitter:title" content="DORMIED — Golf's Brand Desk">
+  <meta name="twitter:description" content="Golf's brand desk. Monthly rankings, analysis, and the stories behind the moves. The DORMIED Index tracks 169 brands across 10 global markets.">
   <meta name="twitter:image" content="https://dormied.com/images/og-image.jpg">
 
   <!-- ── Sitemap ── -->
@@ -58,28 +58,31 @@
   {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": "https://dormied.com/#organization",
     "name": "DORMIED",
+    "alternateName": "Golf's Brand Desk",
     "url": "https://dormied.com",
-    "logo": "https://dormied.com/images/logo.png",
-    "description": "DORMIED is an independent golf brand intelligence platform. We track search interest for 169 golf brands across 11 global markets, updated monthly. No opinions, no endorsements — just data.",
-    "email": "dormiedgolf@gmail.com",
-    "sameAs": ["https://x.com/DORMIED_GOLF", "https://www.instagram.com/dormiedgolf", "https://dormiedgolf.substack.com/"]
+    "logo": "https://dormied.com/images/dormied-logo-colour.png",
+    "description": "Golf's brand desk. Independent monthly rankings of 169 golf brands across 10 global markets, with editorial analysis of what is moving the game.",
+    "sameAs": ["https://x.com/DORMIED_GOLF"],
+    "founder": [
+      { "@type": "Person", "name": "Travis" },
+      { "@type": "Person", "name": "Adam" }
+    ],
+    "foundingDate": "2025-03"
   }
   </script>
 
-  <!-- ── Structured Data: WebSite with SearchAction ── -->
+  <!-- ── Structured Data: WebSite ── -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "DORMIED",
-    "url": "https://dormied.com/",
-    "description": "Monthly golf brand rankings based on real search data. 169 brands, 11 markets.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://dormied.com/rankings/?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
+    "alternateName": "Golf's Brand Desk",
+    "url": "https://dormied.com",
+    "description": "Golf's brand desk. Monthly rankings, analysis, and the stories behind the moves.",
+    "publisher": { "@id": "https://dormied.com/#organization" }
   }
   </script>
 </head>
@@ -117,7 +120,7 @@
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="site-logo" aria-label="DORMIED home">
-        <img src="images/dormied-logo-colour.png" alt="DORMIED" class="logo-img" width="140" height="32" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <img src="images/dormied-logo-colour.png" alt="DORMIED — Golf's Brand Desk" class="logo-img" width="140" height="32" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <span class="logo-text-fallback" style="display:none">DORMIED</span>
       </a>
       <nav class="site-nav" aria-label="Main navigation">
@@ -135,8 +138,8 @@
     <!-- ── HERO — full-viewport-width background ─────────────────────────── -->
     <section class="home-hero" aria-labelledby="home-headline">
       <div class="home-hero-inner">
-        <h1 id="home-headline" class="home-hero-headline">Where Golf Culture, Brands, and Marketing Collide.</h1>
-        <p class="home-hero-sub">Our game has changed. DORMIED tracks the brands transforming it and those getting left behind.</p>
+        <h1 id="home-headline" class="home-hero-headline">Golf's brand desk.</h1>
+        <p class="home-hero-sub">We rank and analyze the companies moving our game. Every month, with data and a point of view.</p>
 
         <!-- Market Pulse Strip -->
         <div id="market-pulse" class="market-pulse" aria-label="Market changes this month">
@@ -186,7 +189,7 @@
             <h2 id="h2h-heading" class="section-title">Today's Match-Up</h2>
             <span class="h2h-date" id="h2h-date"></span>
           </div>
-          <p class="h2h-description">Every day two brands from the same category go head to head. We compare their momentum across four metrics and let the data declare a winner. The brand capturing more attention in our game, right now, wins the match.</p>
+          <p class="h2h-description">Two brands. Same category. Four metrics of momentum. The data picks a winner, every day.</p>
           <div id="h2h-content">
             <!-- Populated by home.js -->
           </div>
@@ -211,10 +214,10 @@
         <!-- ── SCOREBOARD ────────────────────────────────────────────────── -->
         <section class="scoreboard-section" aria-labelledby="scoreboard-heading">
           <div class="section-header">
-            <h2 id="scoreboard-heading" class="section-title">Current Month</h2>
+            <h2 id="scoreboard-heading" class="section-title">The Standings</h2>
             <span class="section-month" id="hero-month-2"></span>
           </div>
-          <p class="h2h-description">The monthly snapshot of our game's brand landscape. Who is sitting at the top, who just made a move worth paying attention to, and who is trending in the wrong direction.</p>
+          <p class="h2h-description">This month's standings. Who sits at the top, who just made a move, and who is trending the wrong way.</p>
           <div class="scoreboard-grid">
             <div class="sb-col" id="sb-top"></div>
             <div class="sb-col" id="sb-movers"></div>
@@ -228,7 +231,7 @@
             <h2 id="why-moved-heading" class="section-title">What Drove The Change</h2>
             <span class="section-month" id="why-moved-month"></span>
           </div>
-          <p class="h2h-description">Behind every significant move in the index is a reason. A product launch, a tour moment, a viral clip, a collaboration nobody saw coming. This is what drove the biggest changes in our game's brand landscape this month.</p>
+          <p class="h2h-description">Behind every move in the index is a reason. A product launch, a tour moment, a viral clip, a collaboration nobody saw coming. We surface the cause behind every significant change.</p>
           <div id="why-moved-list" class="why-moved-list"></div>
         </section>
 
@@ -307,7 +310,7 @@
         <a href="/sitemap.xml">Sitemap</a>
       </nav>
       <div class="footer-signup">
-        <div class="footer-signup-header"><p class="footer-signup-label">THE SCORECARD</p><p class="footer-signup-sub">Where golf culture, brand, and marketing collide, once a month in your inbox. The biggest brand moments in our game, what drove them, and what they mean.</p></div>
+        <div class="footer-signup-header"><p class="footer-signup-label">THE SCORECARD</p><p class="footer-signup-sub">Golf's brand desk in your inbox. The biggest moves of the month, what drove them, and what they mean. Once a month.</p></div>
         <form class="footer-signup-form" novalidate>
           <div class="footer-signup-row">
             <input class="footer-signup-input" type="email" placeholder="Your email" required autocomplete="email" aria-label="Email address">
@@ -317,7 +320,7 @@
         </form>
       </div>
       <p class="footer-legal">
-        © <span id="footer-year"></span> DORMIED. Rankings are independent editorial content. All brand names and logos are property of their respective owners.
+        © DORMIED. Rankings are independent editorial content. No brand pays for placement or improved position on the DORMIED Index. All brand names and logos are property of their respective owners.
       </p>
     </div>
   </footer>
