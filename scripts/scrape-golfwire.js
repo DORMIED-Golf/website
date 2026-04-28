@@ -57,12 +57,16 @@ function stripHtml(html) {
 
 function extractFirstImage(html) {
   if (!html) return null;
-  // Try src with double quotes
-  let m = html.match(/<img[^>]+src="(https?:[^"]+)"/i);
-  if (m) return m[1];
-  // Try src with single quotes
-  m = html.match(/<img[^>]+src='(https?:[^']+)'/i);
-  if (m) return m[1];
+  // Attributes to check in order (covers eager, lazy-loaded, and WordPress lazy variants)
+  const attrs = ['src', 'data-src', 'data-lazy-src', 'data-original'];
+  for (const attr of attrs) {
+    // Double quotes
+    let m = html.match(new RegExp('<img[^>]+' + attr + '="(https?:[^"]+)"', 'i'));
+    if (m) return m[1];
+    // Single quotes
+    m = html.match(new RegExp("<img[^>]+" + attr + "='(https?:[^']+)'", 'i'));
+    if (m) return m[1];
+  }
   return null;
 }
 
@@ -145,18 +149,33 @@ async function main() {
 
     if (!bodyText || bodyText.length < 50) { skipped++; continue; }
 
-    // Extract image: try content HTML first.
-    // If item.guid is a Golf Wire page URL (different from sourceUrl), try its og:image.
-    // We do NOT fall back to og:image from sourceUrl (the brand press release) because
-    // brand sites typically serve their logo as og:image, not the article's actual photo.
+    // Extract image: cascade through three sources in priority order.
+    //
+    // 1. Inline <img> in content:encoded (covers data-src lazy variants too)
+    // 2. og:image from the Golf Wire article page (guid URL when it's a GW page)
+    // 3. og:image from sourceUrl as a last resort — brand sites often serve logos
+    //    but press-release pages frequently have a real hero image as og:image.
     let imageUrl = extractFirstImage(rawContent);
+
     if (!imageUrl) {
       const guidUrl = (item.guid || '').trim();
-      if (guidUrl && guidUrl !== sourceUrl && guidUrl.includes('thegolfwire.com')) {
+      if (guidUrl && guidUrl.includes('thegolfwire.com')) {
         console.log(`[scrape] Trying og:image from Golf Wire page for "${item.title}"…`);
         imageUrl = await fetchOgImage(guidUrl);
       }
     }
+
+    // Last resort: try the source URL itself (press release / brand site)
+    if (!imageUrl && sourceUrl) {
+      console.log(`[scrape] Trying og:image from source URL for "${item.title}"…`);
+      imageUrl = await fetchOgImage(sourceUrl);
+      // Reject obvious logo patterns — very short images or SVGs aren't hero photos
+      if (imageUrl && (imageUrl.endsWith('.svg') || imageUrl.includes('logo') || imageUrl.includes('favicon'))) {
+        console.log(`[scrape] Source og:image looks like a logo, discarding.`);
+        imageUrl = null;
+      }
+    }
+
     if (!imageUrl) {
       console.log(`[scrape] No image found for "${item.title}" — will use default fallback`);
     }
