@@ -42,7 +42,7 @@
   <!-- ── News Page ── -->
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-04-28</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -2006,6 +2006,17 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/from-detroit-airport-retail-to-ajga-title-sponsor-eastside-golfs-2026-04-28-hero.png</image:loc>
       <image:title>From Detroit Airport Retail to AJGA Title Sponsor: Eastside Golf's Grassroots Power Move</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29-hero.jpg</image:loc>
+      <image:title>Scotty Cameron's Newport 2 Finishes Fourth in Short Putt Testing, and That Might Be Fine</image:title>
     </image:image>
   </url>
 </urlset>
