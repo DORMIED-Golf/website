@@ -48,6 +48,10 @@
   <link rel="preconnect" href="https://pagead2.googlesyndication.com">
   <link rel="preconnect" href="https://cimmmmnapdthqvtifpzr.supabase.co" crossorigin>
 
+  <!-- ── LCP hero image preload (update when hero article changes) ── -->
+  <link rel="preload" as="image" fetchpriority="high"
+    href="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29-hero.jpg">
+
   <!-- ── Fonts: preload critical subsets, load full list non-blocking ── -->
   <link rel="preload" href="/fonts/inter-400-normal-6.woff2"              as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/barlow-condensed-700-italic-2.woff2"   as="font" type="font/woff2" crossorigin>
@@ -55,8 +59,56 @@
   <link rel="preload" href="/css/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="/css/fonts.css"></noscript>
 
-  <!-- ── Styles ── -->
-  <link rel="stylesheet" href="css/styles.min.css?v=20260428a">
+  <!-- ── Critical CSS (above-the-fold, inlined to eliminate render-blocking) ── -->
+  <style>
+    :root{--bg:#060b06;--bg-surface:#0c140c;--bg-raised:#111d11;--bg-hover:#162316;--bg-active:#1e311e;--border:#1a2e1a;--border-lite:#243824;--text:#e2f0de;--text-dim:#8aa88a;--text-muted:#6b8f6b;--green:#22c55e;--green-dim:#16a34a;--green-dark:#14532d;--green-glow:rgba(34,197,94,0.15);--red:#ef4444;--red-dim:rgba(239,68,68,0.12);--amber:#f59e0b;--gold:#fbbf24;--silver:#d1d5db;--bronze:#cd7f32;--font-display:'Barlow Condensed',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono','Courier New',monospace;--radius:6px;--radius-sm:4px;--radius-lg:10px;--content-max:1440px;--sidebar-w:180px;--gap:24px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:.9375rem;line-height:1.5;min-height:100vh}
+    a{color:var(--green);text-decoration:none}
+    img{display:block;max-width:100%}
+    .container{width:100%;max-width:var(--content-max);margin:0 auto;padding:0 16px}
+    /* Ad slot sizing — prevents CLS when ads inject */
+    .desktop-ad{display:none}.tablet-ad{display:none}.mobile-ad{display:block}
+    .ad-in-table.mobile-ad{display:flex}.ad-in-table.desktop-ad{display:none}
+    .ad-mobile-banner{min-height:50px}.ad-leaderboard{min-height:90px}
+    .ad-top-zone{display:flex;justify-content:center;padding:12px 16px;background:var(--bg-surface);border-bottom:1px solid var(--border)}
+    @media(min-width:768px){.mobile-ad{display:none}.tablet-ad{display:block}.ad-in-table.desktop-ad{display:flex}.ad-in-table.mobile-ad{display:none}}
+    @media(min-width:1000px){.tablet-ad{display:none}.ad-billboard{display:block}}
+    /* Header */
+    .site-header{background:var(--bg-surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;height:56px}
+    .site-logo{display:flex;align-items:center}
+    .logo-img{height:32px;width:auto}
+    .logo-text-fallback{font-family:var(--font-display);font-size:1.75rem;font-weight:700;font-style:italic;color:var(--green);letter-spacing:.04em;text-transform:uppercase}
+    .site-nav{display:flex;align-items:center;gap:4px}
+    .site-nav-link{font-size:.8125rem;font-weight:500;color:var(--text-dim);padding:6px 10px;border-radius:var(--radius-sm)}
+    /* Hero */
+    .home-hero{border-bottom:1px solid var(--border);margin-bottom:32px;background:radial-gradient(circle at 85% 20%,var(--green-glow),transparent 50%),var(--bg)}
+    .home-hero-inner{max-width:var(--content-max);margin:0 auto;padding:40px 16px 32px}
+    .home-hero-headline{font-family:var(--font-display);font-size:clamp(2.75rem,7vw,4.75rem);font-weight:700;font-style:italic;text-transform:uppercase;color:var(--text);line-height:.93;margin:0 0 16px;letter-spacing:.01em}
+    .home-hero-sub{font-family:var(--font-body);font-size:1.0625rem;color:var(--text-dim);margin:0 0 8px;line-height:1.65;max-width:560px}
+    .hero-cta-group{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:11px 22px;border-radius:var(--radius);font-family:var(--font-body);font-size:14px;font-weight:600;line-height:1;border:1px solid transparent;cursor:pointer;text-decoration:none;white-space:nowrap}
+    .btn--cta{background:var(--green);border-color:var(--green);color:#052e0e}
+    .btn--secondary{background:transparent;border-color:var(--border-lite);color:var(--text-dim)}
+    @media(max-width:480px){.hero-cta-group{flex-direction:column}}
+    /* Layout */
+    .home-layout{display:flex;flex-direction:column;gap:0;max-width:var(--content-max);margin:0 auto;padding:0 16px}
+    .home-main{flex:1;min-width:0;padding:0 0 48px}
+    @media(min-width:1200px){.home-layout{flex-direction:row;flex-wrap:wrap;gap:32px}}
+    /* CLS: reserve space for JS-revealed sections */
+    #home-dormied-section[hidden]{display:block !important;visibility:hidden;pointer-events:none;overflow:hidden;min-height:720px}
+    @media(min-width:600px){#home-dormied-section[hidden]{min-height:860px}}
+    @media(min-width:1100px){#home-dormied-section[hidden]{min-height:600px}}
+    #scorecard-home-card[hidden]{display:block !important;visibility:hidden;pointer-events:none;overflow:hidden;min-height:400px}
+    @media(min-width:768px){#scorecard-home-card[hidden]{min-height:340px}}
+  </style>
+
+  <!-- ── Styles: load non-blocking (critical CSS above handles initial render) ── -->
+  <link rel="preload" href="css/styles.min.css?v=20260429a" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="css/styles.min.css?v=20260429a"></noscript>
 
   <!-- ── Structured Data: Organization ── -->
   <script type="application/ld+json">

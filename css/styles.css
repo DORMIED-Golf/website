@@ -5176,13 +5176,13 @@ details[open] .faq-question::after { content: '−'; }
   visibility: hidden;
   pointer-events: none;
   overflow: hidden;
-  min-height: 960px;    /* ~1 hero card + 5 small cards on mobile */
+  min-height: 720px;    /* ~1 hero card (280px) + 5 small cards (~80px each) + header/padding */
 }
-@media (min-width: 768px) {
-  #home-dormied-section[hidden] { min-height: 680px; }
+@media (min-width: 600px) {
+  #home-dormied-section[hidden] { min-height: 860px; }
 }
 @media (min-width: 1100px) {
-  #home-dormied-section[hidden] { min-height: 560px; }
+  #home-dormied-section[hidden] { min-height: 600px; }
 }
 
 #scorecard-home-card[hidden] {
