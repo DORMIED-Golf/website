@@ -139,11 +139,14 @@
   }
 
   /* ── Feed page card (full card with excerpt — used on /news/ page) ─────── */
-  function renderFeedPageCard(article, allBrands) {
+  function renderFeedPageCard(article, allBrands, isLCP) {
     var thumb = '';
     if (article.imageUrl) {
+      var imgAttrs = isLCP
+        ? 'loading="eager" fetchpriority="high"'
+        : 'loading="lazy"';
       thumb = '<img class="feed-card-thumb feed-card-thumb--lg" src="' + escHtml(article.imageUrl) +
-              '" width="600" height="375" loading="lazy" alt="" onerror="this.remove()">';
+              '" width="600" height="375" ' + imgAttrs + ' alt="" onerror="this.remove()">';
     }
 
     var excerpt = '';
@@ -252,7 +255,7 @@
       var supporting = articles.slice(1, 6);
 
       listEl.innerHTML =
-        renderFeedPageCard(hero, allBrands) +
+        renderFeedPageCard(hero, allBrands, true) +  // isLCP=true: eager + fetchpriority=high
         supporting.map(function (a) { return renderArticleCard(a, true, allBrands); }).join('');
     });
   }

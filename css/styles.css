@@ -5165,3 +5165,37 @@ details[open] .faq-question::after { content: '−'; }
 
 /* ── feed-card--dormied modifier (green left border accent) ──────────────── */
 .feed-card--dormied { border-left: 3px solid var(--green); }
+
+/* ══ CLS PREVENTION ═══════════════════════════════════════════════════════════
+   Sections revealed by JS start as [hidden] (display:none). Override display
+   so they stay in layout flow while invisible — prevents layout shift when
+   JS populates and reveals them. Heights approximate rendered content size.
+   ─────────────────────────────────────────────────────────────────────────── */
+#home-dormied-section[hidden] {
+  display: block !important;
+  visibility: hidden;
+  pointer-events: none;
+  overflow: hidden;
+  min-height: 960px;    /* ~1 hero card + 5 small cards on mobile */
+}
+@media (min-width: 768px) {
+  #home-dormied-section[hidden] { min-height: 680px; }
+}
+@media (min-width: 1100px) {
+  #home-dormied-section[hidden] { min-height: 560px; }
+}
+
+#scorecard-home-card[hidden] {
+  display: block !important;
+  visibility: hidden;
+  pointer-events: none;
+  overflow: hidden;
+  min-height: 420px;
+}
+@media (min-width: 768px) {
+  #scorecard-home-card[hidden] { min-height: 360px; }
+}
+
+/* ── Ad slot explicit dimensions prevent CLS when ads inject content ──────── */
+.ad-mobile-banner { min-height: 50px; }
+.ad-leaderboard   { min-height: 90px; }

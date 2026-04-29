@@ -46,12 +46,17 @@
 
   <!-- ── Resource hints ── -->
   <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+  <link rel="preconnect" href="https://cimmmmnapdthqvtifpzr.supabase.co" crossorigin>
 
-  <!-- ── Fonts ── -->
-  <link rel="stylesheet" href="/css/fonts.css">
+  <!-- ── Fonts: preload critical subsets, load full list non-blocking ── -->
+  <link rel="preload" href="/fonts/inter-400-normal-6.woff2"              as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/barlow-condensed-700-italic-2.woff2"   as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/jetbrains-mono-500-normal-5.woff2"     as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/css/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/fonts.css"></noscript>
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="css/styles.css?v=20260427b">
+  <link rel="stylesheet" href="css/styles.min.css?v=20260428a">
 
   <!-- ── Structured Data: Organization ── -->
   <script type="application/ld+json">
@@ -323,7 +328,7 @@
   <script defer src="js/explanations.min.js?v=20260318"></script>
   <script defer src="js/home.min.js?v=20260323e"></script>
   <script defer src="js/scorecard-home.min.js?v=20260408"></script>
-  <script defer src="js/feed.min.js?v=20260427c"></script>
+  <script defer src="js/feed.min.js?v=20260428a"></script>
   <script defer src="js/analytics.min.js?v=20260320a"></script>
   <script defer src="js/signup.min.js?v=20260324d"></script>
 
