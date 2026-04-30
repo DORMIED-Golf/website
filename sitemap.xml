@@ -42,7 +42,7 @@
   <!-- ── News Page ── -->
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -2028,6 +2028,39 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/callaways-rental-club-strategy-is-quietly-winning-the-resort-golf-arms-race-2026-04-29-hero.jpg</image:loc>
       <image:title>Callaway's Rental Club Strategy Is Quietly Winning the Resort Golf Arms Race</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/tigers-brand-finally-showed-up-for-women-golfers-heres-why-it-took-two-2026-04-30/</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/tigers-brand-finally-showed-up-for-women-golfers-heres-why-it-took-two-2026-04-30-hero.jpg</image:loc>
+      <image:title>Tiger's Brand Finally Showed Up for Women Golfers. Here's Why It Took Two Years.</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/shot-scopes-handicap-data-reveals-what-most-golfers-get-wrong-about-2026-04-30/</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/shot-scopes-handicap-data-reveals-what-most-golfers-get-wrong-about-2026-04-30-hero.jpg</image:loc>
+      <image:title>Shot Scope's Handicap Data Reveals What Most Golfers Get Wrong About Scoring Expectations</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/why-callaways-quantum-max-is-the-best-driver-in-golf-if-you-swing-fast-2026-04-30/</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/why-callaways-quantum-max-is-the-best-driver-in-golf-if-you-swing-fast-2026-04-30-hero.jpg</image:loc>
+      <image:title>Why Callaway's Quantum Max Is the Best Driver in Golf — If You Swing Fast Enough</image:title>
     </image:image>
   </url>
 </urlset>
