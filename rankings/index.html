@@ -244,7 +244,7 @@
           </div>
           <div class="hot-take">
             <span class="hot-take-label">📅 Current Period</span>
-            <span class="hot-take-val" id="stat-current-period">February 2026</span>
+            <span class="hot-take-val" id="stat-current-period">March 2026</span>
           </div>
         </div>
       </div>
@@ -276,7 +276,7 @@
           <!-- ── Main Column ── -->
           <div class="table-main">
 
-            <h2 id="rankings-heading" class="sr-only">DORMIED Index Rankings — February 2026</h2>
+            <h2 id="rankings-heading" class="sr-only">DORMIED Index Rankings — March 2026</h2>
 
             <!-- Country Tabs -->
             <nav class="country-nav" aria-label="Filter by market">
@@ -516,7 +516,8 @@
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
   <script>
-    (function () {
+    // DOMContentLoaded fires AFTER defer scripts execute, so DORMIED_DATA is available
+    document.addEventListener('DOMContentLoaded', function () {
       var meta = window.DORMIED_DATA && window.DORMIED_DATA.meta;
       if (!meta || !meta.currentMonth) return;
       var MONTHS = { Jan:'January', Feb:'February', Mar:'March', Apr:'April', May:'May', Jun:'June', Jul:'July', Aug:'August', Sep:'September', Oct:'October', Nov:'November', Dec:'December' };
@@ -526,7 +527,7 @@
       if (period) period.textContent = full;
       var h2 = document.getElementById('rankings-heading');
       if (h2) h2.textContent = 'DORMIED Index Rankings \u2014 ' + full;
-    })();
+    });
   </script>
 
 
