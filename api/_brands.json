@@ -397,6 +397,7 @@
   {
     "id": "municipal",
     "name": "Municipal",
+    "autoMatch": false,
     "matchTerms": [
       "The Municipal",
       "Municipal brand",

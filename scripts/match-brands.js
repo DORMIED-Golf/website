@@ -37,6 +37,10 @@ const EXCLUSION_LIST = [
   'full swing',  // common generic phrase in golf instruction; only match if in title
 ];
 
+// Brands with autoMatch:false in _brands.json are excluded from pipeline matching
+// entirely — "municipal" matches far too many generic golf articles
+
+
 // ── Supabase ──────────────────────────────────────────────────────────────────
 
 function getSupabase() {
@@ -55,7 +59,10 @@ function loadBrands() {
   const brands = JSON.parse(raw);
 
   // Build a flat list of { slug, terms[] } sorted longest-term first
-  return brands.map(b => {
+  // Brands with autoMatch:false are excluded from automatic pipeline matching
+  return brands
+  .filter(b => b.autoMatch !== false)
+  .map(b => {
     const terms = [b.name, ...(b.aliases || []), ...(b.matchTerms || [])];
     return { slug: b.id, name: b.name, terms };
   }).sort((a, b) => {
