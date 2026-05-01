@@ -208,8 +208,8 @@ button, select, input {
   height: 56px;
 }
 
-.site-logo { display: flex; align-items: center; }
-.logo-img { height: 32px; width: auto; }
+.site-logo { display: flex; align-items: center; flex-shrink: 0; }
+.logo-img { height: 32px; width: auto; flex-shrink: 0; }
 
 .logo-text-fallback {
   font-family: var(--font-display);
