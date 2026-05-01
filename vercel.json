@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    { "source": "/brands/travismatthew",  "destination": "/brands/travismathew",  "permanent": true },
+    { "source": "/brands/travismatthew/", "destination": "/brands/travismathew/", "permanent": true },
+    { "source": "/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17",  "destination": "/news/travismathew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17",  "permanent": true },
+    { "source": "/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/", "destination": "/news/travismathew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/", "permanent": true },
+    { "source": "/news/travismatthew-is-betting-big-on-country-music-and-it-might-a-2026-04-17",  "destination": "/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17",  "permanent": true },
+    { "source": "/news/travismatthew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/", "destination": "/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/feed",              "destination": "/feed/index.html" },
     { "source": "/feed/",             "destination": "/feed/index.html" },

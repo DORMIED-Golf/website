@@ -57,7 +57,7 @@ window.DORMIED_SCORECARD_DATA = {
           id:      "at-the-top",
           heading: "AT THE TOP",
           body: `<p>Titleist holds the top position for the third consecutive month. That level of consistency is not exciting to write about, which is probably the point. The brand does not need a moment. It is the moment.</p>
-<p>TaylorMade slipped to 66.8, continuing a gradual drift that has been building since the start of the year. TravisMatthew holds at 54.8. Callaway and Sun Day Red are tied at 44.9 — a Tiger-adjacent brand matching one of the game's most established equipment makers in a single month is its own kind of story.</p>`,
+<p>TaylorMade slipped to 66.8, continuing a gradual drift that has been building since the start of the year. TravisMathew holds at 54.8. Callaway and Sun Day Red are tied at 44.9 — a Tiger-adjacent brand matching one of the game's most established equipment makers in a single month is its own kind of story.</p>`,
         },
         {
           id:      "the-biggest-move",
@@ -95,13 +95,13 @@ window.DORMIED_SCORECARD_DATA = {
       indexSnapshot: [
         { rank: 1, id: "titleist",      name: "Titleist",      di: 100.0, mom:   0.0,  category: "Clubs & Balls"      },
         { rank: 2, id: "taylormade",    name: "TaylorMade",    di:  66.8, mom: -17.9,  category: "Clubs & Balls"      },
-        { rank: 3, id: "travismatthew", name: "TravisMatthew", di:  54.8, mom:   0.2,  category: "Apparel & Footwear" },
+        { rank: 3, id: "travismathew", name: "TravisMathew", di:  54.8, mom:   0.2,  category: "Apparel & Footwear" },
         { rank: 4, id: "callaway",      name: "Callaway",      di:  44.9, mom: -17.9,  category: "Clubs & Balls"      },
         { rank: 4, id: "sun-day-red",   name: "Sun Day Red",   di:  44.9, mom: -17.9,  category: "Apparel & Footwear" },
       ],
 
       brandMentions: [
-        "titleist", "taylormade", "travismatthew", "callaway", "sun-day-red",
+        "titleist", "taylormade", "travismathew", "callaway", "sun-day-red",
         "sugar-loaf-social-club", "students-golf", "rhoback", "krank-golf",
         "lab-golf", "vuori", "malbon",
       ],
@@ -144,7 +144,7 @@ window.DORMIED_SCORECARD_DATA = {
         {
           id:      "at-the-top",
           heading: "AT THE TOP",
-          body: `<p>Titleist holds at 100.0. TaylorMade at 82.1. TravisMatthew and Callaway are tied at 54.7 — though TravisMatthew's three-month trend is down 45%, worth watching. Sun Day Red surged 48.6% to complete the top five, driven by Fleetwood's Genesis sighting plus the Pioneer Willow golf shoe launch on February 26th and the Presidio spikeless on February 17th.</p>
+          body: `<p>Titleist holds at 100.0. TaylorMade at 82.1. TravisMathew and Callaway are tied at 54.7 — though TravisMathew's three-month trend is down 45%, worth watching. Sun Day Red surged 48.6% to complete the top five, driven by Fleetwood's Genesis sighting plus the Pioneer Willow golf shoe launch on February 26th and the Presidio spikeless on February 17th.</p>
 <p>The top of the index is remarkably stable. The same five brands have occupied these positions for consecutive months, which tells you something about how concentrated attention is at the top of the game. The action is in the middle of the field.</p>`,
         },
         {
@@ -188,13 +188,13 @@ window.DORMIED_SCORECARD_DATA = {
       indexSnapshot: [
         { rank: 1, id: "titleist",      name: "Titleist",      di: 100.0, mom:   0.0,  category: "Clubs & Balls"      },
         { rank: 2, id: "taylormade",    name: "TaylorMade",    di:  82.1, mom: -12.6,  category: "Clubs & Balls"      },
-        { rank: 3, id: "travismatthew", name: "TravisMatthew", di:  54.7, mom:   0.0,  category: "Apparel & Footwear" },
+        { rank: 3, id: "travismathew", name: "TravisMathew", di:  54.7, mom:   0.0,  category: "Apparel & Footwear" },
         { rank: 3, id: "callaway",      name: "Callaway",      di:  54.7, mom:   0.0,  category: "Clubs & Balls"      },
         { rank: 5, id: "sun-day-red",   name: "Sun Day Red",   di:  54.7, mom:  48.6,  category: "Apparel & Footwear" },
       ],
 
       brandMentions: [
-        "titleist", "taylormade", "travismatthew", "callaway", "sun-day-red",
+        "titleist", "taylormade", "travismathew", "callaway", "sun-day-red",
         "lab-golf", "students-golf", "ep-ny", "hackmotion", "pxg",
         "malbon", "vuori", "rhoback",
       ],

@@ -3379,9 +3379,9 @@ window.DORMIED_DATA = {
       },
     },
     {
-      id: "travismatthew",
-      name: "TravisMatthew",
-      logo: "/images/logos/travismatthew.jpg",
+      id: "travismathew",
+      name: "TravisMathew",
+      logo: "/images/logos/travismathew.jpg",
       website: "https://travismathew.com",
       headquarters: "Huntington Beach, California, USA",
       founded: 2007,
