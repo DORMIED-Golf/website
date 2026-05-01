@@ -289,6 +289,10 @@ async function main() {
     targetYYYYMM = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   }
 
+  // Optional --limit flag: node script.js 2026-04 --limit 10
+  const limitArg = process.argv.indexOf('--limit');
+  const limit    = limitArg !== -1 ? parseInt(process.argv[limitArg + 1], 10) : Infinity;
+
   const curLabel  = yyyymmToLabel(targetYYYYMM);
   const prevLabel = prevMonthLabel(targetYYYYMM);
 
@@ -296,6 +300,7 @@ async function main() {
   console.log(`║  Month:  ${curLabel} (${targetYYYYMM})`);
   console.log(`║  Prev:   ${prevLabel}`);
   console.log(`║  Threshold: >${MOVEMENT_THRESHOLD}% MoM`);
+  if (limit !== Infinity) console.log(`║  Limit:  ${limit} generations`);
   console.log(`╚${'═'.repeat(40)}\n`);
 
   const data      = loadData();
@@ -316,7 +321,7 @@ async function main() {
     process.exit(1);
   }
 
-  let generated = 0, skipped = 0, errors = 0, retries = 0;
+  let generated = 0, skipped = 0, errors = 0, retries = 0, genCount = 0;
 
   for (const brand of data.brands) {
     const pct = getMoMPct(brand, curLabel, prevLabel);
@@ -339,6 +344,9 @@ async function main() {
       skipped++;
       continue;
     }
+
+    if (genCount >= limit) break;
+    genCount++;
 
     const sign = pct > 0 ? '+' : '';
     console.log(`  GEN   ${brand.name}  ${sign}${pct.toFixed(1)}%`);
