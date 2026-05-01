@@ -210,6 +210,10 @@ button, select, input {
 
 .site-logo { display: flex; align-items: center; flex-shrink: 0; }
 .logo-img { height: 32px; width: auto; flex-shrink: 0; }
+@media (max-width: 520px) {
+  .header-inner { gap: 8px; }
+  .logo-img { height: 24px; }
+}
 
 .logo-text-fallback {
   font-family: var(--font-display);
@@ -2492,8 +2496,8 @@ details[open] .faq-question::after { content: '−'; }
 
 /* ── Site Nav ────────────────────────────────────────────────────────────────── */
 .site-nav { display: flex; gap: 20px; align-items: center; }
-@media (max-width: 480px) {
-  .site-nav { gap: 12px; }
+@media (max-width: 520px) {
+  .site-nav { gap: 8px; }
 }
 .site-nav-link {
   font-family: var(--font-mono);

@@ -81,8 +81,9 @@
     .site-logo{display:flex;align-items:center;flex-shrink:0}
     .logo-img{height:32px;width:auto;flex-shrink:0}
     .logo-text-fallback{font-family:var(--font-display);font-size:1.75rem;font-weight:700;font-style:italic;color:var(--green);letter-spacing:.04em;text-transform:uppercase}
-    .site-nav{display:flex;align-items:center;gap:4px}
-    .site-nav-link{font-size:.8125rem;font-weight:500;color:var(--text-dim);padding:6px 10px;border-radius:var(--radius-sm)}
+    .site-nav{display:flex;align-items:center;gap:20px}
+    .site-nav-link{font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text);text-decoration:none}
+    @media(max-width:520px){.header-inner{gap:8px}.logo-img{height:24px}.site-nav{gap:8px}}
     /* Hero */
     .home-hero{border-bottom:1px solid var(--border);margin-bottom:32px;background:radial-gradient(circle at 85% 20%,var(--green-glow),transparent 50%),var(--bg)}
     .home-hero-inner{max-width:var(--content-max);margin:0 auto;padding:40px 16px 32px}
@@ -107,8 +108,8 @@
   </style>
 
   <!-- ── Styles: load non-blocking (critical CSS above handles initial render) ── -->
-  <link rel="preload" href="css/styles.min.css?v=20260430a" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="css/styles.min.css?v=20260430a"></noscript>
+  <link rel="preload" href="css/styles.min.css?v=20260430b" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="css/styles.min.css?v=20260430b"></noscript>
 
   <!-- ── Structured Data: Organization ── -->
   <script type="application/ld+json">
