@@ -42,7 +42,7 @@
   <!-- ── News Page ── -->
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-04-30</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -2094,6 +2094,17 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/bushnell-golfs-app-upgrade-is-a-quiet-admission-that-hardware-alone-wont-2026-04-30-hero.png</image:loc>
       <image:title>Bushnell Golf's App Upgrade Is a Quiet Admission That Hardware Alone Won't Cut It Anymore</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://dormied.com/news/troons-23-city-community-tour-is-the-muni-play-golf-needed-five-years-ago-2026-04-30/</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/troons-23-city-community-tour-is-the-muni-play-golf-needed-five-years-ago-2026-04-30-hero.jpg</image:loc>
+      <image:title>Troon's 23-City Community Tour Is the Muni Play Golf Needed Five Years Ago</image:title>
     </image:image>
   </url>
 </urlset>
