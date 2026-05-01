@@ -415,7 +415,9 @@
   },
   {
     "id": "nike-golf",
-    "name": "Nike Golf"
+    "name": "Nike Golf",
+    "aliases": ["Nike"],
+    "matchTerms": ["Nike Pegasus", "Nike Air Max golf", "Nike Roshe golf", "Nike golf shoe", "Nike golf ball"]
   },
   {
     "id": "odyssey-golf",
@@ -453,7 +455,9 @@
   },
   {
     "id": "pinnacle",
-    "name": "Pinnacle"
+    "name": "Pinnacle",
+    "autoMatch": false,
+    "matchTerms": ["Pinnacle golf", "Pinnacle ball", "Pinnacle Gold"]
   },
   {
     "id": "pins-and-aces",
