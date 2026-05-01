@@ -2,8 +2,8 @@
 /**
  * DORMIED — Monthly Brand Explanation Generator
  *
- * Loops all 122 brands, finds any with >15% MoM global search change,
- * generates a 2-sentence AI explanation via Anthropic + web search,
+ * Loops all brands, finds any with >15% MoM global search change,
+ * generates a bullet-list explanation via Anthropic + web search,
  * and stores the result in Supabase.
  *
  * Usage:
@@ -33,6 +33,57 @@ const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'
 
 const FALLBACK_TEXT =
   '• No identifiable catalyst this month. The move is real but the why is not visible yet.';
+
+// ── Meta-commentary validator (Edit 3) ───────────────────────────────────────
+
+// Validation patterns. If output starts with or contains any of these,
+// it failed the no-meta-commentary rule.
+const META_START_PATTERNS = [
+  /^based on/i,
+  /^according to/i,
+  /^let me/i,
+  /^i need to/i,
+  /^i found/i,
+  /^i cannot/i,
+  /^i have not/i,
+  /^i can see/i,
+  /^i also see/i,
+  /^despite/i,
+  /^however,/i,
+  /^after search/i,
+  /^after review/i,
+  /^my search/i,
+  /^my research/i,
+  /^the search results/i,
+  /^the searches/i,
+];
+
+const META_BODY_PATTERNS = [
+  /based on my search/i,
+  /based on the search/i,
+  /let me search/i,
+  /let me try/i,
+  /let me look/i,
+  /i need to search/i,
+  /my searches/i,
+  /search results show/i,
+  /search results suggest/i,
+  /the searches/i,
+  /searching for/i,
+  /i cannot find/i,
+  /i have not found/i,
+  /i could not find/i,
+  /no specific news/i,
+  /no clear catalyst/i,
+];
+
+function hasMetaCommentary(text) {
+  if (!text) return false;
+  const trimmed = text.trim();
+  if (META_START_PATTERNS.some(p => p.test(trimmed))) return true;
+  if (META_BODY_PATTERNS.some(p => p.test(trimmed))) return true;
+  return false;
+}
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -103,19 +154,35 @@ async function fetchRecentDormiedCoverage(supabase, brandId, monthYYYYMM) {
 async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCoverage) {
   const sign = pct > 0 ? '+' : '';
 
+  // Edit 1: Stricter system prompt with clearly labelled BANNED OUTPUT PATTERNS
   const systemPrompt =
     'You are the Explanation Agent for DORMIED, golf\'s brand desk. ' +
     'DORMIED is the monthly ranking and editorial home for golf brands. We track 169 brands across 10 global markets and publish independent rankings as the DORMIED Index. ' +
     'Every sport has a publication that covers the business and culture of its brands. Fashion has Lyst and Business of Fashion. Basketball has Boardroom. Golf has DORMIED. ' +
     'Your audience is gear-obsessed golf insiders who follow brand culture and equipment closely. ' +
-    'Voice: dry, direct, opinionated, knowledgeable but casual. You report what happened, never what you searched for. ' +
-    'Never explain your research process. Never open with or include phrases like "Based on my search results", "Based on my research", "Based on available information", "I found", "it appears", "it seems", "it is worth noting", "according to", or any similar meta-commentary. ' +
-    'Never reference the search process at all. Go directly to the facts as if you already know them. ' +
+    '\n\n' +
+    'CRITICAL RULE ABOUT YOUR OUTPUT: ' +
+    'You have access to a web search tool. Use it silently. The user will never see your search process, your reasoning, your hesitation, your hedging, or any commentary about what you did or did not find. ' +
+    'Your output is the final published artifact. It appears on a brand\'s page on dormied.com. ' +
+    'Treat the output the way a published columnist treats a column: only what makes the page. No drafts, no notes, no thinking-out-loud, no apology for what wasn\'t found. ' +
+    '\n\n' +
+    'BANNED OUTPUT PATTERNS (these will be rejected): ' +
+    '- Any sentence that begins with "Based on", "According to", "Let me", "I need to", "I found", "I cannot", "I have not", "I can see", "I also see", "Despite", "However", "After searching", "After reviewing", "My search", "My research", "The search results". ' +
+    '- Any sentence describing what you searched for, considered, or attempted. ' +
+    '- Any sentence that says no catalyst was found and then continues with more text. The fallback rule below is the only acceptable way to indicate no catalyst was found. ' +
+    '- Any sentence that summarizes what you will do next or what you just did. ' +
+    '- Any opening preamble before the first bullet. ' +
+    '- Any closing summary after the last bullet. ' +
+    '- The phrase "search interest" (the percentage is shown elsewhere on the page; do not narrate the metric). ' +
+    '\n\n' +
+    'STYLE: ' +
+    'Voice: dry, direct, opinionated, knowledgeable but casual. ' +
     'Never describe DORMIED as a ranking platform, data tool, or tracker. ' +
     'Never use the words "popularity" or "buzz". Use "attention" or "momentum" or just describe the thing. ' +
     'Never use em dashes. Use periods, commas, or restructure. ' +
-    'If you cannot find a specific fact do not speculate and do not explain why. Just report what you know.';
+    'Report what happened, not what you searched for.';
 
+  // Edit 2: Tighter user prompt with numbered rules and explicit invalid examples
   const dormiedCoverageBlock = dormiedCoverage && dormiedCoverage.length > 0
     ? `\n\nRecent DORMIED coverage of ${brand.name}:\n` +
       dormiedCoverage.map(a => `- "${a.title}" (${a.date}) — ${a.url}`).join('\n') +
@@ -123,35 +190,39 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
     : '';
 
   const userPrompt =
-    `${brand.name} saw a ${sign}${pct.toFixed(1)}% change in global search interest on the DORMIED Index in ${monthLabel}. ` +
-    `Brand category: ${brand.category}.${dormiedCoverageBlock}\n\n` +
-    `Search the web for news, tour activity, product launches, viral moments, player equipment changes, ` +
-    `or media coverage involving ${brand.name} during or just before ${monthLabel} that explains this movement.\n\n` +
-    `Output is a bullet list. One bullet per catalyst. One catalyst per bullet. ` +
-    `Most moves have one to three real catalysts. Do not pad the list to look thorough. ` +
-    `If there is one cause return one bullet. If there are three return three. Maximum five bullets.\n\n` +
-    `Each bullet is one tight sentence stating a specific fact. Name the player, product, event, or publication where relevant. Do not be vague.\n\n` +
-    `Rules that must be followed without exception:\n` +
-    `• Start each bullet with •\n` +
-    `• No intro text before the first bullet\n` +
-    `• No outro text after the last bullet\n` +
-    `• No preamble of any kind\n` +
-    `• Do not start any bullet with the brand name\n` +
-    `• Do not start any bullet with "Based", "According", "From", "My", "It appears", "It seems", "There was", "There has been", or any phrase that references your research process\n` +
-    `• Start each bullet directly with the fact\n` +
-    `• 10 to 25 words per bullet (excluding any markdown link syntax)\n\n` +
-    `Tone examples:\n` +
-    `Good: • Cameron Smith switched to their Mezz.1 Max putter two weeks before the event, triggering coverage on GolfWRX and MyGolfSpy.\n` +
-    `Good: • The Qi35 iron launch generated more earned media than any TaylorMade iron release in three years.\n` +
-    `Good: • Hovland moved his bag to the brand mid-month and search interest tracked the news cycle almost to the day.\n` +
-    `Good (with internal link): • [Augusta capsule drop with Malbon](https://dormied.com/news/example-slug/) anchored the month.\n` +
-    `Bad: • Based on my search results, it appears the brand had a strong month. (meta commentary, vague)\n` +
-    `Bad: • TaylorMade saw increased interest following recent tour activity. (too vague, no specifics)\n` +
-    `Bad: • A combination of factors contributed to growth. (vague, hedging, filler)\n\n` +
-    `If no specific cause can be identified from available sources, output exactly this and nothing else:\n` +
-    `${FALLBACK_TEXT}`;
+    `${brand.name} (${brand.category}) moved ${sign}${pct.toFixed(1)}% on the DORMIED Index in ${monthLabel}.${dormiedCoverageBlock}\n\n` +
+    `Search the web for the catalyst. Look at: tour activity, product launches, viral moments, player equipment changes, executive moves, marketing campaigns, recalls, partnerships, business news, or any other identifiable cause.\n\n` +
+    `OUTPUT RULES:\n` +
+    `1. Output is a markdown bullet list. Each bullet starts with "• ".\n` +
+    `2. One catalyst per bullet. One bullet per catalyst.\n` +
+    `3. 1 to 5 bullets total. Never pad. If there is one cause return one bullet.\n` +
+    `4. 10 to 25 words per bullet. State the specific fact. Name the player, product, event, or publication.\n` +
+    `5. Do not start any bullet with the brand name.\n` +
+    `6. Do not include any text before the first bullet or after the last bullet.\n\n` +
+    `IF YOU CANNOT IDENTIFY A SPECIFIC CATALYST FROM YOUR SEARCH:\n` +
+    `Output exactly this single line and nothing else. No preamble. No explanation. No "I searched but..." commentary:\n` +
+    `${FALLBACK_TEXT}\n\n` +
+    `EXAMPLES OF VALID OUTPUTS:\n\n` +
+    `Example A (catalyst found, multiple bullets):\n` +
+    `• Cameron Smith switched to their Mezz.1 Max putter two weeks before the event, triggering coverage on GolfWRX and MyGolfSpy.\n` +
+    `• The Qi35 iron launch generated more earned media than any TaylorMade iron release in three years.\n\n` +
+    `Example B (catalyst found, single bullet):\n` +
+    `• Hovland moved his bag to the brand mid-month and the news cycle did the rest.\n\n` +
+    `Example C (no catalyst, fallback):\n` +
+    `• No identifiable catalyst this month. The move is real but the why is not visible yet.\n\n` +
+    `EXAMPLES OF INVALID OUTPUTS (these will be rejected):\n\n` +
+    `Invalid 1 (preamble before bullets):\n` +
+    `"Based on my search results, I found the following catalysts: • [bullet]"\n\n` +
+    `Invalid 2 (research narration):\n` +
+    `"Let me search more specifically for X. Based on my searches I can see that..."\n\n` +
+    `Invalid 3 (apologetic non-finding before fallback):\n` +
+    `"I searched extensively but could not find any specific catalysts that would explain the movement. • No identifiable catalyst..."\n\n` +
+    `Invalid 4 (closing summary):\n` +
+    `"• [bullet]\n\nIn summary, the catalyst appears to be the product launch."\n\n` +
+    `Output the bullet list directly. Nothing else.`;
 
-  const response = await anthropic.messages.create({
+  // Edit 3: Wrap API call with validator and one-retry pattern
+  let response = await anthropic.messages.create({
     model:      'claude-sonnet-4-20250514',
     max_tokens: 1000,
     system:     systemPrompt,
@@ -159,11 +230,43 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
     messages:   [{ role: 'user', content: userPrompt }],
   });
 
-  return response.content
+  let output = response.content
     .filter(block => block.type === 'text')
     .map(block => block.text)
     .join('')
     .trim();
+
+  if (hasMetaCommentary(output)) {
+    console.log(`        Meta-commentary detected, retrying...`);
+    const retryUserPrompt =
+      `Your previous response contained banned meta-commentary (research narration, "Based on...", "Let me search...", "I cannot find...", or similar). ` +
+      `Rewrite your response. Output only the bullet list or the fallback line. No preamble. No explanation of what you searched for. No apology for what was not found.`;
+
+    response = await anthropic.messages.create({
+      model:      'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system:     systemPrompt,
+      tools:      [{ type: 'web_search_20250305', name: 'web_search' }],
+      messages:   [
+        { role: 'user',      content: userPrompt },
+        { role: 'assistant', content: output },
+        { role: 'user',      content: retryUserPrompt },
+      ],
+    });
+
+    output = response.content
+      .filter(block => block.type === 'text')
+      .map(block => block.text)
+      .join('')
+      .trim();
+
+    if (hasMetaCommentary(output)) {
+      console.warn(`        Retry still contained meta-commentary. Falling back to safe text.`);
+      output = FALLBACK_TEXT;
+    }
+  }
+
+  return output;
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
@@ -199,7 +302,21 @@ async function main() {
   const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
   const supabase  = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  let generated = 0, skipped = 0, errors = 0;
+  // Edit 4: Sanity check — abort if data pipeline is broken (all brands ±100%)
+  const sample = data.brands
+    .map(b => getMoMPct(b, curLabel, prevLabel))
+    .filter(v => v !== null);
+
+  const allNeg100 = sample.length > 10 && sample.every(v => Math.abs(v + 100) < 0.01);
+  const allPos100 = sample.length > 10 && sample.every(v => Math.abs(v - 100) < 0.01);
+
+  if (allNeg100 || allPos100) {
+    console.error('ABORT: every brand returned ±100% change. The upstream data is broken.');
+    console.error('Investigate the MoM calculation in data.js or the source CSV before re-running.');
+    process.exit(1);
+  }
+
+  let generated = 0, skipped = 0, errors = 0, retries = 0;
 
   for (const brand of data.brands) {
     const pct = getMoMPct(brand, curLabel, prevLabel);
@@ -241,6 +358,9 @@ async function main() {
         anthropic, brand, pct, curLabel, dormiedCoverage
       );
 
+      // Track retries via log output (generateExplanation logs them inline)
+      if (explanation === FALLBACK_TEXT) retries++;
+
       const { error } = await supabase.from('brand_explanations').insert({
         brand_id:          brand.id,
         brand_name:        brand.name,
@@ -253,7 +373,6 @@ async function main() {
         console.error(`  ERROR saving ${brand.name}: ${error.message}`);
         errors++;
       } else {
-        // Truncate explanation for logging
         const preview = explanation.length > 80
           ? explanation.slice(0, 77) + '...'
           : explanation;
