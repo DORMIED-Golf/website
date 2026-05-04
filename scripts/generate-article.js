@@ -864,6 +864,9 @@ async function main() {
       const bHtml    = bodyToHtml(row.body, bSlug, bName);
       const rTime    = estimateReadTime(row.body);
 
+      // Look up real brand stats so the static HTML has correct values
+      const bInfo = getBrandInfo(dormiedData, bSlug);
+
       const html = generateArticleHtml({
         title:           row.title,
         bodyHtml:        bHtml,
@@ -880,13 +883,13 @@ async function main() {
         brandSlug:       bSlug,
         brandName:       bName,
         brandLogo:       bLogo,
-        brandRank:       0,
-        brandDI:            0,
-        brandMom:           null,
-        brandTrend3m:       '—',
-        brandTrend3mClass:  '',
-        brandTrend12m:      '—',
-        brandTrend12mClass: '',
+        brandRank:       bInfo ? bInfo.rank  : 0,
+        brandDI:         bInfo ? bInfo.di    : 0,
+        brandMom:        bInfo ? bInfo.momPct : null,
+        brandTrend3m:       bInfo ? bInfo.trend3mStr  : '—',
+        brandTrend3mClass:  bInfo ? bInfo.trend3mClass : '',
+        brandTrend12m:      bInfo ? bInfo.trend12mStr  : '—',
+        brandTrend12mClass: bInfo ? bInfo.trend12mClass : '',
         readTime:        rTime,
         author,
       });
