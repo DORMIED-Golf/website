@@ -459,8 +459,7 @@ function generateArticleHtml(opts) {
   const {
     title, bodyHtml, imageUrl, ogImageUrl, localUrl, imageAlt, slug, category,
     published_at, source_url, source_name, meta_description, seo_keywords,
-    brandSlug, brandName, brandLogo, brandRank, brandDI, brandMom,
-    brandTrend3m, brandTrend3mClass, brandTrend12m, brandTrend12mClass,
+    brandSlug, brandName, brandLogo,
     readTime, author,
   } = opts;
 
@@ -469,8 +468,6 @@ function generateArticleHtml(opts) {
   const canonicalUrl   = `https://dormied.com/news/${slug}/`;
   const ogImage        = ogImageUrl || imageUrl || 'https://dormied.com/images/og-image.jpg';
   const titleTag       = `${title} | DORMIED`;
-  const momClass       = brandMom > 0.05 ? 'da-mom-up' : brandMom < -0.05 ? 'da-mom-down' : 'da-mom-flat';
-  const momDisplay     = fmtPct(brandMom);
   const keywordsStr    = (seo_keywords || []).join(', ');
 
   const initials       = brandName.split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
@@ -652,11 +649,11 @@ function generateArticleHtml(opts) {
                   <a href="/brands/${escHtml(brandSlug)}/" class="da-brand-card-name">${escHtml(brandName)}</a>
                 </div>
                 <div class="da-brand-card-stats">
-                  <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">#${brandRank}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">${brandDI.toFixed(1)}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val ${momClass}">${momDisplay}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val ${brandTrend3mClass}">${escHtml(brandTrend3m || '—')}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val ${brandTrend12mClass}">${escHtml(brandTrend12m || '—')}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">—</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">—</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val">—</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val">—</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val">—</span></div>
                 </div>
               </div>
             </div>
@@ -864,9 +861,6 @@ async function main() {
       const bHtml    = bodyToHtml(row.body, bSlug, bName);
       const rTime    = estimateReadTime(row.body);
 
-      // Look up real brand stats so the static HTML has correct values
-      const bInfo = getBrandInfo(dormiedData, bSlug);
-
       const html = generateArticleHtml({
         title:           row.title,
         bodyHtml:        bHtml,
@@ -883,13 +877,6 @@ async function main() {
         brandSlug:       bSlug,
         brandName:       bName,
         brandLogo:       bLogo,
-        brandRank:       bInfo ? bInfo.rank  : 0,
-        brandDI:         bInfo ? bInfo.di    : 0,
-        brandMom:        bInfo ? bInfo.momPct : null,
-        brandTrend3m:       bInfo ? bInfo.trend3mStr  : '—',
-        brandTrend3mClass:  bInfo ? bInfo.trend3mClass : '',
-        brandTrend12m:      bInfo ? bInfo.trend12mStr  : '—',
-        brandTrend12mClass: bInfo ? bInfo.trend12mClass : '',
         readTime:        rTime,
         author,
       });
@@ -1051,13 +1038,6 @@ async function main() {
       brandSlug,
       brandName:  brandInfo.brand.name,
       brandLogo:  brandInfo.brand.logo || '',
-      brandRank:  brandInfo.rank,
-      brandDI:            brandInfo.di,
-      brandMom:           brandInfo.momPct,
-      brandTrend3m:       brandInfo.trend3mStr,
-      brandTrend3mClass:  brandInfo.trend3mClass,
-      brandTrend12m:      brandInfo.trend12mStr,
-      brandTrend12mClass: brandInfo.trend12mClass,
       readTime,
       author,
     });
