@@ -142,15 +142,10 @@ function getBrandInfo(dormiedData, brandSlug) {
   const l3avg   = last3m.length  ? last3m.reduce((s, m)  => s + (globalData[m] || 0), 0) / last3m.length  : 0;
   const p3avg   = prior3m.length ? prior3m.reduce((s, m) => s + (globalData[m] || 0), 0) / prior3m.length : 0;
   const t3m     = p3avg > 0 ? (l3avg - p3avg) / p3avg * 100 : null;
-  const trend3mStr   = fmtPct(t3m);
-  const trend3mClass = pctClass(t3m);
-
   // 12M: point-to-point (current vs same month last year — matches da-article.js)
-  const t12m         = s12ago > 0 ? (curSearches - s12ago) / s12ago * 100 : null;
-  const trend12mStr  = fmtPct(t12m);
-  const trend12mClass = pctClass(t12m);
+  const t12m = s12ago > 0 ? (curSearches - s12ago) / s12ago * 100 : null;
 
-  return { brand, rank, di, momPct, momStr, trend3mStr, trend3mClass, trend12mStr, trend12mClass, currentMonth };
+  return { brand, rank, di, momPct, momStr, t3m, t12m, currentMonth };
 }
 
 function makeSlug(title, dateStr) {
@@ -731,16 +726,14 @@ function generateArticleHtml(opts) {
           <p class="footer-signup-msg" style="display:none"></p>
         </form>
       </div>
-      <p class="footer-legal">© DORMIED. Rankings are independent editorial content. No brand pays for placement or improved position on the DORMIED Index. All brand names and logos are property of their respective owners.</p>
+      <p class="footer-legal">© <span id="footer-year"></span> DORMIED. Rankings are independent editorial content. No brand pays for placement or improved position on the DORMIED Index. All brand names and logos are property of their respective owners.</p>
     </div>
   </footer>
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
-  <script>
-    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
-    window.__DA_BRAND_SLUG__   = '${escHtml(brandSlug)}';
-    window.__DA_ARTICLE_SLUG__ = '${escHtml(slug)}';
-  </script>
+  <!-- Brand slug vars in their own block — isolated so any future error above cannot block them -->
+  <script>window.__DA_BRAND_SLUG__='${escHtml(brandSlug)}';window.__DA_ARTICLE_SLUG__='${escHtml(slug)}';</script>
+  <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script src="/js/analytics.min.js?v=20260320a"></script>
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>

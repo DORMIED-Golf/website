@@ -239,16 +239,14 @@
           <p class="footer-signup-msg" style="display:none"></p>
         </form>
       </div>
-      <p class="footer-legal">© DORMIED. Rankings are independent editorial content. No brand pays for placement or improved position on the DORMIED Index. All brand names and logos are property of their respective owners.</p>
+      <p class="footer-legal">© <span id="footer-year"></span> DORMIED. Rankings are independent editorial content. No brand pays for placement or improved position on the DORMIED Index. All brand names and logos are property of their respective owners.</p>
     </div>
   </footer>
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
-  <script>
-    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
-    window.__DA_BRAND_SLUG__   = 'superstroke';
-    window.__DA_ARTICLE_SLUG__ = 'superstroke-rides-mcilroys-back-to-back-masters-win-into-rel-2026-04-13';
-  </script>
+  <!-- Brand slug vars in their own block — isolated so any future error above cannot block them -->
+  <script>window.__DA_BRAND_SLUG__   = 'superstroke';window.__DA_ARTICLE_SLUG__ = 'superstroke-rides-mcilroys-back-to-back-masters-win-into-rel-2026-04-13';</script>
+  <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
   <script defer src="/js/brand-data/superstroke.js"></script>
