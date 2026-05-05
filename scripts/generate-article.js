@@ -459,7 +459,7 @@ function generateArticleHtml(opts) {
   const {
     title, bodyHtml, imageUrl, ogImageUrl, localUrl, imageAlt, slug, category,
     published_at, source_url, source_name, meta_description, seo_keywords,
-    brandSlug, brandName, brandLogo,
+    brandSlug, brandName, brandLogo, dataVersion,
     readTime, author,
   } = opts;
 
@@ -743,7 +743,7 @@ function generateArticleHtml(opts) {
   </script>
   <script src="/js/analytics.min.js?v=20260320a"></script>
   <script src="/js/signup.min.js?v=20260324d"></script>
-  <script src="/js/brand-data/${escHtml(brandSlug)}.js"></script>
+  <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>
   <script src="/js/da-article.min.js?v=20260427c"></script>
   <script>
   window.addEventListener('load',function(){
@@ -877,6 +877,7 @@ async function main() {
         brandSlug:       bSlug,
         brandName:       bName,
         brandLogo:       bLogo,
+        dataVersion:     (dormiedData.meta.lastUpdated || '').replace(/-/g, ''),
         readTime:        rTime,
         author,
       });
@@ -1038,6 +1039,7 @@ async function main() {
       brandSlug,
       brandName:  brandInfo.brand.name,
       brandLogo:  brandInfo.brand.logo || '',
+      dataVersion: (dormiedData.meta.lastUpdated || '').replace(/-/g, ''),
       readTime,
       author,
     });
