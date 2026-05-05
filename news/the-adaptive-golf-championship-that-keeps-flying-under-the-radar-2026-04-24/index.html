@@ -247,7 +247,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'ping';
     window.__DA_ARTICLE_SLUG__ = 'the-adaptive-golf-championship-that-keeps-flying-under-the-radar-2026-04-24';
   </script>

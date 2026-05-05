@@ -244,7 +244,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'kbs-golf';
     window.__DA_ARTICLE_SLUG__ = 'kbs-finally-has-an-answer-for-the-speed-chasing-amateur-2026-04-20';
   </script>

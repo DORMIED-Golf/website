@@ -244,7 +244,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'cleveland-golf';
     window.__DA_ARTICLE_SLUG__ = 'cleveland-golf-is-now-paying-you-to-play-through-a-rewards-a-2026-04-15';
   </script>

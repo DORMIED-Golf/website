@@ -252,7 +252,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'bridgestone-golf';
     window.__DA_ARTICLE_SLUG__ = 'bridgestone-shutters-georgia-plant-after-36-years-bets-future-on-japan-2026-05-01';
   </script>

@@ -245,7 +245,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'sun-mountain';
     window.__DA_ARTICLE_SLUG__ = 'sun-mountains-camo-play-is-smarter-than-it-looks-2026-04-06';
   </script>

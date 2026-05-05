@@ -241,7 +241,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'original-penguin';
     window.__DA_ARTICLE_SLUG__ = 'original-penguin-is-betting-its-womens-line-on-the-picklebal-2026-04-15';
   </script>

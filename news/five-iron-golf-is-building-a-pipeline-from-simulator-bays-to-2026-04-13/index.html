@@ -241,7 +241,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'trackman';
     window.__DA_ARTICLE_SLUG__ = 'five-iron-golf-is-building-a-pipeline-from-simulator-bays-to-2026-04-13';
   </script>

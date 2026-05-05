@@ -252,7 +252,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'scotty-cameron';
     window.__DA_ARTICLE_SLUG__ = 'scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29';
   </script>

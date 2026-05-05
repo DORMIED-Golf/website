@@ -245,7 +245,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'wilson';
     window.__DA_ARTICLE_SLUG__ = 'wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09';
   </script>

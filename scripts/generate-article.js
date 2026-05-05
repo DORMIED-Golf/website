@@ -737,7 +737,7 @@ function generateArticleHtml(opts) {
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = '${escHtml(brandSlug)}';
     window.__DA_ARTICLE_SLUG__ = '${escHtml(slug)}';
   </script>

@@ -252,7 +252,7 @@
 
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    var _fy = document.getElementById('footer-year'); if (_fy) _fy.textContent = new Date().getFullYear();
     window.__DA_BRAND_SLUG__   = 'nippon-shaft';
     window.__DA_ARTICLE_SLUG__ = 'a-40-year-old-austrian-just-made-the-case-for-steel-shafts-at-the-volvo-2026-04-27';
   </script>
