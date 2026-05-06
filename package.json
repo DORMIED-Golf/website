@@ -9,6 +9,11 @@
     "generate-brands": "node scripts/generate-brand-page.js",
     "generate-brands:force": "node scripts/generate-brand-page.js --force",
     "verify:brands": "node scripts/verify-brands.js",
+    "generate-index-pages": "node scripts/generate-index-pages.js",
+    "generate-index-pages:brands": "node scripts/generate-index-pages.js --brands",
+    "generate-index-pages:news": "node scripts/generate-index-pages.js --news",
+    "generate-index-pages:scorecard": "node scripts/generate-index-pages.js --scorecard",
+    "verify:index-pages": "node scripts/verify-index-pages.js",
     "deploy": "vercel --prod"
   },
   "dependencies": {
