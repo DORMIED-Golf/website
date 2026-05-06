@@ -417,10 +417,8 @@ function generateBrands() {
 
   /* Update title, meta, OG/Twitter */
   html = updateHeadMeta(html, {
-    title:         'The Field — Golf Brand Directory | DORMIED',
-    description:   'Every golf brand we track on the DORMIED Index. 169 brands across 10 global markets, ranked monthly by attention. Search, filter, see who\'s moving.',
-    ogTitle:       'Golf Brand Directory — 169 Brands | DORMIED',
-    ogDescription: '169 golf brands. One field. Search, filter, and find out who\'s actually winning attention in golf right now.',
+    title:       'The Field — Golf Brand Directory | DORMIED',
+    description: 'Every golf brand we track on the DORMIED Index. 169 brands across 10 global markets, ranked monthly by attention. Search, filter, see who\'s moving.',
   });
 
   /* Inject intro copy and subhead into hero section */
