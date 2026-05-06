@@ -16,11 +16,11 @@
     var data = window.DORMIED_SCORECARD_DATA;
     if (!data || !data.issues || !data.issues.length) return;
 
-    /* If the archive grid already contains pre-rendered scorecard-entry elements
+    /* If the hero section already contains a pre-rendered sc-hero-card
        (injected by generate-index-pages.js), skip JS rendering entirely.
-       The static list is the complete representation for both crawlers and users. */
-    var archiveEl = document.getElementById('sc-archive-grid');
-    if (archiveEl && archiveEl.querySelector('.scorecard-entry')) return;
+       The static HTML is the complete representation for both crawlers and users. */
+    var heroEl = document.getElementById('sc-hero');
+    if (heroEl && heroEl.querySelector('.sc-hero-card')) return;
 
     var issues  = data.issues;
     var latest  = issues[0];

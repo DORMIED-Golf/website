@@ -408,13 +408,13 @@
       return;
     }
 
-    /* Newest sort (default): hide/show .feed-entry DOM elements */
+    /* Newest sort (default): hide/show .feed-card DOM elements */
     if (staticFeedHtml !== null) {
       /* Restore static HTML first so all articles are visible before we filter */
       el.innerHTML = staticFeedHtml;
     }
 
-    var entries  = el.querySelectorAll('.feed-entry');
+    var entries  = el.querySelectorAll('.feed-card');
     var visible  = 0;
     var noFilter = !brand && !q;
 

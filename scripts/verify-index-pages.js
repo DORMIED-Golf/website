@@ -66,9 +66,9 @@ console.log('\n── news/index.html ──────────────
     const html = fs.readFileSync(filePath, 'utf8');
     check('h1 text "The Feed"',      html.includes('id="feed-title"') && html.includes('>The Feed<'), true);
     check('meta description present', html.includes('<meta name="description"'), true);
-    check('article links (>20)',      countMatches(html, /href="\/news\/[^"]+\/"/g), 20);
-    check('feed-entry articles (>20)', countMatches(html, /class="feed-entry"/g), 20);
-    check('feed-page.min.js present',  html.includes('feed-page.min.js'), true);
+    check('article links (>20)',            countMatches(html, /href="\/news\/[^"]+\/"/g), 20);
+    check('feed-card articles (>20)',       countMatches(html, /class="feed-card feed-card--full/g), 20);
+    check('feed-page.min.js present',       html.includes('feed-page.min.js'), true);
   }
 }
 
@@ -100,8 +100,8 @@ console.log('\n── scorecard/index.html ────────────�
     check('h1 text "The Scorecard"', html.includes('id="sc-archive-title"') && html.includes('>The Scorecard<'), true);
     check('meta description present', html.includes('<meta name="description"'), true);
     check('/scorecard/ links (≥2)',  countMatches(html, /href="\/scorecard\/[^"]+\/"/g), 2);
-    check('scorecard-entry present (≥2)', countMatches(html, /class="scorecard-entry"/g), 2);
-    check('read-more links (≥2)',         countMatches(html, /class="read-more"/g), 2);
+    check('sc-hero-title present',   html.includes('class="sc-hero-title"'), true);
+    check('sc-read-link present',    html.includes('class="sc-read-link"'), true);
   }
 }
 

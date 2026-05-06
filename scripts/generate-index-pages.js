@@ -514,30 +514,37 @@ async function generateNews() {
 
   console.log(`  Fetched ${articles.length} articles from Supabase`);
 
-  /* Build article HTML per the spec's feed-entry format.
-     - data-brand / data-title: used by feed-page.js for DOM hide/show filtering
-     - excerpt: first 250 chars of body (plain text, no HTML)
-     - meta line: formatted date · linked brand name                            */
+  /* Build article HTML matching the feed-card CSS used by the site.
+     Mirrors renderFeedPageCard() in js/feed.js — static and JS output are identical.
+     data-brand / data-title kept on the article element for feed-page.js DOM filtering. */
   function articleCardHtml(article) {
-    /* Excerpt: first 250 chars of plain-text body, not meta_description */
-    const bodyPlain = stripHtml(article.body || article.description || '');
-    let excerpt = bodyPlain.slice(0, 250);
-    if (bodyPlain.length > 250) excerpt = excerpt.replace(/\s\S+$/, '') + '…';
+    const thumbHtml = article.imageUrl
+      ? `<img class="feed-card-thumb feed-card-thumb--lg" src="${escHtml(article.imageUrl)}"` +
+          ` width="600" height="375" loading="lazy" alt="" onerror="this.remove()">`
+      : '';
 
-    /* Brand tag: linked brand name if known, plain slug otherwise */
+    const descPlain = stripHtml(article.description || '');
+    let excerpt = descPlain.slice(0, 180);
+    if (descPlain.length > 180) excerpt = excerpt.replace(/\s\S+$/, '') + '…';
+    const excerptHtml = excerpt ? `<p class="feed-card-excerpt">${escHtml(excerpt)}</p>` : '';
+
     const bname = brandMap[article.brandSlug] || '';
-    const brandTag = article.brandSlug && bname
-      ? `<a href="/brands/${escHtml(article.brandSlug)}/">${escHtml(bname)}</a>`
-      : (bname ? escHtml(bname) : '');
-    const metaText = formatDate(article.pubDate) + (brandTag ? ' · ' : '');
+    const tagsHtml = article.brandSlug && bname
+      ? `<div class="feed-card-tags"><a href="/brands/${escHtml(article.brandSlug)}/" class="feed-brand-tag">${escHtml(bname)}</a></div>`
+      : '';
 
     return (
-      `<article class="feed-entry"` +
+      `<article class="feed-card feed-card--full feed-card--dormied"` +
         ` data-brand="${escHtml(article.brandSlug)}"` +
         ` data-title="${escHtml((article.title || '').toLowerCase())}">` +
-        `<h2><a href="${escHtml(article.url)}">${escHtml(article.title)}</a></h2>` +
-        `<p class="meta">${escHtml(metaText)}${brandTag}</p>` +
-        (excerpt ? `<p class="excerpt">${escHtml(excerpt)}</p>` : '') +
+        thumbHtml +
+        `<div class="feed-card-body">` +
+          `<div class="feed-card-meta"><span class="feed-time">${escHtml(formatDate(article.pubDate))}</span></div>` +
+          `<a href="${escHtml(article.url)}" class="feed-card-title feed-card-title--lg">${escHtml(article.title)}</a>` +
+          `<p class="feed-card-byline">By ${escHtml(article.author || 'Travis')}</p>` +
+          excerptHtml +
+          tagsHtml +
+        `</div>` +
       `</article>`
     );
   }
@@ -681,23 +688,61 @@ function generateScorecard() {
     return (MONTHS[m[1]] || m[1]) + ' ' + m[2];
   }
 
-  /* Build the spec-compliant scorecard-entry format for every issue (all, not just archive).
-     The scorecard-archive.js JS bails when it sees .scorecard-entry already in the DOM,
-     so this static list is the final representation for both crawlers and JS users.       */
-  const issueListHtml = issues.map(issue => {
-    const monthYear = scorecardMonthYear(issue.date);
-    const lede      = extractLede(issue);
+  /* Build image HTML for hero — mirrors scorecard-archive.js buildImageHtml() */
+  function buildScImageHtml(issue, isHero) {
+    if (!issue.images) return '';
+    const strip = issue.images.strip || [];
+    const hero  = issue.images.hero;
+    if (strip.length > 0) {
+      const items = strip.map(img =>
+        `<div class="sc-strip-item">` +
+          `<img class="sc-strip-img" src="${escHtml(img.src)}" alt="${escHtml(img.label || '')}" loading="lazy">` +
+          (img.label ? `<span class="sc-strip-label">${escHtml(img.label)}</span>` : '') +
+        `</div>`
+      ).join('');
+      return `<div class="sc-image-strip${isHero ? ' sc-image-strip--hero' : ''}">${items}</div>`;
+    }
+    if (hero) return `<img class="sc-hero-img" src="${escHtml(hero)}" alt="" loading="lazy">`;
+    return '';
+  }
+
+  /* Hero: latest issue — mirrors renderHero() in scorecard-archive.js */
+  const latest  = issues[0];
+  const archive = issues.slice(1);
+
+  const heroHtml =
+    `<div class="sc-hero-card">` +
+      `<div class="sc-hero-label-row">` +
+        `<span class="sc-label">THE SCORECARD</span>` +
+        `<span class="sc-hero-date">${escHtml(latest.date)}</span>` +
+      `</div>` +
+      buildScImageHtml(latest, true) +
+      `<h2 class="sc-hero-title">${escHtml(latest.title)}</h2>` +
+      `<p class="sc-hero-sub">${escHtml(latest.subtitle || '')}</p>` +
+      `<a href="/scorecard/${escHtml(latest.slug)}/" class="sc-read-link">Read The Scorecard &#x2192;</a>` +
+    `</div>`;
+
+  /* Archive: all other issues — mirrors renderArchive() in scorecard-archive.js */
+  const archiveHtml = archive.map(issue => {
+    const thumb = issue.images && (issue.images.hero ||
+      (issue.images.strip && issue.images.strip[0] && issue.images.strip[0].src));
+    const thumbHtml = thumb
+      ? `<img class="sc-archive-thumb" src="${escHtml(thumb)}" alt="" loading="lazy">`
+      : `<div class="sc-archive-thumb sc-archive-thumb--placeholder"></div>`;
     return (
-      `<article class="scorecard-entry">` +
-        `<h2><a href="/scorecard/${escHtml(issue.slug)}/">${escHtml(monthYear)} Scorecard</a></h2>` +
-        `<p class="meta">${escHtml(monthYear)} · By Adam &amp; Travis</p>` +
-        (lede ? `<p class="lede">${escHtml(lede)}</p>` : '') +
-        `<p><a class="read-more" href="/scorecard/${escHtml(issue.slug)}/">Read the issue &#x2192;</a></p>` +
-      `</article>`
+      `<a href="/scorecard/${escHtml(issue.slug)}/" class="sc-archive-card">` +
+        thumbHtml +
+        `<div class="sc-archive-card-body">` +
+          `<span class="sc-label sc-label--sm">THE SCORECARD</span>` +
+          `<div class="sc-archive-date">${escHtml(issue.date)}</div>` +
+          `<div class="sc-archive-title">${escHtml(issue.title)}</div>` +
+          `<p class="sc-archive-sub">${escHtml(issue.subtitle || '')}</p>` +
+        `</div>` +
+      `</a>`
     );
   }).join('\n');
 
-  /* Intro copy — verbatim from spec */
+  /* Intro copy */
   const scorecardIntroParagraphs =
     `<p class="hero-desc">The Index gives you the numbers. The Scorecard tells you what they mean.</p>` +
     `<p class="hero-desc hero-desc--secondary">Every month we publish one issue from the desk. It opens with the Lede, runs through who's at the top, calls out the biggest move, picks through the rest of the field, drops in on who fell, looks ahead with the long game, files a global dispatch from outside the US, and closes with a note signed by Adam and Travis.</p>` +
@@ -719,22 +764,18 @@ function generateScorecard() {
   /* Inject subhead + intro copy */
   html = injectHeroContent(html, 'sc-archive-title', 'Monthly Golf Brand Newsletter', scorecardIntroParagraphs);
 
-  /* Clear the hero section — all issues are now in the uniform issue list below.
-     The scorecard-archive.js JS bails when .scorecard-entry is present, so
-     #sc-hero stays empty for JS users too (no client-side enhancements needed). */
-  html = injectIntoId(html, 'sc-hero', '');
+  /* Inject hero (latest issue) and archive grid (all older issues) */
+  html = injectIntoId(html, 'sc-hero', heroHtml);
+  html = injectIntoId(html, 'sc-archive-grid', archiveHtml);
 
-  /* Inject complete issue list (all issues, spec scorecard-entry format) */
-  html = injectIntoId(html, 'sc-archive-grid', issueListHtml);
-
-  /* Update the "Previous Issues" heading to reflect all issues */
+  /* Restore the "Previous Issues" heading text */
   html = html.replace(
     /(<h2[^>]+id="sc-archive-heading"[^>]*>)[^<]*/,
-    '$1All Issues'
+    '$1Previous Issues'
   );
 
   fs.writeFileSync(filePath, html, 'utf8');
-  console.log(`  ✔  scorecard/index.html — ${issues.length} issue(s) as scorecard-entry, title/meta/intro updated`);
+  console.log(`  ✔  scorecard/index.html — hero + ${archive.length} archive card(s), title/meta/intro updated`);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
