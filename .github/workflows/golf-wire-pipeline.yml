@@ -100,6 +100,28 @@ jobs:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
+      - name: Regenerate news index after publish
+        # Articles are now published in Supabase — regenerate /news/ so the static
+        # pages include them. This is the step that was missing: generate-article.js
+        # calls generate-index-pages --news BEFORE publish, so new articles (still
+        # draft at that point) were always excluded from the baked HTML.
+        run: |
+          node scripts/generate-index-pages.js --news
+
+          git add news/
+
+          if git diff --cached --quiet; then
+            echo "News index already up to date — nothing to commit."
+          else
+            git commit -m "chore: regenerate news index after article publish [skip ci]"
+            git pull --rebase -X theirs origin main
+            git push
+            echo "News index updated and pushed."
+          fi
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       - name: Ping search engines
         if: success()
         run: |
