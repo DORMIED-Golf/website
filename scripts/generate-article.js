@@ -294,14 +294,45 @@ function formatDate(isoDate) {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-function bodyToHtml(plainText, brandSlug, brandName) {
+/**
+ * Convert plain-text body to HTML paragraphs, auto-linking the first occurrence
+ * of each brand name across the entire body (not per-paragraph).
+ *
+ * @param {string} plainText  - Newline-separated paragraphs from Claude
+ * @param {string} primarySlug - Primary brand slug
+ * @param {string} primaryName - Primary brand display name
+ * @param {Array<{slug:string, name:string}>} secondaryBrands - Additional brands (optional)
+ */
+function bodyToHtml(plainText, primarySlug, primaryName, secondaryBrands = []) {
   const paras = plainText.split(/\n\n+/).filter(p => p.trim());
+
+  // Build list of all brands to auto-link, sorted longest-name-first to avoid
+  // partial matches (e.g. "TaylorMade" before "Taylor").
+  const allBrands = [
+    { slug: primarySlug, name: primaryName },
+    ...secondaryBrands,
+  ].filter(b => b.slug && b.name);
+  allBrands.sort((a, b) => b.name.length - a.name.length);
+
+  // Track which brands have already been linked (first-occurrence-only across whole body).
+  const linked = new Set();
+
+  // Join all paragraphs into one string for global first-occurrence matching,
+  // then split back into paragraphs after replacement.
+  // We do per-paragraph processing but pass `linked` across paragraphs.
   return paras.map(p => {
-    // Auto-link brand name in body
-    const escaped = brandName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const re = new RegExp(`(?<![\\w/"])${escaped}(?![\\w"])`, 'g');
-    const linked = p.replace(re, `<a href="/brands/${brandSlug}/" class="da-brand-link">${brandName}</a>`);
-    return `<p>${linked}</p>`;
+    let out = p;
+    for (const { slug, name } of allBrands) {
+      if (linked.has(slug)) continue; // already linked in an earlier paragraph
+      const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      // Match brand name not preceded/followed by word chars or quote/slash
+      const re = new RegExp(`(?<![\\w/"])${escaped}(?![\\w"])`, '');
+      if (re.test(out)) {
+        out = out.replace(re, `<a href="/brands/${slug}/" class="da-brand-link">${name}</a>`);
+        linked.add(slug);
+      }
+    }
+    return `<p>${out}</p>`;
   }).join('\n');
 }
 
@@ -315,9 +346,21 @@ function isInvalid(text) {
   return false;
 }
 
+/** Returns true when the body has fewer than 500 words — triggers expansion retry. */
+function isTooShort(text) {
+  if (!text) return true;
+  return text.trim().split(/\s+/).filter(Boolean).length < 500;
+}
+
+/** Count words in body text (for soft-warning logging). */
+function wordCount(text) {
+  if (!text) return 0;
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
 // ── Opus ──────────────────────────────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You are the editorial voice of DORMIED, a golf brand intelligence platform. Rewrite the following press release as a substantial original article (400-600 words). Write in DORMIED's voice: direct, dry, opinionated, informed. No filler. No em dashes. No exclamation points. No "exciting news" language. No preamble. No bullet points.
+const SYSTEM_PROMPT = `You are the editorial voice of DORMIED, a golf brand intelligence platform. Rewrite the following press release as a substantial original article (550-700 words). Write in DORMIED's voice: direct, dry, opinionated, informed. No filler. No em dashes. No exclamation points. No "exciting news" language. No preamble. No bullet points.
 
 Lead with the story. What happened, why it matters, what it says about where this brand is headed, and what it means for the broader golf market. Write like a columnist covering a beat, not like a data platform summarizing metrics. The reader should walk away understanding the news, your take on it, and why it matters to them as a golfer or someone following the industry.
 
@@ -327,8 +370,8 @@ This article will appear alongside headlines from MyGolfSpy, GolfWRX, and Golf D
 
 Structure:
 - Lead sentence: the news, stated plainly and with authority
-- Body (3-5 paragraphs): context, history, editorial analysis, and industry implications
-- Closing paragraph: a forward-looking observation about this brand's trajectory
+- Body (4-5 paragraphs): context, history, editorial analysis, and industry implications. Each paragraph should add something — new context, a different angle, a concrete detail. Do not pad with filler.
+- Closing paragraph: a forward-looking observation about this brand's trajectory. Required. Must appear as the final paragraph. It should feel like the article's last word on the subject — where this brand is heading, what this move implies, what to watch for.
 
 DISALLOWED opening phrases (will be auto-rejected):
 "Based on", "According to", "From my", "From the", "Looking at", "After reviewing", "Having reviewed", "The search results", "The news", "The data shows", "It appears", "It seems", "[Brand name]" as the first word.
@@ -353,7 +396,7 @@ Examples of good X posts (notice none start with the brand name):
 Return valid JSON only — no markdown fences, no preamble, exactly this structure:
 {
   "title": "the headline",
-  "body": "paragraph one\\n\\nparagraph two\\n\\nparagraph three",
+  "body": "paragraph one\\n\\nparagraph two\\n\\nparagraph three\\n\\nparagraph four\\n\\nparagraph five",
   "meta_description": "120-155 character SEO description including brand name",
   "seo_keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
   "x_post": "under 250 chars, no hashtags, hot take voice"
@@ -456,9 +499,10 @@ function generateArticleHtml(opts) {
     published_at, source_url, source_name, meta_description, seo_keywords,
     brandSlug, brandName, brandLogo, dataVersion,
     readTime, author, dormiedData,
+    secondaryBrands = [], // Array<{slug, name, logo}>
   } = opts;
 
-  // Compute live brand metrics for the widget (Item 5)
+  // Compute live brand metrics for the primary brand widget
   const bInfo  = dormiedData ? getBrandInfo(dormiedData, brandSlug) : null;
   const bRank  = bInfo ? `#${bInfo.rank}` : '—';
   const bDi    = bInfo ? bInfo.di.toFixed(1) : '—';
@@ -468,6 +512,45 @@ function generateArticleHtml(opts) {
   const bMomCls  = bInfo && bInfo.momPct  !== null ? ` class="${pctClass(bInfo.momPct)}"` : '';
   const bT3mCls  = bInfo && bInfo.t3m     !== null ? ` class="${pctClass(bInfo.t3m)}"` : '';
   const bT12mCls = bInfo && bInfo.t12m    !== null ? ` class="${pctClass(bInfo.t12m)}"` : '';
+
+  // Compute metrics for secondary brand widgets (if any)
+  const secondaryBrandWidgets = secondaryBrands.map(sb => {
+    const sbInfo    = dormiedData ? getBrandInfo(dormiedData, sb.slug) : null;
+    const sbRank    = sbInfo ? `#${sbInfo.rank}` : '—';
+    const sbDi      = sbInfo ? sbInfo.di.toFixed(1) : '—';
+    const sbMom     = sbInfo ? sbInfo.momStr : '—';
+    const sbT3m     = sbInfo ? fmtPct(sbInfo.t3m) : '—';
+    const sbT12m    = sbInfo ? fmtPct(sbInfo.t12m) : '—';
+    const sbMomCls  = sbInfo && sbInfo.momPct !== null ? ` class="${pctClass(sbInfo.momPct)}"` : '';
+    const sbT3mCls  = sbInfo && sbInfo.t3m    !== null ? ` class="${pctClass(sbInfo.t3m)}"` : '';
+    const sbT12mCls = sbInfo && sbInfo.t12m   !== null ? ` class="${pctClass(sbInfo.t12m)}"` : '';
+    const sbInitials = sb.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const sbLogoFallback = `<span class=&quot;bp-logo-initials&quot; style=&quot;background:#1a2a1a;width:40px;height:40px;font-size:0.9rem&quot;>${escHtml(sbInitials)}</span>`;
+    const sbLogoHtml = sb.logo
+      ? `<img src="${escHtml(sb.logo.replace(/sz=\d+/, 'sz=40'))}" alt="${escHtml(sb.name)}" class="bp-logo-img" width="40" height="40" style="width:40px;height:40px" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${sbLogoFallback}')">`
+      : `<span class="bp-logo-initials" style="background:#1a2a1a;width:40px;height:40px;font-size:0.9rem">${escHtml(sbInitials)}</span>`;
+    return `
+            <!-- Secondary brand card: ${escHtml(sb.name)} -->
+            <div class="da-brand-card da-brand-card--secondary">
+              <div class="da-brand-card-header">
+                <span class="da-brand-card-label">ALSO MENTIONED</span>
+                <a href="/brands/${escHtml(sb.slug)}/" class="da-brand-card-cta">View Brand →</a>
+              </div>
+              <div class="da-brand-card-main">
+                <div class="da-brand-card-identity">
+                  <div class="da-brand-card-logo">${sbLogoHtml}</div>
+                  <a href="/brands/${escHtml(sb.slug)}/" class="da-brand-card-name">${escHtml(sb.name)}</a>
+                </div>
+                <div class="da-brand-card-stats">
+                  <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">${sbRank}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">${sbDi}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val"${sbMomCls}>${sbMom}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val"${sbT3mCls}>${sbT3m}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val"${sbT12mCls}>${sbT12m}</span></div>
+                </div>
+              </div>
+            </div>`;
+  }).join('\n');
 
   const dateFormatted  = formatDate(published_at);
   const dateISO        = new Date(published_at).toISOString();
@@ -497,6 +580,15 @@ function generateArticleHtml(opts) {
         </picture>
         <span class="da-image-credit">Image: <a href="${escHtml(source_url)}" target="_blank" rel="noopener noreferrer">${escHtml(source_name)}</a></span>
       </div>`
+    : '';
+
+  // JSON-LD "about" array — primary brand + any secondary brands
+  const aboutEntries = [
+    { slug: brandSlug, name: brandName },
+    ...secondaryBrands,
+  ].map(b => `{ "@type": "Organization", "name": "${escHtml(b.name)}", "url": "https://dormied.com/brands/${b.slug}/" }`);
+  const aboutJson = aboutEntries.length > 0
+    ? `,\n    "about": [${aboutEntries.join(', ')}]`
     : '';
 
   return `<!DOCTYPE html>
@@ -564,7 +656,7 @@ function generateArticleHtml(opts) {
     "datePublished": "${dateISO}",
     "author": { "@type": "Person", "name": "${escHtml(author)}", "url": "https://dormied.com/about/" },
     "publisher": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com" },
-    "url": "${canonicalUrl}",
+    "url": "${canonicalUrl}"${aboutJson},
     "breadcrumb": {
       "@type": "BreadcrumbList",
       "itemListElement": [
@@ -664,6 +756,7 @@ function generateArticleHtml(opts) {
               </div>
             </div>
 
+            ${secondaryBrandWidgets}
 
             <!-- More on [Brand] -->
             <section class="da-bottom-section" id="da-more-brand-section" aria-labelledby="da-more-brand-heading" hidden>
@@ -843,7 +936,7 @@ async function main() {
   // Step B: fetch IDs already generated (+ brand + date + title for dedup checks)
   const { data: existing, error: existErr } = await supabase
     .from('dormied_articles')
-    .select('matched_article_id, brand_slug, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author');
+    .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author');
 
   if (existErr) {
     console.error('[generate] Failed to fetch existing articles:', existErr.message);
@@ -929,11 +1022,15 @@ async function main() {
   // Per-brand body index — raw source body vs recent same-brand generated bodies
   // Body comparison survives DORMIED's title rewrites because specific product names,
   // model numbers, and key facts appear in both raw and generated bodies.
+  // Index under both primary and secondary brand slugs so cross-brand dedup works.
   const brandRecentBodies = {};
   for (const r of recentArticles) {
-    if (!r.brand_slug || !r.body) continue;
-    if (!brandRecentBodies[r.brand_slug]) brandRecentBodies[r.brand_slug] = [];
-    brandRecentBodies[r.brand_slug].push(r.body);
+    if (!r.body) continue;
+    const slugsToIndex = [r.brand_slug, ...(r.secondary_brand_slugs || [])].filter(Boolean);
+    for (const s of slugsToIndex) {
+      if (!brandRecentBodies[s]) brandRecentBodies[s] = [];
+      brandRecentBodies[s].push(r.body);
+    }
   }
 
   // Step C: filter in JS, cap at MAX
@@ -966,13 +1063,17 @@ async function main() {
       // ── Check 2: same-brand body similarity (catches same TOPIC even with different title) ──
       // Compares incoming raw body keywords against stored generated bodies for the same brand.
       // Threshold 0.20 → same story shares ~40-60% of body terms; different story shares ~5-15%.
+      // Check against ALL brands in this matched article (primary + secondary).
       if (rawBody) {
-        const brandBodies = brandRecentBodies[m.primary_brand_slug] || [];
-        for (const pastBody of brandBodies) {
-          const sim = bodySimilarity(rawBody, pastBody);
-          if (sim >= 0.20) {
-            console.log(`[generate] Skipping same-brand topic (body sim ${(sim * 100).toFixed(0)}%): "${rawTitle}"`);
-            return false;
+        const slugsToCheck = [m.primary_brand_slug, ...(Array.isArray(m.all_brand_slugs) ? m.all_brand_slugs : [])].filter(Boolean);
+        for (const slug of slugsToCheck) {
+          const brandBodies = brandRecentBodies[slug] || [];
+          for (const pastBody of brandBodies) {
+            const sim = bodySimilarity(rawBody, pastBody);
+            if (sim >= 0.20) {
+              console.log(`[generate] Skipping same-brand topic (body sim ${(sim * 100).toFixed(0)}%, brand ${slug}): "${rawTitle}"`);
+              return false;
+            }
           }
         }
       }
@@ -981,15 +1082,18 @@ async function main() {
     })
     .slice(0, MAX_ARTICLES_PER_RUN);
 
-  // Deduplicate within this run: one article per brand (keeps first / highest-priority match)
+  // Deduplicate within this run: one article per brand (keeps first / highest-priority match).
+  // Track all brands (primary + secondary) so two articles covering the same brand aren't generated.
   const seenBrandsThisRun = new Set();
   const matchedDeduped = matched.filter(m => {
     if (FORCE_IDS.has(m.id)) return true; // forced articles always included
-    if (seenBrandsThisRun.has(m.primary_brand_slug)) {
-      console.log(`[generate] Skipping within-run duplicate brand: ${m.primary_brand_slug}`);
+    const allSlugsForM = [m.primary_brand_slug, ...(Array.isArray(m.all_brand_slugs) ? m.all_brand_slugs : [])].filter(Boolean);
+    const conflict = allSlugsForM.find(s => seenBrandsThisRun.has(s));
+    if (conflict) {
+      console.log(`[generate] Skipping within-run duplicate brand (${conflict}): ${m.primary_brand_slug}`);
       return false;
     }
-    seenBrandsThisRun.add(m.primary_brand_slug);
+    for (const s of allSlugsForM) seenBrandsThisRun.add(s);
     return true;
   });
 
@@ -1025,11 +1129,54 @@ async function main() {
       }
     }
 
+    // ── Word-count gate ───────────────────────────────────────────────────────
+    // Hard floor at 500 words: retry once with an expansion addendum.
+    // Soft warning for 500-549 words: log but proceed.
+    if (isTooShort(parsed.body)) {
+      const wc = wordCount(parsed.body);
+      console.warn(`[generate] Body too short (${wc} words) for "${raw.title}" — retrying with expansion prompt`);
+      const expansionAddendum = '\n\nYour previous article was too short. The target is 550-700 words. Expand the body with additional context, industry analysis, or relevant history. Add at least one more substantive paragraph. Do not pad — every sentence should add information. Return valid JSON with all fields.';
+      rawResponse = await callOpus(anthropic, raw.body + expansionAddendum, brandInfo, false);
+      parsed      = parseOpusResponse(rawResponse);
+      if (!parsed) {
+        console.warn(`[generate] Expansion retry unparseable — skipping`);
+        continue;
+      }
+      if (isInvalid(parsed.body)) {
+        console.warn(`[generate] Expansion retry invalid — skipping`);
+        continue;
+      }
+    }
+
+    const wc = wordCount(parsed.body);
+    if (wc < 550) {
+      console.warn(`[generate] ⚠ Soft word-count warning: ${wc} words for "${raw.title}" (target 550-700)`);
+    } else {
+      console.log(`[generate] Word count: ${wc} words`);
+    }
+
     const { title, body, meta_description, seo_keywords, x_post } = parsed;
     const publishedAt = raw.published_at || new Date().toISOString();
     const slug        = makeSlug(title, publishedAt);
     const readTime    = estimateReadTime(body);
-    const bodyHtml    = bodyToHtml(body, brandSlug, brandInfo.brand.name);
+
+    // ── Secondary brands ─────────────────────────────────────────────────────
+    // all_brand_slugs is the full set matched to this wire item; primary is already first.
+    const allSlugs       = Array.isArray(match.all_brand_slugs) ? match.all_brand_slugs : [];
+    const secondarySlugs = allSlugs.filter(s => s && s !== brandSlug);
+    const brandsMapLocal = dormiedData ? new Map((dormiedData.brands || []).map(b => [b.id, b])) : new Map();
+    const secondaryBrands = secondarySlugs
+      .map(s => {
+        const b = brandsMapLocal.get(s);
+        return b ? { slug: s, name: b.name, logo: b.logo || '' } : null;
+      })
+      .filter(Boolean)
+      .slice(0, 3); // cap at 3 secondary brands per article
+    if (secondaryBrands.length > 0) {
+      console.log(`[generate] Secondary brands: ${secondaryBrands.map(b => b.slug).join(', ')}`);
+    }
+
+    const bodyHtml    = bodyToHtml(body, brandSlug, brandInfo.brand.name, secondaryBrands);
     // Use brand category first (reliable) — raw.category from the wire can be generic
     const author      = authorFromCategory(brandInfo.brand.category || raw.category);
 
@@ -1066,12 +1213,13 @@ async function main() {
       meta_description,
       seo_keywords,
       brandSlug,
-      brandName:  brandInfo.brand.name,
-      brandLogo:  brandInfo.brand.logo || '',
-      dataVersion: (dormiedData.meta.lastUpdated || '').replace(/-/g, ''),
+      brandName:       brandInfo.brand.name,
+      brandLogo:       brandInfo.brand.logo || '',
+      dataVersion:     (dormiedData.meta.lastUpdated || '').replace(/-/g, ''),
       readTime,
       author,
       dormiedData,
+      secondaryBrands,
     });
 
     fs.writeFileSync(articlePath, html, 'utf8');
@@ -1094,20 +1242,21 @@ async function main() {
     const { error: insertErr } = await supabase
       .from('dormied_articles')
       .insert({
-        matched_article_id: match.id,
-        brand_slug:         brandSlug,
+        matched_article_id:   match.id,
+        brand_slug:           brandSlug,
+        secondary_brand_slugs: secondaryBrands.map(b => b.slug),
         title,
         body,
-        image_url:          imageUrl,
-        source_url:         raw.source_url,
-        source_name:        sourceName,
+        image_url:            imageUrl,
+        source_url:           raw.source_url,
+        source_name:          sourceName,
         meta_description,
-        seo_keywords:       seo_keywords || [],
-        published_at:       publishedAt,
-        status:             'draft', // promoted → 'published' by publish-articles.js after git push
+        seo_keywords:         seo_keywords || [],
+        published_at:         publishedAt,
+        status:               'draft', // promoted → 'published' by publish-articles.js after git push
         slug,
-        category:           raw.category || 'Business',
-        x_post_text:        x_post || null,
+        category:             raw.category || 'Business',
+        x_post_text:          x_post || null,
         author,
       });
 
