@@ -722,6 +722,7 @@ function generateArticleHtml(opts) {
         <a href="/about/">About</a>
         <a href="/contact/">Contact</a>
         <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
         <a href="/sitemap.xml">Sitemap</a>
       </nav>
       <div class="footer-signup">

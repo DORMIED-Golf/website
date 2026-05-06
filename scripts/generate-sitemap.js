@@ -156,11 +156,16 @@ function regenerateSitemap() {
   const today = new Date().toISOString().slice(0, 10);
 
   // ── 1. Static pages ────────────────────────────────────────────────────────
+  // Hardcoded set — add a line here whenever a new top-level static page ships.
   const staticIndexLastmod = mtimeDate(path.join(SITE_ROOT, 'index.html'));
-  const brandsIndexLastmod = mtimeDate(path.join(SITE_ROOT, 'brands', 'index.html'));
-  const newsIndexLastmod   = mtimeDate(path.join(SITE_ROOT, 'news',   'index.html'));
+  const brandsIndexLastmod = mtimeDate(path.join(SITE_ROOT, 'brands',    'index.html'));
+  const newsIndexLastmod   = mtimeDate(path.join(SITE_ROOT, 'news',      'index.html'));
   const scIndexLastmod     = mtimeDate(path.join(SITE_ROOT, 'scorecard', 'index.html'));
-  const rankLastmod        = mtimeDate(path.join(SITE_ROOT, 'rankings', 'index.html'));
+  const rankLastmod        = mtimeDate(path.join(SITE_ROOT, 'rankings',  'index.html'));
+  const aboutLastmod       = mtimeDate(path.join(SITE_ROOT, 'about',     'index.html'));
+  const contactLastmod     = mtimeDate(path.join(SITE_ROOT, 'contact',   'index.html'));
+  const privacyLastmod     = mtimeDate(path.join(SITE_ROOT, 'privacy',   'index.html'));
+  const termsLastmod       = mtimeDate(path.join(SITE_ROOT, 'terms',     'index.html'));
 
   const staticEntries = [
     `  <!-- ── Static pages ── -->`,
@@ -169,6 +174,10 @@ function regenerateSitemap() {
     staticEntry('/scorecard/',  scIndexLastmod,     'monthly', '0.9'),
     staticEntry('/news/',       newsIndexLastmod,   'daily',   '0.8'),
     staticEntry('/brands/',     brandsIndexLastmod, 'daily',   '0.8'),
+    staticEntry('/about/',      aboutLastmod,       'monthly', '0.6'),
+    staticEntry('/contact/',    contactLastmod,     'monthly', '0.6'),
+    staticEntry('/privacy/',    privacyLastmod,     'monthly', '0.5'),
+    staticEntry('/terms/',      termsLastmod,       'monthly', '0.5'),
   ];
 
   // ── 2. Scorecard issues ────────────────────────────────────────────────────
@@ -250,7 +259,7 @@ function regenerateSitemap() {
 
   fs.writeFileSync(OUT_PATH, xml, 'utf8');
 
-  const total = 5 + scorecardPages.length + brandPages.length + newsPages.length + newsPageDirs.length;
+  const total = staticEntries.filter(e => e.includes('<url>')).length + scorecardPages.length + brandPages.length + newsPages.length + newsPageDirs.length;
   console.log(`[sitemap] ✓ Regenerated sitemap.xml — ${total} URLs (${newsPages.length} articles, ${brandPages.length} brands, ${scorecardPages.length} scorecard issues)`);
   return total;
 }
