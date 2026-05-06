@@ -81,14 +81,6 @@
       "destination": "/scorecard/index.html"
     },
     {
-      "source": "/scorecard/:slug",
-      "destination": "/scorecard/article.html"
-    },
-    {
-      "source": "/scorecard/:slug/",
-      "destination": "/scorecard/article.html"
-    },
-    {
       "source": "/news",
       "destination": "/news/index.html"
     },
@@ -168,6 +160,15 @@
     },
     {
       "source": "/brands/(.+)/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/scorecard/(.+)/",
       "headers": [
         {
           "key": "Cache-Control",
