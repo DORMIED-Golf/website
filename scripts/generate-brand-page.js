@@ -248,9 +248,114 @@ function updateSitemapLastmod(slug, dateStr) {
   fs.writeFileSync(sitemapPath, updated, 'utf8');
 }
 
+// ── Per-market helpers — match brand.js exactly ───────────────────────────────
+
+// brand.js uses `val > 0` (not `>=`), so zero reads as '0.0%' without a plus sign.
+function mktFmtPct(val) {
+  if (val === null || val === undefined) return '—';
+  return (val > 0 ? '+' : '') + val.toFixed(1) + '%';
+}
+
+// Matches brand.js pctClass(val, threshold=0)
+function mktPctClass(val) {
+  if (val === null || val === undefined) return 'change-flat';
+  return val > 0 ? 'change-up' : val < 0 ? 'change-down' : 'change-flat';
+}
+
+// Matches brand.js fmtVol(n)
+function fmtVol(n) {
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return Math.round(n / 1e3) + 'K';
+  return n.toLocaleString('en-US');
+}
+
+/**
+ * Port of brand.js computeMarketStats() — exact same algorithm, including the
+ * three-way tiebreaker (current DI → prev-month rank → 3-months-ago rank).
+ * Returns array of { key, label, flag, rank, di, vsMonth, vsYear, totalSearches }
+ * in the same order as data.meta.markets (global first, then the 10 markets).
+ */
+function computeMarketStats(dormiedData, brand) {
+  const cm    = dormiedData.meta.currentMonth;
+  const pm    = dormiedData.meta.previousMonth;
+  const ago3m = shiftMonth(cm, -3);
+  const yam   = shiftMonth(cm, -12);
+
+  return dormiedData.meta.markets.map(mkt => {
+    const key         = mkt.key;
+    const mktSearches = brand.searchesByMarket?.[key] || {};
+    const allVals     = dormiedData.brands.map(b => b.searchesByMarket?.[key]?.[cm] || 0);
+    const max         = Math.max(...allVals);
+    const cur         = mktSearches[cm]  || 0;
+    const prev        = mktSearches[pm]  || 0;
+    const ya          = mktSearches[yam] || 0;
+
+    // Build prev-month and 3M-ago rank maps for tiebreaking — mirrors brand.js exactly
+    const prevSortedMkt = [...dormiedData.brands].sort((a, b) => {
+      const diff = (b.searchesByMarket?.[key]?.[pm] || 0) - (a.searchesByMarket?.[key]?.[pm] || 0);
+      if (Math.abs(diff) > 0.0001) return diff;
+      return (b.searchesByMarket?.[key]?.[ago3m] || 0) - (a.searchesByMarket?.[key]?.[ago3m] || 0);
+    });
+    const prevRankMkt = new Map();
+    prevSortedMkt.forEach((b, i) => prevRankMkt.set(b.id, i + 1));
+
+    const ago3SortedMkt = [...dormiedData.brands].sort((a, b) =>
+      (b.searchesByMarket?.[key]?.[ago3m] || 0) - (a.searchesByMarket?.[key]?.[ago3m] || 0)
+    );
+    const ago3RankMkt = new Map();
+    ago3SortedMkt.forEach((b, i) => ago3RankMkt.set(b.id, i + 1));
+
+    const sorted = [...dormiedData.brands].sort((a, b) => {
+      const diff = (b.searchesByMarket?.[key]?.[cm] || 0) - (a.searchesByMarket?.[key]?.[cm] || 0);
+      if (Math.abs(diff) > 0.0001) return diff;
+      const prevDiff = (prevRankMkt.get(a.id) || 9999) - (prevRankMkt.get(b.id) || 9999);
+      if (prevDiff !== 0) return prevDiff;
+      return (ago3RankMkt.get(a.id) || 9999) - (ago3RankMkt.get(b.id) || 9999);
+    });
+
+    const rank         = sorted.findIndex(b => b.id === brand.id) + 1;
+    const di           = max > 0 ? parseFloat((cur / max * 100).toFixed(1)) : 0;
+    const totalSearches = dormiedData.brands.reduce((s, b) => s + (b.searchesByMarket?.[key]?.[cm] || 0), 0);
+
+    return {
+      key, label: mkt.label, flag: mkt.flag,
+      rank: rank || null,
+      di,
+      vsMonth: prev > 0 ? (cur - prev) / prev * 100 : null,
+      vsYear:  ya   > 0 ? (cur - ya)   / ya   * 100 : null,
+      totalSearches,
+    };
+  });
+}
+
+/**
+ * Render <tr> rows matching renderCountryTable() in brand.js exactly.
+ * Same columns, same order, same class names, same number formatting.
+ */
+function buildCountryTableRows(marketStats) {
+  return marketStats.map(mkt => {
+    const rankStr = mkt.rank ? `#${mkt.rank}` : '—';
+    const diStr   = mkt.di   ? mkt.di.toFixed(1) : '—';
+    const momStr  = mktFmtPct(mkt.vsMonth);
+    const yoyStr  = mktFmtPct(mkt.vsYear);
+    const momCls  = mktPctClass(mkt.vsMonth);
+    const yoyCls  = mktPctClass(mkt.vsYear);
+    const volStr  = mkt.totalSearches > 0 ? fmtVol(mkt.totalSearches) : '—';
+    const rowCls  = mkt.key === 'global' ? ' class="bp-ct-global"' : '';
+    return `<tr${rowCls}>
+        <td class="bp-ct-market"><span class="bp-ct-flag">${mkt.flag}</span> ${escHtml(mkt.label)}</td>
+        <td class="bp-ct-rank"><span class="rank-num">${rankStr}</span></td>
+        <td class="bp-ct-di"><span class="di-value">${diStr}</span></td>
+        <td class="bp-ct-change"><span class="change-val ${momCls}">${momStr}</span></td>
+        <td class="bp-ct-yoy"><span class="change-val ${yoyCls}">${yoyStr}</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">${volStr}</span></td>
+      </tr>`;
+  }).join('\n');
+}
+
 // ── HTML template ─────────────────────────────────────────────────────────────
 
-function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBrands }) {
+function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBrands, dormiedData }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
   const pageTitle    = `${escHtml(brand.name)} | DORMIED Brand Profile`;
@@ -261,6 +366,10 @@ function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBran
   const momStr = fmtPct(momPct);
   const t3mStr = fmtPct(t3m);
   const t12mStr = fmtPct(t12m);
+
+  // Per-market table — computed server-side, same algorithm as brand.js
+  const marketStats    = computeMarketStats(dormiedData, brand);
+  const countryRows    = buildCountryTableRows(marketStats);
 
   // Meta line: Founded YYYY · Headquarters (category already shown as badge)
   const metaParts = [];
@@ -609,8 +718,8 @@ ${takeSectionHtml}
         <div class="table-layout">
           <div class="bp-sections-col">
 
-            <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
+            <!-- ── Rankings by Market (server-rendered; brand.js overwrites on load) ── -->
+            <section class="bp-section" aria-labelledby="bp-countries-heading">
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -624,7 +733,9 @@ ${takeSectionHtml}
                       <th>Index Size</th>
                     </tr>
                   </thead>
-                  <tbody id="bp-country-tbody"></tbody>
+                  <tbody id="bp-country-tbody">
+${countryRows}
+                  </tbody>
                 </table>
               </div>
               <div class="bp-dominance" id="bp-dominance"></div>
@@ -787,7 +898,7 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force) {
 
   const relatedBrands = getRelatedBrands(dormiedData, brandSlug, curSearches);
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, articles, relatedBrands });
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, articles, relatedBrands, dormiedData });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });

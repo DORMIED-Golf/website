@@ -266,8 +266,8 @@ The brand faces increasing competition from photometric systems like Foresight G
         <div class="table-layout">
           <div class="bp-sections-col">
 
-            <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
+            <!-- ── Rankings by Market (server-rendered; brand.js overwrites on load) ── -->
+            <section class="bp-section" aria-labelledby="bp-countries-heading">
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -281,7 +281,96 @@ The brand faces increasing competition from photometric systems like Foresight G
                       <th>Index Size</th>
                     </tr>
                   </thead>
-                  <tbody id="bp-country-tbody"></tbody>
+                  <tbody id="bp-country-tbody">
+<tr class="bp-ct-global">
+        <td class="bp-ct-market"><span class="bp-ct-flag">🌎</span> Global</td>
+        <td class="bp-ct-rank"><span class="rank-num">#18</span></td>
+        <td class="bp-ct-di"><span class="di-value">16.4</span></td>
+        <td class="bp-ct-change"><span class="change-val change-flat">0.0%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-up">+22.2%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">3.2M</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇺🇸</span> United States</td>
+        <td class="bp-ct-rank"><span class="rank-num">#23</span></td>
+        <td class="bp-ct-di"><span class="di-value">13.5</span></td>
+        <td class="bp-ct-change"><span class="change-val change-flat">0.0%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-flat">0.0%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">2.3M</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇯🇵</span> Japan</td>
+        <td class="bp-ct-rank"><span class="rank-num">#17</span></td>
+        <td class="bp-ct-di"><span class="di-value">12.3</span></td>
+        <td class="bp-ct-change"><span class="change-val change-up">+13.6%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-up">+13.6%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">65K</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇰🇷</span> South Korea</td>
+        <td class="bp-ct-rank"><span class="rank-num">#16</span></td>
+        <td class="bp-ct-di"><span class="di-value">7.2</span></td>
+        <td class="bp-ct-change"><span class="change-val change-up">+52.9%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-flat">0.0%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">18K</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇬🇧</span> United Kingdom</td>
+        <td class="bp-ct-rank"><span class="rank-num">#14</span></td>
+        <td class="bp-ct-di"><span class="di-value">24.3</span></td>
+        <td class="bp-ct-change"><span class="change-val change-flat">0.0%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-up">+22.7%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">246K</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇨🇦</span> Canada</td>
+        <td class="bp-ct-rank"><span class="rank-num">#10</span></td>
+        <td class="bp-ct-di"><span class="di-value">24.3</span></td>
+        <td class="bp-ct-change"><span class="change-val change-up">+22.7%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-up">+22.7%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">222K</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇨🇳</span> China</td>
+        <td class="bp-ct-rank"><span class="rank-num">#14</span></td>
+        <td class="bp-ct-di"><span class="di-value">21.9</span></td>
+        <td class="bp-ct-change"><span class="change-val change-up">+75.0%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-up">+40.0%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">4K</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇦🇺</span> Australia</td>
+        <td class="bp-ct-rank"><span class="rank-num">#14</span></td>
+        <td class="bp-ct-di"><span class="di-value">16.2</span></td>
+        <td class="bp-ct-change"><span class="change-val change-down">-15.8%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-down">-15.8%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">94K</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇩🇪</span> Germany</td>
+        <td class="bp-ct-rank"><span class="rank-num">#11</span></td>
+        <td class="bp-ct-di"><span class="di-value">19.8</span></td>
+        <td class="bp-ct-change"><span class="change-val change-down">-33.3%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-flat">0.0%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">70K</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇸🇪</span> Sweden</td>
+        <td class="bp-ct-rank"><span class="rank-num">#4</span></td>
+        <td class="bp-ct-di"><span class="di-value">19.9</span></td>
+        <td class="bp-ct-change"><span class="change-val change-flat">0.0%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-up">+24.1%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">77K</span></td>
+      </tr>
+<tr>
+        <td class="bp-ct-market"><span class="bp-ct-flag">🇫🇷</span> France</td>
+        <td class="bp-ct-rank"><span class="rank-num">#9</span></td>
+        <td class="bp-ct-di"><span class="di-value">16.0</span></td>
+        <td class="bp-ct-change"><span class="change-val change-flat">0.0%</span></td>
+        <td class="bp-ct-yoy"><span class="change-val change-flat">0.0%</span></td>
+        <td class="bp-ct-vol"><span class="bp-ct-vol-val">52K</span></td>
+      </tr>
+                  </tbody>
                 </table>
               </div>
               <div class="bp-dominance" id="bp-dominance"></div>
