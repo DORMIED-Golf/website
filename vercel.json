@@ -1,95 +1,267 @@
 {
   "redirects": [
-    { "source": "/brands/travismatthew",  "destination": "/brands/travismathew",  "permanent": true },
-    { "source": "/brands/travismatthew/", "destination": "/brands/travismathew/", "permanent": true },
-    { "source": "/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17",  "destination": "/news/travismathew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17",  "permanent": true },
-    { "source": "/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/", "destination": "/news/travismathew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/", "permanent": true },
-    { "source": "/news/travismatthew-is-betting-big-on-country-music-and-it-might-a-2026-04-17",  "destination": "/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17",  "permanent": true },
-    { "source": "/news/travismatthew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/", "destination": "/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/", "permanent": true }
+    {
+      "source": "/brands/travismatthew",
+      "destination": "/brands/travismathew",
+      "permanent": true
+    },
+    {
+      "source": "/brands/travismatthew/",
+      "destination": "/brands/travismathew/",
+      "permanent": true
+    },
+    {
+      "source": "/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17",
+      "destination": "/news/travismathew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17",
+      "permanent": true
+    },
+    {
+      "source": "/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/",
+      "destination": "/news/travismathew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/",
+      "permanent": true
+    },
+    {
+      "source": "/news/travismatthew-is-betting-big-on-country-music-and-it-might-a-2026-04-17",
+      "destination": "/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17",
+      "permanent": true
+    },
+    {
+      "source": "/news/travismatthew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/",
+      "destination": "/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/feed",              "destination": "/feed/index.html" },
-    { "source": "/feed/",             "destination": "/feed/index.html" },
-    { "source": "/brands",            "destination": "/brands/index.html" },
-    { "source": "/brands/",           "destination": "/brands/index.html" },
-    { "source": "/rankings",          "destination": "/rankings/index.html" },
-    { "source": "/rankings/",         "destination": "/rankings/index.html" },
-    { "source": "/matchups",          "destination": "/matchups/index.html" },
-    { "source": "/matchups/",         "destination": "/matchups/index.html" },
-    { "source": "/matchups/:date",    "destination": "/matchups/day.html" },
-    { "source": "/matchups/:date/",   "destination": "/matchups/day.html" },
-    { "source": "/scorecard",         "destination": "/scorecard/index.html" },
-    { "source": "/scorecard/",        "destination": "/scorecard/index.html" },
-    { "source": "/scorecard/:slug",   "destination": "/scorecard/article.html" },
-    { "source": "/scorecard/:slug/",  "destination": "/scorecard/article.html" },
-    { "source": "/news",              "destination": "/news/index.html" },
-    { "source": "/news/",             "destination": "/news/index.html" },
-    { "source": "/news/:slug",        "destination": "/news/:slug/index.html" },
-    { "source": "/news/:slug/",       "destination": "/news/:slug/index.html" },
-    { "source": "/about",             "destination": "/about/index.html" },
-    { "source": "/about/",            "destination": "/about/index.html" }
+    {
+      "source": "/feed",
+      "destination": "/feed/index.html"
+    },
+    {
+      "source": "/feed/",
+      "destination": "/feed/index.html"
+    },
+    {
+      "source": "/brands",
+      "destination": "/brands/index.html"
+    },
+    {
+      "source": "/brands/",
+      "destination": "/brands/index.html"
+    },
+    {
+      "source": "/rankings",
+      "destination": "/rankings/index.html"
+    },
+    {
+      "source": "/rankings/",
+      "destination": "/rankings/index.html"
+    },
+    {
+      "source": "/matchups",
+      "destination": "/matchups/index.html"
+    },
+    {
+      "source": "/matchups/",
+      "destination": "/matchups/index.html"
+    },
+    {
+      "source": "/matchups/:date",
+      "destination": "/matchups/day.html"
+    },
+    {
+      "source": "/matchups/:date/",
+      "destination": "/matchups/day.html"
+    },
+    {
+      "source": "/scorecard",
+      "destination": "/scorecard/index.html"
+    },
+    {
+      "source": "/scorecard/",
+      "destination": "/scorecard/index.html"
+    },
+    {
+      "source": "/scorecard/:slug",
+      "destination": "/scorecard/article.html"
+    },
+    {
+      "source": "/scorecard/:slug/",
+      "destination": "/scorecard/article.html"
+    },
+    {
+      "source": "/news",
+      "destination": "/news/index.html"
+    },
+    {
+      "source": "/news/",
+      "destination": "/news/index.html"
+    },
+    {
+      "source": "/news/page/:n",
+      "destination": "/news/page/:n/index.html"
+    },
+    {
+      "source": "/news/page/:n/",
+      "destination": "/news/page/:n/index.html"
+    },
+    {
+      "source": "/news/:slug",
+      "destination": "/news/:slug/index.html"
+    },
+    {
+      "source": "/news/:slug/",
+      "destination": "/news/:slug/index.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/about/index.html"
+    },
+    {
+      "source": "/about/",
+      "destination": "/about/index.html"
+    }
   ],
   "functions": {
-    "api/feed.js":              { "maxDuration": 15 },
-    "api/subscribe.js":         { "maxDuration": 10 },
-    "api/take.js":              { "maxDuration": 30 },
-    "api/click.js":             { "maxDuration": 10 },
-    "api/matchup-result.js":    { "maxDuration": 30 },
-    "api/dormied-articles.js":  { "maxDuration": 10 },
-    "api/originals-feed.js":    { "maxDuration": 10 },
-    "api/post-to-x.js":         { "maxDuration": 30 }
+    "api/feed.js": {
+      "maxDuration": 15
+    },
+    "api/subscribe.js": {
+      "maxDuration": 10
+    },
+    "api/take.js": {
+      "maxDuration": 30
+    },
+    "api/click.js": {
+      "maxDuration": 10
+    },
+    "api/matchup-result.js": {
+      "maxDuration": 30
+    },
+    "api/dormied-articles.js": {
+      "maxDuration": 10
+    },
+    "api/originals-feed.js": {
+      "maxDuration": 10
+    },
+    "api/post-to-x.js": {
+      "maxDuration": 30
+    }
   },
   "headers": [
     {
       "source": "/",
-      "headers": [{ "key": "Cache-Control", "value": "public, no-cache" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, no-cache"
+        }
+      ]
     },
     {
       "source": "/(.*)\\.html",
-      "headers": [{ "key": "Cache-Control", "value": "public, no-cache" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, no-cache"
+        }
+      ]
     },
     {
       "source": "/brands/(.+)/",
-      "headers": [{ "key": "Cache-Control", "value": "public, no-cache" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, no-cache"
+        }
+      ]
     },
     {
       "source": "/js/data.js",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=3600" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=3600"
+        }
+      ]
     },
     {
       "source": "/js/data.min.js",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=3600" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=3600"
+        }
+      ]
     },
     {
       "source": "/js/data-home.js",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=3600" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=3600"
+        }
+      ]
     },
     {
       "source": "/js/(.*)\\.js",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
     },
     {
       "source": "/js/brand-data/(.*)\\.js",
-      "headers": [{ "key": "Cache-Control", "value": "public, no-cache" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, no-cache"
+        }
+      ]
     },
     {
       "source": "/css/(.*)\\.css",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
     },
     {
       "source": "/fonts/(.*)\\.woff2",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/images/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
+        }
+      ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options",  "value": "nosniff" },
-        { "key": "X-Frame-Options",         "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy",         "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     }
   ]

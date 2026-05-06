@@ -5,10 +5,11 @@
    statically pre-rendered HTML so crawlers see content without JavaScript.
 
    Usage:
-     node scripts/generate-index-pages.js          # all three pages
-     node scripts/generate-index-pages.js --brands  # brands only
-     node scripts/generate-index-pages.js --news    # news only
+     node scripts/generate-index-pages.js            # all three pages
+     node scripts/generate-index-pages.js --brands   # brands only
+     node scripts/generate-index-pages.js --news     # news only
      node scripts/generate-index-pages.js --scorecard # scorecard only
+     node scripts/generate-index-pages.js --target=brands|news|scorecard
 
    Requires SUPABASE_URL and SUPABASE_SERVICE_KEY in .env (for news)
    ───────────────────────────────────────────────────────────────────────── */
@@ -33,11 +34,14 @@ const ROOT = path.resolve(__dirname, '..');
 })();
 
 /* ── CLI flags ────────────────────────────────────────────────────────────── */
-const args     = process.argv.slice(2);
-const doAll    = args.length === 0 || args.includes('--all');
-const doBrands    = doAll || args.includes('--brands');
-const doNews      = doAll || args.includes('--news');
-const doScorecard = doAll || args.includes('--scorecard');
+const args = process.argv.slice(2);
+const targetArg = args.find(a => a.startsWith('--target='));
+const targetVal = targetArg ? targetArg.split('=')[1] : null;
+
+const doAll       = args.length === 0 || args.includes('--all');
+const doBrands    = doAll || args.includes('--brands')    || targetVal === 'brands';
+const doNews      = doAll || args.includes('--news')      || targetVal === 'news';
+const doScorecard = doAll || args.includes('--scorecard') || targetVal === 'scorecard';
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
 function escHtml(str) {
@@ -58,12 +62,28 @@ function formatDate(iso) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 }
 
-/** Replace the inner content of a specific id'd element in an HTML string.
- *  Handles: <div id="foo" ...>...old...</div>  or  <section id="foo" ...>...old...</section>
- *  Uses a simple balanced-tag approach scoped to the id attribute.
- */
+/** Strip HTML tags and return plain text */
+function stripHtml(html) {
+  return (html || '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").trim();
+}
+
+/** Extract first N sentences from plain text */
+function firstSentences(text, n) {
+  const clean = text.replace(/\s+/g, ' ').trim();
+  // Split on sentence-ending punctuation followed by a space and capital letter
+  const re = /[.!?]+\s+(?=[A-Z"])/g;
+  const bounds = [];
+  let m;
+  while ((m = re.exec(clean)) !== null) {
+    bounds.push(m.index + m[0].length);
+    if (bounds.length === n) break;
+  }
+  if (bounds.length >= n) return clean.slice(0, bounds[n - 1]).trim();
+  return clean;
+}
+
+/** Replace the inner content of a specific id'd element in an HTML string. */
 function injectIntoId(html, elementId, newContent) {
-  // Match the opening tag with this id (any tag name, any attributes)
   const openTagRe = new RegExp(
     `(<(?:div|section|ul|ol|nav|article|aside|main)[^>]+\\bid=["\']${escapeRegex(elementId)}["\'][^>]*>)`,
     's'
@@ -74,12 +94,10 @@ function injectIntoId(html, elementId, newContent) {
     return html;
   }
 
-  const openTagStart = m.index;
   const openTag      = m[1];
   const tagName      = openTag.match(/^<([a-z]+)/i)[1];
-  const contentStart = openTagStart + openTag.length;
+  const contentStart = m.index + openTag.length;
 
-  // Find the matching close tag using a balanced counter
   let depth   = 1;
   let pos     = contentStart;
   const openRe  = new RegExp(`<${tagName}[\\s>]`, 'gi');
@@ -90,16 +108,13 @@ function injectIntoId(html, elementId, newContent) {
     closeRe.lastIndex = pos;
     const nextOpen  = openRe.exec(html);
     const nextClose = closeRe.exec(html);
-
-    if (!nextClose) break;  // malformed HTML
-
+    if (!nextClose) break;
     if (nextOpen && nextOpen.index < nextClose.index) {
       depth++;
       pos = nextOpen.index + nextOpen[0].length;
     } else {
       depth--;
       if (depth === 0) {
-        // Replace content between openTag and this </tagName>
         return html.slice(0, contentStart) + '\n' + newContent + '\n' + html.slice(nextClose.index);
       }
       pos = nextClose.index + nextClose[0].length;
@@ -108,6 +123,117 @@ function injectIntoId(html, elementId, newContent) {
 
   console.warn(`  ⚠  Could not find closing tag for #${elementId}`);
   return html;
+}
+
+/** Replace a tag's full content matched by a regex pattern */
+function replaceTag(html, pattern, replacement) {
+  return html.replace(pattern, replacement);
+}
+
+/** Update <title>, meta description, OG/Twitter tags for a page */
+function updateHeadMeta(html, { title, description, ogTitle, ogDescription }) {
+  // <title>
+  html = html.replace(/<title>[^<]*<\/title>/, `<title>${escHtml(title)}</title>`);
+
+  // <meta name="description">
+  html = html.replace(
+    /(<meta\s+name="description"\s+content=")[^"]*(")/,
+    `$1${escHtml(description)}$2`
+  );
+  // also handle reversed attribute order
+  html = html.replace(
+    /(<meta\s+content=")[^"]*("\s+name="description")/,
+    `$1${escHtml(description)}$2`
+  );
+
+  // OG title
+  html = html.replace(
+    /(<meta\s+property="og:title"\s+content=")[^"]*(")/,
+    `$1${escHtml(ogTitle || title)}$2`
+  );
+
+  // OG description
+  html = html.replace(
+    /(<meta\s+property="og:description"\s+content=")[^"]*(")/,
+    `$1${escHtml(ogDescription || description)}$2`
+  );
+
+  // Twitter title
+  html = html.replace(
+    /(<meta\s+name="twitter:title"\s+content=")[^"]*(")/,
+    `$1${escHtml(ogTitle || title)}$2`
+  );
+
+  // Twitter description
+  html = html.replace(
+    /(<meta\s+name="twitter:description"\s+content=")[^"]*(")/,
+    `$1${escHtml(ogDescription || description)}$2`
+  );
+
+  return html;
+}
+
+/** Replace the hero section intro: h1 stays, inject subhead + paragraphs after it.
+ *  Fully string-based (no regex) so it is safe against greedy match issues.
+ *  Idempotent: skips any existing hero-subhead and hero-desc paragraphs
+ *  that may have been injected by a previous run.
+ */
+function injectHeroContent(html, h1Id, subhead, paragraphsHtml) {
+  const openH1 = `<h1 id="${h1Id}"`;
+  const closeH1 = `</h1>`;
+
+  const h1Start = html.indexOf(openH1);
+  if (h1Start === -1) {
+    console.warn(`  ⚠  Could not find h1#${h1Id} for hero content injection`);
+    return html;
+  }
+
+  const h1Close = html.indexOf(closeH1, h1Start);
+  if (h1Close === -1) {
+    console.warn(`  ⚠  Could not find </h1> for h1#${h1Id}`);
+    return html;
+  }
+
+  // Cursor starts right after </h1>
+  let pos = h1Close + closeH1.length;
+
+  // Helper: skip whitespace characters at pos
+  function skipWhitespace() {
+    while (pos < html.length && (html[pos] === '\n' || html[pos] === ' ' || html[pos] === '\r' || html[pos] === '\t')) {
+      pos++;
+    }
+  }
+
+  // Helper: skip one <p ...>...</p> block if it starts at pos
+  function skipPTag(className) {
+    skipWhitespace();
+    const openP = `<p class="${className}"`;
+    if (!html.startsWith(openP, pos)) return false;
+    const closeP = '</p>';
+    const endPos = html.indexOf(closeP, pos);
+    if (endPos === -1) return false;
+    pos = endPos + closeP.length;
+    return true;
+  }
+
+  // Skip any hero-subhead already injected
+  skipPTag('hero-subhead');
+
+  // Skip all hero-desc paragraphs already injected (one or more)
+  let skipped = true;
+  while (skipped) {
+    skipped = skipPTag('hero-desc');
+  }
+
+  // After skipping, pos is right after the last hero paragraph (or right after </h1>)
+  const afterHero = html.slice(pos);
+  const before    = html.slice(0, h1Close + closeH1.length);
+
+  // Build the new hero content
+  const subheadHtml = `<p class="hero-subhead">${escHtml(subhead)}</p>`;
+  const newHeroContent = `\n            ${subheadHtml}\n            ${paragraphsHtml}`;
+
+  return before + newHeroContent + '\n' + afterHero;
 }
 
 function escapeRegex(str) {
@@ -174,18 +300,32 @@ function generateBrands() {
     return (ago3RankMap[a.brand.id] || 9999) - (ago3RankMap[b.brand.id] || 9999);
   });
 
-  const brands = scored.map((item, i) => ({
-    id:       item.brand.id,
-    name:     item.brand.name,
-    logo:     item.brand.logo || null,
-    category: item.brand.category || '',
-    rank:     i + 1,
-    di:       parseFloat((item.cur / maxVal * 100).toFixed(1)),
-  }));
+  /* Also compute previous-period rank for trend arrow */
+  const prevRankList = prevSorted.map((s, i) => ({ id: s.brand.id, rank: i + 1 }));
+  const prevRankById = {};
+  prevRankList.forEach(r => { prevRankById[r.id] = r.rank; });
+
+  const brands = scored.map((item, i) => {
+    const currentRank = i + 1;
+    const previousRank = prevRankById[item.brand.id] || currentRank;
+    let trend = '';
+    if (previousRank > currentRank) trend = 'up';
+    else if (previousRank < currentRank) trend = 'down';
+
+    return {
+      id:       item.brand.id,
+      name:     item.brand.name,
+      logo:     item.brand.logo || null,
+      category: item.brand.category || '',
+      rank:     currentRank,
+      di:       parseFloat((item.cur / maxVal * 100).toFixed(1)),
+      trend,
+    };
+  });
 
   console.log(`  Computed rankings for ${brands.length} brands`);
 
-  /* Build brand card HTML — mirrors brandCardHtml() in brands-dir.js */
+  /* Build brand card HTML — mirrors brandCardHtml() in brands-dir.js, with trend arrow */
   function brandCardHtml(b) {
     const initials = (b.name || '').slice(0, 2).toUpperCase();
     let logoHtml;
@@ -202,9 +342,13 @@ function generateBrands() {
           `<span class="brand-dir-initials">${escHtml(initials)}</span>` +
         `</div>`;
     }
-    const di   = b.di > 0 ? b.di.toFixed(1) : '—';
-    const rank = '#' + b.rank;
-    const cat  = (b.category || '').replace(/\s*;\s*/g, ' · ');
+    const di      = b.di > 0 ? b.di.toFixed(1) : '—';
+    const rank    = '#' + b.rank;
+    const cat     = (b.category || '').replace(/\s*;\s*/g, ' · ');
+    const arrow   = b.trend === 'up'   ? ' <span class="brand-dir-trend brand-dir-trend--up" aria-label="trending up">↑</span>'
+                  : b.trend === 'down' ? ' <span class="brand-dir-trend brand-dir-trend--down" aria-label="trending down">↓</span>'
+                  : '';
+
     return (
       `<a href="/brands/${escHtml(b.id)}/" class="brand-dir-card">` +
         logoHtml +
@@ -212,7 +356,7 @@ function generateBrands() {
         `<div class="brand-dir-cat">${escHtml(cat)}</div>` +
         `<div class="brand-dir-stats">` +
           `<span class="brand-dir-rank">${escHtml(rank)}</span>` +
-          `<span class="brand-dir-di">DI&nbsp;${escHtml(String(di))}</span>` +
+          `<span class="brand-dir-di">DI&nbsp;${escHtml(String(di))}${arrow}</span>` +
         `</div>` +
       `</a>`
     );
@@ -220,12 +364,32 @@ function generateBrands() {
 
   const gridHtml = brands.map(brandCardHtml).join('\n');
 
-  /* Inject into brands/index.html */
+  /* Read and update brands/index.html */
   const filePath = path.join(ROOT, 'brands/index.html');
   let html = fs.readFileSync(filePath, 'utf8');
+
+  /* Update title, meta, OG/Twitter */
+  html = updateHeadMeta(html, {
+    title:         'The Field — Golf Brand Directory | DORMIED',
+    description:   'Every golf brand we track on the DORMIED Index. 169 brands across 10 global markets, ranked monthly by attention. Search, filter, see who\'s moving.',
+    ogTitle:       'Golf Brand Directory — 169 Brands | DORMIED',
+    ogDescription: '169 golf brands. One field. Search, filter, and find out who\'s actually winning attention in golf right now.',
+  });
+
+  /* Inject intro copy and subhead into hero section */
+  const brandsIntroParagraphs =
+    `<p class="hero-desc">The full roster. Every brand DORMIED tracks on the Index, in one place.</p>` +
+    `<p class="hero-desc hero-desc--secondary">We watch 169 brands across 10 global markets and rank them every month by where attention is actually going. Equipment, apparel, accessories, training tech, course wear, the lifestyle plays pulling our game in new directions. Some are climbing. Some are fading. Some are coasting on a name that stopped meaning what it used to.</p>` +
+    `<p class="hero-desc hero-desc--secondary">Search, filter, sort. The DI score next to each brand is the current month's reading. The arrow tells you which way it's trending. Click into any brand for the trend chart, the recent coverage, and The Read.</p>` +
+    `<p class="hero-desc hero-desc--secondary">This is the field as it stands right now. Check back next month and the order will look different.</p>`;
+
+  html = injectHeroContent(html, 'brands-title', 'Golf Brand Directory', brandsIntroParagraphs);
+
+  /* Inject brand grid */
   html = injectIntoId(html, 'brands-grid', gridHtml);
+
   fs.writeFileSync(filePath, html, 'utf8');
-  console.log(`  ✔  brands/index.html — ${brands.length} brand cards injected`);
+  console.log(`  ✔  brands/index.html — ${brands.length} brand cards, title/meta/intro updated`);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -292,9 +456,9 @@ async function generateNews() {
 
   console.log(`  Fetched ${articles.length} articles from Supabase`);
 
-  /* Build article card HTML — simplified version of renderFeedPageCard()
-     Uses formatted date instead of timeAgo() since this is static HTML.
-     The dynamic JS will replace this with live time when it loads.         */
+  /* Build article card HTML — matches renderFeedPageCard() format from feed.js
+     Uses formatted date instead of timeAgo() for static HTML.
+     The dynamic JS re-renders with live relative time after page load.          */
   function articleCardHtml(article, isFirst) {
     let thumb = '';
     if (article.imageUrl) {
@@ -351,7 +515,13 @@ async function generateNews() {
 
   const PAGE_SIZE = 25;
   const totalPages = Math.ceil(articles.length / PAGE_SIZE);
-  console.log(`  ${articles.length} articles → ${totalPages} pages (${PAGE_SIZE}/page)`);
+  console.log(`  ${articles.length} articles, ${totalPages} pages (${PAGE_SIZE}/page)`);
+
+  /* Intro copy for news — verbatim from spec */
+  const newsIntroParagraphs =
+    `<p class="hero-desc">This is the desk's daily coverage. Brand moves, marketing plays, retail shifts, athlete deals, the WITB tells, and the what-does-this-mean takes the rest of golf media isn't writing.</p>` +
+    `<p class="hero-desc hero-desc--secondary">Other publications cover the players. We cover the companies. The ones writing the checks, signing the deals, missing the moments, reading the room, and occasionally surprising everyone.</p>` +
+    `<p class="hero-desc hero-desc--secondary">Filter by brand to track a specific name. Sort by date for the freshest. Every story here gets read against the Index, so when a brand makes a move you can see whether the data agrees.</p>`;
 
   /* ── Page 1: news/index.html ───────────────────────────────────────────── */
   const page1Articles = articles.slice(0, PAGE_SIZE);
@@ -360,20 +530,32 @@ async function generateNews() {
   const newsFilePath = path.join(ROOT, 'news/index.html');
   let newsHtml = fs.readFileSync(newsFilePath, 'utf8');
 
-  /* Change h1 text from "News" to "The Feed" if not already done */
+  /* Update title, meta, OG/Twitter */
+  newsHtml = updateHeadMeta(newsHtml, {
+    title:         'The Feed — Golf Brand News | DORMIED',
+    description:   'Daily coverage from golf\'s brand desk. Brand moves, marketing plays, retail shifts, athlete deals, and what they mean for our game.',
+    ogTitle:       'The Feed — Golf Brand News | DORMIED',
+    ogDescription: 'Daily coverage from golf\'s brand desk. Brand moves, marketing plays, retail shifts, athlete deals, and what they mean for our game.',
+  });
+
+  /* Ensure h1 reads "The Feed" */
   newsHtml = newsHtml.replace(
-    /(<h1[^>]+id="feed-title"[^>]*>)\s*News\s*(<\/h1>)/,
+    /(<h1[^>]+id="feed-title"[^>]*>)\s*(?:News|The Feed)\s*(<\/h1>)/,
     '$1The Feed$2'
   );
 
+  /* Inject subhead + intro copy */
+  newsHtml = injectHeroContent(newsHtml, 'feed-title', 'Golf Brand News', newsIntroParagraphs);
+
+  /* Inject article list */
   newsHtml = injectIntoId(newsHtml, 'feed-list', feedHtml);
+
   fs.writeFileSync(newsFilePath, newsHtml, 'utf8');
-  console.log(`  ✔  news/index.html — ${page1Articles.length} articles injected`);
+  console.log(`  ✔  news/index.html — ${page1Articles.length} articles, title/meta/intro updated`);
 
   /* ── Pages 2–N: news/page/N/index.html ────────────────────────────────── */
-  /* Read the base template from news/index.html — but strip feed-page.min.js
-     because it would re-fetch from the API and override our static content.
-     The paginated pages are for crawlers; JS users use the main page.        */
+  /* Strip feed-page.min.js from paginated pages — the JS would re-fetch and
+     overwrite the static content. Paginated pages are for crawlers only.    */
   const paginatedBase = fs.readFileSync(newsFilePath, 'utf8')
     .replace(/<script[^>]+feed-page\.min\.js[^>]*><\/script>\s*/g, '');
 
@@ -381,28 +563,17 @@ async function generateNews() {
     const pageArticles = articles.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE);
     const pageFeedHtml = pageArticles.map((a, i) => articleCardHtml(a, i === 0)).join('\n');
 
-    /* Tweak title/canonical for paginated page */
     let pageHtml = paginatedBase
       .replace(
-        /<title>([^<]+)<\/title>/,
-        `<title>Golf Brand News — Page ${p} | DORMIED</title>`
+        /<title>[^<]+<\/title>/,
+        `<title>The Feed — Golf Brand News, Page ${p} | DORMIED</title>`
       )
       .replace(
         /<link rel="canonical"[^>]+>/,
         `<link rel="canonical" href="https://dormied.com/news/page/${p}/">`
-      )
-      /* Add prev/next rel links (insert before </head>) */
-      .replace(
-        /<\/head>/,
-        (p > 2     ? `  <link rel="prev" href="https://dormied.com/news/page/${p - 1}/">\n` : '') +
-        (p > 1     ? `  <link rel="prev" href="https://dormied.com/news/${p === 2 ? '' : `page/${p - 1}/`}">\n` : '') +
-        (p < totalPages ? `  <link rel="next" href="https://dormied.com/news/page/${p + 1}/">\n` : '') +
-        `</head>`
-      )
-      /* Remove duplicate prev links: above logic adds two for p===2, fix it */
-      /* (actually handled by the ternary above — safe) */;
+      );
 
-    /* Fix prev link — clean up the double-insertion above */
+    /* Add rel prev/next (clean insert before </head>) */
     pageHtml = dedupeRelLinks(pageHtml, p, totalPages);
 
     pageHtml = injectIntoId(pageHtml, 'feed-list', pageFeedHtml);
@@ -416,9 +587,8 @@ async function generateNews() {
   return { totalPages, articleCount: articles.length };
 }
 
-/** Fix up rel prev/next links that the replace above may have doubled */
+/** Fix up rel prev/next links */
 function dedupeRelLinks(html, p, totalPages) {
-  // Remove all existing rel prev/next, then add exactly the right ones
   html = html
     .replace(/<link rel="prev"[^>]+>\n?/g, '')
     .replace(/<link rel="next"[^>]+>\n?/g, '');
@@ -429,8 +599,8 @@ function dedupeRelLinks(html, p, totalPages) {
   const nextUrl = `https://dormied.com/news/page/${p + 1}/`;
 
   let relLinks = '';
-  if (p > 1)           relLinks += `  <link rel="prev" href="${prevUrl}">\n`;
-  if (p < totalPages)  relLinks += `  <link rel="next" href="${nextUrl}">\n`;
+  if (p > 1)          relLinks += `  <link rel="prev" href="${prevUrl}">\n`;
+  if (p < totalPages) relLinks += `  <link rel="next" href="${nextUrl}">\n`;
 
   return html.replace('</head>', relLinks + '</head>');
 }
@@ -477,6 +647,16 @@ function generateScorecard() {
     return '';
   }
 
+  /* Extract lede: first 2 sentences from section[0].body (stripped of HTML tags) */
+  function extractLede(issue) {
+    const intro = Array.isArray(issue.sections) ? issue.sections[0] : null;
+    if (!intro) return issue.subtitle || '';
+    const body = intro.body || intro.content || '';
+    if (!body) return issue.subtitle || '';
+    const plain = stripHtml(body);
+    return firstSentences(plain, 2);
+  }
+
   /* Hero section — mirrors renderHero() in scorecard-archive.js */
   const heroHtml =
     `<div class="sc-hero-card">` +
@@ -490,7 +670,7 @@ function generateScorecard() {
       `<a href="/scorecard/${escHtml(latest.slug)}/" class="sc-read-link">Read The Scorecard →</a>` +
     `</div>`;
 
-  /* Archive grid — mirrors renderArchive() in scorecard-archive.js */
+  /* Archive grid — mirrors renderArchive() in scorecard-archive.js, adds lede */
   const archiveHtml = archive.map(issue => {
     const thumb = issue.images && (
       issue.images.hero ||
@@ -500,6 +680,8 @@ function generateScorecard() {
       ? `<img class="sc-archive-thumb" src="${escHtml(thumb)}" alt="" loading="lazy">`
       : `<div class="sc-archive-thumb sc-archive-thumb--placeholder"></div>`;
 
+    const lede = extractLede(issue);
+
     return (
       `<a href="/scorecard/${escHtml(issue.slug)}/" class="sc-archive-card">` +
         thumbHtml +
@@ -508,21 +690,74 @@ function generateScorecard() {
           `<div class="sc-archive-date">${escHtml(issue.date)}</div>` +
           `<div class="sc-archive-title">${escHtml(issue.title)}</div>` +
           `<p class="sc-archive-sub">${escHtml(issue.subtitle)}</p>` +
+          (lede ? `<p class="sc-archive-lede">${escHtml(lede)}</p>` : '') +
         `</div>` +
       `</a>`
     );
   }).join('\n');
 
-  /* Inject into scorecard/index.html */
+  /* Intro copy — verbatim from spec */
+  const scorecardIntroParagraphs =
+    `<p class="hero-desc">The Index gives you the numbers. The Scorecard tells you what they mean.</p>` +
+    `<p class="hero-desc hero-desc--secondary">Every month we publish one issue from the desk. It opens with the Lede, runs through who's at the top, calls out the biggest move, picks through the rest of the field, drops in on who fell, looks ahead with the long game, files a global dispatch from outside the US, and closes with a note signed by Adam and Travis.</p>` +
+    `<p class="hero-desc hero-desc--secondary">Eight sections. One issue. Direct to inbox first, then live on the site a couple of days later. If you want it early, the signup is in the footer.</p>` +
+    `<p class="hero-desc hero-desc--secondary">Below: every issue we've published, most recent first.</p>`;
+
+  /* Update scorecard/index.html */
   const filePath = path.join(ROOT, 'scorecard/index.html');
   let html = fs.readFileSync(filePath, 'utf8');
+
+  /* Update title, meta, OG/Twitter */
+  html = updateHeadMeta(html, {
+    title:         'The Scorecard — Monthly Golf Brand Newsletter | DORMIED',
+    description:   'The monthly editorial issue from golf\'s brand desk. What the Index numbers actually mean, who moved, who faded, and what to watch.',
+    ogTitle:       'The Scorecard — Monthly Golf Brand Newsletter | DORMIED',
+    ogDescription: 'The monthly editorial issue from golf\'s brand desk. What the Index numbers actually mean, who moved, who faded, and what to watch.',
+  });
+
+  /* Inject subhead + intro copy */
+  html = injectHeroContent(html, 'sc-archive-title', 'Monthly Golf Brand Newsletter', scorecardIntroParagraphs);
+
+  /* Inject hero + archive */
   html = injectIntoId(html, 'sc-hero', heroHtml);
   if (archive.length > 0) {
     html = injectIntoId(html, 'sc-archive-grid', archiveHtml);
   }
-  fs.writeFileSync(filePath, html, 'utf8');
 
-  console.log(`  ✔  scorecard/index.html — latest: "${latest.title}" + ${archive.length} archive card(s)`);
+  fs.writeFileSync(filePath, html, 'utf8');
+  console.log(`  ✔  scorecard/index.html — latest: "${latest.title}" + ${archive.length} archive card(s), title/meta/intro updated`);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   VERCEL.JSON — add news/page/:n routing
+   ══════════════════════════════════════════════════════════════════════════ */
+function ensureVercelNewsPageRoutes() {
+  const vercelPath = path.join(ROOT, 'vercel.json');
+  const vercel = JSON.parse(fs.readFileSync(vercelPath, 'utf8'));
+
+  const rewrites = vercel.rewrites || [];
+  const hasPageRoute = rewrites.some(r => r.source && r.source.includes('/news/page/'));
+  if (hasPageRoute) {
+    console.log('  ✔  vercel.json already has /news/page/ rewrite');
+    return;
+  }
+
+  // Insert before the /news/:slug rewrite
+  const newsSlugIdx = rewrites.findIndex(r => r.source === '/news/:slug');
+  const pageRewrites = [
+    { source: '/news/page/:n',  destination: '/news/page/:n/index.html' },
+    { source: '/news/page/:n/', destination: '/news/page/:n/index.html' },
+  ];
+
+  if (newsSlugIdx >= 0) {
+    rewrites.splice(newsSlugIdx, 0, ...pageRewrites);
+  } else {
+    rewrites.push(...pageRewrites);
+  }
+
+  vercel.rewrites = rewrites;
+  fs.writeFileSync(vercelPath, JSON.stringify(vercel, null, 2) + '\n', 'utf8');
+  console.log('  ✔  vercel.json — added /news/page/:n/ rewrite rules');
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -559,7 +794,6 @@ function updateSitemap(newsPageCount) {
   for (let p = 2; p <= newsPageCount; p++) {
     const pageUrl = `https://dormied.com/news/page/${p}/`;
     if (!xml.includes(`<loc>${pageUrl}</loc>`)) {
-      /* Insert before the closing </urlset> */
       const entry =
         `  <url>\n` +
         `    <loc>${pageUrl}</loc>\n` +
@@ -571,7 +805,6 @@ function updateSitemap(newsPageCount) {
       console.log(`  ✔  Added /news/page/${p}/ to sitemap`);
       changed++;
     } else {
-      /* Update existing lastmod */
       const re = new RegExp(
         `(<loc>${escapeRegex(pageUrl)}<\\/loc>\\s*<lastmod>)[^<]+(</lastmod>)`,
         's'
@@ -601,6 +834,7 @@ function updateSitemap(newsPageCount) {
     if (doScorecard) generateScorecard();
 
     if (doAll || doNews) {
+      ensureVercelNewsPageRoutes();
       updateSitemap(newsResult.totalPages);
     }
   } catch (err) {
