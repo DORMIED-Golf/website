@@ -22,7 +22,8 @@
     page:        1
   };
 
-  var csBrand = null;   // handle to custom select widget
+  var csBrand       = null;   // handle to custom select widget
+  var staticFeedHtml = null;  // pre-rendered static HTML — restored when no filters are active
 
   /* ── Author derivation (mirrors api/dormied-articles.js) ───────────────── */
   function authorFromCategory(category) {
@@ -373,6 +374,19 @@
 
   /* ── Apply filters + sort, then render ──────────────────────────────────── */
   function applyAndRender() {
+    var el = document.getElementById('feed-list');
+
+    /* When no filters are active, restore the pre-rendered static HTML so
+       crawlers and first-paint users always see the full article list. */
+    if (!state.brandFilter && !state.searchQuery && state.sort === 'newest') {
+      if (el && staticFeedHtml !== null) el.innerHTML = staticFeedHtml;
+      var countEl0 = document.getElementById('feed-count');
+      if (countEl0) countEl0.textContent = state.articles.length + ' article' + (state.articles.length !== 1 ? 's' : '');
+      var pagEl = document.getElementById('feed-pagination');
+      if (pagEl) pagEl.innerHTML = '';
+      return;
+    }
+
     var filtered = state.articles.filter(function (a) {
       return a.brandIds && a.brandIds.length > 0;
     });
@@ -490,15 +504,20 @@
     }
   }
 
-  /* ── Boot ───────────────────────────────────────────────────────────────── */
+  /* ── Boot ──────────────────────────────────────────────────────────────────────────── */
   function init() {
-    if (!document.getElementById('feed-list')) return;
+    var el = document.getElementById('feed-list');
+    if (!el) return;
+
+    /* Save the pre-rendered static HTML so we can restore it when all
+       filters are cleared (spec: static HTML must remain in the DOM). */
+    staticFeedHtml = el.innerHTML;
 
     bindControls();
 
-    var el = document.getElementById('feed-list');
-    if (el) el.innerHTML = '<p class="feed-empty">Loading articles\u2026</p>';
-
+    /* Fetch article data silently in the background.
+       Do NOT replace the static content with a "Loading..." placeholder —
+       the pre-rendered HTML stays visible until the user actively filters. */
     fetch(DORMIED_API)
       .then(function (r) { return r.ok ? r.json() : Promise.reject('HTTP ' + r.status); })
       .then(function (data) {
@@ -515,12 +534,12 @@
         var top       = computeTopBrands(state.articles);
         renderTopBrandsWidget(top);
         populateBrandDropdown(allBrands);
-        applyAndRender();
+        /* Do NOT call applyAndRender() here — the static content is already
+           visible. applyAndRender() is called only on user interaction. */
       })
       .catch(function (err) {
         console.warn('[feed-page.js] Could not load articles:', err);
-        var el = document.getElementById('feed-list');
-        if (el) el.innerHTML = '<p class="feed-empty">Could not load articles. Please try again later.</p>';
+        /* Static content remains — no error replacement needed. */
       });
   }
 

@@ -26,8 +26,9 @@
     filtered:    []
   };
 
-  var csCat    = null;   // handle to custom select widget for the category filter
-  var csSubCat = null;   // handle to custom select widget for the subcategory filter
+  var csCat         = null;   // handle to custom select widget for the category filter
+  var csSubCat      = null;   // handle to custom select widget for the subcategory filter
+  var staticGridHtml = null;  // pre-rendered static HTML — restored when no filters are active
 
   /* ── Helpers ────────────────────────────────────────────────────────────── */
   function escHtml(str) {
@@ -341,6 +342,19 @@
     var cat    = state.category;
     var subcat = state.subCategory.toLowerCase();
 
+    var el = document.getElementById('brands-grid');
+
+    /* When no filters are active, restore the pre-rendered static HTML so
+       crawlers and first-paint users always see the full ranked list. */
+    if (!q && !cat && !subcat) {
+      if (el && staticGridHtml !== null) el.innerHTML = staticGridHtml;
+      var countEl2 = document.getElementById('brands-count');
+      if (countEl2) countEl2.textContent = state.brands.length + ' of ' + state.brands.length + ' brands';
+      var totalEl2 = document.getElementById('brands-total');
+      if (totalEl2) totalEl2.textContent = state.brands.length;
+      return;
+    }
+
     var filtered = state.brands.filter(function(b) {
       if (q && b.name.toLowerCase().indexOf(q) === -1) return false;
       if (cat) {
@@ -412,21 +426,31 @@
 
   /* ── Boot ───────────────────────────────────────────────────────────────── */
   function init() {
-    if (!document.getElementById('brands-grid')) return;
+    var el = document.getElementById('brands-grid');
+    if (!el) return;
+
+    /* Save the pre-rendered static HTML so we can restore it when all
+       filters are cleared (spec: static HTML must remain in the DOM). */
+    staticGridHtml = el.innerHTML;
 
     bindControls();
 
     state.brands = computeRankings();
 
     if (!state.brands.length) {
-      var el = document.getElementById('brands-grid');
-      if (el) el.innerHTML = '<p class="feed-empty" style="grid-column:1/-1">Brand data unavailable.</p>';
+      el.innerHTML = '<p class="feed-empty" style="grid-column:1/-1">Brand data unavailable.</p>';
       return;
     }
 
     populateCatFilter(state.brands);
     populateSubCatFilter(state.brands);
-    applyAndRender();
+
+    /* Update counts but do NOT call applyAndRender() — the static grid
+       is already pre-rendered. Only call applyAndRender() on user interaction. */
+    var countEl = document.getElementById('brands-count');
+    if (countEl) countEl.textContent = state.brands.length + ' of ' + state.brands.length + ' brands';
+    var totalEl = document.getElementById('brands-total');
+    if (totalEl) totalEl.textContent = state.brands.length;
   }
 
   if (document.readyState === 'loading') {

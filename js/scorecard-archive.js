@@ -16,6 +16,12 @@
     var data = window.DORMIED_SCORECARD_DATA;
     if (!data || !data.issues || !data.issues.length) return;
 
+    /* If the hero section already contains the pre-rendered static card,
+       skip JS rendering — the static HTML must remain in the DOM
+       (spec: client-side JS must not replace statically pre-rendered content). */
+    var heroEl = document.getElementById('sc-hero');
+    if (heroEl && heroEl.querySelector('.sc-hero-card')) return;
+
     var issues  = data.issues;
     var latest  = issues[0];
     var archive = issues.slice(1);
