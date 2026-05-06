@@ -54,6 +54,16 @@ function stripHtml(html) {
   return String(html || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 }
 
+/** Sanitize em dashes out of prose strings (defense-in-depth for site rule: no em dashes). */
+function stripEmDashes(text) {
+  if (!text) return text;
+  return text
+    .replace(/\s*—\s*/g, '. ')   // em dash with surrounding space → period + space
+    .replace(/—/g, ', ')         // bare em dash → comma
+    .replace(/[ \t]{2,}/g, ' ')       // collapse double spaces (but preserve newlines)
+    .trim();
+}
+
 function formatDate(isoDate) {
   if (!isoDate) return '';
   const d = new Date(isoDate.length === 10 ? isoDate + 'T12:00:00Z' : isoDate);
@@ -157,13 +167,15 @@ function buildImageHtml(issue) {
   const hero  = issue.images.hero;
 
   if (strip.length > 0) {
+    // Wrap each image in <figure><figcaption> for proper caption semantics (Bug 1).
     const items = strip.map(img =>
-      `<div class="sc-strip-item">` +
+      `<figure class="sc-strip-figure">` +
         `<img class="sc-strip-img" src="${escHtml(img.src)}" alt="${escHtml(img.label || '')}" loading="lazy">` +
-        (img.label ? `<span class="sc-strip-label">${escHtml(img.label)}</span>` : '') +
-      `</div>`
+        (img.label ? `<figcaption class="sc-strip-figcaption">${escHtml(img.label)}</figcaption>` : '') +
+      `</figure>`
     ).join('');
-    return `<div class="sc-image-strip">${items}</div>`;
+    // Wrap triptych in a constrained-width div; mobile stacking handled via CSS (Bug 1, Bug 2).
+    return `<div class="sc-image-triptych"><div class="sc-image-strip sc-image-strip--article">${items}</div></div>`;
   }
 
   if (hero) {
@@ -179,10 +191,11 @@ function buildTocHtml(issue) {
   const toc = issue.toc || [];
   if (toc.length === 0) return '';
   const items = toc.map(item =>
-    `      <li class="sc-toc-item"><a href="#${escHtml(item.id)}" class="sc-toc-link">${escHtml(item.label)}</a></li>`
+    `        <li><a href="#${escHtml(item.id)}">${escHtml(item.label)}</a></li>`
   ).join('\n');
-  return `<nav class="sc-article-toc" aria-label="Article sections">
-      <ol class="sc-toc-list">
+  return `<nav class="scorecard-toc" aria-label="Sections in this issue">
+      <h2 class="scorecard-toc-title">In this issue</h2>
+      <ol class="scorecard-toc-list">
 ${items}
       </ol>
     </nav>`;
@@ -194,23 +207,26 @@ function buildSnapshotHtml(issue) {
   const snap = issue.indexSnapshot || [];
   if (snap.length === 0) return '';
   const rows = snap.map(e => {
-    const momStr = e.mom >= 0 ? `+${e.mom.toFixed(1)}%` : `${e.mom.toFixed(1)}%`;
+    const momVal = e.mom;
+    const momStr = momVal > 0 ? `+${momVal.toFixed(1)}%` : `${momVal.toFixed(1)}%`;
+    // Use existing sc-table-up / sc-table-down / sc-table-flat CSS classes (Bug 7).
+    const momCls = momVal > 0 ? 'sc-table-up' : momVal < 0 ? 'sc-table-down' : 'sc-table-flat';
     return `          <tr>
-            <td>#${e.rank}</td>
-            <td><a href="/brands/${escHtml(e.id)}/">${escHtml(e.name)}</a></td>
-            <td>${e.di.toFixed(1)}</td>
-            <td class="${e.mom >= 0 ? 'sc-mom-up' : 'sc-mom-down'}">${escHtml(momStr)}</td>
+            <td class="sc-table-rank">#${e.rank}</td>
+            <td><a href="/brands/${escHtml(e.id)}/" class="sc-brand-link">${escHtml(e.name)}</a></td>
+            <td class="sc-table-di">${e.di.toFixed(1)}</td>
+            <td class="${momCls}" style="text-align:right">${escHtml(momStr)}</td>
           </tr>`;
   }).join('\n');
   return `
     <section class="sc-article-section sc-snapshot-section" id="index-snapshot">
       <h2 class="sc-section-heading">Index Snapshot</h2>
       <div class="section-body">
-        <p class="sc-snapshot-label">Top ${snap.length} — ${escHtml(issue.monthLabel)}</p>
-        <div class="table-scroll-wrap">
-          <table class="sc-snapshot-table">
+        <p class="sc-snapshot-label">Top ${snap.length} · ${escHtml(issue.monthLabel)}</p>
+        <div class="sc-table-wrap">
+          <table class="sc-table">
             <thead>
-              <tr><th>Rank</th><th>Brand</th><th>DI Score</th><th>MoM</th></tr>
+              <tr><th>Rank</th><th>Brand</th><th>DI Score</th><th style="text-align:right">MoM</th></tr>
             </thead>
             <tbody>
 ${rows}
@@ -225,15 +241,16 @@ ${rows}
 
 function buildSectionsHtml(issue, brandNameMap) {
   return (issue.sections || []).map(section => {
-    const linkedBody = autoLinkBrandsInSection(
-      section.body || '',
-      issue.brandMentions,
-      brandNameMap
-    );
+    // Apply em-dash sanitizer before auto-linking (Bug 6).
+    const cleanBody  = stripEmDashes(section.body || '');
+    const linkedBody = autoLinkBrandsInSection(cleanBody, issue.brandMentions, brandNameMap);
+    // Use sc-main-heading for proper display-font H2s (Bug 4).
     const headingHtml = section.heading
-      ? `\n      <h2 class="sc-section-heading">${escHtml(section.heading)}</h2>`
+      ? `\n      <h2 class="sc-main-heading" id="${escHtml(section.id)}">${escHtml(section.heading)}</h2>`
       : '';
-    return `    <section class="sc-article-section" id="${escHtml(section.id)}">${headingHtml}
+    // id goes on the H2 so TOC anchor-links scroll to the heading (Bug 3/4).
+    const sectionId = section.heading ? '' : ` id="${escHtml(section.id)}"`;
+    return `    <section class="sc-article-section"${sectionId}>${headingHtml}
       <div class="section-body">
         ${linkedBody}
       </div>
@@ -246,12 +263,22 @@ function buildSectionsHtml(issue, brandNameMap) {
 function buildMoreIssuesHtml(issue, allIssues) {
   const others = allIssues.filter(i => i.slug !== issue.slug).slice(0, 3);
   if (others.length === 0) return '';
-  const items = others.map(i =>
-    `      <li class="sc-more-item"><a href="/scorecard/${escHtml(i.slug)}/" class="sc-more-link">${escHtml(i.title)}</a> <span class="sc-more-date">${escHtml(i.date)}</span></li>`
-  ).join('\n');
+  const items = others.map(i => {
+    const label = i.monthLabel || i.title;
+    const dateStr = i.date || '';
+    return (
+      `      <li class="scorecard-related-card">` +
+        `<a href="/scorecard/${escHtml(i.slug)}/">` +
+          `<span class="scorecard-related-eyebrow">The Scorecard</span>` +
+          `<span class="scorecard-related-title">${escHtml(label)}</span>` +
+          (dateStr ? `<span class="scorecard-related-date">${escHtml(dateStr)}</span>` : '') +
+        `</a>` +
+      `</li>`
+    );
+  }).join('\n');
   return `    <section class="sc-more-issues">
       <h2 class="sc-section-heading">More from The Scorecard</h2>
-      <ul class="sc-more-list">
+      <ul class="scorecard-related-list">
 ${items}
       </ul>
     </section>`;
@@ -261,20 +288,28 @@ ${items}
 
 function buildPrevNextHtml(issue, allIssues) {
   const idx  = allIssues.findIndex(i => i.slug === issue.slug);
-  // Issues are newest-first; "prev" in reading = next in array (older); "next" = prev in array (newer)
-  const newer = idx > 0              ? allIssues[idx - 1] : null; // more recent
-  const older = idx < allIssues.length - 1 ? allIssues[idx + 1] : null; // older
+  // Issues are newest-first in allIssues.
+  // "Newer" = one index lower (more recent), displayed as "← Previous issue" (left slot).
+  // "Older"  = one index higher (less recent), displayed as "Next issue →" (right slot).
+  const newer = idx > 0                    ? allIssues[idx - 1] : null;
+  const older = idx < allIssues.length - 1 ? allIssues[idx + 1] : null;
 
   if (!newer && !older) return '';
 
   const newerLink = newer
-    ? `<a href="/scorecard/${escHtml(newer.slug)}/" class="sc-prevnext-link sc-prevnext-newer">← ${escHtml(newer.title)}</a>`
-    : '<span></span>';
+    ? `<a href="/scorecard/${escHtml(newer.slug)}/" class="scorecard-pagination-prev">` +
+        `<span class="scorecard-pagination-direction">← Previous issue</span>` +
+        `<span class="scorecard-pagination-title">${escHtml(newer.monthLabel || newer.title)}</span>` +
+      `</a>`
+    : '';
   const olderLink = older
-    ? `<a href="/scorecard/${escHtml(older.slug)}/" class="sc-prevnext-link sc-prevnext-older">${escHtml(older.title)} →</a>`
-    : '<span></span>';
+    ? `<a href="/scorecard/${escHtml(older.slug)}/" class="scorecard-pagination-next">` +
+        `<span class="scorecard-pagination-direction">Next issue →</span>` +
+        `<span class="scorecard-pagination-title">${escHtml(older.monthLabel || older.title)}</span>` +
+      `</a>`
+    : '';
 
-  return `    <nav class="sc-article-prevnext" aria-label="Issue navigation">
+  return `    <nav class="scorecard-pagination" aria-label="Scorecard issues">
       ${newerLink}
       ${olderLink}
     </nav>`;
@@ -448,8 +483,12 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
         <a href="/scorecard/" class="sc-label sc-label--link">THE SCORECARD</a>
         <h1 class="sc-article-title">${escHtml(issue.title)}</h1>
         ${issue.subtitle ? `<p class="sc-article-subtitle">${escHtml(issue.subtitle)}</p>` : ''}
-        <p class="sc-article-byline">By ${escHtml(authorStr)}</p>
-        <p class="sc-article-date"><time datetime="${escHtml(issue.dateISO)}">${escHtml(displayDate)}</time></p>
+        <!-- Byline + date as a distinct meta block, visually separate from dek (Bug 12) -->
+        <div class="scorecard-meta">
+          <span class="scorecard-byline">By ${escHtml(authorStr)}</span>
+          <span class="scorecard-meta-separator" aria-hidden="true">·</span>
+          <time datetime="${escHtml(issue.dateISO)}">${escHtml(displayDate)}</time>
+        </div>
       </header>
 
       <!-- ── Two-column layout: article content + sidebar ad ── -->
@@ -459,7 +498,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
           <!-- ── Main column ── -->
           <div class="sc-article-main">
 
-            ${imageHtml ? `<!-- ── Images ── -->\n            <div class="sc-article-image">${imageHtml}</div>` : ''}
+            ${imageHtml ? `<!-- ── Images ── -->\n            ${imageHtml}` : ''}
 
             ${tocHtml ? `<!-- ── Table of contents ── -->\n            ${tocHtml}` : ''}
 
@@ -486,25 +525,10 @@ ${snapshotHtml}
 
 ${moreHtml}
 
-            <!-- ── Signup CTA ── -->
-            <div class="sc-article-signup">
-              <div class="sc-signup-inner">
-                <p class="sc-signup-label">THE SCORECARD</p>
-                <p class="sc-signup-sub">Get the monthly breakdown of what moved in golf brands, who's trending, who's fading, and why it matters. Delivered to your inbox before it hits the site.</p>
-                <form class="footer-signup-form sc-signup-form" novalidate>
-                  <div class="footer-signup-row">
-                    <input class="footer-signup-input" type="email" placeholder="Your email" required autocomplete="email" aria-label="Email address">
-                    <button class="footer-signup-btn" type="submit">Get The Scorecard</button>
-                  </div>
-                  <p class="footer-signup-msg" style="display:none"></p>
-                </form>
-              </div>
-            </div>
-
-            <!-- ── Cross-links ── -->
-            <div class="sc-article-crosslinks">
-              <a href="/rankings/" class="sc-crosslink">View the full DORMIED Index &rarr;</a>
-              <a href="/brands/"   class="sc-crosslink">Browse The Field &rarr;</a>
+            <!-- ── Styled CTAs (Bug 10) ── -->
+            <div class="scorecard-cta-row">
+              <a href="/rankings/" class="scorecard-cta">View the full DORMIED Index <span aria-hidden="true">→</span></a>
+              <a href="/brands/"   class="scorecard-cta">Browse The Field <span aria-hidden="true">→</span></a>
             </div>
 
 ${prevNextHtml}

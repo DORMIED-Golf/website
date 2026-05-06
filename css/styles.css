@@ -5211,3 +5211,276 @@ details[open] .faq-question::after { content: '−'; }
 /* ── Ad slot explicit dimensions prevent CLS when ads inject content ──────── */
 .ad-mobile-banner { min-height: 50px; }
 .ad-leaderboard   { min-height: 90px; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SCORECARD ARTICLE — styling fixes (Issues 1-12 from 2026-05-06 pass)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Bug 12: Byline + date meta block ──────────────────────────────────── */
+.scorecard-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 4px 0 20px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+.scorecard-meta time { color: var(--text-muted); }
+.scorecard-meta-separator { color: var(--border-lite); }
+
+/* ── Bug 1: Hero triptych figures and figcaptions ──────────────────────── */
+/* Constrain triptych to ~960px centered, no viewport-edge bleed */
+.sc-image-triptych {
+  max-width: 960px;
+  margin: 0 auto 24px;
+}
+/* On mobile, stack images vertically */
+@media (max-width: 767px) {
+  .sc-image-triptych .sc-image-strip {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+  .sc-image-triptych .sc-strip-figure {
+    width: 100%;
+    min-width: 0;
+  }
+}
+.sc-strip-figure {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: calc(33.333% - 6px);
+  min-width: 100px;
+}
+.sc-strip-figcaption {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 10px;
+  line-height: 1.35;
+}
+
+/* ── Bug 2: Remove dead space; image section has no forced aspect-ratio ─── */
+/* The sc-article-image wrapper forced a 40:21 aspect ratio — strip images
+   use sc-image-triptych directly and bypass that. Toc gets compact spacing. */
+.scorecard-toc { margin-top: 0; }
+
+/* ── Bug 3: Styled table of contents nav block ──────────────────────────── */
+.scorecard-toc {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 32px;
+}
+.scorecard-toc-title {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin: 0 0 12px;
+  border: none;
+  padding: 0;
+}
+.scorecard-toc-list {
+  list-style: decimal;
+  padding-left: 1.4em;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+/* On wider screens, run items inline with separators */
+@media (min-width: 640px) {
+  .scorecard-toc-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    list-style: none;
+    padding-left: 0;
+    counter-reset: toc-counter;
+  }
+  .scorecard-toc-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    counter-increment: toc-counter;
+  }
+  .scorecard-toc-list li::before {
+    content: counter(toc-counter) ".";
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+}
+.scorecard-toc-list a {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  text-decoration: none;
+}
+.scorecard-toc-list a:hover { color: var(--green); text-decoration: none; }
+
+/* ── Bug 4: Section H2 — proper display-font heading ───────────────────── */
+.sc-main-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.2;
+  margin: 48px 0 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  scroll-margin-top: 72px;
+}
+/* First section heading needs less top gap */
+.sc-article-body .sc-article-section:first-child .sc-main-heading {
+  margin-top: 24px;
+}
+
+/* ── Bug 5: Constrain body copy to readable max-width ───────────────────── */
+.sc-article-body {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Bug 6: Closing signature styling ───────────────────────────────────── */
+.scorecard-signature {
+  font-style: italic;
+  color: var(--text-dim);
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Bug 8: "More from The Scorecard" related-issue cards ──────────────── */
+.scorecard-related-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .scorecard-related-list { grid-template-columns: 1fr; }
+}
+.scorecard-related-card a {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.scorecard-related-card a:hover { border-color: var(--border-lite); text-decoration: none; }
+.scorecard-related-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.scorecard-related-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.2;
+}
+.scorecard-related-date {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+/* ── Bug 10: Styled CTA row ─────────────────────────────────────────────── */
+.scorecard-cta-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+@media (max-width: 600px) {
+  .scorecard-cta-row { grid-template-columns: 1fr; }
+}
+.scorecard-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 20px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  text-align: center;
+  transition: border-color 0.15s, color 0.15s;
+}
+.scorecard-cta:hover { color: var(--green); border-color: var(--green); text-decoration: none; }
+
+/* ── Bug 11: Issue pagination ───────────────────────────────────────────── */
+.scorecard-pagination {
+  display: flex;
+  gap: 12px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+}
+@media (max-width: 600px) {
+  .scorecard-pagination { flex-direction: column; }
+}
+.scorecard-pagination-prev,
+.scorecard-pagination-next {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.scorecard-pagination-prev:hover,
+.scorecard-pagination-next:hover { border-color: var(--border-lite); text-decoration: none; }
+.scorecard-pagination-next { align-items: flex-end; text-align: right; }
+@media (max-width: 600px) {
+  .scorecard-pagination-next { align-items: flex-start; text-align: left; }
+}
+.scorecard-pagination-direction {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-muted);
+}
+.scorecard-pagination-title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}

@@ -112,8 +112,12 @@
         <a href="/scorecard/" class="sc-label sc-label--link">THE SCORECARD</a>
         <h1 class="sc-article-title">The Scorecard | April 2026</h1>
         <p class="sc-article-subtitle">A brand built by a group chat of college friends is now dressing a man teeing it up at the Masters.</p>
-        <p class="sc-article-byline">By Adam &amp; Travis</p>
-        <p class="sc-article-date"><time datetime="2026-04-08">April 8, 2026</time></p>
+        <!-- Byline + date as a distinct meta block, visually separate from dek (Bug 12) -->
+        <div class="scorecard-meta">
+          <span class="scorecard-byline">By Adam &amp; Travis</span>
+          <span class="scorecard-meta-separator" aria-hidden="true">·</span>
+          <time datetime="2026-04-08">April 8, 2026</time>
+        </div>
       </header>
 
       <!-- ── Two-column layout: article content + sidebar ad ── -->
@@ -124,17 +128,18 @@
           <div class="sc-article-main">
 
             <!-- ── Images ── -->
-            <div class="sc-article-image"><div class="sc-image-strip"><div class="sc-strip-item"><img class="sc-strip-img" src="/images/scorecard/april-2026/sugar-loaf-students-golf.jpg" alt="Sugar Loaf Social Club" loading="lazy"><span class="sc-strip-label">Sugar Loaf Social Club</span></div><div class="sc-strip-item"><img class="sc-strip-img" src="/images/scorecard/april-2026/krank-bryson.jpg" alt="Krank Golf" loading="lazy"><span class="sc-strip-label">Krank Golf</span></div><div class="sc-strip-item"><img class="sc-strip-img" src="/images/scorecard/april-2026/malbon-shanghai.jpg" alt="Malbon" loading="lazy"><span class="sc-strip-label">Malbon</span></div></div></div>
+            <div class="sc-image-triptych"><div class="sc-image-strip sc-image-strip--article"><figure class="sc-strip-figure"><img class="sc-strip-img" src="/images/scorecard/april-2026/sugar-loaf-students-golf.jpg" alt="Sugar Loaf Social Club" loading="lazy"><figcaption class="sc-strip-figcaption">Sugar Loaf Social Club</figcaption></figure><figure class="sc-strip-figure"><img class="sc-strip-img" src="/images/scorecard/april-2026/krank-bryson.jpg" alt="Krank Golf" loading="lazy"><figcaption class="sc-strip-figcaption">Krank Golf</figcaption></figure><figure class="sc-strip-figure"><img class="sc-strip-img" src="/images/scorecard/april-2026/malbon-shanghai.jpg" alt="Malbon" loading="lazy"><figcaption class="sc-strip-figcaption">Malbon</figcaption></figure></div></div>
 
             <!-- ── Table of contents ── -->
-            <nav class="sc-article-toc" aria-label="Article sections">
-      <ol class="sc-toc-list">
-      <li class="sc-toc-item"><a href="#at-the-top" class="sc-toc-link">At The Top</a></li>
-      <li class="sc-toc-item"><a href="#the-biggest-move" class="sc-toc-link">The Biggest Move</a></li>
-      <li class="sc-toc-item"><a href="#the-field" class="sc-toc-link">The Field</a></li>
-      <li class="sc-toc-item"><a href="#the-drop-zone" class="sc-toc-link">The Drop Zone</a></li>
-      <li class="sc-toc-item"><a href="#global-dispatch" class="sc-toc-link">Global Dispatch</a></li>
-      <li class="sc-toc-item"><a href="#closing" class="sc-toc-link">Closing</a></li>
+            <nav class="scorecard-toc" aria-label="Sections in this issue">
+      <h2 class="scorecard-toc-title">In this issue</h2>
+      <ol class="scorecard-toc-list">
+        <li><a href="#at-the-top">At The Top</a></li>
+        <li><a href="#the-biggest-move">The Biggest Move</a></li>
+        <li><a href="#the-field">The Field</a></li>
+        <li><a href="#the-drop-zone">The Drop Zone</a></li>
+        <li><a href="#global-dispatch">Global Dispatch</a></li>
+        <li><a href="#closing">Closing</a></li>
       </ol>
     </nav>
 
@@ -160,52 +165,52 @@
       </div>
     </section>
 
-    <section class="sc-article-section" id="at-the-top">
-      <h2 class="sc-section-heading">AT THE TOP</h2>
+    <section class="sc-article-section">
+      <h2 class="sc-main-heading" id="at-the-top">At The Top</h2>
       <div class="section-body">
         <p><a href="/brands/titleist/">Titleist</a> holds the top position for the third consecutive month. That level of consistency is not exciting to write about, which is probably the point. The brand does not need a moment. It is the moment.</p>
-<p><a href="/brands/taylormade/">TaylorMade</a> slipped to 66.8, continuing a gradual drift that has been building since the start of the year. <a href="/brands/travismathew/">TravisMathew</a> holds at 54.8. <a href="/brands/callaway/">Callaway</a> and <a href="/brands/sun-day-red/">Sun Day Red</a> are tied at 44.9 — a Tiger-adjacent brand matching one of the game's most established equipment makers in a single month is its own kind of story.</p>
+<p><a href="/brands/taylormade/">TaylorMade</a> slipped to 66.8, continuing a gradual drift that has been building since the start of the year. <a href="/brands/travismathew/">TravisMathew</a> holds at 54.8. <a href="/brands/callaway/">Callaway</a> and <a href="/brands/sun-day-red/">Sun Day Red</a> are tied at 44.9. A Tiger-adjacent brand matching one of the game's most established equipment makers in a single month is its own kind of story.</p>
       </div>
     </section>
 
-    <section class="sc-article-section" id="the-biggest-move">
-      <h2 class="sc-section-heading">THE BIGGEST MOVE</h2>
+    <section class="sc-article-section">
+      <h2 class="sc-main-heading" id="the-biggest-move">The Biggest Move</h2>
       <div class="section-body">
         <p><a href="/brands/sugar-loaf-social-club/">Sugar Loaf Social Club</a> jumped 125% in March, climbing 15 spots in the index to reach a DI of 3.3. That number sounds small until you consider where this brand was twelve months ago.</p>
-<p>The catalyst was a collision of events that would have been impossible to engineer deliberately. Sugar Loaf released a 17-piece collaboration with <a href="/brands/students-golf/">Students Golf</a> — covered by Boardroom, Skratch, and every gear forum that matters, ranging from $60 tees to an $875 MacKenzie bag. They dropped a Players Championship co-branded collection. And then Brandon Holtz — the U.S. Mid-Amateur champion — received his Masters invitation and was confirmed wearing Sugar Loaf at Augusta. His retired State Farm agent father on the bag. A brand built over a group chat among college friends was suddenly dressing someone teeing it up at Augusta National.</p>
-<p>You cannot buy that. You can only be in position for it when it happens. Sugar Loaf is a subsidiary of Pro Shop Holdings, which also owns Skratch — so when the moment arrived, the distribution infrastructure was already in place.</p>
+<p>The catalyst was a collision of events that would have been impossible to engineer deliberately. Sugar Loaf released a 17-piece collaboration with <a href="/brands/students-golf/">Students Golf</a>, covered by Boardroom, Skratch, and every gear forum that matters, ranging from $60 tees to an $875 MacKenzie bag. They dropped a Players Championship co-branded collection. And then Brandon Holtz, the U.S. Mid-Amateur champion, received his Masters invitation and was confirmed wearing Sugar Loaf at Augusta. His retired State Farm agent father on the bag. A brand built over a group chat among college friends was suddenly dressing someone teeing it up at Augusta National.</p>
+<p>You cannot buy that. You can only be in position for it when it happens. Sugar Loaf is a subsidiary of Pro Shop Holdings, which also owns Skratch. When the moment arrived, the distribution infrastructure was already in place.</p>
       </div>
     </section>
 
-    <section class="sc-article-section" id="the-field">
-      <h2 class="sc-section-heading">THE FIELD</h2>
+    <section class="sc-article-section">
+      <h2 class="sc-main-heading" id="the-field">The Field</h2>
       <div class="section-body">
         <p><a href="/brands/rhoback/">Rhoback</a> climbed 86.2% to 1.8. The annual Azalea Collection does real work, and a No Laying Up "First Major" capsule collab during Players week gave it the distribution it needed. The brand knows its moment and prepares for it a year in advance.</p>
 <p><a href="/brands/krank-golf/">Krank Golf</a> was up 51.7% following Bryson DeChambeau's back-to-back LIV victories in Singapore and South Africa using their Formula Fire drivers. Tour success still moves the needle for equipment brands in a way that apparel rarely replicates. When a recognizable player wins with a product back-to-back, the search interest is immediate and measurable.</p>
       </div>
     </section>
 
-    <section class="sc-article-section" id="the-drop-zone">
-      <h2 class="sc-section-heading">THE DROP ZONE</h2>
+    <section class="sc-article-section">
+      <h2 class="sc-main-heading" id="the-drop-zone">The Drop Zone</h2>
       <div class="section-body">
-        <p>L.A.B. Golf dropped 33.3%, falling 17 spots to a DI of 4.9. This is not a story about a brand losing momentum — it is arithmetic. February's 174% surge was exceptional. March's correction was inevitable. The brand launched the LINK 2.1 and 2.2 mid-month and landed on Fast Company's Most Innovative Companies list. It is still well above where it was six months ago.</p>
-<p><a href="/brands/vuori/">Vuori</a> declined 18.8%. The brand had been building quietly on the back of Tommy Fleetwood's visibility, and then Blackstone signed Fleetwood on March 31st. The deal moves him into a different tier of brand partnership. The Vuori chapter appears to be closed — and the customer complaints about fabric quality and a production shift to Cambodia that surfaced in the same window did not help.</p>
+        <p>L.A.B. Golf dropped 33.3%, falling 17 spots to a DI of 4.9. This is not a story about a brand losing momentum. It is arithmetic. February's 174% surge was exceptional. March's correction was inevitable. The brand launched the LINK 2.1 and 2.2 mid-month and landed on Fast Company's Most Innovative Companies list. It is still well above where it was six months ago.</p>
+<p><a href="/brands/vuori/">Vuori</a> declined 18.8%. The brand had been building quietly on the back of Tommy Fleetwood's visibility, and then Blackstone signed Fleetwood on March 31st. The deal moves him into a different tier of brand partnership. The Vuori chapter appears to be closed, and the customer complaints about fabric quality and a production shift to Cambodia that surfaced in the same window did not help.</p>
       </div>
     </section>
 
-    <section class="sc-article-section" id="global-dispatch">
-      <h2 class="sc-section-heading">GLOBAL DISPATCH</h2>
+    <section class="sc-article-section">
+      <h2 class="sc-main-heading" id="global-dispatch">Global Dispatch</h2>
       <div class="section-body">
         <p>China surged 52.7% in March, the strongest single-market month we have seen from that region this year. The catalyst was <a href="/brands/malbon/">Malbon</a> opening its first mainland flagship store at Jing'an Kerry Centre in Shanghai. A physical retail presence in mainland China signals a level of commitment that search data reflects almost immediately. The question is whether that interest sustains or follows the pattern of launch spikes that fade over the following two months.</p>
       </div>
     </section>
 
-    <section class="sc-article-section" id="closing">
-      <h2 class="sc-section-heading">CLOSING</h2>
+    <section class="sc-article-section">
+      <h2 class="sc-main-heading" id="closing">Closing</h2>
       <div class="section-body">
         <p>Sugar Loaf dressed a Mid-Am champion heading into Augusta. Krank made noise through one player's two wins. <a href="/brands/rhoback/">Rhoback</a> turned Augusta week into a product calendar tentpole with zero official affiliation.</p>
 <p>The old playbook was tour contracts and print ads. The new one is cultural proximity. The brands that are not positioned for the moment when it arrives will not get a second shot at it.</p>
-<p><em>— Adam and Travis, DORMIED</em></p>
+<p class="scorecard-signature">Adam and Travis, DORMIED</p>
       </div>
     </section>
 
@@ -213,42 +218,42 @@
     <section class="sc-article-section sc-snapshot-section" id="index-snapshot">
       <h2 class="sc-section-heading">Index Snapshot</h2>
       <div class="section-body">
-        <p class="sc-snapshot-label">Top 5 — April 2026</p>
-        <div class="table-scroll-wrap">
-          <table class="sc-snapshot-table">
+        <p class="sc-snapshot-label">Top 5 · April 2026</p>
+        <div class="sc-table-wrap">
+          <table class="sc-table">
             <thead>
-              <tr><th>Rank</th><th>Brand</th><th>DI Score</th><th>MoM</th></tr>
+              <tr><th>Rank</th><th>Brand</th><th>DI Score</th><th style="text-align:right">MoM</th></tr>
             </thead>
             <tbody>
           <tr>
-            <td>#1</td>
-            <td><a href="/brands/titleist/">Titleist</a></td>
-            <td>100.0</td>
-            <td class="sc-mom-up">+0.0%</td>
+            <td class="sc-table-rank">#1</td>
+            <td><a href="/brands/titleist/" class="sc-brand-link">Titleist</a></td>
+            <td class="sc-table-di">100.0</td>
+            <td class="sc-table-flat" style="text-align:right">0.0%</td>
           </tr>
           <tr>
-            <td>#2</td>
-            <td><a href="/brands/taylormade/">TaylorMade</a></td>
-            <td>66.8</td>
-            <td class="sc-mom-down">-17.9%</td>
+            <td class="sc-table-rank">#2</td>
+            <td><a href="/brands/taylormade/" class="sc-brand-link">TaylorMade</a></td>
+            <td class="sc-table-di">66.8</td>
+            <td class="sc-table-down" style="text-align:right">-17.9%</td>
           </tr>
           <tr>
-            <td>#3</td>
-            <td><a href="/brands/travismathew/">TravisMathew</a></td>
-            <td>54.8</td>
-            <td class="sc-mom-up">+0.2%</td>
+            <td class="sc-table-rank">#3</td>
+            <td><a href="/brands/travismathew/" class="sc-brand-link">TravisMathew</a></td>
+            <td class="sc-table-di">54.8</td>
+            <td class="sc-table-up" style="text-align:right">+0.2%</td>
           </tr>
           <tr>
-            <td>#4</td>
-            <td><a href="/brands/callaway/">Callaway</a></td>
-            <td>44.9</td>
-            <td class="sc-mom-down">-17.9%</td>
+            <td class="sc-table-rank">#4</td>
+            <td><a href="/brands/callaway/" class="sc-brand-link">Callaway</a></td>
+            <td class="sc-table-di">44.9</td>
+            <td class="sc-table-down" style="text-align:right">-17.9%</td>
           </tr>
           <tr>
-            <td>#4</td>
-            <td><a href="/brands/sun-day-red/">Sun Day Red</a></td>
-            <td>44.9</td>
-            <td class="sc-mom-down">-17.9%</td>
+            <td class="sc-table-rank">#4</td>
+            <td><a href="/brands/sun-day-red/" class="sc-brand-link">Sun Day Red</a></td>
+            <td class="sc-table-di">44.9</td>
+            <td class="sc-table-down" style="text-align:right">-17.9%</td>
           </tr>
             </tbody>
           </table>
@@ -260,35 +265,20 @@
 
     <section class="sc-more-issues">
       <h2 class="sc-section-heading">More from The Scorecard</h2>
-      <ul class="sc-more-list">
-      <li class="sc-more-item"><a href="/scorecard/march-2026/" class="sc-more-link">The Scorecard | March 2026</a> <span class="sc-more-date">Mar 24, 2026</span></li>
+      <ul class="scorecard-related-list">
+      <li class="scorecard-related-card"><a href="/scorecard/march-2026/"><span class="scorecard-related-eyebrow">The Scorecard</span><span class="scorecard-related-title">March 2026</span><span class="scorecard-related-date">Mar 24, 2026</span></a></li>
       </ul>
     </section>
 
-            <!-- ── Signup CTA ── -->
-            <div class="sc-article-signup">
-              <div class="sc-signup-inner">
-                <p class="sc-signup-label">THE SCORECARD</p>
-                <p class="sc-signup-sub">Get the monthly breakdown of what moved in golf brands, who's trending, who's fading, and why it matters. Delivered to your inbox before it hits the site.</p>
-                <form class="footer-signup-form sc-signup-form" novalidate>
-                  <div class="footer-signup-row">
-                    <input class="footer-signup-input" type="email" placeholder="Your email" required autocomplete="email" aria-label="Email address">
-                    <button class="footer-signup-btn" type="submit">Get The Scorecard</button>
-                  </div>
-                  <p class="footer-signup-msg" style="display:none"></p>
-                </form>
-              </div>
+            <!-- ── Styled CTAs (Bug 10) ── -->
+            <div class="scorecard-cta-row">
+              <a href="/rankings/" class="scorecard-cta">View the full DORMIED Index <span aria-hidden="true">→</span></a>
+              <a href="/brands/"   class="scorecard-cta">Browse The Field <span aria-hidden="true">→</span></a>
             </div>
 
-            <!-- ── Cross-links ── -->
-            <div class="sc-article-crosslinks">
-              <a href="/rankings/" class="sc-crosslink">View the full DORMIED Index &rarr;</a>
-              <a href="/brands/"   class="sc-crosslink">Browse The Field &rarr;</a>
-            </div>
-
-    <nav class="sc-article-prevnext" aria-label="Issue navigation">
-      <span></span>
-      <a href="/scorecard/march-2026/" class="sc-prevnext-link sc-prevnext-older">The Scorecard | March 2026 →</a>
+    <nav class="scorecard-pagination" aria-label="Scorecard issues">
+      
+      <a href="/scorecard/march-2026/" class="scorecard-pagination-next"><span class="scorecard-pagination-direction">Next issue →</span><span class="scorecard-pagination-title">March 2026</span></a>
     </nav>
 
           </div><!-- /sc-article-main -->
