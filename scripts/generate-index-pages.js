@@ -38,10 +38,30 @@ const args = process.argv.slice(2);
 const targetArg = args.find(a => a.startsWith('--target='));
 const targetVal = targetArg ? targetArg.split('=')[1] : null;
 
-const doAll       = args.length === 0 || args.includes('--all');
+const forceAll    = args.includes('--force') || args.includes('--all');
+const doAll       = args.length === 0 || forceAll;
 const doBrands    = doAll || args.includes('--brands')    || targetVal === 'brands';
 const doNews      = doAll || args.includes('--news')      || targetVal === 'news';
 const doScorecard = doAll || args.includes('--scorecard') || targetVal === 'scorecard';
+
+/* ── mtime-based skip helper ──────────────────────────────────────────────── */
+/**
+ * Returns true when the output file is UP TO DATE relative to all source files,
+ * so the caller can skip regeneration.
+ *
+ * Skipped only in "default" (no explicit target flag) invocations; explicit flags
+ * (--brands, --news, --scorecard, --force, --all) always regenerate.
+ */
+function isUpToDate(outputPath, ...sourcePaths) {
+  if (forceAll) return false;         // --force always regenerates
+  if (!fs.existsSync(outputPath)) return false;
+  const outMtime = fs.statSync(outputPath).mtimeMs;
+  for (const src of sourcePaths) {
+    if (!fs.existsSync(src)) return false;
+    if (fs.statSync(src).mtimeMs > outMtime) return false;
+  }
+  return true;
+}
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
 function escHtml(str) {
@@ -246,6 +266,14 @@ function escapeRegex(str) {
 function generateBrands() {
   console.log('\n── Brands ──────────────────────────────────────────────');
 
+  /* mtime check: skip if brands/index.html is newer than js/data.js */
+  const brandsOutput = path.join(ROOT, 'brands/index.html');
+  const brandsSource = path.join(ROOT, 'js/data.js');
+  if (!args.includes('--brands') && targetVal !== 'brands' && isUpToDate(brandsOutput, brandsSource)) {
+    console.log('  ✔  brands/index.html is up to date — skipping');
+    return;
+  }
+
   /* Load data.js */
   const dataSrc = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
   const dataCtx = { window: {}, console };
@@ -313,12 +341,13 @@ function generateBrands() {
     else if (previousRank < currentRank) trend = 'down';
 
     return {
-      id:       item.brand.id,
-      name:     item.brand.name,
-      logo:     item.brand.logo || null,
-      category: item.brand.category || '',
-      rank:     currentRank,
-      di:       parseFloat((item.cur / maxVal * 100).toFixed(1)),
+      id:            item.brand.id,
+      name:          item.brand.name,
+      logo:          item.brand.logo || null,
+      category:      item.brand.category || '',
+      subCategories: item.brand.subCategories || [],
+      rank:          currentRank,
+      di:            parseFloat((item.cur / maxVal * 100).toFixed(1)),
       trend,
     };
   });
@@ -342,18 +371,21 @@ function generateBrands() {
           `<span class="brand-dir-initials">${escHtml(initials)}</span>` +
         `</div>`;
     }
-    const di      = b.di > 0 ? b.di.toFixed(1) : '—';
-    const rank    = '#' + b.rank;
-    const cat     = (b.category || '').replace(/\s*;\s*/g, ' · ');
-    const arrow   = b.trend === 'up'   ? ' <span class="brand-dir-trend brand-dir-trend--up" aria-label="trending up">↑</span>'
-                  : b.trend === 'down' ? ' <span class="brand-dir-trend brand-dir-trend--down" aria-label="trending down">↓</span>'
-                  : '';
+    const di     = b.di > 0 ? b.di.toFixed(1) : '—';
+    const rank   = '#' + b.rank;
+    const cat    = (b.category || '').replace(/\s*;\s*/g, ' · ');
+    const subcat = (b.subCategories || []).join(' · ');
+    const arrow  = b.trend === 'up'   ? ' <span class="brand-dir-trend brand-dir-trend--up" aria-label="trending up">↑</span>'
+                 : b.trend === 'down' ? ' <span class="brand-dir-trend brand-dir-trend--down" aria-label="trending down">↓</span>'
+                 : '';
 
     return (
       `<a href="/brands/${escHtml(b.id)}/" class="brand-dir-card">` +
         logoHtml +
         `<div class="brand-dir-name">${escHtml(b.name)}</div>` +
-        `<div class="brand-dir-cat">${escHtml(cat)}</div>` +
+        `<div class="brand-dir-cat">${escHtml(cat)}` +
+          (subcat ? `<span class="brand-dir-subcat"> · ${escHtml(subcat)}</span>` : '') +
+        `</div>` +
         `<div class="brand-dir-stats">` +
           `<span class="brand-dir-rank">${escHtml(rank)}</span>` +
           `<span class="brand-dir-di">DI&nbsp;${escHtml(String(di))}${arrow}</span>` +
@@ -397,6 +429,16 @@ function generateBrands() {
    ══════════════════════════════════════════════════════════════════════════ */
 async function generateNews() {
   console.log('\n── News ─────────────────────────────────────────────────');
+
+  /* mtime check: news articles come from Supabase (no local file to compare),
+     so we compare news/index.html against js/data.js (brand map dependency).
+     Since article data is remote, we only skip if the user passes no explicit
+     --news flag AND data.js hasn't changed. Always regenerates on --news. */
+  const newsOutput = path.join(ROOT, 'news/index.html');
+  if (!args.includes('--news') && targetVal !== 'news' && isUpToDate(newsOutput, path.join(ROOT, 'js/data.js'))) {
+    console.log('  ✔  news/index.html is up to date — skipping');
+    return { totalPages: 0 };
+  }
 
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -610,6 +652,14 @@ function dedupeRelLinks(html, p, totalPages) {
    ══════════════════════════════════════════════════════════════════════════ */
 function generateScorecard() {
   console.log('\n── Scorecard ────────────────────────────────────────────');
+
+  /* mtime check: skip if scorecard/index.html is newer than js/scorecard-data.js */
+  const scorecardOutput = path.join(ROOT, 'scorecard/index.html');
+  const scorecardSource = path.join(ROOT, 'js/scorecard-data.js');
+  if (!args.includes('--scorecard') && targetVal !== 'scorecard' && isUpToDate(scorecardOutput, scorecardSource)) {
+    console.log('  ✔  scorecard/index.html is up to date — skipping');
+    return;
+  }
 
   /* Load scorecard-data.js */
   const src = fs.readFileSync(path.join(ROOT, 'js/scorecard-data.js'), 'utf8');
