@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">Tour Edge</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">Tour Edge</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">Tour Edge</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Clubs &amp; Balls · Founded 1986 · Batavia, Illinois, USA</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 1986 · Batavia, Illinois, USA</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Clubs &amp; Balls</span>
               </div>
@@ -176,9 +165,9 @@
           </div>
           <p class="bp-description" id="bp-description">Tour Edge has operated since 1986 as one of golf's most persistent independent equipment manufacturers, surviving industry consolidation that eliminated most mid-sized club companies. The Batavia, Illinois-based operation built its reputation on delivering genuine performance at price points roughly 20-40% below TaylorMade, Callaway, and Titleist through efficient operations, minimal tour spending, and direct relationships with component suppliers in Asia. Founder and president David Glod has maintained control throughout the company's history, allowing Tour Edge to pursue long-term product development strategies without quarterly earnings pressure or private equity ownership driving decisions.
 
-The brand's product lineup spans three distinct tiers: Exotics for performance-focused players seeking tour-level technology, Hot Launch for game improvement with maximum forgiveness, and Bazooka targeting value-conscious recreational golfers. The Exotics line has earned particular respect for hybrid designs and fairway woods that compete legitimately with major OEM offerings—several club fitters and independent testers have documented Exotics hybrids matching or exceeding forgiveness and distance metrics from clubs costing $100+ more. Tour Edge has achieved modest tour presence through sponsorships and occasional tournament wins, though the company lacks resources for the blanket tour seeding and athlete endorsements that major brands deploy.
+The brand's product lineup spans three distinct tiers: Exotics for performance-focused players seeking tour-level technology, Hot Launch for game improvement with maximum forgiveness, and Bazooka targeting value-conscious recreational golfers. The Exotics line has earned particular respect for hybrid designs and fairway woods that compete legitimately with major OEM offerings. several club fitters and independent testers have documented Exotics hybrids matching or exceeding forgiveness and distance metrics from clubs costing $100+ more. Tour Edge has achieved modest tour presence through sponsorships and occasional tournament wins, though the company lacks resources for the blanket tour seeding and athlete endorsements that major brands deploy.
 
-Tour Edge's market positioning emphasizes performance value validated through independent testing and customer reviews rather than marketing volume or tour cachet. The brand has cultivated loyal followings among golfers who research equipment carefully and among club fitters who appreciate consistent quality and fitting options that rival major manufacturers. Industry analysts view Tour Edge as one of the few remaining examples of sustainable independent equipment manufacturing—the company has found a viable niche serving golfers who want genuine performance without paying for premium branding, tour marketing, or yearly product cycles. Challenges include limited retail distribution as big-box stores prioritize major brands and the ongoing perception among casual golfers that unfamiliar brands represent inferior quality regardless of actual performance data.</p>
+Tour Edge's market positioning emphasizes performance value validated through independent testing and customer reviews rather than marketing volume or tour cachet. The brand has cultivated loyal followings among golfers who research equipment carefully and among club fitters who appreciate consistent quality and fitting options that rival major manufacturers. Industry analysts view Tour Edge as one of the few remaining examples of sustainable independent equipment manufacturing. the company has found a viable niche serving golfers who want genuine performance without paying for premium branding, tour marketing, or yearly product cycles. Challenges include limited retail distribution as big-box stores prioritize major brands and the ongoing perception among casual golfers that unfamiliar brands represent inferior quality regardless of actual performance data.</p>
         </div>
       </section>
 
@@ -278,7 +267,7 @@ Tour Edge's market positioning emphasizes performance value validated through in
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -315,7 +304,7 @@ Tour Edge's market positioning emphasizes performance value validated through in
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -371,7 +360,7 @@ Tour Edge's market positioning emphasizes performance value validated through in
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -381,12 +370,6 @@ Tour Edge's market positioning emphasizes performance value validated through in
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

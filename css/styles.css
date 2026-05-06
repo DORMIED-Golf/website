@@ -5484,3 +5484,26 @@ details[open] .faq-question::after { content: '−'; }
   color: var(--text);
   line-height: 1.2;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SHARED BREADCRUMB COMPONENT  (brand pages · scorecard · news articles)
+   ══════════════════════════════════════════════════════════════════════════ */
+.breadcrumb {
+  padding: 0.75rem 0 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.breadcrumb-link {
+  color: inherit;
+  text-decoration: none;
+}
+.breadcrumb-link:hover { color: var(--green); }
+.breadcrumb-separator {
+  margin: 0 0.4em;
+  color: var(--border-lite);
+}
+.breadcrumb-item--current { color: var(--text-dim); }

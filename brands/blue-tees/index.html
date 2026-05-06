@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">Blue Tees</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">Blue Tees</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">Blue Tees</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Tech &amp; Training Aids · Founded 2019 · Los Angeles, California, USA</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 2019 · Los Angeles, California, USA</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Tech &amp; Training Aids</span>
               </div>
@@ -174,7 +163,7 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">Blue Tees emerged in 2019 as a direct challenge to the rangefinder establishment, betting that golfers were tired of paying $400-plus for distance-measuring devices. Operating out of Los Angeles, the direct-to-consumer brand stripped out retail markup and legacy brand premiums, delivering slope-adjusted laser rangefinders and GPS units at prices often half what Bushnell or Garmin charged. The strategy worked. Within three years, Blue Tees became one of Amazon's best-selling rangefinder brands, driven by aggressive pricing, influencer partnerships, and a product lineup that didn't sacrifice features for affordability. The Series 3 Max rangefinder, retailing around $250, includes slope adjustment, magnetic mounting, and 800-yard range—specs that would have cost double from incumbents. Blue Tees capitalized on a generation of golfers comfortable buying tech sight-unseen, willing to trust online reviews over pro shop recommendations. The brand's aesthetic is equally important to its appeal. Where legacy rangefinders often look like military surplus, Blue Tees devices feature sleek, modern housings in colors like slate gray and navy, designed to look good clipped to a cart or posted on Instagram. The company has expanded beyond rangefinders into GPS speakers, training aids, and even putting mats, building a lifestyle ecosystem around accessible golf tech. Critics argue the brand lacks the durability testing and customer service infrastructure of established players, and questions remain about long-term product support. But for budget-conscious golfers who want tour-caliber yardages without tour-caliber prices, Blue Tees represents a viable alternative to the old guard. The brand's rise reflects a broader shift in golf equipment purchasing: younger players prioritize value and online convenience over legacy brand loyalty, and Blue Tees has positioned itself squarely in that gap.</p>
+          <p class="bp-description" id="bp-description">Blue Tees emerged in 2019 as a direct challenge to the rangefinder establishment, betting that golfers were tired of paying $400-plus for distance-measuring devices. Operating out of Los Angeles, the direct-to-consumer brand stripped out retail markup and legacy brand premiums, delivering slope-adjusted laser rangefinders and GPS units at prices often half what Bushnell or Garmin charged. The strategy worked. Within three years, Blue Tees became one of Amazon's best-selling rangefinder brands, driven by aggressive pricing, influencer partnerships, and a product lineup that didn't sacrifice features for affordability. The Series 3 Max rangefinder, retailing around $250, includes slope adjustment, magnetic mounting, and 800-yard range. specs that would have cost double from incumbents. Blue Tees capitalized on a generation of golfers comfortable buying tech sight-unseen, willing to trust online reviews over pro shop recommendations. The brand's aesthetic is equally important to its appeal. Where legacy rangefinders often look like military surplus, Blue Tees devices feature sleek, modern housings in colors like slate gray and navy, designed to look good clipped to a cart or posted on Instagram. The company has expanded beyond rangefinders into GPS speakers, training aids, and even putting mats, building a lifestyle ecosystem around accessible golf tech. Critics argue the brand lacks the durability testing and customer service infrastructure of established players, and questions remain about long-term product support. But for budget-conscious golfers who want tour-caliber yardages without tour-caliber prices, Blue Tees represents a viable alternative to the old guard. The brand's rise reflects a broader shift in golf equipment purchasing: younger players prioritize value and online convenience over legacy brand loyalty, and Blue Tees has positioned itself squarely in that gap.</p>
         </div>
       </section>
 
@@ -274,7 +263,7 @@
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -311,7 +300,7 @@
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -349,7 +338,7 @@
             </section>
 
             <!-- ── Latest on Brand ── -->
-            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading">
+            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading" hidden>
               <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Blue Tees</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 <p class="latest-feed-empty">No articles yet for this brand.</p>
@@ -358,7 +347,7 @@
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -368,12 +357,6 @@
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

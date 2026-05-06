@@ -73,6 +73,16 @@ function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+/** Sanitize em dashes out of prose strings (site rule: no em dashes). */
+function stripEmDashes(text) {
+  if (!text) return text;
+  return text
+    .replace(/\s*—\s*/g, '. ')
+    .replace(/—/g, ', ')
+    .replace(/[ \t]{2,}/g, ' ')
+    .trim();
+}
+
 function formatDate(isoDate) {
   if (!isoDate) return '';
   const d = new Date(isoDate.length === 10 ? isoDate + 'T12:00:00Z' : isoDate);
@@ -252,8 +262,8 @@ function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBran
   const t3mStr = fmtPct(t3m);
   const t12mStr = fmtPct(t12m);
 
-  // Meta line: Category · Founded YYYY · Headquarters
-  const metaParts = [brand.category];
+  // Meta line: Founded YYYY · Headquarters (category already shown as badge)
+  const metaParts = [];
   if (brand.founded)      metaParts.push(`Founded ${brand.founded}`);
   if (brand.headquarters) metaParts.push(brand.headquarters);
   const metaLine = metaParts.join(' · ');
@@ -327,7 +337,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBran
               <span class="bp-take-month" id="bp-take-month">${escHtml(takeMonthLabel)}</span>
             </div>
             <div class="bp-take-body">
-              <p class="bp-take-text" id="bp-take-text">${escHtml(take.take)}</p>
+              <p class="bp-take-text" id="bp-take-text">${escHtml(stripEmDashes(take.take))}</p>
               <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
             </div>
           </div>
@@ -459,17 +469,6 @@ function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBran
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -493,12 +492,12 @@ function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBran
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">${escHtml(brand.name)}</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">${escHtml(brand.name)}</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -525,7 +524,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBran
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">${escHtml(brand.description || '')}</p>
+          <p class="bp-description" id="bp-description">${escHtml(stripEmDashes(brand.description || ''))}</p>
         </div>
       </section>
 
@@ -611,7 +610,7 @@ ${takeSectionHtml}
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -648,7 +647,7 @@ ${takeSectionHtml}
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -662,7 +661,7 @@ ${takeSectionHtml}
             </section>
 
             <!-- ── Latest on Brand ── -->
-            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading">
+            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading"${articles.length === 0 ? ' hidden' : ''}>
               <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">${escHtml(brand.name)}</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 ${articlesHtml}
@@ -671,7 +670,7 @@ ${takeSectionHtml}
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -681,12 +680,6 @@ ${takeSectionHtml}
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

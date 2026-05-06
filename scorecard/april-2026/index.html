@@ -98,13 +98,12 @@
     <article class="sc-article-layout">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb"
-           style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--text-muted);font-family:var(--font-mono);font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/scorecard/" style="color:inherit;text-decoration:none">Scorecard</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span aria-current="page">The Scorecard | April 2026</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/scorecard/" class="breadcrumb-link">Scorecard</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span class="breadcrumb-item--current" aria-current="page">The Scorecard | April 2026</span>
       </nav>
 
       <!-- ── Article Header ── -->
@@ -277,8 +276,8 @@
             </div>
 
     <nav class="scorecard-pagination" aria-label="Scorecard issues">
+      <a href="/scorecard/march-2026/" class="scorecard-pagination-prev"><span class="scorecard-pagination-direction">← Previous issue</span><span class="scorecard-pagination-title">March 2026</span></a>
       
-      <a href="/scorecard/march-2026/" class="scorecard-pagination-next"><span class="scorecard-pagination-direction">Next issue →</span><span class="scorecard-pagination-title">March 2026</span></a>
     </nav>
 
           </div><!-- /sc-article-main -->

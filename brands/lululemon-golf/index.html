@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">Lululemon Golf</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">Lululemon Golf</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">Lululemon Golf</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Apparel &amp; Footwear · Founded 1998 · Vancouver, Canada</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 1998 · Vancouver, Canada</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Apparel &amp; Footwear</span>
               </div>
@@ -174,13 +163,13 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">Lululemon Athletica, the Vancouver-based athletic apparel giant founded in 1998, entered golf as a natural extension of its men's performance category rather than a standalone golf initiative. Known for premium technical fabrics like Luon and ABC (Anti-Ball-Crushing) pants, Lululemon brought its yoga and running expertise to the course with clothing designed for athletes who happen to play golf—not golfers looking for traditional polos and pleated trousers.
+          <p class="bp-description" id="bp-description">Lululemon Athletica, the Vancouver-based athletic apparel giant founded in 1998, entered golf as a natural extension of its men's performance category rather than a standalone golf initiative. Known for premium technical fabrics like Luon and ABC (Anti-Ball-Crushing) pants, Lululemon brought its yoga and running expertise to the course with clothing designed for athletes who happen to play golf. not golfers looking for traditional polos and pleated trousers.
 
 The brand's golf offering centers on minimalist, technical pieces: moisture-wicking polos with four-way stretch, jogger-style pants, and layering pieces that transition seamlessly from gym to office to tee time. Lululemon's design language avoids overt golf branding or loud patterns, instead favoring clean lines, neutral palettes, and subtle performance details. The result is apparel that meets dress codes without feeling constrained by them, appealing to younger golfers and professionals who prioritize versatility and modern fit over heritage aesthetics.
 
-Lululemon's expansion into golf reflects broader shifts in the sport's culture—more casual, more lifestyle-driven, and increasingly influenced by athleisure trends. The brand doesn't sponsor major tours or chase equipment partnerships; instead, it relies on its established reputation for quality fabrication and its retail presence in upscale shopping districts where its core customer already shops. The golf category serves as a proof point that Lululemon's technical innovation works across sports, not just studios.
+Lululemon's expansion into golf reflects broader shifts in the sport's culture. more casual, more lifestyle-driven, and increasingly influenced by athleisure trends. The brand doesn't sponsor major tours or chase equipment partnerships; instead, it relies on its established reputation for quality fabrication and its retail presence in upscale shopping districts where its core customer already shops. The golf category serves as a proof point that Lululemon's technical innovation works across sports, not just studios.
 
-For golfers tired of stiff, boxy polos and rigid dress codes, Lululemon offers a credible alternative rooted in performance and contemporary design. It's not trying to replace FootJoy or Ralph Lauren—it's offering a different approach entirely, one built on comfort, versatility, and the belief that golf apparel should work as hard as the people wearing it.</p>
+For golfers tired of stiff, boxy polos and rigid dress codes, Lululemon offers a credible alternative rooted in performance and contemporary design. It's not trying to replace FootJoy or Ralph Lauren. it's offering a different approach entirely, one built on comfort, versatility, and the belief that golf apparel should work as hard as the people wearing it.</p>
         </div>
       </section>
 
@@ -280,7 +269,7 @@ For golfers tired of stiff, boxy polos and rigid dress codes, Lululemon offers a
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -317,7 +306,7 @@ For golfers tired of stiff, boxy polos and rigid dress codes, Lululemon offers a
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -355,7 +344,7 @@ For golfers tired of stiff, boxy polos and rigid dress codes, Lululemon offers a
             </section>
 
             <!-- ── Latest on Brand ── -->
-            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading">
+            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading" hidden>
               <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Lululemon Golf</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 <p class="latest-feed-empty">No articles yet for this brand.</p>
@@ -364,7 +353,7 @@ For golfers tired of stiff, boxy polos and rigid dress codes, Lululemon offers a
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -374,12 +363,6 @@ For golfers tired of stiff, boxy polos and rigid dress codes, Lululemon offers a
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

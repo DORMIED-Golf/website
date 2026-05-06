@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">RLX Golf</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">RLX Golf</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">RLX Golf</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Apparel &amp; Footwear · Founded 2012 · New York, New York, USA</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 2012 · New York, New York, USA</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Apparel &amp; Footwear</span>
               </div>
@@ -174,9 +163,9 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">RLX Golf represents Ralph Lauren's answer to the intersection of performance technology and luxury aesthetics, launched in 2012 as a technical evolution of the brand's long-standing golf presence. While Ralph Lauren has dressed golfers for decades—most visibly through its association with the U.S. Open and Ryder Cup teams—RLX Golf specifically addresses the modern demand for golf apparel that delivers athletic performance without abandoning the refined, classic American style that defines the Ralph Lauren brand.
+          <p class="bp-description" id="bp-description">RLX Golf represents Ralph Lauren's answer to the intersection of performance technology and luxury aesthetics, launched in 2012 as a technical evolution of the brand's long-standing golf presence. While Ralph Lauren has dressed golfers for decades. most visibly through its association with the U.S. Open and Ryder Cup teams. RLX Golf specifically addresses the modern demand for golf apparel that delivers athletic performance without abandoning the refined, classic American style that defines the Ralph Lauren brand.
 
-The line employs technical fabrics engineered for moisture management, UV protection, and stretch performance while maintaining the silhouettes, details, and aesthetic codes associated with Ralph Lauren: subtle patterns, quality construction, and design references to East Coast country clubs and athletic heritage. RLX polos feature performance materials but retain traditional golf styling—collars, button plackets, and fits that satisfy formal course dress codes. The collection extends to pants, outerwear, and accessories, all balancing technical requirements with the visual language of traditional golf.
+The line employs technical fabrics engineered for moisture management, UV protection, and stretch performance while maintaining the silhouettes, details, and aesthetic codes associated with Ralph Lauren: subtle patterns, quality construction, and design references to East Coast country clubs and athletic heritage. RLX polos feature performance materials but retain traditional golf styling. collars, button plackets, and fits that satisfy formal course dress codes. The collection extends to pants, outerwear, and accessories, all balancing technical requirements with the visual language of traditional golf.
 
 RLX Golf benefits from Ralph Lauren's substantial tour presence and partnerships. The brand has dressed major championship winners and maintains visibility at premier golf events, providing aspirational context that pure performance brands often lack. This tour credibility combines with Ralph Lauren's luxury retail distribution, placing RLX Golf in premium department stores and brand boutiques alongside the broader Ralph Lauren collection.
 
@@ -280,7 +269,7 @@ Pricing reflects the luxury positioning, with polos typically starting around $1
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -317,7 +306,7 @@ Pricing reflects the luxury positioning, with polos typically starting around $1
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -355,7 +344,7 @@ Pricing reflects the luxury positioning, with polos typically starting around $1
             </section>
 
             <!-- ── Latest on Brand ── -->
-            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading">
+            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading" hidden>
               <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">RLX Golf</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 <p class="latest-feed-empty">No articles yet for this brand.</p>
@@ -364,7 +353,7 @@ Pricing reflects the luxury positioning, with polos typically starting around $1
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -374,12 +363,6 @@ Pricing reflects the luxury positioning, with polos typically starting around $1
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">Abacus Sportswear</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">Abacus Sportswear</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">Abacus Sportswear</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Apparel &amp; Footwear · Founded 1991 · Dalby, Sweden</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 1991 · Dalby, Sweden</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Apparel &amp; Footwear</span>
               </div>
@@ -174,7 +163,7 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">Abacus Sportswear has been manufacturing technical golf apparel from Dalby, Sweden since 1991, building a reputation for serious weather protection and performance fabrics in a market that often prioritizes style over function. While the brand produces both men's and women's collections, it has developed particularly strong traction in women's golf across Europe, where its presence in pro shops and among club players is substantial. Abacus built its foundation on Scandinavian design principles—clean lines, functional minimalism, and engineered performance for variable and often harsh weather conditions. The brand's core competency lies in technical layering systems, waterproof outerwear, and stretch fabrics designed for the golf swing, with particular attention to breathability and moisture management. Products like the Pitch and Bounce collections represent the brand's approach: performance-driven, unfussy, and built for golfers who play in all conditions. Abacus has maintained a significant presence in European team golf, outfitting junior programs and amateur competitions, which has helped establish credibility among serious players. In the United States, the brand remains less well-known than European counterparts like Galvin Green or J.Lindeberg, operating more as a specialty player in pro shops that prioritize performance credentials over marketing flash. The women's collections have found particular resonance as the brand doesn't simply shrink and pink men's designs but develops dedicated fits and styles. As golf's growth among women continues, particularly in Northern Europe where Abacus maintains its strongest presence, the brand represents a performance-first alternative to fashion-forward newcomers, appealing to golfers who prioritize technical capability and durability over trend-driven aesthetics.</p>
+          <p class="bp-description" id="bp-description">Abacus Sportswear has been manufacturing technical golf apparel from Dalby, Sweden since 1991, building a reputation for serious weather protection and performance fabrics in a market that often prioritizes style over function. While the brand produces both men's and women's collections, it has developed particularly strong traction in women's golf across Europe, where its presence in pro shops and among club players is substantial. Abacus built its foundation on Scandinavian design principles. clean lines, functional minimalism, and engineered performance for variable and often harsh weather conditions. The brand's core competency lies in technical layering systems, waterproof outerwear, and stretch fabrics designed for the golf swing, with particular attention to breathability and moisture management. Products like the Pitch and Bounce collections represent the brand's approach: performance-driven, unfussy, and built for golfers who play in all conditions. Abacus has maintained a significant presence in European team golf, outfitting junior programs and amateur competitions, which has helped establish credibility among serious players. In the United States, the brand remains less well-known than European counterparts like Galvin Green or J.Lindeberg, operating more as a specialty player in pro shops that prioritize performance credentials over marketing flash. The women's collections have found particular resonance as the brand doesn't simply shrink and pink men's designs but develops dedicated fits and styles. As golf's growth among women continues, particularly in Northern Europe where Abacus maintains its strongest presence, the brand represents a performance-first alternative to fashion-forward newcomers, appealing to golfers who prioritize technical capability and durability over trend-driven aesthetics.</p>
         </div>
       </section>
 
@@ -274,7 +263,7 @@
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -311,7 +300,7 @@
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -349,7 +338,7 @@
             </section>
 
             <!-- ── Latest on Brand ── -->
-            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading">
+            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading" hidden>
               <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Abacus Sportswear</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 <p class="latest-feed-empty">No articles yet for this brand.</p>
@@ -358,7 +347,7 @@
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -368,12 +357,6 @@
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

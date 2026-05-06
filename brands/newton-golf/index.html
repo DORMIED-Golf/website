@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">Newton Golf</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">Newton Golf</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">Newton Golf</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Tech &amp; Training Aids · Founded 2020 · Camarillo, California, USA</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 2020 · Camarillo, California, USA</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Tech &amp; Training Aids</span>
               </div>
@@ -174,11 +163,11 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">Newton Golf is a California-based shaft manufacturer founded in 2020 under the Sacks Parente Golf umbrella, a company known for its engineering-forward approach to golf equipment. Unlike legacy shaft brands that rely heavily on tour validation or incremental tweaks, Newton positions itself around first-principles physics—analyzing how mass distribution, torque, and energy transfer affect clubhead delivery and ball flight. The brand's messaging emphasizes measurable performance gains through thoughtful engineering rather than marketing hype or pro endorsements.
+          <p class="bp-description" id="bp-description">Newton Golf is a California-based shaft manufacturer founded in 2020 under the Sacks Parente Golf umbrella, a company known for its engineering-forward approach to golf equipment. Unlike legacy shaft brands that rely heavily on tour validation or incremental tweaks, Newton positions itself around first-principles physics. analyzing how mass distribution, torque, and energy transfer affect clubhead delivery and ball flight. The brand's messaging emphasizes measurable performance gains through thoughtful engineering rather than marketing hype or pro endorsements.
 
 Newton's product line focuses on driver and fairway shafts designed to optimize energy transfer from the player's swing into the clubhead. The brand uses proprietary materials and construction techniques intended to reduce inconsistency and improve repeatability, targeting both club fitters and discerning players willing to invest in custom builds. Newton shafts are typically positioned in the premium segment, competing with established names like Fujikura, Graphite Design, and Mitsubishi in the fitting bay rather than on retail racks.
 
-Because Newton launched relatively recently, it lacks the decades of tour history that define brands like True Temper or Project X. Instead, it has built credibility through partnerships with club fitters and performance-focused custom builders who appreciate its data-driven design philosophy. The brand appeals to players who view equipment as a system of optimized components rather than off-the-shelf solutions—those who are willing to experiment with shaft profiles to unlock marginal gains. In an industry often driven by legacy and feel, Newton represents a newer wave of golf companies built on engineering transparency and performance validation, aiming to earn trust through physics rather than pedigree.</p>
+Because Newton launched relatively recently, it lacks the decades of tour history that define brands like True Temper or Project X. Instead, it has built credibility through partnerships with club fitters and performance-focused custom builders who appreciate its data-driven design philosophy. The brand appeals to players who view equipment as a system of optimized components rather than off-the-shelf solutions. those who are willing to experiment with shaft profiles to unlock marginal gains. In an industry often driven by legacy and feel, Newton represents a newer wave of golf companies built on engineering transparency and performance validation, aiming to earn trust through physics rather than pedigree.</p>
         </div>
       </section>
 
@@ -278,7 +267,7 @@ Because Newton launched relatively recently, it lacks the decades of tour histor
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -315,7 +304,7 @@ Because Newton launched relatively recently, it lacks the decades of tour histor
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -353,7 +342,7 @@ Because Newton launched relatively recently, it lacks the decades of tour histor
             </section>
 
             <!-- ── Latest on Brand ── -->
-            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading">
+            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading" hidden>
               <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Newton Golf</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 <p class="latest-feed-empty">No articles yet for this brand.</p>
@@ -362,7 +351,7 @@ Because Newton launched relatively recently, it lacks the decades of tour histor
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -372,12 +361,6 @@ Because Newton launched relatively recently, it lacks the decades of tour histor
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

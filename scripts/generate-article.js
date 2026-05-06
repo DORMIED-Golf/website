@@ -455,8 +455,19 @@ function generateArticleHtml(opts) {
     title, bodyHtml, imageUrl, ogImageUrl, localUrl, imageAlt, slug, category,
     published_at, source_url, source_name, meta_description, seo_keywords,
     brandSlug, brandName, brandLogo, dataVersion,
-    readTime, author,
+    readTime, author, dormiedData,
   } = opts;
+
+  // Compute live brand metrics for the widget (Item 5)
+  const bInfo  = dormiedData ? getBrandInfo(dormiedData, brandSlug) : null;
+  const bRank  = bInfo ? `#${bInfo.rank}` : '—';
+  const bDi    = bInfo ? bInfo.di.toFixed(1) : '—';
+  const bMom   = bInfo ? bInfo.momStr : '—';
+  const bT3m   = bInfo ? fmtPct(bInfo.t3m) : '—';
+  const bT12m  = bInfo ? fmtPct(bInfo.t12m) : '—';
+  const bMomCls  = bInfo && bInfo.momPct  !== null ? ` class="${pctClass(bInfo.momPct)}"` : '';
+  const bT3mCls  = bInfo && bInfo.t3m     !== null ? ` class="${pctClass(bInfo.t3m)}"` : '';
+  const bT12mCls = bInfo && bInfo.t12m    !== null ? ` class="${pctClass(bInfo.t12m)}"` : '';
 
   const dateFormatted  = formatDate(published_at);
   const dateISO        = new Date(published_at).toISOString();
@@ -540,7 +551,7 @@ function generateArticleHtml(opts) {
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260409">
+  <link rel="stylesheet" href="/css/styles.css?v=20260505">
 
   <!-- ── Structured Data ── -->
   <script type="application/ld+json">
@@ -602,12 +613,12 @@ function generateArticleHtml(opts) {
   <main id="main-content">
 
     <!-- ── Breadcrumb ── -->
-    <nav class="da-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b)">
-      <a href="/" style="color:inherit;text-decoration:none">Home</a>
-      <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-      <a href="/news/" style="color:inherit;text-decoration:none">News</a>
-      <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-      <span aria-current="page">${escHtml(title)}</span>
+    <nav class="breadcrumb container" aria-label="Breadcrumb">
+      <a href="/" class="breadcrumb-link">Home</a>
+      <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+      <a href="/news/" class="breadcrumb-link">News</a>
+      <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+      <span class="breadcrumb-item--current" aria-current="page">${escHtml(title)}</span>
     </nav>
 
     <!-- ── Article Header (matches Scorecard layout) ── -->
@@ -644,11 +655,11 @@ function generateArticleHtml(opts) {
                   <a href="/brands/${escHtml(brandSlug)}/" class="da-brand-card-name">${escHtml(brandName)}</a>
                 </div>
                 <div class="da-brand-card-stats">
-                  <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">—</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">—</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val">—</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val">—</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val">—</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">${bRank}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">${bDi}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val"${bMomCls}>${bMom}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val"${bT3mCls}>${bT3m}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val"${bT12mCls}>${bT12m}</span></div>
                 </div>
               </div>
             </div>
@@ -873,6 +884,7 @@ async function main() {
         dataVersion:     (dormiedData.meta.lastUpdated || '').replace(/-/g, ''),
         readTime:        rTime,
         author,
+        dormiedData,
       });
 
       fs.mkdirSync(path.join(SITE_ROOT, 'news', row.slug), { recursive: true });
@@ -1035,6 +1047,7 @@ async function main() {
       dataVersion: (dormiedData.meta.lastUpdated || '').replace(/-/g, ''),
       readTime,
       author,
+      dormiedData,
     });
 
     fs.writeFileSync(path.join(articleDir, 'index.html'), html, 'utf8');

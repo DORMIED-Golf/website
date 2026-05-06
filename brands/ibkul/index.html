@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">IBKUL</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">IBKUL</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">IBKUL</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Apparel &amp; Footwear · Founded 2015 · Miami Lakes, Florida, USA</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 2015 · Miami Lakes, Florida, USA</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Apparel &amp; Footwear</span>
               </div>
@@ -174,7 +163,7 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">IBKUL emerged from Miami Lakes, Florida in 2015 with a straightforward value proposition: women's golf apparel engineered for sun protection and heat management. The brand's name is a portmanteau of &quot;I be cool,&quot; a nod to its core cooling fabric technology that has become its signature across polos, skorts, and layering pieces. Built around IceFil fabric—a proprietary blend that converts sweat into cooling energy—IBKUL targets the growing women's golf market in Sun Belt states where UV exposure and temperature aren't optional considerations but daily realities. The brand has carved out a reputation for technical rigor without sacrificing style, offering vibrant prints and contemporary cuts that appeal to recreational golfers who spend four-plus hours exposed to the elements. Distribution runs heavily through pro shops and resort boutiques in Florida, Arizona, and Southern California, where the brand's UPF 50 sun protection resonates with both dermatology-conscious consumers and those simply seeking comfort in triple-digit heat. IBKUL has expanded beyond golf into tennis and pickleball, reflecting the cross-sport lifestyle of its core customer base. The brand competes in an increasingly crowded women's performance golf category but differentiates through its unwavering focus on climate-specific functionality. While it lacks tour presence or celebrity endorsements, IBKUL has built steady growth through word-of-mouth among club golfers and teaching professionals who appreciate garments that perform across long days of instruction or play. Its positioning sits squarely in the premium-but-accessible tier—more technical than traditional country club brands, less fashion-forward than newer lifestyle entrants, but reliable for women who prioritize function in warm-weather golf.</p>
+          <p class="bp-description" id="bp-description">IBKUL emerged from Miami Lakes, Florida in 2015 with a straightforward value proposition: women's golf apparel engineered for sun protection and heat management. The brand's name is a portmanteau of &quot;I be cool,&quot; a nod to its core cooling fabric technology that has become its signature across polos, skorts, and layering pieces. Built around IceFil fabric. a proprietary blend that converts sweat into cooling energy. IBKUL targets the growing women's golf market in Sun Belt states where UV exposure and temperature aren't optional considerations but daily realities. The brand has carved out a reputation for technical rigor without sacrificing style, offering vibrant prints and contemporary cuts that appeal to recreational golfers who spend four-plus hours exposed to the elements. Distribution runs heavily through pro shops and resort boutiques in Florida, Arizona, and Southern California, where the brand's UPF 50 sun protection resonates with both dermatology-conscious consumers and those simply seeking comfort in triple-digit heat. IBKUL has expanded beyond golf into tennis and pickleball, reflecting the cross-sport lifestyle of its core customer base. The brand competes in an increasingly crowded women's performance golf category but differentiates through its unwavering focus on climate-specific functionality. While it lacks tour presence or celebrity endorsements, IBKUL has built steady growth through word-of-mouth among club golfers and teaching professionals who appreciate garments that perform across long days of instruction or play. Its positioning sits squarely in the premium-but-accessible tier. more technical than traditional country club brands, less fashion-forward than newer lifestyle entrants, but reliable for women who prioritize function in warm-weather golf.</p>
         </div>
       </section>
 
@@ -274,7 +263,7 @@
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -311,7 +300,7 @@
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -349,7 +338,7 @@
             </section>
 
             <!-- ── Latest on Brand ── -->
-            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading">
+            <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading" hidden>
               <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">IBKUL</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 <p class="latest-feed-empty">No articles yet for this brand.</p>
@@ -358,7 +347,7 @@
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -368,12 +357,6 @@
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

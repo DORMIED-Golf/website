@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">Shot Scope</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">Shot Scope</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">Shot Scope</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Tech &amp; Training Aids · Founded 2014 · Edinburgh, Scotland, UK</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 2014 · Edinburgh, Scotland, UK</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Tech &amp; Training Aids</span>
               </div>
@@ -180,7 +169,7 @@ The brand's product lineup includes GPS watches like the X5 and H4, laser rangef
 
 The company emphasizes the quality and actionability of data over flashy features, positioning products as serious tools for game improvement rather than entertainment gadgets. The strokes gained analytics and performance benchmarking tools provide insights previously available only to tour players, democratizing advanced golf analytics. Shot Scope devices have found adoption among serious amateurs, competitive players, and teaching professionals seeking objective performance data for students.
 
-Pricing positions Shot Scope as accessible premium technology, with watches typically $200-350 and rangefinders around $300-400—competitive with or below major brands while including features others charge subscriptions to access. The no-subscription-fee model has become a key marketing differentiator as golf technology increasingly adopts recurring revenue models. Based in Scotland with strong UK and European presence, Shot Scope has grown international distribution while maintaining focus on delivering maximum value and data depth rather than brand prestige or tour endorsements.</p>
+Pricing positions Shot Scope as accessible premium technology, with watches typically $200-350 and rangefinders around $300-400. competitive with or below major brands while including features others charge subscriptions to access. The no-subscription-fee model has become a key marketing differentiator as golf technology increasingly adopts recurring revenue models. Based in Scotland with strong UK and European presence, Shot Scope has grown international distribution while maintaining focus on delivering maximum value and data depth rather than brand prestige or tour endorsements.</p>
         </div>
       </section>
 
@@ -280,7 +269,7 @@ Pricing positions Shot Scope as accessible premium technology, with watches typi
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -317,7 +306,7 @@ Pricing positions Shot Scope as accessible premium technology, with watches typi
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -373,7 +362,7 @@ Pricing positions Shot Scope as accessible premium technology, with watches typi
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -383,12 +372,6 @@ Pricing positions Shot Scope as accessible premium technology, with watches typi
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">Adidas Golf</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">Adidas Golf</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">Adidas Golf</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Apparel &amp; Footwear · Founded 1997 · Herzogenaurach, Germany</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 1997 · Herzogenaurach, Germany</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Apparel &amp; Footwear</span>
               </div>
@@ -174,7 +163,7 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">Adidas Golf brings the weight of a global sportswear giant to golf, blending performance credibility earned in soccer, running, and basketball with golf-specific innovation. Launched as a dedicated golf division in 1997, Adidas leveraged its parent company's expertise in athletic footwear and apparel to challenge traditional golf brands. The breakthrough came in footwear, where Adidas applied technologies from other sports—Boost cushioning, Primeknit uppers, Spikeless traction systems—to create golf shoes that felt more like running shoes than country club footwear. The Tour360 line became an industry standard for stability and comfort, while CodeChaos pushed golf shoes toward a more streetwear-influenced aesthetic. Adidas Golf's apparel similarly balances performance and style, using moisture-wicking fabrics, stretch materials, and modern fits that appeal to younger golfers and athletes who play multiple sports. The brand has maintained a strong tour presence, though its roster has shifted over the years; it currently counts Collin Morikawa and Tyrrell Hatton among its marquee players, having previously had long relationships with Sergio Garcia and Dustin Johnson before Johnson's defection to LIV Golf. Adidas also made waves with collaborations beyond traditional golf, partnering with brands like Malbon Golf to reach younger, style-conscious consumers. In 2024, speculation swirled about Adidas potentially selling or restructuring its golf division as part of broader corporate strategy discussions, though the brand remains active in the market. Adidas Golf sits at the intersection of mainstream athletic wear and golf performance, occupying shelf space at both golf specialty retailers and broader sporting goods chains—a distribution advantage few pure-play golf brands enjoy.</p>
+          <p class="bp-description" id="bp-description">Adidas Golf brings the weight of a global sportswear giant to golf, blending performance credibility earned in soccer, running, and basketball with golf-specific innovation. Launched as a dedicated golf division in 1997, Adidas leveraged its parent company's expertise in athletic footwear and apparel to challenge traditional golf brands. The breakthrough came in footwear, where Adidas applied technologies from other sports. Boost cushioning, Primeknit uppers, Spikeless traction systems. to create golf shoes that felt more like running shoes than country club footwear. The Tour360 line became an industry standard for stability and comfort, while CodeChaos pushed golf shoes toward a more streetwear-influenced aesthetic. Adidas Golf's apparel similarly balances performance and style, using moisture-wicking fabrics, stretch materials, and modern fits that appeal to younger golfers and athletes who play multiple sports. The brand has maintained a strong tour presence, though its roster has shifted over the years; it currently counts Collin Morikawa and Tyrrell Hatton among its marquee players, having previously had long relationships with Sergio Garcia and Dustin Johnson before Johnson's defection to LIV Golf. Adidas also made waves with collaborations beyond traditional golf, partnering with brands like Malbon Golf to reach younger, style-conscious consumers. In 2024, speculation swirled about Adidas potentially selling or restructuring its golf division as part of broader corporate strategy discussions, though the brand remains active in the market. Adidas Golf sits at the intersection of mainstream athletic wear and golf performance, occupying shelf space at both golf specialty retailers and broader sporting goods chains. a distribution advantage few pure-play golf brands enjoy.</p>
         </div>
       </section>
 
@@ -274,7 +263,7 @@
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -311,7 +300,7 @@
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -367,7 +356,7 @@
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -377,12 +366,6 @@
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->

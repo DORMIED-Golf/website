@@ -296,22 +296,24 @@ function buildPrevNextHtml(issue, allIssues) {
 
   if (!newer && !older) return '';
 
-  const newerLink = newer
-    ? `<a href="/scorecard/${escHtml(newer.slug)}/" class="scorecard-pagination-prev">` +
+  // "Previous issue" = the older one (came before current in time) — left slot.
+  // "Next issue"     = the newer one (came after current in time)  — right slot.
+  const olderLink = older
+    ? `<a href="/scorecard/${escHtml(older.slug)}/" class="scorecard-pagination-prev">` +
         `<span class="scorecard-pagination-direction">← Previous issue</span>` +
-        `<span class="scorecard-pagination-title">${escHtml(newer.monthLabel || newer.title)}</span>` +
+        `<span class="scorecard-pagination-title">${escHtml(older.monthLabel || older.title)}</span>` +
       `</a>`
     : '';
-  const olderLink = older
-    ? `<a href="/scorecard/${escHtml(older.slug)}/" class="scorecard-pagination-next">` +
+  const newerLink = newer
+    ? `<a href="/scorecard/${escHtml(newer.slug)}/" class="scorecard-pagination-next">` +
         `<span class="scorecard-pagination-direction">Next issue →</span>` +
-        `<span class="scorecard-pagination-title">${escHtml(older.monthLabel || older.title)}</span>` +
+        `<span class="scorecard-pagination-title">${escHtml(newer.monthLabel || newer.title)}</span>` +
       `</a>`
     : '';
 
   return `    <nav class="scorecard-pagination" aria-label="Scorecard issues">
-      ${newerLink}
       ${olderLink}
+      ${newerLink}
     </nav>`;
 }
 
@@ -469,13 +471,12 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
     <article class="sc-article-layout">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb"
-           style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--text-muted);font-family:var(--font-mono);font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/scorecard/" style="color:inherit;text-decoration:none">Scorecard</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span aria-current="page">${escHtml(issue.title)}</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/scorecard/" class="breadcrumb-link">Scorecard</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span class="breadcrumb-item--current" aria-current="page">${escHtml(issue.title)}</span>
       </nav>
 
       <!-- ── Article Header ── -->

@@ -108,17 +108,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Index
         </a>
-        <div class="brand-nav-pager">
-          <a id="nav-prev" class="brand-nav-btn" href="#" aria-label="Previous brand">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            <span id="nav-prev-name">—</span>
-          </a>
-          <span class="brand-nav-sep">/</span>
-          <a id="nav-next" class="brand-nav-btn" href="#" aria-label="Next brand">
-            <span id="nav-next-name">—</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-        </div>
       </div>
     </nav>
 
@@ -142,12 +131,12 @@
     <div id="brand-content">
 
       <!-- ── Breadcrumb ── -->
-      <nav class="bp-breadcrumb container" aria-label="Breadcrumb" style="padding-top:.75rem;padding-bottom:.25rem;font-size:.78rem;color:var(--clr-muted,#6b7a6b);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase">
-        <a href="/" style="color:inherit;text-decoration:none">Home</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <a href="/brands/" style="color:inherit;text-decoration:none">Brands</a>
-        <span aria-hidden="true" style="margin:0 .4em">&rsaquo;</span>
-        <span id="bp-breadcrumb-name" aria-current="page">Nippon Shaft</span>
+      <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <a href="/brands/" class="breadcrumb-link">Brands</a>
+        <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+        <span id="bp-breadcrumb-name" class="breadcrumb-item--current" aria-current="page">Nippon Shaft</span>
       </nav>
 
       <!-- ── Brand Header ── -->
@@ -162,7 +151,7 @@
                 <h1 class="bp-brand-name" id="bp-name">Nippon Shaft</h1>
                 <span id="bp-heat" class="bp-heat-icon"></span>
               </div>
-              <p class="bp-meta-line" id="bp-meta">Tech &amp; Training Aids · Founded 1959 · Yokohama, Japan</p>
+              <p class="bp-meta-line" id="bp-meta">Founded 1959 · Yokohama, Japan</p>
               <div class="bp-badges" id="bp-badges">
                 <span class="bp-badge">Tech &amp; Training Aids</span>
               </div>
@@ -174,9 +163,9 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">Nippon Shaft, founded in 1959 and headquartered in Yokohama, Japan, is one of the world's leading manufacturers of premium steel golf shafts, known for precision engineering, consistent performance, and widespread adoption on professional tours. A subsidiary of NHK Spring Co., Ltd.—a major Japanese industrial conglomerate specializing in suspension systems and precision springs—Nippon brings decades of metallurgical expertise to golf shaft production, treating shaft manufacturing as an exercise in materials science and quality control.
+          <p class="bp-description" id="bp-description">Nippon Shaft, founded in 1959 and headquartered in Yokohama, Japan, is one of the world's leading manufacturers of premium steel golf shafts, known for precision engineering, consistent performance, and widespread adoption on professional tours. A subsidiary of NHK Spring Co., Ltd.. a major Japanese industrial conglomerate specializing in suspension systems and precision springs. Nippon brings decades of metallurgical expertise to golf shaft production, treating shaft manufacturing as an exercise in materials science and quality control.
 
-Nippon's product portfolio includes some of the most recognizable names in steel shafts, including the N.S. Pro Modus³, a tour-favorite iron shaft known for its tight tolerances, smooth feel, and versatility across different swing profiles. The Modus³ has become a staple in both professional bags and custom iron builds, appealing to players who prioritize consistency and feedback. Nippon also produces the N.S. Pro 950GH and 105T, among others, offering options across weight classes and flex profiles to suit varying swing speeds and preferences. The brand's reputation for manufacturing consistency—ensuring that each shaft in a set performs identically—has made it a trusted choice among tour players and club fitters worldwide.
+Nippon's product portfolio includes some of the most recognizable names in steel shafts, including the N.S. Pro Modus³, a tour-favorite iron shaft known for its tight tolerances, smooth feel, and versatility across different swing profiles. The Modus³ has become a staple in both professional bags and custom iron builds, appealing to players who prioritize consistency and feedback. Nippon also produces the N.S. Pro 950GH and 105T, among others, offering options across weight classes and flex profiles to suit varying swing speeds and preferences. The brand's reputation for manufacturing consistency. ensuring that each shaft in a set performs identically. has made it a trusted choice among tour players and club fitters worldwide.
 
 Nippon's tour presence is substantial, particularly on the PGA Tour and international circuits, where its shafts appear in iron sets across a wide range of endorsement portfolios. The brand doesn't rely on flashy marketing; instead, its credibility is built on performance validation and the trust of professional fitters who consistently recommend Nippon for players seeking reliable, high-quality steel shafts. As a component brand rather than a consumer-facing lifestyle label, Nippon operates in the background of the golf industry, earning respect through engineering excellence and manufacturing discipline rather than athlete storytelling or retail visibility.</p>
         </div>
@@ -278,7 +267,7 @@ Nippon's tour presence is substantial, particularly on the PGA Tour and internat
           <div class="bp-sections-col">
 
             <!-- ── Rankings by Market (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-countries-heading">
+            <section class="bp-section" aria-labelledby="bp-countries-heading" hidden>
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -315,7 +304,7 @@ Nippon's tour presence is substantial, particularly on the PGA Tour and internat
             </div>
 
             <!-- ── Category Standing (populated by brand.js) ── -->
-            <section class="bp-section" aria-labelledby="bp-cat-heading">
+            <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
@@ -381,7 +370,7 @@ Nippon's tour presence is substantial, particularly on the PGA Tour and internat
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad + Top Stories ── -->
+          <!-- ── Sidebar: Skyscraper Ad ── -->
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -391,12 +380,6 @@ Nippon's tour presence is substantial, particularly on the PGA Tour and internat
      data-ad-slot="6935529969"></ins>
               </div>
             </div>
-            <section class="home-stories-section latest-feed-section" aria-labelledby="brand-stories-heading">
-              <h2 class="latest-feed-heading" id="brand-stories-heading">Top Stories</h2>
-              <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading…</p>
-              </div>
-            </section>
           </aside>
 
         </div><!-- /table-layout -->
