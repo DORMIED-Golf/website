@@ -224,11 +224,14 @@ function injectHeroContent(html, h1Id, subhead, paragraphsHtml) {
     }
   }
 
-  // Helper: skip one <p ...>...</p> block if it starts at pos
+  // Helper: skip one <p ...>...</p> block if it starts at pos.
+  // Matches both <p class="hero-desc"> and <p class="hero-desc hero-desc--secondary">
+  // (i.e. the class attribute starts with className, optionally followed by a space).
   function skipPTag(className) {
     skipWhitespace();
-    const openP = `<p class="${className}"`;
-    if (!html.startsWith(openP, pos)) return false;
+    const openExact  = `<p class="${className}"`;
+    const openPrefix = `<p class="${className} `;
+    if (!html.startsWith(openExact, pos) && !html.startsWith(openPrefix, pos)) return false;
     const closeP = '</p>';
     const endPos = html.indexOf(closeP, pos);
     if (endPos === -1) return false;
@@ -345,6 +348,7 @@ function generateBrands() {
       name:          item.brand.name,
       logo:          item.brand.logo || null,
       category:      item.brand.category || '',
+      allCategories: item.brand.allCategories || [],
       subCategories: item.brand.subCategories || [],
       rank:          currentRank,
       di:            parseFloat((item.cur / maxVal * 100).toFixed(1)),
@@ -371,16 +375,27 @@ function generateBrands() {
           `<span class="brand-dir-initials">${escHtml(initials)}</span>` +
         `</div>`;
     }
-    const di     = b.di > 0 ? b.di.toFixed(1) : '—';
-    const rank   = '#' + b.rank;
-    const cat    = (b.category || '').replace(/\s*;\s*/g, ' · ');
-    const subcat = (b.subCategories || []).join(' · ');
-    const arrow  = b.trend === 'up'   ? ' <span class="brand-dir-trend brand-dir-trend--up" aria-label="trending up">↑</span>'
-                 : b.trend === 'down' ? ' <span class="brand-dir-trend brand-dir-trend--down" aria-label="trending down">↓</span>'
-                 : '';
+    const di       = b.di > 0 ? b.di.toFixed(1) : '—';
+    const rank     = '#' + b.rank;
+    const cat      = (b.category || '').replace(/\s*;\s*/g, ' · ');
+    const subcat   = (b.subCategories || []).join(' · ');
+    const arrow    = b.trend === 'up'   ? ' <span class="brand-dir-trend brand-dir-trend--up" aria-label="trending up">↑</span>'
+                   : b.trend === 'down' ? ' <span class="brand-dir-trend brand-dir-trend--down" aria-label="trending down">↓</span>'
+                   : '';
+
+    /* data-allcats: pipe-separated list of expanded category names.
+       mirrors brands-dir.js filter logic: split on ; then trim. */
+    const allCatsExpanded = (b.allCategories || [])
+      .flatMap(c => c.split(';').map(s => s.trim()))
+      .filter(Boolean);
+    const dataAllcats = allCatsExpanded.join('|');
+    const dataSubcat  = (b.subCategories || []).join('|');
 
     return (
-      `<a href="/brands/${escHtml(b.id)}/" class="brand-dir-card">` +
+      `<a href="/brands/${escHtml(b.id)}/" class="brand-dir-card"` +
+        ` data-name="${escHtml((b.name || '').toLowerCase())}"` +
+        ` data-allcats="${escHtml(dataAllcats)}"` +
+        ` data-subcat="${escHtml(dataSubcat)}">` +
         logoHtml +
         `<div class="brand-dir-name">${escHtml(b.name)}</div>` +
         `<div class="brand-dir-cat">${escHtml(cat)}` +
@@ -459,7 +474,7 @@ async function generateNews() {
 
   /* Fetch all published articles from Supabase */
   const apiUrl = `${SUPABASE_URL}/rest/v1/dormied_articles` +
-    `?select=id,brand_slug,title,meta_description,image_url,slug,category,published_at,author` +
+    `?select=id,brand_slug,title,body,meta_description,image_url,slug,category,published_at,author` +
     `&status=eq.published` +
     `&order=published_at.desc` +
     `&limit=200`;
@@ -489,68 +504,40 @@ async function generateNews() {
     url:         `/news/${a.slug}/`,
     author:      a.author || authorFromCat(a.category),
     pubDate:     a.published_at,
+    body:        a.body || '',
     description: a.meta_description || '',
     imageUrl:    a.image_url || null,
-    brandIds:    [a.brand_slug],
+    brandSlug:   a.brand_slug || '',
     category:    a.category || '',
     slug:        a.slug,
   }));
 
   console.log(`  Fetched ${articles.length} articles from Supabase`);
 
-  /* Build article card HTML — matches renderFeedPageCard() format from feed.js
-     Uses formatted date instead of timeAgo() for static HTML.
-     The dynamic JS re-renders with live relative time after page load.          */
-  function articleCardHtml(article, isFirst) {
-    let thumb = '';
-    if (article.imageUrl) {
-      const imgAttrs = isFirst
-        ? 'loading="eager" fetchpriority="high"'
-        : 'loading="lazy"';
-      thumb = `<img class="feed-card-thumb feed-card-thumb--lg" src="${escHtml(article.imageUrl)}" ` +
-              `width="600" height="375" ${imgAttrs} alt="" onerror="this.remove()">`;
-    }
+  /* Build article HTML per the spec's feed-entry format.
+     - data-brand / data-title: used by feed-page.js for DOM hide/show filtering
+     - excerpt: first 250 chars of body (plain text, no HTML)
+     - meta line: formatted date · linked brand name                            */
+  function articleCardHtml(article) {
+    /* Excerpt: first 250 chars of plain-text body, not meta_description */
+    const bodyPlain = stripHtml(article.body || article.description || '');
+    let excerpt = bodyPlain.slice(0, 250);
+    if (bodyPlain.length > 250) excerpt = excerpt.replace(/\s\S+$/, '') + '…';
 
-    let excerpt = '';
-    if (article.description) {
-      let text = article.description.trim();
-      if (text.length > 180) text = text.slice(0, 180).replace(/\s\S+$/, '') + '…';
-      excerpt = `<p class="feed-card-excerpt">${escHtml(text)}</p>`;
-    }
-
-    let tags = '';
-    if (article.brandIds && article.brandIds.length) {
-      const chips = article.brandIds.map(bid => {
-        const bname = brandMap[bid];
-        if (!bname) return '';
-        return `<a href="/brands/${escHtml(bid)}/" class="feed-brand-tag">${escHtml(bname)}</a>`;
-      }).filter(Boolean).join('');
-      if (chips) tags = `<div class="feed-card-tags">${chips}</div>`;
-    }
-
-    const byline  = `By ${escHtml(article.author || 'Travis')}`;
-    const dateStr = escHtml(formatDate(article.pubDate));
+    /* Brand tag: linked brand name if known, plain slug otherwise */
+    const bname = brandMap[article.brandSlug] || '';
+    const brandTag = article.brandSlug && bname
+      ? `<a href="/brands/${escHtml(article.brandSlug)}/">${escHtml(bname)}</a>`
+      : (bname ? escHtml(bname) : '');
+    const metaText = formatDate(article.pubDate) + (brandTag ? ' · ' : '');
 
     return (
-      `<article class="feed-card feed-card--full feed-card--dormied">` +
-        thumb +
-        `<div class="feed-card-body">` +
-          `<div class="feed-card-meta">` +
-            `<span class="feed-time">${dateStr}</span>` +
-          `</div>` +
-          `<a href="${escHtml(article.url)}" class="feed-card-title feed-card-title--lg"` +
-            ` data-track-title="${escHtml(article.title)}"` +
-            ` data-track-source="DORMIED"` +
-            ` data-track-url="${escHtml(article.url)}"` +
-            ` data-track-brands="${escHtml(JSON.stringify(article.brandIds || []))}"` +
-            ` data-track-image="${escHtml(article.imageUrl || '')}"` +
-            ` data-track-pubdate="${escHtml(article.pubDate || '')}">` +
-            escHtml(article.title) +
-          `</a>` +
-          `<p class="feed-card-byline">${byline}</p>` +
-          excerpt +
-          tags +
-        `</div>` +
+      `<article class="feed-entry"` +
+        ` data-brand="${escHtml(article.brandSlug)}"` +
+        ` data-title="${escHtml((article.title || '').toLowerCase())}">` +
+        `<h2><a href="${escHtml(article.url)}">${escHtml(article.title)}</a></h2>` +
+        `<p class="meta">${escHtml(metaText)}${brandTag}</p>` +
+        (excerpt ? `<p class="excerpt">${escHtml(excerpt)}</p>` : '') +
       `</article>`
     );
   }
@@ -567,7 +554,7 @@ async function generateNews() {
 
   /* ── Page 1: news/index.html ───────────────────────────────────────────── */
   const page1Articles = articles.slice(0, PAGE_SIZE);
-  const feedHtml = page1Articles.map((a, i) => articleCardHtml(a, i === 0)).join('\n');
+  const feedHtml = page1Articles.map((a, i) => articleCardHtml(a)).join('\n');
 
   const newsFilePath = path.join(ROOT, 'news/index.html');
   let newsHtml = fs.readFileSync(newsFilePath, 'utf8');
@@ -603,7 +590,7 @@ async function generateNews() {
 
   for (let p = 2; p <= totalPages; p++) {
     const pageArticles = articles.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE);
-    const pageFeedHtml = pageArticles.map((a, i) => articleCardHtml(a, i === 0)).join('\n');
+    const pageFeedHtml = pageArticles.map((a, i) => articleCardHtml(a)).join('\n');
 
     let pageHtml = paginatedBase
       .replace(
@@ -672,30 +659,7 @@ function generateScorecard() {
     process.exit(1);
   }
 
-  const issues  = data.issues;
-  const latest  = issues[0];
-  const archive = issues.slice(1);
-
-  /* Build image strip HTML — mirrors buildImageHtml() in scorecard-archive.js */
-  function buildImageHtml(issue, isHero) {
-    if (!issue.images) return '';
-    const strip = issue.images.strip || [];
-    const hero  = issue.images.hero;
-
-    if (strip.length > 0) {
-      const items = strip.map(img =>
-        `<div class="sc-strip-item">` +
-          `<img class="sc-strip-img" src="${escHtml(img.src)}" alt="${escHtml(img.label || '')}" loading="lazy">` +
-          (img.label ? `<span class="sc-strip-label">${escHtml(img.label)}</span>` : '') +
-        `</div>`
-      ).join('');
-      return `<div class="sc-image-strip${isHero ? ' sc-image-strip--hero' : ''}">${items}</div>`;
-    }
-    if (hero) {
-      return `<img class="sc-hero-img" src="${escHtml(hero)}" alt="" loading="lazy">`;
-    }
-    return '';
-  }
+  const issues = data.issues;
 
   /* Extract lede: first 2 sentences from section[0].body (stripped of HTML tags) */
   function extractLede(issue) {
@@ -707,42 +671,29 @@ function generateScorecard() {
     return firstSentences(plain, 2);
   }
 
-  /* Hero section — mirrors renderHero() in scorecard-archive.js */
-  const heroHtml =
-    `<div class="sc-hero-card">` +
-      `<div class="sc-hero-label-row">` +
-        `<span class="sc-label">THE SCORECARD</span>` +
-        `<span class="sc-hero-date">${escHtml(latest.date)}</span>` +
-      `</div>` +
-      buildImageHtml(latest, true) +
-      `<h2 class="sc-hero-title">${escHtml(latest.title)}</h2>` +
-      `<p class="sc-hero-sub">${escHtml(latest.subtitle)}</p>` +
-      `<a href="/scorecard/${escHtml(latest.slug)}/" class="sc-read-link">Read The Scorecard →</a>` +
-    `</div>`;
+  /* Format "Apr 8, 2026" → "April 2026" for h2 headline and meta line */
+  function scorecardMonthYear(dateStr) {
+    const MONTHS = { Jan: 'January', Feb: 'February', Mar: 'March', Apr: 'April',
+                     May: 'May',     Jun: 'June',     Jul: 'July',  Aug: 'August',
+                     Sep: 'September', Oct: 'October', Nov: 'November', Dec: 'December' };
+    const m = String(dateStr).match(/^([A-Za-z]{3})\S*\s+\d+,?\s+(\d{4})/);
+    if (!m) return String(dateStr);
+    return (MONTHS[m[1]] || m[1]) + ' ' + m[2];
+  }
 
-  /* Archive grid — mirrors renderArchive() in scorecard-archive.js, adds lede */
-  const archiveHtml = archive.map(issue => {
-    const thumb = issue.images && (
-      issue.images.hero ||
-      (issue.images.strip && issue.images.strip[0] && issue.images.strip[0].src)
-    );
-    const thumbHtml = thumb
-      ? `<img class="sc-archive-thumb" src="${escHtml(thumb)}" alt="" loading="lazy">`
-      : `<div class="sc-archive-thumb sc-archive-thumb--placeholder"></div>`;
-
-    const lede = extractLede(issue);
-
+  /* Build the spec-compliant scorecard-entry format for every issue (all, not just archive).
+     The scorecard-archive.js JS bails when it sees .scorecard-entry already in the DOM,
+     so this static list is the final representation for both crawlers and JS users.       */
+  const issueListHtml = issues.map(issue => {
+    const monthYear = scorecardMonthYear(issue.date);
+    const lede      = extractLede(issue);
     return (
-      `<a href="/scorecard/${escHtml(issue.slug)}/" class="sc-archive-card">` +
-        thumbHtml +
-        `<div class="sc-archive-card-body">` +
-          `<span class="sc-label sc-label--sm">THE SCORECARD</span>` +
-          `<div class="sc-archive-date">${escHtml(issue.date)}</div>` +
-          `<div class="sc-archive-title">${escHtml(issue.title)}</div>` +
-          `<p class="sc-archive-sub">${escHtml(issue.subtitle)}</p>` +
-          (lede ? `<p class="sc-archive-lede">${escHtml(lede)}</p>` : '') +
-        `</div>` +
-      `</a>`
+      `<article class="scorecard-entry">` +
+        `<h2><a href="/scorecard/${escHtml(issue.slug)}/">${escHtml(monthYear)} Scorecard</a></h2>` +
+        `<p class="meta">${escHtml(monthYear)} · By Adam &amp; Travis</p>` +
+        (lede ? `<p class="lede">${escHtml(lede)}</p>` : '') +
+        `<p><a class="read-more" href="/scorecard/${escHtml(issue.slug)}/">Read the issue &#x2192;</a></p>` +
+      `</article>`
     );
   }).join('\n');
 
@@ -768,14 +719,22 @@ function generateScorecard() {
   /* Inject subhead + intro copy */
   html = injectHeroContent(html, 'sc-archive-title', 'Monthly Golf Brand Newsletter', scorecardIntroParagraphs);
 
-  /* Inject hero + archive */
-  html = injectIntoId(html, 'sc-hero', heroHtml);
-  if (archive.length > 0) {
-    html = injectIntoId(html, 'sc-archive-grid', archiveHtml);
-  }
+  /* Clear the hero section — all issues are now in the uniform issue list below.
+     The scorecard-archive.js JS bails when .scorecard-entry is present, so
+     #sc-hero stays empty for JS users too (no client-side enhancements needed). */
+  html = injectIntoId(html, 'sc-hero', '');
+
+  /* Inject complete issue list (all issues, spec scorecard-entry format) */
+  html = injectIntoId(html, 'sc-archive-grid', issueListHtml);
+
+  /* Update the "Previous Issues" heading to reflect all issues */
+  html = html.replace(
+    /(<h2[^>]+id="sc-archive-heading"[^>]*>)[^<]*/,
+    '$1All Issues'
+  );
 
   fs.writeFileSync(filePath, html, 'utf8');
-  console.log(`  ✔  scorecard/index.html — latest: "${latest.title}" + ${archive.length} archive card(s), title/meta/intro updated`);
+  console.log(`  ✔  scorecard/index.html — ${issues.length} issue(s) as scorecard-entry, title/meta/intro updated`);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════

@@ -26,9 +26,8 @@
     filtered:    []
   };
 
-  var csCat         = null;   // handle to custom select widget for the category filter
-  var csSubCat      = null;   // handle to custom select widget for the subcategory filter
-  var staticGridHtml = null;  // pre-rendered static HTML — restored when no filters are active
+  var csCat    = null;   // handle to custom select widget for the category filter
+  var csSubCat = null;   // handle to custom select widget for the subcategory filter
 
   /* ── Helpers ────────────────────────────────────────────────────────────── */
   function escHtml(str) {
@@ -336,51 +335,64 @@
     el.innerHTML = html;
   }
 
-  /* ── Apply filters + render ─────────────────────────────────────────────── */
+  /* ── Apply filters + hide/show static DOM rows ──────────────────────────── */
+  /* The spec requires filtering to hide/show existing static rows, not replace
+     innerHTML. Each .brand-dir-card has data-name, data-allcats, data-subcat
+     attributes injected by generate-index-pages.js.                           */
   function applyAndRender() {
     var q      = state.query.toLowerCase().trim();
     var cat    = state.category;
     var subcat = state.subCategory.toLowerCase();
 
     var el = document.getElementById('brands-grid');
+    if (!el) return;
 
-    /* When no filters are active, restore the pre-rendered static HTML so
-       crawlers and first-paint users always see the full ranked list. */
-    if (!q && !cat && !subcat) {
-      if (el && staticGridHtml !== null) el.innerHTML = staticGridHtml;
-      var countEl2 = document.getElementById('brands-count');
-      if (countEl2) countEl2.textContent = state.brands.length + ' of ' + state.brands.length + ' brands';
-      var totalEl2 = document.getElementById('brands-total');
-      if (totalEl2) totalEl2.textContent = state.brands.length;
-      return;
-    }
+    var cards   = el.querySelectorAll('.brand-dir-card');
+    var visible = 0;
 
-    var filtered = state.brands.filter(function(b) {
-      if (q && b.name.toLowerCase().indexOf(q) === -1) return false;
-      if (cat) {
-        var brandCats = (b.allCategories || []).flatMap(function(c) {
-          return c.split(';').map(function(s) { return s.trim(); });
-        });
-        if (brandCats.indexOf(cat) === -1) return false;
+    cards.forEach(function(card) {
+      var name     = (card.getAttribute('data-name') || '').toLowerCase();
+      var allcats  = card.getAttribute('data-allcats') || '';
+      var subcats  = card.getAttribute('data-subcat')  || '';
+
+      var show = true;
+
+      if (q && name.indexOf(q) === -1) show = false;
+
+      if (show && cat) {
+        /* allcats is pipe-separated; each segment is a category string */
+        var catList = allcats.split('|');
+        if (catList.indexOf(cat) === -1) show = false;
       }
-      if (subcat) {
-        var match = (b.subCategories || []).some(function(s) {
+
+      if (show && subcat) {
+        /* subcats is pipe-separated; match any segment containing query */
+        var subcatList = subcats.split('|');
+        var matched = subcatList.some(function(s) {
           return s.toLowerCase().indexOf(subcat) !== -1;
         });
-        if (!match) return false;
+        if (!matched) show = false;
       }
-      return true;
+
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
     });
 
-    state.filtered = filtered;
+    /* No cards in DOM yet (JS loaded before static HTML) — fall back to renderGrid */
+    if (cards.length === 0 && state.brands.length > 0) {
+      renderGrid(state.brands);
+      visible = state.brands.length;
+    }
 
     var countEl = document.getElementById('brands-count');
-    if (countEl) countEl.textContent = filtered.length + ' of ' + state.brands.length + ' brands';
+    if (countEl) {
+      countEl.textContent = (q || cat || subcat)
+        ? visible + ' of ' + state.brands.length + ' brands'
+        : state.brands.length + ' of ' + state.brands.length + ' brands';
+    }
 
     var totalEl = document.getElementById('brands-total');
     if (totalEl) totalEl.textContent = state.brands.length;
-
-    renderGrid(filtered);
   }
 
   /* ── Wire up controls ───────────────────────────────────────────────────── */
@@ -429,10 +441,6 @@
     var el = document.getElementById('brands-grid');
     if (!el) return;
 
-    /* Save the pre-rendered static HTML so we can restore it when all
-       filters are cleared (spec: static HTML must remain in the DOM). */
-    staticGridHtml = el.innerHTML;
-
     bindControls();
 
     state.brands = computeRankings();
@@ -445,8 +453,9 @@
     populateCatFilter(state.brands);
     populateSubCatFilter(state.brands);
 
-    /* Update counts but do NOT call applyAndRender() — the static grid
-       is already pre-rendered. Only call applyAndRender() on user interaction. */
+    /* Update counts from computed data. Do NOT call applyAndRender() or
+       replace innerHTML — the static pre-rendered grid is already visible.
+       applyAndRender() uses DOM hide/show on user interaction only.        */
     var countEl = document.getElementById('brands-count');
     if (countEl) countEl.textContent = state.brands.length + ' of ' + state.brands.length + ' brands';
     var totalEl = document.getElementById('brands-total');

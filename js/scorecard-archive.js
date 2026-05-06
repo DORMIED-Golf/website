@@ -16,11 +16,11 @@
     var data = window.DORMIED_SCORECARD_DATA;
     if (!data || !data.issues || !data.issues.length) return;
 
-    /* If the hero section already contains the pre-rendered static card,
-       skip JS rendering — the static HTML must remain in the DOM
-       (spec: client-side JS must not replace statically pre-rendered content). */
-    var heroEl = document.getElementById('sc-hero');
-    if (heroEl && heroEl.querySelector('.sc-hero-card')) return;
+    /* If the archive grid already contains pre-rendered scorecard-entry elements
+       (injected by generate-index-pages.js), skip JS rendering entirely.
+       The static list is the complete representation for both crawlers and users. */
+    var archiveEl = document.getElementById('sc-archive-grid');
+    if (archiveEl && archiveEl.querySelector('.scorecard-entry')) return;
 
     var issues  = data.issues;
     var latest  = issues[0];

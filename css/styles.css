@@ -291,12 +291,19 @@ button, select, input {
   margin-top: 12px;
 }
 
+.hero-subhead {
+  margin-top: 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
 .hero-desc {
   margin-top: 12px;
   color: var(--text-dim);
   font-size: 0.9375rem;
   line-height: 1.65;
-  max-width: 520px;
 }
 
 .hero-stats {

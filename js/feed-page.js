@@ -373,63 +373,75 @@
   }
 
   /* ── Apply filters + sort, then render ──────────────────────────────────── */
+  /* ── Apply filters + sort, then render ──────────────────────────────────── */
+  /* Filtering (brand/search) uses DOM hide/show on .feed-entry elements so
+     the static pre-rendered HTML stays in the DOM per spec requirements.
+     Date sort (oldest-first) requires reordering and falls back to JS render. */
   function applyAndRender() {
     var el = document.getElementById('feed-list');
+    if (!el) return;
 
-    /* When no filters are active, restore the pre-rendered static HTML so
-       crawlers and first-paint users always see the full article list. */
-    if (!state.brandFilter && !state.searchQuery && state.sort === 'newest') {
-      if (el && staticFeedHtml !== null) el.innerHTML = staticFeedHtml;
-      var countEl0 = document.getElementById('feed-count');
-      if (countEl0) countEl0.textContent = state.articles.length + ' article' + (state.articles.length !== 1 ? 's' : '');
-      var pagEl = document.getElementById('feed-pagination');
-      if (pagEl) pagEl.innerHTML = '';
+    var brand   = state.brandFilter;
+    var q       = state.searchQuery.toLowerCase();
+    var sortOld = state.sort === 'oldest';
+
+    /* "oldest" sort requires reordering — must use innerHTML replacement */
+    if (sortOld) {
+      var filtered = state.articles.filter(function (a) {
+        if (brand && a.brandIds && a.brandIds.indexOf(brand) === -1) return false;
+        if (q && (a.title || '').toLowerCase().indexOf(q) === -1) return false;
+        return true;
+      }).slice().sort(function (a, b) {
+        return new Date(a.pubDate || 0) - new Date(b.pubDate || 0);
+      });
+      state.filtered = filtered;
+      state.page = 1;
+      renderFeedList(filtered.slice(0, PAGE_SIZE));
+      renderPagination();
+      var countEl2 = document.getElementById('feed-count');
+      if (countEl2) {
+        var t2 = filtered.length;
+        countEl2.textContent = t2 === 0 ? '0 articles'
+          : t2 <= PAGE_SIZE ? t2 + ' article' + (t2 !== 1 ? 's' : '')
+          : 'Showing 1\u2013' + PAGE_SIZE + ' of ' + t2 + ' articles';
+      }
       return;
     }
 
-    var filtered = state.articles.filter(function (a) {
-      return a.brandIds && a.brandIds.length > 0;
+    /* Newest sort (default): hide/show .feed-entry DOM elements */
+    if (staticFeedHtml !== null) {
+      /* Restore static HTML first so all articles are visible before we filter */
+      el.innerHTML = staticFeedHtml;
+    }
+
+    var entries  = el.querySelectorAll('.feed-entry');
+    var visible  = 0;
+    var noFilter = !brand && !q;
+
+    entries.forEach(function (entry) {
+      if (noFilter) {
+        entry.style.display = '';
+        visible++;
+        return;
+      }
+      var entryBrand = entry.getAttribute('data-brand') || '';
+      var entryTitle = entry.getAttribute('data-title') || '';
+      var show = true;
+      if (brand && entryBrand !== brand) show = false;
+      if (show && q && entryTitle.indexOf(q) === -1) show = false;
+      entry.style.display = show ? '' : 'none';
+      if (show) visible++;
     });
 
-    if (state.brandFilter) {
-      filtered = filtered.filter(function (a) {
-        return a.brandIds && a.brandIds.indexOf(state.brandFilter) !== -1;
-      });
-    }
-
-    if (state.searchQuery) {
-      var q = state.searchQuery.toLowerCase();
-      filtered = filtered.filter(function (a) {
-        return (a.title       || '').toLowerCase().indexOf(q) !== -1
-            || (a.description || '').toLowerCase().indexOf(q) !== -1
-            || (a.author      || '').toLowerCase().indexOf(q) !== -1;
-      });
-    }
-
-    if (state.sort === 'oldest') {
-      filtered = filtered.slice().sort(function (a, b) {
-        return new Date(a.pubDate || 0) - new Date(b.pubDate || 0);
-      });
-    }
-    /* newest is already sorted by the API */
-
-    state.filtered = filtered;
-    state.page = 1;
+    var pagEl = document.getElementById('feed-pagination');
+    if (pagEl) pagEl.innerHTML = '';
 
     var countEl = document.getElementById('feed-count');
     if (countEl) {
-      var total = filtered.length;
-      if (total === 0) {
-        countEl.textContent = '0 articles';
-      } else if (total <= PAGE_SIZE) {
-        countEl.textContent = total + ' article' + (total !== 1 ? 's' : '');
-      } else {
-        countEl.textContent = 'Showing 1\u2013' + PAGE_SIZE + ' of ' + total + ' articles';
-      }
+      countEl.textContent = noFilter
+        ? (state.articles.length + ' article' + (state.articles.length !== 1 ? 's' : ''))
+        : (visible + ' article' + (visible !== 1 ? 's' : ''));
     }
-
-    renderFeedList(filtered.slice(0, PAGE_SIZE));
-    renderPagination();
   }
 
   /* ── Wire up controls ───────────────────────────────────────────────────── */
