@@ -460,14 +460,28 @@ async function generateNews() {
     process.exit(1);
   }
 
-  /* Load brand name map from data.js */
+  /* Load brand name map and MoM change data from data.js */
   const dataSrc = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
   const dataCtx = { window: {}, console };
   vm.createContext(dataCtx);
   vm.runInContext(dataSrc, dataCtx);
+  const dormiedData = dataCtx.window.DORMIED_DATA || {};
   const brandMap = {};
-  ((dataCtx.window.DORMIED_DATA || {}).brands || []).forEach(b => {
+  const brandChangeMap = {};  // slug → { pct: '+5.2%', cls: 'feed-brand-tag--up' }
+  const curMonth  = (dormiedData.meta || {}).currentMonth  || '';
+  const prevMonth = (dormiedData.meta || {}).previousMonth || '';
+  (dormiedData.brands || []).forEach(b => {
     brandMap[b.id] = b.name;
+    const g    = b.searchesByMarket && b.searchesByMarket.global;
+    const cur  = (g && g[curMonth])  || 0;
+    const prev = (g && g[prevMonth]) || 0;
+    if (prev > 0) {
+      const pct     = (cur - prev) / prev * 100;
+      const rounded = parseFloat(Math.abs(pct).toFixed(1));
+      const sign    = rounded === 0 ? '' : pct > 0 ? '+' : '−';
+      const cls     = rounded === 0 ? 'feed-brand-tag--flat' : pct > 0 ? 'feed-brand-tag--up' : 'feed-brand-tag--down';
+      brandChangeMap[b.id] = { pct: sign + rounded.toFixed(1) + '%', cls };
+    }
   });
 
   /* Fetch all published articles from Supabase */
@@ -526,9 +540,14 @@ async function generateNews() {
     if (descPlain.length > 180) excerpt = excerpt.replace(/\s\S+$/, '') + '…';
     const excerptHtml = excerpt ? `<p class="feed-card-excerpt">${escHtml(excerpt)}</p>` : '';
 
-    const bname = brandMap[article.brandSlug] || '';
+    const bname  = brandMap[article.brandSlug] || '';
+    const change = brandChangeMap[article.brandSlug] || null;
+    const tagCls = 'feed-brand-tag' + (change ? ' ' + change.cls : '');
+    const pctHtml = change
+      ? ` <span class="feed-tag-pct">${escHtml(change.pct)}</span>`
+      : '';
     const tagsHtml = article.brandSlug && bname
-      ? `<div class="feed-card-tags"><a href="/brands/${escHtml(article.brandSlug)}/" class="feed-brand-tag">${escHtml(bname)}</a></div>`
+      ? `<div class="feed-card-tags"><a href="/brands/${escHtml(article.brandSlug)}/" class="${tagCls}">${escHtml(bname)}${pctHtml}</a></div>`
       : '';
 
     return (

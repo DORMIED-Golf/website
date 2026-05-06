@@ -81,6 +81,14 @@
       "destination": "/scorecard/index.html"
     },
     {
+      "source": "/scorecard/:slug",
+      "destination": "/scorecard/:slug/index.html"
+    },
+    {
+      "source": "/scorecard/:slug/",
+      "destination": "/scorecard/:slug/index.html"
+    },
+    {
       "source": "/news",
       "destination": "/news/index.html"
     },
