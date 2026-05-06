@@ -58,6 +58,12 @@ jobs:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
+      - name: Verify index pages
+        run: npm run verify:index-pages
+
+      - name: Verify scorecard pages
+        run: npm run verify:scorecard
+
       - name: Commit generated articles
         run: |
           set -e  # Any failure in this step aborts it — publish step is skipped on failure

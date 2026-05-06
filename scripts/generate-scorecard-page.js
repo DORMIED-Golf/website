@@ -19,9 +19,20 @@
 
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
-const fs   = require('fs');
-const path = require('path');
-const vm   = require('vm');
+const fs               = require('fs');
+const path             = require('path');
+const vm               = require('vm');
+const { createClient } = require('@supabase/supabase-js');
+
+// Supabase client — initialized for pipeline consistency even though scorecard
+// content comes entirely from js/scorecard-data.js (no DB reads needed here).
+function getSupabase() {
+  const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_KEY');
+  }
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+}
 
 const SITE_ROOT = path.resolve(__dirname, '..');
 
