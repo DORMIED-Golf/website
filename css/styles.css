@@ -293,10 +293,14 @@ button, select, input {
 
 .hero-subhead {
   margin-top: 16px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
   color: var(--text-muted);
+}
+
+.hero-text {
+  flex: 1;
+  min-width: 0;
 }
 
 .hero-desc {
