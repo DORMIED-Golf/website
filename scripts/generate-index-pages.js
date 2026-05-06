@@ -23,6 +23,8 @@ const vm   = require('vm');
 /* ── Resolve root ─────────────────────────────────────────────────────────── */
 const ROOT = path.resolve(__dirname, '..');
 
+const { regenerateSitemap } = require('./generate-sitemap');
+
 /* ── Load .env ────────────────────────────────────────────────────────────── */
 (function loadDotenv() {
   const envPath = path.join(ROOT, '.env');
@@ -902,8 +904,11 @@ function updateSitemap(newsPageCount) {
 
     if (doAll || doNews) {
       ensureVercelNewsPageRoutes();
-      updateSitemap(newsResult.totalPages);
     }
+
+    // Regenerate sitemap from filesystem state (replaces the old patch-based
+    // updateSitemap() which caused duplicate entries when run multiple times).
+    regenerateSitemap();
   } catch (err) {
     console.error('\n✖  Fatal error:', err.message);
     console.error(err.stack);

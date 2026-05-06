@@ -1,0 +1,269 @@
+#!/usr/bin/env node
+/**
+ * scripts/generate-sitemap.js
+ *
+ * Rebuilds sitemap.xml entirely from the filesystem — no appending,
+ * no merging. Every URL reflects a real, non-empty file on disk.
+ *
+ * Usage:
+ *   node scripts/generate-sitemap.js
+ *   # or as a module:
+ *   const { regenerateSitemap } = require('./generate-sitemap');
+ *   await regenerateSitemap();
+ *
+ * Sections emitted (in order):
+ *   1. Static pages   — hardcoded set, always present
+ *   2. Scorecard issues — scorecard/{slug}/index.html
+ *   3. Brand pages    — brands/{slug}/index.html
+ *   4. News articles  — news/{slug}/index.html  (with image:image blocks)
+ *   5. News pages     — news/page/{n}/index.html
+ */
+
+'use strict';
+
+const fs   = require('fs');
+const path = require('path');
+
+const SITE_ROOT = path.resolve(__dirname, '..');
+const SITE_BASE = 'https://dormied.com';
+const OUT_PATH  = path.join(SITE_ROOT, 'sitemap.xml');
+const MIN_BYTES = 1000; // files smaller than this are stubs — skip them
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function xmlEsc(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+function mtimeDate(filePath) {
+  try {
+    return fs.statSync(filePath).mtime.toISOString().slice(0, 10);
+  } catch {
+    return new Date().toISOString().slice(0, 10);
+  }
+}
+
+/** Extract <meta property="og:image" content="..."> from HTML */
+function extractOgImage(html) {
+  const m = html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i)
+           || html.match(/<meta\s+content="([^"]+)"\s+property="og:image"/i);
+  return m ? m[1] : null;
+}
+
+/** Extract <meta property="og:title" content="..."> from HTML */
+function extractOgTitle(html) {
+  const m = html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i)
+           || html.match(/<meta\s+content="([^"]+)"\s+property="og:title"/i);
+  return m ? m[1] : null;
+}
+
+/** Extract <meta property="article:published_time" content="..."> */
+function extractPublishedDate(html) {
+  const m = html.match(/<meta\s+property="article:published_time"\s+content="([^"]+)"/i)
+           || html.match(/<meta\s+content="([^"]+)"\s+property="article:published_time"/i);
+  return m ? m[1].slice(0, 10) : null;
+}
+
+/**
+ * Walk a directory one level deep, returning subdirectory names
+ * whose index.html is >= MIN_BYTES. Skips the listing directories
+ * (news/index.html, brands/index.html, etc.) — those are static pages.
+ */
+function walkSubdirs(section, excludePaths = []) {
+  const base    = path.join(SITE_ROOT, section);
+  const results = [];
+  let entries;
+  try {
+    entries = fs.readdirSync(base, { withFileTypes: true });
+  } catch {
+    return results;
+  }
+  for (const ent of entries) {
+    if (!ent.isDirectory()) continue;
+    if (excludePaths.includes(ent.name)) continue;
+    const indexPath = path.join(base, ent.name, 'index.html');
+    try {
+      const stat = fs.statSync(indexPath);
+      if (stat.size >= MIN_BYTES) {
+        results.push({ slug: ent.name, filePath: indexPath, mtime: stat.mtime });
+      }
+    } catch {
+      // no index.html — skip
+    }
+  }
+  // Sort by mtime descending (newest first) so sitemap is predictably ordered
+  results.sort((a, b) => b.mtime - a.mtime);
+  return results;
+}
+
+// ── URL entry builders ────────────────────────────────────────────────────────
+
+function staticEntry(loc, lastmod, changefreq, priority) {
+  return [
+    `  <url>`,
+    `    <loc>${SITE_BASE}${loc}</loc>`,
+    `    <lastmod>${lastmod}</lastmod>`,
+    `    <changefreq>${changefreq}</changefreq>`,
+    `    <priority>${priority}</priority>`,
+    `  </url>`,
+  ].join('\n');
+}
+
+function pageEntry(section, slug, lastmod, changefreq, priority) {
+  const loc = `${SITE_BASE}/${section}/${slug}/`;
+  return [
+    `  <url>`,
+    `    <loc>${xmlEsc(loc)}</loc>`,
+    `    <lastmod>${lastmod}</lastmod>`,
+    `    <changefreq>${changefreq}</changefreq>`,
+    `    <priority>${priority}</priority>`,
+    `  </url>`,
+  ].join('\n');
+}
+
+function newsEntry(slug, lastmod, imageUrl, imageTitle) {
+  const loc = `${SITE_BASE}/news/${slug}/`;
+  const hasImage = imageUrl && !imageUrl.includes('og-image.jpg');
+  const imageBlock = hasImage
+    ? [
+        `    <image:image>`,
+        `      <image:loc>${xmlEsc(imageUrl)}</image:loc>`,
+        `      <image:title>${xmlEsc(imageTitle || '')}</image:title>`,
+        `    </image:image>`,
+      ].join('\n')
+    : null;
+
+  const lines = [
+    `  <url>`,
+    `    <loc>${xmlEsc(loc)}</loc>`,
+    `    <lastmod>${lastmod}</lastmod>`,
+    `    <changefreq>never</changefreq>`,
+    `    <priority>0.7</priority>`,
+  ];
+  if (imageBlock) lines.push(imageBlock);
+  lines.push(`  </url>`);
+  return lines.join('\n');
+}
+
+// ── Main regeneration ─────────────────────────────────────────────────────────
+
+function regenerateSitemap() {
+  const today = new Date().toISOString().slice(0, 10);
+
+  // ── 1. Static pages ────────────────────────────────────────────────────────
+  const staticIndexLastmod = mtimeDate(path.join(SITE_ROOT, 'index.html'));
+  const brandsIndexLastmod = mtimeDate(path.join(SITE_ROOT, 'brands', 'index.html'));
+  const newsIndexLastmod   = mtimeDate(path.join(SITE_ROOT, 'news',   'index.html'));
+  const scIndexLastmod     = mtimeDate(path.join(SITE_ROOT, 'scorecard', 'index.html'));
+  const rankLastmod        = mtimeDate(path.join(SITE_ROOT, 'rankings', 'index.html'));
+
+  const staticEntries = [
+    `  <!-- ── Static pages ── -->`,
+    staticEntry('/',            staticIndexLastmod, 'monthly', '1.0'),
+    staticEntry('/rankings/',   rankLastmod,        'monthly', '0.9'),
+    staticEntry('/scorecard/',  scIndexLastmod,     'monthly', '0.9'),
+    staticEntry('/news/',       newsIndexLastmod,   'daily',   '0.8'),
+    staticEntry('/brands/',     brandsIndexLastmod, 'daily',   '0.8'),
+  ];
+
+  // ── 2. Scorecard issues ────────────────────────────────────────────────────
+  const scorecardPages = walkSubdirs('scorecard');
+  const scorecardEntries = scorecardPages.length
+    ? [
+        `\n  <!-- ── Scorecard issues ── -->`,
+        ...scorecardPages.map(p =>
+          pageEntry('scorecard', p.slug, p.mtime.toISOString().slice(0, 10), 'monthly', '0.8')
+        ),
+      ]
+    : [];
+
+  // ── 3. Brand pages ────────────────────────────────────────────────────────
+  const brandPages = walkSubdirs('brands');
+  const brandEntries = brandPages.length
+    ? [
+        `\n  <!-- ── Brand pages (${brandPages.length}) ── -->`,
+        ...brandPages.map(p =>
+          pageEntry('brands', p.slug, p.mtime.toISOString().slice(0, 10), 'monthly', '0.8')
+        ),
+      ]
+    : [];
+
+  // ── 4. News articles (with image blocks) ──────────────────────────────────
+  const newsPages = walkSubdirs('news', ['page']); // exclude news/page/
+  const newsEntries = newsPages.length
+    ? [
+        `\n  <!-- ── News articles (${newsPages.length}) ── -->`,
+        ...newsPages.map(p => {
+          // Read the file to extract image metadata — worth the I/O for accurate image sitemaps
+          let html = '';
+          try { html = fs.readFileSync(p.filePath, 'utf8'); } catch { /* skip */ }
+          const imageUrl   = extractOgImage(html);
+          const imageTitle = extractOgTitle(html);
+          const pubDate    = extractPublishedDate(html) || p.mtime.toISOString().slice(0, 10);
+          return newsEntry(p.slug, pubDate, imageUrl, imageTitle);
+        }),
+      ]
+    : [];
+
+  // ── 5. News pagination pages ───────────────────────────────────────────────
+  const newsPageDirs = walkSubdirs('news/page');
+  const newsPagEntries = newsPageDirs.length
+    ? [
+        `\n  <!-- ── News pagination ── -->`,
+        ...newsPageDirs.map(p =>
+          // Pagination page URL is /news/page/N/
+          [
+            `  <url>`,
+            `    <loc>${SITE_BASE}/news/page/${xmlEsc(p.slug)}/</loc>`,
+            `    <lastmod>${p.mtime.toISOString().slice(0, 10)}</lastmod>`,
+            `    <changefreq>weekly</changefreq>`,
+            `    <priority>0.4</priority>`,
+            `  </url>`,
+          ].join('\n')
+        ),
+      ]
+    : [];
+
+  // ── Assemble ───────────────────────────────────────────────────────────────
+  const allEntries = [
+    ...staticEntries,
+    ...scorecardEntries,
+    ...brandEntries,
+    ...newsEntries,
+    ...newsPagEntries,
+  ];
+
+  const xml = [
+    `<?xml version="1.0" encoding="UTF-8"?>`,
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"`,
+    `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`,
+    ``,
+    allEntries.join('\n'),
+    ``,
+    `</urlset>`,
+  ].join('\n');
+
+  fs.writeFileSync(OUT_PATH, xml, 'utf8');
+
+  const total = 5 + scorecardPages.length + brandPages.length + newsPages.length + newsPageDirs.length;
+  console.log(`[sitemap] ✓ Regenerated sitemap.xml — ${total} URLs (${newsPages.length} articles, ${brandPages.length} brands, ${scorecardPages.length} scorecard issues)`);
+  return total;
+}
+
+// ── CLI entry point ───────────────────────────────────────────────────────────
+
+if (require.main === module) {
+  try {
+    regenerateSitemap();
+  } catch (err) {
+    console.error('[sitemap] Fatal error:', err.message);
+    process.exit(1);
+  }
+}
+
+module.exports = { regenerateSitemap };

@@ -624,26 +624,11 @@ ${prevNextHtml}
 }
 
 // ── Sitemap ───────────────────────────────────────────────────────────────────
+// Sitemap is regenerated from the filesystem after all issues are written (see
+// main()). The old upsertSitemapEntry() that appended/patched is removed — it
+// was the cause of duplicate scorecard entries when the generator ran multiple times.
 
-function upsertSitemapEntry(slug, dateStr) {
-  const sitemapPath = path.join(SITE_ROOT, 'sitemap.xml');
-  let sitemap = fs.readFileSync(sitemapPath, 'utf8');
-
-  const locUrl = `https://dormied.com/scorecard/${slug}/`;
-  const updated = sitemap.replace(
-    new RegExp(`(<loc>${escapeRegex(locUrl)}<\\/loc>\\s*<lastmod>)[^<]+(<\\/lastmod>)`, 'g'),
-    `$1${dateStr}$2`,
-  );
-
-  if (updated !== sitemap) {
-    fs.writeFileSync(sitemapPath, updated, 'utf8');
-    return;
-  }
-
-  // Entry not present — add it before </urlset>
-  const entry = `  <url>\n    <loc>${locUrl}</loc>\n    <lastmod>${dateStr}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
-  fs.writeFileSync(sitemapPath, sitemap.replace('</urlset>', entry + '</urlset>'), 'utf8');
-}
+const { regenerateSitemap } = require('./generate-sitemap');
 
 // ── Vercel config: remove shell rewrites, add cache header ───────────────────
 
@@ -700,8 +685,6 @@ function processOneIssue(issue, allIssues, brandNameMap, force) {
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, html, 'utf8');
 
-  upsertSitemapEntry(issue.slug, issue.dateISO);
-
   console.log(`[scorecard-page] ✓  scorecard/${issue.slug}/index.html  (${html.length.toLocaleString()} bytes)`);
   return 'written';
 }
@@ -748,16 +731,11 @@ function main() {
   console.log(`\n[scorecard-page] Done — ${written} written, ${skipped} skipped, ${errors} errors`);
 
   if (written > 0) {
-    // Bump /scorecard/ lastmod in sitemap
-    const sitemapPath = path.join(SITE_ROOT, 'sitemap.xml');
-    let sitemap = fs.readFileSync(sitemapPath, 'utf8');
-    const bumped = sitemap.replace(
-      /(<loc>https:\/\/dormied\.com\/scorecard\/<\/loc>\s*<lastmod>)[^<]+(<\/lastmod>)/,
-      `$1${today}$2`,
-    );
-    if (bumped !== sitemap) {
-      fs.writeFileSync(sitemapPath, bumped, 'utf8');
-      console.log('[scorecard-page] Bumped /scorecard/ lastmod in sitemap');
+    // Regenerate sitemap once after all issues are written
+    try {
+      regenerateSitemap();
+    } catch (e) {
+      console.warn('[scorecard-page] Sitemap regeneration failed:', e.message);
     }
 
     // Only remove shell rewrites once ALL issues have static files

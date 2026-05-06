@@ -17,6 +17,8 @@
     "generate-scorecard": "node scripts/generate-scorecard-page.js",
     "generate-scorecard:force": "node scripts/generate-scorecard-page.js --force",
     "verify:scorecard": "node scripts/verify-scorecard-pages.js",
+    "regenerate:sitemap": "node scripts/generate-sitemap.js",
+    "verify:sitemap": "node scripts/verify-sitemap.js",
     "deploy": "vercel --prod"
   },
   "dependencies": {

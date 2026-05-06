@@ -64,6 +64,9 @@ jobs:
       - name: Verify scorecard pages
         run: npm run verify:scorecard
 
+      - name: Verify sitemap (no orphans before commit)
+        run: npm run verify:sitemap
+
       - name: Commit generated articles
         run: |
           set -e  # Any failure in this step aborts it — publish step is skipped on failure

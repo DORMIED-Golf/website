@@ -226,27 +226,10 @@ function getRelatedBrands(dormiedData, brandSlug, curSearches, count = 5) {
 }
 
 // ── Sitemap ───────────────────────────────────────────────────────────────────
+// Sitemap is regenerated from the filesystem after all brand pages are written
+// (see main()). Never patch-appended — that was the source of duplicate entries.
 
-function updateSitemapLastmod(slug, dateStr) {
-  const sitemapPath = path.join(SITE_ROOT, 'sitemap.xml');
-  let sitemap = fs.readFileSync(sitemapPath, 'utf8');
-
-  const locUrl  = `https://dormied.com/brands/${slug}/`;
-  const updated = sitemap.replace(
-    new RegExp(
-      `(<loc>${escapeRegex(locUrl)}<\\/loc>\\s*<lastmod>)[^<]+(<\\/lastmod>)`,
-      'g',
-    ),
-    `$1${dateStr}$2`,
-  );
-
-  if (updated === sitemap) {
-    console.warn(`[brand-page] sitemap: no entry found for /brands/${slug}/`);
-    return;
-  }
-
-  fs.writeFileSync(sitemapPath, updated, 'utf8');
-}
+const { regenerateSitemap } = require('./generate-sitemap');
 
 // ── Per-market helpers — match brand.js exactly ───────────────────────────────
 
@@ -904,10 +887,6 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force) {
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, html, 'utf8');
 
-  // Update sitemap
-  const today = new Date().toISOString().slice(0, 10);
-  updateSitemapLastmod(brandSlug, today);
-
   return { slug: brandSlug, status: 'written' };
 }
 
@@ -958,17 +937,13 @@ async function main() {
 
   console.log(`\n[brand-page] Done — ${written} written, ${skipped} skipped, ${errors} errors`);
 
-  // Bump /brands/ index lastmod when we've written at least one page
+  // Regenerate sitemap once after all brand pages are written (never per-brand,
+  // which would trigger 169 filesystem scans).
   if (written > 0) {
-    const sitemapPath = path.join(SITE_ROOT, 'sitemap.xml');
-    let sitemap = fs.readFileSync(sitemapPath, 'utf8');
-    const bumped = sitemap.replace(
-      /(<loc>https:\/\/dormied\.com\/brands\/<\/loc>\s*<lastmod>)[^<]+(<\/lastmod>)/,
-      `$1${today}$2`,
-    );
-    if (bumped !== sitemap) {
-      fs.writeFileSync(sitemapPath, bumped, 'utf8');
-      console.log('[brand-page] Bumped /brands/ lastmod in sitemap');
+    try {
+      regenerateSitemap();
+    } catch (e) {
+      console.warn('[brand-page] Sitemap regeneration failed:', e.message);
     }
   }
 }

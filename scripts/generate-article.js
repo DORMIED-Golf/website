@@ -766,39 +766,46 @@ function generateArticleHtml(opts) {
 </html>`;
 }
 
-// ── Sitemap updater ───────────────────────────────────────────────────────────
+// ── Sitemap regeneration ───────────────────────────────────────────────────────
+// Replaces the old append-based addToSitemap(). Rebuilds sitemap.xml from the
+// filesystem so it can never contain orphan entries or duplicate URLs.
 
-function xmlEscSitemap(str) {
-  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+const { regenerateSitemap } = require('./generate-sitemap');
 
-function addToSitemap(slug, publishedAt, imageUrl, imageTitle) {
-  const sitemapPath = path.join(SITE_ROOT, 'sitemap.xml');
-  let sitemap = fs.readFileSync(sitemapPath, 'utf8');
+// ── HTML verification ──────────────────────────────────────────────────────────
+// Called immediately after writing the article HTML. Throws on any failure so
+// the Supabase insert and sitemap regeneration are skipped for broken files.
 
-  const dateStr    = publishedAt.slice(0, 10);
-  const today      = new Date().toISOString().slice(0, 10);
+function verifyArticleHtml(filePath, { title, slug }) {
+  const MIN_SIZE = 5000;
+  let stat;
+  try {
+    stat = fs.statSync(filePath);
+  } catch (e) {
+    throw new Error(`Article file not found on disk after write: ${filePath}`);
+  }
+  if (stat.size < MIN_SIZE) {
+    throw new Error(`Article HTML too small (${stat.size} bytes < ${MIN_SIZE}): ${filePath}`);
+  }
 
-  // Build image block (include only if we have an actual hero image — not the og-image fallback)
-  const hasImage = imageUrl && !imageUrl.includes('og-image.jpg');
-  const imageBlock = hasImage
-    ? `\n    <image:image>\n      <image:loc>${xmlEscSitemap(imageUrl)}</image:loc>\n      <image:title>${xmlEscSitemap(imageTitle)}</image:title>\n    </image:image>`
-    : '';
+  const html = fs.readFileSync(filePath, 'utf8');
 
-  // Article entry with image tag
-  const entry = `\n  <url>\n    <loc>https://dormied.com/news/${slug}/</loc>\n    <lastmod>${dateStr}</lastmod>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>${imageBlock}\n  </url>`;
+  const checks = [
+    ['<h1',                    'h1 element'],
+    ['<meta name="description"', 'meta description'],
+    ['<link rel="canonical"',  'canonical link'],
+  ];
+  for (const [needle, label] of checks) {
+    if (!html.includes(needle)) {
+      throw new Error(`Article HTML missing ${label}: ${filePath}`);
+    }
+  }
 
-  // Insert before the closing </urlset>
-  sitemap = sitemap.replace('</urlset>', entry + '\n</urlset>');
-
-  // Also bump the /news/ index lastmod so Google knows to re-crawl the listing
-  sitemap = sitemap.replace(
-    /(<loc>https:\/\/dormied\.com\/news\/<\/loc>\n\s*<lastmod>)[^<]+(<\/lastmod>)/,
-    `$1${today}$2`,
-  );
-
-  fs.writeFileSync(sitemapPath, sitemap, 'utf8');
-  console.log(`[generate] Added /news/${slug}/ to sitemap (image: ${hasImage ? 'yes' : 'no'})`);
+  // The article title (escaped) should appear somewhere in the HTML
+  const titleSnippet = title.slice(0, 30); // first 30 chars is enough
+  if (titleSnippet && !html.includes(titleSnippet)) {
+    throw new Error(`Article title not found in HTML ("${titleSnippet}"): ${filePath}`);
+  }
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -889,7 +896,16 @@ async function main() {
 
       fs.mkdirSync(path.join(SITE_ROOT, 'news', row.slug), { recursive: true });
       fs.writeFileSync(articlePath, html, 'utf8');
-      addToSitemap(row.slug, row.published_at, row.image_url || '', row.title || '');
+      // Verify before touching sitemap — skip silently if it fails
+      try {
+        verifyArticleHtml(articlePath, { title: row.title || '', slug: row.slug });
+      } catch (vErr) {
+        console.warn(`[generate] Backfill verification failed for "${row.slug}": ${vErr.message} — cleaning up`);
+        try { fs.unlinkSync(articlePath); } catch { /* best-effort */ }
+        backfilled--;
+        continue;
+      }
+      regenerateSitemap();
       console.log(`[generate] ✓ Backfilled: news/${row.slug}/index.html`);
       backfilled++;
     } catch (err) {
@@ -1028,10 +1044,17 @@ async function main() {
     // Fall back to the DORMIED default rather than a raw source URL, which may block hotlinking.
     const ogImageUrl  = localUrl || 'https://dormied.com/images/og-image.jpg';
 
-    // ── Write static HTML file ──
-    const articleDir = path.join(SITE_ROOT, 'news', slug);
+    // ── TRANSACTIONAL PUBLISH ─────────────────────────────────────────────────
+    // Order: write HTML → verify HTML → insert Supabase → regenerate sitemap.
+    // If HTML write or verification fails, Supabase and sitemap are untouched.
+    // If the Supabase insert fails, the HTML exists on disk (backfill will
+    // retry on next run) but the sitemap is not updated — harmless.
+
+    const articleDir  = path.join(SITE_ROOT, 'news', slug);
+    const articlePath = path.join(articleDir, 'index.html');
     fs.mkdirSync(articleDir, { recursive: true });
 
+    // Step 1: write candidate HTML
     const html = generateArticleHtml({
       title, bodyHtml, imageUrl, ogImageUrl, localUrl,
       imageAlt:        `${brandInfo.brand.name} — ${raw.category || 'Golf'}`,
@@ -1050,10 +1073,23 @@ async function main() {
       dormiedData,
     });
 
-    fs.writeFileSync(path.join(articleDir, 'index.html'), html, 'utf8');
-    console.log(`[generate] ✓ Wrote news/${slug}/index.html`);
+    fs.writeFileSync(articlePath, html, 'utf8');
 
-    // ── Store in Supabase ──
+    // Step 2: verify HTML on disk before committing any external state
+    try {
+      verifyArticleHtml(articlePath, { title, slug });
+    } catch (verifyErr) {
+      console.error(`[generate] ✗ HTML verification failed for "${title}": ${verifyErr.message}`);
+      // Roll back the partial file so it doesn't get committed as a stub
+      try { fs.unlinkSync(articlePath); } catch { /* best-effort */ }
+      try { fs.rmdirSync(articleDir);   } catch { /* best-effort */ }
+      console.error(`[generate] Rolled back partial file. Skipping "${title}".`);
+      continue; // move on to next article — don't abort the whole run
+    }
+
+    console.log(`[generate] ✓ Wrote + verified news/${slug}/index.html`);
+
+    // Step 3: commit to Supabase (only after HTML is verified on disk)
     const { error: insertErr } = await supabase
       .from('dormied_articles')
       .insert({
@@ -1076,10 +1112,15 @@ async function main() {
 
     if (insertErr) {
       console.warn(`[generate] Supabase insert failed for "${title}":`, insertErr.message);
+      // HTML is on disk — backfill will pick it up on next run once the DB record exists
     }
 
-    // ── Update sitemap (with image tags for Google Image Search + Discover) ──
-    addToSitemap(slug, publishedAt, ogImageUrl, title);
+    // Step 4: regenerate sitemap from filesystem (never orphans, never duplicates)
+    try {
+      regenerateSitemap();
+    } catch (sitemapErr) {
+      console.warn(`[generate] Sitemap regeneration failed: ${sitemapErr.message}`);
+    }
 
     // ── Update in-memory title index so this run doesn't double-generate same story ──
     recentTitles.push(title); // use the generated title for future similarity checks
