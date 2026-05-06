@@ -648,7 +648,7 @@
         + logoImg(r, 'mv-logo', 100)
         + '<div class="mv-name">' + esc(r.name) + '</div>'
         + '<div class="mv-stats">'
-        +   '<span class="mv-rank">#' + (i + 1) + '</span>'
+        +   '<span class="mv-rank">#' + r.rank + '</span>'
         +   '<span class="mv-dot">·</span>'
         +   '<span class="mv-di">' + (r.di != null ? r.di.toFixed(1) : '—') + '</span>'
         +   (pct ? '<span class="mv-dot">·</span><span class="mv-pct ' + pctCls + '">' + pct + '</span>' : '')
