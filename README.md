@@ -317,6 +317,68 @@ To set them on Vercel: go to your project → **Settings** → **Environment Var
 
 ---
 
+## Static Index Page Generation
+
+`/brands/`, `/news/`, and `/scorecard/` are pre-rendered at build time so crawlers see fully populated HTML without running JavaScript.
+
+### How it works
+
+`scripts/generate-index-pages.js` reads local data files and Supabase, then injects content directly into the three HTML files:
+
+| Page | Source data | Output |
+|---|---|---|
+| `/brands/` | `js/data.js` | 169 ranked brand cards with DI, trend arrows, sub-categories |
+| `/news/` | Supabase `dormied_articles` | 25 most recent articles; pages 2–5 at `/news/page/N/` |
+| `/scorecard/` | `js/scorecard-data.js` | Latest hero card + full archive |
+
+Client-side JS (`brands-dir.js`, `feed-page.js`, `scorecard-archive.js`) is modified to **preserve the static HTML** on page load. It only re-renders when the user actively uses search, filter, or sort. When filters are cleared, the original static HTML is restored from cache.
+
+### Running it
+
+```bash
+# All three pages
+npm run generate-index-pages
+
+# Individual pages
+npm run generate-index-pages:brands
+npm run generate-index-pages:news
+npm run generate-index-pages:scorecard
+
+# Force-regenerate even if source data hasn't changed
+node scripts/generate-index-pages.js --force
+
+# Verify output
+npm run verify:index-pages
+```
+
+### Pipeline integration
+
+The generation script is wired into the publish pipeline:
+
+- `generate-article.js` automatically runs `generate-index-pages.js --news` after each article batch.
+- `generate-brand-page.js` automatically runs `generate-index-pages.js --brands` after brand pages are written.
+- Scorecard is regenerated manually after updating `js/scorecard-data.js`.
+
+The script has mtime-based skipping: if the output file is newer than its source data, it skips that page. Explicit flags (`--brands`, `--news`, `--scorecard`, `--force`) always regenerate regardless.
+
+### Monthly update flow
+
+After updating `js/data.js` with new search numbers, run:
+
+```bash
+npm run generate-index-pages:brands
+```
+
+After publishing new articles via `generate-article.js`, the `/news/` index regenerates automatically.
+
+After publishing a new Scorecard issue (updating `js/scorecard-data.js`), run:
+
+```bash
+npm run generate-index-pages:scorecard
+```
+
+---
+
 ## Local Development
 
 ```bash
