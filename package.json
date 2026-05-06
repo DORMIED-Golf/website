@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "python3 -m http.server 8080",
     "generate-explanations": "node scripts/generate-explanations.js",
+    "generate-brands": "node scripts/generate-brand-page.js",
+    "generate-brands:force": "node scripts/generate-brand-page.js --force",
+    "verify:brands": "node scripts/verify-brands.js",
     "deploy": "vercel --prod"
   },
   "dependencies": {

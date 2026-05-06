@@ -12,8 +12,6 @@
     { "source": "/feed/",             "destination": "/feed/index.html" },
     { "source": "/brands",            "destination": "/brands/index.html" },
     { "source": "/brands/",           "destination": "/brands/index.html" },
-    { "source": "/brands/:slug",      "destination": "/brands/brand.html" },
-    { "source": "/brands/:slug/",     "destination": "/brands/brand.html" },
     { "source": "/rankings",          "destination": "/rankings/index.html" },
     { "source": "/rankings/",         "destination": "/rankings/index.html" },
     { "source": "/matchups",          "destination": "/matchups/index.html" },
@@ -48,6 +46,10 @@
     },
     {
       "source": "/(.*)\\.html",
+      "headers": [{ "key": "Cache-Control", "value": "public, no-cache" }]
+    },
+    {
+      "source": "/brands/(.+)/",
       "headers": [{ "key": "Cache-Control", "value": "public, no-cache" }]
     },
     {

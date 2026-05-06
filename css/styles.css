@@ -1782,9 +1782,6 @@ details[open] .faq-question::after { content: '−'; }
   margin-top: 16px;
 }
 
-@media (min-width: 1200px) {
-  .bp-description { max-width: 72ch; }
-}
 
 .bp-rank-block {
   display: flex;
