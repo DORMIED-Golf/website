@@ -55,19 +55,37 @@ function stripHtml(html) {
     .trim();
 }
 
+/** Returns true for URLs that look like brand logos/icons rather than hero photos. */
+function looksLikeLogo(url) {
+  if (!url) return false;
+  const lower = url.toLowerCase();
+  // Explicit logo/icon/favicon signals in path or filename
+  if (/\/(logo|favicon|icon|brand-mark|wordmark|badge)[^/]*\.(png|svg|jpg|jpeg|webp)/i.test(lower)) return true;
+  if (lower.endsWith('.svg')) return true;
+  return false;
+}
+
 function extractFirstImage(html) {
   if (!html) return null;
   // Attributes to check in order (covers eager, lazy-loaded, and WordPress lazy variants)
   const attrs = ['src', 'data-src', 'data-lazy-src', 'data-original'];
+  // Collect all candidate URLs first so we can rank them.
+  const candidates = [];
   for (const attr of attrs) {
     // Double quotes
-    let m = html.match(new RegExp('<img[^>]+' + attr + '="(https?:[^"]+)"', 'i'));
-    if (m) return m[1];
+    const re1 = new RegExp('<img[^>]+' + attr + '="(https?:[^"]+)"', 'gi');
+    let m;
+    while ((m = re1.exec(html)) !== null) candidates.push(m[1]);
     // Single quotes
-    m = html.match(new RegExp("<img[^>]+" + attr + "='(https?:[^']+)'", 'i'));
-    if (m) return m[1];
+    const re2 = new RegExp("<img[^>]+" + attr + "='(https?:[^']+)'", 'gi');
+    while ((m = re2.exec(html)) !== null) candidates.push(m[1]);
   }
-  return null;
+  // Prefer images that are clearly editorial (thegolfwire.com wp-content uploads).
+  // Fall back to any non-logo image; skip anything that looks like a brand logo.
+  const editorial = candidates.find(u => /thegolfwire\.com\/wp-content\/uploads\//i.test(u));
+  if (editorial) return editorial;
+  const nonLogo = candidates.find(u => !looksLikeLogo(u));
+  return nonLogo || null;
 }
 
 async function fetchOgImage(url) {
@@ -169,8 +187,7 @@ async function main() {
     if (!imageUrl && sourceUrl) {
       console.log(`[scrape] Trying og:image from source URL for "${item.title}"…`);
       imageUrl = await fetchOgImage(sourceUrl);
-      // Reject obvious logo patterns — very short images or SVGs aren't hero photos
-      if (imageUrl && (imageUrl.endsWith('.svg') || imageUrl.includes('logo') || imageUrl.includes('favicon'))) {
+      if (imageUrl && looksLikeLogo(imageUrl)) {
         console.log(`[scrape] Source og:image looks like a logo, discarding.`);
         imageUrl = null;
       }
