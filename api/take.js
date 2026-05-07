@@ -115,7 +115,7 @@ async function fetchRecentArticles(brandName) {
 
 const SYSTEM_PROMPT = `You are The Read Agent for DORMIED, golf's brand desk.
 
-DORMIED is the monthly ranking and editorial home for golf brands. We track 169 brands across 10 global markets and publish independent rankings as the DORMIED Index. Every sport has a publication that covers the business and culture of its brands. Fashion has Lyst and Business of Fashion. Basketball has Boardroom. Golf has DORMIED.
+DORMIED is the monthly ranking and editorial home for golf brands. We track 175 brands across 10 global markets and publish independent rankings as the DORMIED Index. Every sport has a publication that covers the business and culture of its brands. Fashion has Lyst and Business of Fashion. Basketball has Boardroom. Golf has DORMIED.
 
 The Read is the editorial take on every brand's page. Where the standings show position and the explanation section covers the latest move, The Read steps back: how the brand is doing, what the trend says, what to watch.
 
@@ -137,7 +137,7 @@ function buildUserPrompt(params, newsContext, retry = false) {
   const base = `Write a 300 to 500 word editorial analysis of the current state of ${name}. This is "The Read" on the brand's DORMIED page. It is substantive editorial that gives the reader something worth reading, not a summary.
 
 Data context:
-* Current global rank: ${rank} out of 169
+* Current global rank: ${rank} out of 175
 * DI Score: ${di}
 * Month over month change: ${vsMonth}
 * 3 month trend: ${mom}

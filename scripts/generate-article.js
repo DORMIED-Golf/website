@@ -406,7 +406,7 @@ async function callOpus(client, pressRelease, brandInfo, retry = false) {
   const { brand, rank, di, momStr, currentMonth } = brandInfo;
 
   const userMsg = `Brand: ${brand.name}
-Current DORMIED global rank: #${rank} of 169
+Current DORMIED global rank: #${rank} of 175
 DI score: ${di}/100
 Month-over-month: ${momStr}
 Month: ${currentMonth}

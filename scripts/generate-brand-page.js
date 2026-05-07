@@ -8,7 +8,7 @@
  *
  * Usage:
  *   node scripts/generate-brand-page.js              # smart: skip existing files
- *   node scripts/generate-brand-page.js --force      # regenerate all 169
+ *   node scripts/generate-brand-page.js --force      # regenerate all 175
  *   node scripts/generate-brand-page.js --slug=titleist  # one brand only
  *
  * Required env vars:
@@ -939,7 +939,7 @@ async function main() {
   console.log(`\n[brand-page] Done — ${written} written, ${skipped} skipped, ${errors} errors`);
 
   // Regenerate sitemap once after all brand pages are written (never per-brand,
-  // which would trigger 169 filesystem scans).
+  // which would trigger 175 filesystem scans).
   if (written > 0) {
     try {
       regenerateSitemap();

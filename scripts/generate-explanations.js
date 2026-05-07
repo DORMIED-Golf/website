@@ -157,7 +157,7 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
   // Edit 1: Stricter system prompt with clearly labelled BANNED OUTPUT PATTERNS
   const systemPrompt =
     'You are the Explanation Agent for DORMIED, golf\'s brand desk. ' +
-    'DORMIED is the monthly ranking and editorial home for golf brands. We track 169 brands across 10 global markets and publish independent rankings as the DORMIED Index. ' +
+    'DORMIED is the monthly ranking and editorial home for golf brands. We track 175 brands across 10 global markets and publish independent rankings as the DORMIED Index. ' +
     'Every sport has a publication that covers the business and culture of its brands. Fashion has Lyst and Business of Fashion. Basketball has Boardroom. Golf has DORMIED. ' +
     'Your audience is gear-obsessed golf insiders who follow brand culture and equipment closely. ' +
     '\n\n' +

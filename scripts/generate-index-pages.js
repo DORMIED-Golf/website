@@ -420,13 +420,13 @@ function generateBrands() {
   /* Update title, meta, OG/Twitter */
   html = updateHeadMeta(html, {
     title:       'The Field — Golf Brand Directory | DORMIED',
-    description: 'Every golf brand we track on the DORMIED Index. 169 brands across 10 global markets, ranked monthly by attention. Search, filter, see who\'s moving.',
+    description: 'Every golf brand we track on the DORMIED Index. 175 brands across 10 global markets, ranked monthly by attention. Search, filter, see who\'s moving.',
   });
 
   /* Inject intro copy and subhead into hero section */
   const brandsIntroParagraphs =
     `<p class="hero-desc">The full roster. Every brand DORMIED tracks on the Index, in one place.</p>` +
-    `<p class="hero-desc hero-desc--secondary">We watch 169 brands across 10 global markets and rank them every month by where attention is actually going. Equipment, apparel, accessories, training tech, course wear, the lifestyle plays pulling our game in new directions. Some are climbing. Some are fading. Some are coasting on a name that stopped meaning what it used to.</p>` +
+    `<p class="hero-desc hero-desc--secondary">We watch 175 brands across 10 global markets and rank them every month by where attention is actually going. Equipment, apparel, accessories, training tech, course wear, the lifestyle plays pulling our game in new directions. Some are climbing. Some are fading. Some are coasting on a name that stopped meaning what it used to.</p>` +
     `<p class="hero-desc hero-desc--secondary">Search, filter, sort. The DI score next to each brand is the current month's reading. The arrow tells you which way it's trending. Click into any brand for the trend chart, the recent coverage, and The Read.</p>` +
     `<p class="hero-desc hero-desc--secondary">This is the field as it stands right now. Check back next month and the order will look different.</p>`;
 
