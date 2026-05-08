@@ -707,7 +707,7 @@ function generateArticleHtml(opts) {
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260505">
+  <link rel="stylesheet" href="/css/styles.css?v=20260508">
 
   <!-- ── Structured Data ── -->
   <script type="application/ld+json">

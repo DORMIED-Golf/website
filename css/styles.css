@@ -203,7 +203,6 @@ button, select, input {
 .header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
   height: 56px;
 }
@@ -2503,7 +2502,7 @@ details[open] .faq-question::after { content: '−'; }
 }
 
 /* ── Site Nav ────────────────────────────────────────────────────────────────── */
-.site-nav { display: flex; gap: 20px; align-items: center; }
+.site-nav { display: flex; gap: 20px; align-items: center; margin-left: auto; }
 @media (max-width: 520px) {
   .site-nav { gap: 8px; }
 }
@@ -5532,28 +5531,41 @@ details[open] .faq-question::after { content: '−'; }
 
 /* ── Universal Search Bar ───────────────────────────────────────────────── */
 
+/* .site-nav already has margin-left:auto (see Site Nav section above)     */
+/* so the search bar follows nav naturally on the right side of the header. */
 .site-search {
   position: relative;
-  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .site-search-trigger {
   background: transparent;
-  border: 1px solid rgba(0,255,65,0.3);
-  color: var(--accent,#00ff41);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  border: 1px solid var(--border-lite);
+  color: var(--text-dim);
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, color 0.15s;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 .site-search-trigger:hover {
-  border-color: var(--accent,#00ff41);
-  background: rgba(0,255,65,0.06);
+  border-color: var(--green);
+  color: var(--green);
+}
+.site-search-trigger svg { flex-shrink: 0; }
+
+.site-search-trigger-label {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: inherit;
 }
 
 .site-search-panel {
@@ -5561,11 +5573,11 @@ details[open] .faq-question::after { content: '−'; }
   top: calc(100% + 8px);
   right: 0;
   width: 460px;
-  max-width: 90vw;
-  background: var(--bg-surface,#0d1f0d);
-  border: 1px solid rgba(0,255,65,0.25);
-  border-radius: 8px;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+  max-width: min(460px, 90vw);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-lite);
+  border-radius: 6px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.6);
   z-index: 200;
   overflow: hidden;
   animation: srch-in 0.14s ease;
@@ -5580,109 +5592,119 @@ details[open] .faq-question::after { content: '−'; }
   align-items: center;
   gap: 0.5rem;
   padding: 0.65rem 0.75rem;
-  border-bottom: 1px solid rgba(0,255,65,0.12);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface);
 }
+.site-search-input-row > svg { color: var(--text-muted); flex-shrink: 0; }
+
 .site-search-input {
   flex: 1;
   background: transparent;
   border: none;
   outline: none;
-  color: inherit;
-  font-size: 0.95rem;
-  font-family: inherit;
+  color: var(--text);
+  caret-color: var(--green);
+  font-size: 0.92rem;
+  font-family: var(--font-body);
   min-width: 0;
 }
-.site-search-input::placeholder { color: rgba(255,255,255,0.35); }
+.site-search-input::placeholder { color: var(--text-muted); }
 
 .site-search-close {
   background: transparent;
   border: none;
-  color: rgba(255,255,255,0.45);
+  color: var(--text-muted);
   cursor: pointer;
   padding: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: color 0.1s;
 }
-.site-search-close:hover { color: var(--accent,#00ff41); }
+.site-search-close:hover { color: var(--text); }
 
 .site-search-results {
   max-height: 58vh;
   overflow-y: auto;
+  background: var(--bg-surface);
 }
-.search-section {
-  padding: 0.35rem 0;
-}
-.search-section + .search-section {
-  border-top: 1px solid rgba(0,255,65,0.08);
-}
+.search-section { padding: 0.35rem 0; }
+.search-section + .search-section { border-top: 1px solid var(--border); }
+
 .search-section-label {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-size: 0.68rem;
-  color: var(--accent,#00ff41);
+  color: var(--green);
   padding: 0.45rem 0.75rem 0.2rem;
   font-weight: 700;
-  font-family: var(--font-mono,monospace);
+  font-family: var(--font-mono);
 }
+
 .search-result {
   display: flex;
   align-items: center;
   gap: 0.65rem;
   padding: 0.45rem 0.75rem;
   text-decoration: none;
-  color: inherit;
+  color: var(--text);
   transition: background 0.1s;
 }
-.search-result:hover { background: rgba(0,255,65,0.05); }
+.search-result:hover { background: var(--bg-hover); text-decoration: none; }
+
 .search-result-thumb {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 3px;
   flex-shrink: 0;
-  background: rgba(255,255,255,0.06);
+  background: var(--bg-raised);
 }
+
 .search-result-body { flex: 1; min-width: 0; }
+
 .search-result-title {
   font-size: 0.88rem;
   font-weight: 500;
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .search-result-subtitle {
-  font-size: 0.76rem;
-  color: rgba(255,255,255,0.5);
+  font-size: 0.75rem;
+  color: var(--text-dim);
   margin-top: 1px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .site-search-empty {
   padding: 1rem 0.75rem;
   text-align: center;
   font-size: 0.88rem;
-  color: rgba(255,255,255,0.45);
+  color: var(--text-muted);
+  background: var(--bg-surface);
 }
 
-/* Mobile */
+/* Mobile — search drops to full-width row below logo+nav */
 @media (max-width: 640px) {
-  .site-search { order: 99; width: 100%; margin: 0.45rem 0 0; }
+  .header-inner { flex-wrap: wrap; height: auto; padding-top: 8px; padding-bottom: 8px; }
+  .site-search {
+    order: 99;
+    width: 100%;
+    margin-top: 6px;
+  }
   .site-search-trigger {
     width: 100%;
-    height: 40px;
-    border-radius: 6px;
+    height: 38px;
+    border-radius: 4px;
     justify-content: center;
     gap: 0.5rem;
-  }
-  .site-search-trigger-label {
-    font-size: 0.78rem;
-    font-family: var(--font-mono,monospace);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 700;
   }
   .site-search-panel {
     position: fixed;
@@ -5694,5 +5716,4 @@ details[open] .faq-question::after { content: '−'; }
     overflow-y: auto;
   }
   .site-search-results { max-height: none; }
-  .header-inner { flex-wrap: wrap; }
 }
