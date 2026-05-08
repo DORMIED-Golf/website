@@ -101,7 +101,7 @@
   +         '<p class="signup-popup-body">The monthly issue from golf\'s brand desk. Once a month, no spam.</p>'
   +         '<form class="signup-popup-form" id="popup-form" novalidate>'
   +           '<input class="signup-popup-input" id="popup-email" type="email" placeholder="Your email" required autocomplete="email">'
-  +           '<button class="signup-popup-btn" id="popup-btn" type="submit">Send Me The Scorecard</button>'
+  +           '<button class="signup-popup-btn" id="popup-btn" type="submit">Subscribe</button>'
   +           '<p class="signup-popup-error" id="popup-error"></p>'
   +         '</form>'
   +         '<p class="signup-popup-fine">Monthly. No spam. Unsubscribe anytime.</p>'
