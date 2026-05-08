@@ -762,6 +762,23 @@ function generateArticleHtml(opts) {
         <a href="/news/"      class="site-nav-link site-nav-link--active">News</a>
         <a href="/brands/"    class="site-nav-link">Brands</a>
       </nav>
+      <div class="site-search">
+        <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+          <span class="site-search-trigger-label">Search</span>
+        </button>
+        <div class="site-search-panel" hidden>
+          <div class="site-search-input-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;opacity:.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" class="site-search-input" placeholder="Search brands, news, scorecard…" autocomplete="off" aria-label="Search dormied.com">
+            <button class="site-search-close" aria-label="Close search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div class="site-search-results" role="listbox" aria-label="Search results"></div>
+          <div class="site-search-empty" hidden>No results for that search.</div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -905,6 +922,7 @@ function generateArticleHtml(opts) {
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script src="/js/analytics.min.js?v=20260320a"></script>
   <script src="/js/signup.min.js?v=20260324d"></script>
+  <script src="/js/search.min.js?v=20260508"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>
   <script src="/js/da-article.min.js?v=20260427c"></script>
   <script>
@@ -929,6 +947,7 @@ function generateArticleHtml(opts) {
 // filesystem so it can never contain orphan entries or duplicate URLs.
 
 const { regenerateSitemap } = require('./generate-sitemap');
+const { generateSearchIndex } = require('./generate-search-index');
 
 // ── HTML verification ──────────────────────────────────────────────────────────
 // Called immediately after writing the article HTML. Throws on any failure so
@@ -1064,6 +1083,7 @@ async function main() {
         continue;
       }
       regenerateSitemap();
+      try { generateSearchIndex(); } catch (siErr) { console.warn(`[generate] Search index failed: ${siErr.message}`); }
       console.log(`[generate] ✓ Backfilled: news/${row.slug}/index.html`);
       backfilled++;
     } catch (err) {
@@ -1331,11 +1351,16 @@ async function main() {
       // HTML is on disk — backfill will pick it up on next run once the DB record exists
     }
 
-    // Step 4: regenerate sitemap from filesystem (never orphans, never duplicates)
+    // Step 4: regenerate sitemap and search index from filesystem
     try {
       regenerateSitemap();
     } catch (sitemapErr) {
       console.warn(`[generate] Sitemap regeneration failed: ${sitemapErr.message}`);
+    }
+    try {
+      generateSearchIndex();
+    } catch (siErr) {
+      console.warn(`[generate] Search index regeneration failed: ${siErr.message}`);
     }
 
     // ── Update in-memory title index so this run doesn't double-generate same story ──
