@@ -4518,6 +4518,109 @@ details[open] .faq-question::after { content: '−'; }
 }
 .sc-crosslink:hover { color: var(--green); text-decoration: none; }
 
+/* ── Scorecard listing — methodology intro body ───────────────────────────── */
+.scorecard-intro-body {
+  padding: 24px 0 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.scorecard-intro-h2 {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 28px 0 10px;
+}
+.scorecard-intro-body > .scorecard-intro-h2:first-child { margin-top: 0; }
+.scorecard-intro-p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+  margin-bottom: 12px;
+}
+.scorecard-intro-link {
+  color: var(--green);
+  text-decoration: none;
+}
+.scorecard-intro-link:hover { text-decoration: underline; }
+
+/* ── Scorecard listing — expanded lede excerpts ───────────────────────────── */
+.sc-hero-lede {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.sc-archive-lede {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-top: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Scorecard listing — top-stories sidebar section ─────────────────────── */
+.scorecard-top-stories {
+  padding-top: 20px;
+}
+.sc-top-stories-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.sc-top-story-link {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-lite);
+  text-decoration: none;
+}
+.sc-top-story-link:last-child { border-bottom: none; }
+.sc-top-story-link:hover .sc-top-story-title { color: var(--green); }
+.sc-top-thumb-wrap { flex-shrink: 0; }
+.sc-top-thumb {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  display: block;
+}
+.sc-top-story-body { flex: 1; min-width: 0; }
+.sc-top-story-title {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 3px;
+  transition: color 0.15s;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sc-top-story-meta {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-muted);
+}
+
 /* ── Article page ─────────────────────────────────────────────────────────── */
 .sc-article-layout {
   padding-bottom: 80px;

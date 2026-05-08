@@ -104,6 +104,15 @@ function firstSentences(text, n) {
   return clean;
 }
 
+/** Truncate plain text to at most `limit` words, appending … if truncated */
+function wordsTruncate(text, limit) {
+  const clean = (text || '').replace(/\s+/g, ' ').trim();
+  if (!clean) return '';
+  const words = clean.split(' ');
+  if (words.length <= limit) return clean;
+  return words.slice(0, limit).join(' ') + '…';
+}
+
 /** Replace the inner content of a specific id'd element in an HTML string. */
 function injectIntoId(html, elementId, newContent) {
   const openTagRe = new RegExp(
@@ -663,7 +672,7 @@ function dedupeRelLinks(html, p, totalPages) {
 /* ══════════════════════════════════════════════════════════════════════════
    SCORECARD  (/scorecard/index.html)
    ══════════════════════════════════════════════════════════════════════════ */
-function generateScorecard() {
+async function generateScorecard() {
   console.log('\n── Scorecard ────────────────────────────────────────────');
 
   /* mtime check: skip if scorecard/index.html is newer than js/scorecard-data.js */
@@ -729,6 +738,13 @@ function generateScorecard() {
   const latest  = issues[0];
   const archive = issues.slice(1);
 
+  /* Extract lede excerpt (~120 words) from first section body */
+  const latestLedeText = wordsTruncate(
+    stripHtml((Array.isArray(latest.sections) && latest.sections[0] &&
+      (latest.sections[0].body || latest.sections[0].content)) || ''),
+    120
+  );
+
   const heroHtml =
     `<div class="sc-hero-card">` +
       `<div class="sc-hero-label-row">` +
@@ -738,6 +754,7 @@ function generateScorecard() {
       buildScImageHtml(latest, true) +
       `<h2 class="sc-hero-title">${escHtml(latest.title)}</h2>` +
       `<p class="sc-hero-sub">${escHtml(latest.subtitle || '')}</p>` +
+      (latestLedeText ? `<p class="sc-hero-lede">${escHtml(latestLedeText)}</p>` : '') +
       `<a href="/scorecard/${escHtml(latest.slug)}/" class="sc-read-link">Read The Scorecard &#x2192;</a>` +
     `</div>`;
 
@@ -748,6 +765,11 @@ function generateScorecard() {
     const thumbHtml = thumb
       ? `<img class="sc-archive-thumb" src="${escHtml(thumb)}" alt="" loading="lazy">`
       : `<div class="sc-archive-thumb sc-archive-thumb--placeholder"></div>`;
+    const issueLede = wordsTruncate(
+      stripHtml((Array.isArray(issue.sections) && issue.sections[0] &&
+        (issue.sections[0].body || issue.sections[0].content)) || ''),
+      100
+    );
     return (
       `<a href="/scorecard/${escHtml(issue.slug)}/" class="sc-archive-card">` +
         thumbHtml +
@@ -756,17 +778,64 @@ function generateScorecard() {
           `<div class="sc-archive-date">${escHtml(issue.date)}</div>` +
           `<div class="sc-archive-title">${escHtml(issue.title)}</div>` +
           `<p class="sc-archive-sub">${escHtml(issue.subtitle || '')}</p>` +
+          (issueLede ? `<p class="sc-archive-lede">${escHtml(issueLede)}</p>` : '') +
         `</div>` +
       `</a>`
     );
   }).join('\n');
 
-  /* Intro copy */
+  /* Intro copy (short version for hero section) */
   const scorecardIntroParagraphs =
     `<p class="hero-desc">The Index gives you the numbers. The Scorecard tells you what they mean.</p>` +
     `<p class="hero-desc hero-desc--secondary">Every month we publish one issue from the desk. It opens with the Lede, runs through who's at the top, calls out the biggest move, picks through the rest of the field, drops in on who fell, looks ahead with the long game, files a global dispatch from outside the US, and closes with a note signed by Adam and Travis.</p>` +
     `<p class="hero-desc hero-desc--secondary">Eight sections. One issue. Direct to inbox first, then live on the site a couple of days later. If you want it early, the signup is in the footer.</p>` +
     `<p class="hero-desc hero-desc--secondary">Below: every issue we've published, most recent first.</p>`;
+
+  /* Top-stories sidebar — fetch latest 5 articles from Supabase (optional) */
+  let topStoriesHtml = '';
+  {
+    const SB_URL = process.env.SUPABASE_URL;
+    const SB_KEY = process.env.SUPABASE_SERVICE_KEY;
+    if (SB_URL && SB_KEY) {
+      try {
+        const artResp = await fetch(
+          `${SB_URL}/rest/v1/dormied_articles` +
+          `?select=id,title,slug,published_at,image_url` +
+          `&status=eq.published` +
+          `&order=published_at.desc` +
+          `&limit=5`,
+          { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` } }
+        );
+        if (artResp.ok) {
+          const artRows = await artResp.json();
+          if (artRows.length) {
+            const items = artRows.map(a => {
+              const thumb = a.image_url
+                ? `<img class="sc-top-thumb" src="${escHtml(a.image_url)}" alt="" loading="lazy" width="48" height="48">`
+                : '';
+              return (
+                `<a href="/news/${escHtml(a.slug)}/" class="sc-top-story-link">` +
+                  (thumb ? `<div class="sc-top-thumb-wrap">${thumb}</div>` : '') +
+                  `<div class="sc-top-story-body">` +
+                    `<p class="sc-top-story-title">${escHtml(a.title)}</p>` +
+                    `<p class="sc-top-story-meta">${escHtml(formatDate(a.published_at))}</p>` +
+                  `</div>` +
+                `</a>`
+              );
+            }).join('\n');
+            topStoriesHtml = `<h3 class="sc-top-stories-heading">Latest from the Desk</h3>\n${items}`;
+            console.log(`  ✔  Top stories: ${artRows.length} articles fetched for sidebar`);
+          }
+        } else {
+          console.warn(`  ⚠  Top stories fetch failed: ${artResp.status}`);
+        }
+      } catch (e) {
+        console.warn('  ⚠  Could not fetch top stories for sidebar:', e.message);
+      }
+    } else {
+      console.log('  ℹ  SUPABASE_URL/KEY not set — skipping top-stories sidebar');
+    }
+  }
 
   /* Update scorecard/index.html */
   const filePath = path.join(ROOT, 'scorecard/index.html');
@@ -786,6 +855,11 @@ function generateScorecard() {
   /* Inject hero (latest issue) and archive grid (all older issues) */
   html = injectIntoId(html, 'sc-hero', heroHtml);
   html = injectIntoId(html, 'sc-archive-grid', archiveHtml);
+
+  /* Inject top-stories sidebar (optional) */
+  if (topStoriesHtml) {
+    html = injectIntoId(html, 'sc-top-stories', topStoriesHtml);
+  }
 
   /* Restore the "Previous Issues" heading text */
   html = html.replace(
@@ -900,7 +974,7 @@ function updateSitemap(newsPageCount) {
   try {
     if (doBrands)    generateBrands();
     if (doNews)      newsResult = await generateNews();
-    if (doScorecard) generateScorecard();
+    if (doScorecard) await generateScorecard();
 
     if (doAll || doNews) {
       ensureVercelNewsPageRoutes();
