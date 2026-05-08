@@ -2,7 +2,7 @@
   "name": "dormied-website",
   "version": "1.0.0",
   "private": true,
-  "description": "DORMIED — Golf's brand desk. 169 brands. 10 markets. Ranked monthly.",
+  "description": "DORMIED — Golf's brand desk. 175 brands. 10 markets. Ranked monthly.",
   "scripts": {
     "dev": "python3 -m http.server 8080",
     "generate-explanations": "node scripts/generate-explanations.js",

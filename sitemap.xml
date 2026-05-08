@@ -1126,6 +1126,44 @@
 
   <!-- ── News articles (130) ── -->
   <url>
+    <loc>https://dormied.com/news/vice-golf-partners-with-uneekor-for-major-season-giveaway-pu-2026-04-08/</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golf-partners-with-uneekor-for-major-season-giveaway-pu-2026-04-08-hero.png</image:loc>
+      <image:title>Vice Golf Partners With Uneekor for Major Season Giveaway Push</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/pxg-finally-admits-it-needs-big-box-retail-to-survive-2026-04-14/</loc>
+    <lastmod>2026-04-14</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/pxg-finally-admits-it-needs-big-box-retail-to-survive-2026-04-14-hero.jpg</image:loc>
+      <image:title>PXG Finally Admits It Needs Big-Box Retail to Survive</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/travismathew-and-peloton-team-up-to-chase-the-athleisure-cro-2026-04-17/</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/news/srixon-bets-its-iron-reputation-on-a-factory-floor-campaign-2026-04-21/</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>never</changefreq>
@@ -1316,16 +1354,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/vice-golf-partners-with-uneekor-for-major-season-giveaway-pu-2026-04-08/</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golf-partners-with-uneekor-for-major-season-giveaway-pu-2026-04-08-hero.png</image:loc>
-      <image:title>Vice Golf Partners With Uneekor for Major Season Giveaway Push</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/callaways-chrome-tour-major-series-is-a-masterclass-in-selling-golf-balls-2026-05-07/</loc>
     <lastmod>2026-05-07</lastmod>
     <changefreq>never</changefreq>
@@ -1482,12 +1510,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/travismathew-and-peloton-team-up-to-chase-the-athleisure-cro-2026-04-17/</loc>
-    <lastmod>2026-04-17</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://dormied.com/news/three-wins-across-three-tours-in-one-weekend-and-still-nobod-2026-04-21/</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>never</changefreq>
@@ -1496,12 +1518,6 @@
       <image:loc>https://dormied.com/images/articles/three-wins-across-three-tours-in-one-weekend-and-still-nobod-2026-04-21-hero.png</image:loc>
       <image:title>Three Wins Across Three Tours in One Weekend, and Still Nobody Talks About Graphite Design</image:title>
     </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/</loc>
-    <lastmod>2026-04-17</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/bushnell-golfs-app-upgrade-is-a-quiet-admission-that-hardware-alone-wont-2026-04-30/</loc>
@@ -1702,12 +1718,6 @@
       <image:loc>https://dormied.com/images/articles/titleists-quiet-play-becoming-the-authority-on-shaft-fitting-2026-04-23-hero.jpg</image:loc>
       <image:title>Titleist&apos;s Quiet Play: Becoming the Authority on Shaft Fitting Without Selling You a Shaft</image:title>
     </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/</loc>
-    <lastmod>2026-04-17</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/two-club-pros-just-won-a-championship-using-a-launch-monitor-ranked-94th-2026-05-07/</loc>
@@ -2152,16 +2162,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/pxg-finally-admits-it-needs-big-box-retail-to-survive-2026-04-14/</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/pxg-finally-admits-it-needs-big-box-retail-to-survive-2026-04-14-hero.jpg</image:loc>
-      <image:title>PXG Finally Admits It Needs Big-Box Retail to Survive</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/titleist-nearly-killed-its-best-golf-ball-heres-why-they-wal-2026-04-23/</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>never</changefreq>
@@ -2410,7 +2410,7 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://dormied.com/news/page/2/</loc>
+    <loc>https://dormied.com/news/page/4/</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -2422,7 +2422,7 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://dormied.com/news/page/4/</loc>
+    <loc>https://dormied.com/news/page/2/</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>

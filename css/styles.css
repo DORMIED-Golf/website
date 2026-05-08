@@ -4518,6 +4518,13 @@ details[open] .faq-question::after { content: '−'; }
 }
 .sc-crosslink:hover { color: var(--green); text-decoration: none; }
 
+/* ── Scorecard listing — methodology divider ─────────────────────────────── */
+.sc-methodology-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 40px 0 32px;
+}
+
 /* ── Scorecard listing — methodology intro body ───────────────────────────── */
 .scorecard-intro-body {
   padding: 24px 0 32px;

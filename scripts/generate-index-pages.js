@@ -784,58 +784,9 @@ async function generateScorecard() {
     );
   }).join('\n');
 
-  /* Intro copy (short version for hero section) */
+  /* Intro copy — single sentence for hero section; methodology lives in static HTML below issues */
   const scorecardIntroParagraphs =
-    `<p class="hero-desc">The Index gives you the numbers. The Scorecard tells you what they mean.</p>` +
-    `<p class="hero-desc hero-desc--secondary">Every month we publish one issue from the desk. It opens with the Lede, runs through who's at the top, calls out the biggest move, picks through the rest of the field, drops in on who fell, looks ahead with the long game, files a global dispatch from outside the US, and closes with a note signed by Adam and Travis.</p>` +
-    `<p class="hero-desc hero-desc--secondary">Eight sections. One issue. Direct to inbox first, then live on the site a couple of days later. If you want it early, the signup is in the footer.</p>` +
-    `<p class="hero-desc hero-desc--secondary">Below: every issue we've published, most recent first.</p>`;
-
-  /* Top-stories sidebar — fetch latest 5 articles from Supabase (optional) */
-  let topStoriesHtml = '';
-  {
-    const SB_URL = process.env.SUPABASE_URL;
-    const SB_KEY = process.env.SUPABASE_SERVICE_KEY;
-    if (SB_URL && SB_KEY) {
-      try {
-        const artResp = await fetch(
-          `${SB_URL}/rest/v1/dormied_articles` +
-          `?select=id,title,slug,published_at,image_url` +
-          `&status=eq.published` +
-          `&order=published_at.desc` +
-          `&limit=5`,
-          { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` } }
-        );
-        if (artResp.ok) {
-          const artRows = await artResp.json();
-          if (artRows.length) {
-            const items = artRows.map(a => {
-              const thumb = a.image_url
-                ? `<img class="sc-top-thumb" src="${escHtml(a.image_url)}" alt="" loading="lazy" width="48" height="48">`
-                : '';
-              return (
-                `<a href="/news/${escHtml(a.slug)}/" class="sc-top-story-link">` +
-                  (thumb ? `<div class="sc-top-thumb-wrap">${thumb}</div>` : '') +
-                  `<div class="sc-top-story-body">` +
-                    `<p class="sc-top-story-title">${escHtml(a.title)}</p>` +
-                    `<p class="sc-top-story-meta">${escHtml(formatDate(a.published_at))}</p>` +
-                  `</div>` +
-                `</a>`
-              );
-            }).join('\n');
-            topStoriesHtml = `<h3 class="sc-top-stories-heading">Latest from the Desk</h3>\n${items}`;
-            console.log(`  ✔  Top stories: ${artRows.length} articles fetched for sidebar`);
-          }
-        } else {
-          console.warn(`  ⚠  Top stories fetch failed: ${artResp.status}`);
-        }
-      } catch (e) {
-        console.warn('  ⚠  Could not fetch top stories for sidebar:', e.message);
-      }
-    } else {
-      console.log('  ℹ  SUPABASE_URL/KEY not set — skipping top-stories sidebar');
-    }
-  }
+    `<p class="hero-desc">Monthly editorial from golf&#x2019;s brand desk. The DORMIED Index gives you the numbers. The Scorecard tells you what they mean.</p>`;
 
   /* Update scorecard/index.html */
   const filePath = path.join(ROOT, 'scorecard/index.html');
@@ -855,11 +806,6 @@ async function generateScorecard() {
   /* Inject hero (latest issue) and archive grid (all older issues) */
   html = injectIntoId(html, 'sc-hero', heroHtml);
   html = injectIntoId(html, 'sc-archive-grid', archiveHtml);
-
-  /* Inject top-stories sidebar (optional) */
-  if (topStoriesHtml) {
-    html = injectIntoId(html, 'sc-top-stories', topStoriesHtml);
-  }
 
   /* Restore the "Previous Issues" heading text */
   html = html.replace(
