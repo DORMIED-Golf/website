@@ -2475,6 +2475,16 @@ details[open] .faq-question::after { content: '−'; }
 .feed-brand-tag--flat  { color: #4d6b4d; border-color: rgba(77, 107, 77, .35); background: rgba(77, 107, 77, .08); }
 .feed-brand-tag--flat:hover { background: rgba(77, 107, 77, .18); }
 .feed-tag-pct          { opacity: .85; margin-left: 1px; }
+.feed-brand-tag-overflow {
+  display: inline-flex;
+  align-items: center;
+  padding: .2rem .4rem;
+  font-size: .6rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  white-space: nowrap;
+  vertical-align: middle;
+}
 
 /* ── Feed cards inside narrow sidebar column (desktop only) ─────────────────── */
 /* At 1200px+ the sidebar is 180px; horizontal cards leave ~70px for text.       */

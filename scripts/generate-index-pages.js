@@ -497,7 +497,7 @@ async function generateNews() {
 
   /* Fetch all published articles from Supabase */
   const apiUrl = `${SUPABASE_URL}/rest/v1/dormied_articles` +
-    `?select=id,brand_slug,title,body,meta_description,image_url,slug,category,published_at,author` +
+    `?select=id,brand_slug,secondary_brand_slugs,title,body,meta_description,image_url,slug,category,published_at,author` +
     `&status=eq.published` +
     `&order=published_at.desc` +
     `&limit=200`;
@@ -522,17 +522,18 @@ async function generateNews() {
   }
 
   const articles = rows.map(a => ({
-    id:          a.id,
-    title:       a.title,
-    url:         `/news/${a.slug}/`,
-    author:      a.author || authorFromCat(a.category),
-    pubDate:     a.published_at,
-    body:        a.body || '',
-    description: a.meta_description || '',
-    imageUrl:    a.image_url || null,
-    brandSlug:   a.brand_slug || '',
-    category:    a.category || '',
-    slug:        a.slug,
+    id:                  a.id,
+    title:               a.title,
+    url:                 `/news/${a.slug}/`,
+    author:              a.author || authorFromCat(a.category),
+    pubDate:             a.published_at,
+    body:                a.body || '',
+    description:         a.meta_description || '',
+    imageUrl:            a.image_url || null,
+    brandSlug:           a.brand_slug || '',
+    secondaryBrandSlugs: a.secondary_brand_slugs || [],
+    category:            a.category || '',
+    slug:                a.slug,
   }));
 
   console.log(`  Fetched ${articles.length} articles from Supabase`);
@@ -551,14 +552,25 @@ async function generateNews() {
     if (descPlain.length > 180) excerpt = excerpt.replace(/\s\S+$/, '') + '…';
     const excerptHtml = excerpt ? `<p class="feed-card-excerpt">${escHtml(excerpt)}</p>` : '';
 
-    const bname  = brandMap[article.brandSlug] || '';
-    const change = brandChangeMap[article.brandSlug] || null;
-    const tagCls = 'feed-brand-tag' + (change ? ' ' + change.cls : '');
-    const pctHtml = change
-      ? ` <span class="feed-tag-pct">${escHtml(change.pct)}</span>`
+    const MAX_CHIPS = 3;
+    const allSlugs = [article.brandSlug, ...(article.secondaryBrandSlugs || [])].filter(Boolean);
+    const visibleSlugs = allSlugs.slice(0, MAX_CHIPS);
+    const overflowCount = Math.max(0, allSlugs.length - MAX_CHIPS);
+    const chipsHtml = visibleSlugs.map(slug => {
+      const bname  = brandMap[slug];
+      if (!bname) return '';
+      const change = brandChangeMap[slug] || null;
+      const tagCls = 'feed-brand-tag' + (change ? ' ' + change.cls : '');
+      const pctHtml = change
+        ? ` <span class="feed-tag-pct">${escHtml(change.pct)}</span>`
+        : '';
+      return `<a href="/brands/${escHtml(slug)}/" class="${tagCls}">${escHtml(bname)}${pctHtml}</a>`;
+    }).filter(Boolean).join('');
+    const overflowHtml = overflowCount > 0
+      ? `<span class="feed-brand-tag-overflow">+${overflowCount} more</span>`
       : '';
-    const tagsHtml = article.brandSlug && bname
-      ? `<div class="feed-card-tags"><a href="/brands/${escHtml(article.brandSlug)}/" class="${tagCls}">${escHtml(bname)}${pctHtml}</a></div>`
+    const tagsHtml = chipsHtml
+      ? `<div class="feed-card-tags">${chipsHtml}${overflowHtml}</div>`
       : '';
 
     return (

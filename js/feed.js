@@ -100,7 +100,10 @@
 
     var tags = '';
     if (showBrandTags && article.brandIds && article.brandIds.length) {
-      var chips = article.brandIds.map(function (bid) {
+      var MAX_CHIPS = 3;
+      var visibleIds = article.brandIds.slice(0, MAX_CHIPS);
+      var overflowCount = Math.max(0, article.brandIds.length - MAX_CHIPS);
+      var chips = visibleIds.map(function (bid) {
         var bname = brandName(bid, allBrands);
         if (!bname) return '';
         var change  = getBrandChange(bid);
@@ -111,7 +114,10 @@
         return '<a href="/brands/' + escHtml(bid) + '/" class="' + cls + '">' +
                escHtml(bname) + pctHtml + '</a>';
       }).filter(Boolean).join('');
-      if (chips) tags = '<div class="feed-card-tags">' + chips + '</div>';
+      var overflowHtml = overflowCount > 0
+        ? '<span class="feed-brand-tag-overflow">+' + overflowCount + ' more</span>'
+        : '';
+      if (chips) tags = '<div class="feed-card-tags">' + chips + overflowHtml + '</div>';
     }
 
     // All articles are DORMIED originals — always internal links
@@ -158,7 +164,10 @@
 
     var tags = '';
     if (article.brandIds && article.brandIds.length) {
-      var chips = article.brandIds.map(function (bid) {
+      var MAX_CHIPS2 = 3;
+      var visibleIds2 = article.brandIds.slice(0, MAX_CHIPS2);
+      var overflowCount2 = Math.max(0, article.brandIds.length - MAX_CHIPS2);
+      var chips = visibleIds2.map(function (bid) {
         var bname = brandName(bid, allBrands);
         if (!bname) return '';
         var change  = getBrandChange(bid);
@@ -169,7 +178,10 @@
         return '<a href="/brands/' + escHtml(bid) + '/" class="' + cls + '">' +
                escHtml(bname) + pctHtml + '</a>';
       }).filter(Boolean).join('');
-      if (chips) tags = '<div class="feed-card-tags">' + chips + '</div>';
+      var overflowHtml2 = overflowCount2 > 0
+        ? '<span class="feed-brand-tag-overflow">+' + overflowCount2 + ' more</span>'
+        : '';
+      if (chips) tags = '<div class="feed-card-tags">' + chips + overflowHtml2 + '</div>';
     }
 
     // All articles are DORMIED originals — always internal links
@@ -203,7 +215,7 @@
   /* ── Fetch DORMIED originals from Supabase (public anon read) ──────────── */
   function fetchDormiedArticles(brandSlug, limit, cb) {
     var url = SB_URL + '/rest/v1/dormied_articles' +
-      '?select=id,brand_slug,title,meta_description,image_url,slug,category,published_at,author' +
+      '?select=id,brand_slug,secondary_brand_slugs,title,meta_description,image_url,slug,category,published_at,author' +
       '&status=eq.published' +
       '&order=published_at.desc' +
       (brandSlug ? '&brand_slug=eq.' + encodeURIComponent(brandSlug) : '') +
@@ -226,7 +238,7 @@
           pubDate:     a.published_at,
           description: a.meta_description || '',
           imageUrl:    a.image_url || null,
-          brandIds:    [a.brand_slug],
+          brandIds:    [a.brand_slug].concat(a.secondary_brand_slugs || []).filter(Boolean),
           isDormied:   true,
           category:    a.category || '',
           slug:        a.slug,

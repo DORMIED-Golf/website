@@ -573,9 +573,9 @@ function generateArticleHtml(opts) {
   const bMom   = bInfo ? bInfo.momStr : '—';
   const bT3m   = bInfo ? fmtPct(bInfo.t3m) : '—';
   const bT12m  = bInfo ? fmtPct(bInfo.t12m) : '—';
-  const bMomCls  = bInfo && bInfo.momPct  !== null ? ` class="${pctClass(bInfo.momPct)}"` : '';
-  const bT3mCls  = bInfo && bInfo.t3m     !== null ? ` class="${pctClass(bInfo.t3m)}"` : '';
-  const bT12mCls = bInfo && bInfo.t12m    !== null ? ` class="${pctClass(bInfo.t12m)}"` : '';
+  const bMomCls  = bInfo && bInfo.momPct  !== null ? ` ${pctClass(bInfo.momPct)}` : '';
+  const bT3mCls  = bInfo && bInfo.t3m     !== null ? ` ${pctClass(bInfo.t3m)}` : '';
+  const bT12mCls = bInfo && bInfo.t12m    !== null ? ` ${pctClass(bInfo.t12m)}` : '';
 
   // Compute metrics for secondary brand widgets (if any)
   const secondaryBrandWidgets = secondaryBrands.map(sb => {
@@ -585,9 +585,9 @@ function generateArticleHtml(opts) {
     const sbMom     = sbInfo ? sbInfo.momStr : '—';
     const sbT3m     = sbInfo ? fmtPct(sbInfo.t3m) : '—';
     const sbT12m    = sbInfo ? fmtPct(sbInfo.t12m) : '—';
-    const sbMomCls  = sbInfo && sbInfo.momPct !== null ? ` class="${pctClass(sbInfo.momPct)}"` : '';
-    const sbT3mCls  = sbInfo && sbInfo.t3m    !== null ? ` class="${pctClass(sbInfo.t3m)}"` : '';
-    const sbT12mCls = sbInfo && sbInfo.t12m   !== null ? ` class="${pctClass(sbInfo.t12m)}"` : '';
+    const sbMomCls  = sbInfo && sbInfo.momPct !== null ? ` ${pctClass(sbInfo.momPct)}` : '';
+    const sbT3mCls  = sbInfo && sbInfo.t3m    !== null ? ` ${pctClass(sbInfo.t3m)}` : '';
+    const sbT12mCls = sbInfo && sbInfo.t12m   !== null ? ` ${pctClass(sbInfo.t12m)}` : '';
     const sbInitials = sb.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
     const sbLogoFallback = `<span class=&quot;bp-logo-initials&quot; style=&quot;background:#1a2a1a;width:40px;height:40px;font-size:0.9rem&quot;>${escHtml(sbInitials)}</span>`;
     const sbLogoHtml = sb.logo
@@ -608,9 +608,9 @@ function generateArticleHtml(opts) {
                 <div class="da-brand-card-stats">
                   <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">${sbRank}</span></div>
                   <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">${sbDi}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val"${sbMomCls}>${sbMom}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val"${sbT3mCls}>${sbT3m}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val"${sbT12mCls}>${sbT12m}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val${sbMomCls}">${sbMom}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val${sbT3mCls}">${sbT3m}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val${sbT12mCls}">${sbT12m}</span></div>
                 </div>
               </div>
             </div>`;
@@ -830,9 +830,9 @@ function generateArticleHtml(opts) {
                 <div class="da-brand-card-stats">
                   <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">${bRank}</span></div>
                   <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">${bDi}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val"${bMomCls}>${bMom}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val"${bT3mCls}>${bT3m}</span></div>
-                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val"${bT12mCls}>${bT12m}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val${bMomCls}">${bMom}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val${bT3mCls}">${bT3m}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val${bT12mCls}">${bT12m}</span></div>
                 </div>
               </div>
             </div>
@@ -1046,8 +1046,17 @@ async function main() {
       const bLogo    = brand.logo || '';
       const author   = row.author || authorFromCategory(row.category);
       const srcName  = row.source_name || getSourceName(row.source_url || '');
-      const bHtml    = bodyToHtml(row.body, bSlug, bName);
       const rTime    = estimateReadTime(row.body);
+
+      // Rebuild secondary brands from stored slugs
+      const secondarySlugs = (row.secondary_brand_slugs || []).filter(Boolean);
+      const secondaryBrands = secondarySlugs
+        .map(s => {
+          const b = brandsMap.get(s);
+          return b ? { slug: s, name: b.name, logo: b.logo || '' } : null;
+        })
+        .filter(Boolean);
+      const bHtml = bodyToHtml(row.body, bSlug, bName, secondaryBrands);
 
       const html = generateArticleHtml({
         title:           row.title,
@@ -1069,6 +1078,7 @@ async function main() {
         readTime:        rTime,
         author,
         dormiedData,
+        secondaryBrands,
       });
 
       fs.mkdirSync(path.join(SITE_ROOT, 'news', row.slug), { recursive: true });
