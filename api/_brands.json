@@ -13,11 +13,17 @@
   },
   {
     "id": "adams-golf",
-    "name": "Adams Golf"
+    "name": "Adams Golf",
+    "matchTerms": [
+      "Adams"
+    ]
   },
   {
     "id": "adidas-golf",
-    "name": "Adidas Golf"
+    "name": "Adidas Golf",
+    "matchTerms": [
+      "Adidas"
+    ]
   },
   {
     "id": "aldila",
@@ -48,7 +54,10 @@
   },
   {
     "id": "ben-hogan-golf",
-    "name": "Ben Hogan Golf"
+    "name": "Ben Hogan Golf",
+    "matchTerms": [
+      "Ben Hogan"
+    ]
   },
   {
     "id": "bettinardi",
@@ -72,7 +81,10 @@
   },
   {
     "id": "bonobos-golf",
-    "name": "Bonobos Golf"
+    "name": "Bonobos Golf",
+    "matchTerms": [
+      "Bonobos"
+    ]
   },
   {
     "id": "breezy-golf",
@@ -80,7 +92,10 @@
   },
   {
     "id": "bridgestone-golf",
-    "name": "Bridgestone Golf"
+    "name": "Bridgestone Golf",
+    "matchTerms": [
+      "Bridgestone"
+    ]
   },
   {
     "id": "bushnell-golf",
@@ -103,7 +118,10 @@
   },
   {
     "id": "cleveland-golf",
-    "name": "Cleveland Golf"
+    "name": "Cleveland Golf",
+    "matchTerms": [
+      "Cleveland"
+    ]
   },
   {
     "id": "clicgear",
@@ -136,7 +154,10 @@
   },
   {
     "id": "devereux-golf",
-    "name": "Devereux Golf"
+    "name": "Devereux Golf",
+    "matchTerms": [
+      "Devereux"
+    ]
   },
   {
     "id": "eastside-golf",
@@ -252,7 +273,10 @@
   },
   {
     "id": "haywood-golf",
-    "name": "Haywood Golf"
+    "name": "Haywood Golf",
+    "matchTerms": [
+      "Haywood"
+    ]
   },
   {
     "id": "holderness-bourne",
@@ -292,7 +316,10 @@
   },
   {
     "id": "kadet-golf",
-    "name": "Kadet Golf"
+    "name": "Kadet Golf",
+    "matchTerms": [
+      "Kadet"
+    ]
   },
   {
     "id": "kastel-denmark",
@@ -311,11 +338,17 @@
     "aliases": [
       "Kirkland Signature",
       "Kirkland ball"
+    ],
+    "matchTerms": [
+      "Kirkland"
     ]
   },
   {
     "id": "krank-golf",
-    "name": "Krank Golf"
+    "name": "Krank Golf",
+    "matchTerms": [
+      "Krank"
+    ]
   },
   {
     "id": "l-a-b-golf",
@@ -324,6 +357,9 @@
       "LAB Golf",
       "L.A.B Golf",
       "LAB Putter"
+    ],
+    "matchTerms": [
+      "L.A.B."
     ]
   },
   {
@@ -344,7 +380,10 @@
   },
   {
     "id": "lululemon-golf",
-    "name": "Lululemon Golf"
+    "name": "Lululemon Golf",
+    "matchTerms": [
+      "Lululemon"
+    ]
   },
   {
     "id": "macade-golf",
@@ -416,8 +455,16 @@
   {
     "id": "nike-golf",
     "name": "Nike Golf",
-    "aliases": ["Nike"],
-    "matchTerms": ["Nike Pegasus", "Nike Air Max golf", "Nike Roshe golf", "Nike golf shoe", "Nike golf ball"]
+    "aliases": [
+      "Nike"
+    ],
+    "matchTerms": [
+      "Nike Pegasus",
+      "Nike Air Max golf",
+      "Nike Roshe golf",
+      "Nike golf shoe",
+      "Nike golf ball"
+    ]
   },
   {
     "id": "odyssey-golf",
@@ -457,7 +504,11 @@
     "id": "pinnacle",
     "name": "Pinnacle",
     "autoMatch": false,
-    "matchTerms": ["Pinnacle golf", "Pinnacle ball", "Pinnacle Gold"]
+    "matchTerms": [
+      "Pinnacle golf",
+      "Pinnacle ball",
+      "Pinnacle Gold"
+    ]
   },
   {
     "id": "pins-and-aces",
@@ -491,7 +542,10 @@
   },
   {
     "id": "puma-golf",
-    "name": "Puma Golf"
+    "name": "Puma Golf",
+    "matchTerms": [
+      "Puma"
+    ]
   },
   {
     "id": "puttout",
@@ -530,7 +584,10 @@
   },
   {
     "id": "rlx-golf",
-    "name": "RLX Golf"
+    "name": "RLX Golf",
+    "matchTerms": [
+      "RLX"
+    ]
   },
   {
     "id": "rohnisch",
@@ -545,7 +602,10 @@
   },
   {
     "id": "seamus-golf",
-    "name": "Seamus Golf"
+    "name": "Seamus Golf",
+    "matchTerms": [
+      "Seamus"
+    ]
   },
   {
     "id": "shot-scope",
@@ -636,7 +696,10 @@
   },
   {
     "id": "takomo-golf",
-    "name": "Takomo Golf"
+    "name": "Takomo Golf",
+    "matchTerms": [
+      "Takomo"
+    ]
   },
   {
     "id": "taylormade",
@@ -706,6 +769,9 @@
     "name": "Under Armour Golf",
     "aliases": [
       "Under Armour Golf"
+    ],
+    "matchTerms": [
+      "Under Armour"
     ]
   },
   {
@@ -714,7 +780,10 @@
   },
   {
     "id": "vice-golf",
-    "name": "Vice Golf"
+    "name": "Vice Golf",
+    "matchTerms": [
+      "Vice"
+    ]
   },
   {
     "id": "voice-caddie",
@@ -733,7 +802,10 @@
   },
   {
     "id": "william-murray-golf",
-    "name": "William Murray Golf"
+    "name": "William Murray Golf",
+    "matchTerms": [
+      "William Murray"
+    ]
   },
   {
     "id": "williams-athletic-club",
@@ -759,12 +831,21 @@
   {
     "id": "accra",
     "name": "ACCRA",
-    "matchTerms": ["ACCRA shaft", "ACCRA shafts", "ACCRA Golf", "ACCRA graphite"]
+    "matchTerms": [
+      "ACCRA shaft",
+      "ACCRA shafts",
+      "ACCRA Golf",
+      "ACCRA graphite"
+    ]
   },
   {
     "id": "aerotech",
     "name": "Aerotech",
-    "aliases": ["SteelFiber", "Aerotech Golf", "Aerotech shaft"]
+    "aliases": [
+      "SteelFiber",
+      "Aerotech Golf",
+      "Aerotech shaft"
+    ]
   },
   {
     "id": "aretera",
@@ -773,42 +854,75 @@
   {
     "id": "autoflex",
     "name": "AutoFlex",
-    "aliases": ["Auto Flex shaft", "AutoFlex shaft"]
+    "aliases": [
+      "Auto Flex shaft",
+      "AutoFlex shaft"
+    ]
   },
   {
     "id": "bgt",
     "name": "BGT",
-    "matchTerms": ["BGT shaft", "BGT putter shaft", "Breakthrough Golf Technology", "BGT Stability"]
+    "matchTerms": [
+      "BGT shaft",
+      "BGT putter shaft",
+      "Breakthrough Golf Technology",
+      "BGT Stability"
+    ]
   },
   {
     "id": "donald-ross",
     "name": "Donald Ross Sportswear",
-    "matchTerms": ["Donald Ross Sportswear", "Donald Ross Collection", "Donald Ross apparel", "Donald Ross golf clothing"]
+    "matchTerms": [
+      "Donald Ross Sportswear",
+      "Donald Ross Collection",
+      "Donald Ross apparel",
+      "Donald Ross golf clothing"
+    ]
   },
   {
     "id": "dormie-workshop",
     "name": "Dormie Workshop",
-    "aliases": ["Dormie Workshop headcover"]
+    "aliases": [
+      "Dormie Workshop headcover"
+    ]
   },
   {
     "id": "fairway-and-greene",
     "name": "Fairway & Greene",
-    "matchTerms": ["Fairway & Greene", "Fairway and Greene", "Fairway &amp; Greene"]
+    "matchTerms": [
+      "Fairway & Greene",
+      "Fairway and Greene",
+      "Fairway &amp; Greene"
+    ]
   },
   {
     "id": "freeflex",
     "name": "FreeFlex",
-    "aliases": ["Free Flex shaft", "FreeFlex shaft"]
+    "aliases": [
+      "Free Flex shaft",
+      "FreeFlex shaft"
+    ]
   },
   {
     "id": "graphite-design",
     "name": "Graphite Design",
-    "matchTerms": ["Graphite Design shaft", "Graphite Design shafts", "Tour AD shaft", "Tour AD shafts", "GD shaft"]
+    "matchTerms": [
+      "Graphite Design shaft",
+      "Graphite Design shafts",
+      "Tour AD shaft",
+      "Tour AD shafts",
+      "GD shaft"
+    ]
   },
   {
     "id": "greg-norman-collection",
     "name": "Greg Norman Collection",
-    "matchTerms": ["Greg Norman Collection", "Norman Collection golf", "Greg Norman apparel", "Greg Norman clothing"]
+    "matchTerms": [
+      "Greg Norman Collection",
+      "Norman Collection golf",
+      "Greg Norman apparel",
+      "Greg Norman clothing"
+    ]
   },
   {
     "id": "khalhon",
@@ -817,66 +931,122 @@
   {
     "id": "kjus",
     "name": "KJUS",
-    "aliases": ["KJUS Golf", "KJUS apparel"]
+    "aliases": [
+      "KJUS Golf",
+      "KJUS apparel"
+    ]
   },
   {
     "id": "new-level-golf",
     "name": "New Level Golf",
-    "aliases": ["New Level irons", "New Level Golf irons"]
+    "aliases": [
+      "New Level irons",
+      "New Level Golf irons"
+    ]
   },
   {
     "id": "newton-golf",
     "name": "Newton Golf",
-    "aliases": ["Newton shaft", "Newton shafts", "Newton putter shaft"]
+    "aliases": [
+      "Newton shaft",
+      "Newton shafts",
+      "Newton putter shaft"
+    ]
   },
   {
     "id": "nippon-shaft",
     "name": "Nippon Shaft",
-    "aliases": ["Nippon shafts", "NS Pro shaft", "NS Pro"]
+    "aliases": [
+      "Nippon shafts",
+      "NS Pro shaft",
+      "NS Pro"
+    ]
   },
   {
     "id": "oban",
     "name": "Oban",
-    "matchTerms": ["Oban shaft", "Oban shafts", "Oban Golf", "Oban graphite"]
+    "matchTerms": [
+      "Oban shaft",
+      "Oban shafts",
+      "Oban Golf",
+      "Oban graphite"
+    ]
   },
   {
     "id": "palm-golf-co",
     "name": "Palm Golf Co.",
-    "aliases": ["Palm Golf", "Palm Golf Co"]
+    "aliases": [
+      "Palm Golf",
+      "Palm Golf Co"
+    ]
   },
   {
     "id": "payntr-golf",
     "name": "Payntr Golf",
-    "aliases": ["PAYNTR", "Payntr shoes", "Payntr footwear"]
+    "aliases": [
+      "PAYNTR",
+      "Payntr shoes",
+      "Payntr footwear"
+    ]
   },
   {
     "id": "rhone",
     "name": "Rhone",
-    "matchTerms": ["Rhone Golf", "Rhone apparel", "Rhone golf apparel", "Rhone LPGA"]
+    "matchTerms": [
+      "Rhone Golf",
+      "Rhone apparel",
+      "Rhone golf apparel",
+      "Rhone LPGA"
+    ]
   },
   {
     "id": "stix-golf",
     "name": "Stix Golf",
-    "aliases": ["Stix clubs", "Stix golf clubs"]
+    "aliases": [
+      "Stix clubs",
+      "Stix golf clubs"
+    ],
+    "matchTerms": [
+      "Stix"
+    ]
   },
   {
     "id": "tpt-golf",
     "name": "TPT Golf",
-    "matchTerms": ["TPT Golf", "TPT shaft", "TPT shafts", "TPT carbon shaft"]
+    "matchTerms": [
+      "TPT Golf",
+      "TPT shaft",
+      "TPT shafts",
+      "TPT carbon shaft",
+      "TPT"
+    ]
   },
   {
     "id": "unrl",
     "name": "UNRL",
-    "aliases": ["UNRL Golf", "UNRL apparel"]
+    "aliases": [
+      "UNRL Golf",
+      "UNRL apparel"
+    ]
   },
   {
     "id": "ust-mamiya",
     "name": "UST Mamiya",
-    "aliases": ["UST shaft", "UST shafts", "Mamiya shaft", "UST Helium", "UST Recoil"]
+    "aliases": [
+      "UST shaft",
+      "UST shafts",
+      "Mamiya shaft",
+      "UST Helium",
+      "UST Recoil"
+    ]
   },
   {
     "id": "va-composites",
     "name": "VA Composites",
-    "aliases": ["VA shaft", "VA shafts", "Victor Afable shaft"]
+    "aliases": [
+      "VA shaft",
+      "VA shafts",
+      "Victor Afable shaft"
+    ]
   }
 ]
