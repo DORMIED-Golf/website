@@ -419,6 +419,25 @@ What you do NOT do:
 - Do not pretend to be neutral when you're not. If a drop is bad, say so. If it's a vanity exercise, say so.
 - Do not open with "I think", "in my view", or any first-person framing. Stay in observational third-person.
 
+Opening the article — pick the approach that best fits this specific story. Do not default to the same pattern every time.
+
+Lede option 1 — The cultural observation:
+Open with a one-sentence observation about how this brand move reads in the broader cultural moment. Examples:
+"Athleisure brands have spent the last five years trying to look like Lululemon. TravisMathew is finally one of them."
+"When a country club apparel brand starts referencing Hypebeast in its press releases, you know the audience has shifted."
+
+Lede option 2 — The quiet flex:
+Open by surfacing a small detail in the news that says more than the headline. Examples:
+"Five tour caddies wore the same brand at Augusta last week. None of the players did."
+"$1,759 is what TravisMathew is asking for a single drop. The interesting number is the second one — they sold out in eight minutes."
+
+Lede option 3 — The audience question:
+Open by raising the implicit question the announcement creates. Examples:
+"Sun Day Red just launched a women's line. The question is whether the brand has a women's customer yet."
+"Penfold returns to American golf after 40 years. The brand that left in 1985 wasn't selling premium bags."
+
+Whichever lede approach you choose, the second paragraph must return to the actual news. The lede earns its place by framing the news, not by replacing it.
+
 Examples of Adam voice (fragments — not full articles):
 Lede: "TravisMathew's Guinness drop reads like the brand looked at Malbon's collab calendar and decided to do the same thing harder."
 Comparison: "If Holderness and Bourne is the Cadillac of country club apparel, Arnie McNair is the unmarked van that pulls up at midnight to hand-deliver one shirt at a time."
@@ -445,6 +464,30 @@ What you do NOT do:
 - Do not show off historical knowledge for its own sake — the parallel only goes in if it earns its place
 - Do not pretend to be neutral when you're not. If a launch is incremental, say so.
 - Do not open with "I think", "in my view", or any first-person framing. Stay in observational third-person.
+
+Opening the article — pick the approach that best fits this specific story. Do not default to the same pattern every time.
+
+Lede option 1 — The historical anchor:
+Open with a comparison or precedent that frames the current move. Examples:
+"The last time a major OEM tried to push DTC at this scale, Callaway lost five years of shelf voice. PXG is making the same bet now."
+"The original Big Bertha launched in 1991 and reshaped the industry. Callaway's Chrome Tour Major Series is operating from the same playbook, with smaller stakes."
+
+Lede option 2 — The data observation:
+Open with a specific data point — testing result, search trend, WITB count, market share — that frames the news. Examples:
+"Four of the ten best short-game players on tour still carry Vokey wedges that came out in 2018. That data point should matter to anyone building a wedge brand."
+"The Qi4D ranks fourth in slow-swing distance testing. For TaylorMade, that might be the design target, not the failure."
+
+Lede option 3 — The structural observation:
+Open by surfacing a structural truth about the industry that the news reveals. Examples:
+"Equipment companies don't hire 35-year industry veterans to run aftermarket sales when things are going well. UST Mamiya's hire is a tell."
+"When a brand spends six figures on Times Square instead of a tour pro endorsement, it's admitting something about the audience it can no longer reach through golf-only channels."
+
+Lede option 4 — The technical detail:
+Open by zooming in on a specific engineering, material, or manufacturing detail that anchors the story. Examples:
+"303 stainless steel mills at a slower rate than the 1025 carbon steel most premium putters use. Toulon Golf is betting that the difference matters to enough buyers."
+"A 5X forging process on 8620 steel costs more per club to manufacture and produces a denser grain structure than any cast iron in the lineup. PXG is betting that fact changes minds."
+
+Whichever lede approach you choose, the second paragraph must return to the actual news. The lede earns its place by framing the news, not by replacing it.
 
 Examples of Travis voice (fragments — not full articles):
 Lede: "The Cleveland Golf rewards app is the second-most-tested customer-loyalty mechanism in golf in the last five years, and the first one that came with a measurable conversion target."
@@ -997,6 +1040,112 @@ async function main() {
   const forceArg = process.argv.find(a => a.startsWith('--force-id='));
   const FORCE_IDS = forceArg ? new Set(forceArg.replace('--force-id=','').split(',')) : new Set();
 
+  // ── --regenerate-all: fix category metadata + regenerate all article HTML ──
+  // Metadata-only: no Opus calls. Body, title, x_post stay identical.
+  // Updates dormied_articles.category from brand subCategories, rewrites HTML byline.
+  if (process.argv.includes('--regenerate-all')) {
+    console.log('[generate] --regenerate-all mode: updating categories + regenerating HTML');
+
+    // Build brand map from dormiedData (available at this point in main())
+    const regenBrandsMap = new Map((dormiedData.brands || []).map(b => [b.id, b]));
+
+    const { data: allRows, error: allErr } = await supabase
+      .from('dormied_articles')
+      .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author')
+      .order('published_at', { ascending: false });
+
+    if (allErr) {
+      console.error('[generate] Failed to fetch articles:', allErr.message);
+      process.exit(1);
+    }
+
+    let regen = 0; let skipped = 0;
+    for (const row of allRows || []) {
+      if (!row.slug || !row.body) { skipped++; continue; }
+
+      const bSlug  = row.brand_slug || '';
+      const brand  = regenBrandsMap.get(bSlug) || {};
+      const bName  = brand.name || bSlug;
+      const bLogo  = brand.logo || '';
+      const correctCategory = (brand.subCategories || [])[0] || brand.category || row.category || 'News';
+      const author = row.author || authorFromCategory(brand.category || row.category);
+
+      // Update DB record if category differs
+      if (row.category !== correctCategory) {
+        const { error: updErr } = await supabase
+          .from('dormied_articles')
+          .update({ category: correctCategory })
+          .eq('slug', row.slug);
+        if (updErr) {
+          console.warn(`[generate] DB update failed for "${row.slug}": ${updErr.message}`);
+        } else {
+          console.log(`[generate] DB category fixed: ${row.slug}  ${row.category || '(empty)'} → ${correctCategory}`);
+        }
+      }
+
+      // Regenerate HTML with corrected category
+      const articlePath = path.join(SITE_ROOT, 'news', row.slug, 'index.html');
+      try {
+        const srcName = row.source_name || getSourceName(row.source_url || '');
+        const rTime   = estimateReadTime(row.body);
+        const secondarySlugs = (row.secondary_brand_slugs || []).filter(Boolean);
+        const secondaryBrands = secondarySlugs
+          .map(s => { const b = regenBrandsMap.get(s); return b ? { slug: s, name: b.name, logo: b.logo || '' } : null; })
+          .filter(Boolean);
+        const bHtml = bodyToHtml(row.body, bSlug, bName, secondaryBrands);
+
+        const html = generateArticleHtml({
+          title:            row.title,
+          bodyHtml:         bHtml,
+          imageUrl:         row.image_url || '',
+          ogImageUrl:       row.image_url || 'https://dormied.com/images/og-image.jpg',
+          imageAlt:         `${bName} — ${correctCategory}`,
+          slug:             row.slug,
+          category:         correctCategory,
+          published_at:     row.published_at,
+          source_url:       row.source_url || '',
+          source_name:      srcName,
+          meta_description: row.meta_description || '',
+          seo_keywords:     row.seo_keywords || [],
+          brandSlug:        bSlug,
+          brandName:        bName,
+          brandLogo:        bLogo,
+          dataVersion:      (dormiedData.meta.lastUpdated || '').replace(/-/g, ''),
+          readTime:         rTime,
+          author,
+          dormiedData,
+          secondaryBrands,
+        });
+
+        fs.mkdirSync(path.dirname(articlePath), { recursive: true });
+        fs.writeFileSync(articlePath, html, 'utf8');
+        regen++;
+        if (regen % 25 === 0) console.log(`[generate] ...${regen} articles regenerated`);
+      } catch (err) {
+        console.warn(`[generate] Regeneration failed for "${row.slug}": ${err.message}`);
+        skipped++;
+      }
+    }
+
+    // Rebuild sitemap + search index once at the end
+    try { regenerateSitemap(); } catch (e) { console.warn('[generate] Sitemap error:', e.message); }
+    try { generateSearchIndex(); } catch (e) { console.warn('[generate] Search index error:', e.message); }
+
+    // Regenerate /news/ listing to pick up corrected categories in chips
+    const { execSync } = require('child_process');
+    try {
+      execSync('node scripts/generate-index-pages.js --news', {
+        cwd: path.join(__dirname, '..'),
+        stdio: 'inherit',
+      });
+    } catch (e) {
+      console.warn('[generate] Warning: generate-index-pages.js --news failed:', e.message);
+    }
+
+    console.log(`[generate] --regenerate-all complete. Regenerated: ${regen}, Skipped: ${skipped}`);
+    process.exit(0);
+  }
+
   // Step A: fetch all matched articles (recent 50 is more than enough)
   const { data: allMatched, error: fetchErr } = await supabase
     .from('golf_wire_matched')
@@ -1044,7 +1193,8 @@ async function main() {
       const brand    = brandsMap.get(bSlug) || {};
       const bName    = brand.name || bSlug;
       const bLogo    = brand.logo || '';
-      const author   = row.author || authorFromCategory(row.category);
+      const author   = row.author || authorFromCategory(brand.category || row.category);
+      const backfillCategory = (brand.subCategories || [])[0] || brand.category || row.category || 'News';
       const srcName  = row.source_name || getSourceName(row.source_url || '');
       const rTime    = estimateReadTime(row.body);
 
@@ -1063,9 +1213,9 @@ async function main() {
         bodyHtml:        bHtml,
         imageUrl:        row.image_url || '',
         ogImageUrl:      row.image_url || 'https://dormied.com/images/og-image.jpg',
-        imageAlt:        `${bName} — ${row.category || 'Golf'}`,
+        imageAlt:        `${bName} — ${backfillCategory}`,
         slug:            row.slug,
-        category:        row.category || 'Business',
+        category:        backfillCategory,
         published_at:    row.published_at,
         source_url:      row.source_url || '',
         source_name:     srcName,
@@ -1210,6 +1360,11 @@ async function main() {
     // Determine author before calling Opus — voice block depends on it
     const author = authorFromCategory(brandInfo.brand.category || raw.category);
 
+    // Derive display category from brand's subCategories (more specific and reliable than wire feed)
+    const articleCategory = (brandInfo.brand.subCategories || [])[0]
+                         || brandInfo.brand.category
+                         || 'News';
+
     console.log(`[generate] Generating: "${raw.title}" → ${brandSlug} (author: ${author})`);
 
     // ── Call Opus ──
@@ -1301,8 +1456,8 @@ async function main() {
     // Step 1: write candidate HTML
     const html = generateArticleHtml({
       title, bodyHtml, imageUrl, ogImageUrl, localUrl,
-      imageAlt:        `${brandInfo.brand.name} — ${raw.category || 'Golf'}`,
-      slug, category:  raw.category || 'Business',
+      imageAlt:        `${brandInfo.brand.name} — ${articleCategory}`,
+      slug, category:  articleCategory,
       published_at:    publishedAt,
       source_url:      raw.source_url,
       source_name:     sourceName,
@@ -1351,7 +1506,7 @@ async function main() {
         published_at:         publishedAt,
         status:               'draft', // promoted → 'published' by publish-articles.js after git push
         slug,
-        category:             raw.category || 'Business',
+        category:             articleCategory,
         x_post_text:          x_post || null,
         author,
       });
