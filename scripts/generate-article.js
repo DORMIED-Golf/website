@@ -66,6 +66,19 @@ function getSupabase() {
   return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 }
 
+/**
+ * Post-processing: strip em dashes from generated body/x_post text.
+ * " — " → ", " handles parentheticals ("brand — founded in 2019 — pivoted")
+ * and clause separators ("capable device — here's why").
+ * Bare "—" (no surrounding spaces) is caught as a fallback.
+ * Titles are intentionally excluded — the dash-as-subtitle convention
+ * ("Best Driver — If You Swing Fast") is fine in a headline.
+ */
+function stripEmDashes(text) {
+  if (!text) return text;
+  return text.replace(/ — /g, ', ').replace(/—/g, ', ');
+}
+
 function loadDormiedData() {
   const raw = fs.readFileSync(path.join(SITE_ROOT, 'js/data.js'), 'utf8');
   const ctx = { window: {} };
@@ -361,7 +374,9 @@ function wordCount(text) {
 // ── Opus ──────────────────────────────────────────────────────────────────────
 
 // Shared structural rules — voice blocks are prepended in getSystemPrompt().
-const SYSTEM_PROMPT_BASE = `You are the editorial voice of DORMIED, a golf brand intelligence platform. Rewrite the following press release as a substantial original article (550-700 words). Write in DORMIED's voice: direct, dry, opinionated, informed. No filler. No em dashes. No exclamation points. No "exciting news" language. No preamble. No bullet points.
+const SYSTEM_PROMPT_BASE = `You are the editorial voice of DORMIED, a golf brand intelligence platform. Rewrite the following press release as a substantial original article (550-700 words). Write in DORMIED's voice: direct, dry, opinionated, informed. No filler. No exclamation points. No "exciting news" language. No preamble. No bullet points.
+
+NEVER use em dashes (—) anywhere in the article or headline. Not in parentheticals, not as clause separators, not anywhere. Use commas, colons, or periods instead. "The brand — founded in 2019 — pivoted to retail." → "The brand, founded in 2019, pivoted to retail." This rule has no exceptions.
 
 Lead with the story. What happened, why it matters, what it says about where this brand is headed, and what it means for the broader golf market. Write like a columnist covering a beat, not like a data platform summarizing metrics. The reader should walk away understanding the news, your take on it, and why it matters to them as a golfer or someone following the industry.
 
@@ -1407,7 +1422,12 @@ async function main() {
       console.log(`[generate] Word count: ${wc} words`);
     }
 
-    const { title, body, meta_description, seo_keywords, x_post } = parsed;
+    const { title, seo_keywords } = parsed;
+    // Strip em dashes from body and x_post — the prompt forbids them but LLMs
+    // still slip them in. Post-processing guarantees they never reach the page.
+    const body             = stripEmDashes(parsed.body);
+    const meta_description = stripEmDashes(parsed.meta_description);
+    const x_post           = stripEmDashes(parsed.x_post);
     const publishedAt = raw.published_at || new Date().toISOString();
     const slug        = makeSlug(title, publishedAt);
     const readTime    = estimateReadTime(body);
