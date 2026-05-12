@@ -515,8 +515,10 @@
         var top       = computeTopBrands(state.articles);
         renderTopBrandsWidget(top);
         populateBrandDropdown(allBrands);
-        /* Do NOT call applyAndRender() here — the static content is already
-           visible. applyAndRender() is called only on user interaction. */
+        /* Render the full paginated list now that we have all articles.
+           This replaces the static pre-rendered stub (25 articles, no pagination)
+           with the complete JS-rendered view including Prev/Next buttons. */
+        applyAndRender();
       })
       .catch(function (err) {
         console.warn('[feed-page.js] Could not load articles:', err);
