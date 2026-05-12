@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var DORMIED_API      = '/api/dormied-articles?limit=100';
+  var DORMIED_API      = '/api/dormied-articles?limit=10000';
   var TOP_BRANDS_COUNT = 10;
   var AD_EVERY         = 10;   // insert ad every N articles
   var PAGE_SIZE        = 30;
@@ -373,10 +373,9 @@
   }
 
   /* ── Apply filters + sort, then render ──────────────────────────────────── */
-  /* ── Apply filters + sort, then render ──────────────────────────────────── */
-  /* Filtering (brand/search) uses DOM hide/show on .feed-entry elements so
-     the static pre-rendered HTML stays in the DOM per spec requirements.
-     Date sort (oldest-first) requires reordering and falls back to JS render. */
+  /* Both newest and oldest sort use paginated JS rendering from state.articles.
+     Static pre-rendered HTML is the initial page-load view; once the user
+     interacts (sort/filter), JS takes over with the full article set from the API. */
   function applyAndRender() {
     var el = document.getElementById('feed-list');
     if (!el) return;
@@ -385,62 +384,32 @@
     var q       = state.searchQuery.toLowerCase();
     var sortOld = state.sort === 'oldest';
 
-    /* "oldest" sort requires reordering — must use innerHTML replacement */
-    if (sortOld) {
-      var filtered = state.articles.filter(function (a) {
-        if (brand && a.brandIds && a.brandIds.indexOf(brand) === -1) return false;
-        if (q && (a.title || '').toLowerCase().indexOf(q) === -1) return false;
-        return true;
-      }).slice().sort(function (a, b) {
-        return new Date(a.pubDate || 0) - new Date(b.pubDate || 0);
-      });
-      state.filtered = filtered;
-      state.page = 1;
-      renderFeedList(filtered.slice(0, PAGE_SIZE));
-      renderPagination();
-      var countEl2 = document.getElementById('feed-count');
-      if (countEl2) {
-        var t2 = filtered.length;
-        countEl2.textContent = t2 === 0 ? '0 articles'
-          : t2 <= PAGE_SIZE ? t2 + ' article' + (t2 !== 1 ? 's' : '')
-          : 'Showing 1\u2013' + PAGE_SIZE + ' of ' + t2 + ' articles';
-      }
-      return;
-    }
-
-    /* Newest sort (default): hide/show .feed-card DOM elements */
-    if (staticFeedHtml !== null) {
-      /* Restore static HTML first so all articles are visible before we filter */
-      el.innerHTML = staticFeedHtml;
-    }
-
-    var entries  = el.querySelectorAll('.feed-card');
-    var visible  = 0;
-    var noFilter = !brand && !q;
-
-    entries.forEach(function (entry) {
-      if (noFilter) {
-        entry.style.display = '';
-        visible++;
-        return;
-      }
-      var entryBrand = entry.getAttribute('data-brand') || '';
-      var entryTitle = entry.getAttribute('data-title') || '';
-      var show = true;
-      if (brand && entryBrand !== brand) show = false;
-      if (show && q && entryTitle.indexOf(q) === -1) show = false;
-      entry.style.display = show ? '' : 'none';
-      if (show) visible++;
+    /* Filter from all fetched articles */
+    var filtered = state.articles.filter(function (a) {
+      if (brand && a.brandIds && a.brandIds.indexOf(brand) === -1) return false;
+      if (q && (a.title || '').toLowerCase().indexOf(q) === -1) return false;
+      return true;
     });
 
-    var pagEl = document.getElementById('feed-pagination');
-    if (pagEl) pagEl.innerHTML = '';
+    /* Sort: oldest-first or newest-first */
+    filtered.sort(function (a, b) {
+      var da = new Date(a.pubDate || 0);
+      var db = new Date(b.pubDate || 0);
+      return sortOld ? da - db : db - da;
+    });
+
+    state.filtered = filtered;
+    state.page = 1;
+
+    renderFeedList(filtered.slice(0, PAGE_SIZE));
+    renderPagination();
 
     var countEl = document.getElementById('feed-count');
     if (countEl) {
-      countEl.textContent = noFilter
-        ? (state.articles.length + ' article' + (state.articles.length !== 1 ? 's' : ''))
-        : (visible + ' article' + (visible !== 1 ? 's' : ''));
+      var t = filtered.length;
+      countEl.textContent = t === 0 ? '0 articles'
+        : t <= PAGE_SIZE ? t + ' article' + (t !== 1 ? 's' : '')
+        : 'Showing 1\u2013' + Math.min(PAGE_SIZE, t) + ' of ' + t + ' articles';
     }
   }
 

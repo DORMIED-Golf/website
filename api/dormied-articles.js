@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   const brandFilter = req.query.brand || null;
-  const limit = Math.min(parseInt(req.query.limit || '50', 10), 100);
+  const limit = Math.min(parseInt(req.query.limit || '50', 10), 10000);
 
   let query = supabase
     .from('dormied_articles')
