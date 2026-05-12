@@ -74,6 +74,24 @@
 
   <!-- ── Brand pages (175) ── -->
   <url>
+    <loc>https://dormied.com/brands/zire-golf/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/brands/vessel/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/brands/vice-golf/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/brands/voice-caddie/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
@@ -116,7 +134,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/zire-golf/</loc>
+    <loc>https://dormied.com/brands/travismathew/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -158,13 +176,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/vessel/</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/vice-golf/</loc>
+    <loc>https://dormied.com/brands/tommy-armour/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -206,7 +218,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/travismathew/</loc>
+    <loc>https://dormied.com/brands/swag-golf/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -254,12 +266,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/tommy-armour/</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://dormied.com/brands/sub-70/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
@@ -296,7 +302,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/swag-golf/</loc>
+    <loc>https://dormied.com/brands/scotty-cameron/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -387,12 +393,6 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/rohnisch/</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/scotty-cameron/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -638,6 +638,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dormied.com/brands/kastel-denmark/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/brands/kbs-golf/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
@@ -723,12 +729,6 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/kadet-golf/</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/kastel-denmark/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1124,15 +1124,25 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (140) ── -->
+  <!-- ── News articles (142) ── -->
   <url>
-    <loc>https://dormied.com/news/adidas-signs-a-dead-man-to-sell-golf-shorts-and-it-actually-works-2026-05-12/</loc>
+    <loc>https://dormied.com/news/vice-golfs-quiet-climb-continues-while-the-pga-championship-spotlight-2026-05-12/</loc>
     <lastmod>2026-05-12</lastmod>
     <changefreq>never</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://dormied.com/images/articles/adidas-signs-a-dead-man-to-sell-golf-shorts-and-it-actually-works-2026-05-12-hero.jpg</image:loc>
-      <image:title>Adidas Signs a Dead Man to Sell Golf Shorts, and It Actually Works</image:title>
+      <image:loc>https://dormied.com/images/articles/vice-golfs-quiet-climb-continues-while-the-pga-championship-spotlight-2026-05-12-hero.png</image:loc>
+      <image:title>Vice Golf&apos;s Quiet Climb Continues While the PGA Championship Spotlight Shines Elsewhere</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-indoor-golf-margin-war-has-officially-started-2026-05-12/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-indoor-golf-margin-war-has-officially-started-2026-05-12-hero.png</image:loc>
+      <image:title>The Indoor Golf Margin War Has Officially Started</image:title>
     </image:image>
   </url>
   <url>
@@ -1143,6 +1153,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09-hero.jpg</image:loc>
       <image:title>Wilson Goes Big in Times Square, But Can Billboards Fix a Brand Problem?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/ust-mamiyas-aftermarket-sales-hire-signals-a-brand-ready-to-fight-for-2026-05-04/</loc>
+    <lastmod>2026-05-04</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/ust-mamiyas-aftermarket-sales-hire-signals-a-brand-ready-to-fight-for-2026-05-04-hero.jpg</image:loc>
+      <image:title>UST Mamiya&apos;s Aftermarket Sales Hire Signals a Brand Ready to Fight for Relevance</image:title>
     </image:image>
   </url>
   <url>
@@ -1310,13 +1330,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/ust-mamiyas-aftermarket-sales-hire-signals-a-brand-ready-to-fight-for-2026-05-04/</loc>
-    <lastmod>2026-05-04</lastmod>
+    <loc>https://dormied.com/news/tigers-brand-finally-showed-up-for-women-golfers-heres-why-it-took-two-2026-04-30/</loc>
+    <lastmod>2026-04-30</lastmod>
     <changefreq>never</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/ust-mamiyas-aftermarket-sales-hire-signals-a-brand-ready-to-fight-for-2026-05-04-hero.jpg</image:loc>
-      <image:title>UST Mamiya&apos;s Aftermarket Sales Hire Signals a Brand Ready to Fight for Relevance</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/tigers-brand-finally-showed-up-for-women-golfers-heres-why-it-took-two-2026-04-30-hero.jpg</image:loc>
+      <image:title>Tiger&apos;s Brand Finally Showed Up for Women Golfers. Here&apos;s Why It Took Two Years.</image:title>
     </image:image>
   </url>
   <url>
@@ -1404,6 +1424,16 @@
     <lastmod>2026-04-17</lastmod>
     <changefreq>never</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-best-golf-glove-money-can-buy-lasts-170-holes-is-that-enough-2026-05-04/</loc>
+    <lastmod>2026-05-04</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-best-golf-glove-money-can-buy-lasts-170-holes-is-that-enough-2026-05-04-hero.jpg</image:loc>
+      <image:title>The Best Golf Glove Money Can Buy Lasts 170 Holes. Is That Enough?</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://dormied.com/news/the-best-golf-shoe-of-2026-is-a-collaboration-you-probably-c-2026-04-23/</loc>
@@ -1496,16 +1526,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/tigers-brand-finally-showed-up-for-women-golfers-heres-why-it-took-two-2026-04-30/</loc>
-    <lastmod>2026-04-30</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/tigers-brand-finally-showed-up-for-women-golfers-heres-why-it-took-two-2026-04-30-hero.jpg</image:loc>
-      <image:title>Tiger&apos;s Brand Finally Showed Up for Women Golfers. Here&apos;s Why It Took Two Years.</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/superstrokes-patriotic-putter-grip-is-the-right-kind-of-limi-2026-04-15/</loc>
     <lastmod>2026-04-15</lastmod>
     <changefreq>never</changefreq>
@@ -1583,26 +1603,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-adaptive-golf-championship-that-keeps-flying-under-the-radar-2026-04-24-hero.jpg</image:loc>
       <image:title>The Adaptive Golf Championship That Keeps Flying Under the Radar</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/the-best-golf-glove-money-can-buy-lasts-170-holes-is-that-enough-2026-05-04/</loc>
-    <lastmod>2026-05-04</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-best-golf-glove-money-can-buy-lasts-170-holes-is-that-enough-2026-05-04-hero.jpg</image:loc>
-      <image:title>The Best Golf Glove Money Can Buy Lasts 170 Holes. Is That Enough?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29/</loc>
-    <lastmod>2026-04-29</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29-hero.jpg</image:loc>
-      <image:title>Scotty Cameron&apos;s Newport 2 Finishes Fourth in Short Putt Testing, and That Might Be Fine</image:title>
     </image:image>
   </url>
   <url>
@@ -1782,6 +1782,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29-hero.jpg</image:loc>
+      <image:title>Scotty Cameron&apos;s Newport 2 Finishes Fourth in Short Putt Testing, and That Might Be Fine</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/payntrs-min-woo-lee-signature-shoe-nearly-tops-mygolfspys-20-2026-04-21/</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>never</changefreq>
@@ -1869,16 +1879,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/original-penguins-spring-2026-collection-asks-if-retro-cool-2026-04-20-hero.jpg</image:loc>
       <image:title>Original Penguin&apos;s Spring 2026 Collection Asks If Retro Cool Still Has a Place in Modern Golf</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/mini-drivers-are-no-longer-a-niche-callaway-just-made-that-o-2026-04-16/</loc>
-    <lastmod>2026-04-16</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/mini-drivers-are-no-longer-a-niche-callaway-just-made-that-o-2026-04-16-hero.jpg</image:loc>
-      <image:title>Mini Drivers Are No Longer a Niche. Callaway Just Made That Official.</image:title>
     </image:image>
   </url>
   <url>
@@ -2042,6 +2042,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/mini-drivers-are-no-longer-a-niche-callaway-just-made-that-o-2026-04-16/</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/mini-drivers-are-no-longer-a-niche-callaway-just-made-that-o-2026-04-16-hero.jpg</image:loc>
+      <image:title>Mini Drivers Are No Longer a Niche. Callaway Just Made That Official.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/forged-wedges-for-less-than-a-single-vokey-kirklands-latest-2026-04-21/</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>never</changefreq>
@@ -2122,16 +2132,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/fitzpatricks-playoff-win-over-scheffler-is-the-best-ad-arcco-2026-04-21/</loc>
-    <lastmod>2026-04-21</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/fitzpatricks-playoff-win-over-scheffler-is-the-best-ad-arcco-2026-04-21-hero.png</image:loc>
-      <image:title>Fitzpatrick&apos;s Playoff Win Over Scheffler Is the Best Ad Arccos Could Buy</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/fitzpatricks-playoff-win-shows-why-titleists-ball-dominance-2026-04-20/</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>never</changefreq>
@@ -2209,16 +2209,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/foresight-sports-locks-down-another-tour-deal-while-its-cons-2026-04-19-hero.png</image:loc>
       <image:title>Foresight Sports Locks Down Another Tour Deal While Its Consumer Brand Flatlines</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/callaways-mothers-day-golf-ball-is-a-gift-shop-move-from-a-t-2026-04-20/</loc>
-    <lastmod>2026-04-20</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaways-mothers-day-golf-ball-is-a-gift-shop-move-from-a-t-2026-04-20-hero.jpg</image:loc>
-      <image:title>Callaway&apos;s Mother&apos;s Day Golf Ball Is a Gift Shop Move From a Top-5 Brand</image:title>
     </image:image>
   </url>
   <url>
@@ -2312,6 +2302,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/fitzpatricks-playoff-win-over-scheffler-is-the-best-ad-arcco-2026-04-21/</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/fitzpatricks-playoff-win-over-scheffler-is-the-best-ad-arcco-2026-04-21-hero.png</image:loc>
+      <image:title>Fitzpatrick&apos;s Playoff Win Over Scheffler Is the Best Ad Arccos Could Buy</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21/</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>never</changefreq>
@@ -2392,6 +2392,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/callaways-mothers-day-golf-ball-is-a-gift-shop-move-from-a-t-2026-04-20/</loc>
+    <lastmod>2026-04-20</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaways-mothers-day-golf-ball-is-a-gift-shop-move-from-a-t-2026-04-20-hero.jpg</image:loc>
+      <image:title>Callaway&apos;s Mother&apos;s Day Golf Ball Is a Gift Shop Move From a Top-5 Brand</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/a-40-year-old-austrian-just-made-the-case-for-steel-shafts-at-the-volvo-2026-04-27/</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>never</changefreq>
@@ -2429,6 +2439,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/a-wire-to-wire-major-win-puts-nike-golf-shoes-back-in-the-winners-circle-2026-04-27-hero.jpg</image:loc>
       <image:title>A Wire-to-Wire Major Win Puts Nike Golf Shoes Back in the Winner&apos;s Circle</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/adidas-signs-a-dead-man-to-sell-golf-shorts-and-it-actually-works-2026-05-12/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/adidas-signs-a-dead-man-to-sell-golf-shorts-and-it-actually-works-2026-05-12-hero.jpg</image:loc>
+      <image:title>Adidas Signs a Dead Man to Sell Golf Shorts, and It Actually Works</image:title>
     </image:image>
   </url>
   <url>
