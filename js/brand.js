@@ -969,8 +969,9 @@
     const rows = _expRows || [];
     const curRow = rows.find(r => r.month === EXP.toYYYYMM(curMon));
 
-    // Use timeline when: period tab is 3M+ AND there are at least 2 stored months
-    const useTimeline = chartMonths > 0 && rows.length >= 2;
+    // Use timeline whenever there are at least 2 stored months, regardless of period tab.
+    // "All" (chartMonths === 0) should show historical context just like 3M/6M/1Y.
+    const useTimeline = rows.length >= 2;
 
     const toBullets = (window.DORMIED_UTILS && window.DORMIED_UTILS.explanationToBullets) || (t => `<p>${t}</p>`);
 
