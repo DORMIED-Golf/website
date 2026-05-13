@@ -426,15 +426,26 @@
     const peakBrand  = Math.max(...actualVals, 1);
     const brandData  = brandRaw.map(v => parseFloat((Math.min(100, v / peakBrand * 100)).toFixed(1)));
 
-    // Global index average: each month's avg across all brands, normalised to
-    // that average's own peak so it sits on the same 0–100 y-axis.
-    const globalAvgRaw = months.map(m => {
-      const vals = data.brands.map(b => b.searchesByMarket?.[chartMarket]?.[m] || 0);
-      const nonZero = vals.filter(v => v > 0);
-      return nonZero.length ? vals.reduce((a, b) => a + b, 0) / nonZero.length : 0;
+    // Global index average: for each month, average each brand's individually
+    // normalised score (raw / brand's own period-peak * 100) — the same unit
+    // as the brand line — then average across brands with data that month.
+    // This keeps both lines on the same "% of own peak" scale so the
+    // comparison is meaningful (no more avg showing 80 while a top-4 brand is 30).
+    const brandPeaks = data.brands.map(b => {
+      const s = b.searchesByMarket?.[chartMarket] || {};
+      const bActual = months.filter(m => m !== projM).map(m => s[m] || 0);
+      return Math.max(...bActual, 1);
     });
-    const peakAvg       = Math.max(...globalAvgRaw, 1);
-    const globalAvgData = globalAvgRaw.map(v => parseFloat((v / peakAvg * 100).toFixed(1)));
+    const globalAvgData = months.map(m => {
+      const normVals = data.brands
+        .map((b, i) => {
+          const raw = b.searchesByMarket?.[chartMarket]?.[m] || 0;
+          return raw > 0 ? raw / brandPeaks[i] * 100 : null;
+        })
+        .filter(v => v !== null);
+      if (!normVals.length) return 0;
+      return parseFloat((normVals.reduce((a, v) => a + v, 0) / normVals.length).toFixed(1));
+    });
 
     // Split brand index into actual vs projected segments
     const projDataActual = months.map((m, i) => m !== projM ? brandData[i] : null);
