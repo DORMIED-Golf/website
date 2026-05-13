@@ -663,14 +663,6 @@ function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBran
       </section>
 ${takeSectionHtml}
 
-      <!-- ── Key Moments (populated by explanations.min.js) ── -->
-      <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading" hidden>
-        <div class="container">
-          <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
-          <div id="bp-explanation-body" class="bp-explanation-body"></div>
-        </div>
-      </section>
-
       <!-- ── Main Chart Section ── -->
       <section class="bp-chart-section">
         <div class="container bp-chart-container">
@@ -713,6 +705,14 @@ ${takeSectionHtml}
      data-ad-slot="5011106608"></ins>
         </div>
       </div>
+
+      <!-- ── Key Moments (populated by explanations.min.js) ── -->
+      <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading" hidden>
+        <div class="container">
+          <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
+          <div id="bp-explanation-body" class="bp-explanation-body"></div>
+        </div>
+      </section>
 
       <!-- ── Two-column layout: content + sidebar ad ── -->
       <div class="container">
