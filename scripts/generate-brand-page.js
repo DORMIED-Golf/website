@@ -180,6 +180,20 @@ async function fetchTake(supabase, brandSlug) {
   return data; // { take, month, brand_name } or null
 }
 
+async function fetchExplanations(supabase, brandSlug) {
+  const { data, error } = await supabase
+    .from('brand_explanations')
+    .select('month, explanation')
+    .eq('brand_id', brandSlug)
+    .order('month', { ascending: true });
+
+  if (error) {
+    console.warn(`[brand-page] explanations fetch error for ${brandSlug}:`, error.message);
+    return [];
+  }
+  return data || []; // [{ month: '2026-01', explanation: '...' }, ...]
+}
+
 async function fetchRecentArticles(supabase, brandSlug, limit = 8) {
   const { data, error } = await supabase
     .from('dormied_articles')
@@ -339,7 +353,7 @@ function buildCountryTableRows(marketStats) {
 
 // ── HTML template ─────────────────────────────────────────────────────────────
 
-function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBrands, dormiedData }) {
+function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
   const pageTitle    = `${escHtml(brand.name)} | DORMIED Brand Profile`;
@@ -449,6 +463,47 @@ function generateBrandPageHtml({ brand, slug, stats, take, articles, relatedBran
               <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
             </div>
           </div>
+        </div>
+      </section>`;
+
+  // Key Moments — pre-render timeline from Supabase explanation rows
+  function expToBullets(text) {
+    if (!text) return '';
+    let items;
+    if (text.indexOf('•') !== -1) {
+      items = text.split('•').map(s => s.trim()).filter(Boolean);
+    } else {
+      const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+      items = sentences.map(s => s.trim()).filter(s => s.length > 15);
+    }
+    if (!items.length) return `<p>${escHtml(text)}</p>`;
+    return '<ul class="exp-bullets">' + items.map(s => `<li>${escHtml(s)}</li>`).join('') + '</ul>';
+  }
+
+  const sortedExplanations = (explanations || []).slice().sort((a, b) => a.month < b.month ? -1 : 1);
+  const explanationsSectionHtml = sortedExplanations.length > 0
+    ? `
+      <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading">
+        <div class="container">
+          <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
+          <div id="bp-explanation-body" class="bp-explanation-body">
+            <div class="bp-exp-timeline">
+              ${sortedExplanations.map(row => {
+                const label = fmtMonth(row.month);
+                return `<div class="bp-exp-timeline-item">
+                  <span class="bp-exp-timeline-month">${escHtml(label)}</span>
+                  <div class="bp-exp-timeline-text">${expToBullets(row.explanation)}</div>
+                </div>`;
+              }).join('\n              ')}
+            </div>
+          </div>
+        </div>
+      </section>`
+    : `
+      <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading" hidden>
+        <div class="container">
+          <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
+          <div id="bp-explanation-body" class="bp-explanation-body"></div>
         </div>
       </section>`;
 
@@ -706,13 +761,8 @@ ${takeSectionHtml}
         </div>
       </div>
 
-      <!-- ── Key Moments (populated by explanations.min.js) ── -->
-      <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading" hidden>
-        <div class="container">
-          <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
-          <div id="bp-explanation-body" class="bp-explanation-body"></div>
-        </div>
-      </section>
+      <!-- ── Key Moments (pre-rendered; brand.js can update on period tab change) ── -->
+      ${explanationsSectionHtml}
 
       <!-- ── Two-column layout: content + sidebar ad ── -->
       <div class="container">
@@ -893,15 +943,16 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force) {
 
   const { brand, curSearches } = stats;
 
-  // Fetch take and recent articles in parallel
-  const [take, articles] = await Promise.all([
+  // Fetch take, explanations, and recent articles in parallel
+  const [take, explanations, articles] = await Promise.all([
     fetchTake(supabase, brandSlug),
+    fetchExplanations(supabase, brandSlug),
     fetchRecentArticles(supabase, brandSlug),
   ]);
 
   const relatedBrands = getRelatedBrands(dormiedData, brandSlug, curSearches);
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, articles, relatedBrands, dormiedData });
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
