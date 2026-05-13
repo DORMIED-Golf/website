@@ -969,14 +969,11 @@
     const rows = _expRows || [];
     const curRow = rows.find(r => r.month === EXP.toYYYYMM(curMon));
 
-    // Use timeline whenever there are at least 2 stored months, regardless of period tab.
-    // "All" (chartMonths === 0) should show historical context just like 3M/6M/1Y.
-    const useTimeline = rows.length >= 2;
-
     const toBullets = (window.DORMIED_UTILS && window.DORMIED_UTILS.explanationToBullets) || (t => `<p>${t}</p>`);
 
-    if (useTimeline) {
-      // Chronological list of all stored months
+    if (rows.length > 0) {
+      // Always render as a timeline — even a single entry gets a month label.
+      // This covers All / 1Y / 6M / 3M tabs and single-month brands alike.
       const items = rows.map(row => {
         const [y, m] = row.month.split('-');
         const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -987,9 +984,6 @@
         </div>`;
       }).join('');
       body.innerHTML = `<div class="bp-exp-timeline">${items}</div>`;
-      section.hidden = false;
-    } else if (curRow) {
-      body.innerHTML = `<div class="bp-exp-current">${toBullets(curRow.explanation)}</div>`;
       section.hidden = false;
     } else {
       section.hidden = true;
