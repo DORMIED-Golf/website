@@ -647,10 +647,10 @@ function generateArticleHtml(opts) {
     const sbT3mCls  = sbInfo && sbInfo.t3m    !== null ? ` ${pctClass(sbInfo.t3m)}` : '';
     const sbT12mCls = sbInfo && sbInfo.t12m   !== null ? ` ${pctClass(sbInfo.t12m)}` : '';
     const sbInitials = sb.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    const sbLogoFallback = `<span class=&quot;bp-logo-initials&quot; style=&quot;background:#1a2a1a;width:40px;height:40px;font-size:0.9rem&quot;>${escHtml(sbInitials)}</span>`;
+    const sbLogoFallback = `<span class=&quot;bp-logo-initials&quot; style=&quot;background:#1a2a1a;width:48px;height:48px;font-size:1rem&quot;>${escHtml(sbInitials)}</span>`;
     const sbLogoHtml = sb.logo
-      ? `<img src="${escHtml(sb.logo.replace(/sz=\d+/, 'sz=40'))}" alt="${escHtml(sb.name)}" class="bp-logo-img" width="40" height="40" style="width:40px;height:40px" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${sbLogoFallback}')">`
-      : `<span class="bp-logo-initials" style="background:#1a2a1a;width:40px;height:40px;font-size:0.9rem">${escHtml(sbInitials)}</span>`;
+      ? `<img src="${escHtml(sb.logo.replace(/sz=\d+/, 'sz=48'))}" alt="${escHtml(sb.name)}" class="bp-logo-img" width="48" height="48" style="width:48px;height:48px" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${sbLogoFallback}')">`
+      : `<span class="bp-logo-initials" style="background:#1a2a1a;width:48px;height:48px;font-size:1rem">${escHtml(sbInitials)}</span>`;
     return `
             <!-- Secondary brand card: ${escHtml(sb.name)} -->
             <div class="da-brand-card da-brand-card--secondary">
