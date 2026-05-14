@@ -231,9 +231,9 @@
               <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
               <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
                 <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
-                <button class="bp-period-btn" data-months="6"  role="tab">6M</button>
+                <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
                 <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
-                <button class="bp-period-btn bp-period-btn--active" data-months="0" role="tab">ALL</button>
+                <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
               </div>
             </div>
             <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
@@ -273,17 +273,17 @@
           <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
           <div id="bp-explanation-body" class="bp-explanation-body">
             <div class="bp-exp-timeline">
-              <div class="bp-exp-timeline-item">
-                  <span class="bp-exp-timeline-month">Jan 2026</span>
-                  <div class="bp-exp-timeline-text"><ul class="exp-bullets"><li>4Aces GC signed as official apparel sponsor for the 2026 LIV Golf season, outfitting Dustin Johnson, Patrick Reed, Thomas Pieters, and Thomas Detry starting February 4 at Riyadh Golf Club.</li><li>Drive Pro Clone golf shoes and ArmourDry Polo launched globally on February 6, featuring proprietary auxetic upper technology that adapts to individual foot shapes.</li><li>Dustin Johnson's existing Extracurricular clothing sponsorship ended in conjunction with the 4Aces team deal.</li></ul></div>
+              <div class="bp-exp-timeline-item" data-month="2026-03">
+                  <span class="bp-exp-timeline-month">Mar 2026</span>
+                  <div class="bp-exp-timeline-text"><ul class="exp-bullets"><li>Drive Pro Clone shoes and ArmourDry Polo launched globally on February 6 with 4Aces GC wearing the products throughout the 2026 season</li><li>Drive Pro Clone scored exceptional retail demand across UK and Europe with several partners calling it their most successful footwear release to date</li><li>Jordan Spieth unveiled custom Masters gear on Instagram including azalea-motif apparel and Drive Pro Clone shoes days before Augusta</li></ul></div>
                 </div>
-              <div class="bp-exp-timeline-item">
+              <div class="bp-exp-timeline-item" data-month="2026-02">
                   <span class="bp-exp-timeline-month">Feb 2026</span>
                   <div class="bp-exp-timeline-text"><ul class="exp-bullets"><li>The February 2026 spike reflects Under Armour's partnership with Dustin Johnson's 4Aces GC team in LIV Golf, which debuted at the league's season opener February 4-7 at Riyadh Golf Club.</li><li>The deal coincided with the global launch of Under Armour's new Drive Pro Clone golf shoes and ArmourDry Polo on February 6, creating a high-visibility product launch moment tied to major tour players that likely generated search interest across the Canadian golf market.</li></ul></div>
                 </div>
-              <div class="bp-exp-timeline-item">
-                  <span class="bp-exp-timeline-month">Mar 2026</span>
-                  <div class="bp-exp-timeline-text"><ul class="exp-bullets"><li>Drive Pro Clone shoes and ArmourDry Polo launched globally on February 6 with 4Aces GC wearing the products throughout the 2026 season</li><li>Drive Pro Clone scored exceptional retail demand across UK and Europe with several partners calling it their most successful footwear release to date</li><li>Jordan Spieth unveiled custom Masters gear on Instagram including azalea-motif apparel and Drive Pro Clone shoes days before Augusta</li></ul></div>
+              <div class="bp-exp-timeline-item" data-month="2026-01">
+                  <span class="bp-exp-timeline-month">Jan 2026</span>
+                  <div class="bp-exp-timeline-text"><ul class="exp-bullets"><li>4Aces GC signed as official apparel sponsor for the 2026 LIV Golf season, outfitting Dustin Johnson, Patrick Reed, Thomas Pieters, and Thomas Detry starting February 4 at Riyadh Golf Club.</li><li>Drive Pro Clone golf shoes and ArmourDry Polo launched globally on February 6, featuring proprietary auxetic upper technology that adapts to individual foot shapes.</li><li>Dustin Johnson's existing Extracurricular clothing sponsorship ended in conjunction with the 4Aces team deal.</li></ul></div>
                 </div>
             </div>
           </div>
@@ -465,6 +465,16 @@
               <div id="bp-latest-list" class="latest-feed-list">
                 
         <article class="latest-feed-item">
+          <a href="/news/the-6590-split-why-under-armour-is-betting-both-sides-of-golfs-footwear-2026-05-14/" class="latest-feed-link">
+            <img src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-6590-split-why-under-armour-is-betting-both-sides-of-golfs-footwear-2026-05-14-hero.jpg" alt="The 65/90 Split: Why Under Armour Is Betting Both Sides of Golf's Footwear Divide" class="latest-feed-thumb" loading="lazy" onerror="this.style.display='none'">
+            <div class="latest-feed-info">
+              <h3 class="latest-feed-title">The 65/90 Split: Why Under Armour Is Betting Both Sides of Golf's Footwear Divide</h3>
+              <span class="latest-feed-meta">May 14, 2026</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="latest-feed-item">
           <a href="/news/under-armour-golf-is-losing-its-territory-reps-to-brands-you-2026-04-20/" class="latest-feed-link">
             <img src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/under-armour-golf-is-losing-its-territory-reps-to-brands-you-2026-04-20-hero.png" alt="Under Armour Golf Is Losing Its Territory Reps to Brands You've Never Heard Of" class="latest-feed-thumb" loading="lazy" onerror="this.style.display='none'">
             <div class="latest-feed-info">
@@ -548,7 +558,7 @@
   <script defer src="/js/take-preview.min.js?v=20260330"></script>
   <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  <script defer src="/js/brand.min.js?v=20260513a"></script>
+  <script defer src="/js/brand.min.js?v=20260514a"></script>
   <script defer src="/js/feed.min.js?v=20260427c"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>

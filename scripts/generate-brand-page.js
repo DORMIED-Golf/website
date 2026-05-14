@@ -480,7 +480,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
     return '<ul class="exp-bullets">' + items.map(s => `<li>${escHtml(s)}</li>`).join('') + '</ul>';
   }
 
-  const sortedExplanations = (explanations || []).slice().sort((a, b) => a.month < b.month ? -1 : 1);
+  const sortedExplanations = (explanations || []).slice().sort((a, b) => a.month < b.month ? 1 : -1); // DESC — newest first
   const explanationsSectionHtml = sortedExplanations.length > 0
     ? `
       <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading">
@@ -490,7 +490,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
             <div class="bp-exp-timeline">
               ${sortedExplanations.map(row => {
                 const label = fmtMonth(row.month);
-                return `<div class="bp-exp-timeline-item">
+                return `<div class="bp-exp-timeline-item" data-month="${escHtml(row.month)}">
                   <span class="bp-exp-timeline-month">${escHtml(label)}</span>
                   <div class="bp-exp-timeline-text">${expToBullets(row.explanation)}</div>
                 </div>`;
@@ -726,9 +726,9 @@ ${takeSectionHtml}
               <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
               <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
                 <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
-                <button class="bp-period-btn" data-months="6"  role="tab">6M</button>
+                <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
                 <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
-                <button class="bp-period-btn bp-period-btn--active" data-months="0" role="tab">ALL</button>
+                <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
               </div>
             </div>
             <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
@@ -902,7 +902,7 @@ ${countryRows}
   <script defer src="/js/take-preview.min.js?v=20260330"></script>
   <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  <script defer src="/js/brand.min.js?v=20260513a"></script>
+  <script defer src="/js/brand.min.js?v=20260514a"></script>
   <script defer src="/js/feed.min.js?v=20260427c"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>

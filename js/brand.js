@@ -29,7 +29,7 @@
   let rankings    = [];     // global rankings for current month (all brands sorted)
   let chartInst   = null;   // Chart.js instance
   let chartMarket = 'global';
-  let chartMonths = 0;      // 0 = ALL; 3/6/12 = slice
+  let chartMonths = 6;      // 0 = ALL; 3/6/12 = slice — default 6M
 
   // ─── Helpers ──────────────────────────────────────────────────────────────
 
@@ -962,54 +962,41 @@
   }
 
   // ─── Explanation section ───────────────────────────────────────────────────
-
-  // _expRows: all explanation rows for this brand, loaded once. null = not loaded yet.
-  let _expRows = null;
+  //
+  // Key Moments are pre-rendered as static HTML by the page generator.
+  // Each <div class="bp-exp-timeline-item"> has a data-month="YYYY-MM" attribute.
+  // This function shows/hides those pre-rendered items based on the active
+  // chart period (chartMonths), without ever touching innerHTML.
 
   function renderExplanationForPeriod() {
-    if (!window.DORMIED_EXPLANATIONS || !brand) return;
-    const EXP     = window.DORMIED_EXPLANATIONS;
     const section = document.getElementById('bp-explanation-section');
-    const body    = document.getElementById('bp-explanation-body');
-    if (!section || !body) return;
+    if (!section) return;
 
-    const meta    = window.DORMIED_DATA.meta;
-    const curMon  = meta.currentMonth;
+    const items = section.querySelectorAll('.bp-exp-timeline-item[data-month]');
+    if (!items.length) return; // no pre-rendered items — nothing to filter
 
-    // Determine which rows to show
-    const rows = _expRows || [];
-    const curRow = rows.find(r => r.month === EXP.toYYYYMM(curMon));
-
-    const toBullets = (window.DORMIED_UTILS && window.DORMIED_UTILS.explanationToBullets) || (t => `<p>${t}</p>`);
-
-    if (rows.length > 0) {
-      // Always render as a timeline — even a single entry gets a month label.
-      // This covers All / 1Y / 6M / 3M tabs and single-month brands alike.
-      const items = rows.map(row => {
-        const [y, m] = row.month.split('-');
-        const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        const label  = `${MONTHS[parseInt(m,10)-1]} ${y}`;
-        return `<div class="bp-exp-timeline-item">
-          <span class="bp-exp-timeline-month">${label}</span>
-          <div class="bp-exp-timeline-text">${toBullets(row.explanation)}</div>
-        </div>`;
-      }).join('');
-      body.innerHTML = `<div class="bp-exp-timeline">${items}</div>`;
-      section.hidden = false;
-    } else {
-      section.hidden = true;
+    // Compute the oldest YYYY-MM that should be visible for the current period.
+    // Mirrors the chart's allM.slice(-chartMonths) logic.
+    let cutoffYYYYMM = null;
+    if (chartMonths > 0) {
+      const projM  = window.DORMIED_DATA.meta.projectedMonth;
+      const allM   = getAllMonths().filter(m => m !== projM);
+      const window = allM.slice(-chartMonths);
+      if (window.length) {
+        const oldest   = window[0]; // e.g. "Oct 2025"
+        const [mon, yr] = oldest.split(' ');
+        const mNum     = String(MONTH_NAMES.indexOf(mon) + 1).padStart(2, '0');
+        cutoffYYYYMM   = `${yr}-${mNum}`; // e.g. "2025-10"
+      }
     }
-  }
 
-  async function loadExplanations() {
-    if (!window.DORMIED_EXPLANATIONS || !brand) return;
-    const EXP = window.DORMIED_EXPLANATIONS;
-    try {
-      _expRows = await EXP.fetchBrand(brand.id);
-    } catch (e) {
-      _expRows = [];
-    }
-    renderExplanationForPeriod();
+    items.forEach(item => {
+      const month = item.dataset.month; // YYYY-MM
+      // Lexicographic comparison works correctly for YYYY-MM strings
+      item.style.display = (!cutoffYYYYMM || month >= cutoffYYYYMM) ? '' : 'none';
+    });
+
+    // Section visibility was set at build time — never hide it here
   }
 
   // ─── The Take ─────────────────────────────────────────────────────────────
@@ -1272,7 +1259,7 @@
     renderCategoryStanding(catData);
     renderSimilarBrands(similar);
     renderPrevNext(globalRank);
-    loadExplanations(); // async — fills explanation section after fetch
+    renderExplanationForPeriod(); // filter pre-rendered Key Moments for default period
     loadTake(globalRank, metrics, allTimeStats); // async — generates AI editorial take
 
     // Analytics: brand page view
