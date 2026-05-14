@@ -1181,9 +1181,11 @@ async function main() {
   }
 
   // Step B: fetch IDs already generated (+ brand + date + title for dedup checks)
+  // NOTE: includes 'suppressed' rows so their matched_article_id stays in alreadyGenerated
+  // and the pipeline never re-generates a manually-removed article.
   const { data: existing, error: existErr } = await supabase
     .from('dormied_articles')
-    .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author');
+    .select('status, matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author');
 
   if (existErr) {
     console.error('[generate] Failed to fetch existing articles:', existErr.message);
@@ -1199,6 +1201,8 @@ async function main() {
   let backfilled = 0;
   for (const row of existing || []) {
     if (!row.slug || !row.body) continue;
+    // Never regenerate suppressed articles — they were intentionally removed.
+    if (row.status === 'suppressed') continue;
     const articlePath = path.join(SITE_ROOT, 'news', row.slug, 'index.html');
     if (fs.existsSync(articlePath)) continue;
 

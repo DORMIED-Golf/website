@@ -1124,7 +1124,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (157) ── -->
+  <!-- ── News articles (156) ── -->
   <url>
     <loc>https://dormied.com/news/where-is-avoda-golf-based/</loc>
     <lastmod>2026-05-14</lastmod>
@@ -1293,16 +1293,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golfs-first-driver-lands-at-the-bottom-of-mygolfspy-tes-2026-04-22-hero.jpg</image:loc>
       <image:title>Vice Golf&apos;s First Driver Lands at the Bottom of MyGolfSpy Testing</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/vice-golfs-quiet-climb-continues-while-the-pga-championship-spotlight-2026-05-12/</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golfs-quiet-climb-continues-while-the-pga-championship-spotlight-2026-05-12-hero.png</image:loc>
-      <image:title>Vice Golf&apos;s Quiet Climb Continues While the PGA Championship Spotlight Shines Elsewhere</image:title>
     </image:image>
   </url>
   <url>
