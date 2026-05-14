@@ -1124,7 +1124,47 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (148) ── -->
+  <!-- ── News articles (152) ── -->
+  <url>
+    <loc>https://dormied.com/news/is-gfore-owned-by-peter-millar/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/is-gfore-owned-by-peter-millar-hero.jpg</image:loc>
+      <image:title>Is G/Fore Owned by Peter Millar?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-is-avoda-golf-based/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/where-is-avoda-golf-based-hero.png</image:loc>
+      <image:title>Where Is Avoda Golf Based?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-is-takomo-golf-from/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/where-is-takomo-golf-from-hero.jpg</image:loc>
+      <image:title>Where Is Takomo Golf From?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/who-owns-odyssey-golf/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/who-owns-odyssey-golf-hero.jpg</image:loc>
+      <image:title>Who Owns Odyssey Golf?</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/takomos-third-bag-launch-is-a-masterclass-in-dtc-hustle-2026-05-13/</loc>
     <lastmod>2026-05-13</lastmod>
