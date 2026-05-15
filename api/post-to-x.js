@@ -111,7 +111,7 @@ function fitCopy(copy, slug) { // eslint-disable-line no-unused-vars
 }
 
 function validateXPost(postText, article) {
-  const { slug, brand_slug, x_posted_at } = article;
+  const { slug, x_posted_at } = article;
 
   // 1. Duplicate check (defensive — query already filters by x_posted_at IS NULL)
   if (x_posted_at) {
@@ -132,17 +132,7 @@ function validateXPost(postText, article) {
     }
   }
 
-  // 4. First-word check — reject if first word matches brand name
-  if (brand_slug) {
-    const brandWords  = brand_slug.replace(/-/g, ' ').toLowerCase().split(' ');
-    const firstWord   = lower.split(/\W+/)[0];
-    const brandJoined = brand_slug.replace(/-/g, '').toLowerCase();
-    if (brandWords.includes(firstWord) || firstWord === brandJoined) {
-      return { valid: false, reason: `Post starts with brand name ("${firstWord}")` };
-    }
-  }
-
-  // 5. Length — fit within 280 Twitter-weighted chars
+  // 4. Length — fit within 280 Twitter-weighted chars
   //    Twitter counts all URLs as 23 chars (t.co), so weighted length =
   //    copy.length + 2 (\n\n) + 23 (t.co URL) — NOT finalPost.length
   const fittedCopy    = fitCopy(copy, slug);
