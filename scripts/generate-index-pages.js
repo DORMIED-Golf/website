@@ -426,16 +426,24 @@ function generateBrands() {
   const filePath = path.join(ROOT, 'brands/index.html');
   let html = fs.readFileSync(filePath, 'utf8');
 
+  const n = brands.length;
+
   /* Update title, meta, OG/Twitter */
   html = updateHeadMeta(html, {
     title:       'The Field — Golf Brand Directory | DORMIED',
-    description: 'Every golf brand we track on the DORMIED Index. 175 brands across 10 global markets, ranked monthly by attention. Search, filter, see who\'s moving.',
+    description: `Every golf brand we track on the DORMIED Index. ${n} brands across 10 global markets, ranked monthly by attention. Search, filter, see who's moving.`,
   });
+
+  /* Update JSON-LD CollectionPage name dynamically so brand count never goes stale */
+  html = html.replace(
+    /"name":\s*"Golf Brand Directory — \d+ Brands \| DORMIED"/,
+    `"name": "Golf Brand Directory — ${n} Brands | DORMIED"`,
+  );
 
   /* Inject intro copy and subhead into hero section */
   const brandsIntroParagraphs =
     `<p class="hero-desc">The full roster. Every brand DORMIED tracks on the Index, in one place.</p>` +
-    `<p class="hero-desc hero-desc--secondary">We watch 175 brands across 10 global markets and rank them every month by where attention is actually going. Equipment, apparel, accessories, training tech, course wear, the lifestyle plays pulling our game in new directions. Some are climbing. Some are fading. Some are coasting on a name that stopped meaning what it used to.</p>` +
+    `<p class="hero-desc hero-desc--secondary">We watch ${n} brands across 10 global markets and rank them every month by where attention is actually going. Equipment, apparel, accessories, training tech, course wear, the lifestyle plays pulling our game in new directions. Some are climbing. Some are fading. Some are coasting on a name that stopped meaning what it used to.</p>` +
     `<p class="hero-desc hero-desc--secondary">Search, filter, sort. The DI score next to each brand is the current month's reading. The arrow tells you which way it's trending. Click into any brand for the trend chart, the recent coverage, and The Read.</p>` +
     `<p class="hero-desc hero-desc--secondary">This is the field as it stands right now. Check back next month and the order will look different.</p>`;
 
@@ -445,7 +453,7 @@ function generateBrands() {
   html = injectIntoId(html, 'brands-grid', gridHtml);
 
   fs.writeFileSync(filePath, html, 'utf8');
-  console.log(`  ✔  brands/index.html — ${brands.length} brand cards, title/meta/intro updated`);
+  console.log(`  ✔  brands/index.html — ${n} brand cards, title/meta/intro updated`);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
