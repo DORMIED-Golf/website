@@ -1124,7 +1124,97 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (165) ── -->
+  <!-- ── News articles (174) ── -->
+  <url>
+    <loc>https://dormied.com/news/why-is-malbon-so-popular/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/why-is-malbon-so-popular-hero.png</image:loc>
+      <image:title>Why Is Malbon So Popular?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/who-owns-malbon-golf/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/who-owns-malbon-golf-hero.jpg</image:loc>
+      <image:title>Who Owns Malbon Golf?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-is-callaway-headquartered/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/where-is-callaway-headquartered-hero.jpg</image:loc>
+      <image:title>Where Is Callaway Headquartered?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-are-callaway-clubs-made/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/where-are-callaway-clubs-made-hero.webp</image:loc>
+      <image:title>Where Are Callaway Clubs Made?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-is-taylormade-headquartered/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/where-is-taylormade-headquartered-hero.webp</image:loc>
+      <image:title>Where Is TaylorMade Headquartered?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-are-taylormade-clubs-manufactured/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/where-are-taylormade-clubs-manufactured-hero.jpg</image:loc>
+      <image:title>Where Are TaylorMade Clubs Manufactured?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-is-titleist-headquartered/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/where-is-titleist-headquartered-hero.jpg</image:loc>
+      <image:title>Where Is Titleist Headquartered?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-are-titleist-clubs-made/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/where-are-titleist-clubs-made-hero.jpg</image:loc>
+      <image:title>Where Are Titleist Clubs Made?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/who-owns-scotty-cameron/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/who-owns-scotty-cameron-hero.jpg</image:loc>
+      <image:title>Who Owns Scotty Cameron?</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/two-tour-wins-in-one-week-signal-superstrokes-grip-on-both-ends-of-the-bag-2026-05-11/</loc>
     <lastmod>2026-05-11</lastmod>
@@ -2754,7 +2844,7 @@
 
   <!-- ── News pagination ── -->
   <url>
-    <loc>https://dormied.com/news/page/5/</loc>
+    <loc>https://dormied.com/news/page/7/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -2766,13 +2856,13 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://dormied.com/news/page/7/</loc>
+    <loc>https://dormied.com/news/page/5/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://dormied.com/news/page/2/</loc>
+    <loc>https://dormied.com/news/page/4/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -2784,7 +2874,7 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://dormied.com/news/page/4/</loc>
+    <loc>https://dormied.com/news/page/2/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
