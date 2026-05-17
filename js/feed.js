@@ -218,7 +218,12 @@
       '?select=id,brand_slug,secondary_brand_slugs,title,meta_description,image_url,slug,category,published_at,author' +
       '&status=eq.published' +
       '&order=published_at.desc' +
-      (brandSlug ? '&brand_slug=eq.' + encodeURIComponent(brandSlug) : '') +
+      // Match primary brand OR secondary brand — so articles tagged as secondary
+      // also appear on that brand's Latest section.
+      (brandSlug
+        ? '&or=(brand_slug.eq.' + encodeURIComponent(brandSlug) +
+          ',secondary_brand_slugs.cs.%7B' + encodeURIComponent(brandSlug) + '%7D)'
+        : '') +
       '&limit=' + (limit || 10);
 
     fetch(url, {
