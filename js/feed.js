@@ -214,24 +214,15 @@
 
   /* ── Fetch DORMIED originals from Supabase (public anon read) ──────────── */
   function fetchDormiedArticles(brandSlug, limit, cb) {
-    var url = SB_URL + '/rest/v1/dormied_articles' +
+    var lim     = limit || 10;
+    var headers = { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON };
+    var base    = SB_URL + '/rest/v1/dormied_articles' +
       '?select=id,brand_slug,secondary_brand_slugs,title,meta_description,image_url,slug,category,published_at,author' +
       '&status=eq.published' +
-      '&order=published_at.desc' +
-      // Match primary brand OR secondary brand — so articles tagged as secondary
-      // also appear on that brand's Latest section.
-      (brandSlug
-        ? '&or=(brand_slug.eq.' + encodeURIComponent(brandSlug) +
-          ',secondary_brand_slugs.cs.%7B' + encodeURIComponent(brandSlug) + '%7D)'
-        : '') +
-      '&limit=' + (limit || 10);
+      '&order=published_at.desc';
 
-    fetch(url, {
-      headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON }
-    })
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-    .then(function (rows) {
-      var articles = (rows || []).map(function (a) {
+    function transform(rows) {
+      return (rows || []).map(function (a) {
         var author = a.author || authorFromCategory(a.category);
         return {
           id:          a.id,
@@ -249,9 +240,38 @@
           slug:        a.slug,
         };
       });
-      cb(articles);
-    })
-    .catch(function () { cb([]); });
+    }
+
+    if (!brandSlug) {
+      // No brand filter — simple single fetch (homepage / news feed)
+      fetch(base + '&limit=' + lim, { headers: headers })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function (rows) { cb(transform(rows)); })
+        .catch(function () { cb([]); });
+      return;
+    }
+
+    // Brand page: two parallel fetches — primary brand and secondary brand —
+    // then merge, deduplicate, and re-sort. Avoids PostgREST or=() complexity.
+    var primaryUrl   = base + '&brand_slug=eq.' + encodeURIComponent(brandSlug) + '&limit=' + lim;
+    var secondaryUrl = base + '&secondary_brand_slugs=cs.%7B' + encodeURIComponent(brandSlug) + '%7D&limit=' + lim;
+
+    function safeFetch(url) {
+      return fetch(url, { headers: headers })
+        .then(function (r) { return r.ok ? r.json() : []; })
+        .catch(function () { return []; });
+    }
+
+    Promise.all([ safeFetch(primaryUrl), safeFetch(secondaryUrl) ])
+      .then(function (results) {
+        var seen = {}, merged = [];
+        (results[0] || []).concat(results[1] || []).forEach(function (a) {
+          if (!seen[a.id]) { seen[a.id] = true; merged.push(a); }
+        });
+        merged.sort(function (a, b) { return a.published_at > b.published_at ? -1 : 1; });
+        cb(transform(merged.slice(0, lim)));
+      })
+      .catch(function () { cb([]); });
   }
 
   /* ── Render: homepage "Latest from DORMIED" hero section ───────────────── */
