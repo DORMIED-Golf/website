@@ -406,8 +406,9 @@
 
   /* ── Render: brand page (DORMIED originals only) ──────────────────────── */
   function renderLatestBrand(brandId, brandDisplayName) {
-    var listEl  = document.getElementById('bp-latest-list');
-    var nameEl  = document.getElementById('bp-latest-brand-name');
+    var listEl    = document.getElementById('bp-latest-list');
+    var section   = document.getElementById('bp-latest');
+    var nameEl    = document.getElementById('bp-latest-brand-name');
     if (!listEl) return;
     if (nameEl) nameEl.textContent = brandDisplayName || brandId;
 
@@ -415,11 +416,13 @@
 
     fetchDormiedArticles(brandId, BRAND_LIMIT, function (articles) {
       if (!articles.length) {
-        listEl.innerHTML = '<p class="latest-feed-loading">No DORMIED coverage yet for ' +
-                           escHtml(brandDisplayName || brandId) +
-                           '. Check back soon or <a href="/news/" style="color:inherit">browse all coverage</a> on the News page.</p>';
+        // Keep section hidden when there are genuinely no articles
         return;
       }
+
+      // Unhide the section — it may have been rendered hidden at build time
+      // if the brand had no coverage yet when the page was generated.
+      if (section) section.hidden = false;
 
       listEl.innerHTML = articles.map(function (a) {
         return renderArticleCard(a, true, allBrands);
