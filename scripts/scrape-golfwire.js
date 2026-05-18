@@ -55,13 +55,18 @@ function stripHtml(html) {
     .trim();
 }
 
-/** Returns true for URLs that look like brand logos/icons rather than hero photos. */
+/** Returns true for URLs that should be skipped (logos, icons, emojis, thumbnails). */
 function looksLikeLogo(url) {
   if (!url) return false;
   const lower = url.toLowerCase();
   // Explicit logo/icon/favicon signals in path or filename
   if (/\/(logo|favicon|icon|brand-mark|wordmark|badge)[^/]*\.(png|svg|jpg|jpeg|webp)/i.test(lower)) return true;
   if (lower.endsWith('.svg')) return true;
+  // WordPress emoji images (s.w.org or any path containing /emoji/)
+  if (lower.includes('s.w.org') || lower.includes('/emoji/')) return true;
+  // WordPress thumbnail-size suffixes: -150x150.jpg, -300x200.png, etc.
+  // Real hero images don't have these suffixes — they're added by WP for resized variants.
+  if (/\-\d{2,4}x\d{2,4}\.(png|jpg|jpeg|webp)$/i.test(lower)) return true;
   return false;
 }
 
@@ -80,12 +85,12 @@ function extractFirstImage(html) {
     const re2 = new RegExp("<img[^>]+" + attr + "='(https?:[^']+)'", 'gi');
     while ((m = re2.exec(html)) !== null) candidates.push(m[1]);
   }
+  // Filter out emojis, thumbnails, and logos before ranking.
+  const filtered = candidates.filter(u => !looksLikeLogo(u));
   // Prefer images that are clearly editorial (thegolfwire.com wp-content uploads).
-  // Fall back to any non-logo image; skip anything that looks like a brand logo.
-  const editorial = candidates.find(u => /thegolfwire\.com\/wp-content\/uploads\//i.test(u));
-  if (editorial) return editorial;
-  const nonLogo = candidates.find(u => !looksLikeLogo(u));
-  return nonLogo || null;
+  // Fall back to any non-logo image.
+  const editorial = filtered.find(u => /thegolfwire\.com\/wp-content\/uploads\//i.test(u));
+  return editorial || filtered[0] || null;
 }
 
 async function fetchOgImage(url) {
@@ -169,22 +174,33 @@ async function main() {
 
     // Extract image: cascade through three sources in priority order.
     //
-    // 1. Inline <img> in content:encoded (covers data-src lazy variants too)
-    // 2. og:image from the Golf Wire article page (guid URL when it's a GW page)
-    // 3. og:image from sourceUrl as a last resort — brand sites often serve logos
-    //    but press-release pages frequently have a real hero image as og:image.
-    let imageUrl = extractFirstImage(rawContent);
+    // 1. For Golf Wire native articles (sourceUrl on thegolfwire.com): always
+    //    fetch og:image directly from the page — it's the authoritative featured
+    //    image. The RSS content:encoded is unreliable: it includes WordPress emoji
+    //    <img> tags and legacy thumbnail-size variants before the real hero image.
+    // 2. Inline <img> in content:encoded (for non-GW source articles)
+    // 3. og:image from sourceUrl as a last resort (brand sites, press releases)
+    let imageUrl = null;
 
-    if (!imageUrl) {
-      const guidUrl = (item.guid || '').trim();
-      if (guidUrl && guidUrl.includes('thegolfwire.com')) {
-        console.log(`[scrape] Trying og:image from Golf Wire page for "${item.title}"…`);
-        imageUrl = await fetchOgImage(guidUrl);
+    const isGolfWireSource = sourceUrl.includes('thegolfwire.com');
+
+    if (isGolfWireSource) {
+      // Always prefer og:image scraped from the Golf Wire page itself
+      console.log(`[scrape] Fetching og:image from Golf Wire page for "${item.title}"…`);
+      imageUrl = await fetchOgImage(sourceUrl);
+      if (imageUrl && looksLikeLogo(imageUrl)) {
+        console.log(`[scrape] GW og:image looks like a logo, discarding.`);
+        imageUrl = null;
       }
     }
 
+    // For non-GW sources (or if GW og:image fetch failed): try inline content image
+    if (!imageUrl) {
+      imageUrl = extractFirstImage(rawContent);
+    }
+
     // Last resort: try the source URL itself (press release / brand site)
-    if (!imageUrl && sourceUrl) {
+    if (!imageUrl && !isGolfWireSource && sourceUrl) {
       console.log(`[scrape] Trying og:image from source URL for "${item.title}"…`);
       imageUrl = await fetchOgImage(sourceUrl);
       if (imageUrl && looksLikeLogo(imageUrl)) {
