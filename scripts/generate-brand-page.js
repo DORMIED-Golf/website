@@ -467,6 +467,22 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
       </section>`;
 
   // Key Moments — pre-render timeline from Supabase explanation rows
+
+  /** Convert markdown links [label](url) → <a href="url">label</a>, escaping everything else. */
+  function mdLinksToHtml(text) {
+    const parts = [];
+    let last = 0;
+    const re = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      parts.push(escHtml(text.slice(last, m.index)));
+      parts.push(`<a href="${escHtml(m[2])}">${escHtml(m[1])}</a>`);
+      last = m.index + m[0].length;
+    }
+    parts.push(escHtml(text.slice(last)));
+    return parts.join('');
+  }
+
   function expToBullets(text) {
     if (!text) return '';
     let items;
@@ -476,8 +492,8 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
       const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
       items = sentences.map(s => s.trim()).filter(s => s.length > 15);
     }
-    if (!items.length) return `<p>${escHtml(text)}</p>`;
-    return '<ul class="exp-bullets">' + items.map(s => `<li>${escHtml(s)}</li>`).join('') + '</ul>';
+    if (!items.length) return `<p>${mdLinksToHtml(text)}</p>`;
+    return '<ul class="exp-bullets">' + items.map(s => `<li>${mdLinksToHtml(s)}</li>`).join('') + '</ul>';
   }
 
   const sortedExplanations = (explanations || []).slice().sort((a, b) => a.month < b.month ? 1 : -1); // DESC — newest first
