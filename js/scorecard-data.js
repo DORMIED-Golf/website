@@ -19,6 +19,99 @@ window.DORMIED_SCORECARD_DATA = {
 
   issues: [
 
+    /* ── MAY 2026 ──────────────────────────────────────────────────────── */
+    {
+      slug:       "may-2026",
+      title:      "The Scorecard | May 2026",
+      subtitle:   "McLaren did not tiptoe into our game. It kicked in the door at $375 a club with a world top-five player and a Formula 1 race happening down the road.",
+      date:       "May 19, 2026",
+      dateISO:    "2026-05-19",
+      monthLabel: "May 2026",
+
+      images: {
+        hero: null,
+        strip: [
+          { src: "/images/scorecard/may-2026/mclaren-launch.jpg",  label: "McLaren Golf launch" },
+          { src: "/images/scorecard/may-2026/mclaren-irons.jpg",   label: "McLaren Series 1 irons" },
+          { src: "/images/scorecard/may-2026/the-field.jpg",       label: "The Field" },
+        ],
+      },
+
+      toc: [
+        { id: "at-the-top",        label: "At The Top"       },
+        { id: "the-biggest-move",  label: "The Biggest Move" },
+        { id: "the-field",         label: "The Field"        },
+        { id: "the-drop-zone",     label: "The Drop Zone"    },
+        { id: "the-long-game",     label: "The Long Game"    },
+        { id: "global-dispatch",   label: "Global Dispatch"  },
+        { id: "closing",           label: "Closing"          },
+      ],
+
+      sections: [
+        {
+          id:      "intro",
+          heading: null,
+          body: `<p>A Formula 1 team launched golf clubs in April. Not a licensing deal on a headcover. Not a co-branded polo. Actual irons, engineered from the ground up using metal injection moulding, debuted by a world top-five player at a PGA Tour Signature Event the same week as the Miami Grand Prix. McLaren Golf did not tiptoe into our game. It kicked in the door at $375 a club with Justin Rose, Michelle Wie West, and Ian Poulter signed on not just as ambassadors but as investors. The last time a new entrant made this much noise on arrival, Bob Parsons was writing checks for PXG in 2015. Whether McLaren follows that trajectory or flames out like every other luxury crossover that has tried golf remains the only question that matters. April's data suggests the market is at least paying attention.</p>`,
+        },
+        {
+          id:      "at-the-top",
+          heading: "At The Top",
+          body: `<p>Titleist holds the top spot for the fourth consecutive month, as steady as the brand itself. TaylorMade sits second at 81.7, buoyed by Rory McIlroy's second consecutive Masters win with the Qi4D driver and 2026 TP5 ball. Only the fourth player in 90 years to go back-to-back at Augusta. TravisMathew, Callaway, and FootJoy share third at 54.8. FootJoy's arrival in the top five is the story here. The Aime Leon Dore collaboration, the Premiere Series relaunch, and Cameron Young winning The Players in FootJoy pushed the brand to heights it has not reached on the index before.</p>`,
+        },
+        {
+          id:      "the-biggest-move",
+          heading: "The Biggest Move",
+          body: `<p>McLaren Golf surged 307.4% in April, climbing 18 spots to a DI of 54.8. That puts a brand that did not exist in the index three months ago in a tie for third place. The launch was orchestrated with the precision you would expect from a company that builds cars for a living. Rose, who leads the PGA Tour in greens in regulation this season and already won the Farmers Insurance Open wire-to-wire in January, debuted the Series 1 blades at the Cadillac Championship the same week Lando Norris was racing in Miami. CEO Neil Howie spent over 25 years at Callaway. The irons use metal injection moulding with an internal structural mesh and hidden tungsten weighting. Rose has been involved in development for nearly two years. The PXG comparison is inevitable: premium price, tour validation from day one, bold entry into a crowded market. The difference is McLaren already has a globally recognized brand worth billions behind it. Whether it can convert attention into sustained market presence is what the next six months will answer.</p>`,
+        },
+        {
+          id:      "the-field",
+          heading: "The Field",
+          body: `<p>Vuori jumped 176.9% to a DI of 1.2, climbing 17 spots. Last month we reported the brand dropping 18.8% after the Fleetwood speculation ended. This month Tom Holland was announced as a global ambassador, creative partner, and financial investor, with the golf-centric "Play It as It Lies" campaign launching the same week as the Masters. Spider-Man playing golf in Portugal is a very different brand strategy than chasing a PGA Tour apparel deal, and the data says it worked.</p>
+<p>Ben Hogan Golf climbed 172.5% to a DI of 20.1 on the strength of the GS53 golf ball launch, the brand's first entry into the ball category. Named after Hogan's legendary 1953 Triple Crown, the four-piece premium construction at $50 a dozen is pitched directly at the ProV1 buyer who wants to feel something when they read the name on the ball. Whether nostalgia converts to sustained purchase behavior is another question.</p>
+<p>Peter Millar surged 124.2% after Cameron Young wore the brand during his Players Championship win in March. The quiet luxury play is working. Bettinardi rose 50% as Matt Fitzpatrick won twice in three weeks, the Valspar Championship and the Zurich Classic, becoming the only player this season winning with a blade putter. The BB 6.0 and BB 7.0 also swept first and second in MyGolfSpy's mallet test.</p>`,
+        },
+        {
+          id:      "the-drop-zone",
+          heading: "The Drop Zone",
+          body: `<p>L.A.B. Golf fell another 18.2%, marking the third consecutive monthly decline since February's 174% spike. The LINK 2.1 and 2.2 launched in April. Rickie Fowler ditched his L.A.B. DF3 for a 14-year-old Scotty Cameron Golo. The brand is still meaningfully higher than where it sat six months ago, but the trajectory since the Cognizant Classic peak now looks like a classic spike-and-settle pattern. The floor has not been established yet.</p>
+<p>UST Mamiya dropped 19.4% in the same month they signed Rickie Fowler, giving the shaft maker its biggest name in years. A signing alone does not move search volume. Product and results do. The Stack System and Perfect Practice both fell roughly 21%, suggesting the training aid category is cooling after a hot start to the season.</p>`,
+        },
+        {
+          id:      "the-long-game",
+          heading: "The Long Game",
+          body: `<p>Vuori. The Tom Holland deal is not a one-off campaign. He is a creative partner and equity holder in a brand that just launched a dedicated golf collection with course-specific apparel, magnetic scorecard pockets, and a full cinematic campaign filmed in Portugal. Vuori raised $400 million from SoftBank at a $4 billion valuation in 2021. The golf play follows the same template On used with Zendaya to move from niche performance brand to global lifestyle company. If Vuori's May numbers hold or grow, it will confirm that the most valuable thing in golf apparel right now is not a tour contract but a famous person who actually plays the game.</p>`,
+        },
+        {
+          id:      "global-dispatch",
+          heading: "Global Dispatch",
+          body: `<p>McLaren Golf launched simultaneously in North America, Europe, and South Korea through select custom-fitting retailers. That three-market launch is deliberate. South Korea is the most brand-conscious golf market in the world, where PXG already proved that premium positioning translates to outsized market share. McLaren's decision to include Korea from day one, rather than expanding later, signals the brand understands where the early adopter money lives. Watch the Korean DI number next month. If McLaren's global surge was disproportionately driven by one market, it will tell us whether this is a worldwide story or an Asian luxury play.</p>`,
+        },
+        {
+          id:      "closing",
+          heading: "Closing",
+          body: `<p>Justin Rose drove a papaya McLaren GTS to the McLaren Technology Centre, walked past the set of a Brad Pitt movie, and sat down with engineers to finalize the irons he would play that week in Miami. Two years of development, one launch day timed to a Formula 1 race, and a 307% move on the index. Whether that translates to a real equipment business or an expensive vanity project is a story we will be telling for the rest of the year. But this much is already clear: the barrier to entry in golf equipment has never been lower and the cost of attention has never been higher. McLaren just paid both prices at once.</p>
+<p class="scorecard-signature">Adam and Travis, DORMIED</p>
+<p class="scorecard-substack-link"><a href="https://dormiedgolf.substack.com/p/the-scorecard-may-2026" target="_blank" rel="noopener">Read on Substack <span aria-hidden="true">→</span></a></p>`,
+        },
+      ],
+
+      indexSnapshot: [
+        { rank: 1, id: "titleist",     name: "Titleist",      di: 100.0, mom:   0.0 },
+        { rank: 2, id: "taylormade",   name: "TaylorMade",    di:  81.7, mom:  22.4 },
+        { rank: 3, id: "travismathew", name: "TravisMathew",  di:  54.8, mom:   0.0 },
+        { rank: 3, id: "callaway",     name: "Callaway",      di:  54.8, mom:  22.2 },
+        { rank: 3, id: "footjoy",      name: "FootJoy",       di:  54.8, mom:  22.2 },
+        { rank: 3, id: "mclaren-golf", name: "McLaren Golf",  di:  54.8, mom: 307.4 },
+      ],
+
+      brandMentions: [
+        "titleist", "taylormade", "travismathew", "callaway", "footjoy",
+        "mclaren-golf", "pxg", "vuori", "ben-hogan-golf", "peter-millar",
+        "bettinardi", "l-a-b-golf", "scotty-cameron", "ust-mamiya",
+        "the-stack-system", "perfect-practice",
+      ],
+    },
+
     /* ── APRIL 2026 ────────────────────────────────────────────────────── */
     {
       slug:        "april-2026",
