@@ -781,9 +781,7 @@
   {
     "id": "vice-golf",
     "name": "Vice Golf",
-    "matchTerms": [
-      "Vice"
-    ]
+    "matchTerms": []
   },
   {
     "id": "voice-caddie",
