@@ -1132,6 +1132,46 @@
 
   <!-- ── News articles (209) ── -->
   <url>
+    <loc>https://dormied.com/news/tour-edge-exotics-cb-tops-mygolfspys-players-iron-test-and-nobody-noticed-2026-05-21/</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/tour-edge-exotics-cb-tops-mygolfspys-players-iron-test-and-nobody-noticed-2026-05-21-hero.jpg</image:loc>
+      <image:title>Tour Edge Exotics CB Tops MyGolfSpy&apos;s Player&apos;s Iron Test and Nobody Noticed</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/sun-day-reds-womens-osprey-makes-the-case-that-golf-shoes-should-work-2026-05-21/</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/sun-day-reds-womens-osprey-makes-the-case-that-golf-shoes-should-work-2026-05-21-hero.jpg</image:loc>
+      <image:title>Sun Day Red&apos;s Women&apos;s Osprey Makes the Case That Golf Shoes Should Work Everywhere</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/srixons-annual-ball-promo-returns-as-the-brand-climbs-the-rankings-2026-05-21/</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/srixons-annual-ball-promo-returns-as-the-brand-climbs-the-rankings-2026-05-21-hero.jpg</image:loc>
+      <image:title>Srixon&apos;s Annual Ball Promo Returns as the Brand Climbs the Rankings</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/a-jgto-win-wont-fix-graphite-designs-visibility-problem-2026-05-18/</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/a-jgto-win-wont-fix-graphite-designs-visibility-problem-2026-05-18-hero.png</image:loc>
+      <image:title>A JGTO Win Won&apos;t Fix Graphite Design&apos;s Visibility Problem</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/jj-spauns-texas-open-win-gives-puma-something-it-desperately-2026-04-05/</loc>
     <lastmod>2026-04-05</lastmod>
     <changefreq>never</changefreq>
@@ -2906,16 +2946,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/a-jgto-win-wont-fix-graphite-designs-visibility-problem-2026-05-18/</loc>
-    <lastmod>2026-05-18</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/a-jgto-win-wont-fix-graphite-designs-visibility-problem-2026-05-18-hero.png</image:loc>
-      <image:title>A JGTO Win Won&apos;t Fix Graphite Design&apos;s Visibility Problem</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/golf-prides-zero-taper-putter-grip-takes-direct-aim-at-superstrokes-2026-05-19/</loc>
     <lastmod>2026-05-19</lastmod>
     <changefreq>never</changefreq>
@@ -3053,36 +3083,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sunday-golf-uncorks-a-wine-collab-that-has-nothing-to-do-with-tiger-2026-05-20-hero.jpg</image:loc>
       <image:title>Sunday Golf Uncorks a Wine Collab That Has Nothing to Do With Tiger</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/srixons-annual-ball-promo-returns-as-the-brand-climbs-the-rankings-2026-05-21/</loc>
-    <lastmod>2026-05-21</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/srixons-annual-ball-promo-returns-as-the-brand-climbs-the-rankings-2026-05-21-hero.jpg</image:loc>
-      <image:title>Srixon&apos;s Annual Ball Promo Returns as the Brand Climbs the Rankings</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/sun-day-reds-womens-osprey-makes-the-case-that-golf-shoes-should-work-2026-05-21/</loc>
-    <lastmod>2026-05-21</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sun-day-reds-womens-osprey-makes-the-case-that-golf-shoes-should-work-2026-05-21-hero.jpg</image:loc>
-      <image:title>Sun Day Red&apos;s Women&apos;s Osprey Makes the Case That Golf Shoes Should Work Everywhere</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/tour-edge-exotics-cb-tops-mygolfspys-players-iron-test-and-nobody-noticed-2026-05-21/</loc>
-    <lastmod>2026-05-21</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/tour-edge-exotics-cb-tops-mygolfspys-players-iron-test-and-nobody-noticed-2026-05-21-hero.jpg</image:loc>
-      <image:title>Tour Edge Exotics CB Tops MyGolfSpy&apos;s Player&apos;s Iron Test and Nobody Noticed</image:title>
     </image:image>
   </url>
   <url>
