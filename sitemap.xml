@@ -1130,7 +1130,57 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (195) ── -->
+  <!-- ── News articles (200) ── -->
+  <url>
+    <loc>https://dormied.com/news/what-is-public-drip-golf/</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/what-is-public-drip-golf-hero.jpg</image:loc>
+      <image:title>What Is Public Drip Golf?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/what-is-william-murray-golf/</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/what-is-william-murray-golf-hero.png</image:loc>
+      <image:title>What Is William Murray Golf?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-to-buy-william-murray-golf/</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/where-to-buy-william-murray-golf-hero.jpg</image:loc>
+      <image:title>Where to Buy William Murray Golf</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/what-is-students-golf/</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/what-is-students-golf-hero.jpg</image:loc>
+      <image:title>What Is Students Golf?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/what-is-dormie-in-golf/</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/what-is-dormie-in-golf-hero.jpg</image:loc>
+      <image:title>What Is Dormie in Golf?</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/jj-spauns-texas-open-win-gives-puma-something-it-desperately-2026-04-05/</loc>
     <lastmod>2026-04-05</lastmod>
