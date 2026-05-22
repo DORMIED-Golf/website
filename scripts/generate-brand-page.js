@@ -571,7 +571,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260508">
+  <link rel="stylesheet" href="/css/styles.css?v=20260522">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json" id="brand-jsonld">${jsonld}</script>
