@@ -215,20 +215,8 @@
       });
     }
 
-    /* ── Latest from DORMIED ── */
-    var latestEl      = document.getElementById('da-latest-dormied-list');
-    var latestSection = document.getElementById('da-latest-dormied-section');
-    if (latestEl) {
-      fetchArticles({ 'brand_slug': 'neq.' + brandSlug }, function(rows) {
-        var latest = (rows || []).filter(function(a) { return a.slug !== articleSlug; }).slice(0, 3);
-        if (!latest.length) {
-          if (latestSection) latestSection.hidden = true;
-          return;
-        }
-        if (latestSection) latestSection.hidden = false;
-        latestEl.innerHTML = latest.map(renderCard).join('');
-      });
-    }
+    /* ── Latest from DORMIED sidebar (populated by feed.js renderLatestWidget) ── */
+    /* feed.js reads window.__DA_ARTICLE_SLUG__ to exclude the current article.  */
   }
 
   if (document.readyState === 'loading') {

@@ -223,7 +223,7 @@
       } else {
         logoHtml = '<span class="top-brand-initials">' + escHtml((b.name||'').slice(0,2).toUpperCase()) + '</span>';
       }
-      return '<a href="/brands/' + escHtml(b.id) + '/" class="top-brand-row" data-brand-id="' + escHtml(b.id) + '">' +
+      return '<a href="/news/?brand=' + escHtml(b.id) + '" class="top-brand-row" data-brand-id="' + escHtml(b.id) + '">' +
                logoHtml +
                '<span class="top-brand-name">' + escHtml(b.name) + '</span>' +
                '<span class="top-brand-count">' + b.count + '</span>' +
@@ -496,6 +496,13 @@
     /* Save the pre-rendered static HTML so we can restore it when all
        filters are cleared (spec: static HTML must remain in the DOM). */
     staticFeedHtml = el.innerHTML;
+
+    /* Read ?brand= from URL — allows Most Mentioned widget links to pre-filter */
+    try {
+      var urlParams = new URLSearchParams(window.location.search);
+      var urlBrand  = urlParams.get('brand');
+      if (urlBrand) state.brandFilter = urlBrand;
+    } catch (e) {}
 
     bindControls();
 

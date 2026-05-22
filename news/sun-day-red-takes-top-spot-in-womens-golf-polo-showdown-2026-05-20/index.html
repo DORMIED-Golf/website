@@ -224,16 +224,11 @@
               <div id="da-more-brand-list" class="da-bottom-cards"></div>
             </section>
 
-            <!-- Latest from DORMIED -->
-            <section class="da-bottom-section" id="da-latest-dormied-section" aria-labelledby="da-latest-dormied-heading" hidden>
-              <h3 class="da-bottom-heading" id="da-latest-dormied-heading">Latest from DORMIED</h3>
-              <div id="da-latest-dormied-list" class="da-bottom-cards"></div>
-            </section>
-
           </div><!-- /sc-article-main -->
 
-          <!-- AD_UNIT:sidebar
+          <!-- Sidebar: LATEST widget (populated by feed.js, excludes current article via __DA_ARTICLE_SLUG__) -->
           <aside class="sidebar-ad-col">
+            <!-- AD_UNIT:sidebar
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
                 <ins class="adsbygoogle"
@@ -242,8 +237,14 @@
                      data-ad-slot="6935529969"></ins>
               </div>
             </div>
+            -->
+            <section class="home-stories-section latest-feed-section" aria-labelledby="article-latest-heading">
+              <h2 class="latest-feed-heading" id="article-latest-heading">Latest</h2>
+              <div id="dormied-latest-list" class="latest-feed-list">
+                <p class="latest-feed-loading">Loading&#x2026;</p>
+              </div>
+            </section>
           </aside>
-          -->
 
         </div><!-- /table-layout -->
       </div><!-- /container -->
@@ -304,7 +305,7 @@
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
   <script src="/js/brand-data/sun-day-red.js?v=20260518"></script>
-  <script src="/js/da-article.min.js?v=20260427c"></script>
+  <script src="/js/da-article.min.js?v=20260522"></script>
   <!-- AD_SCRIPT
   <script>
   window.addEventListener('load',function(){

@@ -8,8 +8,9 @@
   'use strict';
 
   /* ── Constants ─────────────────────────────────────────────────────────── */
-  var BRAND_LIMIT = 10;
-  var HOME_LIMIT  = 5;
+  var BRAND_LIMIT  = 10;
+  var HOME_LIMIT   = 10;
+  var LATEST_LIMIT = 10;
 
   // Supabase — public anon key, read-only
   var SB_URL  = 'https://cimmmmnapdthqvtifpzr.supabase.co';
@@ -404,6 +405,44 @@
     el.parentNode.appendChild(div);
   }
 
+  /* ── Render: LATEST widget (10 most-recent articles, shared across pages) ─
+     targetId    – id of the <div> to populate
+     excludeSlug – optional article slug to exclude (used on article pages)    */
+  function renderLatestWidget(targetId, excludeSlug) {
+    var el = document.getElementById(targetId);
+    if (!el) return;
+
+    // Fetch a few extra so we can filter out the excluded article
+    var fetchLimit = excludeSlug ? LATEST_LIMIT + 3 : LATEST_LIMIT;
+
+    fetchDormiedArticles(null, fetchLimit, function (articles) {
+      var allBrands = getAllBrands();
+      var filtered  = (articles || []);
+      if (excludeSlug) {
+        filtered = filtered.filter(function (a) { return a.slug !== excludeSlug; });
+      }
+      filtered = filtered.slice(0, LATEST_LIMIT);
+
+      if (!filtered.length) {
+        el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
+        return;
+      }
+
+      el.innerHTML = filtered.map(function (a) {
+        return renderArticleCard(a, true, allBrands);
+      }).join('');
+
+      var seeAllId = targetId + '-see-all';
+      if (!document.getElementById(seeAllId)) {
+        var div = document.createElement('div');
+        div.id        = seeAllId;
+        div.className = 'bp-latest-see-all';
+        div.innerHTML = '<a href="/news/">See All News</a>';
+        el.parentNode.appendChild(div);
+      }
+    });
+  }
+
   /* ── Render: brand page (DORMIED originals only) ──────────────────────── */
   function renderLatestBrand(brandId, brandDisplayName) {
     var listEl    = document.getElementById('bp-latest-list');
@@ -444,10 +483,12 @@
     var isBrand        = !!document.getElementById('bp-latest-list');
     var isHome         = !!document.getElementById('home-stories-list');
     var hasHomeDormied = !!document.getElementById('home-dormied-list');
-    if (!isBrand && !isHome && !hasHomeDormied) return;
+    var hasLatest      = !!document.getElementById('dormied-latest-list');
+    if (!isBrand && !isHome && !hasHomeDormied && !hasLatest) return;
 
     if (hasHomeDormied) renderLatestFromDormied();
     if (isHome)         renderHomeStories();
+    if (hasLatest)      renderLatestWidget('dormied-latest-list', window.__DA_ARTICLE_SLUG__ || '');
     if (isBrand) {
       var slug = getCurrentBrandSlug();
       renderLatestBrand(slug, getBrandDisplayName(slug));
