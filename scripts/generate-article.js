@@ -759,7 +759,7 @@ function generateArticleHtml(opts) {
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
   <!-- ── Resource hints ── -->
-  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+  <!-- AD_PRECONNECT <link rel="preconnect" href="https://pagead2.googlesyndication.com"> -->
 
   <!-- ── Fonts ── -->
   <link rel="stylesheet" href="/css/fonts.css">
@@ -796,6 +796,7 @@ function generateArticleHtml(opts) {
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N4Q8J6L3" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- ══ TOP AD ════════════════════════════════════════════════════════════ -->
+  <!-- AD_UNIT:top
   <div class="ad-top-zone" aria-hidden="true">
     <div class="ad-leaderboard tablet-ad">
       <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px"
@@ -806,6 +807,7 @@ function generateArticleHtml(opts) {
            data-ad-client="ca-pub-5259693727609263" data-ad-slot="6216377061"></ins>
     </div>
   </div>
+  -->
 
   <!-- ══ SITE HEADER ═══════════════════════════════════════════════════════ -->
   <header class="site-header" role="banner">
@@ -911,7 +913,7 @@ function generateArticleHtml(opts) {
 
           </div><!-- /sc-article-main -->
 
-          <!-- ── Sidebar: 160×600 ad ── -->
+          <!-- AD_UNIT:sidebar
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -919,9 +921,10 @@ function generateArticleHtml(opts) {
                      style="display:inline-block;width:160px;height:600px"
                      data-ad-client="ca-pub-5259693727609263"
                      data-ad-slot="6935529969"></ins>
-                        </div>
+              </div>
             </div>
           </aside>
+          -->
 
         </div><!-- /table-layout -->
       </div><!-- /container -->
@@ -983,6 +986,7 @@ function generateArticleHtml(opts) {
   <script src="/js/search.min.js?v=20260508"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>
   <script src="/js/da-article.min.js?v=20260427c"></script>
+  <!-- AD_SCRIPT
   <script>
   window.addEventListener('load',function(){
     var s=document.createElement('script');
@@ -995,6 +999,7 @@ function generateArticleHtml(opts) {
     };
   });
   </script>
+  -->
 
 </body>
 </html>`;

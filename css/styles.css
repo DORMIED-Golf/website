@@ -5851,3 +5851,22 @@ details[open] .faq-question::after { content: '−'; }
 .news-page-context-stats {
   font-size: 0.75rem;
 }
+
+/* ── Ad units disabled (pending AdSense approval) ──────────────────────────────
+   All ad wrappers and ins elements are hidden until approval is granted.
+   To re-enable: remove this block and uncomment AD_UNIT / AD_SCRIPT markers
+   in generate-article.js, generate-brand-page.js, app.js, feed-page.js,
+   brands-dir.js, and the static template HTML files.                         */
+.adsbygoogle,
+.ad-top-zone,
+.ad-leaderboard,
+.ad-billboard,
+.ad-mobile-banner,
+.ad-skyscraper,
+.ad-in-table,
+.sidebar-ad-col,
+.feed-ad-slot,
+.brands-ad-row,
+.bp-mid-ad {
+  display: none !important;
+}

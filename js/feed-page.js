@@ -286,6 +286,7 @@
   }
 
   /* ── In-feed ad slot HTML ────────────────────────────────────────────────── */
+  /* AD_UNIT:in-feed — uncomment when AdSense approved
   function adSlotHtml() {
     return '<div class="feed-ad-slot" aria-hidden="true">' +
              '<div class="ad-in-table desktop-ad">' +
@@ -302,6 +303,8 @@
              '</div>' +
            '</div>';
   }
+  */
+  function adSlotHtml() { return ''; } // AD_PLACEHOLDER: re-enable above when AdSense approved
 
   /* ── Render article list ────────────────────────────────────────────────── */
   function renderFeedList(articles) {
@@ -327,10 +330,10 @@
     });
     el.innerHTML = html;
 
-    // Push in-feed ads after DOM insertion
-    el.querySelectorAll('.adsbygoogle').forEach(function () {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    });
+    // AD_PUSH: re-enable when AdSense approved
+    // el.querySelectorAll('.adsbygoogle').forEach(function () {
+    //   (window.adsbygoogle = window.adsbygoogle || []).push({});
+    // });
   }
 
   /* ── Render pagination controls ─────────────────────────────────────────── */

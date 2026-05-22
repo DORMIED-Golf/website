@@ -270,6 +270,7 @@
   }
 
   /* ── Ad slot HTML ───────────────────────────────────────────────────────── */
+  /* AD_UNIT:brands-in-grid — uncomment when AdSense approved
   function adSlotHtml() {
     return '<div class="brands-ad-row" aria-hidden="true">' +
              '<div class="ad-in-table desktop-ad">' +
@@ -286,6 +287,8 @@
              '</div>' +
            '</div>';
   }
+  */
+  function adSlotHtml() { return ''; } // AD_PLACEHOLDER: re-enable above when AdSense approved
 
   /* ── Render a single brand card ─────────────────────────────────────────── */
   function brandCardHtml(b) {

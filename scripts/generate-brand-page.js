@@ -565,7 +565,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   <meta id="tw-img"   name="twitter:image"       content="${ogImage}">
 
   <!-- ── Resource hints ── -->
-  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+  <!-- AD_PRECONNECT <link rel="preconnect" href="https://pagead2.googlesyndication.com"> -->
 
   <!-- ── Fonts ── -->
   <link rel="stylesheet" href="/css/fonts.css">
@@ -584,7 +584,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <!-- ══ TOP AD ZONE ══════════════════════════════════════════════════════════ -->
+  <!-- AD_UNIT:top
   <div class="ad-top-zone" aria-hidden="true">
     <div class="ad-billboard desktop-ad">
       <ins class="adsbygoogle"
@@ -605,6 +605,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
      data-ad-slot="7841984771"></ins>
     </div>
   </div>
+  -->
 
   <!-- ══ SITE HEADER ══════════════════════════════════════════════════════════ -->
   <header class="site-header" role="banner">
@@ -761,7 +762,7 @@ ${takeSectionHtml}
         </div>
       </section>
 
-      <!-- ── Mid-page Ad (after chart) ── -->
+      <!-- AD_UNIT:mid-chart
       <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
         <div class="ad-leaderboard tablet-ad">
           <ins class="adsbygoogle"
@@ -776,6 +777,7 @@ ${takeSectionHtml}
      data-ad-slot="5011106608"></ins>
         </div>
       </div>
+      -->
 
       <!-- ── Key Moments (pre-rendered; brand.js can update on period tab change) ── -->
       ${explanationsSectionHtml}
@@ -808,7 +810,7 @@ ${countryRows}
               <div class="bp-dominance" id="bp-dominance"></div>
             </section>
 
-            <!-- ── Mid-page Ad (after Rankings by Market) ── -->
+            <!-- AD_UNIT:mid-rankings
             <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
               <div class="ad-leaderboard tablet-ad">
                 <ins class="adsbygoogle"
@@ -823,6 +825,7 @@ ${countryRows}
      data-ad-slot="5011106608"></ins>
               </div>
             </div>
+            -->
 
             <!-- ── Category Standing (populated by brand.js) ── -->
             <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
@@ -848,7 +851,7 @@ ${countryRows}
 
           </div><!-- /bp-sections-col -->
 
-          <!-- ── Sidebar: Skyscraper Ad ── -->
+          <!-- AD_UNIT:sidebar
           <aside class="sidebar-ad-col">
             <div class="sidebar-sticky-zone" aria-hidden="true">
               <div class="ad-skyscraper">
@@ -859,6 +862,7 @@ ${countryRows}
               </div>
             </div>
           </aside>
+          -->
 
         </div><!-- /table-layout -->
       </div><!-- /container -->
@@ -924,6 +928,7 @@ ${countryRows}
   <script defer src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
 
+  <!-- AD_SCRIPT
   <script>
     window.addEventListener('load',function(){
   var s=document.createElement('script');
@@ -936,6 +941,7 @@ ${countryRows}
   };
 });
   </script>
+  -->
 
 </body>
 </html>`;

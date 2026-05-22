@@ -432,6 +432,7 @@
     return tr;
   }
 
+  /* AD_UNIT:scorecard-table — uncomment when AdSense approved
   function createAdRow() {
     const tr = document.createElement('tr');
     tr.className = 'ad-row';
@@ -455,6 +456,8 @@
     // renderTable() pushes after tbody.appendChild().
     return tr;
   }
+  */
+  function createAdRow() { return null; } // AD_PLACEHOLDER: re-enable above when AdSense approved
 
   // ─── Table Renderer ────────────────────────────────────────────────────────
   function renderTable() {
@@ -477,7 +480,8 @@
 
     sorted.forEach(brand => {
       if (dataRowCount > 0 && dataRowCount % AD_EVERY_N_ROWS === 0) {
-        fragment.appendChild(createAdRow());
+        const adRow = createAdRow();
+        if (adRow) fragment.appendChild(adRow); // AD_PLACEHOLDER: adRow is null until AdSense approved
       }
       fragment.appendChild(createBrandRow(brand));
       dataRowCount++;
@@ -485,10 +489,10 @@
 
     tbody.appendChild(fragment);
 
-    // Push in-table ads now that the ins elements are in the DOM.
-    tbody.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])').forEach(() => {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    });
+    // AD_PUSH: re-enable when AdSense approved
+    // tbody.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])').forEach(() => {
+    //   (window.adsbygoogle = window.adsbygoogle || []).push({});
+    // });
 
     // Update count
     const countEl = document.getElementById('results-count');
