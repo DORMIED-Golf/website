@@ -1132,6 +1132,26 @@
 
   <!-- ── News articles (202) ── -->
   <url>
+    <loc>https://dormied.com/news/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22/</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22-hero.jpg</image:loc>
+      <image:title>Jason Day&apos;s Wardrobe Is Doing More for Malbon Than His Swing</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/memorial-day-golf-sales-reveal-which-brands-are-playing-defense-2026-05-22/</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/memorial-day-golf-sales-reveal-which-brands-are-playing-defense-2026-05-22-hero.jpg</image:loc>
+      <image:title>Memorial Day Golf Sales Reveal Which Brands Are Playing Defense</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/jj-spauns-texas-open-win-gives-puma-something-it-desperately-2026-04-05/</loc>
     <lastmod>2026-04-05</lastmod>
     <changefreq>never</changefreq>
@@ -3048,16 +3068,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22/</loc>
-    <lastmod>2026-05-22</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22-hero.jpg</image:loc>
-      <image:title>Jason Day&apos;s Wardrobe Is Doing More for Malbon Than His Swing</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/srixons-buy-2-get-1-promo-is-a-volume-play-in-a-category-its-quietly-2026-05-21/</loc>
     <lastmod>2026-05-21</lastmod>
     <changefreq>never</changefreq>
@@ -3065,16 +3075,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/srixons-buy-2-get-1-promo-is-a-volume-play-in-a-category-its-quietly-2026-05-21-hero.jpg</image:loc>
       <image:title>Srixon&apos;s Buy 2 Get 1 Promo Is a Volume Play in a Category It&apos;s Quietly Winning</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/memorial-day-golf-sales-reveal-which-brands-are-playing-defense-2026-05-22/</loc>
-    <lastmod>2026-05-22</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/memorial-day-golf-sales-reveal-which-brands-are-playing-defense-2026-05-22-hero.jpg</image:loc>
-      <image:title>Memorial Day Golf Sales Reveal Which Brands Are Playing Defense</image:title>
     </image:image>
   </url>
   <url>
