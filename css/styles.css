@@ -5826,3 +5826,28 @@ details[open] .faq-question::after { content: '−'; }
   }
   .site-search-results { max-height: none; }
 }
+
+/* ── News page context block (breaks structural-similarity signal across paginated pages) ── */
+.news-page-context {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  background: var(--bg-card, #111);
+  border: 1px solid var(--border, #222);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--text-muted, #888);
+  flex-wrap: wrap;
+}
+.news-page-context-label {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--green, #4caf50);
+  font-size: 0.7rem;
+}
+.news-page-context-detail,
+.news-page-context-stats {
+  font-size: 0.75rem;
+}

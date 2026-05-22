@@ -607,18 +607,39 @@ async function generateNews() {
     `<p class="hero-desc hero-desc--secondary">Other publications cover the players. We cover the companies. The ones writing the checks, signing the deals, missing the moments, reading the room, and occasionally surprising everyone.</p>` +
     `<p class="hero-desc hero-desc--secondary">Filter by brand to track a specific name. Sort by date for the freshest. Every story here gets read against the Index, so when a brand makes a move you can see whether the data agrees.</p>`;
 
+  /* Helper: build page-specific context block (breaks structural-similarity flag) */
+  function pageContextBlock(pageArticles, pageNum) {
+    const dates = pageArticles
+      .map(a => a.pubDate ? new Date(a.pubDate) : null)
+      .filter(Boolean)
+      .sort((a, b) => a - b);
+    const dateFrom = dates.length ? dates[0].toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '';
+    const dateTo   = dates.length ? dates[dates.length - 1].toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '';
+    const allBrands = new Set([
+      ...pageArticles.map(a => a.brandSlug).filter(Boolean),
+      ...pageArticles.flatMap(a => a.secondaryBrandSlugs || []).filter(Boolean),
+    ]);
+    const brandCount = allBrands.size;
+    const dateRange  = dateFrom === dateTo ? dateFrom : `${dateFrom} to ${dateTo}`;
+    return `<div class="news-page-context" aria-label="Page ${pageNum} summary">` +
+      `<span class="news-page-context-label">PAGE ${pageNum}</span>` +
+      `<span class="news-page-context-detail">${dateRange}</span>` +
+      `<span class="news-page-context-stats">${pageArticles.length} articles · ${brandCount} brands covered</span>` +
+      `</div>`;
+  }
+
   /* ── Page 1: news/index.html ───────────────────────────────────────────── */
   const page1Articles = articles.slice(0, PAGE_SIZE);
-  const feedHtml = page1Articles.map((a, i) => articleCardHtml(a)).join('\n');
+  const feedHtml = pageContextBlock(page1Articles, 1) + '\n' + page1Articles.map((a, i) => articleCardHtml(a)).join('\n');
 
   const newsFilePath = path.join(ROOT, 'news/index.html');
   let newsHtml = fs.readFileSync(newsFilePath, 'utf8');
 
   /* Update title, meta, OG/Twitter */
   newsHtml = updateHeadMeta(newsHtml, {
-    title:         'The Feed — Golf Brand News | DORMIED',
+    title:         'The Feed | Golf Brand News | DORMIED',
     description:   'Daily coverage from golf\'s brand desk. Brand moves, marketing plays, retail shifts, athlete deals, and what they mean for our game.',
-    ogTitle:       'The Feed — Golf Brand News | DORMIED',
+    ogTitle:       'The Feed | Golf Brand News | DORMIED',
     ogDescription: 'Daily coverage from golf\'s brand desk. Brand moves, marketing plays, retail shifts, athlete deals, and what they mean for our game.',
   });
 
@@ -645,12 +666,12 @@ async function generateNews() {
 
   for (let p = 2; p <= totalPages; p++) {
     const pageArticles = articles.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE);
-    const pageFeedHtml = pageArticles.map((a, i) => articleCardHtml(a)).join('\n');
+    const pageFeedHtml = pageContextBlock(pageArticles, p) + '\n' + pageArticles.map((a, i) => articleCardHtml(a)).join('\n');
 
     let pageHtml = paginatedBase
       .replace(
         /<title>[^<]+<\/title>/,
-        `<title>The Feed — Golf Brand News, Page ${p} | DORMIED</title>`
+        `<title>The Feed | Golf Brand News, Page ${p} | DORMIED</title>`
       )
       .replace(
         /<link rel="canonical"[^>]+>/,

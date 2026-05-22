@@ -1067,6 +1067,7 @@ async function main() {
     const { data: allRows, error: allErr } = await supabase
       .from('dormied_articles')
       .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author')
+      .neq('status', 'suppressed')
       .order('published_at', { ascending: false });
 
     if (allErr) {
