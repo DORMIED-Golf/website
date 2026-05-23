@@ -33,6 +33,7 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
+    "cheerio": "^1.2.0",
     "sharp": "^0.34.5",
     "terser": "^5.46.2"
   }

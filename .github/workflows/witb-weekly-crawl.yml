@@ -1,0 +1,87 @@
+name: WITB Weekly Crawl
+
+# Runs every Tuesday at 13:00 UTC (Tuesday 9am ET, good for post-weekend bag updates)
+# Can also be triggered manually from GitHub Actions tab
+
+on:
+  schedule:
+    - cron: '0 13 * * 2'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Scrape mode (weekly or initial)'
+        required: false
+        default: 'weekly'
+        type: choice
+        options:
+          - weekly
+          - initial
+      no_history:
+        description: 'Skip historical bags (for initial mode)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  witb-crawl:
+    name: WITB Data Refresh
+    runs-on: ubuntu-latest
+    timeout-minutes: 180   # 3 hours max (covers a full initial scrape)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run WITB scrape (scheduled weekly)
+        if: github.event_name == 'schedule'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/witb-scrape.js --mode=weekly
+
+      - name: Run WITB scrape (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          ARGS="--mode=${{ inputs.mode }}"
+          if [ "${{ inputs.no_history }}" = "true" ]; then
+            ARGS="$ARGS --no-history"
+          fi
+          node scripts/witb-scrape.js $ARGS
+
+      - name: Check crawl status
+        if: always()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          node -e "
+          require('dotenv').config();
+          const { createClient } = require('@supabase/supabase-js');
+          const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+          sb.from('witb_crawl_runs')
+            .select('run_type, status, players_scraped, bags_added, changes_detected, started_at, finished_at')
+            .order('started_at', { ascending: false })
+            .limit(1)
+            .then(({ data }) => {
+              if (data && data[0]) {
+                const r = data[0];
+                console.log('Last run:', JSON.stringify(r, null, 2));
+                if (r.status === 'failed') {
+                  console.error('CRAWL FAILED');
+                  process.exit(1);
+                }
+              }
+            });
+          "
