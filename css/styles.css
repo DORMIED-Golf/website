@@ -6072,7 +6072,7 @@ details[open] .faq-question::after { content: '−'; }
   flex-shrink: 0;
   user-select: none;
 }
-.witb-scatter-inner { flex: 1; min-width: 0; }
+.witb-scatter-inner { flex: 1; min-width: 0; max-height: 340px; overflow: hidden; }
 .witb-scatter-xtitle {
   font-family: var(--font-mono);
   font-size: .58rem;
@@ -6086,6 +6086,7 @@ details[open] .faq-question::after { content: '−'; }
 .witb-scatter-svg {
   width: 100%;
   height: auto;
+  max-height: 340px;
   display: block;
 }
 /* Tooltip: matches brand-page chart.js tooltip exactly */
