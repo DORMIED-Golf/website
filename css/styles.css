@@ -6050,38 +6050,74 @@ details[open] .faq-question::after { content: '−'; }
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px;
-  overflow: hidden;
+  padding: 12px 12px 8px;
+  overflow: visible; /* tooltip may overflow boundary */
+}
+/* Axis title layout — HTML titles outside SVG so tooltip can't overlap */
+.witb-scatter-frame {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+.witb-scatter-ytitle {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  color: #4d6b4d;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  padding: 8px 4px 8px 0;
+  flex-shrink: 0;
+  user-select: none;
+}
+.witb-scatter-inner { flex: 1; min-width: 0; }
+.witb-scatter-xtitle {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  color: #4d6b4d;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  text-align: center;
+  padding-top: 4px;
+  user-select: none;
 }
 .witb-scatter-svg {
   width: 100%;
   height: auto;
   display: block;
 }
+/* Tooltip: matches brand-page chart.js tooltip exactly */
 .witb-scatter-tooltip {
   position: fixed;
-  background: var(--bg-raised);
-  border: 1px solid var(--border-lite);
-  border-radius: var(--radius-sm);
+  background: #0c140c;
+  border: 1px solid #1a2e1a;
+  border-radius: 4px;
   padding: 8px 10px;
-  font-family: var(--font-mono);
-  font-size: .72rem;
-  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #8aa88a;
   pointer-events: none;
   z-index: 200;
   display: none;
   white-space: nowrap;
-  max-width: 220px;
+  max-width: 240px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.6);
+  line-height: 1.65;
 }
 .witb-scatter-tooltip.visible { display: block; }
+.witb-tt-title { color: #22c55e; font-weight: 700; margin-bottom: 3px; }
+.witb-tt-gap   { color: #4d6b4d; margin-top: 3px; }
 .witb-scatter-axis-label {
-  font-family: var(--font-mono);
-  font-size: .65rem;
-  fill: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  fill: #4d6b4d;
   text-transform: uppercase;
   letter-spacing: .05em;
 }
-.witb-scatter-grid { stroke: var(--border); stroke-width: .5; }
+/* Grid: semi-transparent, matching brand chart color */
+.witb-scatter-grid { stroke: rgba(26,46,26,0.5); stroke-width: .5; }
 .witb-scatter-dot {
   fill: var(--green);
   fill-opacity: .85;
@@ -6098,6 +6134,49 @@ details[open] .faq-question::after { content: '−'; }
   pointer-events: none;
 }
 .witb-scatter-diagonal { stroke: var(--text-muted); stroke-dasharray: 4 4; stroke-width: 1; opacity: .4; }
+
+/* Brand logos in WITB leaderboard / legend rows */
+.witb-brand-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-right: 5px;
+  vertical-align: middle;
+  display: inline-block;
+}
+.witb-brand-logo-sm {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-right: 4px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+/* Category icon — rendered in site green; extends to future icon slugs */
+.witb-cat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 5px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+/* Prop-legend items: flex row so logo + dot + name align */
+.witb-prop-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
 
 /* Bag moves / change feed */
 .witb-moves-empty {

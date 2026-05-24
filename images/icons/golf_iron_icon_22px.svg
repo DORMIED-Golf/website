@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" width="22" height="22" fill="currentColor" aria-hidden="true">
+  <!-- Shaft: angled strip from upper-right to hosel -->
+  <polygon points="14,2 16.5,2 10.5,15 8,15"/>
+  <!-- Club head: horizontal blade at bottom -->
+  <rect x="3" y="15" width="15" height="4.5" rx="1"/>
+</svg>
