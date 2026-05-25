@@ -283,7 +283,7 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
 
   const treemapClub  = buildShareData(CLUB_TYPES);
   const treemapBall  = buildShareData(BALL_TYPES);
-  const treemapGrip  = buildShareData([...GRIP_TYPES, 'shaft']);
+  const treemapGrip  = buildShareData(GRIP_TYPES); // grips only (shafts in separate view below)
 
   // --- Did You Know ---
   const drivers = currentItems.filter(i => i.club_type === 'driver');
@@ -337,6 +337,10 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
     .sort((a, b) => b.count - a.count);
   const shaftTopCount = shaftLeaderboard[0]?.count || 1;
 
+  // Shaft proportional share for Brand Tour Share widget (separate from grips)
+  const shaftShareTotal = shaftLeaderboard.reduce((s, b) => s + b.count, 0) || 1;
+  const treemapShaft = shaftLeaderboard.map(b => ({ ...b, pct: b.count / shaftShareTotal * 100 }));
+
   // Inject real shaft data into the leaderboards array in place of the empty stub
   const shaftLb = leaderboards.find(l => l.key === 'shafts');
   if (shaftLb) {
@@ -348,7 +352,7 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
     .map(m => ({ ...m, count: m.bags.size }))
     .sort((a, b) => b.count - a.count)[0] || null;
 
-  return { scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, dyk, gainLoss, totalPlayers, topShaftModel };
+  return { scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, treemapShaft, dyk, gainLoss, totalPlayers, topShaftModel };
 }
 
 // ── SVG Scatter Plot ───────────────────────────────────────────────────────
@@ -459,9 +463,14 @@ function buildLeaderboard(cat) {
     : '';
   const rows = cat.brands.slice(0, 8).map((b, i) => {
     const pct  = (b.count / cat.topCount * 100).toFixed(0);
+    const initials = esc(b.name.replace(/[^A-Za-z0-9]/g, '').substring(0, 2).toUpperCase());
+    const logoHtml = b.dormied_slug
+      ? `<img src="/images/logos/${esc(b.dormied_slug)}.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">`
+        + `<span class="witb-brand-monogram" style="display:none">${initials}</span>`
+      : `<span class="witb-brand-monogram">${initials}</span>`;
     const nameHtml = b.dormied_slug
-      ? `<a href="/brands/${esc(b.dormied_slug)}/">${esc(b.name)}</a>`
-      : esc(b.name);
+      ? `${logoHtml}<a href="/brands/${esc(b.dormied_slug)}/">${esc(b.name)}</a>`
+      : `${logoHtml}${esc(b.name)}`;
     return `<div class="witb-lb-row">
       <span class="witb-lb-rank">${i + 1}</span>
       <span class="witb-lb-name">${nameHtml}</span>
@@ -525,7 +534,7 @@ function buildDykHtml(dyk) {
 
   if (dyk.threeWoodCount !== undefined) {
     cards.push(`<div class="witb-dyk-card">
-      <div class="witb-dyk-stat">${dyk.threeWoodCount}<span style="font-size:1rem">v</span>${dyk.miniDriverCount}</div>
+      <div class="witb-dyk-stat">${dyk.threeWoodCount} vs ${dyk.miniDriverCount}</div>
       <div class="witb-dyk-label">3-Wood vs Mini-Driver</div>
       <div class="witb-dyk-detail">${dyk.threeWoodCount} players carry a traditional 3-wood; ${dyk.miniDriverCount} carry a mini-driver</div>
     </div>`);
@@ -548,7 +557,7 @@ function buildDykHtml(dyk) {
 
 function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems }) {
   const {
-    scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip,
+    scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, treemapShaft,
     dyk, gainLoss, totalPlayers, topShaftModel
   } = computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftItems });
 
@@ -806,16 +815,17 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
 
   <!-- ══ MAIN ═════════════════════════════════════════════════════════════════ -->
   <main>
-    <div class="container" style="padding-top:28px;padding-bottom:0">
-      <nav class="witb-breadcrumb" aria-label="Breadcrumb">
-        <a href="/">Home</a> &rsaquo; WITB
-      </nav>
-
-      <div class="witb-hero">
-        <h1 class="witb-hero-h1">What's In The Bag</h1>
-        <p class="witb-hero-dek">What the tour actually plays, and how it lines up with what the rest of golf is paying attention to.</p>
+    <section class="hero-section" aria-labelledby="witb-page-title">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-text">
+            <h1 id="witb-page-title" class="hero-title">What's In The Bag</h1>
+            <p class="hero-subhead">Tour Equipment Data</p>
+            <p class="hero-desc">What the tour actually plays, and how it lines up with what the amateur game is paying attention to.</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
     <div class="witb-layout">
       <!-- ── LEFT / MAIN COLUMN ─────────────────────────────────────────── -->
@@ -835,7 +845,7 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
         <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
         <section class="witb-section" aria-labelledby="scatter-heading">
           <h2 class="witb-section-title" id="scatter-heading">Tour Usage vs. Amateur Attention</h2>
-          <p class="witb-section-sub">April 2026 tour usage vs. April 2026 DORMIED Index score, like-for-like</p>
+          <p class="witb-section-sub">April 2026 tour usage vs. April 2026 DORMIED Index score. Same month, same brands, measured two ways.</p>
           <div class="witb-scatter-filter" id="scatter-filter" aria-label="Filter brands on chart">
             <div class="witb-scatter-filter-bar">
               <input type="search" id="scatter-brand-search" class="witb-scatter-search" placeholder="Search brands&hellip;" autocomplete="off" aria-label="Search brands">
@@ -851,7 +861,7 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
             </div>
           </div>
           <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:8px;text-transform:uppercase;letter-spacing:.05em">
-            Brands above the dashed line are pro favorites the public underrates. Below: more attention than tour usage. Dot size = player count. Click any dot to view brand page.
+            Brands above the dashed line are pro favorites the amateur game underrates. Below: more attention than tour usage. Dot size = player count. Click any dot to view brand page.
           </p>
         </section>
 
@@ -893,8 +903,12 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
             ${buildPropBar(treemapBall)}
           </div>
           <div class="witb-treemap-group">
-            <div class="witb-treemap-title">Grips and Shafts</div>
+            <div class="witb-treemap-title">Grips</div>
             ${buildPropBar(treemapGrip)}
+          </div>
+          <div class="witb-treemap-group">
+            <div class="witb-treemap-title">Shafts</div>
+            ${buildPropBar(treemapShaft)}
           </div>
         </section>
 
@@ -947,14 +961,14 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
           <h2 class="witb-section-title" id="method-heading">Methodology</h2>
           <div class="witb-methodology">
             <h2>What This Data Is</h2>
-            <p>The DORMIED WITB dataset tracks the current equipment setup of ${totalPlayers} professional golfers, pulling bag data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker.com</a> on a weekly basis. Each player's bag is recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball, and grips. Brand, model, shaft, and loft are captured where available. The dataset covers ${totalBrands} distinct equipment brands and is refreshed every Tuesday at 9am ET.</p>
+            <p>The DORMIED WITB dataset tracks the current equipment setup of ${totalPlayers} professional golfers, pulling current bag data on a weekly basis. Each player's bag is recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball, and grips. Brand, model, shaft, and loft are captured where available. The dataset covers ${totalBrands} distinct equipment brands and is refreshed every Tuesday at 9am ET.</p>
 
-            <p>This is equipment-in-play data, not equipment-sold data. A brand appearing here means a tour-level professional has chosen it in competition - which is a meaningfully different signal than market share, retail velocity, or endorsement deals. Some of the most tour-popular brands barely register in the general golf public's awareness. That gap is the most interesting thing this page exists to show.</p>
+            <p>This is equipment-in-play data, not equipment-sold data. A brand appearing here means a tour-level professional has chosen it in competition - which is a meaningfully different signal than market share, retail velocity, or endorsement deals. Some of the most tour-popular brands barely register in amateur golfers' awareness. That gap is the most interesting thing this page exists to show.</p>
 
-            <h2>Reading the Tour Usage vs. Public Attention Chart</h2>
-            <p>The signature chart plots two independent signals against each other. The X axis is tour usage share: what percentage of the ${totalPlayers} tracked players carry at least one product from that brand in their bag. The Y axis is the DORMIED Index (DI) score for that brand in April 2026, which measures global search interest relative to the highest-scoring brand in the Index that month. Both axes use the same time period for a like-for-like comparison.</p>
+            <h2>Reading the Tour Usage vs. Amateur Attention Chart</h2>
+            <p>The signature chart plots two independent signals against each other. The X axis is tour usage share: what percentage of the ${totalPlayers} tracked players carry at least one product from that brand in their bag. The Y axis is the DORMIED Index (DI) score for that brand in April 2026, which measures global search interest relative to the highest-scoring brand in the Index that month. Both axes use the same time period.</p>
 
-            <p>The dashed diagonal is a reference line, not a regression. Brands sitting above the line are pro favorites the general golf public has not yet matched with search attention - either because the brand does not market aggressively, serves a niche the mainstream has not discovered, or benefits from tour contracts that do not translate to retail awareness. Brands sitting below the line command more public attention than their tour presence suggests - often large heritage brands with strong retail and marketing footprints even when pros have shifted toward competitors.</p>
+            <p>The dashed diagonal is a reference line, not a regression. Brands sitting above the line are pro favorites the amateur game has not yet matched with search attention - either because the brand does not market aggressively, serves a niche the mainstream has not discovered, or benefits from tour contracts that do not translate to retail awareness. Brands sitting below the line command more amateur attention than their tour presence suggests - often large heritage brands with strong retail and marketing footprints even when pros have shifted toward competitors.</p>
 
             <h2>How the Tour-Usage-to-DI Join Works</h2>
             <p>The WITB brand database maps each equipment brand to its corresponding entry in the <a href="/rankings/">DORMIED Index</a>. Not every tour brand has a DORMIED Index entry - particularly grip companies and shaft manufacturers that do not compete in the retail consumer markets tracked by the Index. Brands without a mapping appear in the leaderboards and share views but are excluded from the scatter chart, which requires both a tour usage figure and a DI score to plot. As of this writing, ${brands.filter(b => !b.dormied_brand_slug).length} of ${totalBrands} tracked equipment brands lack a DI mapping; those brands render as plain text throughout this page rather than as hyperlinks to brand pages.</p>
@@ -1085,7 +1099,7 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
         var rank     = dot.dataset.rank;
         var players  = dot.dataset.players;
         var gap      = (parseFloat(di) - parseFloat(tour)).toFixed(1);
-        var gapLabel = gap > 0 ? 'Underrated by public (+' + gap + ')' : gap < 0 ? 'Over-indexed (' + gap + ')' : 'Balanced';
+        var gapLabel = gap > 0 ? 'Underrated by amateurs (+' + gap + ')' : gap < 0 ? 'Over-indexed (' + gap + ')' : 'Balanced';
         tooltip.innerHTML =
           '<strong>' + name + '</strong><br>' +
           'Tour: ' + tour + '% (' + players + ' players)<br>' +
