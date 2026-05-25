@@ -65,6 +65,27 @@ const GREEN_SHADES = [
   '#4ade80','#86efac','#bbf7d0','#dcfce7','#f0fdf4',
 ];
 
+/** Normalize truncated shaft brand names (ingestion artifact; fix at render time only) */
+const SHAFT_BRAND_NORMALIZE = {
+  'True':     'True Temper',
+  'Graphite': 'Graphite Design',
+  'UST':      'UST Mamiya',
+  'LA':       'L.A. Golf',
+};
+
+/** Category icon paths — used in leaderboard titles and top-model rows */
+const CAT_ICONS = {
+  driver:  '/images/icons/driver_22px.svg',
+  woods:   '/images/icons/fairway_wood_22px.svg',
+  hybrids: '/images/icons/hybrid_22px.svg',
+  irons:   '/images/icons/golf_iron_icon_22px.svg',
+  wedges:  '/images/icons/wedge_22px.svg',
+  putters: '/images/icons/putter_22px.svg',
+  balls:   '/images/icons/ball.svg',
+  grips:   '/images/icons/grip.svg',
+  shafts:  '/images/icons/shaft.svg',
+};
+
 // ── Data fetching ──────────────────────────────────────────────────────────
 
 async function fetchAllData() {
@@ -113,12 +134,22 @@ async function fetchAllData() {
     .limit(1);
   const lastCrawl = crawlRuns?.[0];
 
-  return { currentItems, playerMap, brands, diBySlug, changes: changes || [], lastCrawl };
+  // 7. Shaft items via witb_shafts join (for shafts leaderboard + top model)
+  const shaftItemsRaw = await paginate((from, to) =>
+    sb.from('witb_bag_items')
+      .select('bag_id, shaft_id, witb_shafts!shaft_id(brand_name, model), witb_bags!bag_id(is_current)')
+      .not('shaft_id', 'is', null)
+      .range(from, to)
+  );
+  const shaftItems = shaftItemsRaw.filter(i => i.witb_bags?.is_current === true);
+  console.log(`  Shaft items (current bags with shaft data): ${shaftItems.length}`);
+
+  return { currentItems, playerMap, brands, diBySlug, changes: changes || [], lastCrawl, shaftItems };
 }
 
 // ── Widget computations ────────────────────────────────────────────────────
 
-function computeWidgetData({ currentItems, playerMap, brands, diBySlug }) {
+function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftItems }) {
   const totalPlayers = 160;
 
   // Club type groups
@@ -284,7 +315,40 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug }) {
   // Widget 8 gracefully labels the window.
   const gainLoss = { window: 'initial tracking only', note: true };
 
-  return { scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, dyk, gainLoss, totalPlayers };
+  // --- Shaft leaderboard and top model (from witb_shafts join, not club_type) ---
+  const shaftBrandBags = {};
+  const shaftModelBags = {};
+  for (const item of (shaftItems || [])) {
+    const rawBrand = item.witb_shafts?.brand_name;
+    const rawModel = item.witb_shafts?.model;
+    if (!rawBrand || rawBrand.trim() === '') continue;
+    const brand = SHAFT_BRAND_NORMALIZE[rawBrand.trim()] || rawBrand.trim();
+    const bagId  = item.bag_id;
+    if (!shaftBrandBags[brand]) shaftBrandBags[brand] = new Set();
+    shaftBrandBags[brand].add(bagId);
+    if (rawModel && rawModel.trim()) {
+      const modelKey = `${brand}||${rawModel.trim()}`;
+      if (!shaftModelBags[modelKey]) shaftModelBags[modelKey] = { brand, model: rawModel.trim(), bags: new Set() };
+      shaftModelBags[modelKey].bags.add(bagId);
+    }
+  }
+  const shaftLeaderboard = Object.entries(shaftBrandBags)
+    .map(([name, bags]) => ({ name, dormied_slug: null, count: bags.size }))
+    .sort((a, b) => b.count - a.count);
+  const shaftTopCount = shaftLeaderboard[0]?.count || 1;
+
+  // Inject real shaft data into the leaderboards array in place of the empty stub
+  const shaftLb = leaderboards.find(l => l.key === 'shafts');
+  if (shaftLb) {
+    shaftLb.brands   = shaftLeaderboard;
+    shaftLb.topCount = shaftTopCount;
+  }
+
+  const topShaftModel = Object.values(shaftModelBags)
+    .map(m => ({ ...m, count: m.bags.size }))
+    .sort((a, b) => b.count - a.count)[0] || null;
+
+  return { scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, dyk, gainLoss, totalPlayers, topShaftModel };
 }
 
 // ── SVG Scatter Plot ───────────────────────────────────────────────────────
@@ -389,6 +453,10 @@ function buildPropBar(shareData, limit = 8) {
 // ── Leaderboard HTML ───────────────────────────────────────────────────────
 
 function buildLeaderboard(cat) {
+  const iconPath = CAT_ICONS[cat.key];
+  const iconHtml = iconPath
+    ? `<span class="witb-cat-icon" aria-hidden="true"><img src="${iconPath}" width="16" height="16" alt=""></span>`
+    : '';
   const rows = cat.brands.slice(0, 8).map((b, i) => {
     const pct  = (b.count / cat.topCount * 100).toFixed(0);
     const nameHtml = b.dormied_slug
@@ -405,7 +473,7 @@ function buildLeaderboard(cat) {
   }).join('');
 
   return `<div class="witb-lb-section" id="${esc(cat.key)}">
-    <div class="witb-lb-title">${esc(cat.label)}</div>
+    <div class="witb-lb-title">${iconHtml}${esc(cat.label)}</div>
     ${rows}
   </div>`;
 }
@@ -478,11 +546,11 @@ function buildDykHtml(dyk) {
 
 // ── Full page HTML ─────────────────────────────────────────────────────────
 
-function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCrawl }) {
+function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems }) {
   const {
     scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip,
-    dyk, gainLoss, totalPlayers
-  } = computeWidgetData({ currentItems, playerMap, brands, diBySlug });
+    dyk, gainLoss, totalPlayers, topShaftModel
+  } = computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftItems });
 
   const totalItems  = currentItems.length;
   const totalBrands = brands.length;
@@ -498,17 +566,66 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
     : new Date().toISOString();
 
   // Top models table
-  const MODEL_LABELS = { driver: 'Drivers', '3-wood': 'Fairway Woods', hybrid: 'Hybrids', iron: 'Irons', wedge: 'Wedges', putter: 'Putters', ball: 'Balls' };
-  const topModelsHtml = Object.entries(topModels).filter(([, m]) => m).map(([ct, m]) => {
-    const brandHtml = m.dormied_slug
-      ? `<a href="/brands/${esc(m.dormied_slug)}/">${esc(m.brand)}</a>`
-      : esc(m.brand);
-    return `<div class="witb-lb-row">
-      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">${esc(MODEL_LABELS[ct] || ct)}</span>
+  const MODEL_LABELS = {
+    driver:   'Drivers',
+    '3-wood': 'Fairway Woods',
+    hybrid:   'Hybrids',
+    iron:     'Irons',
+    wedge:    'Wedges',
+    putter:   'Putters',
+    ball:     'Balls',
+    grip:     'Grips',
+    shaft:    'Shafts',
+  };
+  // Maps club_type key -> CAT_ICONS key
+  const MODEL_ICON_KEY = {
+    driver:   'driver',
+    '3-wood': 'woods',
+    hybrid:   'hybrids',
+    iron:     'irons',
+    wedge:    'wedges',
+    putter:   'putters',
+    ball:     'balls',
+    grip:     'grips',
+    shaft:    'shafts',
+  };
+  function modelCatIcon(ct) {
+    const iconKey  = MODEL_ICON_KEY[ct];
+    const iconPath = iconKey ? CAT_ICONS[iconKey] : null;
+    if (!iconPath) return '';
+    const sz = (ct === 'iron') ? 16 : 14;
+    return `<span class="witb-cat-icon" aria-hidden="true"><img src="${iconPath}" width="${sz}" height="${sz}" alt=""></span>`;
+  }
+  const topModelsHtml = Object.entries(topModels)
+    .filter(([ct, m]) => m && ct !== 'shaft')
+    .map(([ct, m]) => {
+      const brandHtml = m.dormied_slug
+        ? `<a href="/brands/${esc(m.dormied_slug)}/">${esc(m.brand)}</a>`
+        : esc(m.brand);
+      return `<div class="witb-lb-row">
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">${modelCatIcon(ct)}${esc(MODEL_LABELS[ct] || ct)}</span>
       <span class="witb-lb-name">${brandHtml} ${esc(m.model)}</span>
       <span class="witb-lb-count">${m.count}</span>
     </div>`;
-  }).join('');
+    }).join('');
+
+  // Shaft row in top-model table — populated from witb_shafts join.
+  // Many shaft model strings already include the brand name (e.g. "True Temper Dynamic Gold…"),
+  // so skip the brand prefix if the model string already starts with it.
+  const shaftModelRowHtml = topShaftModel
+    ? (() => {
+        const modelStr = topShaftModel.model;
+        const brandStr = topShaftModel.brand;
+        const display  = modelStr.toLowerCase().startsWith(brandStr.toLowerCase())
+          ? modelStr
+          : `${brandStr} ${modelStr}`;
+        return `<div class="witb-lb-row">
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">${modelCatIcon('shaft')}Shafts</span>
+      <span class="witb-lb-name">${esc(display)}</span>
+      <span class="witb-lb-count">${topShaftModel.count}</span>
+    </div>`;
+      })()
+    : '';
 
   // Scatter JSON for JS tooltip
   const scatterJSON = JSON.stringify(scatterData.map(d => ({
@@ -592,6 +709,17 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
     .site-search-trigger:hover{color:var(--text)}
     .site-search-trigger-label{display:none}
     @media(min-width:600px){.site-search-trigger-label{display:inline}}
+    /* Scatter brand filter */
+    .witb-scatter-filter{margin-bottom:12px}
+    .witb-scatter-filter-bar{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+    .witb-scatter-search{background:var(--bg-surface);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:4px 8px;font-family:var(--font-mono);font-size:.7rem;min-width:150px;outline:none}
+    .witb-scatter-search::placeholder{color:var(--text-muted)}
+    .witb-scatter-search:focus{border-color:var(--green)}
+    .witb-scatter-btn{background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:4px;padding:4px 10px;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
+    .witb-scatter-btn:hover{border-color:var(--green);color:var(--green)}
+    .witb-scatter-checkboxes{display:flex;flex-wrap:wrap;gap:4px 14px}
+    .witb-scatter-cb-label{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+    .witb-scatter-cb-label input[type=checkbox]{accent-color:var(--green);cursor:pointer;width:11px;height:11px}
   </style>
 
   <link rel="preload" href="/css/styles.min.css?v=20260523" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -704,12 +832,23 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
           <span><span class="witb-pulse-val">${fmt(uniqueClubTypes)}</span> club categories</span>
         </div>
 
-        <!-- WIDGET 2: TOUR USAGE vs PUBLIC ATTENTION (signature) -->
+        <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
         <section class="witb-section" aria-labelledby="scatter-heading">
-          <h2 class="witb-section-title" id="scatter-heading">Tour Usage vs. Public Attention</h2>
-          <p class="witb-section-sub">April 2026 tour usage vs. April 2026 DORMIED Index score &mdash; solid data, like-for-like comparison</p>
+          <h2 class="witb-section-title" id="scatter-heading">Tour Usage vs. Amateur Attention</h2>
+          <p class="witb-section-sub">April 2026 tour usage vs. April 2026 DORMIED Index score, like-for-like</p>
+          <div class="witb-scatter-filter" id="scatter-filter" aria-label="Filter brands on chart">
+            <div class="witb-scatter-filter-bar">
+              <input type="search" id="scatter-brand-search" class="witb-scatter-search" placeholder="Search brands&hellip;" autocomplete="off" aria-label="Search brands">
+              <button type="button" class="witb-scatter-btn" id="scatter-select-all">Select all</button>
+              <button type="button" class="witb-scatter-btn" id="scatter-clear-all">Clear all</button>
+            </div>
+            <div class="witb-scatter-checkboxes" id="scatter-checkboxes" role="group" aria-label="Brand checkboxes"></div>
+          </div>
           <div class="witb-scatter-wrap">
-            ${scatterSVG}
+            <div class="witb-scatter-frame">
+              <div class="witb-scatter-ytitle" aria-hidden="true">DI Score</div>
+              <div class="witb-scatter-inner">${scatterSVG}</div>
+            </div>
           </div>
           <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:8px;text-transform:uppercase;letter-spacing:.05em">
             Brands above the dashed line are pro favorites the public underrates. Below: more attention than tour usage. Dot size = player count. Click any dot to view brand page.
@@ -719,7 +858,7 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
         <!-- WIDGET 3: BAG MOVES -->
         <section class="witb-section" aria-labelledby="moves-heading">
           <h2 class="witb-section-title" id="moves-heading">This Week's Bag Moves</h2>
-          <p class="witb-section-sub">Equipment changes detected on most recent crawl</p>
+          <p class="witb-section-sub">Equipment changes detected on the most recent update</p>
           ${changesHtml}
         </section>
 
@@ -736,7 +875,7 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
           <h2 class="witb-section-title" id="model-heading">Top Model Per Category</h2>
           <p class="witb-section-sub">Most-played specific model across all tracked players</p>
           <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px">
-            ${topModelsHtml}
+            ${topModelsHtml}${shaftModelRowHtml}
           </div>
         </section>
 
@@ -769,7 +908,7 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
         <!-- WIDGET 8: GAINED / LOST -->
         <section class="witb-section" aria-labelledby="momentum-heading">
           <h2 class="witb-section-title" id="momentum-heading">Brand Momentum</h2>
-          <p class="witb-section-sub">Tour usage as of initial tracking snapshot${gainLoss.note ? ' &mdash; historical comparison available after the second weekly crawl' : ''}</p>
+          <p class="witb-section-sub">Tour usage as of initial tracking snapshot. Historical comparison builds week over week.</p>
           <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px">
             <div class="witb-momentum-grid">
               <div>
@@ -799,7 +938,7 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
                 }).join('') || ''}
               </div>
             </div>
-            <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:16px;text-transform:uppercase;letter-spacing:.05em">Full quarter-over-quarter comparison available after additional weekly crawls accumulate</p>
+            <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:16px;text-transform:uppercase;letter-spacing:.05em">Quarter-over-quarter trends populate after additional weekly updates.</p>
           </div>
         </section>
 
@@ -970,6 +1109,63 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
   })();
   </script>
 
+  <!-- Brand filter for scatter chart -->
+  <script>
+  (function(){
+    var svg = document.querySelector('.witb-scatter-svg');
+    var container = document.getElementById('scatter-checkboxes');
+    if (!svg || !container) return;
+
+    // Build brand list from SVG circles
+    var circles = Array.from(svg.querySelectorAll('.witb-scatter-dot'));
+    var brands = circles.map(function(c){ return {slug: c.dataset.slug, name: c.dataset.name}; });
+
+    // Render checkboxes (all checked by default)
+    brands.forEach(function(b){
+      var lbl = document.createElement('label');
+      lbl.className = 'witb-scatter-cb-label';
+      lbl.setAttribute('data-name', b.name.toLowerCase());
+      lbl.innerHTML = '<input type="checkbox" class="witb-scatter-cb" value="' + b.slug + '" checked> ' + b.name;
+      container.appendChild(lbl);
+    });
+
+    // Toggle chart dots + labels based on checked state
+    function updateChart(){
+      var checked = {};
+      document.querySelectorAll('.witb-scatter-cb:checked').forEach(function(cb){ checked[cb.value] = true; });
+      circles.forEach(function(circle){
+        var vis = !!checked[circle.dataset.slug];
+        circle.style.display = vis ? '' : 'none';
+        // Find matching text label by cx position
+        var cx = circle.getAttribute('cx');
+        var txt = svg.querySelector('text.witb-scatter-label[x="' + cx + '"]');
+        if (txt) txt.style.display = vis ? '' : 'none';
+      });
+    }
+
+    // Checkbox changes
+    container.addEventListener('change', updateChart);
+
+    // Select all / Clear all
+    document.getElementById('scatter-select-all').addEventListener('click', function(){
+      document.querySelectorAll('.witb-scatter-cb').forEach(function(cb){ cb.checked = true; });
+      updateChart();
+    });
+    document.getElementById('scatter-clear-all').addEventListener('click', function(){
+      document.querySelectorAll('.witb-scatter-cb').forEach(function(cb){ cb.checked = false; });
+      updateChart();
+    });
+
+    // Search filters checkbox labels (not chart dots)
+    document.getElementById('scatter-brand-search').addEventListener('input', function(){
+      var q = this.value.toLowerCase().trim();
+      document.querySelectorAll('.witb-scatter-cb-label').forEach(function(lbl){
+        lbl.style.display = (q === '' || lbl.getAttribute('data-name').indexOf(q) !== -1) ? '' : 'none';
+      });
+    });
+  })();
+  </script>
+
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/feed.min.js?v=20260522"></script>
   <script defer src="/js/search.min.js?v=20260508"></script>
@@ -997,8 +1193,12 @@ async function main() {
     ['Titleist in HTML',    html.includes('Titleist')],
     ['TaylorMade in HTML',  html.includes('TaylorMade')],
     ['No em dash',         !html.includes('—')],
+    ['No shaft placeholder',!html.includes('next update')],
     ['Scatter SVG',         html.includes('witb-scatter-svg')],
     ['Leaderboard anchor',  html.includes('id="driver"')],
+    ['Shafts leaderboard',  html.includes('id="shafts"')],
+    ['Grips leaderboard',   html.includes('id="grips"')],
+    ['Scatter filter',      html.includes('scatter-brand-search')],
     ['pgaclubtracker',      html.includes('pgaclubtracker')],
     ['dormied-latest-list', html.includes('dormied-latest-list')],
     ['Hamburger btn',       html.includes('nav-hamburger')],
