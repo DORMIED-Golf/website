@@ -72,6 +72,17 @@
     .site-search-trigger:hover{color:var(--text)}
     .site-search-trigger-label{display:none}
     @media(min-width:600px){.site-search-trigger-label{display:inline}}
+    /* Scatter brand filter */
+    .witb-scatter-filter{margin-bottom:12px}
+    .witb-scatter-filter-bar{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+    .witb-scatter-search{background:var(--bg-surface);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:4px 8px;font-family:var(--font-mono);font-size:.7rem;min-width:150px;outline:none}
+    .witb-scatter-search::placeholder{color:var(--text-muted)}
+    .witb-scatter-search:focus{border-color:var(--green)}
+    .witb-scatter-btn{background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:4px;padding:4px 10px;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
+    .witb-scatter-btn:hover{border-color:var(--green);color:var(--green)}
+    .witb-scatter-checkboxes{display:flex;flex-wrap:wrap;gap:4px 14px}
+    .witb-scatter-cb-label{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+    .witb-scatter-cb-label input[type=checkbox]{accent-color:var(--green);cursor:pointer;width:11px;height:11px}
   </style>
 
   <link rel="preload" href="/css/styles.min.css?v=20260524" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -194,7 +205,15 @@
         <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
         <section class="witb-section" aria-labelledby="scatter-heading">
           <h2 class="witb-section-title" id="scatter-heading">Tour Usage vs. Amateur Attention</h2>
-          <p class="witb-section-sub">April 2026 tour usage vs. April 2026 DORMIED Index score &mdash; solid data, like-for-like comparison</p>
+          <p class="witb-section-sub">April 2026 tour usage vs. April 2026 DORMIED Index score, like-for-like</p>
+          <div class="witb-scatter-filter" id="scatter-filter" aria-label="Filter brands on chart">
+            <div class="witb-scatter-filter-bar">
+              <input type="search" id="scatter-brand-search" class="witb-scatter-search" placeholder="Search brands&hellip;" autocomplete="off" aria-label="Search brands">
+              <button type="button" class="witb-scatter-btn" id="scatter-select-all">Select all</button>
+              <button type="button" class="witb-scatter-btn" id="scatter-clear-all">Clear all</button>
+            </div>
+            <div class="witb-scatter-checkboxes" id="scatter-checkboxes" role="group" aria-label="Brand checkboxes"></div>
+          </div>
           <div class="witb-scatter-wrap">
             <div class="witb-scatter-frame">
               <div class="witb-scatter-ytitle" aria-hidden="true">DI Score</div>
@@ -346,7 +365,7 @@
         <!-- WIDGET 3: BAG MOVES -->
         <section class="witb-section" aria-labelledby="moves-heading">
           <h2 class="witb-section-title" id="moves-heading">This Week's Bag Moves</h2>
-          <p class="witb-section-sub">Equipment changes detected on most recent crawl</p>
+          <p class="witb-section-sub">Equipment changes detected on the most recent update</p>
           <div class="witb-moves-empty">No bag changes recorded yet. Check back after Tuesday's update.</div>
         </section>
 
@@ -356,7 +375,7 @@
           <p class="witb-section-sub">Player count across current bags</p>
           <div class="witb-lb-grid">
             <div class="witb-lb-section" id="driver">
-    <div class="witb-lb-title">Drivers</div>
+    <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt=""></span>Drivers</div>
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#7f1d1d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/titleist/">Titleist</a></span>
@@ -416,7 +435,7 @@
     </div>
   </div>
 <div class="witb-lb-section" id="woods">
-    <div class="witb-lb-title">Fairway Woods</div>
+    <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt=""></span>Fairway Woods</div>
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#14532d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/taylormade/">TaylorMade</a></span>
@@ -476,7 +495,7 @@
     </div>
   </div>
 <div class="witb-lb-section" id="hybrids">
-    <div class="witb-lb-title">Hybrids</div>
+    <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/hybrid_22px.svg" width="16" height="16" alt=""></span>Hybrids</div>
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#7f1d1d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/titleist/">Titleist</a></span>
@@ -589,7 +608,7 @@
     </div>
   </div>
 <div class="witb-lb-section" id="wedges">
-    <div class="witb-lb-title">Wedges</div>
+    <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt=""></span>Wedges</div>
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#7f1d1d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/titleist/">Titleist</a></span>
@@ -649,7 +668,7 @@
     </div>
   </div>
 <div class="witb-lb-section" id="putters">
-    <div class="witb-lb-title">Putters</div>
+    <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt=""></span>Putters</div>
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#4a1d96" data-ini="OG" onerror="witbLogoErr(this)"><a href="/brands/odyssey-golf/">Odyssey</a></span>
@@ -709,7 +728,7 @@
     </div>
   </div>
 <div class="witb-lb-section" id="balls">
-    <div class="witb-lb-title">Balls</div>
+    <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/ball.svg" width="16" height="16" alt=""></span>Balls</div>
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#7f1d1d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/titleist/">Titleist</a></span>
@@ -754,6 +773,49 @@
       </span>
     </div>
   </div>
+<div class="witb-lb-section" id="grips">
+    <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/grip.svg" width="16" height="16" alt=""></span>Grips</div>
+    <div class="witb-lb-row">
+      <span class="witb-lb-rank">1</span>
+      <span class="witb-lb-name"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#1e3a5f" data-ini="GP" onerror="witbLogoErr(this)">Golf Pride</span>
+      <span class="witb-lb-count">67%</span>
+      <span class="witb-lb-bar-wrap">
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
+      </span>
+    </div><div class="witb-lb-row">
+      <span class="witb-lb-rank">2</span>
+      <span class="witb-lb-name"><img src="/images/logos/superstroke.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#831843" data-ini="SS" onerror="witbLogoErr(this)">SuperStroke</span>
+      <span class="witb-lb-count">23%</span>
+      <span class="witb-lb-bar-wrap">
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:34%"></div></div>
+      </span>
+    </div><div class="witb-lb-row">
+      <span class="witb-lb-rank">3</span>
+      <span class="witb-lb-name"><img src="/images/logos/lamkin.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#14532d" data-ini="LK" onerror="witbLogoErr(this)">Lamkin</span>
+      <span class="witb-lb-count">5%</span>
+      <span class="witb-lb-bar-wrap">
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:7%"></div></div>
+      </span>
+    </div><div class="witb-lb-row">
+      <span class="witb-lb-rank">4</span>
+      <span class="witb-lb-name"><img src="/images/logos/ping.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#6b21a8" data-ini="P" onerror="witbLogoErr(this)"><a href="/brands/ping/">PING</a></span>
+      <span class="witb-lb-count">3%</span>
+      <span class="witb-lb-bar-wrap">
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:4%"></div></div>
+      </span>
+    </div><div class="witb-lb-row">
+      <span class="witb-lb-rank">5</span>
+      <span class="witb-lb-name"><img src="/images/logos/jumbomax.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#1e1b4b" data-ini="JM" onerror="witbLogoErr(this)">JumboMax</span>
+      <span class="witb-lb-count">1%</span>
+      <span class="witb-lb-bar-wrap">
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:1%"></div></div>
+      </span>
+    </div>
+  </div>
+<div class="witb-lb-section" id="shafts">
+    <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/shaft.svg" width="16" height="16" alt=""></span>Shafts</div>
+    <div class="witb-moves-empty" style="font-size:.75rem;padding:12px 0">Shaft brand breakdown available in the next update.</div>
+  </div>
           </div>
         </section>
 
@@ -762,15 +824,15 @@
           <p class="witb-section-sub">Most-played specific model across all tracked players</p>
           <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px">
             <div class="witb-lb-row">
-      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">Drivers</span>
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/driver_22px.svg" width="14" height="14" alt=""></span>Drivers</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#7f1d1d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/titleist/">Titleist</a> GT3</span>
       <span class="witb-lb-count">14</span>
     </div><div class="witb-lb-row">
-      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">Fairway Woods</span>
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/fairway_wood_22px.svg" width="14" height="14" alt=""></span>Fairway Woods</span>
       <span class="witb-lb-name"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#14532d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/taylormade/">TaylorMade</a> Qi10</span>
       <span class="witb-lb-count">12</span>
     </div><div class="witb-lb-row">
-      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">Hybrids</span>
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/hybrid_22px.svg" width="14" height="14" alt=""></span>Hybrids</span>
       <span class="witb-lb-name"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#14532d" data-ini="C" onerror="witbLogoErr(this)"><a href="/brands/callaway/">Callaway</a> Apex UW</span>
       <span class="witb-lb-count">8</span>
     </div><div class="witb-lb-row">
@@ -778,17 +840,25 @@
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#7f1d1d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/titleist/">Titleist</a> T100</span>
       <span class="witb-lb-count">28</span>
     </div><div class="witb-lb-row">
-      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">Wedges</span>
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/wedge_22px.svg" width="14" height="14" alt=""></span>Wedges</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#7f1d1d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/titleist/">Titleist</a> Vokey Design SM10</span>
       <span class="witb-lb-count">47</span>
     </div><div class="witb-lb-row">
-      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">Putters</span>
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/putter_22px.svg" width="14" height="14" alt=""></span>Putters</span>
       <span class="witb-lb-name"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#14532d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/taylormade/">TaylorMade</a> Spider Tour X</span>
       <span class="witb-lb-count">6</span>
     </div><div class="witb-lb-row">
-      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">Balls</span>
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/ball.svg" width="14" height="14" alt=""></span>Balls</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#7f1d1d" data-ini="T" onerror="witbLogoErr(this)"><a href="/brands/titleist/">Titleist</a> Pro V1</span>
       <span class="witb-lb-count">50</span>
+    </div><div class="witb-lb-row">
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/grip.svg" width="14" height="14" alt=""></span>Grips</span>
+      <span class="witb-lb-name"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" data-bg="#1e3a5f" data-ini="GP" onerror="witbLogoErr(this)">Golf Pride MCC</span>
+      <span class="witb-lb-count">—</span>
+    </div><div class="witb-lb-row">
+      <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/shaft.svg" width="14" height="14" alt=""></span>Shafts</span>
+      <span class="witb-lb-name" style="color:var(--text-muted);font-style:italic;font-size:.75rem">Data in next update</span>
+      <span class="witb-lb-count">—</span>
     </div>
           </div>
         </section>
@@ -910,7 +980,7 @@
         <!-- WIDGET 8: GAINED / LOST -->
         <section class="witb-section" aria-labelledby="momentum-heading">
           <h2 class="witb-section-title" id="momentum-heading">Brand Momentum</h2>
-          <p class="witb-section-sub">Tour usage as of initial tracking snapshot &mdash; historical comparison available after the second weekly crawl</p>
+          <p class="witb-section-sub">Tour usage as of initial tracking snapshot. Historical comparison builds week over week.</p>
           <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px">
             <div class="witb-momentum-grid">
               <div>
@@ -962,7 +1032,7 @@
                   </div>
               </div>
             </div>
-            <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:16px;text-transform:uppercase;letter-spacing:.05em">Full quarter-over-quarter comparison available after additional weekly crawls accumulate</p>
+            <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:16px;text-transform:uppercase;letter-spacing:.05em">Quarter-over-quarter trends populate after additional weekly updates.</p>
           </div>
         </section>
 
@@ -1138,6 +1208,63 @@
       tooltip.style.left = x + 'px';
       tooltip.style.top  = y + 'px';
     }
+  })();
+  </script>
+
+  <!-- Scatter brand filter JS -->
+  <script>
+  (function(){
+    var svg = document.querySelector('.witb-scatter-svg');
+    var container = document.getElementById('scatter-checkboxes');
+    if (!svg || !container) return;
+
+    // Build brand list from SVG circles
+    var circles = Array.from(svg.querySelectorAll('.witb-scatter-dot'));
+    var brands = circles.map(function(c){ return {slug: c.dataset.slug, name: c.dataset.name}; });
+
+    // Render checkboxes (all checked by default)
+    brands.forEach(function(b){
+      var lbl = document.createElement('label');
+      lbl.className = 'witb-scatter-cb-label';
+      lbl.setAttribute('data-name', b.name.toLowerCase());
+      lbl.innerHTML = '<input type="checkbox" class="witb-scatter-cb" value="' + b.slug + '" checked> ' + b.name;
+      container.appendChild(lbl);
+    });
+
+    // Toggle chart dots + labels based on checked state
+    function updateChart(){
+      var checked = {};
+      document.querySelectorAll('.witb-scatter-cb:checked').forEach(function(cb){ checked[cb.value] = true; });
+      circles.forEach(function(circle){
+        var vis = !!checked[circle.dataset.slug];
+        circle.style.display = vis ? '' : 'none';
+        // Find matching text label by cx position
+        var cx = circle.getAttribute('cx');
+        var txt = svg.querySelector('text.witb-scatter-label[x="' + cx + '"]');
+        if (txt) txt.style.display = vis ? '' : 'none';
+      });
+    }
+
+    // Checkbox changes
+    container.addEventListener('change', updateChart);
+
+    // Select all / Clear all
+    document.getElementById('scatter-select-all').addEventListener('click', function(){
+      document.querySelectorAll('.witb-scatter-cb').forEach(function(cb){ cb.checked = true; });
+      updateChart();
+    });
+    document.getElementById('scatter-clear-all').addEventListener('click', function(){
+      document.querySelectorAll('.witb-scatter-cb').forEach(function(cb){ cb.checked = false; });
+      updateChart();
+    });
+
+    // Search filters checkbox labels (not chart dots)
+    document.getElementById('scatter-brand-search').addEventListener('input', function(){
+      var q = this.value.toLowerCase().trim();
+      document.querySelectorAll('.witb-scatter-cb-label').forEach(function(lbl){
+        lbl.style.display = (q === '' || lbl.getAttribute('data-name').indexOf(q) !== -1) ? '' : 'none';
+      });
+    });
   })();
   </script>
 

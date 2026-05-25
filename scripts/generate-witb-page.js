@@ -190,6 +190,8 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug }) {
     { key: 'wedges',    label: 'Wedges',         types: ['wedge'] },
     { key: 'putters',   label: 'Putters',        types: ['putter'] },
     { key: 'balls',     label: 'Balls',          types: ['ball'] },
+    { key: 'grips',    label: 'Grips',          types: ['grip'] },
+    { key: 'shafts',   label: 'Shafts',         types: ['shaft'] },
   ];
 
   const leaderboards = LEADERBOARD_CATS.map(cat => {
@@ -211,7 +213,7 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug }) {
   });
 
   // --- Top model per category ---
-  const MODEL_CATS = ['driver','3-wood','hybrid','iron','wedge','putter','ball'];
+  const MODEL_CATS = ['driver','3-wood','hybrid','iron','wedge','putter','ball','grip','shaft'];
   const topModels = {};
   for (const ct of MODEL_CATS) {
     const modelCounts = {};
