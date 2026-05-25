@@ -221,14 +221,27 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
     `"• [bullet]\n\nIn summary, the catalyst appears to be the product launch."\n\n` +
     `Output the bullet list directly. Nothing else.`;
 
+  // System prompt as a cached array block — stable across all brands in a run,
+  // so the second+ brand in a session reads from cache at 10% of base input cost.
+  // System prompt is ~500 tokens — below the 2,048-token Sonnet 4.6 cache floor.
+  // cache_creation and cache_read will be 0 on every call; that is expected, not
+  // a bug. The cache_control marker is kept so future prompt growth auto-activates
+  // caching without a code change.
+  const cachedSystem = [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }];
+
   // Edit 3: Wrap API call with validator and one-retry pattern
   let response = await anthropic.messages.create({
-    model:      'claude-sonnet-4-20250514',
+    model:      'claude-sonnet-4-6',
     max_tokens: 1000,
-    system:     systemPrompt,
+    system:     cachedSystem,
     tools:      [{ type: 'web_search_20250305', name: 'web_search' }],
     messages:   [{ role: 'user', content: userPrompt }],
   });
+
+  // Log cache/token metrics. cache_creation and cache_read will be 0 because the
+  // system prompt (~500 tokens) is below the 2,048-token Sonnet 4.6 cache floor.
+  const u1 = response.usage || {};
+  console.log(`        tokens — input: ${u1.input_tokens ?? 0}, cache_read: ${u1.cache_read_input_tokens ?? 0}, cache_creation: ${u1.cache_creation_input_tokens ?? 0}, output: ${u1.output_tokens ?? 0} [cache: no-op, system prompt below 2048-token floor]`);
 
   let output = response.content
     .filter(block => block.type === 'text')
@@ -242,10 +255,12 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
       `Your previous response contained banned meta-commentary (research narration, "Based on...", "Let me search...", "I cannot find...", or similar). ` +
       `Rewrite your response. Output only the bullet list or the fallback line. No preamble. No explanation of what you searched for. No apology for what was not found.`;
 
+    // Retry uses the same cachedSystem — the second call gets a cache hit on the
+    // system prompt since the content is byte-for-byte identical (same 5m TTL window).
     response = await anthropic.messages.create({
-      model:      'claude-sonnet-4-20250514',
+      model:      'claude-sonnet-4-6',
       max_tokens: 1000,
-      system:     systemPrompt,
+      system:     cachedSystem,
       tools:      [{ type: 'web_search_20250305', name: 'web_search' }],
       messages:   [
         { role: 'user',      content: userPrompt },
@@ -253,6 +268,9 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
         { role: 'user',      content: retryUserPrompt },
       ],
     });
+
+    const u2 = response.usage || {};
+    console.log(`        retry tokens — input: ${u2.input_tokens ?? 0}, cache_read: ${u2.cache_read_input_tokens ?? 0}, output: ${u2.output_tokens ?? 0} [cache: no-op, system prompt below 2048-token floor]`);
 
     output = response.content
       .filter(block => block.type === 'text')

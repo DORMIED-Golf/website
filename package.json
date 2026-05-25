@@ -23,7 +23,7 @@
     "deploy": "vercel --prod"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.27.0",
+    "@anthropic-ai/sdk": "^0.98.0",
     "@supabase/supabase-js": "^2.45.0",
     "dotenv": "^17.3.1",
     "rss-parser": "^3.13.0",

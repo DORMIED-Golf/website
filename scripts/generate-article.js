@@ -28,8 +28,15 @@ try { sharp = require('sharp'); } catch { sharp = null; }
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const MAX_ARTICLES_PER_RUN = 5;
-const MODEL                = 'claude-opus-4-5';
-const SITE_ROOT            = path.resolve(__dirname, '..');
+
+// ── Article generation model config ───────────────────────────────────────────
+// Opus 4.7 solo — highest voice quality, no advisor.
+// NOTE: Opus 4.7 tokenizes ~35% more tokens than prior Opus at the same
+// per-token rate. The system prompt (~2,800 tokens) is below the Opus 4.7
+// cache floor of 4,096 tokens, so prompt caching is a no-op here; cache
+// fields in logs will show 0 — expected, not a bug.
+const MODEL      = 'claude-opus-4-7';
+const SITE_ROOT  = path.resolve(__dirname, '..');
 
 // Brands permanently excluded from article generation
 // (stale sources, off-topic content, or owner request)
@@ -397,6 +404,13 @@ DISALLOWED anywhere in body:
 
 Start with the editorial observation. Write like a columnist, not a press office or a dashboard.
 
+DORMIED READER PROFILE:
+The DORMIED reader is golf's informed minority: club professionals, independent retailers, brand marketing managers, serious enthusiasts, and amateurs who follow equipment and brand news the way others follow sports trades. They know what a direct-to-consumer pivot costs in lost retail relationships. They have opinions about KBS versus True Temper. They can identify five major OEM shaft partnerships without prompting. Terms like "DTC," "WRX," "GIR," and "WITB" need no explanation. Write to this reader's level without condescension or over-explanation.
+
+DORMIED's editorial competition: MyGolfSpy (equipment testing, affiliate model, data-driven community), GolfWRX (enthusiast forum, gear-obsessive culture), Golf Digest (legacy publisher, broad casual readership), No Laying Up (tour narrative and player personality), and Golf.com (news aggregation, SEO-primary). DORMIED's differentiation is brand and business intelligence: what companies are doing strategically, why, and what it signals for the category. A DORMIED reader clicks because they want the angle behind the announcement, not a retelling of it.
+
+An article succeeds when it leaves the reader with one concrete insight they did not have before. Not a summary of what was announced. Not a list of the product's features. A specific insight: a precedent this move follows or breaks, a structural fact about the category, a business implication, or a cultural read that reframes the announcement in industry context. If you cannot identify that angle, look harder. It is there in almost every press release.
+
 Also generate:
 - A meta description (120-155 characters) for SEO
 - 3-5 SEO keywords relevant to the article
@@ -537,14 +551,28 @@ Category: ${brand.category}
 Press release:
 ${pressRelease}${retry ? '\n\nYour previous response contained a disallowed phrase or invalid JSON. Rewrite starting directly with the editorial observation. Include all fields (title, body, meta_description, seo_keywords, x_post). Return valid JSON only.' : ''}`;
 
+  // System prompt has cache_control marker so future prompt growth auto-activates
+  // caching without a code change. With Opus 4.7, the system prompt (~2,800 tokens)
+  // is BELOW the Opus 4,096-token cache floor, so cache_creation and cache_read
+  // will always log 0 — expected no-op, not a bug.
+  const cachedSystem = [{ type: 'text', text: getSystemPrompt(author), cache_control: { type: 'ephemeral' } }];
+
   const res = await client.messages.create({
     model:      MODEL,
-    max_tokens: 2000,
-    system:     getSystemPrompt(author),
+    max_tokens: 4000,
+    system:     cachedSystem,
     messages:   [{ role: 'user', content: userMsg }],
   });
 
-  return (res.content[0]?.text || '').trim();
+  // Token log — cache fields will be 0 (no-op: system prompt below Opus 4,096-token floor).
+  const u = res.usage || {};
+  const inputCost  = (u.input_tokens  ?? 0) / 1_000_000 * 5;   // Opus 4.7: $5/MTok input
+  const outputCost = (u.output_tokens ?? 0) / 1_000_000 * 25;  // Opus 4.7: $25/MTok output
+  console.log(`[generate] tokens — input: ${u.input_tokens ?? 0}, cache_read: ${u.cache_read_input_tokens ?? 0} (no-op), cache_creation: ${u.cache_creation_input_tokens ?? 0} (no-op), output: ${u.output_tokens ?? 0} | cost: $${(inputCost + outputCost).toFixed(4)}`);
+
+  // Keep last-text-block parsing: harmless without advisor, correct with it.
+  const textBlocks = (res.content || []).filter(b => b.type === 'text' && b.text?.trim());
+  return (textBlocks[textBlocks.length - 1]?.text || '').trim();
 }
 
 function parseOpusResponse(raw) {

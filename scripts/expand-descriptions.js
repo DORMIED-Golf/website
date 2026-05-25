@@ -146,6 +146,11 @@ Format your response as a JSON array, where each element is an object with "id" 
 
   const userMsg = `Expand descriptions for these ${brands.length} brands. Use their original short descriptions as a starting point but expand significantly to 200-400 words each.\n\n${prompt}\n\nBrand IDs (in order): ${brands.map(b => b.id).join(', ')}\n\nReturn a JSON array: [{"id":"...","description":"..."}, ...]`;
 
+  // System prompt is stable across all batches in a run — cache_control marker is
+  // set so future prompt growth auto-activates caching without a code change.
+  // NOTE: the system prompt is ~300 tokens, below the 2,048-token Sonnet 4.6
+  // cache floor, so cache_creation and cache_read will be 0 on every call.
+  // The zeros in the token log are expected; they are not a bug.
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -154,9 +159,9 @@ Format your response as a JSON array, where each element is an object with "id" 
       'content-type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-5',
+      model: 'claude-sonnet-4-6',
       max_tokens: 8000,
-      system: systemPrompt,
+      system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
       messages: [{ role: 'user', content: userMsg }],
     }),
   });
@@ -167,6 +172,12 @@ Format your response as a JSON array, where each element is an object with "id" 
   }
 
   const data = await response.json();
+
+  // Log cache metrics so we can verify system-prompt cache hits across batches.
+  const u = data.usage || {};
+  // cache_creation/cache_read are 0 because system prompt is below 2048-token floor.
+  console.log(`  [tokens] input: ${u.input_tokens ?? 0}, cache_read: ${u.cache_read_input_tokens ?? 0}, cache_creation: ${u.cache_creation_input_tokens ?? 0}, output: ${u.output_tokens ?? 0} [cache: no-op, system prompt below 2048-token floor]`);
+
   const text = data.content[0].text.trim();
 
   // Parse JSON — handle potential markdown code fences
