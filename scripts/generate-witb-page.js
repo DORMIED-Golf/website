@@ -73,6 +73,18 @@ const SHAFT_BRAND_NORMALIZE = {
   'LA':       'L.A. Golf',
 };
 
+/** Dormied brand slugs for named shaft brands — used for logos + links */
+const SHAFT_SLUG_MAP = {
+  'True Temper':     'true-temper',
+  'Fujikura':        'fujikura',
+  'Mitsubishi':      'mitsubishi-golf',
+  'Nippon':          'nippon-shaft',
+  'Aldila':          'aldila',
+  'Graphite Design': 'graphite-design',
+  'UST Mamiya':      'ust-mamiya',
+  'KBS':             'kbs-golf',
+};
+
 /** Category icon paths — used in leaderboard titles and top-model rows */
 const CAT_ICONS = {
   driver:  '/images/icons/driver_22px.svg',
@@ -295,8 +307,9 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
     dyk.loftCount = lofts.length;
   }
 
-  const threeWoodCount   = currentItems.filter(i => i.club_type === '3-wood').length;
-  const miniDriverCount  = currentItems.filter(i => i.club_type === 'mini-driver').length;
+  // Use distinct bag_ids (5 players carry two 3-woods; row count overstates)
+  const threeWoodCount   = new Set(currentItems.filter(i => i.club_type === '3-wood').map(i => i.bag_id)).size;
+  const miniDriverCount  = new Set(currentItems.filter(i => i.club_type === 'mini-driver').map(i => i.bag_id)).size;
   dyk.threeWoodCount  = threeWoodCount;
   dyk.miniDriverCount = miniDriverCount;
 
@@ -308,6 +321,28 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
     highWoodPlayers[pid].push(item.club_type);
   }
   dyk.highWoodCount = Object.keys(highWoodPlayers).length;
+
+  // --- Ball / grip player coverage (for denominator notes) ---
+  const ballPlayerCount = new Set(
+    currentItems.filter(i => i.club_type === 'ball' && i.witb_bags?.player_id)
+      .map(i => i.witb_bags.player_id)
+  ).size;
+  const gripPlayerCount = new Set(
+    currentItems.filter(i => i.club_type === 'grip' && i.witb_bags?.player_id)
+      .map(i => i.witb_bags.player_id)
+  ).size;
+
+  // Annotate ball / grip leaderboards with denominator note
+  const ballsLb = leaderboards.find(l => l.key === 'balls');
+  if (ballsLb) ballsLb.denominatorNote = `${ballPlayerCount} of ${totalPlayers} players in dataset`;
+  const gripsLb = leaderboards.find(l => l.key === 'grips');
+  if (gripsLb) gripsLb.denominatorNote = `${gripPlayerCount} of ${totalPlayers} players in dataset`;
+
+  // --- Top club brands by unique player count (for Brand Momentum table) ---
+  const topClubBrands = Object.entries(brandPlayerSets)
+    .map(([dslug, { name, players }]) => ({ name, dormied_slug: dslug, count: players.size }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
 
   // --- Gained / Lost (since first tracked — only current snapshot) ---
   // Since we ran --no-history, we only have one snapshot per player.
@@ -333,7 +368,7 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
     }
   }
   const shaftLeaderboard = Object.entries(shaftBrandBags)
-    .map(([name, bags]) => ({ name, dormied_slug: null, count: bags.size }))
+    .map(([name, bags]) => ({ name, dormied_slug: SHAFT_SLUG_MAP[name] || null, count: bags.size }))
     .sort((a, b) => b.count - a.count);
   const shaftTopCount = shaftLeaderboard[0]?.count || 1;
 
@@ -352,7 +387,7 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
     .map(m => ({ ...m, count: m.bags.size }))
     .sort((a, b) => b.count - a.count)[0] || null;
 
-  return { scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, treemapShaft, dyk, gainLoss, totalPlayers, topShaftModel };
+  return { scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, treemapShaft, dyk, gainLoss, totalPlayers, topShaftModel, topClubBrands };
 }
 
 // ── SVG Scatter Plot ───────────────────────────────────────────────────────
@@ -410,11 +445,9 @@ function buildScatterSVG(scatterData) {
       onclick="window.location='/brands/${esc(d.slug)}/'">
       <title>${esc(d.name)}: ${d.tourPct.toFixed(1)}% tour, DI ${d.diScore.toFixed(1)}</title>
     </circle>`;
-    // Label for large dots only
-    if (d.playerCount >= 20 || d.tourPct >= 15) {
-      const labelY = cy < PAD.top + 20 ? cy + 14 : cy - 8;
-      dots += `<text class="witb-scatter-label" x="${cx.toFixed(1)}" y="${labelY.toFixed(1)}" text-anchor="middle">${esc(d.name)}</text>`;
-    }
+    // Label all dots — data-slug binds each label to its dot for reliable show/hide
+    const labelY = cy < PAD.top + 20 ? cy + 14 : cy - 8;
+    dots += `<text class="witb-scatter-label" data-slug="${esc(d.slug)}" x="${cx.toFixed(1)}" y="${labelY.toFixed(1)}" text-anchor="middle">${esc(d.name)}</text>`;
   }
 
   return `<svg class="witb-scatter-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg"
@@ -435,8 +468,8 @@ function buildPropBar(shareData, limit = 8) {
     const color = GREEN_SHADES[i % GREEN_SHADES.length];
     const w     = b.pct.toFixed(2);
     const inner = b.dormied_slug
-      ? `<a href="/brands/${esc(b.dormied_slug)}/" title="${esc(b.name)} ${b.pct.toFixed(0)}%">${b.pct >= 8 ? esc(b.name) : ''}</a>`
-      : `<span title="${esc(b.name)} ${b.pct.toFixed(0)}%">${b.pct >= 8 ? esc(b.name) : ''}</span>`;
+      ? `<a href="/brands/${esc(b.dormied_slug)}/" title="${esc(b.name)} ${b.pct.toFixed(0)}%" style="font-family:var(--font-mono);font-size:.68rem">${b.pct >= 8 ? esc(b.name) : ''}</a>`
+      : `<span title="${esc(b.name)} ${b.pct.toFixed(0)}%" style="font-family:var(--font-mono);font-size:.68rem">${b.pct >= 8 ? esc(b.name) : ''}</span>`;
     return `<div class="witb-prop-seg" style="width:${w}%;background:${color}">${inner}</div>`;
   }).join('');
 
@@ -481,9 +514,12 @@ function buildLeaderboard(cat) {
     </div>`;
   }).join('');
 
+  const noteHtml = cat.denominatorNote
+    ? `<p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em">${esc(cat.denominatorNote)}</p>`
+    : '';
   return `<div class="witb-lb-section" id="${esc(cat.key)}">
     <div class="witb-lb-title">${iconHtml}${esc(cat.label)}</div>
-    ${rows}
+    ${rows}${noteHtml}
   </div>`;
 }
 
@@ -518,7 +554,7 @@ function buildDykHtml(dyk) {
 
   if (dyk.avgLoft) {
     cards.push(`<div class="witb-dyk-card">
-      <div class="witb-dyk-stat">${dyk.avgLoft}&deg;</div>
+      <div class="witb-dyk-stat" style="color:var(--text)">${dyk.avgLoft}&deg;</div>
       <div class="witb-dyk-label">Avg Driver Loft</div>
       <div class="witb-dyk-detail">Across ${dyk.loftCount} drivers with parsed loft data</div>
     </div>`);
@@ -526,7 +562,7 @@ function buildDykHtml(dyk) {
 
   if (dyk.minLoft) {
     cards.push(`<div class="witb-dyk-card">
-      <div class="witb-dyk-stat">${dyk.minLoft}&deg;</div>
+      <div class="witb-dyk-stat" style="color:var(--text)">${dyk.minLoft}&deg;</div>
       <div class="witb-dyk-label">Lowest Driver Loft</div>
       <div class="witb-dyk-detail">The flattest driver currently in play on tour</div>
     </div>`);
@@ -534,7 +570,7 @@ function buildDykHtml(dyk) {
 
   if (dyk.threeWoodCount !== undefined) {
     cards.push(`<div class="witb-dyk-card">
-      <div class="witb-dyk-stat">${dyk.threeWoodCount} vs ${dyk.miniDriverCount}</div>
+      <div class="witb-dyk-stat" style="color:var(--text)">${dyk.threeWoodCount} vs ${dyk.miniDriverCount}</div>
       <div class="witb-dyk-label">3-Wood vs Mini-Driver</div>
       <div class="witb-dyk-detail">${dyk.threeWoodCount} players carry a traditional 3-wood; ${dyk.miniDriverCount} carry a mini-driver</div>
     </div>`);
@@ -542,7 +578,7 @@ function buildDykHtml(dyk) {
 
   if (dyk.highWoodCount) {
     cards.push(`<div class="witb-dyk-card">
-      <div class="witb-dyk-stat">${dyk.highWoodCount}</div>
+      <div class="witb-dyk-stat" style="color:var(--text)">${dyk.highWoodCount}</div>
       <div class="witb-dyk-label">Players with 7-Wood+</div>
       <div class="witb-dyk-detail">${dyk.highWoodCount} players carry a 7-wood or higher on tour this season</div>
     </div>`);
@@ -558,7 +594,7 @@ function buildDykHtml(dyk) {
 function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems }) {
   const {
     scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, treemapShaft,
-    dyk, gainLoss, totalPlayers, topShaftModel
+    dyk, gainLoss, totalPlayers, topShaftModel, topClubBrands
   } = computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftItems });
 
   const totalItems  = currentItems.length;
@@ -573,6 +609,11 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
   const dateModified = lastCrawl?.finished_at
     ? new Date(lastCrawl.finished_at).toISOString()
     : new Date().toISOString();
+
+  // Human-readable last-updated date for pulse strip (1A)
+  const lastUpdatedDisplay = lastCrawl?.finished_at
+    ? new Date(lastCrawl.finished_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : null;
 
   // Top models table
   const MODEL_LABELS = {
@@ -608,12 +649,18 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
   const topModelsHtml = Object.entries(topModels)
     .filter(([ct, m]) => m && ct !== 'shaft')
     .map(([ct, m]) => {
+      const initials  = esc((m.brand || '').replace(/[^A-Za-z0-9]/g, '').substring(0, 2).toUpperCase());
+      const logoHtml  = m.dormied_slug
+        ? `<img src="/images/logos/${esc(m.dormied_slug)}.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">${initials}</span>`
+        : `<span class="witb-brand-monogram">${initials}</span>`;
+      // Concatenate brand + model inside the link text to avoid CSS flex whitespace-stripping
+      const brandModel = `${(m.brand || '').trim()} ${(m.model || '').trim()}`.trim();
       const brandHtml = m.dormied_slug
-        ? `<a href="/brands/${esc(m.dormied_slug)}/">${esc(m.brand)}</a>`
-        : esc(m.brand);
+        ? `${logoHtml}<a href="/brands/${esc(m.dormied_slug)}/">${esc(brandModel)}</a>`
+        : `${logoHtml}${esc(brandModel)}`;
       return `<div class="witb-lb-row">
       <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">${modelCatIcon(ct)}${esc(MODEL_LABELS[ct] || ct)}</span>
-      <span class="witb-lb-name">${brandHtml} ${esc(m.model)}</span>
+      <span class="witb-lb-name">${brandHtml}</span>
       <span class="witb-lb-count">${m.count}</span>
     </div>`;
     }).join('');
@@ -623,14 +670,22 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
   // so skip the brand prefix if the model string already starts with it.
   const shaftModelRowHtml = topShaftModel
     ? (() => {
-        const modelStr = topShaftModel.model;
-        const brandStr = topShaftModel.brand;
-        const display  = modelStr.toLowerCase().startsWith(brandStr.toLowerCase())
+        const modelStr  = topShaftModel.model;
+        const brandStr  = topShaftModel.brand;
+        const dslug     = SHAFT_SLUG_MAP[brandStr] || null;
+        const display   = modelStr.toLowerCase().startsWith(brandStr.toLowerCase())
           ? modelStr
           : `${brandStr} ${modelStr}`;
+        const initials  = (brandStr || '').replace(/[^A-Za-z0-9]/g, '').substring(0, 2).toUpperCase();
+        const logoHtml  = dslug
+          ? `<img src="/images/logos/${esc(dslug)}.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">${esc(initials)}</span>`
+          : `<span class="witb-brand-monogram">${esc(initials)}</span>`;
+        const shaftModelBrandHtml = dslug
+          ? `${logoHtml}<a href="/brands/${esc(dslug)}/">${esc(display)}</a>`
+          : `${logoHtml}${esc(display)}`;
         return `<div class="witb-lb-row">
       <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase">${modelCatIcon('shaft')}Shafts</span>
-      <span class="witb-lb-name">${esc(display)}</span>
+      <span class="witb-lb-name">${shaftModelBrandHtml}</span>
       <span class="witb-lb-count">${topShaftModel.count}</span>
     </div>`;
       })()
@@ -835,11 +890,12 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
         <div class="witb-pulse" aria-label="WITB summary stats">
           <span><span class="witb-pulse-val">${fmt(totalPlayers)}</span> players tracked</span>
           <span class="witb-pulse-sep">&middot;</span>
-          <span><span class="witb-pulse-val">${fmt(totalItems)}</span> clubs logged</span>
+          <span><span class="witb-pulse-val">${fmt(totalItems)}</span> items logged</span>
           <span class="witb-pulse-sep">&middot;</span>
           <span><span class="witb-pulse-val">${fmt(totalBrands)}</span> brands represented</span>
           <span class="witb-pulse-sep">&middot;</span>
           <span><span class="witb-pulse-val">${fmt(uniqueClubTypes)}</span> club categories</span>
+          ${lastUpdatedDisplay ? `<span class="witb-pulse-sep">&middot;</span><span>Updated <span class="witb-pulse-val">${esc(lastUpdatedDisplay)}</span></span>` : ''}
         </div>
 
         <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
@@ -919,42 +975,62 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
           ${dykHtml}
         </section>
 
-        <!-- WIDGET 8: GAINED / LOST -->
-        <section class="witb-section" aria-labelledby="momentum-heading">
+        <!-- WIDGET 8: BRAND MOMENTUM -->
+        ${(() => {
+          // Momentum change computation.
+          // Each column = (brand player count this period) - (count N weeks ago).
+          // Historical player counts are keyed by dormied_slug: Map<slug, count> | null.
+          // null means no snapshot exists for that window — show "-" placeholder.
+          // W/W  = prior week snapshot  (available after 2nd weekly crawl)
+          // M/M  = prior month snapshot (available after ~4 weekly crawls)
+          // 3M   = 3-month snapshot     (available after ~13 weekly crawls)
+          // When data exists: render as signed integer "+N" / "-N" with green/red color.
+          const momentumHistory = {
+            ww:     null, // Map<dormied_slug, playerCount> | null
+            mm:     null,
+            threeM: null,
+          };
+
+          function formatMomentumCell(current, priorMap) {
+            if (!priorMap) {
+              return `<span style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);text-align:right">-</span>`;
+            }
+            const prior = priorMap.get(current.dormied_slug) ?? 0;
+            const delta = current.count - prior;
+            const sign  = delta > 0 ? '+' : '';
+            const color = delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--red)' : 'var(--text-muted)';
+            return `<span style="font-family:var(--font-mono);font-size:.72rem;color:${color};text-align:right;font-weight:600">${sign}${delta}</span>`;
+          }
+
+          const rows = topClubBrands.map(b => {
+            const initials = (b.name || '').replace(/[^A-Za-z0-9]/g, '').substring(0, 2).toUpperCase();
+            const logoHtml = b.dormied_slug
+              ? `<img src="/images/logos/${esc(b.dormied_slug)}.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">${esc(initials)}</span>`
+              : `<span class="witb-brand-monogram">${esc(initials)}</span>`;
+            const nameHtml = b.dormied_slug
+              ? `${logoHtml}<a href="/brands/${esc(b.dormied_slug)}/">${esc(b.name)}</a>`
+              : `${logoHtml}${esc(b.name)}`;
+            return `<span class="witb-lb-name" style="font-size:.85rem">${nameHtml}</span>
+              ${formatMomentumCell(b, momentumHistory.ww)}
+              ${formatMomentumCell(b, momentumHistory.mm)}
+              ${formatMomentumCell(b, momentumHistory.threeM)}`;
+          }).join('\n              ');
+
+          return `<section class="witb-section" aria-labelledby="momentum-heading">
           <h2 class="witb-section-title" id="momentum-heading">Brand Momentum</h2>
-          <p class="witb-section-sub">Tour usage as of initial tracking snapshot. Historical comparison builds week over week.</p>
-          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px">
-            <div class="witb-momentum-grid">
-              <div>
-                <div class="witb-momentum-col-title gained">Most Players (Clubs)</div>
-                ${leaderboards.find(l => l.key === 'driver')?.brands.slice(0,5).map((b, i) => {
-                  const html = b.dormied_slug
-                    ? `<a href="/brands/${esc(b.dormied_slug)}/">${esc(b.name)}</a>`
-                    : esc(b.name);
-                  return `<div class="witb-lb-row">
-                    <span class="witb-lb-rank">${i+1}</span>
-                    <span class="witb-lb-name">${html}</span>
-                    <span class="witb-lb-count">${b.count}</span>
-                  </div>`;
-                }).join('') || ''}
-              </div>
-              <div>
-                <div class="witb-momentum-col-title gained">Most Players (Putters)</div>
-                ${leaderboards.find(l => l.key === 'putters')?.brands.slice(0,5).map((b, i) => {
-                  const html = b.dormied_slug
-                    ? `<a href="/brands/${esc(b.dormied_slug)}/">${esc(b.name)}</a>`
-                    : esc(b.name);
-                  return `<div class="witb-lb-row">
-                    <span class="witb-lb-rank">${i+1}</span>
-                    <span class="witb-lb-name">${html}</span>
-                    <span class="witb-lb-count">${b.count}</span>
-                  </div>`;
-                }).join('') || ''}
-              </div>
+          <p class="witb-section-sub">Tour usage changes</p>
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+            <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:6px 16px;align-items:center">
+              <span style="font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)">Brand</span>
+              <span style="font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);text-align:right">W/W</span>
+              <span style="font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);text-align:right">M/M</span>
+              <span style="font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);text-align:right">3M</span>
+              ${rows}
             </div>
-            <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:16px;text-transform:uppercase;letter-spacing:.05em">Quarter-over-quarter trends populate after additional weekly updates.</p>
+            <p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:14px;text-transform:uppercase;letter-spacing:.05em">Change in players carrying brand across all categories. Builds as weekly snapshots accumulate.</p>
           </div>
-        </section>
+        </section>`;
+        })()}
 
         <!-- WIDGET 9: METHODOLOGY -->
         <section class="witb-section" aria-labelledby="method-heading">
@@ -983,6 +1059,12 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
 
       <!-- ── RIGHT SIDEBAR ──────────────────────────────────────────────── -->
       <aside class="witb-sidebar sidebar-ad-col">
+        <section class="home-stories-section latest-feed-section" aria-labelledby="witb-stories-heading">
+          <h2 class="latest-feed-heading" id="witb-stories-heading">Top Stories</h2>
+          <div id="home-stories-list" class="latest-feed-list">
+            <p class="latest-feed-loading">Loading&#x2026;</p>
+          </div>
+        </section>
         <section class="home-stories-section latest-feed-section" aria-labelledby="witb-latest-heading">
           <h2 class="latest-feed-heading" id="witb-latest-heading">Latest</h2>
           <div id="dormied-latest-list" class="latest-feed-list">
@@ -1144,16 +1226,17 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
     });
 
     // Toggle chart dots + labels based on checked state
+    // Labels are matched by data-slug (robust - avoids floating-point cx matching)
     function updateChart(){
       var checked = {};
       document.querySelectorAll('.witb-scatter-cb:checked').forEach(function(cb){ checked[cb.value] = true; });
       circles.forEach(function(circle){
         var vis = !!checked[circle.dataset.slug];
         circle.style.display = vis ? '' : 'none';
-        // Find matching text label by cx position
-        var cx = circle.getAttribute('cx');
-        var txt = svg.querySelector('text.witb-scatter-label[x="' + cx + '"]');
-        if (txt) txt.style.display = vis ? '' : 'none';
+      });
+      svg.querySelectorAll('text.witb-scatter-label[data-slug]').forEach(function(txt){
+        var vis = !!checked[txt.dataset.slug];
+        txt.style.display = vis ? '' : 'none';
       });
     }
 
@@ -1215,6 +1298,7 @@ async function main() {
     ['Scatter filter',      html.includes('scatter-brand-search')],
     ['pgaclubtracker',      html.includes('pgaclubtracker')],
     ['dormied-latest-list', html.includes('dormied-latest-list')],
+    ['home-stories-list',   html.includes('home-stories-list')],
     ['Hamburger btn',       html.includes('nav-hamburger')],
   ];
   console.log('\nValidation:');
