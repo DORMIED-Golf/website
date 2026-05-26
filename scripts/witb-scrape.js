@@ -618,36 +618,56 @@ async function autoMapBrands(supabase) {
     .order('name');
   if (error) { warn(`autoMapBrands fetch: ${error.message}`); return { mapped: [], unmapped: [] }; }
 
+  // Brands that must NEVER receive an auto-mapped slug.
+  // These are niche/Japanese/discontinued brands with no DORMIED Index entry.
+  // The previous fuzzy partial-match logic (startsWith single letter) produced
+  // false matches: Artisan->'a-putnam', Grindworks->'g-fore'. Adding them here
+  // permanently blocks re-mapping on every future crawl.
+  const WITB_BRAND_BLOCK = new Set([
+    'artisan',         // Japanese forged wedges — no DORMIED Index entry
+    'grindworks',      // Japanese forged irons — no DORMIED Index entry
+    'iomic',           // grip brand — not in DORMIED Index
+    'never-compromise',// discontinued putter brand — not in DORMIED Index
+    'sik',             // putter brand — not in DORMIED Index
+    'switchgrips',     // niche grip brand — not in DORMIED Index
+  ]);
+
+  // Explicit curated overrides for brands whose WITB slug differs from DORMIED slug.
+  // Only add entries here after manual verification. Prefer exact slug matches above.
+  const WITB_BRAND_OVERRIDE = {
+    // example: 'some-witb-slug': 'dormied-slug',
+  };
+
   const mapped   = [];
   const unmapped = [];
 
   for (const wb of witbBrands) {
     if (wb.dormied_brand_slug) { mapped.push(wb); continue; } // already mapped
 
-    // Try: exact slug match
-    let dormiedSlug = dormiedBySlug[wb.slug] || null;
+    // Hard block — brands that must stay NULL permanently
+    if (WITB_BRAND_BLOCK.has(wb.slug)) { unmapped.push(wb); continue; }
 
-    // Try: normalized slug
+    // Curated override — explicit manual mapping
+    let dormiedSlug = WITB_BRAND_OVERRIDE[wb.slug] || null;
+
+    // Exact slug match only — WITB slug must equal DORMIED slug exactly
+    if (!dormiedSlug) {
+      dormiedSlug = dormiedBySlug[wb.slug] || null;
+    }
+
+    // Normalized slug match — strip hyphens, must be identical after normalization
+    // (handles e.g. 'golf-pride' <-> 'golfpride' if that ever occurs)
     if (!dormiedSlug) {
       const norm = wb.slug.replace(/-/g, '');
-      dormiedSlug = dormiedByNorm[norm] || null;
+      const candidate = dormiedByNorm[norm] || null;
+      // Only accept if the normalized form is long enough to be unambiguous (>= 5 chars)
+      if (candidate && norm.length >= 5) dormiedSlug = candidate;
     }
 
-    // Try: normalized name
-    if (!dormiedSlug) {
-      const nameNorm = slugify(wb.name).replace(/-/g, '');
-      dormiedSlug = dormiedByNorm[nameNorm] || null;
-    }
-
-    // Try: partial match (witb slug is prefix/suffix of dormied slug)
-    if (!dormiedSlug) {
-      for (const b of dormiedBrands) {
-        if (b.id.startsWith(wb.slug) || wb.slug.startsWith(b.id.split('-')[0])) {
-          dormiedSlug = b.id;
-          break;
-        }
-      }
-    }
+    // NOTE: partial/prefix/name fuzzy matching deliberately removed.
+    // It produced false positives (Artisan->'a-putnam', Grindworks->'g-fore').
+    // Any brand not matched above stays NULL. Use WITB_BRAND_OVERRIDE for
+    // legitimate brands whose slugs don't align.
 
     if (dormiedSlug) {
       const { error: updErr } = await supabase

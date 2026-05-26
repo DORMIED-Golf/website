@@ -979,30 +979,33 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
         ${(() => {
           // Momentum change computation.
           // Each column = (brand player count this period) - (count N weeks ago).
-          // Historical player counts are keyed by dormied_slug: Map<slug, count> | null.
-          // null means no snapshot exists for that window — show "-" placeholder.
-          // W/W  = prior week snapshot  (available after 2nd weekly crawl)
-          // M/M  = prior month snapshot (available after ~4 weekly crawls)
-          // 3M   = 3-month snapshot     (available after ~13 weekly crawls)
-          // When data exists: render as signed integer "+N" / "-N" with green/red color.
+          // Historical player counts: Map<dormied_slug, count> | null.
+          // null = no snapshot for that window yet -> show "-" placeholder.
+          // W/W  available after 2nd weekly crawl
+          // M/M  available after ~4 weekly crawls
+          // 3M   available after ~13 weekly crawls
           const momentumHistory = {
             ww:     null, // Map<dormied_slug, playerCount> | null
             mm:     null,
             threeM: null,
           };
 
-          function formatMomentumCell(current, priorMap) {
-            if (!priorMap) {
-              return `<span style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);text-align:right">-</span>`;
-            }
+          // Returns inner HTML for a .witb-lb-count cell
+          function fmtMom(current, priorMap) {
+            if (!priorMap) return '-';
             const prior = priorMap.get(current.dormied_slug) ?? 0;
             const delta = current.count - prior;
             const sign  = delta > 0 ? '+' : '';
-            const color = delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--red)' : 'var(--text-muted)';
-            return `<span style="font-family:var(--font-mono);font-size:.72rem;color:${color};text-align:right;font-weight:600">${sign}${delta}</span>`;
+            const color = delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--red)' : '';
+            return color
+              ? `<span style="color:${color};font-weight:600">${sign}${delta}</span>`
+              : `${sign}${delta}`;
           }
 
-          const rows = topClubBrands.map(b => {
+          const colHdr = (label) =>
+            `<span class="witb-lb-count" style="font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)">${label}</span>`;
+
+          const brandRows = topClubBrands.map((b, i) => {
             const initials = (b.name || '').replace(/[^A-Za-z0-9]/g, '').substring(0, 2).toUpperCase();
             const logoHtml = b.dormied_slug
               ? `<img src="/images/logos/${esc(b.dormied_slug)}.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">${esc(initials)}</span>`
@@ -1010,24 +1013,26 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
             const nameHtml = b.dormied_slug
               ? `${logoHtml}<a href="/brands/${esc(b.dormied_slug)}/">${esc(b.name)}</a>`
               : `${logoHtml}${esc(b.name)}`;
-            return `<span class="witb-lb-name" style="font-size:.85rem">${nameHtml}</span>
-              ${formatMomentumCell(b, momentumHistory.ww)}
-              ${formatMomentumCell(b, momentumHistory.mm)}
-              ${formatMomentumCell(b, momentumHistory.threeM)}`;
-          }).join('\n              ');
+            return `<div class="witb-lb-row">
+              <span class="witb-lb-rank">${i + 1}</span>
+              <span class="witb-lb-name">${nameHtml}</span>
+              <span class="witb-lb-count">${fmtMom(b, momentumHistory.ww)}</span>
+              <span class="witb-lb-count">${fmtMom(b, momentumHistory.mm)}</span>
+              <span class="witb-lb-count">${fmtMom(b, momentumHistory.threeM)}</span>
+            </div>`;
+          }).join('');
 
           return `<section class="witb-section" aria-labelledby="momentum-heading">
           <h2 class="witb-section-title" id="momentum-heading">Brand Momentum</h2>
           <p class="witb-section-sub">Tour usage changes</p>
-          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
-            <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:6px 16px;align-items:center">
-              <span style="font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)">Brand</span>
-              <span style="font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);text-align:right">W/W</span>
-              <span style="font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);text-align:right">M/M</span>
-              <span style="font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);text-align:right">3M</span>
-              ${rows}
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px">
+            <div class="witb-lb-row" style="padding-bottom:4px;border-bottom:1px solid var(--border-lite);margin-bottom:2px">
+              <span class="witb-lb-rank" style="visibility:hidden" aria-hidden="true">0</span>
+              <span class="witb-lb-name" style="font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)">Brand</span>
+              ${colHdr('W/W')}${colHdr('M/M')}${colHdr('3M')}
             </div>
-            <p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:14px;text-transform:uppercase;letter-spacing:.05em">Change in players carrying brand across all categories. Builds as weekly snapshots accumulate.</p>
+            ${brandRows}
+            <p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:10px;text-transform:uppercase;letter-spacing:.05em">Change in players carrying brand across all categories. Builds as weekly snapshots accumulate.</p>
           </div>
         </section>`;
         })()}
