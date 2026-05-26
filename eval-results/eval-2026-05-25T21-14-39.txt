@@ -1,0 +1,69 @@
+══════════════════════════════════════════════════════════════════════
+DORMIED Article Config Eval — Part D Results
+Generated: 2026-05-25T21:14:39.320Z
+══════════════════════════════════════════════════════════════════════
+
+── Topic: equipment-travis  (Travis voice) ─────────────────────────
+
+  Config:   b-sonnet+advisor — Sonnet 4.6 executor + Opus 4.7 advisor
+  Cost:     $0.1548 total  (exec: $0.0375, adv: $0.1172)
+  Tokens:   input 714, cache_read 3434, cache_creation 4850, output 1079
+  Advisor:  input 7003, output 3289
+  Time:     83.5s
+  Valid JSON: true
+  Title:    KBS Tour 90 Is a Direct Attack on Dynamic Gold Territory, and Kim Braly Knows That Franchise Better Than Almost Anyone
+  X Post:   Founding KBS after building the Dynamic Gold franchise from the inside is the kind of origin story that makes a low-launch steel shaft launch feel less like a product drop and more like unfinished business.
+  Body (first 400 chars):
+    Steel iron shafts don't have a lot of untouched real estate. The fast-swing, low-launch segment is True Temper Dynamic Gold X100 territory, and it has been for the better part of three decades. When KBS announces a shaft built exactly for that player profile, the competitive subtext isn't subtle.
+    
+    The Tour 90 is KBS's new addition to the Tour family, available in three weight options (90, 95, and 
+
+── Topic: apparel-adam  (Adam voice) ─────────────────────────
+
+  Config:   b-sonnet+advisor — Sonnet 4.6 executor + Opus 4.7 advisor
+  Cost:     $0.3855 total  (exec: $0.0385, adv: $0.3470)
+  Tokens:   input 663, cache_read 7224, cache_creation 5047, output 1026
+  Advisor:  input 6682, output 12545
+  Time:     289.0s
+  Valid JSON: false
+  Title:    [JSON parse failed]
+  X Post:   
+  Body (first 400 chars):
+    
+
+── Topic: tech-travis  (Travis voice) ─────────────────────────
+
+  Config:   b-sonnet+advisor — Sonnet 4.6 executor + Opus 4.7 advisor
+  Cost:     $0.1352 total  (exec: $0.0279, adv: $0.1073)
+  Tokens:   input 5, cache_read 11789, cache_creation 2396, output 1026
+  Advisor:  input 6923, output 2907
+  Time:     98.6s
+  Valid JSON: true
+  Title:    Callaway Just Bought Equity in the Company That's Supposed to Fit You for Any Brand's Clubs
+  X Post:   Callaway just bought equity in the company fitting golfers for every brand's clubs. That's not a data partnership. That's a structural shift in who controls fitting recommendations.
+  Body (first 400 chars):
+    Thirty million dollars is not the number that matters here. Callaway leading the round is.
+    
+    Arccos Golf announced a $30 million Series C this week, bringing its total raised to $60 million. Callaway Golf led the investment and attached a commercial partnership: Arccos's Strokes Gained analytics will now power the data layer inside Callaway's AI fitting recommendation engine, deployed across more t
+
+══════════════════════════════════════════════════════════════════════
+Cost Summary (average per article across topics)
+══════════════════════════════════════════════════════════════════════
+  b-sonnet+advisor     avg $0.2252/article  (exec $0.0346 + adv $0.1905)  avg output tokens: 1044
+
+══════════════════════════════════════════════════════════════════════
+DECISION RULE
+══════════════════════════════════════════════════════════════════════
+Adopt b-sonnet+advisor for the live pipeline ONLY if its voice/quality
+matches a-opus-solo closely enough to be indistinguishable in DORMIED
+voice. If advisor config loses the voice, set USE_ADVISOR = false and
+EXECUTOR_MODEL = 'claude-opus-4-7' in generate-article.js.
+
+Key checks:
+  - No em dashes (—) anywhere
+  - Lede: direct, editorial, not press-office language
+  - Voice calibration: dry, specific, no 'exciting news' phrases
+  - Insider fluency: correct references, plausible industry analysis
+  - X post: does NOT start with brand name; works as standalone take
+
+Full JSON: /Users/travisr/Desktop/dormied_website/eval-results/eval-2026-05-25T21-14-39.json

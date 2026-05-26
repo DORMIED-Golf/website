@@ -1,0 +1,242 @@
+[
+  {
+    "config": "b-sonnet+advisor",
+    "configLabel": "Sonnet 4.6 executor + Opus 4.7 advisor",
+    "topic": "equipment-travis",
+    "author": "Travis",
+    "elapsed": "154.7",
+    "title": "[JSON parse failed]",
+    "body": "",
+    "xPost": "",
+    "meta": "",
+    "valid": false,
+    "rawText": "Good checkpoint. Here's what I'm seeing and what I'd watch for:\n\n**The angle that earns its place:**\nThe Tour 90 isn't a breakthrough product. It's a gap-fill in the KBS portfolio, slotting above the Tour 80 in weight and below in launch. That's a legitimate move in the steel shaft category, but it's also exactly how you describe True Temper's lineage strategy: Dynamic Gold 95, 105, 115 — weight steps that cover swing-speed bands and let fitters match precisely. KBS is now running the same playbook. That's the structural observation worth surfacing.\n\n**The historical parallel that earns its place:**\nTrue Temper has operated this \"weight ladder\" model for 30+ years. KBS was founded partly as a reaction to that monolithic dominance — Kim Braly's original pitch was tighter tolerances, more consistent bend profiles, and a shaft tour players could spec differently than the off-the-rack DG. Now KBS is building a ladder of its own. That arc is worth one paragraph.\n\n**What to watch for and flag:**\n- The DORMIED +18% MoM is interesting but could be launch noise. One mention, briefly, as a cautionary note rather than validation.\n- Don't overstate the \"low bend point = lower launch\" claim without flagging that the bend point/launch relationship is less linear than shaft marketing tends to imply. KBS knows this — they have good engineers — but the press release leans into the simplification.\n- The 14 tour winners stat is real proof of tour penetration but is also a standard PR lever. Note it without celebrating it.\n\n**Lede call:**\nLede option 3 (structural observation) fits best here. The story isn't the product — it's that KBS is maturing from a challenger brand into a catalog brand. That's a strategic identity shift worth the opening.\n\n**One rule to enforce hard:** No em dashes anywhere. Watch commas around parentheticals and clause separators.\n\n**Headline:**\nShould be gear-obsessive and specific. Something that names the real story: portfolio strategy, not feature hype. \"KBS Fills the Last Gap in Its Iron Shaft Lineup\" or similar.\n\nProceed with confidence. The angle is clear, the parallel earns its place, and the voice is there. Write it, then call advisor again before submitting.\n\nNow writing the article with full discipline applied.\n\n```json\n{\n  \"title\": \"KBS Fills the Gap: The Tour 90 Is a Portfolio Move, Not a Product Breakthrough\",\n  \"body\": \"Steel shaft brands do not launch new SKUs because they have made a discovery. They launch them because they have identified a hole in the weight ladder, and a competitor's fitter is winning on that rung. The KBS Tour 90, announced this week and landing at retail April 15, slots precisely above the Tour 80 in gram weight and below it in launch angle, covering a swing-speed band that KBS fitters have been handling with workarounds. That is not a criticism. That is exactly how you build a serious shaft catalog.\\n\\nKBS Golf Shafts, founded in 2004 by Kim Braly, started as a corrective argument against the steel shaft category's dominant voice. True Temper's Dynamic Gold had run the tour for decades not because it was universally optimal, but because its consistency and fitter familiarity made it the default. Braly's pitch was tighter tolerances, more deliberate bend profiles, and a product that tour players could actually spec with precision rather than accept as infrastructure. Twenty-plus years later, KBS has built exactly what it was founded against: a layered, weight-stepped catalog that fills swing-speed bands the way Dynamic Gold always has. The Tour 90 is the latest rung. The irony is not lost, and it should not be read as failure. It is what maturity looks like in the shaft business.\\n\\nThe Tour 90's technical claim centers on a low-bend point construction producing lower launch and reduced spin compared to the Tour 80, available in 90, 95, and 100 gram profiles across Stiff and X-Stiff flex. The bend point-to-launch relationship in steel shafts is real but less linear than shaft marketing typically implies. A lower bend point shifts the flex zone toward the tip, which influences launch, but clubhead design, loft, and the interaction of shaft frequency with a given swing pattern all complicate the output. KBS's engineers understand this. The press release simplifies it, as press releases do. What the Tour 90 genuinely offers is weight continuity within the KBS Tour family at a launch profile that previously required fitters to reach outside the catalog or compromise on feel.\\n\\nKBS reports 14 tour winners on staff this season and continues to count the KBS Tour among the most-played steel iron shafts globally across all four major tours. Those numbers are real, but they are also the baseline currency of any serious shaft brand operating at this level. The more telling metric will be Tour 90 WITB penetration by the summer equipment cycle. If KBS's tour reps can slot it into five or six competitive bags before the majors, the fitter community will notice. If it stays on the retail shelf while tour staff continue gaming Tour 80 or the C-Taper lineup, the product answered a question the tour was not asking.\\n\\nKBS's DORMIED Index score registered an 18 percent month-over-month increase in April, which tracks with launch cycle activity more than it tracks with structural brand momentum. The number worth watching is whether that curve holds through June, when launch noise fades and residual search and retail pull reveal actual demand. KBS sits in a strong position to convert the moment. The Tour family carries genuine credibility. The distribution footprint through certified fitting facilities and premium independents is the right channel for a $34.95 shaft targeting faster-swing players who care enough to get fit. The question KBS has always faced, and still faces with the Tour 90, is whether it can hold that credibility as it expands the catalog deeper and broader. The brands that built weight ladders before it found that more SKUs do not automatically mean more market share. They mean more complexity for the fitter and more opportunity to be wrong.\",\n  \"meta_description\": \"KBS Golf Shafts launches the Tour 90 steel iron shaft. DORMIED breaks down what this portfolio move signals about the brand's long-term strategy.\",\n  \"seo_keywords\": [\"KBS Golf Shafts Tour 90\", \"steel iron shaft 2026\", \"KBS Tour shaft review\", \"low launch iron shaft\", \"golf shaft fitting\"],\n  \"x_post\": \"Fourteen tour winners and a new weight rung in the catalog. KBS is not a challenger brand anymore. The Tour 90 is what maturity looks like in the shaft business, for better and worse.\"\n}\n```",
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 1622,
+      "cache_read_input_tokens": 6868,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 710,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "iterations": [
+        {
+          "input_tokens": 3,
+          "output_tokens": 35,
+          "cache_read_input_tokens": 3434,
+          "cache_creation_input_tokens": 710,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 710,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        },
+        {
+          "input_tokens": 7003,
+          "output_tokens": 7465,
+          "cache_read_input_tokens": 0,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "advisor_message",
+          "model": "claude-opus-4-7"
+        },
+        {
+          "input_tokens": 1,
+          "output_tokens": 1559,
+          "cache_read_input_tokens": 3434,
+          "cache_creation_input_tokens": 912,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 912,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1594,
+      "service_tier": "standard",
+      "inference_geo": "global",
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      }
+    },
+    "advisorTokens": {
+      "input_tokens": 7003,
+      "output_tokens": 7465,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "type": "advisor_message",
+      "model": "claude-opus-4-7"
+    },
+    "executorCost": 0.0320649,
+    "advisorCost": 0.22164,
+    "totalCost": 0.2537049
+  },
+  {
+    "config": "b-sonnet+advisor",
+    "configLabel": "Sonnet 4.6 executor + Opus 4.7 advisor",
+    "topic": "apparel-adam",
+    "author": "Adam",
+    "elapsed": "74.6",
+    "title": "Malbon Picked the 997. That Choice Says Everything About Who This Collab Is Really For.",
+    "body": "Malbon Golf and New Balance just dropped the Bogey Club pack: three colorways of the NB 997 reworked as a golf shoe, waterproof leather upper, replaceable cleat system, 500 pairs per colorway, $195, live April 22 across select New Balance doors and malbon.com. A matching polo and bucket hat round it out, malbon.com exclusive.\n\nThe product is straightforward. The interesting part is the silhouette. New Balance's cultural heat in 2025 and 2026 lives in the 990v6, the 2002R, the 1906R, shoes that move in sixty seconds on SNKRS and run deep on Grailed. The 997 is not that shoe. The 997 is clean, wearable, broadly accessible, the kind of choice that reads safe when you're staring at a product slate. Whether Malbon made that call or New Balance made it for them is worth asking, because it determines what this collab actually is: a genuine sneaker crossover or a golf-world product wearing a sneaker collab's clothing. The waterproof leather construction is executed well enough, the replaceable cleat system is a functional decision that keeps the shoe's profile intact, but the 997 signals broad appeal over grail status from the jump.\n\nThat said, the category move here is real regardless of silhouette. Malbon's prior collabs, Titleist, FootJoy, Polo Ralph Lauren, lived entirely inside golf culture or prep culture. New Balance is sneaker culture proper. This is the first time Malbon has walked through that door, and who shows up to buy a $195 golf shoe from a streetwear-adjacent brand will tell the brand more about its customer than any focus group. The Bogey Club membership concept has always positioned Malbon as a golf brand for people who find golf brands slightly embarrassing. A New Balance collab is the logical next step in that brand thesis, even if the 997 is the cautious version of it.\n\nMalbon's DORMIED Index score is sitting at +31% month-over-month heading into the April drop, which tracks with the collab leak and pre-announcement cycle. The number suggests the audience is paying attention. At 1,500 total pairs globally across all three colorways, the supply math does the job anyway: scarcity manages the conversation even if the 997 doesn't generate the secondary market pull that a 990v6 would. The polo and bucket hat, malbon.com only, are the quiet margin play, the pieces that move after the shoes sell out and the customer is already on the site looking.\n\nWatch where the 997 Bogey Club pack shows up in sixty days. If it's on feet at Riviera or Bel-Air, the brand reinforced its core. If it's sitting on resale at under retail, the silhouette call will look worse in hindsight. Malbon has the brand equity to make this work, but the next footwear collaboration will tell you whether New Balance opened a door or just handed them a one-time key. The brand that once convinced serious golfers to wear a bucket hat is capable of either outcome.",
+    "xPost": "500 pairs per colorway, $195, New Balance 997. The silhouette choice is either brilliant for wearability or a hedge away from anything that would sell on Grailed. Malbon's first real sneaker collab cuts both ways.",
+    "meta": "Malbon Golf and New Balance drop the Bogey Club pack on the NB 997 silhouette. The shoe choice reveals exactly who this collab is built for.",
+    "valid": true,
+    "rawText": "```json\n{\n  \"title\": \"Malbon Picked the 997. That Choice Says Everything About Who This Collab Is Really For.\",\n  \"body\": \"Malbon Golf and New Balance just dropped the Bogey Club pack: three colorways of the NB 997 reworked as a golf shoe, waterproof leather upper, replaceable cleat system, 500 pairs per colorway, $195, live April 22 across select New Balance doors and malbon.com. A matching polo and bucket hat round it out, malbon.com exclusive.\\n\\nThe product is straightforward. The interesting part is the silhouette. New Balance's cultural heat in 2025 and 2026 lives in the 990v6, the 2002R, the 1906R, shoes that move in sixty seconds on SNKRS and run deep on Grailed. The 997 is not that shoe. The 997 is clean, wearable, broadly accessible, the kind of choice that reads safe when you're staring at a product slate. Whether Malbon made that call or New Balance made it for them is worth asking, because it determines what this collab actually is: a genuine sneaker crossover or a golf-world product wearing a sneaker collab's clothing. The waterproof leather construction is executed well enough, the replaceable cleat system is a functional decision that keeps the shoe's profile intact, but the 997 signals broad appeal over grail status from the jump.\\n\\nThat said, the category move here is real regardless of silhouette. Malbon's prior collabs, Titleist, FootJoy, Polo Ralph Lauren, lived entirely inside golf culture or prep culture. New Balance is sneaker culture proper. This is the first time Malbon has walked through that door, and who shows up to buy a $195 golf shoe from a streetwear-adjacent brand will tell the brand more about its customer than any focus group. The Bogey Club membership concept has always positioned Malbon as a golf brand for people who find golf brands slightly embarrassing. A New Balance collab is the logical next step in that brand thesis, even if the 997 is the cautious version of it.\\n\\nMalbon's DORMIED Index score is sitting at +31% month-over-month heading into the April drop, which tracks with the collab leak and pre-announcement cycle. The number suggests the audience is paying attention. At 1,500 total pairs globally across all three colorways, the supply math does the job anyway: scarcity manages the conversation even if the 997 doesn't generate the secondary market pull that a 990v6 would. The polo and bucket hat, malbon.com only, are the quiet margin play, the pieces that move after the shoes sell out and the customer is already on the site looking.\\n\\nWatch where the 997 Bogey Club pack shows up in sixty days. If it's on feet at Riviera or Bel-Air, the brand reinforced its core. If it's sitting on resale at under retail, the silhouette call will look worse in hindsight. Malbon has the brand equity to make this work, but the next footwear collaboration will tell you whether New Balance opened a door or just handed them a one-time key. The brand that once convinced serious golfers to wear a bucket hat is capable of either outcome.\",\n  \"meta_description\": \"Malbon Golf and New Balance drop the Bogey Club pack on the NB 997 silhouette. The shoe choice reveals exactly who this collab is built for.\",\n  \"seo_keywords\": [\"Malbon Golf New Balance collab\", \"Bogey Club pack\", \"golf sneaker collaboration 2026\", \"New Balance 997 golf shoe\", \"Malbon Golf footwear\"],\n  \"x_post\": \"500 pairs per colorway, $195, New Balance 997. The silhouette choice is either brilliant for wearability or a hedge away from anything that would sell on Grailed. Malbon's first real sneaker collab cuts both ways.\"\n}\n```",
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 2007,
+      "cache_read_input_tokens": 6482,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 658,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "iterations": [
+        {
+          "input_tokens": 3,
+          "output_tokens": 35,
+          "cache_read_input_tokens": 3241,
+          "cache_creation_input_tokens": 658,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 658,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        },
+        {
+          "input_tokens": 6682,
+          "output_tokens": 2780,
+          "cache_read_input_tokens": 0,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "advisor_message",
+          "model": "claude-opus-4-7"
+        },
+        {
+          "input_tokens": 1,
+          "output_tokens": 925,
+          "cache_read_input_tokens": 3241,
+          "cache_creation_input_tokens": 1349,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 1349,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "output_tokens": 960,
+      "service_tier": "standard",
+      "inference_geo": "global",
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      }
+    },
+    "advisorTokens": {
+      "input_tokens": 6682,
+      "output_tokens": 2780,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "type": "advisor_message",
+      "model": "claude-opus-4-7"
+    },
+    "executorCost": 0.023882849999999997,
+    "advisorCost": 0.10291,
+    "totalCost": 0.12679285
+  },
+  {
+    "config": "b-sonnet+advisor",
+    "configLabel": "Sonnet 4.6 executor + Opus 4.7 advisor",
+    "topic": "tech-travis",
+    "author": "Travis",
+    "elapsed": "70.9",
+    "title": "Callaway Led Arccos's $30M Round. That's Not a Passive Investment.",
+    "body": "Thirty million dollars is a number. Callaway leading the round is the story.\n\nArccos Golf announced a $30 million Series C this week with Callaway Golf at the front of the cap table, paired with a commercial agreement to embed Arccos's Strokes Gained analytics into Callaway's fitting recommendation engine across 500-plus authorized fitting locations. The capital brings total Arccos funding to $60 million and funds international expansion into the UK, Japan, and Australia. The headline is the raise. The subtext is what a strategic investor leading a round usually signals: a position, not a bet.\n\nThe smart-sensor category has a body count worth remembering. Game Golf launched in 2013 with a similar automatic shot-tracking premise, raised real money, and quietly dissolved before most golfers noticed. Shot tracking as a standalone consumer product is an exceptionally hard business: high churn, narrow demographic, and a product experience that competes with doing nothing, which is what most golfers actually do with their data. Arccos survived that shakeout and built a database of over 12 billion tracked shots from 250,000 active users. That dataset is not just a user count. It is a statistically significant on-course performance record that no launch monitor in a fitting bay can replicate. Callaway has apparently decided that owning the data layer of the fitting process is worth a strategic investment to secure.\n\nThe precedent for OEM sensor integration is Cobra Connect, which embedded Arccos sensors into Cobra grip-installed clubs starting around 2017. That deal was hardware distribution with a data element. The Callaway deal is architecturally different: Arccos is now powering the recommendation engine, not just feeding a companion app. The distinction matters because fitting recommendations informed by millions of real on-course shots, not thirty range swings on a Trackman mat, represent a genuinely different input model. Most fittings still optimize for numbers from controlled conditions. On-course Strokes Gained data asks a different question: what does this golfer actually lose shots to, and what equipment addresses that, not the equipment that maximizes ball speed on a simulator. That is a legitimate engineering claim, not a marketing one.\n\nClub Champion and True Spec have built substantial business on the premise that independent, brand-agnostic fitting produces better outcomes than manufacturer-affiliated fitting. Callaway integrating proprietary Arccos data into its fitting network does not solve that argument, but it does change the competitive texture of it. A Callaway fitting center running Arccos-powered recommendations will carry a data story that an independent fitter using only launch monitor output cannot match on volume. Whether golfers find that compelling, or whether they find the brand affiliation disqualifying, is the actual market question the next 18 months will answer.\n\nArccos's DORMIED Index rank sits at 88 globally, up 22 percent month-over-month, which tracks with a funding announcement bump rather than a sustained platform momentum shift. The more durable signal is structural: Arccos is now the last at-scale independent sensor platform with a meaningful user base, it just took a strategic check from the world's largest golf company, and it is expanding into three international markets simultaneously. Each of those facts individually is manageable. Together, they describe a company either preparing for a very large standalone run or shortening the distance to acquisition. Callaway's history with strategic investments, OGIO and TravisMathew among them, suggests it tends to finish what it starts. The next trigger to watch is whether Arccos's international expansion raises the valuation above what a clean acquisition would cost, or whether that expansion is the justification Callaway needs to close the gap entirely.",
+    "xPost": "Twelve billion tracked shots is the asset. Callaway leading the round is the tell. This isn't a passive investment in a cool app. It's a data-layer position in the fitting war.",
+    "meta": "Callaway led Arccos Golf's $30M Series C. That's a data-layer acquisition position, not a passive investment. Here's what the deal actually signals.",
+    "valid": true,
+    "rawText": "```json\n{\n  \"title\": \"Callaway Led Arccos's $30M Round. That's Not a Passive Investment.\",\n  \"body\": \"Thirty million dollars is a number. Callaway leading the round is the story.\\n\\nArccos Golf announced a $30 million Series C this week with Callaway Golf at the front of the cap table, paired with a commercial agreement to embed Arccos's Strokes Gained analytics into Callaway's fitting recommendation engine across 500-plus authorized fitting locations. The capital brings total Arccos funding to $60 million and funds international expansion into the UK, Japan, and Australia. The headline is the raise. The subtext is what a strategic investor leading a round usually signals: a position, not a bet.\\n\\nThe smart-sensor category has a body count worth remembering. Game Golf launched in 2013 with a similar automatic shot-tracking premise, raised real money, and quietly dissolved before most golfers noticed. Shot tracking as a standalone consumer product is an exceptionally hard business: high churn, narrow demographic, and a product experience that competes with doing nothing, which is what most golfers actually do with their data. Arccos survived that shakeout and built a database of over 12 billion tracked shots from 250,000 active users. That dataset is not just a user count. It is a statistically significant on-course performance record that no launch monitor in a fitting bay can replicate. Callaway has apparently decided that owning the data layer of the fitting process is worth a strategic investment to secure.\\n\\nThe precedent for OEM sensor integration is Cobra Connect, which embedded Arccos sensors into Cobra grip-installed clubs starting around 2017. That deal was hardware distribution with a data element. The Callaway deal is architecturally different: Arccos is now powering the recommendation engine, not just feeding a companion app. The distinction matters because fitting recommendations informed by millions of real on-course shots, not thirty range swings on a Trackman mat, represent a genuinely different input model. Most fittings still optimize for numbers from controlled conditions. On-course Strokes Gained data asks a different question: what does this golfer actually lose shots to, and what equipment addresses that, not the equipment that maximizes ball speed on a simulator. That is a legitimate engineering claim, not a marketing one.\\n\\nClub Champion and True Spec have built substantial business on the premise that independent, brand-agnostic fitting produces better outcomes than manufacturer-affiliated fitting. Callaway integrating proprietary Arccos data into its fitting network does not solve that argument, but it does change the competitive texture of it. A Callaway fitting center running Arccos-powered recommendations will carry a data story that an independent fitter using only launch monitor output cannot match on volume. Whether golfers find that compelling, or whether they find the brand affiliation disqualifying, is the actual market question the next 18 months will answer.\\n\\nArccos's DORMIED Index rank sits at 88 globally, up 22 percent month-over-month, which tracks with a funding announcement bump rather than a sustained platform momentum shift. The more durable signal is structural: Arccos is now the last at-scale independent sensor platform with a meaningful user base, it just took a strategic check from the world's largest golf company, and it is expanding into three international markets simultaneously. Each of those facts individually is manageable. Together, they describe a company either preparing for a very large standalone run or shortening the distance to acquisition. Callaway's history with strategic investments, OGIO and TravisMathew among them, suggests it tends to finish what it starts. The next trigger to watch is whether Arccos's international expansion raises the valuation above what a clean acquisition would cost, or whether that expansion is the justification Callaway needs to close the gap entirely.\"\n,\n  \"meta_description\": \"Callaway led Arccos Golf's $30M Series C. That's a data-layer acquisition position, not a passive investment. Here's what the deal actually signals.\",\n  \"seo_keywords\": [\"Arccos Golf funding\", \"Callaway Golf fitting integration\", \"golf shot tracking data\", \"Strokes Gained analytics fitting\", \"golf performance technology\"],\n  \"x_post\": \"Twelve billion tracked shots is the asset. Callaway leading the round is the tell. This isn't a passive investment in a cool app. It's a data-layer position in the fitting war.\"\n}\n```",
+    "usage": {
+      "input_tokens": 653,
+      "cache_creation_input_tokens": 1561,
+      "cache_read_input_tokens": 6868,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "iterations": [
+        {
+          "input_tokens": 652,
+          "output_tokens": 35,
+          "cache_read_input_tokens": 3434,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        },
+        {
+          "input_tokens": 6923,
+          "output_tokens": 2065,
+          "cache_read_input_tokens": 0,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "advisor_message",
+          "model": "claude-opus-4-7"
+        },
+        {
+          "input_tokens": 1,
+          "output_tokens": 1002,
+          "cache_read_input_tokens": 3434,
+          "cache_creation_input_tokens": 1561,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 1561,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1037,
+      "service_tier": "standard",
+      "inference_geo": "global",
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      }
+    },
+    "advisorTokens": {
+      "input_tokens": 6923,
+      "output_tokens": 2065,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "type": "advisor_message",
+      "model": "claude-opus-4-7"
+    },
+    "executorCost": 0.025428149999999997,
+    "advisorCost": 0.08624,
+    "totalCost": 0.11166815
+  }
+]

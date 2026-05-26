@@ -1,0 +1,109 @@
+══════════════════════════════════════════════════════════════════════
+DORMIED Article Config Eval — Part D Results
+Generated: 2026-05-25T20:57:33.398Z
+══════════════════════════════════════════════════════════════════════
+
+── Topic: equipment-travis  (Travis voice) ─────────────────────────
+
+  Config:   a-opus-solo — Opus 4.7 solo (no advisor)
+  Cost:     $0.0571 total  (exec: $0.0571, adv: $0.0000)
+  Tokens:   input 575, cache_read 0, cache_creation 3289, output 1345
+  Time:     27.5s
+  Valid JSON: true
+  Title:    KBS Drops a Low-Launch Tour 90, and the Steel Iron Shaft War Gets Another Front
+  X Post:   Low-bend point steel at 90 grams is a specific design target, not a broad market play. KBS is going after the same X100 crowd it took from True Temper with the C-Taper in 2012. Different decade, same playbook.
+  Body (first 400 chars):
+    The premium steel iron shaft market has been a two-horse race between KBS and True Temper's Dynamic Gold line for the better part of a decade. KBS just opened a new front in that race.
+    
+    KBS Golf Shafts announced the Tour 90 on Tuesday, a low-launch, low-spin steel iron shaft positioned as a higher-control alternative to the existing Tour 80. It comes in 90, 95, and 100-gram weights, Stiff and X-St
+
+  Config:   c-sonnet-solo — Sonnet 4.6 solo (baseline)
+  Cost:     $0.0228 total  (exec: $0.0228, adv: $0.0000)
+  Tokens:   input 396, cache_read 0, cache_creation 2415, output 836
+  Time:     20.8s
+  Valid JSON: true
+  Title:    KBS Tour 90 Targets the One Gap in Its Own Steel Shaft Lineup
+  X Post:   Filling a gap in your own lineup is not a headline product launch. It is how serious shaft brands actually operate. The Tour 90 is KBS doing the quiet work right.
+  Body (first 400 chars):
+    Steel shaft fitting has a weight problem, and KBS just addressed the version of it that lives in the 90-gram range. The Tour 90 is a new low-bend-point iron shaft built for faster swing speeds, added to the KBS Tour family to sit above the existing Tour 80 in weight and below the penetrating-flight options that previously required moving outside the Tour line entirely.
+    
+    The Tour 90 comes in three 
+
+  [b-sonnet+advisor] ERROR: Cannot read properties of undefined (reading 'create')
+
+── Topic: apparel-adam  (Adam voice) ─────────────────────────
+
+  Config:   a-opus-solo — Opus 4.7 solo (no advisor)
+  Cost:     $0.0571 total  (exec: $0.0571, adv: $0.0000)
+  Tokens:   input 523, cache_read 0, cache_creation 3020, output 1426
+  Time:     31.3s
+  Valid JSON: true
+  Title:    Malbon x New Balance: The 997 Becomes a Golf Shoe, and the Sneaker War Officially Hits the Tee Box
+  X Post:   Putting the 997 on a golf course is not a collab, it's New Balance announcing that golf is now a category worth showing up for. Malbon got the call before anyone else did. 1,500 pairs total. This resells in a week.
+  Body (first 400 chars):
+    Dad-shoe culture and golf were going to collide eventually. Malbon and New Balance just picked the date.
+    
+    The two brands launch the Bogey Club pack on April 22, a three-colorway run of the 997 silhouette retrofitted with a replaceable cleat system and a waterproof leather upper. Each colorway is capped at 500 pairs globally at $195, with a matching polo and bucket hat available only through malbon
+
+  Config:   c-sonnet-solo — Sonnet 4.6 solo (baseline)
+  Cost:     $0.0225 total  (exec: $0.0225, adv: $0.0000)
+  Tokens:   input 344, cache_read 0, cache_creation 2222, output 874
+  Time:     20.1s
+  Valid JSON: true
+  Title:    Malbon and New Balance Just Made the Golf Shoe That Doesn't Look Like a Golf Shoe
+  X Post:   500 pairs per colorway and a simultaneous sneaker-retail launch. Malbon just stopped playing in the golf footwear lane and walked straight into the sneaker drop conversation.
+  Body (first 400 chars):
+    Three colorways, 500 pairs each, $195 a pop, and a silhouette that was never designed for a fairway. Malbon Golf and New Balance are dropping the Bogey Club pack on April 22: a golf-adapted version of the 997 with a replaceable cleat system and waterproof leather upper, sold simultaneously through select New Balance retail and malbon.com.
+    
+    The 997 is a deliberate choice, and not an obvious one. Ne
+
+  [b-sonnet+advisor] ERROR: Cannot read properties of undefined (reading 'create')
+
+── Topic: tech-travis  (Travis voice) ─────────────────────────
+
+  Config:   a-opus-solo — Opus 4.7 solo (no advisor)
+  Cost:     $0.0361 total  (exec: $0.0361, adv: $0.0000)
+  Tokens:   input 495, cache_read 3289, cache_creation 0, output 1281
+  Time:     26.4s
+  Valid JSON: true
+  Title:    Callaway Just Bought The Data Layer: Arccos Lands $30M and the Fitting Network That Comes With It
+  X Post:   Callaway didn't invest in Arccos. It bought the data layer that will sit underneath every fitting it runs for the next decade. $30M for 12 billion shots and a moat against Shot Scope and Garmin. The independent fitter just lost a neutral tool.
+  Body (first 400 chars):
+    Callaway leading a $30 million Series C in Arccos is not a venture investment. It is an acquisition of the data layer that will sit underneath every fitting Callaway runs from now until the partnership ends.
+    
+    The deal makes Arccos the statistical engine behind Callaway's AI fitting recommendations across 500-plus fitting centers. In exchange, Arccos gets $30 million, doubling its total funding to 
+
+  Config:   c-sonnet-solo — Sonnet 4.6 solo (baseline)
+  Cost:     $0.0145 total  (exec: $0.0145, adv: $0.0000)
+  Tokens:   input 335, cache_read 2415, cache_creation 0, output 853
+  Time:     22.1s
+  Valid JSON: true
+  Title:    Arccos Just Became the Data Engine Inside Callaway's Fitting Network. That Changes Everything About How the Brand Gets Sold.
+  X Post:   Embedding 12 billion tracked shots into Callaway's fitting network is a smarter distribution play than any consumer marketing Arccos has ever run. The fitting room is where the adoption problem gets solved.
+  Body (first 400 chars):
+    Thirty million dollars and a seat inside Callaway's fitting infrastructure is not the same thing as thirty million dollars and a press release. Arccos Golf closed a Series C led by Callaway this week, and the more consequential detail is buried in the second paragraph: Arccos's 12 billion tracked shots will now power the statistical foundation of Callaway's AI fitting recommendation engine across 
+
+  [b-sonnet+advisor] ERROR: Cannot read properties of undefined (reading 'create')
+
+══════════════════════════════════════════════════════════════════════
+Cost Summary (average per article across topics)
+══════════════════════════════════════════════════════════════════════
+  a-opus-solo          avg $0.0501/article  (exec $0.0501 + adv $0.0000)  avg output tokens: 1351
+  c-sonnet-solo        avg $0.0199/article  (exec $0.0199 + adv $0.0000)  avg output tokens: 854
+
+══════════════════════════════════════════════════════════════════════
+DECISION RULE
+══════════════════════════════════════════════════════════════════════
+Adopt b-sonnet+advisor for the live pipeline ONLY if its voice/quality
+matches a-opus-solo closely enough to be indistinguishable in DORMIED
+voice. If advisor config loses the voice, set USE_ADVISOR = false and
+EXECUTOR_MODEL = 'claude-opus-4-7' in generate-article.js.
+
+Key checks:
+  - No em dashes (—) anywhere
+  - Lede: direct, editorial, not press-office language
+  - Voice calibration: dry, specific, no 'exciting news' phrases
+  - Insider fluency: correct references, plausible industry analysis
+  - X post: does NOT start with brand name; works as standalone take
+
+Full JSON: /Users/travisr/Desktop/dormied_website/eval-results/eval-2026-05-25T20-57-33.json

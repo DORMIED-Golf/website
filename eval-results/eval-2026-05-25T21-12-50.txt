@@ -1,0 +1,69 @@
+══════════════════════════════════════════════════════════════════════
+DORMIED Article Config Eval — Part D Results
+Generated: 2026-05-25T21:12:50.530Z
+══════════════════════════════════════════════════════════════════════
+
+── Topic: equipment-travis  (Travis voice) ─────────────────────────
+
+  Config:   b-sonnet+advisor — Sonnet 4.6 executor + Opus 4.7 advisor
+  Cost:     $0.2537 total  (exec: $0.0321, adv: $0.2216)
+  Tokens:   input 4, cache_read 6868, cache_creation 1622, output 1594
+  Advisor:  input 7003, output 7465
+  Time:     154.7s
+  Valid JSON: false
+  Title:    [JSON parse failed]
+  X Post:   
+  Body (first 400 chars):
+    
+
+── Topic: apparel-adam  (Adam voice) ─────────────────────────
+
+  Config:   b-sonnet+advisor — Sonnet 4.6 executor + Opus 4.7 advisor
+  Cost:     $0.1268 total  (exec: $0.0239, adv: $0.1029)
+  Tokens:   input 4, cache_read 6482, cache_creation 2007, output 960
+  Advisor:  input 6682, output 2780
+  Time:     74.6s
+  Valid JSON: true
+  Title:    Malbon Picked the 997. That Choice Says Everything About Who This Collab Is Really For.
+  X Post:   500 pairs per colorway, $195, New Balance 997. The silhouette choice is either brilliant for wearability or a hedge away from anything that would sell on Grailed. Malbon's first real sneaker collab cuts both ways.
+  Body (first 400 chars):
+    Malbon Golf and New Balance just dropped the Bogey Club pack: three colorways of the NB 997 reworked as a golf shoe, waterproof leather upper, replaceable cleat system, 500 pairs per colorway, $195, live April 22 across select New Balance doors and malbon.com. A matching polo and bucket hat round it out, malbon.com exclusive.
+    
+    The product is straightforward. The interesting part is the silhouette.
+
+── Topic: tech-travis  (Travis voice) ─────────────────────────
+
+  Config:   b-sonnet+advisor — Sonnet 4.6 executor + Opus 4.7 advisor
+  Cost:     $0.1117 total  (exec: $0.0254, adv: $0.0862)
+  Tokens:   input 653, cache_read 6868, cache_creation 1561, output 1037
+  Advisor:  input 6923, output 2065
+  Time:     70.9s
+  Valid JSON: true
+  Title:    Callaway Led Arccos's $30M Round. That's Not a Passive Investment.
+  X Post:   Twelve billion tracked shots is the asset. Callaway leading the round is the tell. This isn't a passive investment in a cool app. It's a data-layer position in the fitting war.
+  Body (first 400 chars):
+    Thirty million dollars is a number. Callaway leading the round is the story.
+    
+    Arccos Golf announced a $30 million Series C this week with Callaway Golf at the front of the cap table, paired with a commercial agreement to embed Arccos's Strokes Gained analytics into Callaway's fitting recommendation engine across 500-plus authorized fitting locations. The capital brings total Arccos funding to $60 
+
+══════════════════════════════════════════════════════════════════════
+Cost Summary (average per article across topics)
+══════════════════════════════════════════════════════════════════════
+  b-sonnet+advisor     avg $0.1641/article  (exec $0.0271 + adv $0.1369)  avg output tokens: 1197
+
+══════════════════════════════════════════════════════════════════════
+DECISION RULE
+══════════════════════════════════════════════════════════════════════
+Adopt b-sonnet+advisor for the live pipeline ONLY if its voice/quality
+matches a-opus-solo closely enough to be indistinguishable in DORMIED
+voice. If advisor config loses the voice, set USE_ADVISOR = false and
+EXECUTOR_MODEL = 'claude-opus-4-7' in generate-article.js.
+
+Key checks:
+  - No em dashes (—) anywhere
+  - Lede: direct, editorial, not press-office language
+  - Voice calibration: dry, specific, no 'exciting news' phrases
+  - Insider fluency: correct references, plausible industry analysis
+  - X post: does NOT start with brand name; works as standalone take
+
+Full JSON: /Users/travisr/Desktop/dormied_website/eval-results/eval-2026-05-25T21-12-50.json

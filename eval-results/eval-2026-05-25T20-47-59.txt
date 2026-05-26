@@ -1,0 +1,49 @@
+══════════════════════════════════════════════════════════════════════
+DORMIED Article Config Eval — Part D Results
+Generated: 2026-05-25T20:47:59.804Z
+══════════════════════════════════════════════════════════════════════
+
+── Topic: equipment-travis  (Travis voice) ─────────────────────────
+
+  [a-opus-solo] ERROR: Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the "X-Api-Key" or "Authorization" headers to be explicitly omitted
+
+  [b-sonnet+advisor] ERROR: Cannot read properties of undefined (reading 'create')
+
+  [c-sonnet-solo] ERROR: Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the "X-Api-Key" or "Authorization" headers to be explicitly omitted
+
+── Topic: apparel-adam  (Adam voice) ─────────────────────────
+
+  [a-opus-solo] ERROR: Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the "X-Api-Key" or "Authorization" headers to be explicitly omitted
+
+  [b-sonnet+advisor] ERROR: Cannot read properties of undefined (reading 'create')
+
+  [c-sonnet-solo] ERROR: Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the "X-Api-Key" or "Authorization" headers to be explicitly omitted
+
+── Topic: tech-travis  (Travis voice) ─────────────────────────
+
+  [a-opus-solo] ERROR: Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the "X-Api-Key" or "Authorization" headers to be explicitly omitted
+
+  [b-sonnet+advisor] ERROR: Cannot read properties of undefined (reading 'create')
+
+  [c-sonnet-solo] ERROR: Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the "X-Api-Key" or "Authorization" headers to be explicitly omitted
+
+══════════════════════════════════════════════════════════════════════
+Cost Summary (average per article across topics)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+DECISION RULE
+══════════════════════════════════════════════════════════════════════
+Adopt b-sonnet+advisor for the live pipeline ONLY if its voice/quality
+matches a-opus-solo closely enough to be indistinguishable in DORMIED
+voice. If advisor config loses the voice, set USE_ADVISOR = false and
+EXECUTOR_MODEL = 'claude-opus-4-7' in generate-article.js.
+
+Key checks:
+  - No em dashes (—) anywhere
+  - Lede: direct, editorial, not press-office language
+  - Voice calibration: dry, specific, no 'exciting news' phrases
+  - Insider fluency: correct references, plausible industry analysis
+  - X post: does NOT start with brand name; works as standalone take
+
+Full JSON: /Users/travisr/Desktop/dormied_website/eval-results/eval-2026-05-25T20-47-59.json

@@ -1,0 +1,56 @@
+[
+  {
+    "config": "a-opus-solo",
+    "configLabel": "Opus 4.7 solo (no advisor)",
+    "topic": "equipment-travis",
+    "error": "Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the \"X-Api-Key\" or \"Authorization\" headers to be explicitly omitted"
+  },
+  {
+    "config": "b-sonnet+advisor",
+    "configLabel": "Sonnet 4.6 executor + Opus 4.7 advisor",
+    "topic": "equipment-travis",
+    "error": "Cannot read properties of undefined (reading 'create')"
+  },
+  {
+    "config": "c-sonnet-solo",
+    "configLabel": "Sonnet 4.6 solo (baseline)",
+    "topic": "equipment-travis",
+    "error": "Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the \"X-Api-Key\" or \"Authorization\" headers to be explicitly omitted"
+  },
+  {
+    "config": "a-opus-solo",
+    "configLabel": "Opus 4.7 solo (no advisor)",
+    "topic": "apparel-adam",
+    "error": "Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the \"X-Api-Key\" or \"Authorization\" headers to be explicitly omitted"
+  },
+  {
+    "config": "b-sonnet+advisor",
+    "configLabel": "Sonnet 4.6 executor + Opus 4.7 advisor",
+    "topic": "apparel-adam",
+    "error": "Cannot read properties of undefined (reading 'create')"
+  },
+  {
+    "config": "c-sonnet-solo",
+    "configLabel": "Sonnet 4.6 solo (baseline)",
+    "topic": "apparel-adam",
+    "error": "Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the \"X-Api-Key\" or \"Authorization\" headers to be explicitly omitted"
+  },
+  {
+    "config": "a-opus-solo",
+    "configLabel": "Opus 4.7 solo (no advisor)",
+    "topic": "tech-travis",
+    "error": "Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the \"X-Api-Key\" or \"Authorization\" headers to be explicitly omitted"
+  },
+  {
+    "config": "b-sonnet+advisor",
+    "configLabel": "Sonnet 4.6 executor + Opus 4.7 advisor",
+    "topic": "tech-travis",
+    "error": "Cannot read properties of undefined (reading 'create')"
+  },
+  {
+    "config": "c-sonnet-solo",
+    "configLabel": "Sonnet 4.6 solo (baseline)",
+    "topic": "tech-travis",
+    "error": "Could not resolve authentication method. Expected either apiKey or authToken to be set. Or for one of the \"X-Api-Key\" or \"Authorization\" headers to be explicitly omitted"
+  }
+]

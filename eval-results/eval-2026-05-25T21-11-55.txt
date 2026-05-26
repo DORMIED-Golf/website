@@ -1,0 +1,41 @@
+══════════════════════════════════════════════════════════════════════
+DORMIED Article Config Eval — Part D Results
+Generated: 2026-05-25T21:11:55.795Z
+══════════════════════════════════════════════════════════════════════
+
+── Topic: equipment-travis  (Travis voice) ─────────────────────────
+
+  Config:   b-sonnet+advisor — Sonnet 4.6 executor + Opus 4.7 advisor
+  Cost:     $0.1218 total  (exec: $0.0248, adv: $0.0969)
+  Tokens:   input 4, cache_read 6868, cache_creation 2067, output 1001
+  Advisor:  input 7003, output 2476
+  Time:     73.6s
+  Valid JSON: true
+  Title:    KBS Is Betting Faster Swing Speeds Want Less Launch, Not Just More Weight
+  X Post:   Lighter steel with a lower launch profile is a specific engineering bet, not a positioning line. KBS Tour 90 is asking the bend point to do what weight usually handles. Fitting data will settle it.
+  Body (first 400 chars):
+    Low-bend point construction in a 90-gram shaft is not a neutral engineering choice. KBS Golf Shafts introduced the Tour 90 this week, slotting it above the existing Tour 80 in weight and below the shaft's launch window, targeting faster-swing-speed players who want a penetrating ball flight without climbing into heavier profiles they don't need.
+    
+    The core tension here is worth naming plainly. Conv
+
+══════════════════════════════════════════════════════════════════════
+Cost Summary (average per article across topics)
+══════════════════════════════════════════════════════════════════════
+  b-sonnet+advisor     avg $0.1218/article  (exec $0.0248 + adv $0.0969)  avg output tokens: 1001
+
+══════════════════════════════════════════════════════════════════════
+DECISION RULE
+══════════════════════════════════════════════════════════════════════
+Adopt b-sonnet+advisor for the live pipeline ONLY if its voice/quality
+matches a-opus-solo closely enough to be indistinguishable in DORMIED
+voice. If advisor config loses the voice, set USE_ADVISOR = false and
+EXECUTOR_MODEL = 'claude-opus-4-7' in generate-article.js.
+
+Key checks:
+  - No em dashes (—) anywhere
+  - Lede: direct, editorial, not press-office language
+  - Voice calibration: dry, specific, no 'exciting news' phrases
+  - Insider fluency: correct references, plausible industry analysis
+  - X post: does NOT start with brand name; works as standalone take
+
+Full JSON: /Users/travisr/Desktop/dormied_website/eval-results/eval-2026-05-25T21-11-55.json
