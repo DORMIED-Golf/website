@@ -88,7 +88,6 @@ function dedupeShaft(raw) {
   for (const brand of Object.keys(SHAFT_BRAND_LINKS)) {
     const doubled = brand + ' ' + brand;
     if (raw.startsWith(doubled)) {
-      // Remove the first "Brand " prefix
       return raw.slice(brand.length + 1);
     }
   }
@@ -97,10 +96,9 @@ function dedupeShaft(raw) {
 
 /**
  * Return HTML for shaft display.
- * - Prefers witb_shafts.model (already contains brand), falls back to raw_shaft.
- * - Deduplicates a doubled leading brand token.
- * - Links the brand portion to /brands/{slug} for the eight mapped shaft brands.
- * Returns plain '-' string (not HTML) when no shaft data.
+ * Prefers witb_shafts.model (already contains brand), falls back to raw_shaft.
+ * Deduplicates doubled leading brand token.
+ * Links the brand portion to /brands/{slug} for mapped shaft brands.
  */
 function shaftCell(item) {
   let raw = ((item.witb_shafts?.model) || item.raw_shaft || '').trim();
@@ -123,12 +121,12 @@ function shaftCell(item) {
 
 // ── Brand cell ────────────────────────────────────────────────────────────────
 
-/** Render brand logo + link component (exact-match-or-null: no fuzzy) */
+/** Render brand logo + link. Exact-match-or-null only -- no fuzzy. */
 function brandCell(rawBrand, dormiedSlug) {
   const name = esc(rawBrand || '');
   if (!dormiedSlug) {
     const mono = (rawBrand || '??').slice(0, 2).toUpperCase();
-    return `<span class="witb-brand-monogram">${mono}</span>${name}`;
+    return `<span class="witb-brand-monogram">${mono}</span><span>${name}</span>`;
   }
   const logo = `/images/logos/${dormiedSlug}.jpg`;
   const mono = (rawBrand || '??').slice(0, 2).toUpperCase();
@@ -137,7 +135,11 @@ function brandCell(rawBrand, dormiedSlug) {
 
 // ── Category icon ─────────────────────────────────────────────────────────────
 
-/** Category icon img tag */
+/**
+ * Category icon img tag.
+ * filter: brightness(0)invert(1) converts any icon (dark-on-white SVG) to
+ * white-on-transparent, suitable for DORMIED's dark background.
+ */
 function catIcon(clubType) {
   const icons = {
     'driver':     '/images/icons/driver_22px.svg',
@@ -154,7 +156,7 @@ function catIcon(clubType) {
     'grip':       '/images/icons/grip.svg',
   };
   const src = icons[clubType] || '/images/icons/golf_iron_icon_22px.svg';
-  return `<img src="${src}" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7">`;
+  return `<img src="${src}" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0">`;
 }
 
 /** Human-readable club type label */
@@ -176,29 +178,80 @@ function clubLabel(ct) {
   return labels[ct] || ct.charAt(0).toUpperCase() + ct.slice(1);
 }
 
-// ── History item formatter ────────────────────────────────────────────────────
+// ── Mobile bag card layout ────────────────────────────────────────────────────
 
 /**
- * Format a single bag item for the history timeline table.
- * @param {object|null} item  - bag item with witb_shafts join
- * @param {boolean} showDetail - if true, add loft + shaft sub-line
+ * Build mobile card HTML for a list of bag items.
+ * Shown below 641px; the desktop table is hidden at that breakpoint.
  */
-function fmtHistItem(item, showDetail = false) {
-  if (!item) return '<span style="color:var(--text-muted)">-</span>';
-  const model = (item.raw_model || '').split(' ').slice(0, 5).join(' ');
-  let html = `<strong>${esc(item.raw_brand)}</strong> ${esc(model)}`;
+function buildBagCards(items) {
+  return items.map(item => {
+    const dslug = item.witb_brands?.dormied_brand_slug || null;
+    const loft  = item.loft_or_number || '';
+    const sc    = shaftCell(item);
+    const model = item.raw_model || '';
 
-  if (showDetail) {
-    const parts = [];
-    if (item.loft_or_number) parts.push(esc(item.loft_or_number));
-    const sc = shaftCell(item);
-    if (sc && sc !== '-') parts.push(sc);
-    if (parts.length) {
-      html += `<br><span class="witb-hist-detail">${parts.join(' &middot; ')}</span>`;
-    }
-  }
+    return `<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    ${catIcon(item.club_type)}<span class="witb-mc-type">${esc(clubLabel(item.club_type))}</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex">${brandCell(item.witb_brands?.name || item.raw_brand, dslug)}</div>
+  <div class="witb-mc-model">${esc(model)}</div>
+  ${loft ? `<div class="witb-mc-loft">${esc(loft)}</div>` : ''}
+  ${sc !== '-' ? `<div class="witb-mc-shaft">${sc}</div>` : ''}
+</div>`;
+  }).join('\n');
+}
 
-  return html;
+// ── Bag history snapshots ─────────────────────────────────────────────────────
+
+/**
+ * Build the full-bag history section HTML.
+ * Each snapshot is a <details> block (server-rendered, crawlable).
+ * First/newest snapshot is open by default; older ones are collapsed.
+ * Items use the same compact row format as the current bag but without
+ * the mobile/desktop split (rows work at any width).
+ */
+function buildHistorySnapshots(bags) {
+  const sorted = [...bags].sort((a, b) => b.bag_date.localeCompare(a.bag_date));
+
+  return sorted.map((bag, idx) => {
+    const isOpen  = idx === 0;
+    const label   = fmtDate(bag.bag_date);
+    const tagHtml = bag.is_current
+      ? ' <span class="witb-snap-tag">current</span>'
+      : '';
+
+    const itemRows = (bag._items || []).map(item => {
+      const dslug = item.witb_brands?.dormied_brand_slug || null;
+      const loft  = item.loft_or_number || '';
+      const sc    = shaftCell(item);
+      const specs = [
+        loft ? esc(loft) : '',
+        sc !== '-' ? sc : '',
+      ].filter(Boolean).join(' &middot; ');
+
+      return `<div class="witb-snap-item">
+  <div class="witb-snap-item-type">${catIcon(item.club_type)}<span class="witb-snap-item-label">${esc(clubLabel(item.club_type))}</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap">${brandCell(item.witb_brands?.name || item.raw_brand, dslug)}</div>
+      <span class="witb-snap-item-model">${esc(item.raw_model || '')}</span>
+    </div>
+    ${specs ? `<div class="witb-snap-item-specs">${specs}</div>` : ''}
+  </div>
+</div>`;
+    }).join('\n');
+
+    return `<details class="witb-snapshot"${isOpen ? ' open' : ''}>
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">${esc(label)}${tagHtml}</span>
+    <span class="witb-snap-count">${(bag._items || []).length} clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body">${itemRows}</div>
+</details>`;
+  }).join('\n');
 }
 
 // ── Lede cache ────────────────────────────────────────────────────────────────
@@ -263,16 +316,14 @@ DATA CONSTRAINT: The snapshot record goes from June 2020 (TaylorMade) directly t
 
 TASK 1 -- LEDE (130-180 words total):
 
-Write one cohesive opening paragraph. It has two parts that should flow naturally together -- do NOT separate them with a line break or section break:
+Write one cohesive opening paragraph. It has two parts that should flow naturally together:
 
-Part A -- Bio context (2-3 sentences): Establish who Rahm is for readers who need grounding. Accurate facts only: Spanish professional golfer, former world number one, two-time major champion (2021 U.S. Open at Torrey Pines, 2023 Masters Tournament). Moved to LIV Golf in December 2023. State these facts plainly without editorializing or framing them as transitions.
+Part A -- Bio context (2-3 sentences): Establish who Rahm is for readers who need grounding. Accurate facts only: Spanish professional golfer, former world number one, two-time major champion (2021 U.S. Open at Torrey Pines, 2023 Masters Tournament). Moved to LIV Golf in December 2023. State these facts plainly without editorializing.
 
-Part B -- Equipment narrative (continues from Part A): Narrate from the real data. Observe what is notable about the current Callaway bag. What has been stable? What changed from earlier snapshots? Start Part B by pivoting directly to equipment -- a specific detail, not a transition phrase.
-
-The result should read as a single unified paragraph, not two separate sections.
+Part B -- Equipment narrative (continues from Part A): Narrate from the real data. Observe what is notable about the current Callaway bag. What has been stable? What changed? Start Part B by pivoting directly to equipment -- a specific detail, not a transition phrase.
 
 TASK 2 -- HISTORY NARRATIVE (2-4 sentences):
-A concise prose summary of the equipment arc across the 10 bag snapshots. Capture the TaylorMade era (2019-2020), the Callaway transition, and the current state. Accuracy to snapshots only -- no invented details between data points.
+A concise prose summary of the equipment arc across the 10 bag snapshots. Capture the TaylorMade era (2019-2020), the Callaway transition, and the current state. Accuracy to snapshots only.
 
 Return valid JSON only:
 {
@@ -378,15 +429,14 @@ async function fetchTourComparison(sb) {
 
 function buildComparisonRows(tourComp, playerBrandsByCategory) {
   const rows = [];
-
   const catConfig = [
-    { cat: 'driver', label: 'Driver', icon: 'driver' },
-    { cat: 'irons',  label: 'Irons',  icon: 'iron' },
-    { cat: 'putter', label: 'Putter', icon: 'putter' },
-    { cat: 'ball',   label: 'Ball',   icon: 'ball' },
+    { cat: 'driver', label: 'Driver' },
+    { cat: 'irons',  label: 'Irons' },
+    { cat: 'putter', label: 'Putter' },
+    { cat: 'ball',   label: 'Ball' },
   ];
 
-  for (const { cat, label, icon } of catConfig) {
+  for (const { cat, label } of catConfig) {
     const all = tourComp[cat] || [];
     const playerBrand = playerBrandsByCategory[cat];
     if (!playerBrand) continue;
@@ -396,14 +446,12 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
     const rank1 = all[0];
 
     rows.push({
-      cat,
-      label,
-      icon,
-      playerBrand:      playerBrand.name,
-      playerDormiedSlug:playerBrand.dormied_slug,
+      cat, label,
+      playerBrand:       playerBrand.name,
+      playerDormiedSlug: playerBrand.dormied_slug,
       playerCount,
-      rank1Name:        rank1?.name,
-      rank1Count:       rank1?.count,
+      rank1Name:         rank1?.name,
+      rank1Count:        rank1?.count,
     });
   }
 
@@ -417,56 +465,53 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
 
-  // ── OWGR rank line with logo ───────────────────────────────────────────────
-
-  const owgrLogoHtml = `<a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank" class="owgr-logo-link" aria-label="Official World Golf Ranking"><img src="/images/owgr-logo.svg" alt="OWGR" class="owgr-logo" width="44" height="15" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"><span class="owgr-logo-fallback" style="display:none;font-family:var(--font-mono);font-size:.65rem;font-weight:700;letter-spacing:.1em">OWGR</span></a>`;
+  // ── OWGR rank line with official logo ─────────────────────────────────────
+  // Logo is the official OWGR "WGR / Official World Golf Ranking" mark (PNG).
+  // Do not restyle or recolor it (trademark).
+  const owgrLogoHtml = `<a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank" class="owgr-logo-link" aria-label="Official World Golf Ranking"><img src="/images/owgr-logo.png" alt="Official World Golf Ranking" class="owgr-logo" height="22"></a>`;
 
   const owgrLine = owgr_rank
-    ? `${owgrLogoHtml} <span class="witb-rank-num">#${owgr_rank}</span>${owgrDate ? ` &middot; <span class="witb-rank-updated">updated ${owgrDate}</span>` : ''}${data_golf_rank ? ` &middot; DG #${data_golf_rank}` : ''}`
-    : `Unranked${data_golf_rank ? ` &middot; DG #${data_golf_rank}` : ''}`;
+    ? `${owgrLogoHtml}<span class="witb-rank-num">#${owgr_rank}</span>${owgrDate ? `<span class="witb-rank-sep">&middot;</span><span class="witb-rank-updated">updated ${owgrDate}</span>` : ''}${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`
+    : `${owgrLogoHtml}<span class="witb-rank-num">Unranked</span>${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`;
 
   // ── Player brands per category (for comparison) ───────────────────────────
-
   const playerBrandsByCategory = {};
   for (const item of currentItems) {
     const cat = item.club_type === 'iron' ? 'irons' : item.club_type;
-    if (['driver', 'irons', 'putter', 'ball'].includes(cat)) {
-      if (!playerBrandsByCategory[cat]) {
-        playerBrandsByCategory[cat] = {
-          name:         item.witb_brands?.name || item.raw_brand,
-          dormied_slug: item.witb_brands?.dormied_brand_slug || null,
-        };
-      }
+    if (['driver', 'irons', 'putter', 'ball'].includes(cat) && !playerBrandsByCategory[cat]) {
+      playerBrandsByCategory[cat] = {
+        name:         item.witb_brands?.name || item.raw_brand,
+        dormied_slug: item.witb_brands?.dormied_brand_slug || null,
+      };
     }
   }
 
   const compRows = buildComparisonRows(tourComp, playerBrandsByCategory);
 
   // ── SEO ───────────────────────────────────────────────────────────────────
-
   const pageTitle    = `${esc(name)} WITB: What's In The Bag 2026 | DORMIED`;
   const metaDesc     = `${esc(name)} WITB 2026: Callaway Elyte driver, Odyssey putter, and a full Callaway bag from driver to ball. Equipment breakdown and gear history across 10 snapshots.`;
   const canonicalUrl = `https://dormied.com/witb/players/${slug}/`;
 
-  // ── Current bag table ─────────────────────────────────────────────────────
-
+  // ── Current bag: desktop table rows ──────────────────────────────────────
   const tableRows = currentItems.map(item => {
     const dslug = item.witb_brands?.dormied_brand_slug || null;
     const loft  = item.loft_or_number || '';
-    const sc    = shaftCell(item); // returns HTML (may contain <a> tags)
+    const sc    = shaftCell(item);
 
-    return `
-    <tr>
+    return `<tr>
       <td class="witb-bag-type-cell"><div class="witb-cell-flex">${catIcon(item.club_type)}<span>${esc(clubLabel(item.club_type))}</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex">${brandCell(item.witb_brands?.name || item.raw_brand, dslug)}</div></td>
       <td class="witb-bag-model-cell">${esc(item.raw_model || '')}</td>
       <td class="witb-bag-loft-cell">${esc(loft)}</td>
       <td class="witb-bag-shaft-cell">${sc}</td>
     </tr>`;
-  }).join('');
+  }).join('\n');
+
+  // ── Current bag: mobile cards ─────────────────────────────────────────────
+  const mobileCards = buildBagCards(currentItems);
 
   // ── Tour comparison HTML ──────────────────────────────────────────────────
-
   const compHtml = compRows.map(row => {
     const barPct   = row.rank1Count ? Math.round(row.playerCount / row.rank1Count * 100) : 0;
     const isLeader = row.rank1Name === row.playerBrand;
@@ -478,46 +523,23 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
       ctxNote = `<span class="witb-comp-note">${esc(row.rank1Name)} leads (${row.rank1Count})</span>`;
     }
 
-    return `
-    <div class="witb-comp-row">
-      <div class="witb-comp-cat">${catIcon(row.icon)}${esc(row.label)}</div>
-      <div class="witb-comp-brand"><div class="witb-cell-flex">${brandCell(row.playerBrand, row.playerDormiedSlug)}</div></div>
-      <div class="witb-comp-stat">
-        <span class="witb-comp-count">${row.playerCount} of ${TOTAL_TOUR_PLAYERS}</span>
-        <div class="witb-lb-bar-bg" style="margin-top:4px"><div class="witb-lb-bar-fill" style="width:${barPct}%"></div></div>
-      </div>
-      <div class="witb-comp-context">${ctxNote}</div>
-    </div>`;
-  }).join('');
+    return `<div class="witb-comp-row">
+  <div class="witb-comp-cat">${catIcon(row.cat)}<span>${esc(row.label)}</span></div>
+  <div class="witb-comp-brand"><div class="witb-cell-flex">${brandCell(row.playerBrand, row.playerDormiedSlug)}</div></div>
+  <div class="witb-comp-stat">
+    <span class="witb-comp-count">${row.playerCount} of ${TOTAL_TOUR_PLAYERS}</span>
+    <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:${barPct}%"></div></div>
+  </div>
+  <div class="witb-comp-context">${ctxNote}</div>
+</div>`;
+  }).join('\n');
 
-  // ── History timeline ──────────────────────────────────────────────────────
-
-  // Club types that get shaft+loft detail in history
-  const DETAIL_TYPES = new Set(['driver', '3-wood', '4-wood', '5-wood', '7-wood', 'mini-driver', 'iron', 'wedge']);
-
-  const histBags = [...bags].sort((a, b) => b.bag_date.localeCompare(a.bag_date));
-
-  const timelineRows = histBags.map(bag => {
-    const label   = fmtDate(bag.bag_date) + (bag.is_current ? ' (current)' : '');
-    const driver  = bag._items.find(i => i.club_type === 'driver');
-    const iron    = bag._items.find(i => i.club_type === 'iron');
-    const putter  = bag._items.find(i => i.club_type === 'putter');
-    const ball    = bag._items.find(i => i.club_type === 'ball');
-
-    return `
-    <tr${bag.is_current ? ' class="witb-hist-current"' : ''}>
-      <td class="witb-hist-date">${esc(label)}</td>
-      <td>${fmtHistItem(driver, true)}</td>
-      <td>${fmtHistItem(iron, true)}</td>
-      <td>${fmtHistItem(putter, false)}</td>
-      <td>${fmtHistItem(ball, false)}</td>
-    </tr>`;
-  }).join('');
+  // ── History snapshots (full bag per snapshot, details/summary) ────────────
+  const historySnapshotsHtml = buildHistorySnapshots(bags);
 
   // ── Word count for robots decision ────────────────────────────────────────
-
   const bagItemWords  = currentItems.reduce((s, i) => s + wordCount(`${i.raw_brand} ${i.raw_model} ${i.raw_shaft || ''} ${i.loft_or_number || ''}`), 0);
-  const histItemWords = bags.reduce((s, b) => s + b._items.reduce((s2, i) => s2 + wordCount(`${i.raw_brand} ${i.raw_model}`), 0), 0);
+  const histItemWords = bags.reduce((s, b) => s + (b._items || []).reduce((s2, i) => s2 + wordCount(`${i.raw_brand} ${i.raw_model}`), 0), 0);
   const compWords     = compRows.reduce((s, r) => s + wordCount(`${r.label} ${r.playerBrand} ${r.playerCount} of ${TOTAL_TOUR_PLAYERS} ${r.rank1Name || ''}`), 0);
   const proseWords    = wordCount(ledes.lede)
                       + wordCount(ledes.history_narrative)
@@ -531,7 +553,6 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
   else         log(`Word count: ~${proseWords} (threshold 500, hasCore=${hasCore})`);
 
   // ── JSON-LD ───────────────────────────────────────────────────────────────
-
   const bagItemsLd = currentItems.map((item, i) => ({
     '@type':    'ListItem',
     position:   i + 1,
@@ -552,10 +573,10 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
         ],
       },
       {
-        '@type':      'Person',
-        name:         name,
-        description:  `${name} tour equipment bag, tracked across ${bags.length} snapshots by DORMIED.`,
-        url:          canonicalUrl,
+        '@type': 'Person',
+        name:    name,
+        url:     canonicalUrl,
+        description: `${name} tour equipment bag, tracked across ${bags.length} snapshots by DORMIED.`,
       },
       {
         '@type':         'ItemList',
@@ -615,12 +636,13 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
 
   <!-- Critical CSS -->
   <style>
-    :root{--bg:#060b06;--bg-surface:#0c140c;--bg-raised:#111d11;--bg-hover:#162316;--bg-active:#1e311e;--border:#1a2e1a;--border-lite:#243824;--text:#e2f0de;--text-dim:#8aa88a;--text-muted:#6b8f6b;--green:#22c55e;--green-dim:#16a34a;--green-dark:#14532d;--green-glow:rgba(34,197,94,0.15);--red:#ef4444;--red-dim:rgba(239,68,68,0.12);--amber:#f59e0b;--gold:#fbbf24;--silver:#d1d5db;--bronze:#cd7f32;--font-display:'Barlow Condensed',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono','Courier New',monospace;--radius:6px;--radius-sm:4px;--radius-lg:10px;--content-max:1440px;--sidebar-w:180px;--gap:24px}
+    :root{--bg:#060b06;--bg-surface:#0c140c;--bg-raised:#111d11;--bg-hover:#162316;--bg-active:#1e311e;--border:#1a2e1a;--border-lite:#243824;--text:#e2f0de;--text-dim:#8aa88a;--text-muted:#6b8f6b;--green:#22c55e;--green-dim:#16a34a;--green-dark:#14532d;--green-glow:rgba(34,197,94,0.15);--red:#ef4444;--font-display:'Barlow Condensed',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono','Courier New',monospace;--radius:6px;--radius-sm:4px;--content-max:1440px;--sidebar-w:180px;--gap:24px}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     [hidden]{display:none!important}
     html{font-size:16px;-webkit-font-smoothing:antialiased}
     body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:.9375rem;line-height:1.5;min-height:100vh}
     a{color:var(--green);text-decoration:none}
+    a:hover{text-decoration:underline}
     img{display:block;max-width:100%}
     .container{width:100%;max-width:var(--content-max);margin:0 auto;padding:0 16px}
     .site-header{background:var(--bg-surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
@@ -643,17 +665,18 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
     .site-search-trigger:hover{color:var(--text)}
     .site-search-trigger-label{display:none}
     @media(min-width:600px){.site-search-trigger-label{display:inline}}
-    /* Player page specific */
+    /* Player page */
     .witb-player-eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:6px}
-    .witb-player-title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;font-style:italic;color:var(--text);text-transform:uppercase;letter-spacing:.02em;line-height:1.05;margin-bottom:4px}
-    .witb-player-rank{font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .witb-player-rank .witb-rank-num{color:var(--green);font-weight:700}
-    .witb-player-rank .witb-rank-updated{color:var(--text-muted)}
+    .witb-player-title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;font-style:italic;color:var(--text);text-transform:uppercase;letter-spacing:.02em;line-height:1.05;margin-bottom:8px}
+    .witb-player-rank{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);margin-bottom:6px}
+    .witb-rank-num{color:var(--green);font-weight:700;font-size:.9rem}
+    .witb-rank-sep{color:var(--border-lite)}
+    .witb-rank-updated{color:var(--text-muted)}
     .witb-player-underline{width:56px;height:3px;background:var(--green);margin:12px 0 0}
-    .witb-player-lede{font-size:1rem;line-height:1.7;color:var(--text-dim);max-width:72ch}
-    .owgr-logo-link{display:inline-flex;align-items:center;opacity:.85}
-    .owgr-logo-link:hover{opacity:1}
-    .owgr-logo{display:inline;vertical-align:middle}
+    .witb-player-lede{font-size:1rem;line-height:1.7;color:var(--text-dim)}
+    .owgr-logo-link{display:inline-flex;align-items:center;opacity:.9;flex-shrink:0}
+    .owgr-logo-link:hover{opacity:1;text-decoration:none}
+    .owgr-logo{display:block;height:22px;width:auto}
   </style>
 
   <link rel="preload" href="/css/styles.min.css?v=20260523" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -676,7 +699,6 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <span class="logo-text-fallback" style="display:none">DORMIED</span>
       </a>
-
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
         <a href="/witb/"      class="site-nav-link site-nav-link--active">WITB</a>
@@ -684,14 +706,12 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
         <a href="/news/"      class="site-nav-link">News</a>
         <a href="/brands/"    class="site-nav-link">Brands</a>
       </nav>
-
       <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
         aria-expanded="false" aria-controls="mobile-nav-panel">
         <span class="bars" aria-hidden="true">
           <span class="bar"></span><span class="bar"></span><span class="bar"></span>
         </span>
       </button>
-
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -706,7 +726,6 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
         </div>
       </div>
     </div>
-
     <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
       <a href="/rankings/"  class="mobile-nav-link">Index</a>
       <a href="/witb/"      class="mobile-nav-link active">WITB</a>
@@ -719,7 +738,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
   <!-- MAIN -->
   <main id="main-content">
 
-    <!-- BREADCRUMB -- above the header band, full width -->
+    <!-- BREADCRUMB -- full width, above header band -->
     <nav class="breadcrumb container" aria-label="Breadcrumb">
       <a href="/" class="breadcrumb-link">Home</a>
       <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
@@ -730,7 +749,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
       <span class="breadcrumb-item--current" aria-current="page">${esc(name)}</span>
     </nav>
 
-    <!-- FULL-WIDTH HEADER BAND -->
+    <!-- FULL-WIDTH PLAYER HEADER BAND -->
     <section class="bp-header-section" aria-labelledby="player-title">
       <div class="container">
         <p class="witb-player-eyebrow">Tour Equipment</p>
@@ -740,14 +759,14 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
       </div>
     </section>
 
-    <!-- TWO-COLUMN CONTENT: main sections + sidebar -->
+    <!-- TWO-COLUMN LAYOUT: main content + sidebar -->
     <div class="container">
       <div class="table-layout">
 
         <!-- MAIN CONTENT COLUMN -->
         <div class="bp-sections-col">
 
-          <!-- 1. LEDE -->
+          <!-- 1. LEDE -- full content width, no max-width cap -->
           <section class="witb-section" style="padding-top:24px;border-bottom:none" aria-label="Equipment overview">
             <p class="witb-player-lede">${esc(ledes.lede)}</p>
           </section>
@@ -756,14 +775,16 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
           <section class="witb-section" aria-labelledby="current-bag-heading">
             <h2 class="witb-section-title" id="current-bag-heading">Current Bag</h2>
             <p class="witb-section-sub">Snapshot: ${esc(currentDate)}</p>
-            <div style="overflow-x:auto">
-              <table class="witb-player-bag-table" style="width:100%;border-collapse:collapse;table-layout:fixed">
+
+            <!-- Desktop table (hidden on mobile) -->
+            <div class="witb-bag-table-wrap">
+              <table class="witb-player-bag-table">
                 <colgroup>
-                  <col style="width:110px">
-                  <col style="width:160px">
-                  <col>
-                  <col style="width:80px">
-                  <col style="width:210px">
+                  <col class="witb-col-club">
+                  <col class="witb-col-brand">
+                  <col class="witb-col-model">
+                  <col class="witb-col-loft">
+                  <col class="witb-col-shaft">
                 </colgroup>
                 <thead>
                   <tr class="witb-bag-thead-row">
@@ -774,9 +795,15 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
                     <th class="witb-bag-th">Shaft</th>
                   </tr>
                 </thead>
-                <tbody>${tableRows}
+                <tbody>
+                  ${tableRows}
                 </tbody>
               </table>
+            </div>
+
+            <!-- Mobile stacked cards (hidden on desktop) -->
+            <div class="witb-bag-mobile-cards">
+              ${mobileCards}
             </div>
           </section>
 
@@ -784,7 +811,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
           <section class="witb-section" aria-labelledby="compare-heading">
             <h2 class="witb-section-title" id="compare-heading">How This Bag Compares to the Tour</h2>
             <p class="witb-section-sub">Brand usage across ${TOTAL_TOUR_PLAYERS} current bags</p>
-            <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="witb-comp-grid">
               ${compHtml}
             </div>
             <p class="witb-footnote">Player counts reflect unique players carrying at least one item from that brand in the relevant category. Computed from current bags.</p>
@@ -795,24 +822,12 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
             <h2 class="witb-section-title" id="history-heading">Bag History</h2>
             <p class="witb-section-sub">${bags.length} snapshots tracked, 2019-2025</p>
 
-            ${ledes.history_narrative ? `<div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px">
-              <p style="font-size:.9375rem;line-height:1.65;color:var(--text-dim)">${esc(ledes.history_narrative)}</p>
+            ${ledes.history_narrative ? `<div class="witb-hist-narrative">
+              <p>${esc(ledes.history_narrative)}</p>
             </div>` : ''}
 
-            <div style="overflow-x:auto">
-              <table style="width:100%;border-collapse:collapse;font-size:.875rem">
-                <thead>
-                  <tr class="witb-bag-thead-row">
-                    <th class="witb-bag-th" style="white-space:nowrap;width:110px">Snapshot</th>
-                    <th class="witb-bag-th">Driver</th>
-                    <th class="witb-bag-th">Irons</th>
-                    <th class="witb-bag-th">Putter</th>
-                    <th class="witb-bag-th">Ball</th>
-                  </tr>
-                </thead>
-                <tbody>${timelineRows}
-                </tbody>
-              </table>
+            <div class="witb-snapshots">
+              ${historySnapshotsHtml}
             </div>
 
             <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
@@ -882,57 +897,110 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
 
   <!-- SCRIPTS -->
   <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
-
-  <!-- Mobile nav -->
   <script>
   (function(){
-    var btn   = document.getElementById('nav-hamburger');
-    var panel = document.getElementById('mobile-nav-panel');
-    if (!btn || !panel) return;
-    function openNav()  { btn.setAttribute('aria-expanded','true');  panel.classList.add('open');    panel.removeAttribute('hidden'); }
-    function closeNav() { btn.setAttribute('aria-expanded','false'); panel.classList.remove('open'); panel.setAttribute('hidden',''); }
-    btn.addEventListener('click', function(){ btn.getAttribute('aria-expanded')==='true' ? closeNav() : openNav(); });
-    panel.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeNav); });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeNav(); });
-    document.addEventListener('click',   function(e){ if(!btn.contains(e.target) && !panel.contains(e.target)) closeNav(); });
+    var btn=document.getElementById('nav-hamburger'),panel=document.getElementById('mobile-nav-panel');
+    if(!btn||!panel)return;
+    function openNav(){btn.setAttribute('aria-expanded','true');panel.classList.add('open');panel.removeAttribute('hidden')}
+    function closeNav(){btn.setAttribute('aria-expanded','false');panel.classList.remove('open');panel.setAttribute('hidden','')}
+    btn.addEventListener('click',function(){btn.getAttribute('aria-expanded')==='true'?closeNav():openNav()});
+    panel.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeNav)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav()});
+    document.addEventListener('click',function(e){if(!btn.contains(e.target)&&!panel.contains(e.target))closeNav()});
   })();
   </script>
 
   <!-- Page-specific styles -->
   <style>
-    /* Bag table */
-    .witb-bag-th{text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px;white-space:nowrap}
+    /* ── Layout helpers ── */
+    .witb-cell-flex{display:flex;align-items:center;gap:6px}
+
+    /* ── Brand cells ── */
+    .witb-brand-logo{width:20px;height:20px;object-fit:contain;border-radius:3px;display:block;flex-shrink:0}
+    .witb-brand-monogram{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--bg-raised);border:1px solid var(--border);border-radius:3px;font-family:var(--font-mono);font-size:.6rem;font-weight:700;color:var(--text-muted);flex-shrink:0}
+
+    /* ── BAG TABLE (desktop) ── */
+    .witb-bag-table-wrap{overflow-x:auto}
+    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed}
+    .witb-col-club {width:110px}
+    .witb-col-brand{width:150px}
+    .witb-col-model{width:auto}
+    .witb-col-loft {width:90px}
+    .witb-col-shaft{width:220px}
+    .witb-bag-th{text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 12px 8px;white-space:nowrap}
     .witb-bag-thead-row{border-bottom:1px solid var(--border)}
-    .witb-player-bag-table td{padding:8px;border-bottom:1px solid var(--border-lite);vertical-align:middle;font-size:.875rem}
+    .witb-player-bag-table td{padding:8px 12px;border-bottom:1px solid var(--border-lite);vertical-align:middle;font-size:.875rem;line-height:1.4}
     .witb-player-bag-table tr:hover td{background:var(--bg-hover)}
     .witb-bag-type-cell{color:var(--text-dim);white-space:nowrap}
-    .witb-bag-brand-cell{white-space:nowrap}
-    .witb-bag-loft-cell{color:var(--text-muted);font-size:.8125rem;white-space:nowrap}
+    .witb-bag-brand-cell{white-space:nowrap;overflow:hidden}
+    .witb-bag-model-cell{overflow:hidden;text-overflow:ellipsis}
+    .witb-bag-loft-cell{color:var(--text-muted);font-size:.8125rem;white-space:nowrap;font-family:var(--font-mono)}
     .witb-bag-shaft-cell{color:var(--text-muted);font-size:.8125rem;overflow:hidden;text-overflow:ellipsis}
     .witb-bag-shaft-cell a{color:var(--text-muted)}
     .witb-bag-shaft-cell a:hover{color:var(--green)}
-    .witb-bag-model-cell{font-size:.875rem;overflow:hidden;text-overflow:ellipsis}
-    .witb-cell-flex{display:flex;align-items:center;gap:6px}
-    /* Comparison grid -- fixed columns so all rows align */
-    .witb-comp-row{display:grid;grid-template-columns:90px 170px 150px 1fr;gap:8px;align-items:center;padding:10px 12px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius)}
+
+    /* ── BAG MOBILE CARDS ── */
+    .witb-bag-mobile-cards{display:none}
+    @media(max-width:640px){
+      .witb-bag-table-wrap{display:none}
+      .witb-bag-mobile-cards{display:flex;flex-direction:column;gap:8px}
+    }
+    .witb-mobile-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+    .witb-mc-header{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+    .witb-mc-type{font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim)}
+    .witb-mc-brand{margin-bottom:4px}
+    .witb-mc-model{font-size:.9375rem;color:var(--text);margin-bottom:3px}
+    .witb-mc-loft{font-size:.8125rem;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:2px}
+    .witb-mc-shaft{font-size:.8125rem;color:var(--text-muted)}
+    .witb-mc-shaft a{color:var(--text-muted)}
+    .witb-mc-shaft a:hover{color:var(--green)}
+
+    /* ── COMPARISON ROWS (desktop: fixed 4-col grid; mobile: stacked) ── */
+    .witb-comp-grid{display:flex;flex-direction:column;gap:8px}
+    .witb-comp-row{display:grid;grid-template-columns:90px 170px 150px 1fr;gap:8px;align-items:center;padding:10px 14px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius)}
     .witb-comp-cat{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
     .witb-comp-brand{min-width:0;overflow:hidden}
     .witb-comp-stat{min-width:0}
-    .witb-comp-count{font-family:var(--font-mono);font-size:.78rem;color:var(--text-dim);display:block}
+    .witb-comp-count{font-family:var(--font-mono);font-size:.78rem;color:var(--text-dim);display:block;margin-bottom:4px}
+    .witb-lb-bar-bg{background:var(--bg-raised);border-radius:2px;height:4px;overflow:hidden}
+    .witb-lb-bar-fill{background:var(--green);height:100%;border-radius:2px}
     .witb-comp-leader{font-family:var(--font-mono);font-size:.65rem;color:var(--green);text-transform:uppercase;letter-spacing:.06em}
     .witb-comp-note{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted)}
-    @media(max-width:640px){.witb-comp-row{grid-template-columns:80px 1fr}.witb-comp-stat,.witb-comp-context{display:none}}
-    /* History table */
-    .witb-hist-current td{background:var(--bg-surface)}
-    .witb-hist-date{white-space:nowrap;color:var(--text-dim);font-family:var(--font-mono);font-size:.72rem;padding-right:12px;vertical-align:top}
-    .witb-hist-detail{font-size:.72rem;color:var(--text-muted);font-weight:400}
-    .witb-hist-detail a{color:var(--text-muted)}
-    .witb-hist-detail a:hover{color:var(--green)}
-    tbody tr td{padding:7px 8px;border-bottom:1px solid var(--border-lite);vertical-align:top}
-    /* Brand cells */
-    .witb-brand-logo{width:20px;height:20px;object-fit:contain;border-radius:3px;display:inline;vertical-align:middle}
-    .witb-brand-monogram{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--bg-raised);border:1px solid var(--border);border-radius:3px;font-family:var(--font-mono);font-size:.6rem;font-weight:700;color:var(--text-muted);vertical-align:middle;flex-shrink:0}
-    /* Misc */
+    @media(max-width:640px){
+      .witb-comp-row{display:block;padding:12px 14px}
+      .witb-comp-cat{margin-bottom:6px}
+      .witb-comp-brand{margin-bottom:8px;font-size:.9375rem}
+      .witb-comp-stat{margin-bottom:6px}
+    }
+
+    /* ── BAG HISTORY SNAPSHOTS ── */
+    .witb-hist-narrative{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;font-size:.9375rem;line-height:1.65;color:var(--text-dim)}
+    .witb-snapshots{display:flex;flex-direction:column;gap:6px}
+    .witb-snapshot{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg-surface)}
+    .witb-snap-summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none}
+    .witb-snap-summary::-webkit-details-marker{display:none}
+    .witb-snap-summary::marker{display:none}
+    .witb-snap-summary:hover{background:var(--bg-hover)}
+    .witb-snap-date{font-family:var(--font-mono);font-size:.78rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;flex:1;display:flex;align-items:center;gap:8px}
+    .witb-snap-tag{font-family:var(--font-mono);font-size:.65rem;color:var(--green);background:var(--green-dark);padding:2px 6px;border-radius:3px;letter-spacing:.06em;font-weight:700}
+    .witb-snap-count{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
+    .witb-snap-chevron{flex-shrink:0;font-size:.55rem;color:var(--text-muted);width:14px;text-align:center}
+    .witb-snap-chevron::before{content:'\\25BC'}
+    .witb-snapshot[open] .witb-snap-chevron::before{content:'\\25B2'}
+    .witb-snap-body{padding:4px 14px 12px;display:flex;flex-direction:column}
+    .witb-snap-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-lite)}
+    .witb-snap-item:last-child{border-bottom:none}
+    .witb-snap-item-type{display:flex;align-items:center;gap:5px;width:88px;flex-shrink:0;padding-top:2px}
+    .witb-snap-item-label{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+    .witb-snap-item-right{flex:1;min-width:0}
+    .witb-snap-item-brand-model{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:2px}
+    .witb-snap-brand-wrap{flex-shrink:0}
+    .witb-snap-item-model{font-size:.875rem;color:var(--text-dim)}
+    .witb-snap-item-specs{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono)}
+    .witb-snap-item-specs a{color:var(--text-muted)}
+    .witb-snap-item-specs a:hover{color:var(--green)}
+
+    /* ── Misc ── */
     .witb-footnote{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:12px;text-transform:uppercase;letter-spacing:.05em}
     .witb-footnote a{color:var(--text-muted)}
     .witb-footnote a:hover{color:var(--green)}
@@ -981,8 +1049,8 @@ function updateSearchIndex(player, currentItems, noindex) {
 
   const siPath = path.join(ROOT, 'search-index.json');
   const si     = JSON.parse(fs.readFileSync(siPath, 'utf8'));
+  const url    = `/witb/players/${player.slug}/`;
 
-  const url = `/witb/players/${player.slug}/`;
   si.entries = si.entries.filter(e => !(e.type === 'witb-player' && e.url === url));
 
   const brands = [...new Set(currentItems.map(i => i.witb_brands?.name || i.raw_brand).filter(Boolean))];
@@ -1016,7 +1084,6 @@ async function main() {
 
   log(`Building player page for: ${PLAYER_SLUG}`);
 
-  // 1. Fetch all data
   const player = await fetchPlayerData(sb, PLAYER_SLUG);
   log(`Player: ${player.name}, OWGR #${player.owgr_rank}`);
 
@@ -1028,11 +1095,9 @@ async function main() {
   const currentItems = currentBag._items;
   log(`Current bag items: ${currentItems.length}`);
 
-  // 2. Tour comparison
   log('Fetching tour comparison data...');
   const tourComp = await fetchTourComparison(sb);
 
-  // 3. Lede generation (cached by slug:bag_date)
   const cacheKey = `${PLAYER_SLUG}:${currentBag.bag_date}`;
   const cache    = loadLedeCache();
   let ledes      = cache[cacheKey];
@@ -1049,19 +1114,16 @@ async function main() {
 
   log(`Lede (${wordCount(ledes.lede)} words): ${ledes.lede?.slice(0, 100)}...`);
 
-  // 4. Build HTML
   const html = buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, today });
 
   const noindex = html.includes('noindex');
 
-  // 5. Write output
   const outDir = path.join(ROOT, 'witb', 'players', PLAYER_SLUG);
   fs.mkdirSync(outDir, { recursive: true });
   const outPath = path.join(outDir, 'index.html');
   fs.writeFileSync(outPath, html, 'utf8');
   log(`Wrote: ${outPath} (${(html.length / 1024).toFixed(1)} KB)`);
 
-  // 6. Update sitemap + search index
   updateSitemap(PLAYER_SLUG, today, noindex);
   updateSearchIndex(player, currentItems, noindex);
 

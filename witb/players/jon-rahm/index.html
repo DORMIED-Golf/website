@@ -43,12 +43,13 @@
 
   <!-- Critical CSS -->
   <style>
-    :root{--bg:#060b06;--bg-surface:#0c140c;--bg-raised:#111d11;--bg-hover:#162316;--bg-active:#1e311e;--border:#1a2e1a;--border-lite:#243824;--text:#e2f0de;--text-dim:#8aa88a;--text-muted:#6b8f6b;--green:#22c55e;--green-dim:#16a34a;--green-dark:#14532d;--green-glow:rgba(34,197,94,0.15);--red:#ef4444;--red-dim:rgba(239,68,68,0.12);--amber:#f59e0b;--gold:#fbbf24;--silver:#d1d5db;--bronze:#cd7f32;--font-display:'Barlow Condensed',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono','Courier New',monospace;--radius:6px;--radius-sm:4px;--radius-lg:10px;--content-max:1440px;--sidebar-w:180px;--gap:24px}
+    :root{--bg:#060b06;--bg-surface:#0c140c;--bg-raised:#111d11;--bg-hover:#162316;--bg-active:#1e311e;--border:#1a2e1a;--border-lite:#243824;--text:#e2f0de;--text-dim:#8aa88a;--text-muted:#6b8f6b;--green:#22c55e;--green-dim:#16a34a;--green-dark:#14532d;--green-glow:rgba(34,197,94,0.15);--red:#ef4444;--font-display:'Barlow Condensed',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono','Courier New',monospace;--radius:6px;--radius-sm:4px;--content-max:1440px;--sidebar-w:180px;--gap:24px}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     [hidden]{display:none!important}
     html{font-size:16px;-webkit-font-smoothing:antialiased}
     body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:.9375rem;line-height:1.5;min-height:100vh}
     a{color:var(--green);text-decoration:none}
+    a:hover{text-decoration:underline}
     img{display:block;max-width:100%}
     .container{width:100%;max-width:var(--content-max);margin:0 auto;padding:0 16px}
     .site-header{background:var(--bg-surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
@@ -71,17 +72,18 @@
     .site-search-trigger:hover{color:var(--text)}
     .site-search-trigger-label{display:none}
     @media(min-width:600px){.site-search-trigger-label{display:inline}}
-    /* Player page specific */
+    /* Player page */
     .witb-player-eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:6px}
-    .witb-player-title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;font-style:italic;color:var(--text);text-transform:uppercase;letter-spacing:.02em;line-height:1.05;margin-bottom:4px}
-    .witb-player-rank{font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .witb-player-rank .witb-rank-num{color:var(--green);font-weight:700}
-    .witb-player-rank .witb-rank-updated{color:var(--text-muted)}
+    .witb-player-title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;font-style:italic;color:var(--text);text-transform:uppercase;letter-spacing:.02em;line-height:1.05;margin-bottom:8px}
+    .witb-player-rank{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);margin-bottom:6px}
+    .witb-rank-num{color:var(--green);font-weight:700;font-size:.9rem}
+    .witb-rank-sep{color:var(--border-lite)}
+    .witb-rank-updated{color:var(--text-muted)}
     .witb-player-underline{width:56px;height:3px;background:var(--green);margin:12px 0 0}
-    .witb-player-lede{font-size:1rem;line-height:1.7;color:var(--text-dim);max-width:72ch}
-    .owgr-logo-link{display:inline-flex;align-items:center;opacity:.85}
-    .owgr-logo-link:hover{opacity:1}
-    .owgr-logo{display:inline;vertical-align:middle}
+    .witb-player-lede{font-size:1rem;line-height:1.7;color:var(--text-dim)}
+    .owgr-logo-link{display:inline-flex;align-items:center;opacity:.9;flex-shrink:0}
+    .owgr-logo-link:hover{opacity:1;text-decoration:none}
+    .owgr-logo{display:block;height:22px;width:auto}
   </style>
 
   <link rel="preload" href="/css/styles.min.css?v=20260523" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -124,8 +126,8 @@
     {
       "@type": "Person",
       "name": "Jon Rahm",
-      "description": "Jon Rahm tour equipment bag, tracked across 10 snapshots by DORMIED.",
-      "url": "https://dormied.com/witb/players/jon-rahm/"
+      "url": "https://dormied.com/witb/players/jon-rahm/",
+      "description": "Jon Rahm tour equipment bag, tracked across 10 snapshots by DORMIED."
     },
     {
       "@type": "ItemList",
@@ -218,7 +220,6 @@
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <span class="logo-text-fallback" style="display:none">DORMIED</span>
       </a>
-
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
         <a href="/witb/"      class="site-nav-link site-nav-link--active">WITB</a>
@@ -226,14 +227,12 @@
         <a href="/news/"      class="site-nav-link">News</a>
         <a href="/brands/"    class="site-nav-link">Brands</a>
       </nav>
-
       <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
         aria-expanded="false" aria-controls="mobile-nav-panel">
         <span class="bars" aria-hidden="true">
           <span class="bar"></span><span class="bar"></span><span class="bar"></span>
         </span>
       </button>
-
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -248,7 +247,6 @@
         </div>
       </div>
     </div>
-
     <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
       <a href="/rankings/"  class="mobile-nav-link">Index</a>
       <a href="/witb/"      class="mobile-nav-link active">WITB</a>
@@ -261,7 +259,7 @@
   <!-- MAIN -->
   <main id="main-content">
 
-    <!-- BREADCRUMB -- above the header band, full width -->
+    <!-- BREADCRUMB -- full width, above header band -->
     <nav class="breadcrumb container" aria-label="Breadcrumb">
       <a href="/" class="breadcrumb-link">Home</a>
       <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
@@ -272,24 +270,24 @@
       <span class="breadcrumb-item--current" aria-current="page">Jon Rahm</span>
     </nav>
 
-    <!-- FULL-WIDTH HEADER BAND -->
+    <!-- FULL-WIDTH PLAYER HEADER BAND -->
     <section class="bp-header-section" aria-labelledby="player-title">
       <div class="container">
         <p class="witb-player-eyebrow">Tour Equipment</p>
         <h1 class="witb-player-title" id="player-title">Jon Rahm</h1>
-        <p class="witb-player-rank"><a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank" class="owgr-logo-link" aria-label="Official World Golf Ranking"><img src="/images/owgr-logo.svg" alt="OWGR" class="owgr-logo" width="44" height="15" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"><span class="owgr-logo-fallback" style="display:none;font-family:var(--font-mono);font-size:.65rem;font-weight:700;letter-spacing:.1em">OWGR</span></a> <span class="witb-rank-num">#11</span> &middot; <span class="witb-rank-updated">updated May 26, 2026</span></p>
+        <p class="witb-player-rank"><a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank" class="owgr-logo-link" aria-label="Official World Golf Ranking"><img src="/images/owgr-logo.png" alt="Official World Golf Ranking" class="owgr-logo" height="22"></a><span class="witb-rank-num">#11</span><span class="witb-rank-sep">&middot;</span><span class="witb-rank-updated">updated May 26, 2026</span></p>
         <div class="witb-player-underline" aria-hidden="true"></div>
       </div>
     </section>
 
-    <!-- TWO-COLUMN CONTENT: main sections + sidebar -->
+    <!-- TWO-COLUMN LAYOUT: main content + sidebar -->
     <div class="container">
       <div class="table-layout">
 
         <!-- MAIN CONTENT COLUMN -->
         <div class="bp-sections-col">
 
-          <!-- 1. LEDE -->
+          <!-- 1. LEDE -- full content width, no max-width cap -->
           <section class="witb-section" style="padding-top:24px;border-bottom:none" aria-label="Equipment overview">
             <p class="witb-player-lede">Jon Rahm is a Spanish professional golfer, a former world number one, and a two-time major champion, having won the 2021 U.S. Open at Torrey Pines and the 2023 Masters Tournament. He moved to LIV Golf in December 2023 and currently sits at OWGR #11. The Odyssey Rossie S head has been a constant through every Callaway-era snapshot, first as a White Hot OG and now in Ai-ONE dress. The Apex TCB blades in the 5-iron through pitching wedge slot have been in the bag since the earliest 2021 record, with an Apex Pro 4-iron and an Apex UT 21-degree driving iron rounding out the top of the set. The driver line has cycled through the Triple Diamond family on schedule, Epic Speed to Rogue ST to Paradym to Paradym Ai Smoke and now the Elyte, all sleeved with a Fujikura Ventus Black 7 X. The Chrome Soft X gave way to the Chrome Tour after the 2023 ball relaunch.</p>
           </section>
@@ -298,14 +296,16 @@
           <section class="witb-section" aria-labelledby="current-bag-heading">
             <h2 class="witb-section-title" id="current-bag-heading">Current Bag</h2>
             <p class="witb-section-sub">Snapshot: May 2025</p>
-            <div style="overflow-x:auto">
-              <table class="witb-player-bag-table" style="width:100%;border-collapse:collapse;table-layout:fixed">
+
+            <!-- Desktop table (hidden on mobile) -->
+            <div class="witb-bag-table-wrap">
+              <table class="witb-player-bag-table">
                 <colgroup>
-                  <col style="width:110px">
-                  <col style="width:160px">
-                  <col>
-                  <col style="width:80px">
-                  <col style="width:210px">
+                  <col class="witb-col-club">
+                  <col class="witb-col-brand">
+                  <col class="witb-col-model">
+                  <col class="witb-col-loft">
+                  <col class="witb-col-shaft">
                 </colgroup>
                 <thead>
                   <tr class="witb-bag-thead-row">
@@ -317,78 +317,78 @@
                   </tr>
                 </thead>
                 <tbody>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>Driver</span></div></td>
+                  <tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Driver</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></td>
       <td class="witb-bag-model-cell">Elyte Triple Diamond</td>
       <td class="witb-bag-loft-cell">10.5 degrees</td>
       <td class="witb-bag-shaft-cell"><a href="/brands/fujikura/">Fujikura</a> Ventus Black 7 X</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>3-Wood</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>3-Wood</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></td>
       <td class="witb-bag-model-cell">Paradym Ai Smoke Triple Diamond T</td>
       <td class="witb-bag-loft-cell">High Launch, 16 degrees</td>
       <td class="witb-bag-shaft-cell"><a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>5-Wood</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>5-Wood</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></td>
       <td class="witb-bag-model-cell">Paradym Ai Smoke Triple Diamond T</td>
       <td class="witb-bag-loft-cell">18 degrees</td>
       <td class="witb-bag-shaft-cell"><a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>Iron</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Iron</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></td>
       <td class="witb-bag-model-cell">Apex UT</td>
       <td class="witb-bag-loft-cell">21 degrees</td>
       <td class="witb-bag-shaft-cell"><a href="/brands/kbs-golf/">KBS</a> Tour Hybrid Prototype 105 X</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>Iron</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Iron</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></td>
       <td class="witb-bag-model-cell">Apex Pro</td>
       <td class="witb-bag-loft-cell">4</td>
       <td class="witb-bag-shaft-cell"><a href="/brands/true-temper/">True Temper</a> Project X 6.5</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>Iron</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Iron</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></td>
       <td class="witb-bag-model-cell">Apex TCB</td>
       <td class="witb-bag-loft-cell">5-10</td>
       <td class="witb-bag-shaft-cell"><a href="/brands/true-temper/">True Temper</a> Project X 6.5</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>Wedge</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Wedge</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></td>
       <td class="witb-bag-model-cell">Jaws Raw</td>
       <td class="witb-bag-loft-cell">52-10, 56-12</td>
       <td class="witb-bag-shaft-cell"><a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>Wedge</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Wedge</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></td>
       <td class="witb-bag-model-cell">Opus</td>
       <td class="witb-bag-loft-cell">60-04C</td>
       <td class="witb-bag-shaft-cell"><a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>Putter</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Putter</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div></td>
       <td class="witb-bag-model-cell">Ai-ONE Rossie S</td>
       <td class="witb-bag-loft-cell"></td>
       <td class="witb-bag-shaft-cell">-</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/grip.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>Grip</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Grip</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div></td>
       <td class="witb-bag-model-cell">MCC</td>
       <td class="witb-bag-loft-cell"></td>
       <td class="witb-bag-shaft-cell">-</td>
     </tr>
-    <tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/ball.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7"><span>Ball</span></div></td>
+<tr>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Ball</span></div></td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></td>
       <td class="witb-bag-model-cell">Chrome Tour</td>
       <td class="witb-bag-loft-cell"></td>
@@ -397,50 +397,152 @@
                 </tbody>
               </table>
             </div>
+
+            <!-- Mobile stacked cards (hidden on desktop) -->
+            <div class="witb-bag-mobile-cards">
+              <div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">Driver</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+  <div class="witb-mc-model">Elyte Triple Diamond</div>
+  <div class="witb-mc-loft">10.5 degrees</div>
+  <div class="witb-mc-shaft"><a href="/brands/fujikura/">Fujikura</a> Ventus Black 7 X</div>
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">3-Wood</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+  <div class="witb-mc-model">Paradym Ai Smoke Triple Diamond T</div>
+  <div class="witb-mc-loft">High Launch, 16 degrees</div>
+  <div class="witb-mc-shaft"><a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">5-Wood</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+  <div class="witb-mc-model">Paradym Ai Smoke Triple Diamond T</div>
+  <div class="witb-mc-loft">18 degrees</div>
+  <div class="witb-mc-shaft"><a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">Iron</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+  <div class="witb-mc-model">Apex UT</div>
+  <div class="witb-mc-loft">21 degrees</div>
+  <div class="witb-mc-shaft"><a href="/brands/kbs-golf/">KBS</a> Tour Hybrid Prototype 105 X</div>
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">Iron</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+  <div class="witb-mc-model">Apex Pro</div>
+  <div class="witb-mc-loft">4</div>
+  <div class="witb-mc-shaft"><a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">Iron</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+  <div class="witb-mc-model">Apex TCB</div>
+  <div class="witb-mc-loft">5-10</div>
+  <div class="witb-mc-shaft"><a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">Wedge</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+  <div class="witb-mc-model">Jaws Raw</div>
+  <div class="witb-mc-loft">52-10, 56-12</div>
+  <div class="witb-mc-shaft"><a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</div>
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">Wedge</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+  <div class="witb-mc-model">Opus</div>
+  <div class="witb-mc-loft">60-04C</div>
+  <div class="witb-mc-shaft"><a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</div>
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">Putter</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+  <div class="witb-mc-model">Ai-ONE Rossie S</div>
+  
+  
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">Grip</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+  <div class="witb-mc-model">MCC</div>
+  
+  
+</div>
+<div class="witb-mobile-card">
+  <div class="witb-mc-header">
+    <img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-mc-type">Ball</span>
+  </div>
+  <div class="witb-mc-brand witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+  <div class="witb-mc-model">Chrome Tour</div>
+  
+  
+</div>
+            </div>
           </section>
 
           <!-- 3. HOW THIS BAG COMPARES -->
           <section class="witb-section" aria-labelledby="compare-heading">
             <h2 class="witb-section-title" id="compare-heading">How This Bag Compares to the Tour</h2>
             <p class="witb-section-sub">Brand usage across 160 current bags</p>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              
-    <div class="witb-comp-row">
-      <div class="witb-comp-cat"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7">Driver</div>
-      <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></div>
-      <div class="witb-comp-stat">
-        <span class="witb-comp-count">28 of 160</span>
-        <div class="witb-lb-bar-bg" style="margin-top:4px"><div class="witb-lb-bar-fill" style="width:47%"></div></div>
-      </div>
-      <div class="witb-comp-context"><span class="witb-comp-note">Titleist leads (59)</span></div>
-    </div>
-    <div class="witb-comp-row">
-      <div class="witb-comp-cat"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7">Irons</div>
-      <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></div>
-      <div class="witb-comp-stat">
-        <span class="witb-comp-count">29 of 160</span>
-        <div class="witb-lb-bar-bg" style="margin-top:4px"><div class="witb-lb-bar-fill" style="width:63%"></div></div>
-      </div>
-      <div class="witb-comp-context"><span class="witb-comp-note">Titleist leads (46)</span></div>
-    </div>
-    <div class="witb-comp-row">
-      <div class="witb-comp-cat"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7">Putter</div>
-      <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div></div>
-      <div class="witb-comp-stat">
-        <span class="witb-comp-count">53 of 160</span>
-        <div class="witb-lb-bar-bg" style="margin-top:4px"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
-      </div>
-      <div class="witb-comp-context"><span class="witb-comp-leader">Tour leader</span></div>
-    </div>
-    <div class="witb-comp-row">
-      <div class="witb-comp-cat"><img src="/images/icons/ball.svg" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7">Ball</div>
-      <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></div>
-      <div class="witb-comp-stat">
-        <span class="witb-comp-count">13 of 160</span>
-        <div class="witb-lb-bar-bg" style="margin-top:4px"><div class="witb-lb-bar-fill" style="width:13%"></div></div>
-      </div>
-      <div class="witb-comp-context"><span class="witb-comp-note">Titleist leads (104)</span></div>
-    </div>
+            <div class="witb-comp-grid">
+              <div class="witb-comp-row">
+  <div class="witb-comp-cat"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Driver</span></div>
+  <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></div>
+  <div class="witb-comp-stat">
+    <span class="witb-comp-count">28 of 160</span>
+    <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:47%"></div></div>
+  </div>
+  <div class="witb-comp-context"><span class="witb-comp-note">Titleist leads (59)</span></div>
+</div>
+<div class="witb-comp-row">
+  <div class="witb-comp-cat"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Irons</span></div>
+  <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></div>
+  <div class="witb-comp-stat">
+    <span class="witb-comp-count">29 of 160</span>
+    <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:63%"></div></div>
+  </div>
+  <div class="witb-comp-context"><span class="witb-comp-note">Titleist leads (46)</span></div>
+</div>
+<div class="witb-comp-row">
+  <div class="witb-comp-cat"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Putter</span></div>
+  <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div></div>
+  <div class="witb-comp-stat">
+    <span class="witb-comp-count">53 of 160</span>
+    <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
+  </div>
+  <div class="witb-comp-context"><span class="witb-comp-leader">Tour leader</span></div>
+</div>
+<div class="witb-comp-row">
+  <div class="witb-comp-cat"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Ball</span></div>
+  <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div></div>
+  <div class="witb-comp-stat">
+    <span class="witb-comp-count">13 of 160</span>
+    <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:13%"></div></div>
+  </div>
+  <div class="witb-comp-context"><span class="witb-comp-note">Titleist leads (104)</span></div>
+</div>
             </div>
             <p class="witb-footnote">Player counts reflect unique players carrying at least one item from that brand in the relevant category. Computed from current bags.</p>
           </section>
@@ -450,94 +552,991 @@
             <h2 class="witb-section-title" id="history-heading">Bag History</h2>
             <p class="witb-section-sub">10 snapshots tracked, 2019-2025</p>
 
-            <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px">
-              <p style="font-size:.9375rem;line-height:1.65;color:var(--text-dim)">Rahm's late-2019 and 2020 snapshots show a full TaylorMade setup, SIM driver, P750 irons, Spider X, and TP5. The record then jumps to March 2021 with the bag already fully Callaway and Odyssey, anchored by the Apex TCB irons, an X Forged UT, and a 2-Ball Ten prototype putter. The Rossie S took over later in 2021 and has stayed in the bag since, while the driver progressed through Epic Speed, Rogue ST, Paradym, Paradym Ai Smoke, and now the Elyte Triple Diamond. The current build adds an Apex Pro 4-iron and the Apex UT at 21 degrees, with the Chrome Tour replacing the long-running Chrome Soft X.</p>
+            <div class="witb-hist-narrative">
+              <p>Rahm's late-2019 and 2020 snapshots show a full TaylorMade setup, SIM driver, P750 irons, Spider X, and TP5. The record then jumps to March 2021 with the bag already fully Callaway and Odyssey, anchored by the Apex TCB irons, an X Forged UT, and a 2-Ball Ten prototype putter. The Rossie S took over later in 2021 and has stayed in the bag since, while the driver progressed through Epic Speed, Rogue ST, Paradym, Paradym Ai Smoke, and now the Elyte Triple Diamond. The current build adds an Apex Pro 4-iron and the Apex UT at 21 degrees, with the Chrome Tour replacing the long-running Chrome Soft X.</p>
             </div>
 
-            <div style="overflow-x:auto">
-              <table style="width:100%;border-collapse:collapse;font-size:.875rem">
-                <thead>
-                  <tr class="witb-bag-thead-row">
-                    <th class="witb-bag-th" style="white-space:nowrap;width:110px">Snapshot</th>
-                    <th class="witb-bag-th">Driver</th>
-                    <th class="witb-bag-th">Irons</th>
-                    <th class="witb-bag-th">Putter</th>
-                    <th class="witb-bag-th">Ball</th>
-                  </tr>
-                </thead>
-                <tbody>
-    <tr class="witb-hist-current">
-      <td class="witb-hist-date">May 2025 (current)</td>
-      <td><strong>Callaway</strong> Elyte Triple Diamond<br><span class="witb-hist-detail">10.5 degrees &middot; <a href="/brands/fujikura/">Fujikura</a> Ventus Black 7 X</span></td>
-      <td><strong>Callaway</strong> Apex UT<br><span class="witb-hist-detail">21 degrees &middot; <a href="/brands/kbs-golf/">KBS</a> Tour Hybrid Prototype 105 X</span></td>
-      <td><strong>Odyssey</strong> Ai-ONE Rossie S</td>
-      <td><strong>Callaway</strong> Chrome Tour</td>
-    </tr>
-    <tr>
-      <td class="witb-hist-date">May 2024</td>
-      <td><strong>Callaway</strong> Paradym Ai Smoke Triple Diamond<br><span class="witb-hist-detail">10.5 degrees &middot; <a href="/brands/aldila/">Aldila</a> Tour Green ATX 75 2.8 TX</span></td>
-      <td><strong>Callaway</strong> Apex UT<br><span class="witb-hist-detail">21 degrees &middot; <a href="/brands/kbs-golf/">KBS</a> Tour Hybrid Prototype 105 X</span></td>
-      <td><strong>Odyssey</strong> Ai-ONE Rossie S</td>
-      <td><span style="color:var(--text-muted)">-</span></td>
-    </tr>
-    <tr>
-      <td class="witb-hist-date">April 2023</td>
-      <td><strong>Callaway</strong> Paradym Triple Diamond<br><span class="witb-hist-detail">10.5 degrees @11.5 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green ATX 75 2.8 TX</span></td>
-      <td><strong>Callaway</strong> Apex TCB<br><span class="witb-hist-detail">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5 (4-PW</span></td>
-      <td><strong>Odyssey</strong> White Hot OG Rossie S</td>
-      <td><strong>Callaway</strong> Chrome Soft X</td>
-    </tr>
-    <tr>
-      <td class="witb-hist-date">January 2023</td>
-      <td><strong>Callaway</strong> Paradym Triple Diamond<br><span class="witb-hist-detail">10.5 degrees @11.3 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green ATX 75 2.8 TX</span></td>
-      <td><strong>Callaway</strong> Apex TCB<br><span class="witb-hist-detail">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</span></td>
-      <td><strong>Odyssey</strong> White Hot OG Rossie S</td>
-      <td><strong>Callaway</strong> Chrome Soft X</td>
-    </tr>
-    <tr>
-      <td class="witb-hist-date">May 2022</td>
-      <td><strong>Callaway</strong> Rogue ST Triple Diamond LS<br><span class="witb-hist-detail">10.5 degrees @11.2 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</span></td>
-      <td><strong>Callaway</strong> X Forged UT<br><span class="witb-hist-detail">22 degrees, @20.5 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</span></td>
-      <td><strong>Odyssey</strong> White Hot OG Rossie S</td>
-      <td><strong>Callaway</strong> Chrome Soft X</td>
-    </tr>
-    <tr>
-      <td class="witb-hist-date">January 2022</td>
-      <td><strong>Callaway</strong> Rogue ST Triple Diamond LS<br><span class="witb-hist-detail">10.5 degrees @11.2, 10GF, 4GB &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</span></td>
-      <td><strong>Callaway</strong> Apex TCB<br><span class="witb-hist-detail">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</span></td>
-      <td><strong>Odyssey</strong> White Hot OG Rossie S</td>
-      <td><strong>Callaway</strong> Chrome Soft X</td>
-    </tr>
-    <tr>
-      <td class="witb-hist-date">June 2021</td>
-      <td><strong>Callaway</strong> Epic Speed Triple Diamond LS<br><span class="witb-hist-detail">10.5 degrees @10.2, Std. CG, 7 GF, 7 GB &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</span></td>
-      <td><strong>Callaway</strong> Apex TCB<br><span class="witb-hist-detail">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</span></td>
-      <td><strong>Odyssey</strong> White Hot OG Rossie S</td>
-      <td><strong>Callaway</strong> Chrome Soft X</td>
-    </tr>
-    <tr>
-      <td class="witb-hist-date">March 2021</td>
-      <td><strong>Callaway</strong> Epic Speed Triple Diamond<br><span class="witb-hist-detail">10.5 degrees &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</span></td>
-      <td><strong>Callaway</strong> X Forged UT<br><span class="witb-hist-detail">22 degrees/4 &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</span></td>
-      <td><strong>Odyssey</strong> 2-Ball Ten Prototype</td>
-      <td><strong>Callaway</strong> Chrome Soft X</td>
-    </tr>
-    <tr>
-      <td class="witb-hist-date">June 2020</td>
-      <td><strong>TaylorMade</strong> SIM<br><span class="witb-hist-detail">10.5 @ 10 degrees &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</span></td>
-      <td><strong>TaylorMade</strong> P750<br><span class="witb-hist-detail">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</span></td>
-      <td><strong>TaylorMade</strong> Spider X</td>
-      <td><strong>TaylorMade</strong> TP5</td>
-    </tr>
-    <tr>
-      <td class="witb-hist-date">November 2019</td>
-      <td><strong>TaylorMade</strong> M5<br><span class="witb-hist-detail">10.5 degrees &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</span></td>
-      <td><strong>TaylorMade</strong> UDI<br><span class="witb-hist-detail">4 &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</span></td>
-      <td><strong>TaylorMade</strong> Spider X</td>
-      <td><strong>TaylorMade</strong> TP5</td>
-    </tr>
-                </tbody>
-              </table>
+            <div class="witb-snapshots">
+              <details class="witb-snapshot" open>
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">May 2025 <span class="witb-snap-tag">current</span></span>
+    <span class="witb-snap-count">11 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Elyte Triple Diamond</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 degrees &middot; <a href="/brands/fujikura/">Fujikura</a> Ventus Black 7 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Ai Smoke Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">High Launch, 16 degrees &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Ai Smoke Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">18 degrees &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex UT</span>
+    </div>
+    <div class="witb-snap-item-specs">21 degrees &middot; <a href="/brands/kbs-golf/">KBS</a> Tour Hybrid Prototype 105 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex Pro</span>
+    </div>
+    <div class="witb-snap-item-specs">4 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex TCB</span>
+    </div>
+    <div class="witb-snap-item-specs">5-10 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws Raw</span>
+    </div>
+    <div class="witb-snap-item-specs">52-10, 56-12 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Opus</span>
+    </div>
+    <div class="witb-snap-item-specs">60-04C &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+      <span class="witb-snap-item-model">Ai-ONE Rossie S</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+      <span class="witb-snap-item-model">MCC</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Ball</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Chrome Tour</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
+<details class="witb-snapshot">
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">May 2024</span>
+    <span class="witb-snap-count">10 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Ai Smoke Triple Diamond</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 degrees &middot; <a href="/brands/aldila/">Aldila</a> Tour Green ATX 75 2.8 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Ai Smoke Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">High Launch, 16 degrees &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Ai Smoke Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">18 degrees &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex UT</span>
+    </div>
+    <div class="witb-snap-item-specs">21 degrees &middot; <a href="/brands/kbs-golf/">KBS</a> Tour Hybrid Prototype 105 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex Pro</span>
+    </div>
+    <div class="witb-snap-item-specs">4 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex TCB</span>
+    </div>
+    <div class="witb-snap-item-specs">5-10 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws Forged</span>
+    </div>
+    <div class="witb-snap-item-specs">52-10, 56-12 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws Raw</span>
+    </div>
+    <div class="witb-snap-item-specs">60-04C &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+      <span class="witb-snap-item-model">Ai-ONE Rossie S</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+      <span class="witb-snap-item-model">MCC</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
+<details class="witb-snapshot">
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">April 2023</span>
+    <span class="witb-snap-count">8 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Triple Diamond</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 degrees @11.5 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green ATX 75 2.8 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">High Launch, 16 degrees @15.1 &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">18 degrees &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex TCB</span>
+    </div>
+    <div class="witb-snap-item-specs">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5 (4-PW</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws Raw</span>
+    </div>
+    <div class="witb-snap-item-specs">52-10, 56-12 @55.25, 60-10 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+      <span class="witb-snap-item-model">White Hot OG Rossie S</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Ball</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Chrome Soft X</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+      <span class="witb-snap-item-model">MCC</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
+<details class="witb-snapshot">
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">January 2023</span>
+    <span class="witb-snap-count">8 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Triple Diamond</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 degrees @11.3 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green ATX 75 2.8 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">High Launch, 16 degrees @15.1 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green ATX 85 2.6 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Paradym Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">18 degrees &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex TCB</span>
+    </div>
+    <div class="witb-snap-item-specs">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws Raw</span>
+    </div>
+    <div class="witb-snap-item-specs">52-10, 56-12 @55.25, 60-10 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 125 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+      <span class="witb-snap-item-model">White Hot OG Rossie S</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+      <span class="witb-snap-item-model">MCC</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Ball</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Chrome Soft X</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
+<details class="witb-snapshot">
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">May 2022</span>
+    <span class="witb-snap-count">9 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Rogue ST Triple Diamond LS</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 degrees @11.2 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Rogue ST Triple Diamond T HL</span>
+    </div>
+    <div class="witb-snap-item-specs">16.5 degrees @15.2 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 85 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Rogue ST Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">18 degrees @17.9 &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI Black 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">X Forged UT</span>
+    </div>
+    <div class="witb-snap-item-specs">22 degrees, @20.5 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex TCB</span>
+    </div>
+    <div class="witb-snap-item-specs">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws Forged</span>
+    </div>
+    <div class="witb-snap-item-specs">52-10, 56-12 @55.25, and 60-10 degrees &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+      <span class="witb-snap-item-model">White Hot OG Rossie S</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Ball</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Chrome Soft X</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+      <span class="witb-snap-item-model">MCC midsize</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
+<details class="witb-snapshot">
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">January 2022</span>
+    <span class="witb-snap-count">10 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Rogue ST Triple Diamond LS</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 degrees @11.2, 10GF, 4GB &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Rogue ST LS Triple Diamond Proto</span>
+    </div>
+    <div class="witb-snap-item-specs">15 degrees @14.2, 14GF, 10GB &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Epic Speed Sub Zero Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">@18.1 degrees, 14 GF, 12 GB &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI Black 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex TCB</span>
+    </div>
+    <div class="witb-snap-item-specs">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws Forged</span>
+    </div>
+    <div class="witb-snap-item-specs">52-10, 56-12 @55.25 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws MD5</span>
+    </div>
+    <div class="witb-snap-item-specs">60-08W &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+      <span class="witb-snap-item-model">White Hot OG Rossie S</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+      <span class="witb-snap-item-model">56 pistol</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Ball</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Chrome Soft X</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+      <span class="witb-snap-item-model">MCC</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
+<details class="witb-snapshot">
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">June 2021</span>
+    <span class="witb-snap-count">8 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Epic Speed Triple Diamond LS</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 degrees @10.2, Std. CG, 7 GF, 7 GB &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Epic Speed Sub Zero Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">@14.2 degrees, 14 GF, 10 GB &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Epic Speed Sub Zero Triple Diamond T</span>
+    </div>
+    <div class="witb-snap-item-specs">@18.1 degrees, 14 GF, 12 GB &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI Black 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex TCB</span>
+    </div>
+    <div class="witb-snap-item-specs">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws Forged “Rahmbo”</span>
+    </div>
+    <div class="witb-snap-item-specs">52-10, 56-12, 60-10 &middot; <a href="/brands/true-temper/">True Temper</a> Project X 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+      <span class="witb-snap-item-model">White Hot OG Rossie S</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Ball</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Chrome Soft X</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+      <span class="witb-snap-item-model">MCC</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
+<details class="witb-snapshot">
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">March 2021</span>
+    <span class="witb-snap-count">8 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Epic Speed Triple Diamond</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 degrees &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Epic Speed Prototype</span>
+    </div>
+    <div class="witb-snap-item-specs">15 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Epic Speed Prototype</span>
+    </div>
+    <div class="witb-snap-item-specs">18 degrees &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI Black 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">X Forged UT</span>
+    </div>
+    <div class="witb-snap-item-specs">22 degrees/4 &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Apex TCB</span>
+    </div>
+    <div class="witb-snap-item-specs">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Jaws Forged JPN</span>
+    </div>
+    <div class="witb-snap-item-specs">52-10, 56-12, 60-10 &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/odyssey-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">OD</span><a href="/brands/odyssey-golf/">Odyssey</a></div>
+      <span class="witb-snap-item-model">2-Ball Ten Prototype</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Ball</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></div>
+      <span class="witb-snap-item-model">Chrome Soft X</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
+<details class="witb-snapshot">
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">June 2020</span>
+    <span class="witb-snap-count">8 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">SIM</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 @ 10 degrees &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">SIM</span>
+    </div>
+    <div class="witb-snap-item-specs">15 @14.5 degrees &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">SIM</span>
+    </div>
+    <div class="witb-snap-item-specs">19 @17.5 degrees &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">P750</span>
+    </div>
+    <div class="witb-snap-item-specs">4-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">MG2</span>
+    </div>
+    <div class="witb-snap-item-specs">52-09SB, 56-12SB, 60-11TW &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">Spider X</span>
+    </div>
+    <div class="witb-snap-item-specs">Chalk</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+      <span class="witb-snap-item-model">MCC</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Ball</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">TP5</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
+<details class="witb-snapshot">
+  <summary class="witb-snap-summary">
+    <span class="witb-snap-date">November 2019</span>
+    <span class="witb-snap-count">11 clubs</span>
+    <span class="witb-snap-chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="witb-snap-body"><div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Driver</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">M5</span>
+    </div>
+    <div class="witb-snap-item-specs">10.5 degrees &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">3-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">M5</span>
+    </div>
+    <div class="witb-snap-item-specs">15 degrees set at 16 &middot; <a href="/brands/aldila/">Aldila</a> Tour Green 75 TX</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/fairway_wood_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">5-Wood</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">M5</span>
+    </div>
+    <div class="witb-snap-item-specs">19 degrees &middot; <a href="/brands/graphite-design/">Graphite Design</a> Tour AD DI 8 X</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">UDI</span>
+    </div>
+    <div class="witb-snap-item-specs">4 &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Iron</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">P750</span>
+    </div>
+    <div class="witb-snap-item-specs">5-PW &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">Hi-Toe</span>
+    </div>
+    <div class="witb-snap-item-specs">52, 56 &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/wedge_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Wedge</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">MG2 TW 11 Grind</span>
+    </div>
+    <div class="witb-snap-item-specs">60 &middot; <a href="/brands/true-temper/">True Temper</a> Project X Rifle 6.5</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Putter</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">Spider X</span>
+    </div>
+    <div class="witb-snap-item-specs">Copper</div>
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/superstroke.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">SU</span><a href="/brands/superstroke/">SuperStroke</a></div>
+      <span class="witb-snap-item-model">Ultra Slim 1.0 P</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Ball</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></div>
+      <span class="witb-snap-item-model">TP5</span>
+    </div>
+    
+  </div>
+</div>
+<div class="witb-snap-item">
+  <div class="witb-snap-item-type"><img src="/images/icons/grip.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span class="witb-snap-item-label">Grip</span></div>
+  <div class="witb-snap-item-right">
+    <div class="witb-snap-item-brand-model">
+      <div class="witb-cell-flex witb-snap-brand-wrap"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></div>
+      <span class="witb-snap-item-model">MCC</span>
+    </div>
+    
+  </div>
+</div></div>
+</details>
             </div>
 
             <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
@@ -607,57 +1606,110 @@
 
   <!-- SCRIPTS -->
   <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
-
-  <!-- Mobile nav -->
   <script>
   (function(){
-    var btn   = document.getElementById('nav-hamburger');
-    var panel = document.getElementById('mobile-nav-panel');
-    if (!btn || !panel) return;
-    function openNav()  { btn.setAttribute('aria-expanded','true');  panel.classList.add('open');    panel.removeAttribute('hidden'); }
-    function closeNav() { btn.setAttribute('aria-expanded','false'); panel.classList.remove('open'); panel.setAttribute('hidden',''); }
-    btn.addEventListener('click', function(){ btn.getAttribute('aria-expanded')==='true' ? closeNav() : openNav(); });
-    panel.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeNav); });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeNav(); });
-    document.addEventListener('click',   function(e){ if(!btn.contains(e.target) && !panel.contains(e.target)) closeNav(); });
+    var btn=document.getElementById('nav-hamburger'),panel=document.getElementById('mobile-nav-panel');
+    if(!btn||!panel)return;
+    function openNav(){btn.setAttribute('aria-expanded','true');panel.classList.add('open');panel.removeAttribute('hidden')}
+    function closeNav(){btn.setAttribute('aria-expanded','false');panel.classList.remove('open');panel.setAttribute('hidden','')}
+    btn.addEventListener('click',function(){btn.getAttribute('aria-expanded')==='true'?closeNav():openNav()});
+    panel.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeNav)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav()});
+    document.addEventListener('click',function(e){if(!btn.contains(e.target)&&!panel.contains(e.target))closeNav()});
   })();
   </script>
 
   <!-- Page-specific styles -->
   <style>
-    /* Bag table */
-    .witb-bag-th{text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px;white-space:nowrap}
+    /* ── Layout helpers ── */
+    .witb-cell-flex{display:flex;align-items:center;gap:6px}
+
+    /* ── Brand cells ── */
+    .witb-brand-logo{width:20px;height:20px;object-fit:contain;border-radius:3px;display:block;flex-shrink:0}
+    .witb-brand-monogram{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--bg-raised);border:1px solid var(--border);border-radius:3px;font-family:var(--font-mono);font-size:.6rem;font-weight:700;color:var(--text-muted);flex-shrink:0}
+
+    /* ── BAG TABLE (desktop) ── */
+    .witb-bag-table-wrap{overflow-x:auto}
+    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed}
+    .witb-col-club {width:110px}
+    .witb-col-brand{width:150px}
+    .witb-col-model{width:auto}
+    .witb-col-loft {width:90px}
+    .witb-col-shaft{width:220px}
+    .witb-bag-th{text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 12px 8px;white-space:nowrap}
     .witb-bag-thead-row{border-bottom:1px solid var(--border)}
-    .witb-player-bag-table td{padding:8px;border-bottom:1px solid var(--border-lite);vertical-align:middle;font-size:.875rem}
+    .witb-player-bag-table td{padding:8px 12px;border-bottom:1px solid var(--border-lite);vertical-align:middle;font-size:.875rem;line-height:1.4}
     .witb-player-bag-table tr:hover td{background:var(--bg-hover)}
     .witb-bag-type-cell{color:var(--text-dim);white-space:nowrap}
-    .witb-bag-brand-cell{white-space:nowrap}
-    .witb-bag-loft-cell{color:var(--text-muted);font-size:.8125rem;white-space:nowrap}
+    .witb-bag-brand-cell{white-space:nowrap;overflow:hidden}
+    .witb-bag-model-cell{overflow:hidden;text-overflow:ellipsis}
+    .witb-bag-loft-cell{color:var(--text-muted);font-size:.8125rem;white-space:nowrap;font-family:var(--font-mono)}
     .witb-bag-shaft-cell{color:var(--text-muted);font-size:.8125rem;overflow:hidden;text-overflow:ellipsis}
     .witb-bag-shaft-cell a{color:var(--text-muted)}
     .witb-bag-shaft-cell a:hover{color:var(--green)}
-    .witb-bag-model-cell{font-size:.875rem;overflow:hidden;text-overflow:ellipsis}
-    .witb-cell-flex{display:flex;align-items:center;gap:6px}
-    /* Comparison grid -- fixed columns so all rows align */
-    .witb-comp-row{display:grid;grid-template-columns:90px 170px 150px 1fr;gap:8px;align-items:center;padding:10px 12px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius)}
+
+    /* ── BAG MOBILE CARDS ── */
+    .witb-bag-mobile-cards{display:none}
+    @media(max-width:640px){
+      .witb-bag-table-wrap{display:none}
+      .witb-bag-mobile-cards{display:flex;flex-direction:column;gap:8px}
+    }
+    .witb-mobile-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+    .witb-mc-header{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+    .witb-mc-type{font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim)}
+    .witb-mc-brand{margin-bottom:4px}
+    .witb-mc-model{font-size:.9375rem;color:var(--text);margin-bottom:3px}
+    .witb-mc-loft{font-size:.8125rem;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:2px}
+    .witb-mc-shaft{font-size:.8125rem;color:var(--text-muted)}
+    .witb-mc-shaft a{color:var(--text-muted)}
+    .witb-mc-shaft a:hover{color:var(--green)}
+
+    /* ── COMPARISON ROWS (desktop: fixed 4-col grid; mobile: stacked) ── */
+    .witb-comp-grid{display:flex;flex-direction:column;gap:8px}
+    .witb-comp-row{display:grid;grid-template-columns:90px 170px 150px 1fr;gap:8px;align-items:center;padding:10px 14px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius)}
     .witb-comp-cat{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
     .witb-comp-brand{min-width:0;overflow:hidden}
     .witb-comp-stat{min-width:0}
-    .witb-comp-count{font-family:var(--font-mono);font-size:.78rem;color:var(--text-dim);display:block}
+    .witb-comp-count{font-family:var(--font-mono);font-size:.78rem;color:var(--text-dim);display:block;margin-bottom:4px}
+    .witb-lb-bar-bg{background:var(--bg-raised);border-radius:2px;height:4px;overflow:hidden}
+    .witb-lb-bar-fill{background:var(--green);height:100%;border-radius:2px}
     .witb-comp-leader{font-family:var(--font-mono);font-size:.65rem;color:var(--green);text-transform:uppercase;letter-spacing:.06em}
     .witb-comp-note{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted)}
-    @media(max-width:640px){.witb-comp-row{grid-template-columns:80px 1fr}.witb-comp-stat,.witb-comp-context{display:none}}
-    /* History table */
-    .witb-hist-current td{background:var(--bg-surface)}
-    .witb-hist-date{white-space:nowrap;color:var(--text-dim);font-family:var(--font-mono);font-size:.72rem;padding-right:12px;vertical-align:top}
-    .witb-hist-detail{font-size:.72rem;color:var(--text-muted);font-weight:400}
-    .witb-hist-detail a{color:var(--text-muted)}
-    .witb-hist-detail a:hover{color:var(--green)}
-    tbody tr td{padding:7px 8px;border-bottom:1px solid var(--border-lite);vertical-align:top}
-    /* Brand cells */
-    .witb-brand-logo{width:20px;height:20px;object-fit:contain;border-radius:3px;display:inline;vertical-align:middle}
-    .witb-brand-monogram{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--bg-raised);border:1px solid var(--border);border-radius:3px;font-family:var(--font-mono);font-size:.6rem;font-weight:700;color:var(--text-muted);vertical-align:middle;flex-shrink:0}
-    /* Misc */
+    @media(max-width:640px){
+      .witb-comp-row{display:block;padding:12px 14px}
+      .witb-comp-cat{margin-bottom:6px}
+      .witb-comp-brand{margin-bottom:8px;font-size:.9375rem}
+      .witb-comp-stat{margin-bottom:6px}
+    }
+
+    /* ── BAG HISTORY SNAPSHOTS ── */
+    .witb-hist-narrative{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;font-size:.9375rem;line-height:1.65;color:var(--text-dim)}
+    .witb-snapshots{display:flex;flex-direction:column;gap:6px}
+    .witb-snapshot{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg-surface)}
+    .witb-snap-summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none}
+    .witb-snap-summary::-webkit-details-marker{display:none}
+    .witb-snap-summary::marker{display:none}
+    .witb-snap-summary:hover{background:var(--bg-hover)}
+    .witb-snap-date{font-family:var(--font-mono);font-size:.78rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;flex:1;display:flex;align-items:center;gap:8px}
+    .witb-snap-tag{font-family:var(--font-mono);font-size:.65rem;color:var(--green);background:var(--green-dark);padding:2px 6px;border-radius:3px;letter-spacing:.06em;font-weight:700}
+    .witb-snap-count{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
+    .witb-snap-chevron{flex-shrink:0;font-size:.55rem;color:var(--text-muted);width:14px;text-align:center}
+    .witb-snap-chevron::before{content:'\25BC'}
+    .witb-snapshot[open] .witb-snap-chevron::before{content:'\25B2'}
+    .witb-snap-body{padding:4px 14px 12px;display:flex;flex-direction:column}
+    .witb-snap-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-lite)}
+    .witb-snap-item:last-child{border-bottom:none}
+    .witb-snap-item-type{display:flex;align-items:center;gap:5px;width:88px;flex-shrink:0;padding-top:2px}
+    .witb-snap-item-label{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+    .witb-snap-item-right{flex:1;min-width:0}
+    .witb-snap-item-brand-model{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:2px}
+    .witb-snap-brand-wrap{flex-shrink:0}
+    .witb-snap-item-model{font-size:.875rem;color:var(--text-dim)}
+    .witb-snap-item-specs{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono)}
+    .witb-snap-item-specs a{color:var(--text-muted)}
+    .witb-snap-item-specs a:hover{color:var(--green)}
+
+    /* ── Misc ── */
     .witb-footnote{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:12px;text-transform:uppercase;letter-spacing:.05em}
     .witb-footnote a{color:var(--text-muted)}
     .witb-footnote a:hover{color:var(--green)}
