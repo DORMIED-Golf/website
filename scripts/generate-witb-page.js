@@ -441,9 +441,8 @@ function buildScatterSVG(scatterData) {
     dots += `<circle class="witb-scatter-dot" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}"
       data-slug="${esc(d.slug)}" data-name="${esc(d.name)}"
       data-tour="${d.tourPct.toFixed(1)}" data-di="${d.diScore.toFixed(1)}"
-      data-rank="${d.diRank}" data-players="${d.playerCount}">
-      <title>${esc(d.name)}: ${d.tourPct.toFixed(1)}% tour, DI ${d.diScore.toFixed(1)}</title>
-    </circle>`;
+      data-rank="${d.diRank}" data-players="${d.playerCount}"
+      aria-label="${esc(d.name)}: ${d.tourPct.toFixed(1)}% tour, DI ${d.diScore.toFixed(1)}"></circle>`;
     // Label all dots — data-slug binds each label to its dot for reliable show/hide
     const labelY = cy < PAD.top + 20 ? cy + 14 : cy - 8;
     dots += `<text class="witb-scatter-label" data-slug="${esc(d.slug)}" x="${cx.toFixed(1)}" y="${labelY.toFixed(1)}" text-anchor="middle">${esc(d.name)}</text>`;
