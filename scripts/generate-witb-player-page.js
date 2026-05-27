@@ -33,6 +33,19 @@ const TOTAL_TOUR_PLAYERS = 160;
 
 const PLAYER_SLUG = process.argv[2] || 'jon-rahm';
 
+// ── Shaft brand slug map ──────────────────────────────────────────────────────
+
+const SHAFT_BRAND_LINKS = {
+  'True Temper':    'true-temper',
+  'Fujikura':       'fujikura',
+  'Mitsubishi':     'mitsubishi-golf',
+  'Nippon':         'nippon-shaft',
+  'Aldila':         'aldila',
+  'Graphite Design':'graphite-design',
+  'UST Mamiya':     'ust-mamiya',
+  'KBS':            'kbs-golf',
+};
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function esc(s) {
@@ -60,37 +73,88 @@ function fmtOwgrDate(isoTs) {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
+/** Count words in a prose string (rough) */
+function wordCount(text) {
+  return (text || '').trim().split(/\s+/).filter(Boolean).length;
+}
+
+// ── Shaft rendering ───────────────────────────────────────────────────────────
+
+/**
+ * Deduplicate a leading repeated brand token in a shaft string.
+ * e.g. "Fujikura Fujikura Ventus Black 7 X" -> "Fujikura Ventus Black 7 X"
+ */
+function dedupeShaft(raw) {
+  for (const brand of Object.keys(SHAFT_BRAND_LINKS)) {
+    const doubled = brand + ' ' + brand;
+    if (raw.startsWith(doubled)) {
+      // Remove the first "Brand " prefix
+      return raw.slice(brand.length + 1);
+    }
+  }
+  return raw;
+}
+
+/**
+ * Return HTML for shaft display.
+ * - Prefers witb_shafts.model (already contains brand), falls back to raw_shaft.
+ * - Deduplicates a doubled leading brand token.
+ * - Links the brand portion to /brands/{slug} for the eight mapped shaft brands.
+ * Returns plain '-' string (not HTML) when no shaft data.
+ */
+function shaftCell(item) {
+  let raw = ((item.witb_shafts?.model) || item.raw_shaft || '').trim();
+  if (!raw || raw === '-') return '-';
+
+  raw = dedupeShaft(raw);
+
+  for (const [brand, slug] of Object.entries(SHAFT_BRAND_LINKS)) {
+    if (raw === brand) {
+      return `<a href="/brands/${slug}/">${esc(brand)}</a>`;
+    }
+    if (raw.startsWith(brand + ' ')) {
+      const rest = raw.slice(brand.length + 1);
+      return `<a href="/brands/${slug}/">${esc(brand)}</a> ${esc(rest)}`;
+    }
+  }
+
+  return esc(raw);
+}
+
+// ── Brand cell ────────────────────────────────────────────────────────────────
+
 /** Render brand logo + link component (exact-match-or-null: no fuzzy) */
 function brandCell(rawBrand, dormiedSlug) {
   const name = esc(rawBrand || '');
   if (!dormiedSlug) {
-    // No DORMIED mapping -- monogram fallback, plain text
     const mono = (rawBrand || '??').slice(0, 2).toUpperCase();
     return `<span class="witb-brand-monogram">${mono}</span>${name}`;
   }
   const logo = `/images/logos/${dormiedSlug}.jpg`;
-  const mono  = (rawBrand || '??').slice(0, 2).toUpperCase();
+  const mono = (rawBrand || '??').slice(0, 2).toUpperCase();
   return `<img src="${logo}" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">${mono}</span><a href="/brands/${dormiedSlug}/">${name}</a>`;
 }
+
+// ── Category icon ─────────────────────────────────────────────────────────────
 
 /** Category icon img tag */
 function catIcon(clubType) {
   const icons = {
-    'driver':    '/images/icons/driver_22px.svg',
-    '3-wood':    '/images/icons/fairway_wood_22px.svg',
-    '4-wood':    '/images/icons/fairway_wood_22px.svg',
-    '5-wood':    '/images/icons/fairway_wood_22px.svg',
-    '7-wood':    '/images/icons/fairway_wood_22px.svg',
+    'driver':     '/images/icons/driver_22px.svg',
+    '3-wood':     '/images/icons/fairway_wood_22px.svg',
+    '4-wood':     '/images/icons/fairway_wood_22px.svg',
+    '5-wood':     '/images/icons/fairway_wood_22px.svg',
+    '7-wood':     '/images/icons/fairway_wood_22px.svg',
     'mini-driver':'/images/icons/fairway_wood_22px.svg',
-    'hybrid':    '/images/icons/hybrid_22px.svg',
-    'iron':      '/images/icons/golf_iron_icon_22px.svg',
-    'wedge':     '/images/icons/wedge_22px.svg',
-    'putter':    '/images/icons/putter_22px.svg',
-    'ball':      '/images/icons/ball.svg',
-    'grip':      '/images/icons/grip.svg',
+    'hybrid':     '/images/icons/hybrid_22px.svg',
+    'iron':       '/images/icons/golf_iron_icon_22px.svg',
+    'wedge':      '/images/icons/wedge_22px.svg',
+    'putter':     '/images/icons/putter_22px.svg',
+    'ball':       '/images/icons/ball.svg',
+    'grip':       '/images/icons/grip.svg',
   };
   const src = icons[clubType] || '/images/icons/golf_iron_icon_22px.svg';
-  return `<span class="witb-cat-icon" aria-hidden="true"><img src="${src}" width="16" height="16" alt=""></span>`;
+  return `<img src="${src}" width="16" height="16" alt="" style="display:inline;vertical-align:middle;opacity:.7">`;
 }
 
 /** Human-readable club type label */
@@ -112,9 +176,29 @@ function clubLabel(ct) {
   return labels[ct] || ct.charAt(0).toUpperCase() + ct.slice(1);
 }
 
-/** Count words in a prose string (rough) */
-function wordCount(text) {
-  return (text || '').trim().split(/\s+/).filter(Boolean).length;
+// ── History item formatter ────────────────────────────────────────────────────
+
+/**
+ * Format a single bag item for the history timeline table.
+ * @param {object|null} item  - bag item with witb_shafts join
+ * @param {boolean} showDetail - if true, add loft + shaft sub-line
+ */
+function fmtHistItem(item, showDetail = false) {
+  if (!item) return '<span style="color:var(--text-muted)">-</span>';
+  const model = (item.raw_model || '').split(' ').slice(0, 5).join(' ');
+  let html = `<strong>${esc(item.raw_brand)}</strong> ${esc(model)}`;
+
+  if (showDetail) {
+    const parts = [];
+    if (item.loft_or_number) parts.push(esc(item.loft_or_number));
+    const sc = shaftCell(item);
+    if (sc && sc !== '-') parts.push(sc);
+    if (parts.length) {
+      html += `<br><span class="witb-hist-detail">${parts.join(' &middot; ')}</span>`;
+    }
+  }
+
+  return html;
 }
 
 // ── Lede cache ────────────────────────────────────────────────────────────────
@@ -137,16 +221,15 @@ function saveLedeCache(cache) {
 async function generateLede(anthropic, player, bags, currentBag, currentItems) {
   log('Generating lede + history narrative via Opus 4.7...');
 
-  // Build a concise equipment summary for the prompt
   const keyItems = currentItems
     .filter(i => ['driver', 'iron', 'putter', 'ball'].includes(i.club_type))
     .map(i => {
-      const loft = i.loft_or_number ? ` (${i.loft_or_number})` : '';
-      return `${clubLabel(i.club_type)}: ${i.raw_brand} ${i.raw_model}${loft}`;
+      const loft  = i.loft_or_number ? ` (${i.loft_or_number})` : '';
+      const shaft = (i.witb_shafts?.model || i.raw_shaft) ? ` / shaft: ${dedupeShaft(i.witb_shafts?.model || i.raw_shaft)}` : '';
+      return `${clubLabel(i.club_type)}: ${i.raw_brand} ${i.raw_model}${loft}${shaft}`;
     })
     .join('\n');
 
-  // Build historical bag summary (newest first, skip current)
   const histBags = bags
     .filter(b => !b.is_current)
     .sort((a, b) => b.bag_date.localeCompare(a.bag_date));
@@ -165,6 +248,7 @@ DORMIED voice rules (non-negotiable):
 - No first-person. Observational third-person throughout.
 - Do not assert precise switch dates the data does not support.
 - Do not use hedging phrases like "it seems" or "appears to".
+- No hyphens used as em dashes (do not write " - " as a pause; use commas or period breaks).
 
 Player: Jon Rahm
 OWGR rank: #${player.owgr_rank}
@@ -177,8 +261,15 @@ ${histSummary}
 
 DATA CONSTRAINT: The snapshot record goes from June 2020 (TaylorMade) directly to March 2021 (Callaway). Do not claim a specific switch date -- say only what the data shows (e.g. "by early 2021 his bag was full Callaway").
 
-TASK 1 -- LEDE (60-100 words):
-Write an opening paragraph for the player page. Must narrate from the real data: the TaylorMade-to-Callaway equipment arc, and something specific about the current bag. Start with a data observation or distinctive detail, not the player's name. No recap of his resume. The reader knows who Rahm is.
+TASK 1 -- LEDE (130-180 words total):
+
+Write one cohesive opening paragraph. It has two parts that should flow naturally together -- do NOT separate them with a line break or section break:
+
+Part A -- Bio context (2-3 sentences): Establish who Rahm is for readers who need grounding. Accurate facts only: Spanish professional golfer, former world number one, two-time major champion (2021 U.S. Open at Torrey Pines, 2023 Masters Tournament). Moved to LIV Golf in December 2023. State these facts plainly without editorializing or framing them as transitions.
+
+Part B -- Equipment narrative (continues from Part A): Narrate from the real data. Observe what is notable about the current Callaway bag. What has been stable? What changed from earlier snapshots? Start Part B by pivoting directly to equipment -- a specific detail, not a transition phrase.
+
+The result should read as a single unified paragraph, not two separate sections.
 
 TASK 2 -- HISTORY NARRATIVE (2-4 sentences):
 A concise prose summary of the equipment arc across the 10 bag snapshots. Capture the TaylorMade era (2019-2020), the Callaway transition, and the current state. Accuracy to snapshots only -- no invented details between data points.
@@ -191,27 +282,24 @@ Return valid JSON only:
 
   const res = await anthropic.messages.create({
     model:      'claude-opus-4-7',
-    max_tokens: 1000,
+    max_tokens: 1200,
     thinking:   { type: 'adaptive' },
     messages:   [{ role: 'user', content: prompt }],
   });
 
-  const u = res.usage || {};
+  const u    = res.usage || {};
   const cost = ((u.input_tokens ?? 0) / 1e6 * 5) + ((u.output_tokens ?? 0) / 1e6 * 25);
   log(`Opus tokens: input=${u.input_tokens}, output=${u.output_tokens}, cost=$${cost.toFixed(4)}`);
 
-  // Extract text from response (thinking blocks are opaque; get last text block)
   const textBlocks = (res.content || []).filter(b => b.type === 'text' && b.text?.trim());
   const raw = (textBlocks[textBlocks.length - 1]?.text || '').trim();
 
-  // Parse JSON
   const cleaned = raw.replace(/^```(?:json)?\n?/m, '').replace(/\n?```$/m, '').trim();
   try {
     return JSON.parse(cleaned);
   } catch {
     warn('Failed to parse Opus JSON response. Raw:\n' + raw.slice(0, 500));
-    // Fallback: return raw as lede
-    return { lede: raw.slice(0, 400), history_narrative: '' };
+    return { lede: raw.slice(0, 500), history_narrative: '' };
   }
 }
 
@@ -235,7 +323,6 @@ async function fetchBagsWithItems(sb, playerId) {
     .order('bag_date', { ascending: false });
   if (error) throw new Error(`Bags fetch failed: ${error.message}`);
 
-  // Fetch items for each bag
   for (const bag of bags) {
     const { data: items } = await sb
       .from('witb_bag_items')
@@ -252,15 +339,12 @@ async function fetchBagsWithItems(sb, playerId) {
   return bags;
 }
 
-async function fetchTourComparison(sb, brandNames) {
-  // For key club categories, count how many current-bag players use each brand.
-  // Returns per-category brand counts: { driver: [{brand, count},...], ... }
-
+async function fetchTourComparison(sb) {
   const catGroups = {
-    driver:  ['driver'],
-    irons:   ['iron'],
-    putter:  ['putter'],
-    ball:    ['ball'],
+    driver: ['driver'],
+    irons:  ['iron'],
+    putter: ['putter'],
+    ball:   ['ball'],
   };
 
   const result = {};
@@ -273,8 +357,6 @@ async function fetchTourComparison(sb, brandNames) {
 
     const currentItems = (items || []).filter(i => i.witb_bags?.is_current);
 
-    // Count unique players per brand (for irons/putter/ball)
-    // For driver, count items (since there's only one driver per player)
     const brandMap = {};
     currentItems.forEach(i => {
       const name  = i.witb_brands?.name || i.raw_brand || 'Unknown';
@@ -292,16 +374,7 @@ async function fetchTourComparison(sb, brandNames) {
   return result;
 }
 
-async function fetchDiData(sb, slugs) {
-  const { data } = await sb
-    .from('dormied_monthly_brand_summary')
-    .select('brand_slug, global_rank, di_score')
-    .in('brand_slug', slugs)
-    .eq('snapshot_month', '2026-04-01');
-  return new Map((data || []).map(d => [d.brand_slug, d]));
-}
-
-// ── Tour comparison prose ─────────────────────────────────────────────────────
+// ── Tour comparison rows ──────────────────────────────────────────────────────
 
 function buildComparisonRows(tourComp, playerBrandsByCategory) {
   const rows = [];
@@ -315,7 +388,6 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 
   for (const { cat, label, icon } of catConfig) {
     const all = tourComp[cat] || [];
-    const total = all.reduce((s, b) => s + b.count, 0);
     const playerBrand = playerBrandsByCategory[cat];
     if (!playerBrand) continue;
 
@@ -323,26 +395,15 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
     const playerCount = playerEntry?.count || 0;
     const rank1 = all[0];
 
-    // Build prose
-    let context = '';
-    if (rank1 && rank1.name !== playerBrand.name) {
-      context = ` (${esc(rank1.name)} leads with ${rank1.count})`;
-    } else if (rank1 && rank1.name === playerBrand.name) {
-      context = ` -- tour's most-used ${label.toLowerCase()} brand`;
-    }
-
     rows.push({
       cat,
       label,
       icon,
-      playerBrand: playerBrand.name,
-      playerDormiedSlug: playerBrand.dormied_slug,
-      playerModel: playerBrand.model,
+      playerBrand:      playerBrand.name,
+      playerDormiedSlug:playerBrand.dormied_slug,
       playerCount,
-      total,
-      context,
-      rank1Name: rank1?.name,
-      rank1Count: rank1?.count,
+      rank1Name:        rank1?.name,
+      rank1Count:       rank1?.count,
     });
   }
 
@@ -351,24 +412,29 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
-function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, ledes, today }) {
+function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, today }) {
   const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
 
-  const owgrLine = owgr_rank
-    ? `OWGR #${owgr_rank}${owgrDate ? ` &middot; updated ${owgrDate}` : ''}${data_golf_rank ? ` &middot; DG #${data_golf_rank}` : ''}`
-    : `OWGR: Unranked${data_golf_rank ? ` &middot; DG #${data_golf_rank}` : ''}`;
+  // ── OWGR rank line with logo ───────────────────────────────────────────────
 
-  // Player's brand per category (for comparison)
+  const owgrLogoHtml = `<a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank" class="owgr-logo-link" aria-label="Official World Golf Ranking"><img src="/images/owgr-logo.svg" alt="OWGR" class="owgr-logo" width="44" height="15" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"><span class="owgr-logo-fallback" style="display:none;font-family:var(--font-mono);font-size:.65rem;font-weight:700;letter-spacing:.1em">OWGR</span></a>`;
+
+  const owgrLine = owgr_rank
+    ? `${owgrLogoHtml} <span class="witb-rank-num">#${owgr_rank}</span>${owgrDate ? ` &middot; <span class="witb-rank-updated">updated ${owgrDate}</span>` : ''}${data_golf_rank ? ` &middot; DG #${data_golf_rank}` : ''}`
+    : `Unranked${data_golf_rank ? ` &middot; DG #${data_golf_rank}` : ''}`;
+
+  // ── Player brands per category (for comparison) ───────────────────────────
+
   const playerBrandsByCategory = {};
   for (const item of currentItems) {
-    if (['driver', 'iron', 'putter', 'ball'].includes(item.club_type)) {
-      if (!playerBrandsByCategory[item.club_type === 'iron' ? 'irons' : item.club_type]) {
-        playerBrandsByCategory[item.club_type === 'iron' ? 'irons' : item.club_type] = {
+    const cat = item.club_type === 'iron' ? 'irons' : item.club_type;
+    if (['driver', 'irons', 'putter', 'ball'].includes(cat)) {
+      if (!playerBrandsByCategory[cat]) {
+        playerBrandsByCategory[cat] = {
           name:         item.witb_brands?.name || item.raw_brand,
           dormied_slug: item.witb_brands?.dormied_brand_slug || null,
-          model:        item.raw_model,
         };
       }
     }
@@ -376,37 +442,33 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
 
   const compRows = buildComparisonRows(tourComp, playerBrandsByCategory);
 
-  // SEO
-  const pageTitle       = `${esc(name)} WITB: What's In The Bag 2026 | DORMIED`;
-  const metaDesc        = `${esc(name)} WITB 2026: Callaway Elyte driver, Odyssey putter, and a full Callaway bag from driver to ball. Equipment breakdown and gear history across 10 snapshots.`;
-  const canonicalUrl    = `https://dormied.com/witb/players/${slug}/`;
-  const dateModified    = today;
+  // ── SEO ───────────────────────────────────────────────────────────────────
 
-  // ── Current bag table ────────────────────────────────────────────────────────
+  const pageTitle    = `${esc(name)} WITB: What's In The Bag 2026 | DORMIED`;
+  const metaDesc     = `${esc(name)} WITB 2026: Callaway Elyte driver, Odyssey putter, and a full Callaway bag from driver to ball. Equipment breakdown and gear history across 10 snapshots.`;
+  const canonicalUrl = `https://dormied.com/witb/players/${slug}/`;
 
-  // Group iron entries: condense iron rows
+  // ── Current bag table ─────────────────────────────────────────────────────
+
   const tableRows = currentItems.map(item => {
     const dslug = item.witb_brands?.dormied_brand_slug || null;
     const loft  = item.loft_or_number || '';
-    // Shaft display: prefer linked shaft, then raw_shaft, then '-'
-    let shaftDisplay = item.witb_shafts?.model || item.raw_shaft || '-';
-    if (shaftDisplay.length > 40) shaftDisplay = shaftDisplay.slice(0, 40) + '...';
+    const sc    = shaftCell(item); // returns HTML (may contain <a> tags)
 
     return `
     <tr>
-      <td class="witb-player-bag-type">${catIcon(item.club_type)}${esc(clubLabel(item.club_type))}</td>
-      <td class="witb-player-bag-brand">${brandCell(item.witb_brands?.name || item.raw_brand, dslug)}</td>
-      <td class="witb-player-bag-model">${esc(item.raw_model || '')}</td>
-      <td class="witb-player-bag-loft">${esc(loft)}</td>
-      <td class="witb-player-bag-shaft">${esc(shaftDisplay)}</td>
+      <td class="witb-bag-type-cell"><div class="witb-cell-flex">${catIcon(item.club_type)}<span>${esc(clubLabel(item.club_type))}</span></div></td>
+      <td class="witb-bag-brand-cell"><div class="witb-cell-flex">${brandCell(item.witb_brands?.name || item.raw_brand, dslug)}</div></td>
+      <td class="witb-bag-model-cell">${esc(item.raw_model || '')}</td>
+      <td class="witb-bag-loft-cell">${esc(loft)}</td>
+      <td class="witb-bag-shaft-cell">${sc}</td>
     </tr>`;
   }).join('');
 
-  // ── Tour comparison section ───────────────────────────────────────────────────
+  // ── Tour comparison HTML ──────────────────────────────────────────────────
 
   const compHtml = compRows.map(row => {
-    const pct     = row.total > 0 ? Math.round(row.playerCount / TOTAL_TOUR_PLAYERS * 100) : 0;
-    const barPct  = row.rank1Count ? Math.round(row.playerCount / row.rank1Count * 100) : 0;
+    const barPct   = row.rank1Count ? Math.round(row.playerCount / row.rank1Count * 100) : 0;
     const isLeader = row.rank1Name === row.playerBrand;
 
     let ctxNote = '';
@@ -418,8 +480,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
 
     return `
     <div class="witb-comp-row">
-      <div class="witb-comp-cat">${catIcon(row.cat)}${esc(row.label)}</div>
-      <div class="witb-comp-brand">${brandCell(row.playerBrand, row.playerDormiedSlug)}</div>
+      <div class="witb-comp-cat">${catIcon(row.icon)}${esc(row.label)}</div>
+      <div class="witb-comp-brand"><div class="witb-cell-flex">${brandCell(row.playerBrand, row.playerDormiedSlug)}</div></div>
       <div class="witb-comp-stat">
         <span class="witb-comp-count">${row.playerCount} of ${TOTAL_TOUR_PLAYERS}</span>
         <div class="witb-lb-bar-bg" style="margin-top:4px"><div class="witb-lb-bar-fill" style="width:${barPct}%"></div></div>
@@ -428,31 +490,37 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
     </div>`;
   }).join('');
 
-  // ── DI attention angle section ────────────────────────────────────────────────
+  // ── History timeline ──────────────────────────────────────────────────────
 
-  const callawayDi  = diMap.get('callaway');
-  const odysseyDi   = diMap.get('odyssey-golf');
-  let diAngle = '';
-  if (callawayDi && odysseyDi) {
-    diAngle = `Callaway ranks ${ordinal(callawayDi.global_rank)} globally on the DORMIED Index (DI score ${callawayDi.di_score}/100) -- significant amateur awareness for a brand that also commands top-3 tour driver usage. Odyssey, the tour's most-used putter brand by a wide margin, sits at DI rank ${ordinal(odysseyDi.global_rank)} (score ${odysseyDi.di_score}/100). Tour ubiquity and consumer attention are not the same thing; Odyssey's putting dominance has almost no echo in public search behavior, which is the exact gap the DORMIED Index was built to surface.`;
-  } else if (callawayDi) {
-    diAngle = `Callaway ranks ${ordinal(callawayDi.global_rank)} globally on the DORMIED Index (DI score ${callawayDi.di_score}/100), with genuine consumer awareness to match its tour presence.`;
-  }
+  // Club types that get shaft+loft detail in history
+  const DETAIL_TYPES = new Set(['driver', '3-wood', '4-wood', '5-wood', '7-wood', 'mini-driver', 'iron', 'wedge']);
 
-  function ordinal(n) {
-    if (!n) return '?th';
-    const s = ['th','st','nd','rd'];
-    const v = n % 100;
-    return n + (s[(v-20)%10] || s[v] || s[0]);
-  }
+  const histBags = [...bags].sort((a, b) => b.bag_date.localeCompare(a.bag_date));
 
-  // Word count for robots decision (computed after diAngle is available)
+  const timelineRows = histBags.map(bag => {
+    const label   = fmtDate(bag.bag_date) + (bag.is_current ? ' (current)' : '');
+    const driver  = bag._items.find(i => i.club_type === 'driver');
+    const iron    = bag._items.find(i => i.club_type === 'iron');
+    const putter  = bag._items.find(i => i.club_type === 'putter');
+    const ball    = bag._items.find(i => i.club_type === 'ball');
+
+    return `
+    <tr${bag.is_current ? ' class="witb-hist-current"' : ''}>
+      <td class="witb-hist-date">${esc(label)}</td>
+      <td>${fmtHistItem(driver, true)}</td>
+      <td>${fmtHistItem(iron, true)}</td>
+      <td>${fmtHistItem(putter, false)}</td>
+      <td>${fmtHistItem(ball, false)}</td>
+    </tr>`;
+  }).join('');
+
+  // ── Word count for robots decision ────────────────────────────────────────
+
   const bagItemWords  = currentItems.reduce((s, i) => s + wordCount(`${i.raw_brand} ${i.raw_model} ${i.raw_shaft || ''} ${i.loft_or_number || ''}`), 0);
   const histItemWords = bags.reduce((s, b) => s + b._items.reduce((s2, i) => s2 + wordCount(`${i.raw_brand} ${i.raw_model}`), 0), 0);
   const compWords     = compRows.reduce((s, r) => s + wordCount(`${r.label} ${r.playerBrand} ${r.playerCount} of ${TOTAL_TOUR_PLAYERS} ${r.rank1Name || ''}`), 0);
   const proseWords    = wordCount(ledes.lede)
                       + wordCount(ledes.history_narrative)
-                      + wordCount(diAngle)
                       + compWords
                       + bagItemWords
                       + histItemWords;
@@ -460,32 +528,9 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
                   currentItems.some(i => i.club_type === 'putter');
   const noindex = proseWords < 500 || !hasCore;
   if (noindex) warn(`Page for ${slug} will be noindex (words=${proseWords}, hasCore=${hasCore})`);
+  else         log(`Word count: ~${proseWords} (threshold 500, hasCore=${hasCore})`);
 
-  // ── History timeline ─────────────────────────────────────────────────────────
-
-  const histBags = [...bags].sort((a, b) => b.bag_date.localeCompare(a.bag_date));
-  const timelineRows = histBags.map(bag => {
-    const label  = fmtDate(bag.bag_date) + (bag.is_current ? ' (current)' : '');
-    const driver = bag._items.find(i => i.club_type === 'driver');
-    const iron   = bag._items.find(i => i.club_type === 'iron');
-    const putter = bag._items.find(i => i.club_type === 'putter');
-    const ball   = bag._items.find(i => i.club_type === 'ball');
-
-    const fmt = (item) => item
-      ? `<strong>${esc(item.raw_brand)}</strong> ${esc((item.raw_model || '').split(' ').slice(0, 4).join(' '))}`
-      : '<span style="color:var(--text-muted)">-</span>';
-
-    return `
-    <tr${bag.is_current ? ' class="witb-hist-current"' : ''}>
-      <td class="witb-hist-date">${esc(label)}</td>
-      <td>${fmt(driver)}</td>
-      <td>${fmt(iron)}</td>
-      <td>${fmt(putter)}</td>
-      <td>${fmt(ball)}</td>
-    </tr>`;
-  }).join('');
-
-  // ── JSON-LD ───────────────────────────────────────────────────────────────────
+  // ── JSON-LD ───────────────────────────────────────────────────────────────
 
   const bagItemsLd = currentItems.map((item, i) => ({
     '@type':    'ListItem',
@@ -498,23 +543,32 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
     '@context': 'https://schema.org',
     '@graph': [
       {
+        '@type':       'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home',    item: 'https://dormied.com/' },
+          { '@type': 'ListItem', position: 2, name: 'WITB',    item: 'https://dormied.com/witb/' },
+          { '@type': 'ListItem', position: 3, name: 'Players', item: 'https://dormied.com/witb/' },
+          { '@type': 'ListItem', position: 4, name: name,      item: canonicalUrl },
+        ],
+      },
+      {
         '@type':      'Person',
         name:         name,
         description:  `${name} tour equipment bag, tracked across ${bags.length} snapshots by DORMIED.`,
         url:          canonicalUrl,
       },
       {
-        '@type':       'ItemList',
-        name:          `${name} What's In The Bag - Current Equipment`,
-        description:   `${name} current bag as of ${currentDate}`,
-        url:           canonicalUrl,
-        numberOfItems: currentItems.length,
+        '@type':         'ItemList',
+        name:            `${name} What's In The Bag - Current Equipment`,
+        description:     `${name} current bag as of ${currentDate}`,
+        url:             canonicalUrl,
+        numberOfItems:   currentItems.length,
         itemListElement: bagItemsLd,
       },
     ],
   }, null, 2);
 
-  // ── Full HTML ─────────────────────────────────────────────────────────────────
+  // ── Full HTML ─────────────────────────────────────────────────────────────
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -591,14 +645,15 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
     @media(min-width:600px){.site-search-trigger-label{display:inline}}
     /* Player page specific */
     .witb-player-eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:6px}
-    .witb-player-breadcrumb{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-bottom:16px}
-    .witb-player-breadcrumb a{color:var(--text-muted)}
-    .witb-player-breadcrumb a:hover{color:var(--green)}
     .witb-player-title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;font-style:italic;color:var(--text);text-transform:uppercase;letter-spacing:.02em;line-height:1.05;margin-bottom:4px}
-    .witb-player-rank{font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);margin-bottom:6px}
-    .witb-player-rank span{color:var(--green)}
-    .witb-player-underline{width:56px;height:3px;background:var(--green);margin:12px 0 20px}
-    .witb-player-lede{font-size:1rem;line-height:1.65;color:var(--text-dim);margin-bottom:0;max-width:68ch}
+    .witb-player-rank{font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .witb-player-rank .witb-rank-num{color:var(--green);font-weight:700}
+    .witb-player-rank .witb-rank-updated{color:var(--text-muted)}
+    .witb-player-underline{width:56px;height:3px;background:var(--green);margin:12px 0 0}
+    .witb-player-lede{font-size:1rem;line-height:1.7;color:var(--text-dim);max-width:72ch}
+    .owgr-logo-link{display:inline-flex;align-items:center;opacity:.85}
+    .owgr-logo-link:hover{opacity:1}
+    .owgr-logo{display:inline;vertical-align:middle}
   </style>
 
   <link rel="preload" href="/css/styles.min.css?v=20260523" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -613,7 +668,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
   <!-- GTM noscript -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N4Q8J6L3" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-  <!-- HEADER -->
+  <!-- SITE HEADER -->
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="site-logo" aria-label="DORMIED home">
@@ -662,45 +717,61 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
   </header>
 
   <!-- MAIN -->
-  <main>
-    <div class="witb-layout">
+  <main id="main-content">
 
-      <!-- MAIN COLUMN -->
-      <div class="witb-main">
+    <!-- BREADCRUMB -- above the header band, full width -->
+    <nav class="breadcrumb container" aria-label="Breadcrumb">
+      <a href="/" class="breadcrumb-link">Home</a>
+      <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+      <a href="/witb/" class="breadcrumb-link">WITB</a>
+      <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+      <a href="/witb/" class="breadcrumb-link">Players</a>
+      <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
+      <span class="breadcrumb-item--current" aria-current="page">${esc(name)}</span>
+    </nav>
 
-        <!-- 1. PLAYER HEADER -->
-        <section class="hero-section" aria-labelledby="player-title">
-          <div class="container" style="padding-top:24px;padding-bottom:0">
-            <nav class="witb-player-breadcrumb" aria-label="Breadcrumb">
-              <a href="/">Home</a> &rsaquo; <a href="/witb/">WITB</a> &rsaquo; Players &rsaquo; ${esc(name)}
-            </nav>
-            <p class="witb-player-eyebrow">Tour Equipment</p>
-            <h1 class="witb-player-title" id="player-title">${esc(name)}</h1>
-            <p class="witb-player-rank">${owgrLine}</p>
-            <div class="witb-player-underline" aria-hidden="true"></div>
-          </div>
-        </section>
+    <!-- FULL-WIDTH HEADER BAND -->
+    <section class="bp-header-section" aria-labelledby="player-title">
+      <div class="container">
+        <p class="witb-player-eyebrow">Tour Equipment</p>
+        <h1 class="witb-player-title" id="player-title">${esc(name)}</h1>
+        <p class="witb-player-rank">${owgrLine}</p>
+        <div class="witb-player-underline" aria-hidden="true"></div>
+      </div>
+    </section>
 
-        <div class="container">
+    <!-- TWO-COLUMN CONTENT: main sections + sidebar -->
+    <div class="container">
+      <div class="table-layout">
 
-          <!-- 2. LEDE -->
-          <section class="witb-section" style="padding-top:0" aria-label="Equipment overview">
+        <!-- MAIN CONTENT COLUMN -->
+        <div class="bp-sections-col">
+
+          <!-- 1. LEDE -->
+          <section class="witb-section" style="padding-top:24px;border-bottom:none" aria-label="Equipment overview">
             <p class="witb-player-lede">${esc(ledes.lede)}</p>
           </section>
 
-          <!-- 3. CURRENT BAG -->
+          <!-- 2. CURRENT BAG -->
           <section class="witb-section" aria-labelledby="current-bag-heading">
             <h2 class="witb-section-title" id="current-bag-heading">Current Bag</h2>
-            <p class="witb-section-sub">Snapshot: ${esc(currentDate)} &middot; Source: <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a></p>
+            <p class="witb-section-sub">Snapshot: ${esc(currentDate)}</p>
             <div style="overflow-x:auto">
-              <table class="witb-player-bag-table" style="width:100%;border-collapse:collapse">
+              <table class="witb-player-bag-table" style="width:100%;border-collapse:collapse;table-layout:fixed">
+                <colgroup>
+                  <col style="width:110px">
+                  <col style="width:160px">
+                  <col>
+                  <col style="width:80px">
+                  <col style="width:210px">
+                </colgroup>
                 <thead>
-                  <tr style="border-bottom:1px solid var(--border)">
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px">Club</th>
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px">Brand</th>
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px">Model</th>
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px">Loft / No.</th>
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px">Shaft</th>
+                  <tr class="witb-bag-thead-row">
+                    <th class="witb-bag-th">Club</th>
+                    <th class="witb-bag-th">Brand</th>
+                    <th class="witb-bag-th">Model</th>
+                    <th class="witb-bag-th">Loft / No.</th>
+                    <th class="witb-bag-th">Shaft</th>
                   </tr>
                 </thead>
                 <tbody>${tableRows}
@@ -709,27 +780,17 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
             </div>
           </section>
 
-          <!-- 4. HOW THIS BAG COMPARES -->
+          <!-- 3. HOW THIS BAG COMPARES -->
           <section class="witb-section" aria-labelledby="compare-heading">
             <h2 class="witb-section-title" id="compare-heading">How This Bag Compares to the Tour</h2>
             <p class="witb-section-sub">Brand usage across ${TOTAL_TOUR_PLAYERS} current bags</p>
-            <div class="witb-comp-grid" style="display:grid;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:8px">
               ${compHtml}
             </div>
-            <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:12px;text-transform:uppercase;letter-spacing:.05em">Player counts reflect unique players carrying at least one item from that brand in the relevant category. Computed from current bags.</p>
+            <p class="witb-footnote">Player counts reflect unique players carrying at least one item from that brand in the relevant category. Computed from current bags.</p>
           </section>
 
-          <!-- 5. DORMIED INDEX ANGLE -->
-          ${diAngle ? `<section class="witb-section" aria-labelledby="di-heading">
-            <h2 class="witb-section-title" id="di-heading">The Attention Angle</h2>
-            <p class="witb-section-sub">Rahm's brands on the DORMIED Index</p>
-            <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px">
-              <p style="font-size:.9375rem;line-height:1.65;color:var(--text-dim)">${esc(diAngle)}</p>
-              <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:10px;text-transform:uppercase;letter-spacing:.05em">DI scores: <a href="/rankings/">DORMIED Index</a>, April 2026 snapshot.</p>
-            </div>
-          </section>` : ''}
-
-          <!-- 6. BAG HISTORY -->
+          <!-- 4. BAG HISTORY -->
           <section class="witb-section" aria-labelledby="history-heading">
             <h2 class="witb-section-title" id="history-heading">Bag History</h2>
             <p class="witb-section-sub">${bags.length} snapshots tracked, 2019-2025</p>
@@ -741,12 +802,12 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
             <div style="overflow-x:auto">
               <table style="width:100%;border-collapse:collapse;font-size:.875rem">
                 <thead>
-                  <tr style="border-bottom:1px solid var(--border)">
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px;white-space:nowrap">Snapshot</th>
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px">Driver</th>
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px">Irons</th>
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px">Putter</th>
-                    <th style="text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px">Ball</th>
+                  <tr class="witb-bag-thead-row">
+                    <th class="witb-bag-th" style="white-space:nowrap;width:110px">Snapshot</th>
+                    <th class="witb-bag-th">Driver</th>
+                    <th class="witb-bag-th">Irons</th>
+                    <th class="witb-bag-th">Putter</th>
+                    <th class="witb-bag-th">Ball</th>
                   </tr>
                 </thead>
                 <tbody>${timelineRows}
@@ -754,29 +815,24 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
               </table>
             </div>
 
-            <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:10px;text-transform:uppercase;letter-spacing:.05em">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
+            <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
           </section>
 
-        </div><!-- /container -->
-      </div><!-- /witb-main -->
+        </div><!-- /bp-sections-col -->
 
-      <!-- RIGHT SIDEBAR -->
-      <aside class="witb-sidebar sidebar-ad-col">
-        <section class="home-stories-section latest-feed-section" aria-labelledby="player-stories-heading">
-          <h2 class="latest-feed-heading" id="player-stories-heading">Top Stories</h2>
-          <div id="home-stories-list" class="latest-feed-list">
-            <p class="latest-feed-loading">Loading&hellip;</p>
-          </div>
-        </section>
-        <section class="home-stories-section latest-feed-section" aria-labelledby="player-latest-heading">
-          <h2 class="latest-feed-heading" id="player-latest-heading">Latest</h2>
-          <div id="dormied-latest-list" class="latest-feed-list">
-            <p class="latest-feed-loading">Loading&hellip;</p>
-          </div>
-        </section>
-      </aside>
+        <!-- SIDEBAR: Latest only -->
+        <aside class="sidebar-ad-col">
+          <section class="home-stories-section latest-feed-section" aria-labelledby="player-latest-heading">
+            <h2 class="latest-feed-heading" id="player-latest-heading">Latest</h2>
+            <div id="dormied-latest-list" class="latest-feed-list">
+              <p class="latest-feed-loading">Loading&hellip;</p>
+            </div>
+          </section>
+        </aside>
 
-    </div><!-- /witb-layout -->
+      </div><!-- /table-layout -->
+    </div><!-- /container -->
+
   </main>
 
   <!-- FOOTER -->
@@ -842,23 +898,44 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
   })();
   </script>
 
-  <!-- Bag table row highlight on hover -->
+  <!-- Page-specific styles -->
   <style>
-    .witb-player-bag-table tr:hover td { background: var(--bg-hover); }
-    .witb-player-bag-table td { padding: 8px 8px; border-bottom: 1px solid var(--border-lite); vertical-align: middle; font-size: .875rem; }
-    .witb-player-bag-type { white-space: nowrap; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
-    .witb-player-bag-brand { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-    .witb-player-bag-loft, .witb-player-bag-shaft { color: var(--text-muted); font-size: .8125rem; }
-    .witb-hist-current td { background: var(--bg-surface); }
-    .witb-hist-date { white-space: nowrap; color: var(--text-dim); font-family: var(--font-mono); font-size: .72rem; padding-right: 12px; }
-    tbody tr td { padding: 7px 8px; border-bottom: 1px solid var(--border-lite); vertical-align: top; }
-    .witb-comp-row { display: grid; grid-template-columns: 100px 1fr 120px auto; gap: 8px; align-items: center; padding: 10px 12px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); }
-    .witb-comp-cat { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
-    .witb-comp-brand { display: flex; align-items: center; gap: 6px; font-size: .875rem; }
-    .witb-comp-count { font-family: var(--font-mono); font-size: .78rem; color: var(--text-dim); }
-    .witb-comp-leader { font-family: var(--font-mono); font-size: .65rem; color: var(--green); text-transform: uppercase; letter-spacing: .06em; }
-    .witb-comp-note { font-family: var(--font-mono); font-size: .65rem; color: var(--text-muted); }
-    @media(max-width:600px){ .witb-comp-row { grid-template-columns: 1fr 1fr; } .witb-comp-stat, .witb-comp-context { display: none; } }
+    /* Bag table */
+    .witb-bag-th{text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px 8px;white-space:nowrap}
+    .witb-bag-thead-row{border-bottom:1px solid var(--border)}
+    .witb-player-bag-table td{padding:8px;border-bottom:1px solid var(--border-lite);vertical-align:middle;font-size:.875rem}
+    .witb-player-bag-table tr:hover td{background:var(--bg-hover)}
+    .witb-bag-type-cell{color:var(--text-dim);white-space:nowrap}
+    .witb-bag-brand-cell{white-space:nowrap}
+    .witb-bag-loft-cell{color:var(--text-muted);font-size:.8125rem;white-space:nowrap}
+    .witb-bag-shaft-cell{color:var(--text-muted);font-size:.8125rem;overflow:hidden;text-overflow:ellipsis}
+    .witb-bag-shaft-cell a{color:var(--text-muted)}
+    .witb-bag-shaft-cell a:hover{color:var(--green)}
+    .witb-bag-model-cell{font-size:.875rem;overflow:hidden;text-overflow:ellipsis}
+    .witb-cell-flex{display:flex;align-items:center;gap:6px}
+    /* Comparison grid -- fixed columns so all rows align */
+    .witb-comp-row{display:grid;grid-template-columns:90px 170px 150px 1fr;gap:8px;align-items:center;padding:10px 12px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius)}
+    .witb-comp-cat{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+    .witb-comp-brand{min-width:0;overflow:hidden}
+    .witb-comp-stat{min-width:0}
+    .witb-comp-count{font-family:var(--font-mono);font-size:.78rem;color:var(--text-dim);display:block}
+    .witb-comp-leader{font-family:var(--font-mono);font-size:.65rem;color:var(--green);text-transform:uppercase;letter-spacing:.06em}
+    .witb-comp-note{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted)}
+    @media(max-width:640px){.witb-comp-row{grid-template-columns:80px 1fr}.witb-comp-stat,.witb-comp-context{display:none}}
+    /* History table */
+    .witb-hist-current td{background:var(--bg-surface)}
+    .witb-hist-date{white-space:nowrap;color:var(--text-dim);font-family:var(--font-mono);font-size:.72rem;padding-right:12px;vertical-align:top}
+    .witb-hist-detail{font-size:.72rem;color:var(--text-muted);font-weight:400}
+    .witb-hist-detail a{color:var(--text-muted)}
+    .witb-hist-detail a:hover{color:var(--green)}
+    tbody tr td{padding:7px 8px;border-bottom:1px solid var(--border-lite);vertical-align:top}
+    /* Brand cells */
+    .witb-brand-logo{width:20px;height:20px;object-fit:contain;border-radius:3px;display:inline;vertical-align:middle}
+    .witb-brand-monogram{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--bg-raised);border:1px solid var(--border);border-radius:3px;font-family:var(--font-mono);font-size:.6rem;font-weight:700;color:var(--text-muted);vertical-align:middle;flex-shrink:0}
+    /* Misc */
+    .witb-footnote{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:12px;text-transform:uppercase;letter-spacing:.05em}
+    .witb-footnote a{color:var(--text-muted)}
+    .witb-footnote a:hover{color:var(--green)}
   </style>
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
@@ -870,21 +947,19 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, le
 // ── Sitemap update ────────────────────────────────────────────────────────────
 
 function updateSitemap(slug, today, noindex) {
-  if (noindex) return; // Don't add noindex pages to sitemap
+  if (noindex) return;
 
   const sitemapPath = path.join(ROOT, 'sitemap.xml');
   let sitemap = fs.readFileSync(sitemapPath, 'utf8');
   const url   = `https://dormied.com/witb/players/${slug}/`;
 
   if (sitemap.includes(url)) {
-    // Update lastmod
     sitemap = sitemap.replace(
       new RegExp(`(<loc>${url.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}</loc>\\s*<lastmod>)[^<]+(</lastmod>)`),
       `$1${today}$2`
     );
     log('Sitemap: updated lastmod for existing entry');
   } else {
-    // Insert before </urlset>
     const entry = `
   <url>
     <loc>${url}</loc>
@@ -902,14 +977,12 @@ function updateSitemap(slug, today, noindex) {
 // ── Search index update ───────────────────────────────────────────────────────
 
 function updateSearchIndex(player, currentItems, noindex) {
-  if (noindex) return; // Don't add noindex pages to search index
+  if (noindex) return;
 
   const siPath = path.join(ROOT, 'search-index.json');
   const si     = JSON.parse(fs.readFileSync(siPath, 'utf8'));
 
   const url = `/witb/players/${player.slug}/`;
-
-  // Remove any existing entry for this player
   si.entries = si.entries.filter(e => !(e.type === 'witb-player' && e.url === url));
 
   const brands = [...new Set(currentItems.map(i => i.witb_brands?.name || i.raw_brand).filter(Boolean))];
@@ -943,8 +1016,7 @@ async function main() {
 
   log(`Building player page for: ${PLAYER_SLUG}`);
 
-  // ── 1. Fetch all data ───────────────────────────────────────────────────────
-
+  // 1. Fetch all data
   const player = await fetchPlayerData(sb, PLAYER_SLUG);
   log(`Player: ${player.name}, OWGR #${player.owgr_rank}`);
 
@@ -956,19 +1028,11 @@ async function main() {
   const currentItems = currentBag._items;
   log(`Current bag items: ${currentItems.length}`);
 
-  // ── 2. Tour comparison ──────────────────────────────────────────────────────
-
+  // 2. Tour comparison
   log('Fetching tour comparison data...');
-  const tourComp = await fetchTourComparison(sb, []);
+  const tourComp = await fetchTourComparison(sb);
 
-  // ── 3. DI data ──────────────────────────────────────────────────────────────
-
-  const dormiedSlugs = [...new Set(currentItems.map(i => i.witb_brands?.dormied_brand_slug).filter(Boolean))];
-  const diMap = await fetchDiData(sb, dormiedSlugs);
-  log(`DI data fetched for ${diMap.size} brands`);
-
-  // ── 4. Lede generation (cached) ─────────────────────────────────────────────
-
+  // 3. Lede generation (cached by slug:bag_date)
   const cacheKey = `${PLAYER_SLUG}:${currentBag.bag_date}`;
   const cache    = loadLedeCache();
   let ledes      = cache[cacheKey];
@@ -983,32 +1047,27 @@ async function main() {
     log('Lede generated and cached');
   }
 
-  log(`Lede (${wordCount(ledes.lede)} words): ${ledes.lede?.slice(0, 80)}...`);
+  log(`Lede (${wordCount(ledes.lede)} words): ${ledes.lede?.slice(0, 100)}...`);
 
-  // ── 5. Build HTML ───────────────────────────────────────────────────────────
+  // 4. Build HTML
+  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, today });
 
-  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, diMap, ledes, today });
-
-  // Determine noindex status (buildPage handles the detailed calculation)
-  const hasCore = currentItems.some(i => i.club_type === 'driver') && currentItems.some(i => i.club_type === 'putter');
   const noindex = html.includes('noindex');
 
-  // ── 6. Write output ─────────────────────────────────────────────────────────
-
+  // 5. Write output
   const outDir = path.join(ROOT, 'witb', 'players', PLAYER_SLUG);
   fs.mkdirSync(outDir, { recursive: true });
   const outPath = path.join(outDir, 'index.html');
   fs.writeFileSync(outPath, html, 'utf8');
   log(`Wrote: ${outPath} (${(html.length / 1024).toFixed(1)} KB)`);
 
-  // ── 7. Update sitemap + search index ────────────────────────────────────────
-
+  // 6. Update sitemap + search index
   updateSitemap(PLAYER_SLUG, today, noindex);
   updateSearchIndex(player, currentItems, noindex);
 
   log(`Done. Page: /witb/players/${PLAYER_SLUG}/`);
   if (!noindex) log('Page is indexable.');
-  else          log('Page has noindex (prose word count or missing core clubs).');
+  else          warn('Page has noindex (prose word count or missing core clubs).');
 }
 
 main().catch(err => {
