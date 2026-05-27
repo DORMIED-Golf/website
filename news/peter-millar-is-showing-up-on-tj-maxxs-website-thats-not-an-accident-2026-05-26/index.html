@@ -25,7 +25,7 @@
   <meta property="og:url" content="https://dormied.com/news/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26/">
   <meta property="og:title" content="Peter Millar Is Showing Up on TJ Maxx's Website. That's Not an Accident.">
   <meta property="og:description" content="Peter Millar, G/FORE, and Greyson are quietly showing up on TJ Maxx's website under a &quot;Reveal Designer&quot; button. It's a channel strategy, not a failure.">
-  <meta property="og:image" content="https://dormied.com/images/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.jpg">
+  <meta property="og:image" content="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="DORMIED">
@@ -38,7 +38,7 @@
   <meta name="twitter:site" content="@DORMIED_GOLF">
   <meta name="twitter:title" content="Peter Millar Is Showing Up on TJ Maxx's Website. That's Not an Accident.">
   <meta name="twitter:description" content="Peter Millar, G/FORE, and Greyson are quietly showing up on TJ Maxx's website under a &quot;Reveal Designer&quot; button. It's a channel strategy, not a failure.">
-  <meta name="twitter:image" content="https://dormied.com/images/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.jpg">
+  <meta name="twitter:image" content="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.jpg">
 
   <!-- ── Sitemap ── -->
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -59,7 +59,7 @@
     "@type": "Article",
     "headline": "Peter Millar Is Showing Up on TJ Maxx's Website. That's Not an Accident.",
     "description": "Peter Millar, G/FORE, and Greyson are quietly showing up on TJ Maxx's website under a &quot;Reveal Designer&quot; button. It's a channel strategy, not a failure.",
-    "image": "https://dormied.com/images/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.jpg",
+    "image": "https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.jpg",
     "datePublished": "2026-05-26T11:01:00.000Z",
     "author": { "@type": "Person", "name": "Adam", "url": "https://dormied.com/about/" },
     "publisher": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com" },
@@ -104,10 +104,18 @@
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
+        <a href="/witb/"      class="site-nav-link">WITB</a>
         <a href="/scorecard/" class="site-nav-link">Scorecard</a>
         <a href="/news/"      class="site-nav-link site-nav-link--active">News</a>
         <a href="/brands/"    class="site-nav-link">Brands</a>
       </nav>
+      <!-- Hamburger (mobile only) -->
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
+        aria-expanded="false" aria-controls="mobile-nav-panel">
+        <span class="bars" aria-hidden="true">
+          <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </span>
+      </button>
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -126,6 +134,14 @@
         </div>
       </div>
     </div>
+    <!-- Mobile nav panel -->
+    <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
+      <a href="/rankings/"  class="mobile-nav-link">Index</a>
+      <a href="/witb/"      class="mobile-nav-link">WITB</a>
+      <a href="/scorecard/" class="mobile-nav-link">Scorecard</a>
+      <a href="/news/"      class="mobile-nav-link active">News</a>
+      <a href="/brands/"    class="mobile-nav-link">Brands</a>
+    </nav>
   </header>
 
   <!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
@@ -158,7 +174,7 @@
 
             <div class="sc-article-image">
         <picture>
-          <source srcset="/images/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.webp" type="image/webp">
+          
           <img class="sc-article-hero-img" src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.jpg" alt="Peter Millar — Luxury/High-End" width="1200" height="630" loading="eager">
         </picture>
         <span class="da-image-credit">Image: <a href="https://mygolfspy.com/news-opinion/the-golf-clothing-shopping-hack-i-almost-didnt-want-to-share/" target="_blank" rel="noopener noreferrer">MyGolfSpy</a></span>
@@ -279,6 +295,18 @@
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <!-- Brand slug vars in their own block — isolated so any future error above cannot block them -->
   <script>window.__DA_BRAND_SLUG__='peter-millar';window.__DA_ARTICLE_SLUG__='peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26';</script>
+  <script>
+  (function(){
+    var btn=document.getElementById('nav-hamburger'),panel=document.getElementById('mobile-nav-panel');
+    if(!btn||!panel)return;
+    function openNav(){btn.setAttribute('aria-expanded','true');panel.classList.add('open');panel.removeAttribute('hidden')}
+    function closeNav(){btn.setAttribute('aria-expanded','false');panel.classList.remove('open');panel.setAttribute('hidden','')}
+    btn.addEventListener('click',function(){btn.getAttribute('aria-expanded')==='true'?closeNav():openNav()});
+    panel.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeNav)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav()});
+    document.addEventListener('click',function(e){if(!btn.contains(e.target)&&!panel.contains(e.target))closeNav()});
+  })();
+  </script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script src="/js/analytics.min.js?v=20260320a"></script>
   <script src="/js/signup.min.js?v=20260324d"></script>

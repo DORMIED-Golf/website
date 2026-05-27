@@ -970,11 +970,11 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
     /* table-layout:fixed + overflow:hidden on every td is what keeps columns
        from bleeding into each other. Long shaft strings wrap within the cell. */
     .witb-bag-table-wrap{overflow-x:auto}
-    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:960px}
+    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:960px;max-width:1120px}
     .witb-col-club {width:110px}
     .witb-col-brand{width:145px}
     .witb-col-model{width:auto}
-    .witb-col-loft {width:120px}
+    .witb-col-loft {width:175px}
     .witb-col-shaft{width:240px}
     .witb-bag-th{text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 12px 8px;white-space:nowrap}
     .witb-bag-thead-row{border-bottom:1px solid var(--border)}

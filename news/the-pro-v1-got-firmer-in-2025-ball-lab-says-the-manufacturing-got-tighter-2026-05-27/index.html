@@ -25,7 +25,7 @@
   <meta property="og:url" content="https://dormied.com/news/the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27/">
   <meta property="og:title" content="The Pro V1 Got Firmer in 2025. Ball Lab Says the Manufacturing Got Tighter Too.">
   <meta property="og:description" content="MyGolfSpy's Ball Lab returns with a 93.0 score for the 2025 Titleist Pro V1, but the firmer 92.5 compression reading is the real story.">
-  <meta property="og:image" content="https://dormied.com/images/articles/the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27-hero.png">
+  <meta property="og:image" content="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27-hero.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="DORMIED">
@@ -38,7 +38,7 @@
   <meta name="twitter:site" content="@DORMIED_GOLF">
   <meta name="twitter:title" content="The Pro V1 Got Firmer in 2025. Ball Lab Says the Manufacturing Got Tighter Too.">
   <meta name="twitter:description" content="MyGolfSpy's Ball Lab returns with a 93.0 score for the 2025 Titleist Pro V1, but the firmer 92.5 compression reading is the real story.">
-  <meta name="twitter:image" content="https://dormied.com/images/articles/the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27-hero.png">
+  <meta name="twitter:image" content="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27-hero.png">
 
   <!-- ── Sitemap ── -->
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -59,7 +59,7 @@
     "@type": "Article",
     "headline": "The Pro V1 Got Firmer in 2025. Ball Lab Says the Manufacturing Got Tighter Too.",
     "description": "MyGolfSpy's Ball Lab returns with a 93.0 score for the 2025 Titleist Pro V1, but the firmer 92.5 compression reading is the real story.",
-    "image": "https://dormied.com/images/articles/the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27-hero.png",
+    "image": "https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27-hero.png",
     "datePublished": "2026-05-27T13:01:11.000Z",
     "author": { "@type": "Person", "name": "Travis", "url": "https://dormied.com/about/" },
     "publisher": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com" },
@@ -104,10 +104,18 @@
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
+        <a href="/witb/"      class="site-nav-link">WITB</a>
         <a href="/scorecard/" class="site-nav-link">Scorecard</a>
         <a href="/news/"      class="site-nav-link site-nav-link--active">News</a>
         <a href="/brands/"    class="site-nav-link">Brands</a>
       </nav>
+      <!-- Hamburger (mobile only) -->
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
+        aria-expanded="false" aria-controls="mobile-nav-panel">
+        <span class="bars" aria-hidden="true">
+          <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </span>
+      </button>
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -126,6 +134,14 @@
         </div>
       </div>
     </div>
+    <!-- Mobile nav panel -->
+    <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
+      <a href="/rankings/"  class="mobile-nav-link">Index</a>
+      <a href="/witb/"      class="mobile-nav-link">WITB</a>
+      <a href="/scorecard/" class="mobile-nav-link">Scorecard</a>
+      <a href="/news/"      class="mobile-nav-link active">News</a>
+      <a href="/brands/"    class="mobile-nav-link">Brands</a>
+    </nav>
   </header>
 
   <!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
@@ -158,7 +174,7 @@
 
             <div class="sc-article-image">
         <picture>
-          <source srcset="/images/articles/the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27-hero.webp" type="image/webp">
+          
           <img class="sc-article-hero-img" src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27-hero.png" alt="Titleist — Balls" width="1200" height="630" loading="eager">
         </picture>
         <span class="da-image-credit">Image: <a href="https://mygolfspy.com/labs/titleist-pro-v1-ball-lab/" target="_blank" rel="noopener noreferrer">MyGolfSpy</a></span>
@@ -278,6 +294,18 @@
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <!-- Brand slug vars in their own block — isolated so any future error above cannot block them -->
   <script>window.__DA_BRAND_SLUG__='titleist';window.__DA_ARTICLE_SLUG__='the-pro-v1-got-firmer-in-2025-ball-lab-says-the-manufacturing-got-tighter-2026-05-27';</script>
+  <script>
+  (function(){
+    var btn=document.getElementById('nav-hamburger'),panel=document.getElementById('mobile-nav-panel');
+    if(!btn||!panel)return;
+    function openNav(){btn.setAttribute('aria-expanded','true');panel.classList.add('open');panel.removeAttribute('hidden')}
+    function closeNav(){btn.setAttribute('aria-expanded','false');panel.classList.remove('open');panel.setAttribute('hidden','')}
+    btn.addEventListener('click',function(){btn.getAttribute('aria-expanded')==='true'?closeNav():openNav()});
+    panel.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeNav)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav()});
+    document.addEventListener('click',function(e){if(!btn.contains(e.target)&&!panel.contains(e.target))closeNav()});
+  })();
+  </script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script src="/js/analytics.min.js?v=20260320a"></script>
   <script src="/js/signup.min.js?v=20260324d"></script>
