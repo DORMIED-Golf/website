@@ -441,8 +441,7 @@ function buildScatterSVG(scatterData) {
     dots += `<circle class="witb-scatter-dot" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}"
       data-slug="${esc(d.slug)}" data-name="${esc(d.name)}"
       data-tour="${d.tourPct.toFixed(1)}" data-di="${d.diScore.toFixed(1)}"
-      data-rank="${d.diRank}" data-players="${d.playerCount}"
-      onclick="window.location='/brands/${esc(d.slug)}/'">
+      data-rank="${d.diRank}" data-players="${d.playerCount}">
       <title>${esc(d.name)}: ${d.tourPct.toFixed(1)}% tour, DI ${d.diScore.toFixed(1)}</title>
     </circle>`;
     // Label all dots — data-slug binds each label to its dot for reliable show/hide
@@ -1178,35 +1177,93 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
     tooltip.className = 'witb-scatter-tooltip';
     document.body.appendChild(tooltip);
 
-    document.querySelectorAll('.witb-scatter-dot').forEach(function(dot) {
-      dot.addEventListener('mouseenter', function(e) {
-        var name     = dot.dataset.name;
-        var tour     = dot.dataset.tour;
-        var di       = dot.dataset.di;
-        var rank     = dot.dataset.rank;
-        var players  = dot.dataset.players;
-        var gap      = (parseFloat(di) - parseFloat(tour)).toFixed(1);
-        var gapLabel = gap > 0 ? 'Underrated by amateurs (+' + gap + ')' : gap < 0 ? 'Over-indexed (' + gap + ')' : 'Balanced';
-        tooltip.innerHTML =
-          '<strong>' + name + '</strong><br>' +
-          'Tour: ' + tour + '% (' + players + ' players)<br>' +
-          'DI score: ' + di + ' (#' + rank + ')<br>' +
-          '<span style="color:var(--text-muted)">' + gapLabel + '</span>';
-        tooltip.classList.add('visible');
-        posTooltip(e);
-      });
-      dot.addEventListener('mousemove', posTooltip);
-      dot.addEventListener('mouseleave', function() {
-        tooltip.classList.remove('visible');
-      });
-    });
+    var activeDot = null;
 
-    function posTooltip(e) {
-      var x = e.clientX + 14, y = e.clientY - 10;
-      if (x + 230 > window.innerWidth) x = e.clientX - 230;
+    function buildTooltipHTML(dot, withLink) {
+      var name     = dot.dataset.name;
+      var slug     = dot.dataset.slug;
+      var tour     = dot.dataset.tour;
+      var di       = dot.dataset.di;
+      var rank     = dot.dataset.rank;
+      var players  = dot.dataset.players;
+      var gap      = (parseFloat(di) - parseFloat(tour)).toFixed(1);
+      var gapLabel = gap > 0 ? 'Underrated by amateurs (+' + gap + ')' : gap < 0 ? 'Over-indexed (' + gap + ')' : 'Balanced';
+      var html =
+        '<strong>' + name + '</strong><br>' +
+        'Tour: ' + tour + '% (' + players + ' players)<br>' +
+        'DI score: ' + di + ' (#' + rank + ')<br>' +
+        '<span style="color:var(--text-muted)">' + gapLabel + '</span>';
+      if (withLink) {
+        html += '<a href="/brands/' + slug + '/" class="witb-tt-link">View brand page →</a>';
+      }
+      return html;
+    }
+
+    function posTooltipXY(x, y) {
+      if (x + 240 > window.innerWidth) x = x - 240;
+      if (x < 8) x = 8;
       tooltip.style.left = x + 'px';
       tooltip.style.top  = y + 'px';
     }
+
+    function posTooltip(e) {
+      posTooltipXY(e.clientX + 14, e.clientY - 10);
+    }
+
+    function dismissTooltip() {
+      tooltip.classList.remove('visible', 'interactive');
+      activeDot = null;
+    }
+
+    var isTouch = false;
+
+    document.querySelectorAll('.witb-scatter-dot').forEach(function(dot) {
+      // Desktop: hover
+      dot.addEventListener('mouseenter', function(e) {
+        if (isTouch) return;
+        tooltip.innerHTML = buildTooltipHTML(dot, false);
+        tooltip.classList.add('visible');
+        tooltip.classList.remove('interactive');
+        posTooltip(e);
+      });
+      dot.addEventListener('mousemove', function(e) {
+        if (isTouch) return;
+        posTooltip(e);
+      });
+      dot.addEventListener('mouseleave', function() {
+        if (isTouch) return;
+        tooltip.classList.remove('visible', 'interactive');
+      });
+
+      // Touch: first tap = show tooltip; second tap on same dot = navigate
+      dot.addEventListener('touchstart', function(e) {
+        isTouch = true;
+        if (activeDot === dot) {
+          // second tap - navigate
+          window.location = '/brands/' + dot.dataset.slug + '/';
+          return;
+        }
+        e.preventDefault();
+        activeDot = dot;
+        var rect = dot.getBoundingClientRect();
+        tooltip.innerHTML = buildTooltipHTML(dot, true);
+        tooltip.classList.add('visible', 'interactive');
+        posTooltipXY(rect.left + rect.width / 2 + 14, rect.top - 10);
+      }, { passive: false });
+
+      // Desktop click (no touch): navigate
+      dot.addEventListener('click', function(e) {
+        if (isTouch) return;
+        window.location = '/brands/' + dot.dataset.slug + '/';
+      });
+    });
+
+    // Tap outside dots dismisses tooltip on touch
+    document.addEventListener('touchstart', function(e) {
+      if (activeDot && !e.target.closest('.witb-scatter-dot') && !e.target.closest('.witb-scatter-tooltip')) {
+        dismissTooltip();
+      }
+    }, { passive: true });
   })();
   </script>
 

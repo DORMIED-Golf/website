@@ -361,11 +361,25 @@ Return valid JSON only:
 async function fetchPlayerData(sb, slug) {
   const { data: player, error } = await sb
     .from('witb_players')
-    .select('id, name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank')
+    .select('id, name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code')
     .eq('slug', slug)
     .single();
   if (error) throw new Error(`Player not found (slug="${slug}"): ${error.message}`);
   return player;
+}
+
+/**
+ * Convert ISO 3166-1 alpha-2 country code to flag emoji via regional-indicator offset.
+ * Returns empty string if code is null/undefined/invalid.
+ * 'ES' -> 🇪🇸, 'US' -> 🇺🇸, etc.
+ */
+function countryFlag(code) {
+  if (!code || code.length !== 2) return '';
+  const base = 0x1F1E6;
+  const c1 = code.charCodeAt(0) - 65;
+  const c2 = code.charCodeAt(1) - 65;
+  if (c1 < 0 || c1 > 25 || c2 < 0 || c2 > 25) return '';
+  return String.fromCodePoint(base + c1) + String.fromCodePoint(base + c2);
 }
 
 async function fetchBagsWithItems(sb, playerId) {
@@ -466,9 +480,13 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
 function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, today }) {
-  const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank } = player;
+  const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
+
+  // ── Nationality flag ───────────────────────────────────────────────────────
+  const flag    = countryFlag(country_code);
+  const flagHtml = flag ? `<span class="witb-player-flag" aria-label="${country_code} flag">${flag}</span>` : '';
 
   // ── OWGR rank line with official logo ─────────────────────────────────────
   // Logo is the official OWGR "WGR / Official World Golf Ranking" mark (PNG).
@@ -476,8 +494,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
   const owgrLogoHtml = `<a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank" class="owgr-logo-link" aria-label="Official World Golf Ranking"><img src="/images/owgr-logo.png" alt="Official World Golf Ranking" class="owgr-logo" height="22"></a>`;
 
   const owgrLine = owgr_rank
-    ? `${owgrLogoHtml}<span class="witb-rank-num">#${owgr_rank}</span>${owgrDate ? `<span class="witb-rank-sep">&middot;</span><span class="witb-rank-updated">UPDATED ${owgrDate}</span>` : ''}${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`
-    : `${owgrLogoHtml}<span class="witb-rank-num">Unranked</span>${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`;
+    ? `${flagHtml}${owgrLogoHtml}<span class="witb-rank-num">#${owgr_rank}</span>${owgrDate ? `<span class="witb-rank-sep">&middot;</span><span class="witb-rank-updated">UPDATED ${owgrDate}</span>` : ''}${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`
+    : `${flagHtml}${owgrLogoHtml}<span class="witb-rank-num">Unranked</span>${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`;
 
   // ── Player brands per category (for comparison) ───────────────────────────
   const playerBrandsByCategory = {};
@@ -697,6 +715,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
     .witb-player-eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:6px}
     .witb-player-title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;font-style:italic;color:var(--text);text-transform:uppercase;letter-spacing:.02em;line-height:1.05;margin-bottom:8px}
     .witb-player-rank{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);margin-bottom:6px}
+    .witb-player-flag{font-size:1.2em;line-height:1;flex-shrink:0}
     .witb-rank-num{color:var(--green);font-weight:700;font-size:.9rem}
     .witb-rank-sep{color:var(--border-lite)}
     .witb-rank-updated{color:var(--text-muted)}
@@ -951,7 +970,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
     /* table-layout:fixed + overflow:hidden on every td is what keeps columns
        from bleeding into each other. Long shaft strings wrap within the cell. */
     .witb-bag-table-wrap{overflow-x:auto}
-    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:640px}
+    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:960px}
     .witb-col-club {width:110px}
     .witb-col-brand{width:145px}
     .witb-col-model{width:auto}
@@ -971,7 +990,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
 
     /* ── BAG MOBILE CARDS ── */
     .witb-bag-mobile-cards{display:none}
-    @media(max-width:640px){
+    @media(max-width:960px){
       .witb-bag-table-wrap{display:none}
       .witb-bag-mobile-cards{display:flex;flex-direction:column;gap:8px}
     }

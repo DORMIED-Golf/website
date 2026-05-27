@@ -203,6 +203,7 @@ button, select, input {
 .header-inner {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
   height: 56px;
 }
@@ -6104,7 +6105,7 @@ details[open] .faq-question::after { content: '−'; }
   flex-shrink: 0;
   user-select: none;
 }
-.witb-scatter-inner { flex: 1; min-width: 0; max-height: 340px; overflow: hidden; }
+.witb-scatter-inner { flex: 1; min-width: 0; overflow: hidden; }
 .witb-scatter-xtitle {
   font-family: var(--font-mono);
   font-size: .58rem;
@@ -6118,7 +6119,6 @@ details[open] .faq-question::after { content: '−'; }
 .witb-scatter-svg {
   width: 100%;
   height: auto;
-  max-height: 340px;
   display: block;
 }
 /* Tooltip: matches brand-page chart.js tooltip exactly */
@@ -6135,11 +6135,14 @@ details[open] .faq-question::after { content: '−'; }
   z-index: 200;
   display: none;
   white-space: nowrap;
-  max-width: 240px;
+  max-width: 260px;
   box-shadow: 0 4px 16px rgba(0,0,0,.6);
   line-height: 1.65;
 }
 .witb-scatter-tooltip.visible { display: block; }
+/* Touch mode: make tooltip interactive so the brand link is tappable */
+.witb-scatter-tooltip.interactive { pointer-events: auto; white-space: normal; }
+.witb-tt-link { display: block; margin-top: 7px; color: #22c55e; text-decoration: none; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
 .witb-tt-title { color: #22c55e; font-weight: 700; margin-bottom: 3px; }
 .witb-tt-gap   { color: #4d6b4d; margin-top: 3px; }
 .witb-scatter-axis-label {

@@ -846,10 +846,18 @@ function generateArticleHtml(opts) {
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
+        <a href="/witb/"      class="site-nav-link">WITB</a>
         <a href="/scorecard/" class="site-nav-link">Scorecard</a>
         <a href="/news/"      class="site-nav-link site-nav-link--active">News</a>
         <a href="/brands/"    class="site-nav-link">Brands</a>
       </nav>
+      <!-- Hamburger (mobile only) -->
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
+        aria-expanded="false" aria-controls="mobile-nav-panel">
+        <span class="bars" aria-hidden="true">
+          <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </span>
+      </button>
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -868,6 +876,14 @@ function generateArticleHtml(opts) {
         </div>
       </div>
     </div>
+    <!-- Mobile nav panel -->
+    <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
+      <a href="/rankings/"  class="mobile-nav-link">Index</a>
+      <a href="/witb/"      class="mobile-nav-link">WITB</a>
+      <a href="/scorecard/" class="mobile-nav-link">Scorecard</a>
+      <a href="/news/"      class="mobile-nav-link active">News</a>
+      <a href="/brands/"    class="mobile-nav-link">Brands</a>
+    </nav>
   </header>
 
   <!-- ══ MAIN ══════════════════════════════════════════════════════════════ -->
@@ -1009,6 +1025,18 @@ function generateArticleHtml(opts) {
   <!-- ══ SCRIPTS ════════════════════════════════════════════════════════════ -->
   <!-- Brand slug vars in their own block — isolated so any future error above cannot block them -->
   <script>window.__DA_BRAND_SLUG__='${escHtml(brandSlug)}';window.__DA_ARTICLE_SLUG__='${escHtml(slug)}';</script>
+  <script>
+  (function(){
+    var btn=document.getElementById('nav-hamburger'),panel=document.getElementById('mobile-nav-panel');
+    if(!btn||!panel)return;
+    function openNav(){btn.setAttribute('aria-expanded','true');panel.classList.add('open');panel.removeAttribute('hidden')}
+    function closeNav(){btn.setAttribute('aria-expanded','false');panel.classList.remove('open');panel.setAttribute('hidden','')}
+    btn.addEventListener('click',function(){btn.getAttribute('aria-expanded')==='true'?closeNav():openNav()});
+    panel.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeNav)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav()});
+    document.addEventListener('click',function(e){if(!btn.contains(e.target)&&!panel.contains(e.target))closeNav()});
+  })();
+  </script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script src="/js/analytics.min.js?v=20260320a"></script>
   <script src="/js/signup.min.js?v=20260324d"></script>
