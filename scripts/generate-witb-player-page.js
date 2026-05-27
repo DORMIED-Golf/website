@@ -213,7 +213,11 @@ function buildBagCards(items) {
  * the mobile/desktop split (rows work at any width).
  */
 function buildHistorySnapshots(bags) {
-  const sorted = [...bags].sort((a, b) => b.bag_date.localeCompare(a.bag_date));
+  // Exclude the current bag -- it is already shown in full in the Current Bag
+  // section above. History shows only the non-current historical snapshots.
+  const sorted = [...bags]
+    .filter(b => !b.is_current)
+    .sort((a, b) => b.bag_date.localeCompare(a.bag_date));
 
   return sorted.map((bag, idx) => {
     const isOpen  = idx === 0;
@@ -302,9 +306,7 @@ DORMIED voice rules (non-negotiable):
 - Do not assert precise switch dates the data does not support.
 - Do not use hedging phrases like "it seems" or "appears to".
 - No hyphens used as em dashes (do not write " - " as a pause; use commas or period breaks).
-
-Player: Jon Rahm
-OWGR rank: #${player.owgr_rank}
+- Do NOT include the player's current OWGR rank number in the lede. The rank appears in the live page header and changes weekly -- naming it in the lede text will go stale. The bio should establish the player's career without citing a live ranking.
 
 CURRENT BAG (${currentBag.bag_date}):
 ${keyItems}
@@ -441,8 +443,10 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
     const playerBrand = playerBrandsByCategory[cat];
     if (!playerBrand) continue;
 
-    const playerEntry = all.find(b => b.name === playerBrand.name);
+    const playerIdx   = all.findIndex(b => b.name === playerBrand.name);
+    const playerEntry = playerIdx >= 0 ? all[playerIdx] : null;
     const playerCount = playerEntry?.count || 0;
+    const playerRank  = playerIdx >= 0 ? playerIdx + 1 : null;
     const rank1 = all[0];
 
     rows.push({
@@ -450,6 +454,7 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
       playerBrand:       playerBrand.name,
       playerDormiedSlug: playerBrand.dormied_slug,
       playerCount,
+      playerRank,
       rank1Name:         rank1?.name,
       rank1Count:        rank1?.count,
     });
@@ -471,7 +476,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
   const owgrLogoHtml = `<a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank" class="owgr-logo-link" aria-label="Official World Golf Ranking"><img src="/images/owgr-logo.png" alt="Official World Golf Ranking" class="owgr-logo" height="22"></a>`;
 
   const owgrLine = owgr_rank
-    ? `${owgrLogoHtml}<span class="witb-rank-num">#${owgr_rank}</span>${owgrDate ? `<span class="witb-rank-sep">&middot;</span><span class="witb-rank-updated">updated ${owgrDate}</span>` : ''}${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`
+    ? `${owgrLogoHtml}<span class="witb-rank-num">#${owgr_rank}</span>${owgrDate ? `<span class="witb-rank-sep">&middot;</span><span class="witb-rank-updated">UPDATED ${owgrDate}</span>` : ''}${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`
     : `${owgrLogoHtml}<span class="witb-rank-num">Unranked</span>${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`;
 
   // ── Player brands per category (for comparison) ───────────────────────────
@@ -489,8 +494,26 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
   const compRows = buildComparisonRows(tourComp, playerBrandsByCategory);
 
   // ── SEO ───────────────────────────────────────────────────────────────────
-  const pageTitle    = `${esc(name)} WITB: What's In The Bag 2026 | DORMIED`;
-  const metaDesc     = `${esc(name)} WITB 2026: Callaway Elyte driver, Odyssey putter, and a full Callaway bag from driver to ball. Equipment breakdown and gear history across 10 snapshots.`;
+  // Title and description are PER-PLAYER: composed from real bag data so no
+  // two player pages share the same meta text. This is the uniqueness gate
+  // that must hold before scaling to 160 players.
+  const currentYear = new Date().getFullYear();
+  const pageTitle   = `${esc(name)} WITB: What's In The Bag ${currentYear} | DORMIED`;
+
+  // Build description from this player's actual bag items (unique per player)
+  const _descDriver = currentItems.find(i => i.club_type === 'driver');
+  const _descIrons  = currentItems.find(i => i.club_type === 'iron');
+  const _descPutter = currentItems.find(i => i.club_type === 'putter');
+  const _descBall   = currentItems.find(i => i.club_type === 'ball');
+  const _descParts  = [
+    _descDriver ? `${_descDriver.raw_brand} ${_descDriver.raw_model} driver` : null,
+    _descIrons  ? `${_descIrons.raw_brand} ${_descIrons.raw_model} irons`   : null,
+    _descPutter ? `${_descPutter.witb_brands?.name || _descPutter.raw_brand} putter` : null,
+    _descBall   ? `${_descBall.raw_brand} ball`                              : null,
+  ].filter(Boolean);
+  const _descGear   = _descParts.length ? _descParts.join(', ') : 'full bag';
+  const metaDesc    = `${name} WITB ${currentYear}: ${_descGear}. Full equipment breakdown and bag history across ${bags.length} snapshots.`;
+
   const canonicalUrl = `https://dormied.com/witb/players/${slug}/`;
 
   // ── Current bag: desktop table rows ──────────────────────────────────────
@@ -514,14 +537,19 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
   // ── Tour comparison HTML ──────────────────────────────────────────────────
   const compHtml = compRows.map(row => {
     const barPct   = row.rank1Count ? Math.round(row.playerCount / row.rank1Count * 100) : 0;
-    const isLeader = row.rank1Name === row.playerBrand;
+    const isLeader = row.playerRank === 1;
 
-    let ctxNote = '';
-    if (isLeader) {
-      ctxNote = `<span class="witb-comp-leader">Tour leader</span>`;
-    } else if (row.rank1Name) {
-      ctxNote = `<span class="witb-comp-note">${esc(row.rank1Name)} leads (${row.rank1Count})</span>`;
-    }
+    // Rank badge: TOUR LEADER for #1, Ranked #N for others
+    const rankBadge = isLeader
+      ? `<span class="witb-comp-leader">TOUR LEADER</span>`
+      : row.playerRank
+        ? `<span class="witb-comp-rank">Ranked #${row.playerRank}</span>`
+        : '';
+
+    // Context note: who leads (when player is not #1)
+    const ctxNote = !isLeader && row.rank1Name
+      ? `<span class="witb-comp-note">${esc(row.rank1Name)} leads (${row.rank1Count})</span>`
+      : '';
 
     return `<div class="witb-comp-row">
   <div class="witb-comp-cat">${catIcon(row.cat)}<span>${esc(row.label)}</span></div>
@@ -530,7 +558,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
     <span class="witb-comp-count">${row.playerCount} of ${TOTAL_TOUR_PLAYERS}</span>
     <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:${barPct}%"></div></div>
   </div>
-  <div class="witb-comp-context">${ctxNote}</div>
+  <div class="witb-comp-context">${rankBadge}${ctxNote ? `<span class="witb-comp-context-sep"></span>${ctxNote}` : ''}</div>
 </div>`;
   }).join('\n');
 
@@ -920,22 +948,24 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
     .witb-brand-monogram{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--bg-raised);border:1px solid var(--border);border-radius:3px;font-family:var(--font-mono);font-size:.6rem;font-weight:700;color:var(--text-muted);flex-shrink:0}
 
     /* ── BAG TABLE (desktop) ── */
+    /* table-layout:fixed + overflow:hidden on every td is what keeps columns
+       from bleeding into each other. Long shaft strings wrap within the cell. */
     .witb-bag-table-wrap{overflow-x:auto}
-    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed}
+    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:640px}
     .witb-col-club {width:110px}
-    .witb-col-brand{width:150px}
+    .witb-col-brand{width:145px}
     .witb-col-model{width:auto}
-    .witb-col-loft {width:90px}
-    .witb-col-shaft{width:220px}
+    .witb-col-loft {width:120px}
+    .witb-col-shaft{width:240px}
     .witb-bag-th{text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 12px 8px;white-space:nowrap}
     .witb-bag-thead-row{border-bottom:1px solid var(--border)}
-    .witb-player-bag-table td{padding:8px 12px;border-bottom:1px solid var(--border-lite);vertical-align:middle;font-size:.875rem;line-height:1.4}
+    .witb-player-bag-table td{padding:8px 12px;border-bottom:1px solid var(--border-lite);vertical-align:top;font-size:.875rem;line-height:1.5;overflow:hidden}
     .witb-player-bag-table tr:hover td{background:var(--bg-hover)}
-    .witb-bag-type-cell{color:var(--text-dim);white-space:nowrap}
-    .witb-bag-brand-cell{white-space:nowrap;overflow:hidden}
-    .witb-bag-model-cell{overflow:hidden;text-overflow:ellipsis}
-    .witb-bag-loft-cell{color:var(--text-muted);font-size:.8125rem;white-space:nowrap;font-family:var(--font-mono)}
-    .witb-bag-shaft-cell{color:var(--text-muted);font-size:.8125rem;overflow:hidden;text-overflow:ellipsis}
+    .witb-bag-type-cell{color:var(--text-dim);white-space:nowrap;vertical-align:middle}
+    .witb-bag-brand-cell{white-space:nowrap;overflow:hidden;vertical-align:middle}
+    .witb-bag-model-cell{overflow:hidden;word-break:break-word;vertical-align:middle}
+    .witb-bag-loft-cell{color:var(--text-muted);font-size:.8125rem;word-break:break-word;font-family:var(--font-mono);padding-right:14px}
+    .witb-bag-shaft-cell{color:var(--text-muted);font-size:.8125rem;overflow:hidden;word-break:break-word}
     .witb-bag-shaft-cell a{color:var(--text-muted)}
     .witb-bag-shaft-cell a:hover{color:var(--green)}
 
@@ -965,6 +995,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
     .witb-lb-bar-bg{background:var(--bg-raised);border-radius:2px;height:4px;overflow:hidden}
     .witb-lb-bar-fill{background:var(--green);height:100%;border-radius:2px}
     .witb-comp-leader{font-family:var(--font-mono);font-size:.65rem;color:var(--green);text-transform:uppercase;letter-spacing:.06em}
+    .witb-comp-rank{font-family:var(--font-mono);font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em}
+    .witb-comp-context-sep{display:block;height:3px}
     .witb-comp-note{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted)}
     @media(max-width:640px){
       .witb-comp-row{display:block;padding:12px 14px}
