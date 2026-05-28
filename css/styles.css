@@ -4671,6 +4671,14 @@ details[open] .faq-question::after { content: '−'; }
   letter-spacing: 0.05em;
 }
 
+.sc-article-updated {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
 /* Main article column (left side of two-col grid) */
 .sc-article-main {
   min-width: 0;
