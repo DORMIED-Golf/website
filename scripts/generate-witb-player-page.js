@@ -298,7 +298,22 @@ async function generateLede(anthropic, player, bags, currentBag, currentItems) {
     return `${b.bag_date}: ${headlines.join(', ')}`;
   }).join('\n');
 
-  const prompt = `You are Travis, DORMIED's equipment desk. Generate two pieces of copy for the Jon Rahm WITB player page.
+  // Derive a data-driven brand arc summary for the DATA CONSTRAINT hint
+  const allBrands = new Set();
+  const allBagsSorted = [...bags].sort((a, b) => a.bag_date.localeCompare(b.bag_date));
+  allBagsSorted.forEach(b => {
+    (b._items || []).filter(i => i.club_type === 'driver').forEach(i => {
+      if (i.raw_brand) allBrands.add(i.raw_brand);
+    });
+  });
+  const brandArc = allBrands.size > 0
+    ? `Driver brands observed across snapshots (oldest to newest): ${[...allBrands].join(', ')}.`
+    : 'No multi-brand driver arc in data.';
+
+  const histCount = histBags.length;
+  const hasHistory = histCount > 0;
+
+  const prompt = `You are Travis, DORMIED's equipment desk. Generate two pieces of copy for the ${player.name} WITB player page.
 
 DORMIED voice rules (non-negotiable):
 - Dry, direct, insider. No em dashes anywhere. No exclamation points. No marketing language.
@@ -308,26 +323,31 @@ DORMIED voice rules (non-negotiable):
 - No hyphens used as em dashes (do not write " - " as a pause; use commas or period breaks).
 - Do NOT include the player's current OWGR rank number in the lede. The rank appears in the live page header and changes weekly -- naming it in the lede text will go stale. The bio should establish the player's career without citing a live ranking.
 
+PLAYER: ${player.name}
+
 CURRENT BAG (${currentBag.bag_date}):
 ${keyItems}
 
-HISTORICAL BAGS (newest first, data-verified):
-${histSummary}
+HISTORICAL BAGS (newest first, data-verified, ${histCount} snapshot${histCount !== 1 ? 's' : ''}):
+${hasHistory ? histSummary : '(No historical snapshots -- only current bag is on record)'}
 
-DATA CONSTRAINT: The snapshot record goes from June 2020 (TaylorMade) directly to March 2021 (Callaway). Do not claim a specific switch date -- say only what the data shows (e.g. "by early 2021 his bag was full Callaway").
+BRAND ARC NOTE (from data only): ${brandArc}
 
 TASK 1 -- LEDE (130-180 words total):
 
 Write one cohesive opening paragraph. It has two parts that should flow naturally together:
 
-Part A -- Bio context (2-3 sentences): Establish who Rahm is for readers who need grounding. Accurate facts only: Spanish professional golfer, former world number one, two-time major champion (2021 U.S. Open at Torrey Pines, 2023 Masters Tournament). Moved to LIV Golf in December 2023. State these facts plainly without editorializing.
+Part A -- Bio context (2-3 sentences): Establish who ${player.name} is for readers who need grounding. Use only accurate, verifiable facts about this specific player's career (majors won, notable achievements, tour affiliation). Do not invent or guess facts. State plainly without editorializing.
 
-Part B -- Equipment narrative (continues from Part A): Narrate from the real data. Observe what is notable about the current Callaway bag. What has been stable? What changed? Start Part B by pivoting directly to equipment -- a specific detail, not a transition phrase.
+Part B -- Equipment narrative (continues from Part A): Narrate from the real snapshot data above. Observe what is notable about the current bag. What has been stable across snapshots? What changed? If there is a clear brand arc in the historical data, name it specifically. If the player has used one brand throughout, note that consistency. Start Part B by pivoting directly to equipment -- a specific detail, not a generic transition phrase.
 
 TASK 2 -- HISTORY NARRATIVE (2-4 sentences):
-A concise prose summary of the equipment arc across the 10 bag snapshots. Capture the TaylorMade era (2019-2020), the Callaway transition, and the current state. Accuracy to snapshots only.
+${hasHistory
+  ? `A concise prose summary of the equipment arc across the ${histCount + 1} bag snapshots (including current). Describe the brand changes and consistency patterns visible in the data. Accuracy to snapshots only -- no speculation beyond what the data shows.`
+  : `A 1-2 sentence note that the current bag represents the only recorded snapshot in the database, and briefly describe what is notable about it.`
+}
 
-Return valid JSON only:
+Return valid JSON only, no markdown fences:
 {
   "lede": "...",
   "history_narrative": "..."
@@ -335,7 +355,7 @@ Return valid JSON only:
 
   const res = await anthropic.messages.create({
     model:      'claude-opus-4-7',
-    max_tokens: 1200,
+    max_tokens: 3000,
     thinking:   { type: 'adaptive' },
     messages:   [{ role: 'user', content: prompt }],
   });
