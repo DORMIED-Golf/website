@@ -1,7 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12">
-  <!-- Northern Ireland: St Patrick's Cross (red saltire on white) -->
-  <rect width="20" height="12" fill="#fff"/>
-  <!-- Diagonal arms (stroke-based, centred) -->
-  <line x1="0" y1="0" x2="20" y2="12" stroke="#cf142b" stroke-width="3.5" stroke-linecap="square"/>
-  <line x1="20" y1="0" x2="0" y2="12" stroke="#cf142b" stroke-width="3.5" stroke-linecap="square"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 36">
+  <!-- Ulster Banner (simplified): white background, red cross, gold Star of David, red hand -->
+  <rect width="60" height="36" fill="#fff"/>
+  <!-- Red St George's Cross -->
+  <rect y="12" width="60" height="12" fill="#cf142b"/>
+  <rect x="24" y="0" width="12" height="36" fill="#cf142b"/>
+  <!-- Six-pointed star (gold) in upper-left canton: two overlapping triangles -->
+  <!-- Up triangle -->
+  <polygon points="12,1.5 16,8 8,8" fill="#f5c518"/>
+  <!-- Down triangle -->
+  <polygon points="12,10.5 16,4 8,4" fill="#f5c518"/>
+  <!-- Red Hand (simplified ellipse below star, above cross bar) -->
+  <ellipse cx="12" cy="9.5" rx="1.6" ry="2" fill="#cf142b"/>
 </svg>

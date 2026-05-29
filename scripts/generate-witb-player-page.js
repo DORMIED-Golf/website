@@ -50,6 +50,10 @@ const SHAFT_BRAND_LINKS = {
   'PING':           'ping',
   'Accra':          'accra',
   'LA Golf':        'la-golf',
+  'Aerotech':       'aerotech',
+  'TPT Golf':       'tpt-golf',
+  'Odyssey':        'odyssey-golf',
+  'Aretera':        'aretera',
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -695,7 +699,9 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
 
   // ── Tour comparison HTML ──────────────────────────────────────────────────
   const compHtml = compRows.map(row => {
-    const barPct   = row.rank1Count ? Math.round(row.playerCount / row.rank1Count * 100) : 0;
+    // Bar fill is proportional to total bag count (playerCount / 160), not relative to leader.
+    // A tour leader at 59/160 fills ~37%, not 100%. This gives honest visual weight.
+    const barPct   = Math.round(row.playerCount / TOTAL_TOUR_PLAYERS * 100);
     const isLeader = row.playerRank === 1;
 
     // Rank badge: TOUR LEADER for #1, Ranked #N for others

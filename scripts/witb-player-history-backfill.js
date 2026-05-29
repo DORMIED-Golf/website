@@ -139,16 +139,16 @@ function parseBagTable($) {
     const brandLink    = brandCell.find('a').first();
     const brandHref    = brandLink.attr('href') || '';
     const brandSlug    = brandHref.replace('/brands/', '').replace(/-tour-players.*$/, '').trim() || null;
-    const rawBrand     = brandCell.text().trim();
+    const rawBrand     = normalizeEquipmentString(brandCell.text().trim());
 
     const modelLink    = modelCell.find('a').first();
     const modelHref    = modelLink.attr('href') || '';
     const clubheadSlug = modelHref.startsWith('/clubheads/')
       ? modelHref.replace('/clubheads/', '').replace(/\/$/, '')
       : null;
-    const rawModel = modelCell.text().trim();
+    const rawModel = normalizeEquipmentString(modelCell.text().trim());
 
-    const rawShaft  = shaftCell ? shaftCell.text().trim() : '';
+    const rawShaft  = shaftCell ? normalizeEquipmentString(shaftCell.text().trim()) : '';
     const shaftLink = shaftCell ? shaftCell.find('a').first() : null;
     const shaftHref = shaftLink ? (shaftLink.attr('href') || '') : '';
     const shaftSlug = shaftHref.startsWith('/shafts/')
@@ -218,6 +218,22 @@ function parseHistoricalBagLinks($) {
   return links;
 }
 
+// ── String normalization ──────────────────────────────────────────────────────
+
+/**
+ * Normalize a raw equipment string scraped from HTML.
+ * Strips trailing whitespace and dangling unmatched "(" characters that appear
+ * when source HTML is truncated mid-string (e.g. "LA Golf (" -> "LA Golf").
+ * Returns null for empty results so DB columns stay clean.
+ */
+function normalizeEquipmentString(s) {
+  if (!s || typeof s !== 'string') return s;
+  let out = s.trim();
+  // Strip trailing dangling "(" (may recur after trimming)
+  while (out.endsWith('(')) out = out.slice(0, -1).trimEnd();
+  return out || null;
+}
+
 // ── Shaft slug inference ──────────────────────────────────────────────────────
 
 function inferShaftSlug(rawShaft) {
@@ -241,9 +257,10 @@ async function upsertBrand(supabase, { slug, name, source_url }) {
 
 async function upsertClubhead(supabase, { slug, brand_id, model, club_type, source_url }) {
   if (!slug) return null;
+  const cleanModel = normalizeEquipmentString(model) || slug;
   const { data, error } = await supabase
     .from('witb_clubheads')
-    .upsert({ slug, brand_id, model: model || slug, club_type: club_type || 'unknown',
+    .upsert({ slug, brand_id, model: cleanModel, club_type: club_type || 'unknown',
               source_url, last_updated: new Date().toISOString() },
              { onConflict: 'slug', ignoreDuplicates: false })
     .select('id')
@@ -254,10 +271,12 @@ async function upsertClubhead(supabase, { slug, brand_id, model, club_type, sour
 
 async function upsertShaft(supabase, { slug, brand_name, model, source_url }) {
   if (!slug) return null;
-  if (!brand_name && model) brand_name = model.split(' ')[0];
+  // Normalize: strip trailing whitespace and dangling "(" from model strings
+  const cleanModel = normalizeEquipmentString(model) || slug;
+  if (!brand_name && cleanModel) brand_name = cleanModel.split(' ')[0];
   const { data, error } = await supabase
     .from('witb_shafts')
-    .upsert({ slug, brand_name, model: model || slug, source_url,
+    .upsert({ slug, brand_name, model: cleanModel, source_url,
               last_updated: new Date().toISOString() },
              { onConflict: 'slug', ignoreDuplicates: false })
     .select('id')
