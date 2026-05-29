@@ -229,8 +229,8 @@ function buildWitbPlayerEntries() {
     const rankM = html.match(/<span class="witb-rank-num">(#[\d]+|Unranked)<\/span>/i);
     const rank  = rankM ? rankM[1] : '';
 
-    // Skip unranked players (null OWGR shown as "Unranked" and sentinel 4990)
-    if (!rank || rank === 'Unranked' || rank === '#4990') continue;
+    // Skip players with no numeric OWGR rank (shown as "Unranked" in the page HTML)
+    if (!rank || rank === 'Unranked') continue;
 
     // Current bag date from the snapshots sub-heading "N snapshots tracked, YYYY[-YYYY]"
     const subM  = html.match(/class="witb-section-sub">([^<]*snapshots[^<]*)<\/p>/i);

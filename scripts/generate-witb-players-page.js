@@ -112,8 +112,8 @@ function buildLogoStrip(brands) {
 function buildPlayerCard(player, bagDate, filterMap, logoList) {
   const { slug, name, owgr_rank, country_code, nation } = player;
 
-  // 4990 is a sentinel for inactive/unranked — treat the same as null
-  const rankDisplay = (!owgr_rank || owgr_rank === OWGR_SENTINEL) ? 'Unranked' : `#${owgr_rank}`;
+  // Show numeric rank for all players with a rank (including sentinel 4990 — they sort last)
+  const rankDisplay = owgr_rank ? `#${owgr_rank}` : 'Unranked';
   const dateDisplay = fmtBagDate(bagDate);
   const flagHtml    = buildFlagHtml(country_code, nation);
   const logoHtml    = buildLogoStrip(logoList);
@@ -231,8 +231,7 @@ function buildPage(players, brandNames) {
     .player-dir-logo-img{width:20px;height:20px;object-fit:contain;border-radius:2px;display:block}
     .player-dir-logo-mono{width:20px;height:20px;border-radius:2px;background:var(--bg-raised);border:1px solid var(--border-lite);display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.5rem;font-weight:700;color:var(--green)}
     .player-dir-logos-more{font-family:var(--font-mono);font-size:.55rem;color:var(--text-muted);white-space:nowrap}
-    /* Grid: same minmax as brands but narrower cards */
-    .player-dir-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+    /* Grid: reuse brands-grid from styles.min.css (3 cols desktop, 2 cols mobile, 10px gap, 16px top padding) */
   </style>
 </head>
 
@@ -353,7 +352,7 @@ function buildPage(players, brandNames) {
             </div>
 
             <!-- Player grid -->
-            <div id="players-grid" class="player-dir-grid" aria-live="polite">
+            <div id="players-grid" class="brands-grid" aria-live="polite">
 ${gridHtml}
             </div>
           </div><!-- /table-main -->
@@ -459,12 +458,14 @@ async function main() {
     .order('owgr_rank', { ascending: true, nullsFirst: false });
   if (pErr) throw new Error(`Players query failed: ${pErr.message}`);
 
-  // Filter out null OWGR and sentinel 4990 (inactive/unranked such as Tiger Woods, Ian Poulter)
+  // Only exclude players with a null OWGR rank (e.g. Grayson Murray, Scott Stallings).
+  // Players with a numeric rank — including sentinel 4990 (Tiger Woods, Ian Poulter) — stay
+  // and sort last since Supabase orders nulls last and 4990 is a high numeric value.
   const players = allPlayers
-    .filter(p => p.owgr_rank !== null && p.owgr_rank !== OWGR_SENTINEL)
+    .filter(p => p.owgr_rank !== null)
     .sort((a, b) => a.owgr_rank - b.owgr_rank);
 
-  console.log(`[witb-players-page] ${players.length} ranked players (excluded ${allPlayers.length - players.length} unranked).`);
+  console.log(`[witb-players-page] ${players.length} players with numeric OWGR (excluded ${allPlayers.length - players.length} null-rank).`);
 
   // 2. Load current bag dates
   const bagIds = [...new Set(players.map(p => p.current_bag_id).filter(Boolean))];
