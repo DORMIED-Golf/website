@@ -35,6 +35,9 @@ const PLAYER_SLUG = process.argv[2] || 'jon-rahm';
 
 // ── Shaft brand slug map ──────────────────────────────────────────────────────
 
+// Keys are full brand names as they appear in witb_shafts.model strings.
+// Values are DORMIED brand slugs for /brands/{slug}/ links.
+// Used for both brand-name display text and legacy raw_shaft fallback.
 const SHAFT_BRAND_LINKS = {
   'True Temper':    'true-temper',
   'Fujikura':       'fujikura',
@@ -44,6 +47,9 @@ const SHAFT_BRAND_LINKS = {
   'Graphite Design':'graphite-design',
   'UST Mamiya':     'ust-mamiya',
   'KBS':            'kbs-golf',
+  'PING':           'ping',
+  'Accra':          'accra',
+  'LA Golf':        'la-golf',
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -66,11 +72,44 @@ function fmtDate(isoDate) {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', timeZone: 'UTC' });
 }
 
+/** Format date string (YYYY-MM-DD) as "Month D, YYYY" — includes day for disambiguation */
+function fmtDateWithDay(isoDate) {
+  if (!isoDate) return '';
+  const d = new Date(isoDate + 'T00:00:00Z');
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+}
+
 /** Format OWGR updated_at timestamp to "Mon DD, YYYY" */
 function fmtOwgrDate(isoTs) {
   if (!isoTs) return null;
   const d = new Date(isoTs);
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+/**
+ * Count the number of individual irons represented by a loft_or_number string.
+ * "5-PW" = 6 clubs, "3, 4" = 2 clubs, "5" = 1 club.
+ * Used for most-clubs-per-brand iron category logic.
+ */
+function countIronsInSet(loftStr) {
+  if (!loftStr) return 1;
+  const s = loftStr.trim();
+  // Numeric comparables for named clubs
+  const named = {
+    '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+    'PW': 10, 'AW': 10, 'GW': 10, 'UW': 11, 'SW': 12, 'LW': 13,
+  };
+  // Range notation: "5-PW", "4-9", "3-GW"
+  const rangeM = s.match(/^(\d+|[A-Z]{2})-(\d+|[A-Z]{2})$/i);
+  if (rangeM) {
+    const a = named[rangeM[1].toUpperCase()] ?? parseInt(rangeM[1], 10);
+    const b = named[rangeM[2].toUpperCase()] ?? parseInt(rangeM[2], 10);
+    if (!isNaN(a) && !isNaN(b) && b >= a) return b - a + 1;
+  }
+  // List notation: "3, 4" or "3,4" -- count each number
+  const nums = s.match(/\d+/g);
+  if (nums && nums.length > 1) return nums.length;
+  return 1;
 }
 
 /** Count words in a prose string (rough) */
@@ -98,14 +137,41 @@ function dedupeShaft(raw) {
  * Return HTML for shaft display.
  * Prefers witb_shafts.model (already contains brand), falls back to raw_shaft.
  * Deduplicates doubled leading brand token.
- * Links the brand portion to /brands/{slug} for mapped shaft brands.
+ * Links the brand portion using witb_shafts.dormied_brand_slug (DB column, primary)
+ * or SHAFT_BRAND_LINKS (legacy fallback for raw_shaft strings not in DB).
  */
 function shaftCell(item) {
-  let raw = ((item.witb_shafts?.model) || item.raw_shaft || '').trim();
+  const shaft = item.witb_shafts;
+  let raw = (shaft?.model || item.raw_shaft || '').trim();
   if (!raw || raw === '-') return '-';
 
   raw = dedupeShaft(raw);
 
+  // Primary path: DB dormied_brand_slug is available -- use SHAFT_BRAND_LINKS for the
+  // display brand name (full multi-word names like "True Temper", "LA Golf") and the
+  // DB slug for the href. Falls back to brand_name token for brands not in the map.
+  const dslug = shaft?.dormied_brand_slug || null;
+  if (dslug) {
+    for (const [brand] of Object.entries(SHAFT_BRAND_LINKS)) {
+      if (raw === brand) {
+        return `<a href="/brands/${dslug}/">${esc(brand)}</a>`;
+      }
+      if (raw.startsWith(brand + ' ')) {
+        const rest = raw.slice(brand.length + 1);
+        return `<a href="/brands/${dslug}/">${esc(brand)}</a> ${esc(rest)}`;
+      }
+    }
+    // Brand not in SHAFT_BRAND_LINKS -- link the brand_name token (first word)
+    const brandTok = shaft?.brand_name || null;
+    if (brandTok && raw.startsWith(brandTok)) {
+      const rest = raw.slice(brandTok.length).trimStart();
+      return rest
+        ? `<a href="/brands/${dslug}/">${esc(brandTok)}</a> ${esc(rest)}`
+        : `<a href="/brands/${dslug}/">${esc(brandTok)}</a>`;
+    }
+  }
+
+  // Legacy fallback: match full brand name against SHAFT_BRAND_LINKS (for raw_shaft strings)
   for (const [brand, slug] of Object.entries(SHAFT_BRAND_LINKS)) {
     if (raw === brand) {
       return `<a href="/brands/${slug}/">${esc(brand)}</a>`;
@@ -219,9 +285,18 @@ function buildHistorySnapshots(bags) {
     .filter(b => !b.is_current)
     .sort((a, b) => b.bag_date.localeCompare(a.bag_date));
 
+  // Count bags per YYYY-MM across ALL bags (including current) to detect collisions.
+  // When two bags share a calendar month, show the full day to disambiguate.
+  const monthCounts = {};
+  bags.forEach(b => {
+    const m = b.bag_date.slice(0, 7);
+    monthCounts[m] = (monthCounts[m] || 0) + 1;
+  });
+
   return sorted.map((bag, idx) => {
-    const isOpen  = idx === 0;
-    const label   = fmtDate(bag.bag_date);
+    const isOpen       = idx === 0;
+    const hasConflict  = (monthCounts[bag.bag_date.slice(0, 7)] || 0) > 1;
+    const label        = hasConflict ? fmtDateWithDay(bag.bag_date) : fmtDate(bag.bag_date);
     const tagHtml = bag.is_current
       ? ' <span class="witb-snap-tag">current</span>'
       : '';
@@ -381,7 +456,7 @@ Return valid JSON only, no markdown fences:
 async function fetchPlayerData(sb, slug) {
   const { data: player, error } = await sb
     .from('witb_players')
-    .select('id, name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code')
+    .select('id, name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation')
     .eq('slug', slug)
     .single();
   if (error) throw new Error(`Player not found (slug="${slug}"): ${error.message}`);
@@ -389,17 +464,36 @@ async function fetchPlayerData(sb, slug) {
 }
 
 /**
- * Convert ISO 3166-1 alpha-2 country code to flag emoji via regional-indicator offset.
- * Returns empty string if code is null/undefined/invalid.
- * 'ES' -> 🇪🇸, 'US' -> 🇺🇸, etc.
+ * Build the full flag HTML for a player.
+ * GB home nations (ENG, NIR, SCO, WAL) use SVG image assets at /images/flags/{code}.svg
+ * to avoid unreliable subdivision emoji sequences.
+ * All other countries use ISO 3166-1 alpha-2 regional-indicator emoji (🇺🇸, 🇪🇸, etc.).
+ * Returns empty string if no valid code is available.
  */
-function countryFlag(code) {
-  if (!code || code.length !== 2) return '';
-  const base = 0x1F1E6;
-  const c1 = code.charCodeAt(0) - 65;
-  const c2 = code.charCodeAt(1) - 65;
-  if (c1 < 0 || c1 > 25 || c2 < 0 || c2 > 25) return '';
-  return String.fromCodePoint(base + c1) + String.fromCodePoint(base + c2);
+function buildFlagHtml(countryCode, nation) {
+  const HOME_NATIONS = {
+    ENG: { file: 'eng', label: 'England' },
+    NIR: { file: 'nir', label: 'Northern Ireland' },
+    SCO: { file: 'sco', label: 'Scotland' },
+    WAL: { file: 'wal', label: 'Wales' },
+  };
+
+  if (nation && HOME_NATIONS[nation]) {
+    const { file, label } = HOME_NATIONS[nation];
+    return `<span class="witb-player-flag" aria-label="${esc(label)} flag" style="line-height:1;display:inline-flex;align-items:center"><img src="/images/flags/${file}.svg" alt="${esc(label)} flag" width="20" height="12" style="display:inline-block;border-radius:1px;vertical-align:middle"></span>`;
+  }
+
+  if (countryCode && countryCode.length === 2) {
+    const base = 0x1F1E6;
+    const c1 = countryCode.charCodeAt(0) - 65;
+    const c2 = countryCode.charCodeAt(1) - 65;
+    if (c1 >= 0 && c1 <= 25 && c2 >= 0 && c2 <= 25) {
+      const emoji = String.fromCodePoint(base + c1) + String.fromCodePoint(base + c2);
+      return `<span class="witb-player-flag" aria-label="${esc(countryCode)} flag">${emoji}</span>`;
+    }
+  }
+
+  return '';
 }
 
 async function fetchBagsWithItems(sb, playerId) {
@@ -416,7 +510,7 @@ async function fetchBagsWithItems(sb, playerId) {
       .select(`
         club_type, raw_brand, raw_model, raw_shaft, loft_or_number, position,
         witb_brands!brand_id(slug, name, dormied_brand_slug),
-        witb_shafts!shaft_id(slug, brand_name, model)
+        witb_shafts!shaft_id(slug, brand_name, model, dormied_brand_slug)
       `)
       .eq('bag_id', bag.id)
       .order('position');
@@ -500,13 +594,18 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
 function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, today }) {
-  const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code } = player;
+  const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
 
+  // ── Snapshot year range (Fix 1: compute from actual bag dates, not hardcoded) ──
+  const bagYears = bags.map(b => parseInt(b.bag_date.slice(0, 4), 10)).filter(y => !isNaN(y));
+  const minYear  = bagYears.length ? Math.min(...bagYears) : new Date().getFullYear();
+  const maxYear  = bagYears.length ? Math.max(...bagYears) : new Date().getFullYear();
+  const yearRange = minYear === maxYear ? String(minYear) : `${minYear}-${maxYear}`;
+
   // ── Nationality flag ───────────────────────────────────────────────────────
-  const flag    = countryFlag(country_code);
-  const flagHtml = flag ? `<span class="witb-player-flag" aria-label="${country_code} flag">${flag}</span>` : '';
+  const flagHtml = buildFlagHtml(country_code, nation);
 
   // ── OWGR rank line with official logo ─────────────────────────────────────
   // Logo is the official OWGR "WGR / Official World Golf Ranking" mark (PNG).
@@ -518,15 +617,37 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
     : `${flagHtml}${owgrLogoHtml}<span class="witb-rank-num">Unranked</span>${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`;
 
   // ── Player brands per category (for comparison) ───────────────────────────
+  // Driver / putter / ball: first item wins (only one in a bag).
+  // Irons: most physical clubs per brand wins; tiebreak to the set containing PW.
   const playerBrandsByCategory = {};
   for (const item of currentItems) {
     const cat = item.club_type === 'iron' ? 'irons' : item.club_type;
-    if (['driver', 'irons', 'putter', 'ball'].includes(cat) && !playerBrandsByCategory[cat]) {
+    if (['driver', 'putter', 'ball'].includes(cat) && !playerBrandsByCategory[cat]) {
       playerBrandsByCategory[cat] = {
         name:         item.witb_brands?.name || item.raw_brand,
         dormied_slug: item.witb_brands?.dormied_brand_slug || null,
       };
     }
+  }
+
+  // Iron brand: count physical clubs per brand via loft expansion (Fix 2)
+  const ironsByBrand = {};
+  for (const item of currentItems) {
+    if (item.club_type !== 'iron') continue;
+    const brandName = item.witb_brands?.name || item.raw_brand || 'Unknown';
+    const dslug     = item.witb_brands?.dormied_brand_slug || null;
+    const count     = countIronsInSet(item.loft_or_number);
+    const hasPW     = /\bPW\b/i.test(item.loft_or_number || '');
+    if (!ironsByBrand[brandName]) {
+      ironsByBrand[brandName] = { name: brandName, dormied_slug: dslug, count: 0, hasPW: false };
+    }
+    ironsByBrand[brandName].count += count;
+    ironsByBrand[brandName].hasPW  = ironsByBrand[brandName].hasPW || hasPW;
+  }
+  const ironWinner = Object.values(ironsByBrand)
+    .sort((a, b) => b.count !== a.count ? b.count - a.count : (b.hasPW ? 1 : 0) - (a.hasPW ? 1 : 0))[0];
+  if (ironWinner) {
+    playerBrandsByCategory['irons'] = { name: ironWinner.name, dormied_slug: ironWinner.dormied_slug };
   }
 
   const compRows = buildComparisonRows(tourComp, playerBrandsByCategory);
@@ -887,7 +1008,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
           <!-- 4. BAG HISTORY -->
           <section class="witb-section" aria-labelledby="history-heading">
             <h2 class="witb-section-title" id="history-heading">Bag History</h2>
-            <p class="witb-section-sub">${bags.length} snapshots tracked, 2019-2025</p>
+            <p class="witb-section-sub">${bags.length} snapshots tracked, ${yearRange}</p>
 
             ${ledes.history_narrative ? `<div class="witb-hist-narrative">
               <p>${esc(ledes.history_narrative)}</p>
@@ -1079,6 +1200,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/feed.min.js?v=20260522"></script>
+  <script defer src="/js/search.min.js?v=20260508"></script>
 </body>
 </html>`;
 }
@@ -1201,6 +1323,27 @@ async function main() {
   log(`Done. Page: /witb/players/${PLAYER_SLUG}/`);
   if (!noindex) log('Page is indexable.');
   else          warn('Page has noindex (prose word count or missing core clubs).');
+
+  // ── Fix 4: Unlinked brand report ──────────────────────────────────────────
+  // List witb_brands that appear in the current bags of our 10 players but
+  // have dormied_brand_slug=null while a /brands/{slug}/ page exists on site.
+  const { data: allBrands } = await sb
+    .from('witb_brands')
+    .select('slug, name, dormied_brand_slug')
+    .is('dormied_brand_slug', null);
+  if (allBrands && allBrands.length > 0) {
+    const brandsDir = path.join(ROOT, 'brands');
+    const unlinked  = allBrands.filter(b => {
+      try { fs.statSync(path.join(brandsDir, b.slug, 'index.html')); return true; }
+      catch { return false; }
+    });
+    if (unlinked.length > 0) {
+      warn('Brands with DORMIED page but no dormied_brand_slug in DB:');
+      unlinked.forEach(b => warn(`  witb_brands.slug="${b.slug}" name="${b.name}" -- UPDATE witb_brands SET dormied_brand_slug='${b.slug}' WHERE slug='${b.slug}';`));
+    } else {
+      log('Unlinked brand check: all brands with /brands/ pages are wired up.');
+    }
+  }
 }
 
 main().catch(err => {

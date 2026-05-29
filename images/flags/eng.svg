@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12">
+  <!-- England: St George's Cross (red cross on white) -->
+  <rect width="20" height="12" fill="#fff"/>
+  <!-- Horizontal bar -->
+  <rect x="0" y="4" width="20" height="4" fill="#cf142b"/>
+  <!-- Vertical bar -->
+  <rect x="8" y="0" width="4" height="12" fill="#cf142b"/>
+</svg>
