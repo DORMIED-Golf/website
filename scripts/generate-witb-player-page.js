@@ -938,7 +938,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
       <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
       <a href="/witb/" class="breadcrumb-link">WITB</a>
       <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
-      <a href="/witb/" class="breadcrumb-link">Players</a>
+      <a href="/witb/players/" class="breadcrumb-link">Players</a>
       <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
       <span class="breadcrumb-item--current" aria-current="page">${esc(name)}</span>
     </nav>

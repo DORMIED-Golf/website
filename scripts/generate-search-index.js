@@ -193,6 +193,65 @@ function buildScorecardEntries(scorecardData) {
   return entries;
 }
 
+// ── WITB player entries ────────────────────────────────────────────────────────
+
+function buildWitbPlayerEntries() {
+  const playersDir = path.join(SITE_ROOT, 'witb', 'players');
+  const entries    = [];
+
+  let slugs;
+  try {
+    slugs = fs.readdirSync(playersDir).filter(name => {
+      // Skip index.html and non-directories
+      if (name === 'index.html') return false;
+      const full = path.join(playersDir, name);
+      return fs.statSync(full).isDirectory();
+    });
+  } catch (e) {
+    return entries;
+  }
+
+  for (const slug of slugs) {
+    const htmlPath = path.join(playersDir, slug, 'index.html');
+    if (!fs.existsSync(htmlPath)) continue;
+
+    const html = fs.readFileSync(htmlPath, 'utf8');
+
+    // Player name from <h1 class="witb-player-title">
+    const nameM = html.match(/<h1[^>]+witb-player-title[^>]*>([^<]+)<\/h1>/i);
+    if (!nameM) continue;
+    const name = nameM[1].trim();
+
+    // Meta description for search text
+    const metaDesc = extractMeta(html, 'name', 'description') || '';
+
+    // OWGR rank from the rank element
+    const rankM = html.match(/<span class="witb-rank-num">(#[\d]+|Unranked)<\/span>/i);
+    const rank  = rankM ? rankM[1] : '';
+
+    // Current bag date from the snapshots sub-heading "N snapshots tracked, YYYY[-YYYY]"
+    const subM  = html.match(/class="witb-section-sub">([^<]*snapshots[^<]*)<\/p>/i);
+    const subStr = subM ? subM[1].trim() : '';
+
+    // Subtitle: "OWGR #N · bag date" from meta description snippet
+    const subtitle = [rank, subStr].filter(Boolean).join(' · ');
+
+    const searchText = [name, metaDesc].join(' ').toLowerCase();
+
+    entries.push({
+      type:        'witb-player',
+      slug,
+      title:       name,
+      subtitle,
+      url:         `/witb/players/${slug}/`,
+      thumbnail:   null,
+      search_text: searchText,
+    });
+  }
+
+  return entries;
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 function generateSearchIndex() {
@@ -214,10 +273,14 @@ function generateSearchIndex() {
   const scorecardEntries = buildScorecardEntries(scorecardData || { issues: [] });
   console.log(`[search-index]   Scorecard: ${scorecardEntries.length}`);
 
+  // 4. WITB players
+  const witbEntries = buildWitbPlayerEntries();
+  console.log(`[search-index]   WITB players: ${witbEntries.length}`);
+
   const output = {
     generated_at: new Date().toISOString(),
     version:      1,
-    entries:      [...brandEntries, ...newsEntries, ...scorecardEntries],
+    entries:      [...brandEntries, ...witbEntries, ...newsEntries, ...scorecardEntries],
   };
 
   fs.writeFileSync(OUT_PATH, JSON.stringify(output), 'utf8');
