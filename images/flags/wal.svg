@@ -1,8 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12">
-  <!-- Wales: simplified bicolour (white top, green bottom) with red bar suggestion -->
-  <!-- Full dragon would be too complex at 20x12; use bicolour with centre stripe -->
-  <rect width="20" height="6" fill="#fff"/>
-  <rect y="6" width="20" height="6" fill="#00ab39"/>
-  <!-- Thin red centre stripe to differentiate from other bicolours -->
-  <rect y="5.5" width="20" height="1" fill="#cf142b"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 36">
+  <!-- Wales: white top / green bottom bicolour with simplified red dragon -->
+  <rect width="60" height="18" fill="#fff"/>
+  <rect y="18" width="60" height="18" fill="#00ab39"/>
+  <!-- Dragon body -->
+  <path d="M18,10 Q20,8 28,9 Q36,10 40,16 Q44,20 40,26 Q36,30 28,29 Q20,28 16,22 Q12,16 18,10Z" fill="#cf142b"/>
+  <!-- Head and neck -->
+  <path d="M40,16 Q44,13 47,11 Q49,8 46,6 Q43,5 42,8 Q41,12 40,16Z" fill="#cf142b"/>
+  <!-- Wing -->
+  <path d="M22,11 Q16,6 10,9 Q12,13 18,13Z" fill="#cf142b"/>
+  <!-- Tail -->
+  <path d="M16,24 Q10,28 8,34" stroke="#cf142b" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- Legs -->
+  <path d="M30,27 L28,34 M36,26 L35,33" stroke="#cf142b" stroke-width="3" fill="none" stroke-linecap="round"/>
 </svg>

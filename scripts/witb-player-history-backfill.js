@@ -540,9 +540,44 @@ async function main() {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  // Resolve target slugs from CLI args or default list
+  // ── Resolve target slugs ───────────────────────────────────────────────────
+  const flags    = new Set(process.argv.slice(2).filter(a => a.startsWith('--')));
   const cliSlugs = process.argv.slice(2).filter(a => !a.startsWith('--'));
-  const slugs    = cliSlugs.length > 0 ? cliSlugs : TARGET_SLUGS;
+
+  let slugs;
+  if (flags.has('--all') || cliSlugs.length === 0 && flags.size === 0 && TARGET_SLUGS.length === 0) {
+    // Read all players from DB ordered by OWGR rank
+    const { data: allPlayers, error: allErr } = await supabase
+      .from('witb_players')
+      .select('slug')
+      .order('owgr_rank', { ascending: true });
+    if (allErr) throw new Error(`Could not load witb_players: ${allErr.message}`);
+    slugs = allPlayers.map(p => p.slug);
+    log(`--all: targeting ${slugs.length} players from DB`);
+  } else if (cliSlugs.length > 0) {
+    slugs = cliSlugs;
+  } else {
+    slugs = TARGET_SLUGS;
+  }
+
+  // --skip-backfilled: skip players who already have at least one historical bag
+  if (flags.has('--skip-backfilled')) {
+    const { data: withHist } = await supabase
+      .from('witb_bags')
+      .select('player_id')
+      .eq('is_current', false);
+    const { data: playerRows } = await supabase
+      .from('witb_players')
+      .select('id, slug')
+      .in('slug', slugs);
+    const backfilledIds = new Set((withHist || []).map(b => b.player_id));
+    const skipSlugs = new Set(
+      (playerRows || []).filter(p => backfilledIds.has(p.id)).map(p => p.slug)
+    );
+    const before = slugs.length;
+    slugs = slugs.filter(s => !skipSlugs.has(s));
+    log(`--skip-backfilled: skipped ${before - slugs.length} already-backfilled players`);
+  }
 
   log(`Running historical backfill for ${slugs.length} player(s): ${slugs.join(', ')}`);
 

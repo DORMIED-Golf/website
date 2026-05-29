@@ -127,10 +127,27 @@ async function fetchOwgrRankings() {
 
   log(`OWGR returned ${list.length} ranked players (total in ranking: ${json.totalNumberOfRankings ?? '?'})`);
 
-  return list.map(entry => ({
-    rank: entry.rank,
-    name: entry.player?.fullName || `${entry.player?.firstName} ${entry.player?.lastName}`.trim(),
-  })).filter(r => r.rank > 0 && r.name.length > 1);
+  return list.map(entry => {
+    const c = entry.player?.country;
+    // Standard nations have code2 (ISO 3166-1 alpha-2).
+    // GB home nations (England, Scotland, Wales, Northern Ireland) have empty code2
+    // but a distinct code3 (ENG, SCO, WAL, NIR). Map those to country_code=GB + nation.
+    let country_code = c?.code2 || null;
+    let nation       = null;
+    if (!country_code && c?.code3) {
+      const HOME_NATIONS = { NIR: true, ENG: true, SCO: true, WAL: true };
+      if (HOME_NATIONS[c.code3]) {
+        country_code = 'GB';
+        nation       = c.code3;
+      }
+    }
+    return {
+      rank:         entry.rank,
+      name:         entry.player?.fullName || `${entry.player?.firstName} ${entry.player?.lastName}`.trim(),
+      country_code,
+      nation,
+    };
+  }).filter(r => r.rank > 0 && r.name.length > 1);
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -152,18 +169,23 @@ async function main() {
     process.exit(1);
   }
 
-  // Build normalised lookup: normName -> { rank, rawName }
+  // Build normalised lookup: normName -> { rank, rawName, country_code, nation }
   const owgrByNorm = new Map();
   for (const row of owgrRankings) {
     const key = normaliseName(row.name);
-    if (key) owgrByNorm.set(key, { rank: row.rank, rawName: row.name });
+    if (key) owgrByNorm.set(key, {
+      rank:         row.rank,
+      rawName:      row.name,
+      country_code: row.country_code,
+      nation:       row.nation,
+    });
   }
 
   // ── 2. Load all players from DB ────────────────────────────────────────────
 
   const { data: players, error: pErr } = await supabase
     .from('witb_players')
-    .select('id, name, slug, owgr_rank')
+    .select('id, name, slug, owgr_rank, country_code, nation')
     .order('name');
 
   if (pErr) throw new Error(`Could not load witb_players: ${pErr.message}`);
@@ -199,6 +221,8 @@ async function main() {
       .update({
         owgr_rank:            hit.rank,
         owgr_rank_updated_at: now,
+        country_code:         hit.country_code,
+        nation:               hit.nation,
       })
       .eq('id', player.id);
 
@@ -209,7 +233,10 @@ async function main() {
       const delta = (player.owgr_rank !== null && player.owgr_rank !== hit.rank)
         ? ` (was #${player.owgr_rank})`
         : '';
-      log(`  Updated: ${player.name} -> #${hit.rank}${delta}`);
+      const flagNote = hit.nation
+        ? ` [GB/${hit.nation}]`
+        : (hit.country_code ? ` [${hit.country_code}]` : '');
+      log(`  Updated: ${player.name} -> #${hit.rank}${delta}${flagNote}`);
       updatedCount++;
     }
   }
@@ -224,6 +251,25 @@ async function main() {
   console.log(`  Matched and updated:   ${updatedCount}`);
   console.log(`  Update errors:         ${errorCount}`);
   console.log(`  Unmatched (unchanged): ${unmatched.length}`);
+
+  // Country/nation coverage
+  const gbPlayers = matched.filter(({ hit }) => hit.country_code === 'GB');
+  const homeNationCounts = {};
+  gbPlayers.forEach(({ hit }) => {
+    homeNationCounts[hit.nation || '?'] = (homeNationCounts[hit.nation || '?'] || 0) + 1;
+  });
+  if (gbPlayers.length > 0) {
+    console.log('\nGB home nation breakdown:');
+    Object.entries(homeNationCounts).sort().forEach(([n, c]) => {
+      console.log(`  ${n}: ${c} player${c !== 1 ? 's' : ''}`);
+    });
+  }
+
+  const noCountry = matched.filter(({ hit }) => !hit.country_code);
+  if (noCountry.length > 0) {
+    console.log(`\nWARN: ${noCountry.length} matched players have no country_code in OWGR data:`);
+    noCountry.forEach(({ player }) => console.log(`  ${player.name}`));
+  }
 
   if (unmatched.length > 0) {
     console.log('\nPlayers NOT matched to OWGR (owgr_rank left unchanged):');
