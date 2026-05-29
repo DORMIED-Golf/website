@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <g fill="#22c55e">
+    <!-- head -->
+    <circle cx="54" cy="19" r="9"/>
+    <!-- torso / right-leg column in follow-through -->
+    <path d="M60 27 C66 29 67 35 63 41 C57 47 54 55 55 65 L55 79 L63 79 L65 64 C67 52 64 43 59 36 C64 31 67 26 62 26 Z"/>
+    <!-- left-body column + left leg -->
+    <path d="M44 38 C38 42 33 51 29 62 L37 65 C39 57 43 50 49 45 C50 57 50 68 47 79 L55 79 L55 65 C55 52 52 40 46 36 Z"/>
+    <!-- left arm reaching out to club -->
+    <path d="M42 44 L16 57 C13 59 13 64 16 63 L20 61 L44 49 Z"/>
+    <!-- club head (oval) at lower-left -->
+    <ellipse cx="14" cy="63" rx="5" ry="3.5" transform="rotate(-25 14 63)"/>
+  </g>
+  <!-- club shaft arcing up-right (follow-through) -->
+  <path fill="none" stroke="#22c55e" stroke-width="6" stroke-linecap="round"
+        d="M 64 27 C 79 33 81 53 74 67 C 72 74 70 78 67 80"/>
+</svg>

@@ -3,7 +3,7 @@
  * scripts/generate-witb-players-page.js
  *
  * Builds /witb/players/index.html — the WITB player directory.
- * Queries Supabase for all 160 players + current-bag brand data, then
+ * Queries Supabase for all ranked players + current-bag brand data, then
  * pre-renders player cards (same pattern as brands/index.html).
  * Client-side witb-dir.js handles search, club-type, and brand filtering.
  *
@@ -22,6 +22,9 @@ const { createClient } = require('@supabase/supabase-js');
 const ROOT    = path.resolve(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'witb', 'players');
 const OUT     = path.join(OUT_DIR, 'index.html');
+
+// Sentinel OWGR value used for inactive/unranked players (e.g. Tiger Woods, Ian Poulter)
+const OWGR_SENTINEL = 4990;
 
 // ── Club-type -> filter category mapping ──────────────────────────────────────
 
@@ -87,14 +90,15 @@ function buildFlagHtml(countryCode, nation) {
 const LOGO_CAP = 5; // max logos shown before "+N more"
 
 function buildLogoStrip(brands) {
-  // brands: array of { slug, name, dormied_brand_slug } (already deduped, with dormied page only)
-  const visible = brands.slice(0, LOGO_CAP);
+  // brands: array of { slug, name, dormied_brand_slug } (deduped, with dormied page only)
+  const visible  = brands.slice(0, LOGO_CAP);
   const overflow = brands.length - visible.length;
   let html = '<div class="player-dir-logos">';
   for (const b of visible) {
     const initials = b.name.slice(0, 2).toUpperCase();
+    // Use dormied_brand_slug for both the URL and the image path
     html += `<a href="/brands/${esc(b.dormied_brand_slug)}/" class="player-dir-logo-item" title="${esc(b.name)}" tabindex="-1">` +
-      `<img src="/images/logos/${esc(b.slug)}.jpg" alt="" class="player-dir-logo-img" width="20" height="20" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">` +
+      `<img src="/images/logos/${esc(b.dormied_brand_slug)}.jpg" alt="" class="player-dir-logo-img" width="20" height="20" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">` +
       `<span class="player-dir-logo-mono" style="display:none">${esc(initials)}</span>` +
       `</a>`;
   }
@@ -108,33 +112,35 @@ function buildLogoStrip(brands) {
 function buildPlayerCard(player, bagDate, filterMap, logoList) {
   const { slug, name, owgr_rank, country_code, nation } = player;
 
-  const rankDisplay = owgr_rank ? `#${owgr_rank}` : 'Unranked';
+  // 4990 is a sentinel for inactive/unranked — treat the same as null
+  const rankDisplay = (!owgr_rank || owgr_rank === OWGR_SENTINEL) ? 'Unranked' : `#${owgr_rank}`;
   const dateDisplay = fmtBagDate(bagDate);
   const flagHtml    = buildFlagHtml(country_code, nation);
   const logoHtml    = buildLogoStrip(logoList);
 
-  // data-bag: JSON map of category -> array of brand slugs (with dormied page)
+  // data-bag: JSON map of category -> array of dormied brand slugs
   const bagData = {};
   for (const cat of CAT_ORDER) {
     const slugs = filterMap[cat];
     if (slugs && slugs.length) bagData[cat] = slugs;
   }
 
-  // data-brands-all: flat deduplicated list across all categories (for brand-only filter)
+  // data-brands: flat deduplicated list for brand-only filter
   const allBrandSlugs = [...new Set(CAT_ORDER.flatMap(c => filterMap[c] || []))];
 
-  return `<a href="/witb/players/${esc(slug)}/" class="player-dir-card" ` +
+  // Card is a <div> (not <a>) so logo <a> links can be valid HTML children.
+  // The player link <a> covers name / rank / date only.
+  return `<div class="player-dir-card" ` +
     `data-name="${esc(name.toLowerCase())}" ` +
     `data-bag="${esc(JSON.stringify(bagData))}" ` +
     `data-brands="${esc(allBrandSlugs.join('|'))}">` +
-    `<div class="player-dir-head">` +
-      flagHtml +
+    `<a href="/witb/players/${esc(slug)}/" class="player-dir-link" aria-label="${esc(name)}">` +
       `<div class="player-dir-name">${esc(name)}</div>` +
-    `</div>` +
-    `<div class="player-dir-rank">${esc(rankDisplay)}</div>` +
-    `<div class="player-dir-date">${esc(dateDisplay)}</div>` +
+      `<div class="player-dir-rankrow">${flagHtml}<span class="player-dir-rank">${esc(rankDisplay)}</span></div>` +
+      `<div class="player-dir-date">${esc(dateDisplay)}</div>` +
+    `</a>` +
     logoHtml +
-  `</a>`;
+  `</div>`;
 }
 
 // ── Generate HTML page ────────────────────────────────────────────────────────
@@ -159,8 +165,8 @@ function buildPage(players, brandNames) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>WITB Player Directory -- 160 Tour Players | DORMIED</title>
-  <meta name="description" content="Every tour player DORMIED tracks across 160 current bags. Filter by equipment brand and club type to find who plays what.">
+  <title>WITB Player Directory | DORMIED</title>
+  <meta name="description" content="All ${count} tour players DORMIED tracks, ranked by world ranking. Filter by equipment brand and club type to find who plays what.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://dormied.com/witb/players/">
 
@@ -169,15 +175,15 @@ function buildPage(players, brandNames) {
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://dormied.com/witb/players/">
-  <meta property="og:title" content="WITB Player Directory -- 160 Tour Players | DORMIED">
-  <meta property="og:description" content="Every tour player DORMIED tracks across 160 current bags. Filter by equipment brand and club type.">
+  <meta property="og:title" content="WITB Player Directory | DORMIED">
+  <meta property="og:description" content="All ${count} tour players DORMIED tracks. Filter by equipment brand and club type to find who plays what.">
   <meta property="og:image" content="https://dormied.com/images/og-image.jpg">
   <meta property="og:site_name" content="DORMIED">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@DORMIED_GOLF">
-  <meta name="twitter:title" content="WITB Player Directory -- 160 Tour Players | DORMIED">
-  <meta name="twitter:description" content="Every tour player DORMIED tracks across 160 current bags.">
+  <meta name="twitter:title" content="WITB Player Directory | DORMIED">
+  <meta name="twitter:description" content="All ${count} tour players DORMIED tracks. Filter by brand and club type.">
   <meta name="twitter:image" content="https://dormied.com/images/og-image.jpg">
 
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -189,9 +195,9 @@ function buildPage(players, brandNames) {
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "WITB Player Directory -- 160 Tour Players | DORMIED",
+    "name": "WITB Player Directory | DORMIED",
     "url": "https://dormied.com/witb/players/",
-    "description": "Every tour player DORMIED tracks. 160 current bags, filterable by brand and club type.",
+    "description": "All ${count} tour players DORMIED tracks, ranked by world ranking. Filterable by brand and club type.",
     "breadcrumb": {
       "@type": "BreadcrumbList",
       "itemListElement": [
@@ -206,19 +212,26 @@ function buildPage(players, brandNames) {
 
   <style>
     /* ── Player directory card ── */
-    .player-dir-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;transition:border-color .15s,background .15s}
-    .player-dir-card:hover{border-color:var(--green);background:var(--bg-hover);text-decoration:none}
-    .player-dir-head{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
-    .player-dir-flag{font-size:1.1em;line-height:1;flex-shrink:0}
+    /* Card is a <div> so logo <a> links can be valid HTML children.
+       Player link covers name/rank/date; logos sit below as separate links. */
+    .player-dir-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;text-align:center;transition:border-color .15s,background .15s;overflow:hidden}
+    .player-dir-card:hover{border-color:var(--green);background:var(--bg-hover)}
+    /* Inner player link (name + rank + date) */
+    .player-dir-link{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 10px 8px;text-decoration:none;color:inherit;flex:1}
+    .player-dir-link:hover{text-decoration:none}
     .player-dir-name{font-family:var(--font-mono);font-size:.78rem;font-weight:600;color:var(--text);line-height:1.2}
+    /* Rank row: flag immediately left of the rank number */
+    .player-dir-rankrow{display:flex;align-items:center;justify-content:center;gap:4px}
+    .player-dir-flag{font-size:1em;line-height:1;flex-shrink:0}
     .player-dir-rank{font-family:var(--font-mono);font-size:.62rem;color:var(--green)}
     .player-dir-date{font-family:var(--font-mono);font-size:.58rem;color:var(--text-muted)}
-    .player-dir-logos{display:flex;align-items:center;justify-content:center;gap:3px;flex-wrap:wrap;margin-top:2px}
+    /* Logo strip at card bottom */
+    .player-dir-logos{display:flex;align-items:center;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 10px 10px}
     .player-dir-logo-item{display:inline-flex;align-items:center;text-decoration:none;flex-shrink:0}
     .player-dir-logo-img{width:20px;height:20px;object-fit:contain;border-radius:2px;display:block}
     .player-dir-logo-mono{width:20px;height:20px;border-radius:2px;background:var(--bg-raised);border:1px solid var(--border-lite);display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.5rem;font-weight:700;color:var(--green)}
     .player-dir-logos-more{font-family:var(--font-mono);font-size:.55rem;color:var(--text-muted);white-space:nowrap}
-    /* ── Player-specific grid (narrower cards than brands) ── */
+    /* Grid: same minmax as brands but narrower cards */
     .player-dir-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
   </style>
 </head>
@@ -234,7 +247,7 @@ function buildPage(players, brandNames) {
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="site-logo" aria-label="DORMIED home">
-        <img src="/images/dormied-logo-colour.png" alt="DORMIED -- Golf's Brand Desk" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <img src="/images/dormied-logo-colour.png" alt="DORMIED: Golf's Brand Desk" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <span class="logo-text-fallback" style="display:none">DORMIED</span>
       </a>
       <nav class="site-nav" aria-label="Main navigation">
@@ -292,7 +305,7 @@ function buildPage(players, brandNames) {
             <h1 id="players-title" class="hero-title">The Players</h1>
             <p class="hero-subhead">WITB Player Directory</p>
             <p class="hero-desc">All ${count} players DORMIED tracks, ranked by world ranking.</p>
-            <p class="hero-desc hero-desc--secondary">Current bags updated weekly. Filter by club type and brand to find who plays what -- TaylorMade drivers, Callaway irons, L.A.B. Golf putters. Click any player for the full bag history.</p>
+            <p class="hero-desc hero-desc--secondary">Current bags updated weekly. Filter by club type and brand to find who plays what: TaylorMade drivers, Callaway irons, L.A.B. Golf putters. Click any player for the full bag history.</p>
           </div>
         </div>
       </div>
@@ -419,6 +432,7 @@ ${gridHtml}
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/witb-dir.min.js?v=20260529"></script>
+  <script defer src="/js/data.min.js?v=20260518"></script>
   <script defer src="/js/feed.min.js?v=20260522"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
@@ -439,20 +453,18 @@ async function main() {
 
   // 1. Load all players ordered by OWGR rank (nulls last)
   console.log('[witb-players-page] Loading players...');
-  const { data: players, error: pErr } = await sb
+  const { data: allPlayers, error: pErr } = await sb
     .from('witb_players')
     .select('id, slug, name, owgr_rank, country_code, nation, current_bag_id')
     .order('owgr_rank', { ascending: true, nullsFirst: false });
   if (pErr) throw new Error(`Players query failed: ${pErr.message}`);
-  // Secondary sort for nulls: players with no OWGR rank come last, ordered by name
-  players.sort((a, b) => {
-    const ar = a.owgr_rank, br = b.owgr_rank;
-    if (ar === null && br === null) return a.name < b.name ? -1 : 1;
-    if (ar === null) return 1;
-    if (br === null) return -1;
-    return ar - br;
-  });
-  console.log(`[witb-players-page] ${players.length} players loaded.`);
+
+  // Filter out null OWGR and sentinel 4990 (inactive/unranked such as Tiger Woods, Ian Poulter)
+  const players = allPlayers
+    .filter(p => p.owgr_rank !== null && p.owgr_rank !== OWGR_SENTINEL)
+    .sort((a, b) => a.owgr_rank - b.owgr_rank);
+
+  console.log(`[witb-players-page] ${players.length} ranked players (excluded ${allPlayers.length - players.length} unranked).`);
 
   // 2. Load current bag dates
   const bagIds = [...new Set(players.map(p => p.current_bag_id).filter(Boolean))];
@@ -464,7 +476,7 @@ async function main() {
   const bagDateMap = new Map(bags.map(b => [b.id, b.bag_date]));
 
   // 3. Load ALL non-shaft bag items (paginated) then filter to current bags in JS.
-  //    Using .in(bagIds) with 160 UUIDs silently truncates the URL and misses rows.
+  //    Using .in(bagIds) with many UUIDs silently truncates the URL and misses rows.
   const bagIdSet = new Set(bagIds);
   console.log('[witb-players-page] Loading bag items (paginated, filter in JS)...');
   const items = [];
@@ -477,7 +489,6 @@ async function main() {
       .neq('club_type', 'shaft')
       .range(itemsFrom, itemsFrom + ITEMS_PAGE - 1);
     if (iErr) throw new Error(`Items query failed: ${iErr.message}`);
-    // Filter to current bags only
     for (const row of page) {
       if (bagIdSet.has(row.bag_id)) items.push(row);
     }
@@ -517,11 +528,10 @@ async function main() {
 
     // Build filter map: cat -> array of unique dormied brand slugs
     const filterMap = {};
-    // For logo strip: collect ordered unique brands with dormied pages
-    const logoSeen = new Set();
-    const logoList = [];
+    const logoSeen  = new Set();
+    const logoList  = [];
 
-    // Process items in category order for logo ordering
+    // Group items by category
     const itemsByCat = {};
     for (const { club_type, brand } of rawItems) {
       const cat = CLUB_TYPE_CAT[club_type];
@@ -536,15 +546,14 @@ async function main() {
       const catSlugs = [];
       for (const brand of catItems) {
         if (!brand.dormied_brand_slug) continue;
-        const slug = brand.dormied_brand_slug;
-        if (!slugSeen.has(slug)) {
-          slugSeen.add(slug);
-          catSlugs.push(slug);
-          brandNames.set(slug, brand.name);
-          // Add to logo list (ordered by first appearance)
-          if (!logoSeen.has(slug)) {
-            logoSeen.add(slug);
-            logoList.push({ slug: brand.slug, name: brand.name, dormied_brand_slug: slug });
+        const dslug = brand.dormied_brand_slug;
+        if (!slugSeen.has(dslug)) {
+          slugSeen.add(dslug);
+          catSlugs.push(dslug);
+          brandNames.set(dslug, brand.name);
+          if (!logoSeen.has(dslug)) {
+            logoSeen.add(dslug);
+            logoList.push({ slug: brand.slug, name: brand.name, dormied_brand_slug: dslug });
           }
         }
       }
