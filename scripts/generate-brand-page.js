@@ -1118,9 +1118,11 @@ function buildOnTourHtml(brandName, onTourData) {
     }
 
     const modelRows = (modelGroups || []).map(({ model, count, players }) => {
-      const playerLinks = players.map(p =>
-        `<a href="/witb/players/${escHtml(p.slug)}/" class="bp-tour-player-link">${escHtml(p.name)}</a>`
-      ).join('');
+      const playerLinks = '<div class="bp-tour-players">'
+        + players.map(p =>
+          `<a href="/witb/players/${escHtml(p.slug)}/" class="bp-tour-player-link">${escHtml(p.name)}</a>`
+        ).join('')
+        + '</div>';
       return `              <tr class="bp-tour-model-row">
                 <td class="bp-tour-model-name">${escHtml(model)}</td>
                 <td class="bp-tour-model-count">${count}</td>
