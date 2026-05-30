@@ -46,10 +46,10 @@
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.min.css?v=20260523">
+  <link rel="stylesheet" href="/css/styles.css?v=20260530">
 
   <!-- ── JSON-LD ── -->
-  <script type="application/ld+json" id="brand-jsonld">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://dormied.com/"},{"@type":"ListItem","position":2,"name":"Brands","item":"https://dormied.com/brands/"},{"@type":"ListItem","position":3,"name":"Srixon","item":"https://dormied.com/brands/srixon/"}]},{"@type":"Organization","name":"Srixon","url":"https://www.srixon.com","logo":"/images/logos/srixon.jpg","foundingDate":"1930","description":"Srixon, a subsidiary of Sumitomo Rubber Industries under the Dunlop Sports umbrella, has operated since 1930 as one of Japan's most technically rigorous golf equipment manufacturers. The brand is best known for its golf balls, particularly the Z-STAR and Z-STAR XV lines, which compete directly with Titleist's Pro V1 family and have gained significant tour adoption, including major championship wins. Srixon balls are engineered in Kobe with a focus on spin control and urethane cover formulations, and the company's FastLayer core technology represents years of proprietary materials research. Beyond balls, Srixon produces a full line of clubs with particular strength in forged irons—the ZX series has become popular among better players seeking soft feel and workability. The brand's woods and wedges also maintain a reputation for quality, though Srixon doesn't command the same market share in clubs as in balls. Tour professionals like Hideki Matsuyama and Brooks Koepka have used Srixon equipment to win majors, providing validation in a market obsessed with tour performance. The brand's marketing budget is modest compared to Titleist or Callaway, which has kept Srixon positioned as a connoisseur's choice rather than a mass-market leader. In recent years, Srixon has invested in custom fitting infrastructure and digital engagement to expand beyond its traditional base of precision-oriented players. The company's Cleveland Golf sister brand handles wedges and putters, allowing Srixon to focus on balls, irons, and woods. As Japanese manufacturing and engineering prowess continue to earn respect in golf, Srixon represents the quiet, technical alternative to more marketing-driven Western brands."}]}</script>
+  <script type="application/ld+json" id="brand-jsonld">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://dormied.com/"},{"@type":"ListItem","position":2,"name":"Brands","item":"https://dormied.com/brands/"},{"@type":"ListItem","position":3,"name":"Srixon","item":"https://dormied.com/brands/srixon/"}]},{"@type":"Organization","name":"Srixon","url":"https://www.srixon.com","logo":"/images/logos/srixon.jpg","foundingDate":"1930","description":"Srixon, a subsidiary of Sumitomo Rubber Industries under the Dunlop Sports umbrella, has operated since 1930 as one of Japan's most technically rigorous golf equipment manufacturers. The brand is best known for its golf balls, particularly the Z-STAR and Z-STAR XV lines, which compete directly with Titleist's Pro V1 family and have gained significant tour adoption, including major championship wins. Srixon balls are engineered in Kobe with a focus on spin control and urethane cover formulations, and the company's FastLayer core technology represents years of proprietary materials research. Beyond balls, Srixon produces a full line of clubs with particular strength in forged irons, the ZX series has become popular among better players seeking soft feel and workability. The brand's woods and wedges also maintain a reputation for quality, though Srixon doesn't command the same market share in clubs as in balls. Tour professionals like Hideki Matsuyama and Brooks Koepka have used Srixon equipment to win majors, providing validation in a market obsessed with tour performance. The brand's marketing budget is modest compared to Titleist or Callaway, which has kept Srixon positioned as a connoisseur's choice rather than a mass-market leader. In recent years, Srixon has invested in custom fitting infrastructure and digital engagement to expand beyond its traditional base of precision-oriented players. The company's Cleveland Golf sister brand handles wedges and putters, allowing Srixon to focus on balls, irons, and woods. As Japanese manufacturing and engineering prowess continue to earn respect in golf, Srixon represents the quiet, technical alternative to more marketing-driven Western brands."}]}</script>
 </head>
 
 <body class="brand-page">
@@ -92,22 +92,10 @@
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
-        <a href="/witb/"      class="site-nav-link">WITB</a>
         <a href="/scorecard/" class="site-nav-link">Scorecard</a>
         <a href="/news/"      class="site-nav-link">News</a>
         <a href="/brands/"    class="site-nav-link site-nav-link--active">Brands</a>
       </nav>
-
-      <!-- Hamburger (mobile only) -->
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
-        aria-expanded="false" aria-controls="mobile-nav-panel">
-        <span class="bars" aria-hidden="true">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </span>
-      </button>
-
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -126,16 +114,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Mobile nav panel -->
-    <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
-      <a href="/rankings/"  class="mobile-nav-link">Index</a>
-      <a href="/witb/"      class="mobile-nav-link">WITB</a>
-      <a href="/scorecard/" class="mobile-nav-link">Scorecard</a>
-      <a href="/news/"      class="mobile-nav-link">News</a>
-      <a href="/brands/"    class="mobile-nav-link">Brands</a>
-    </nav>
-
   </header>
 
   <!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
@@ -203,7 +181,7 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">Srixon, a subsidiary of Sumitomo Rubber Industries under the Dunlop Sports umbrella, has operated since 1930 as one of Japan's most technically rigorous golf equipment manufacturers. The brand is best known for its golf balls, particularly the Z-STAR and Z-STAR XV lines, which compete directly with Titleist's Pro V1 family and have gained significant tour adoption, including major championship wins. Srixon balls are engineered in Kobe with a focus on spin control and urethane cover formulations, and the company's FastLayer core technology represents years of proprietary materials research. Beyond balls, Srixon produces a full line of clubs with particular strength in forged irons. the ZX series has become popular among better players seeking soft feel and workability. The brand's woods and wedges also maintain a reputation for quality, though Srixon doesn't command the same market share in clubs as in balls. Tour professionals like Hideki Matsuyama and Brooks Koepka have used Srixon equipment to win majors, providing validation in a market obsessed with tour performance. The brand's marketing budget is modest compared to Titleist or Callaway, which has kept Srixon positioned as a connoisseur's choice rather than a mass-market leader. In recent years, Srixon has invested in custom fitting infrastructure and digital engagement to expand beyond its traditional base of precision-oriented players. The company's Cleveland Golf sister brand handles wedges and putters, allowing Srixon to focus on balls, irons, and woods. As Japanese manufacturing and engineering prowess continue to earn respect in golf, Srixon represents the quiet, technical alternative to more marketing-driven Western brands.</p>
+          <p class="bp-description" id="bp-description">Srixon, a subsidiary of Sumitomo Rubber Industries under the Dunlop Sports umbrella, has operated since 1930 as one of Japan's most technically rigorous golf equipment manufacturers. The brand is best known for its golf balls, particularly the Z-STAR and Z-STAR XV lines, which compete directly with Titleist's Pro V1 family and have gained significant tour adoption, including major championship wins. Srixon balls are engineered in Kobe with a focus on spin control and urethane cover formulations, and the company's FastLayer core technology represents years of proprietary materials research. Beyond balls, Srixon produces a full line of clubs with particular strength in forged irons, the ZX series has become popular among better players seeking soft feel and workability. The brand's woods and wedges also maintain a reputation for quality, though Srixon doesn't command the same market share in clubs as in balls. Tour professionals like Hideki Matsuyama and Brooks Koepka have used Srixon equipment to win majors, providing validation in a market obsessed with tour performance. The brand's marketing budget is modest compared to Titleist or Callaway, which has kept Srixon positioned as a connoisseur's choice rather than a mass-market leader. In recent years, Srixon has invested in custom fitting infrastructure and digital engagement to expand beyond its traditional base of precision-oriented players. The company's Cleveland Golf sister brand handles wedges and putters, allowing Srixon to focus on balls, irons, and woods. As Japanese manufacturing and engineering prowess continue to earn respect in golf, Srixon represents the quiet, technical alternative to more marketing-driven Western brands.</p>
         </div>
       </section>
 
@@ -217,22 +195,25 @@
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">MoM Change</span>
-              <span class="bp-metric-val">+22.2%</span>
+              <span class="bp-metric-val change-up">+22.2%</span>
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">3M Trend</span>
-              <span class="bp-metric-val">+31.3%</span>
+              <span class="bp-metric-val change-up">+31.3%</span>
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">12M Trend</span>
-              <span class="bp-metric-val">+0.0%</span>
+              <span class="bp-metric-val change-flat">+0.0%</span>
             </div>
           </div>
         </div>
       </section>
+      <div class="container">
+        <div class="bp-page-grid">
+          <div class="bp-page-main">
+
 
       <section class="bp-take-section" id="bp-take-section">
-        <div class="container">
           <div class="bp-take-inner">
             <div class="bp-take-label-wrap">
               <span class="bp-take-label">THE READ</span>
@@ -243,58 +224,40 @@
               <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
             </div>
           </div>
-        </div>
       </section>
 
-      <!-- ── Main Chart Section ── -->
-      <section class="bp-chart-section">
-        <div class="container bp-chart-container">
-          <div class="bp-chart-main">
-            <div class="bp-chart-controls">
-              <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
-              <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
-                <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
-                <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
-                <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
-                <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
+            <!-- ── Srixon Interest Over Time ── -->
+            <section class="bp-chart-section">
+              <p class="bp-chart-heading">Srixon Interest Over Time</p>
+              <p class="bp-chart-heading-sub">How search demand for Srixon has moved over time, indexed against the rest of the field.</p>
+              <div class="bp-chart-main">
+                <div class="bp-chart-controls">
+                  <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
+                  <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
+                    <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
+                    <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
+                    <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
+                    <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
+                  </div>
+                </div>
+                <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
+                <div class="bp-chart-wrap">
+                  <canvas id="bp-chart" aria-label="Search interest chart" role="img"></canvas>
+                </div>
+                <div class="bp-chart-legend">
+                  <span class="bp-legend-item bp-legend-brand">Brand index</span>
+                  <span class="bp-legend-item bp-legend-avg">Global index avg</span>
+                  <span class="bp-legend-item bp-legend-proj">Projected</span>
+                </div>
+                <p id="bp-methodology-note" style="margin:.75rem 0 0;font-size:.75rem;color:var(--clr-muted,#6b7a6b);line-height:1.5;display:none"></p>
               </div>
-            </div>
-            <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
-            <div class="bp-chart-wrap">
-              <canvas id="bp-chart" aria-label="Search interest chart" role="img"></canvas>
-            </div>
-            <div class="bp-chart-legend">
-              <span class="bp-legend-item bp-legend-brand">Brand index</span>
-              <span class="bp-legend-item bp-legend-avg">Global index avg</span>
-              <span class="bp-legend-item bp-legend-proj">Projected</span>
-            </div>
-            <p id="bp-methodology-note" style="margin:.75rem 0 0;font-size:.75rem;color:var(--clr-muted,#6b7a6b);line-height:1.5;display:none"></p>
-          </div>
-        </div>
-      </section>
+            </section>
 
-      <!-- AD_UNIT:mid-chart
-      <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
-        <div class="ad-leaderboard tablet-ad">
-          <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="3187856648"></ins>
-        </div>
-        <div class="ad-in-table mobile-ad">
-          <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="5011106608"></ins>
-        </div>
-      </div>
-      -->
+            <!-- ── Key Moments ── -->
 
-      <!-- ── Key Moments (pre-rendered; brand.js can update on period tab change) ── -->
-      
       <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading">
-        <div class="container">
           <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
+          <p class="bp-section-sub">The product, marketing, culture, and on-course moments that moved search interest in Srixon in a given month.</p>
           <div id="bp-explanation-body" class="bp-explanation-body">
             <div class="bp-exp-timeline">
               <div class="bp-exp-timeline-item" data-month="2026-04">
@@ -307,17 +270,12 @@
                 </div>
             </div>
           </div>
-        </div>
       </section>
 
-      <!-- ── Two-column layout: content + sidebar ad ── -->
-      <div class="container">
-        <div class="table-layout">
-          <div class="bp-sections-col">
-
-            <!-- ── Rankings by Market (server-rendered; brand.js overwrites on load) ── -->
+            <!-- ── Rankings by Market ── -->
             <section class="bp-section" aria-labelledby="bp-countries-heading">
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
+              <p class="bp-section-sub">Brand interest is not uniform. Where Srixon is searched hardest, and where it lags, varies market to market.</p>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
                   <thead>
@@ -425,32 +383,34 @@
               <div class="bp-dominance" id="bp-dominance"></div>
             </section>
 
-            <!-- AD_UNIT:mid-rankings
-            <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
-              <div class="ad-leaderboard tablet-ad">
-                <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="3187856648"></ins>
-              </div>
-              <div class="ad-in-table mobile-ad">
-                <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="5011106608"></ins>
-              </div>
-            </div>
-            -->
-
             <!-- ── Category Standing (populated by brand.js) ── -->
             <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
 
+
+            <!-- ── Srixon On Tour ── -->
+            <section class="bp-section bp-on-tour-section" aria-labelledby="bp-on-tour-heading">
+              <h2 class="bp-section-title bp-section-title--green" id="bp-on-tour-heading">Srixon On Tour</h2>
+              <p class="bp-section-sub">Who plays Srixon right now, pulled from the <a href="/witb/players/">DORMIED WITB</a> tour database.</p>
+            <div class="bp-tour-cat">
+              <p class="bp-tour-cat-header">Drivers <span class="bp-tour-rank">· 6th on tour</span></p>
+              <div class="bp-tour-players"><a href="/witb/players/hideki-matsuyama/" class="bp-tour-player-link">Hideki Matsuyama</a><a href="/witb/players/shane-lowry/" class="bp-tour-player-link">Shane Lowry</a></div>
+            </div>
+            <div class="bp-tour-cat">
+              <p class="bp-tour-cat-header">Irons <span class="bp-tour-rank">· 4th on tour</span></p>
+              <div class="bp-tour-players"><a href="/witb/players/scottie-scheffler/" class="bp-tour-player-link">Scottie Scheffler</a><a href="/witb/players/j-j-spaun/" class="bp-tour-player-link">J.J. Spaun</a><a href="/witb/players/sepp-straka/" class="bp-tour-player-link">Sepp Straka</a><a href="/witb/players/hideki-matsuyama/" class="bp-tour-player-link">Hideki Matsuyama</a><a href="/witb/players/patrick-cantlay/" class="bp-tour-player-link">Patrick Cantlay</a><a href="/witb/players/shane-lowry/" class="bp-tour-player-link">Shane Lowry</a><a href="/witb/players/andrew-novak/" class="bp-tour-player-link">Andrew Novak</a><a href="/witb/players/haotong-li/" class="bp-tour-player-link">Haotong Li</a><a href="/witb/players/lucas-glover/" class="bp-tour-player-link">Lucas Glover</a><a href="/witb/players/brooks-koepka/" class="bp-tour-player-link">Brooks Koepka</a><a href="/witb/players/kevin-yu/" class="bp-tour-player-link">Kevin Yu</a><a href="/witb/players/marcus-armitage/" class="bp-tour-player-link">Marcus Armitage</a><a href="/witb/players/matt-kuchar/" class="bp-tour-player-link">Matt Kuchar</a><a href="/witb/players/nick-dunlap/" class="bp-tour-player-link">Nick Dunlap</a><a href="/witb/players/martin-laird/" class="bp-tour-player-link">Martin Laird</a><a href="/witb/players/camilo-villegas/" class="bp-tour-player-link">Camilo Villegas</a><a href="/witb/players/harold-varner-iii/" class="bp-tour-player-link">Harold Varner III</a><a href="/witb/players/kevin-kisner/" class="bp-tour-player-link">Kevin Kisner</a></div>
+            </div>
+            <div class="bp-tour-cat">
+              <p class="bp-tour-cat-header">Balls <span class="bp-tour-rank">· 3rd on tour</span><span class="bp-tour-model"> · Z-Star XV is the no. 5 ball model</span></p>
+              <div class="bp-tour-players"><a href="/witb/players/j-j-spaun/" class="bp-tour-player-link">J.J. Spaun</a><a href="/witb/players/sepp-straka/" class="bp-tour-player-link">Sepp Straka</a><a href="/witb/players/hideki-matsuyama/" class="bp-tour-player-link">Hideki Matsuyama</a><a href="/witb/players/shane-lowry/" class="bp-tour-player-link">Shane Lowry</a><a href="/witb/players/andrew-novak/" class="bp-tour-player-link">Andrew Novak</a><a href="/witb/players/lucas-glover/" class="bp-tour-player-link">Lucas Glover</a></div>
+            </div>
+            </section>
+
             <!-- ── Similar Brands ── -->
             <section class="bp-section" aria-labelledby="bp-similar-heading">
-              <h2 class="bp-section-title" id="bp-similar-heading">Similar Brands</h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-similar-heading">Similar Brands</h2>
               <p class="bp-section-sub">Same category · closest search interest</p>
               <div class="bp-similar-grid" id="bp-similar-grid">
         <a href="/brands/wilson/" class="bp-similar-card">
@@ -482,9 +442,29 @@
 
             <!-- ── Latest on Brand ── -->
             <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading">
-              <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Srixon</span></h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Srixon</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 
+        <article class="latest-feed-item">
+          <a href="/news/srixons-all-american-collection-is-a-calendar-play-not-a-product-story-2026-05-27/" class="latest-feed-link">
+            <img src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/srixons-all-american-collection-is-a-calendar-play-not-a-product-story-2026-05-27-hero.jpg" alt="Srixon's All-American Collection Is a Calendar Play, Not a Product Story" class="latest-feed-thumb" loading="lazy" onerror="this.style.display='none'">
+            <div class="latest-feed-info">
+              <h3 class="latest-feed-title">Srixon's All-American Collection Is a Calendar Play, Not a Product Story</h3>
+              <span class="latest-feed-meta">May 27, 2026</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="latest-feed-item">
+          <a href="/news/srixons-all-american-drop-is-a-tell-on-where-the-brand-thinks-it-can-2026-05-27/" class="latest-feed-link">
+            <img src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/srixons-all-american-drop-is-a-tell-on-where-the-brand-thinks-it-can-2026-05-27-hero.jpg" alt="Srixon's All-American Drop Is a Tell on Where the Brand Thinks It Can Compete" class="latest-feed-thumb" loading="lazy" onerror="this.style.display='none'">
+            <div class="latest-feed-info">
+              <h3 class="latest-feed-title">Srixon's All-American Drop Is a Tell on Where the Brand Thinks It Can Compete</h3>
+              <span class="latest-feed-meta">May 27, 2026</span>
+            </div>
+          </a>
+        </article>
+
         <article class="latest-feed-item">
           <a href="/news/srixons-buy-2-get-1-promo-is-a-volume-play-in-a-category-its-quietly-2026-05-21/" class="latest-feed-link">
             <img src="https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/srixons-buy-2-get-1-promo-is-a-volume-play-in-a-category-its-quietly-2026-05-21-hero.jpg" alt="Srixon's Buy 2 Get 1 Promo Is a Volume Play in a Category It's Quietly Winning" class="latest-feed-thumb" loading="lazy" onerror="this.style.display='none'">
@@ -537,7 +517,7 @@
               </div>
             </section>
 
-          </div><!-- /bp-sections-col -->
+          </div><!-- /bp-page-main -->
 
           <!-- Sidebar: LATEST widget -->
           <aside class="sidebar-ad-col">
@@ -559,7 +539,7 @@
             </section>
           </aside>
 
-        </div><!-- /table-layout -->
+        </div><!-- /bp-page-grid -->
       </div><!-- /container -->
 
     </div><!-- /brand-content -->
@@ -585,7 +565,6 @@
       </div>
       <nav class="footer-nav" aria-label="Footer navigation">
         <a href="/rankings/">Index</a>
-        <a href="/witb/">WITB</a>
         <a href="/scorecard/">Scorecard</a>
         <a href="/news/">News</a>
         <a href="/brands/">Brands</a>
@@ -622,7 +601,7 @@
   <script defer src="/js/feed.min.js?v=20260522"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
-  <script src="/js/search.min.js?v=20260508"></script>
+  <script src="/js/search.min.js?v=20260529"></script>
 
   <!-- AD_SCRIPT
   <script>
@@ -638,26 +617,6 @@
 });
   </script>
   -->
-
-
-  <!-- Mobile nav hamburger -->
-  <script>
-  (function(){
-    var btn   = document.getElementById('nav-hamburger');
-    var panel = document.getElementById('mobile-nav-panel');
-    if (!btn || !panel) return;
-    function openNav()  { btn.setAttribute('aria-expanded','true');  panel.classList.add('open');    panel.removeAttribute('hidden'); }
-    function closeNav() { btn.setAttribute('aria-expanded','false'); panel.classList.remove('open'); panel.setAttribute('hidden',''); }
-    btn.addEventListener('click', function() {
-      btn.getAttribute('aria-expanded') === 'true' ? closeNav() : openNav();
-    });
-    panel.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeNav); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
-    document.addEventListener('click', function(e) {
-      if (!btn.contains(e.target) && !panel.contains(e.target)) closeNav();
-    });
-  })();
-  </script>
 
 </body>
 </html>

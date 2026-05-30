@@ -46,10 +46,10 @@
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.min.css?v=20260523">
+  <link rel="stylesheet" href="/css/styles.css?v=20260530">
 
   <!-- ── JSON-LD ── -->
-  <script type="application/ld+json" id="brand-jsonld">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://dormied.com/"},{"@type":"ListItem","position":2,"name":"Brands","item":"https://dormied.com/brands/"},{"@type":"ListItem","position":3,"name":"Under Armour Golf","item":"https://dormied.com/brands/under-armour-golf/"}]},{"@type":"Organization","name":"Under Armour Golf","url":"https://www.underarmour.com/golf","logo":"/images/logos/under-armour-golf.jpg","foundingDate":"1996","description":"Under Armour Golf represents the Baltimore-based athletic giant's calculated push into golf, translating its performance apparel DNA—moisture-wicking fabrics, compression fits, and tech-forward materials—into golf-specific silhouettes. Founded in 1996 by former University of Maryland football player Kevin Plank, Under Armour built its reputation on synthetic performance gear that challenged traditional cotton-based athletic wear. The golf division launched in earnest in the early 2010s, backed by aggressive tour signings including Jordan Spieth, who became the brand's flagship athlete from 2013 through 2022. Under Armour's golf footwear, particularly the Spieth signature shoe line and the Drive series, emphasized traction innovation and lightweight construction, competing directly with Nike and adidas in the performance golf shoe category. The apparel range—polos, outerwear, and base layers—features branded technologies like HeatGear and ColdGear, designed for temperature regulation across varied playing conditions. Following Spieth's departure to FootJoy in 2022, Under Armour's golf presence has recalibrated, maintaining tour staff including Tom Kim and maintaining shelf space at major retailers. The brand targets golfers who identify with athletic performance narratives rather than traditional country club aesthetics, positioning itself as modern, data-driven, and relentlessly focused on functional advantage. Under Armour Golf remains a significant player in the golf apparel and footwear markets, though its trajectory has been less meteoric than its early-2010s ambitions suggested, navigating broader corporate challenges and intensifying competition from both legacy golf brands and new direct-to-consumer entrants."}]}</script>
+  <script type="application/ld+json" id="brand-jsonld">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://dormied.com/"},{"@type":"ListItem","position":2,"name":"Brands","item":"https://dormied.com/brands/"},{"@type":"ListItem","position":3,"name":"Under Armour Golf","item":"https://dormied.com/brands/under-armour-golf/"}]},{"@type":"Organization","name":"Under Armour Golf","url":"https://www.underarmour.com/golf","logo":"/images/logos/under-armour-golf.jpg","foundingDate":"1996","description":"Under Armour Golf represents the Baltimore-based athletic giant's calculated push into golf, translating its performance apparel DNA, moisture-wicking fabrics, compression fits, and tech-forward materials, into golf-specific silhouettes. Founded in 1996 by former University of Maryland football player Kevin Plank, Under Armour built its reputation on synthetic performance gear that challenged traditional cotton-based athletic wear. The golf division launched in earnest in the early 2010s, backed by aggressive tour signings including Jordan Spieth, who became the brand's flagship athlete from 2013 through 2022. Under Armour's golf footwear, particularly the Spieth signature shoe line and the Drive series, emphasized traction innovation and lightweight construction, competing directly with Nike and adidas in the performance golf shoe category. The apparel range, polos, outerwear, and base layers, features branded technologies like HeatGear and ColdGear, designed for temperature regulation across varied playing conditions. Following Spieth's departure to FootJoy in 2022, Under Armour's golf presence has recalibrated, maintaining tour staff including Tom Kim and maintaining shelf space at major retailers. The brand targets golfers who identify with athletic performance narratives rather than traditional country club aesthetics, positioning itself as modern, data-driven, and relentlessly focused on functional advantage. Under Armour Golf remains a significant player in the golf apparel and footwear markets, though its trajectory has been less meteoric than its early-2010s ambitions suggested, navigating broader corporate challenges and intensifying competition from both legacy golf brands and new direct-to-consumer entrants."}]}</script>
 </head>
 
 <body class="brand-page">
@@ -92,22 +92,10 @@
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
-        <a href="/witb/"      class="site-nav-link">WITB</a>
         <a href="/scorecard/" class="site-nav-link">Scorecard</a>
         <a href="/news/"      class="site-nav-link">News</a>
         <a href="/brands/"    class="site-nav-link site-nav-link--active">Brands</a>
       </nav>
-
-      <!-- Hamburger (mobile only) -->
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
-        aria-expanded="false" aria-controls="mobile-nav-panel">
-        <span class="bars" aria-hidden="true">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </span>
-      </button>
-
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -126,16 +114,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Mobile nav panel -->
-    <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
-      <a href="/rankings/"  class="mobile-nav-link">Index</a>
-      <a href="/witb/"      class="mobile-nav-link">WITB</a>
-      <a href="/scorecard/" class="mobile-nav-link">Scorecard</a>
-      <a href="/news/"      class="mobile-nav-link">News</a>
-      <a href="/brands/"    class="mobile-nav-link">Brands</a>
-    </nav>
-
   </header>
 
   <!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
@@ -203,7 +181,7 @@
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">Under Armour Golf represents the Baltimore-based athletic giant's calculated push into golf, translating its performance apparel DNA. moisture-wicking fabrics, compression fits, and tech-forward materials. into golf-specific silhouettes. Founded in 1996 by former University of Maryland football player Kevin Plank, Under Armour built its reputation on synthetic performance gear that challenged traditional cotton-based athletic wear. The golf division launched in earnest in the early 2010s, backed by aggressive tour signings including Jordan Spieth, who became the brand's flagship athlete from 2013 through 2022. Under Armour's golf footwear, particularly the Spieth signature shoe line and the Drive series, emphasized traction innovation and lightweight construction, competing directly with Nike and adidas in the performance golf shoe category. The apparel range. polos, outerwear, and base layers. features branded technologies like HeatGear and ColdGear, designed for temperature regulation across varied playing conditions. Following Spieth's departure to FootJoy in 2022, Under Armour's golf presence has recalibrated, maintaining tour staff including Tom Kim and maintaining shelf space at major retailers. The brand targets golfers who identify with athletic performance narratives rather than traditional country club aesthetics, positioning itself as modern, data-driven, and relentlessly focused on functional advantage. Under Armour Golf remains a significant player in the golf apparel and footwear markets, though its trajectory has been less meteoric than its early-2010s ambitions suggested, navigating broader corporate challenges and intensifying competition from both legacy golf brands and new direct-to-consumer entrants.</p>
+          <p class="bp-description" id="bp-description">Under Armour Golf represents the Baltimore-based athletic giant's calculated push into golf, translating its performance apparel DNA, moisture-wicking fabrics, compression fits, and tech-forward materials, into golf-specific silhouettes. Founded in 1996 by former University of Maryland football player Kevin Plank, Under Armour built its reputation on synthetic performance gear that challenged traditional cotton-based athletic wear. The golf division launched in earnest in the early 2010s, backed by aggressive tour signings including Jordan Spieth, who became the brand's flagship athlete from 2013 through 2022. Under Armour's golf footwear, particularly the Spieth signature shoe line and the Drive series, emphasized traction innovation and lightweight construction, competing directly with Nike and adidas in the performance golf shoe category. The apparel range, polos, outerwear, and base layers, features branded technologies like HeatGear and ColdGear, designed for temperature regulation across varied playing conditions. Following Spieth's departure to FootJoy in 2022, Under Armour's golf presence has recalibrated, maintaining tour staff including Tom Kim and maintaining shelf space at major retailers. The brand targets golfers who identify with athletic performance narratives rather than traditional country club aesthetics, positioning itself as modern, data-driven, and relentlessly focused on functional advantage. Under Armour Golf remains a significant player in the golf apparel and footwear markets, though its trajectory has been less meteoric than its early-2010s ambitions suggested, navigating broader corporate challenges and intensifying competition from both legacy golf brands and new direct-to-consumer entrants.</p>
         </div>
       </section>
 
@@ -217,22 +195,25 @@
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">MoM Change</span>
-              <span class="bp-metric-val">+49.5%</span>
+              <span class="bp-metric-val change-up">+49.5%</span>
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">3M Trend</span>
-              <span class="bp-metric-val">+43.9%</span>
+              <span class="bp-metric-val change-up">+43.9%</span>
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">12M Trend</span>
-              <span class="bp-metric-val">+0.0%</span>
+              <span class="bp-metric-val change-flat">+0.0%</span>
             </div>
           </div>
         </div>
       </section>
+      <div class="container">
+        <div class="bp-page-grid">
+          <div class="bp-page-main">
+
 
       <section class="bp-take-section" id="bp-take-section">
-        <div class="container">
           <div class="bp-take-inner">
             <div class="bp-take-label-wrap">
               <span class="bp-take-label">THE READ</span>
@@ -243,58 +224,40 @@
               <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
             </div>
           </div>
-        </div>
       </section>
 
-      <!-- ── Main Chart Section ── -->
-      <section class="bp-chart-section">
-        <div class="container bp-chart-container">
-          <div class="bp-chart-main">
-            <div class="bp-chart-controls">
-              <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
-              <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
-                <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
-                <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
-                <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
-                <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
+            <!-- ── Under Armour Golf Interest Over Time ── -->
+            <section class="bp-chart-section">
+              <p class="bp-chart-heading">Under Armour Golf Interest Over Time</p>
+              <p class="bp-chart-heading-sub">How search demand for Under Armour Golf has moved over time, indexed against the rest of the field.</p>
+              <div class="bp-chart-main">
+                <div class="bp-chart-controls">
+                  <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
+                  <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
+                    <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
+                    <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
+                    <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
+                    <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
+                  </div>
+                </div>
+                <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
+                <div class="bp-chart-wrap">
+                  <canvas id="bp-chart" aria-label="Search interest chart" role="img"></canvas>
+                </div>
+                <div class="bp-chart-legend">
+                  <span class="bp-legend-item bp-legend-brand">Brand index</span>
+                  <span class="bp-legend-item bp-legend-avg">Global index avg</span>
+                  <span class="bp-legend-item bp-legend-proj">Projected</span>
+                </div>
+                <p id="bp-methodology-note" style="margin:.75rem 0 0;font-size:.75rem;color:var(--clr-muted,#6b7a6b);line-height:1.5;display:none"></p>
               </div>
-            </div>
-            <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
-            <div class="bp-chart-wrap">
-              <canvas id="bp-chart" aria-label="Search interest chart" role="img"></canvas>
-            </div>
-            <div class="bp-chart-legend">
-              <span class="bp-legend-item bp-legend-brand">Brand index</span>
-              <span class="bp-legend-item bp-legend-avg">Global index avg</span>
-              <span class="bp-legend-item bp-legend-proj">Projected</span>
-            </div>
-            <p id="bp-methodology-note" style="margin:.75rem 0 0;font-size:.75rem;color:var(--clr-muted,#6b7a6b);line-height:1.5;display:none"></p>
-          </div>
-        </div>
-      </section>
+            </section>
 
-      <!-- AD_UNIT:mid-chart
-      <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
-        <div class="ad-leaderboard tablet-ad">
-          <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="3187856648"></ins>
-        </div>
-        <div class="ad-in-table mobile-ad">
-          <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="5011106608"></ins>
-        </div>
-      </div>
-      -->
+            <!-- ── Key Moments ── -->
 
-      <!-- ── Key Moments (pre-rendered; brand.js can update on period tab change) ── -->
-      
       <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading">
-        <div class="container">
           <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
+          <p class="bp-section-sub">The product, marketing, culture, and on-course moments that moved search interest in Under Armour Golf in a given month.</p>
           <div id="bp-explanation-body" class="bp-explanation-body">
             <div class="bp-exp-timeline">
               <div class="bp-exp-timeline-item" data-month="2026-04">
@@ -315,17 +278,12 @@
                 </div>
             </div>
           </div>
-        </div>
       </section>
 
-      <!-- ── Two-column layout: content + sidebar ad ── -->
-      <div class="container">
-        <div class="table-layout">
-          <div class="bp-sections-col">
-
-            <!-- ── Rankings by Market (server-rendered; brand.js overwrites on load) ── -->
+            <!-- ── Rankings by Market ── -->
             <section class="bp-section" aria-labelledby="bp-countries-heading">
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
+              <p class="bp-section-sub">Brand interest is not uniform. Where Under Armour Golf is searched hardest, and where it lags, varies market to market.</p>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
                   <thead>
@@ -433,32 +391,17 @@
               <div class="bp-dominance" id="bp-dominance"></div>
             </section>
 
-            <!-- AD_UNIT:mid-rankings
-            <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
-              <div class="ad-leaderboard tablet-ad">
-                <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="3187856648"></ins>
-              </div>
-              <div class="ad-in-table mobile-ad">
-                <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="5011106608"></ins>
-              </div>
-            </div>
-            -->
-
             <!-- ── Category Standing (populated by brand.js) ── -->
             <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
 
+
+
             <!-- ── Similar Brands ── -->
             <section class="bp-section" aria-labelledby="bp-similar-heading">
-              <h2 class="bp-section-title" id="bp-similar-heading">Similar Brands</h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-similar-heading">Similar Brands</h2>
               <p class="bp-section-sub">Same category · closest search interest</p>
               <div class="bp-similar-grid" id="bp-similar-grid">
         <a href="/brands/puma-golf/" class="bp-similar-card">
@@ -490,7 +433,7 @@
 
             <!-- ── Latest on Brand ── -->
             <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading">
-              <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Under Armour Golf</span></h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Under Armour Golf</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 
         <article class="latest-feed-item">
@@ -525,7 +468,7 @@
               </div>
             </section>
 
-          </div><!-- /bp-sections-col -->
+          </div><!-- /bp-page-main -->
 
           <!-- Sidebar: LATEST widget -->
           <aside class="sidebar-ad-col">
@@ -547,7 +490,7 @@
             </section>
           </aside>
 
-        </div><!-- /table-layout -->
+        </div><!-- /bp-page-grid -->
       </div><!-- /container -->
 
     </div><!-- /brand-content -->
@@ -573,7 +516,6 @@
       </div>
       <nav class="footer-nav" aria-label="Footer navigation">
         <a href="/rankings/">Index</a>
-        <a href="/witb/">WITB</a>
         <a href="/scorecard/">Scorecard</a>
         <a href="/news/">News</a>
         <a href="/brands/">Brands</a>
@@ -610,7 +552,7 @@
   <script defer src="/js/feed.min.js?v=20260522"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
-  <script src="/js/search.min.js?v=20260508"></script>
+  <script src="/js/search.min.js?v=20260529"></script>
 
   <!-- AD_SCRIPT
   <script>
@@ -626,26 +568,6 @@
 });
   </script>
   -->
-
-
-  <!-- Mobile nav hamburger -->
-  <script>
-  (function(){
-    var btn   = document.getElementById('nav-hamburger');
-    var panel = document.getElementById('mobile-nav-panel');
-    if (!btn || !panel) return;
-    function openNav()  { btn.setAttribute('aria-expanded','true');  panel.classList.add('open');    panel.removeAttribute('hidden'); }
-    function closeNav() { btn.setAttribute('aria-expanded','false'); panel.classList.remove('open'); panel.setAttribute('hidden',''); }
-    btn.addEventListener('click', function() {
-      btn.getAttribute('aria-expanded') === 'true' ? closeNav() : openNav();
-    });
-    panel.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeNav); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
-    document.addEventListener('click', function(e) {
-      if (!btn.contains(e.target) && !panel.contains(e.target)) closeNav();
-    });
-  })();
-  </script>
 
 </body>
 </html>

@@ -29,7 +29,7 @@ const Anthropic        = require('@anthropic-ai/sdk');
 
 const ROOT       = path.resolve(__dirname, '..');
 const CACHE_FILE = path.join(__dirname, 'cache', 'witb-player-ledes.json');
-const TOTAL_TOUR_PLAYERS = 160;
+// TOTAL_TOUR_PLAYERS is now dynamic — derived from ranked players at build time.
 
 const PLAYER_SLUG = process.argv[2] || 'jon-rahm';
 
@@ -524,7 +524,23 @@ async function fetchBagsWithItems(sb, playerId) {
   return bags;
 }
 
-async function fetchTourComparison(sb) {
+/**
+ * Returns the Set of player IDs for all players with a current bag and a world ranking.
+ * This is the canonical denominator for tour comparison ("N of 158", not 160).
+ */
+async function fetchRankedPlayerIds(sb) {
+  const { data: players } = await sb
+    .from('witb_players')
+    .select('id')
+    .not('owgr_rank', 'is', null);
+  return new Set((players || []).map(p => p.id));
+}
+
+/**
+ * Fetches brand usage counts across current bags, restricted to ranked players.
+ * Returns { data: result, rankedCount } where rankedCount is the size of rankedPlayerIds.
+ */
+async function fetchTourComparison(sb, rankedPlayerIds) {
   const catGroups = {
     driver: ['driver'],
     irons:  ['iron'],
@@ -540,7 +556,10 @@ async function fetchTourComparison(sb) {
       .select('raw_brand, witb_brands!brand_id(name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id)')
       .in('club_type', types);
 
-    const currentItems = (items || []).filter(i => i.witb_bags?.is_current);
+    // Only count items from current bags belonging to ranked players
+    const currentItems = (items || []).filter(i =>
+      i.witb_bags?.is_current && rankedPlayerIds.has(i.witb_bags.player_id)
+    );
 
     const brandMap = {};
     currentItems.forEach(i => {
@@ -556,7 +575,7 @@ async function fetchTourComparison(sb) {
       .sort((a, b) => b.count - a.count);
   }
 
-  return result;
+  return { data: result, rankedCount: rankedPlayerIds.size };
 }
 
 // ── Tour comparison rows ──────────────────────────────────────────────────────
@@ -597,7 +616,7 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
-function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, today }) {
+function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today }) {
   const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
@@ -699,9 +718,9 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
 
   // ── Tour comparison HTML ──────────────────────────────────────────────────
   const compHtml = compRows.map(row => {
-    // Bar fill is proportional to total bag count (playerCount / 160), not relative to leader.
-    // A tour leader at 59/160 fills ~37%, not 100%. This gives honest visual weight.
-    const barPct   = Math.round(row.playerCount / TOTAL_TOUR_PLAYERS * 100);
+    // Bar fill is proportional to ranked bag count, not relative to leader.
+    // A tour leader at 58/158 fills ~37%, not 100%. This gives honest visual weight.
+    const barPct   = Math.round(row.playerCount / rankedCount * 100);
     const isLeader = row.playerRank === 1;
 
     // Rank badge: TOUR LEADER for #1, Ranked #N for others
@@ -720,7 +739,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
   <div class="witb-comp-cat">${catIcon(row.cat)}<span>${esc(row.label)}</span></div>
   <div class="witb-comp-brand"><div class="witb-cell-flex">${brandCell(row.playerBrand, row.playerDormiedSlug)}</div></div>
   <div class="witb-comp-stat">
-    <span class="witb-comp-count">${row.playerCount} of ${TOTAL_TOUR_PLAYERS}</span>
+    <span class="witb-comp-count">${row.playerCount} of ${rankedCount}</span>
     <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:${barPct}%"></div></div>
   </div>
   <div class="witb-comp-context">${rankBadge}${ctxNote ? `<span class="witb-comp-context-sep"></span>${ctxNote}` : ''}</div>
@@ -733,7 +752,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
   // ── Word count for robots decision ────────────────────────────────────────
   const bagItemWords  = currentItems.reduce((s, i) => s + wordCount(`${i.raw_brand} ${i.raw_model} ${i.raw_shaft || ''} ${i.loft_or_number || ''}`), 0);
   const histItemWords = bags.reduce((s, b) => s + (b._items || []).reduce((s2, i) => s2 + wordCount(`${i.raw_brand} ${i.raw_model}`), 0), 0);
-  const compWords     = compRows.reduce((s, r) => s + wordCount(`${r.label} ${r.playerBrand} ${r.playerCount} of ${TOTAL_TOUR_PLAYERS} ${r.rank1Name || ''}`), 0);
+  const compWords     = compRows.reduce((s, r) => s + wordCount(`${r.label} ${r.playerBrand} ${r.playerCount} of ${rankedCount} ${r.rank1Name || ''}`), 0);
   const proseWords    = wordCount(ledes.lede)
                       + wordCount(ledes.history_narrative)
                       + compWords
@@ -1004,7 +1023,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
           <!-- 3. HOW THIS BAG COMPARES -->
           <section class="witb-section" aria-labelledby="compare-heading">
             <h2 class="witb-section-title" id="compare-heading">How This Bag Compares to the Tour</h2>
-            <p class="witb-section-sub">Brand usage across ${TOTAL_TOUR_PLAYERS} current bags</p>
+            <p class="witb-section-sub">Brand usage across ${rankedCount} current bags</p>
             <div class="witb-comp-grid">
               ${compHtml}
             </div>
@@ -1206,7 +1225,15 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, to
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/feed.min.js?v=20260522"></script>
-  <script defer src="/js/search.min.js?v=20260508"></script>
+  <script defer src="/js/search.min.js?v=20260529"></script>
+  <script>
+  // Player page view tracking — fire-and-forget, mirrors brand_page_views
+  (function(pid){
+    var SB='https://cimmmmnapdthqvtifpzr.supabase.co';
+    var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
+    fetch(SB+'/rest/v1/player_page_views',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=minimal'},body:JSON.stringify({player_id:pid})}).catch(function(){});
+  })('${esc(player.id)}');
+  </script>
 </body>
 </html>`;
 }
@@ -1294,8 +1321,12 @@ async function main() {
   const currentItems = currentBag._items;
   log(`Current bag items: ${currentItems.length}`);
 
+  log('Fetching ranked player IDs...');
+  const rankedPlayerIds = await fetchRankedPlayerIds(sb);
+  log(`Ranked players: ${rankedPlayerIds.size}`);
+
   log('Fetching tour comparison data...');
-  const tourComp = await fetchTourComparison(sb);
+  const { data: tourComp, rankedCount } = await fetchTourComparison(sb, rankedPlayerIds);
 
   const cacheKey = `${PLAYER_SLUG}:${currentBag.bag_date}`;
   const cache    = loadLedeCache();
@@ -1313,7 +1344,7 @@ async function main() {
 
   log(`Lede (${wordCount(ledes.lede)} words): ${ledes.lede?.slice(0, 100)}...`);
 
-  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, ledes, today });
+  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today });
 
   const noindex = html.includes('noindex');
 

@@ -46,7 +46,7 @@
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.min.css?v=20260523">
+  <link rel="stylesheet" href="/css/styles.css?v=20260530">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json" id="brand-jsonld">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://dormied.com/"},{"@type":"ListItem","position":2,"name":"Brands","item":"https://dormied.com/brands/"},{"@type":"ListItem","position":3,"name":"Toulon Golf","item":"https://dormied.com/brands/toulon-golf/"}]},{"@type":"Organization","name":"Toulon Golf","url":"https://toulongolf.com/","logo":"/images/logos/toulon-golf.jpg","foundingDate":"2023","description":"Toulon Golf is Sean Toulon’s second act in the boutique putter business, and its existence is one of the more unusual stories in modern golf equipment. Toulon, a former TaylorMade executive vice president who oversaw sales growth from $349 million in 1999 to $1.7 billion in 2013, retired briefly in 2015 before launching Toulon Design with sons Tony and Joe. The original company milled premium putters from solid blocks of 303 stainless steel using a vacuum brazing technique that allowed multiple head and hosel configurations. It was profitable in its first month. Within a year, Callaway acquired it.\n\nFrom 2016 through July 2023, Sean Toulon ran Odyssey as general manager while the Toulon name lived on as Odyssey’s high-end milled sub-brand. Toulon putters racked up more than 50 wins on global tours and became the second-most-used milled putter in professional golf. Then Sean Toulon retired again, and this time he came back with Toulon Golf, co-founded with son Tony and longtime industry stalwart Toru Kamatari, in a unique structure: independent from Callaway, but with Callaway as a partner. The 2024 First Run collection introduced the Dogwood and the San Diego, the latter a classic blade head that reviewers called astonishingly beautiful.\n\nThe positioning is specific. Toulon Golf is not chasing the mainline market it once owned through Odyssey. The pricing is higher than the Toulon-by-Odyssey models. The materials, the milling tolerances, and the production runs are smaller. The audience is the high-end collector and the player who wants a putter built closer to the way Scotty Cameron and PXG occupy the premium tier, but with the family name attached and Callaway technology accessible in the background. After 100-plus combined patents and decades of equipment leadership, Sean Toulon is once again building putters with his name on the back. The team has made every mistake a startup can make. They aren’t going to make those again."}]}</script>
@@ -92,22 +92,10 @@
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
-        <a href="/witb/"      class="site-nav-link">WITB</a>
         <a href="/scorecard/" class="site-nav-link">Scorecard</a>
         <a href="/news/"      class="site-nav-link">News</a>
         <a href="/brands/"    class="site-nav-link site-nav-link--active">Brands</a>
       </nav>
-
-      <!-- Hamburger (mobile only) -->
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
-        aria-expanded="false" aria-controls="mobile-nav-panel">
-        <span class="bars" aria-hidden="true">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </span>
-      </button>
-
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -126,16 +114,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Mobile nav panel -->
-    <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
-      <a href="/rankings/"  class="mobile-nav-link">Index</a>
-      <a href="/witb/"      class="mobile-nav-link">WITB</a>
-      <a href="/scorecard/" class="mobile-nav-link">Scorecard</a>
-      <a href="/news/"      class="mobile-nav-link">News</a>
-      <a href="/brands/"    class="mobile-nav-link">Brands</a>
-    </nav>
-
   </header>
 
   <!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
@@ -221,22 +199,25 @@ The positioning is specific. Toulon Golf is not chasing the mainline market it o
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">MoM Change</span>
-              <span class="bp-metric-val">+22.2%</span>
+              <span class="bp-metric-val change-up">+22.2%</span>
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">3M Trend</span>
-              <span class="bp-metric-val">+60.3%</span>
+              <span class="bp-metric-val change-up">+60.3%</span>
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">12M Trend</span>
-              <span class="bp-metric-val">+22.2%</span>
+              <span class="bp-metric-val change-up">+22.2%</span>
             </div>
           </div>
         </div>
       </section>
+      <div class="container">
+        <div class="bp-page-grid">
+          <div class="bp-page-main">
+
 
       <section class="bp-take-section" id="bp-take-section" hidden>
-        <div class="container">
           <div class="bp-take-inner">
             <div class="bp-take-label-wrap">
               <span class="bp-take-label">THE READ</span>
@@ -247,58 +228,40 @@ The positioning is specific. Toulon Golf is not chasing the mainline market it o
               <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
             </div>
           </div>
-        </div>
       </section>
 
-      <!-- ── Main Chart Section ── -->
-      <section class="bp-chart-section">
-        <div class="container bp-chart-container">
-          <div class="bp-chart-main">
-            <div class="bp-chart-controls">
-              <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
-              <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
-                <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
-                <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
-                <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
-                <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
+            <!-- ── Toulon Golf Interest Over Time ── -->
+            <section class="bp-chart-section">
+              <p class="bp-chart-heading">Toulon Golf Interest Over Time</p>
+              <p class="bp-chart-heading-sub">How search demand for Toulon Golf has moved over time, indexed against the rest of the field.</p>
+              <div class="bp-chart-main">
+                <div class="bp-chart-controls">
+                  <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
+                  <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
+                    <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
+                    <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
+                    <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
+                    <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
+                  </div>
+                </div>
+                <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
+                <div class="bp-chart-wrap">
+                  <canvas id="bp-chart" aria-label="Search interest chart" role="img"></canvas>
+                </div>
+                <div class="bp-chart-legend">
+                  <span class="bp-legend-item bp-legend-brand">Brand index</span>
+                  <span class="bp-legend-item bp-legend-avg">Global index avg</span>
+                  <span class="bp-legend-item bp-legend-proj">Projected</span>
+                </div>
+                <p id="bp-methodology-note" style="margin:.75rem 0 0;font-size:.75rem;color:var(--clr-muted,#6b7a6b);line-height:1.5;display:none"></p>
               </div>
-            </div>
-            <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
-            <div class="bp-chart-wrap">
-              <canvas id="bp-chart" aria-label="Search interest chart" role="img"></canvas>
-            </div>
-            <div class="bp-chart-legend">
-              <span class="bp-legend-item bp-legend-brand">Brand index</span>
-              <span class="bp-legend-item bp-legend-avg">Global index avg</span>
-              <span class="bp-legend-item bp-legend-proj">Projected</span>
-            </div>
-            <p id="bp-methodology-note" style="margin:.75rem 0 0;font-size:.75rem;color:var(--clr-muted,#6b7a6b);line-height:1.5;display:none"></p>
-          </div>
-        </div>
-      </section>
+            </section>
 
-      <!-- AD_UNIT:mid-chart
-      <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
-        <div class="ad-leaderboard tablet-ad">
-          <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="3187856648"></ins>
-        </div>
-        <div class="ad-in-table mobile-ad">
-          <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="5011106608"></ins>
-        </div>
-      </div>
-      -->
+            <!-- ── Key Moments ── -->
 
-      <!-- ── Key Moments (pre-rendered; brand.js can update on period tab change) ── -->
-      
       <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading">
-        <div class="container">
           <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
+          <p class="bp-section-sub">The product, marketing, culture, and on-course moments that moved search interest in Toulon Golf in a given month.</p>
           <div id="bp-explanation-body" class="bp-explanation-body">
             <div class="bp-exp-timeline">
               <div class="bp-exp-timeline-item" data-month="2026-04">
@@ -307,17 +270,12 @@ The positioning is specific. Toulon Golf is not chasing the mainline market it o
                 </div>
             </div>
           </div>
-        </div>
       </section>
 
-      <!-- ── Two-column layout: content + sidebar ad ── -->
-      <div class="container">
-        <div class="table-layout">
-          <div class="bp-sections-col">
-
-            <!-- ── Rankings by Market (server-rendered; brand.js overwrites on load) ── -->
+            <!-- ── Rankings by Market ── -->
             <section class="bp-section" aria-labelledby="bp-countries-heading">
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
+              <p class="bp-section-sub">Brand interest is not uniform. Where Toulon Golf is searched hardest, and where it lags, varies market to market.</p>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
                   <thead>
@@ -425,32 +383,17 @@ The positioning is specific. Toulon Golf is not chasing the mainline market it o
               <div class="bp-dominance" id="bp-dominance"></div>
             </section>
 
-            <!-- AD_UNIT:mid-rankings
-            <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
-              <div class="ad-leaderboard tablet-ad">
-                <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="3187856648"></ins>
-              </div>
-              <div class="ad-in-table mobile-ad">
-                <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="5011106608"></ins>
-              </div>
-            </div>
-            -->
-
             <!-- ── Category Standing (populated by brand.js) ── -->
             <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
 
+
+
             <!-- ── Similar Brands ── -->
             <section class="bp-section" aria-labelledby="bp-similar-heading">
-              <h2 class="bp-section-title" id="bp-similar-heading">Similar Brands</h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-similar-heading">Similar Brands</h2>
               <p class="bp-section-sub">Same category · closest search interest</p>
               <div class="bp-similar-grid" id="bp-similar-grid">
         <a href="/brands/evnroll/" class="bp-similar-card">
@@ -482,13 +425,13 @@ The positioning is specific. Toulon Golf is not chasing the mainline market it o
 
             <!-- ── Latest on Brand ── -->
             <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading" hidden>
-              <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Toulon Golf</span></h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">Toulon Golf</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 <p class="latest-feed-empty">No articles yet for this brand.</p>
               </div>
             </section>
 
-          </div><!-- /bp-sections-col -->
+          </div><!-- /bp-page-main -->
 
           <!-- Sidebar: LATEST widget -->
           <aside class="sidebar-ad-col">
@@ -510,7 +453,7 @@ The positioning is specific. Toulon Golf is not chasing the mainline market it o
             </section>
           </aside>
 
-        </div><!-- /table-layout -->
+        </div><!-- /bp-page-grid -->
       </div><!-- /container -->
 
     </div><!-- /brand-content -->
@@ -536,7 +479,6 @@ The positioning is specific. Toulon Golf is not chasing the mainline market it o
       </div>
       <nav class="footer-nav" aria-label="Footer navigation">
         <a href="/rankings/">Index</a>
-        <a href="/witb/">WITB</a>
         <a href="/scorecard/">Scorecard</a>
         <a href="/news/">News</a>
         <a href="/brands/">Brands</a>
@@ -573,7 +515,7 @@ The positioning is specific. Toulon Golf is not chasing the mainline market it o
   <script defer src="/js/feed.min.js?v=20260522"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
-  <script src="/js/search.min.js?v=20260508"></script>
+  <script src="/js/search.min.js?v=20260529"></script>
 
   <!-- AD_SCRIPT
   <script>
@@ -589,26 +531,6 @@ The positioning is specific. Toulon Golf is not chasing the mainline market it o
 });
   </script>
   -->
-
-
-  <!-- Mobile nav hamburger -->
-  <script>
-  (function(){
-    var btn   = document.getElementById('nav-hamburger');
-    var panel = document.getElementById('mobile-nav-panel');
-    if (!btn || !panel) return;
-    function openNav()  { btn.setAttribute('aria-expanded','true');  panel.classList.add('open');    panel.removeAttribute('hidden'); }
-    function closeNav() { btn.setAttribute('aria-expanded','false'); panel.classList.remove('open'); panel.setAttribute('hidden',''); }
-    btn.addEventListener('click', function() {
-      btn.getAttribute('aria-expanded') === 'true' ? closeNav() : openNav();
-    });
-    panel.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeNav); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
-    document.addEventListener('click', function(e) {
-      if (!btn.contains(e.target) && !panel.contains(e.target)) closeNav();
-    });
-  })();
-  </script>
 
 </body>
 </html>

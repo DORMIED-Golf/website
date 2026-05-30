@@ -659,6 +659,118 @@
     el.innerHTML = cards;
   }
 
+  /* ─────────────────────────────────────────────────────────────────────── */
+  /* ── FLAG EMOJI ───────────────────────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  // Asset-based flags: home nations use SVG images (NIR = Ulster Banner),
+  // all others use ISO 3166-1 regional indicator emoji.
+  var HOME_NATIONS_IMG = {
+    ENG: { file: 'eng', label: 'England' },
+    NIR: { file: 'nir', label: 'Northern Ireland' },
+    SCO: { file: 'sco', label: 'Scotland' },
+    WAL: { file: 'wal', label: 'Wales' }
+  };
+  function flagHtml(countryCode, nation) {
+    if (nation && HOME_NATIONS_IMG[nation]) {
+      var n = HOME_NATIONS_IMG[nation];
+      return '<img src="/images/flags/' + n.file + '.svg" alt="' + esc(n.label) + ' flag" width="20" height="12" style="display:inline-block;border-radius:1px;vertical-align:middle">';
+    }
+    if (!countryCode || countryCode.length !== 2) return '';
+    var base = 0x1F1E6;
+    var c1 = countryCode.charCodeAt(0) - 65;
+    var c2 = countryCode.charCodeAt(1) - 65;
+    if (c1 < 0 || c1 > 25 || c2 < 0 || c2 > 25) return '';
+    return String.fromCodePoint(base + c1) + String.fromCodePoint(base + c2);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────── */
+  /* ── MOST VIEWED WITBs ────────────────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  function fetchMostViewedPlayers() {
+    return fetch(SUPABASE_URL + '/rest/v1/player_views_7d?limit=10', {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
+  }
+
+  function renderMostViewedPlayers(viewData, leaders) {
+    var el = document.getElementById('most-viewed-witb-list');
+    if (!el || !leaders) return;
+    var allPlayers = leaders.allPlayers || leaders.topPlayers || [];
+    var playerMap  = {};
+    allPlayers.forEach(function (p) { playerMap[p.id] = p; });
+
+    var displayData;
+    if (!viewData || viewData.length < 3) {
+      displayData = allPlayers.map(function (p) { return { player_id: p.id }; });
+    } else {
+      displayData = viewData;
+    }
+
+    var cards = displayData.map(function (v) {
+      var p = playerMap[v.player_id];
+      if (!p) return '';
+      var flag = flagHtml(p.country_code, p.nation);
+      return '<a href="/witb/players/' + esc(p.slug) + '/" class="mv-card mv-witb-card">'
+        + '<div class="mv-name">' + esc(p.name) + '</div>'
+        + '<div class="mv-witb-meta">'
+        + (flag ? '<span class="mv-witb-flag">' + flag + '</span>' : '')
+        + (p.owgr_rank ? '<span class="mv-witb-rank">#' + p.owgr_rank + '</span>' : '')
+        + '</div>'
+        + '</a>';
+    }).filter(Boolean).join('');
+
+    el.innerHTML = cards;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────── */
+  /* ── WITB LEADERS ─────────────────────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────────────── */
+  function renderWitbLeaders(leaders) {
+    if (!leaders) return;
+
+    // Brand logo lookup by dormied slug (same key as DORMIED_DATA.brands[].id)
+    var brandMap = {};
+    if (window.DORMIED_DATA && window.DORMIED_DATA.brands) {
+      window.DORMIED_DATA.brands.forEach(function (b) { brandMap[b.id] = b; });
+    }
+
+    function modelCard(d) {
+      var b    = d.dormiedSlug ? brandMap[d.dormiedSlug] : null;
+      var logo = b ? logoImg(b, 'witb-ldr-logo', 20) : '<span class="witb-ldr-brand-text">' + esc(d.brand) + '</span>';
+      var inner = logo
+        + '<span class="sb-card-name">' + esc(d.brand + ' ' + d.model) + '</span>'
+        + '<span class="witb-ldr-count">' + d.count + '</span>';
+      return d.dormiedSlug
+        ? '<a href="/brands/' + esc(d.dormiedSlug) + '/" class="sb-card" style="color:var(--text)">' + inner + '</a>'
+        : '<div class="sb-card">' + inner + '</div>';
+    }
+
+    var topCol = document.getElementById('witb-leaders-top');
+    if (topCol) {
+      var rows1 = (leaders.topPlayers || []).map(function (p) {
+        var flag = flagHtml(p.country_code, p.nation);
+        return '<a href="/witb/players/' + esc(p.slug) + '/" class="sb-card" style="color:var(--text)">'
+          + '<span class="witb-ldr-flag">' + flag + '</span>'
+          + '<span class="sb-card-name">' + esc(p.name) + '</span>'
+          + '<span class="witb-ldr-rank">#' + p.owgr_rank + '</span>'
+          + '</a>';
+      }).join('');
+      topCol.innerHTML = '<div class="sb-col-title">World Ranking</div>' + rows1;
+    }
+
+    var driverCol = document.getElementById('witb-leaders-drivers');
+    if (driverCol) {
+      driverCol.innerHTML = '<div class="sb-col-title">Drivers</div>'
+        + (leaders.topDrivers || []).map(modelCard).join('');
+    }
+
+    var putterCol = document.getElementById('witb-leaders-putters');
+    if (putterCol) {
+      putterCol.innerHTML = '<div class="sb-col-title">Putters</div>'
+        + (leaders.topPutters || []).map(modelCard).join('');
+    }
+  }
+
   function init() {
     if (!window.DORMIED_DATA) {
       console.warn('[home.js] DORMIED_DATA not found');
@@ -684,6 +796,15 @@
     fetchMostViewedBrands().then(function (data) {
       renderMostViewed(data, ranked);
     });
+
+    // WITB Leaders (pre-computed at build time) + Most Viewed WITBs (live)
+    var witbLeaders = window.DORMIED_WITB_LEADERS;
+    if (witbLeaders) {
+      renderWitbLeaders(witbLeaders);
+      fetchMostViewedPlayers().then(function (data) {
+        renderMostViewedPlayers(data, witbLeaders);
+      });
+    }
 
     patchExplanations(window.DORMIED_DATA.meta.currentMonth);
 

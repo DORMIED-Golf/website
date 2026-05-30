@@ -506,13 +506,13 @@
           <!-- 3. HOW THIS BAG COMPARES -->
           <section class="witb-section" aria-labelledby="compare-heading">
             <h2 class="witb-section-title" id="compare-heading">How This Bag Compares to the Tour</h2>
-            <p class="witb-section-sub">Brand usage across 160 current bags</p>
+            <p class="witb-section-sub">Brand usage across 158 current bags</p>
             <div class="witb-comp-grid">
               <div class="witb-comp-row">
   <div class="witb-comp-cat"><img src="/images/icons/driver_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Driver</span></div>
   <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></div></div>
   <div class="witb-comp-stat">
-    <span class="witb-comp-count">59 of 160</span>
+    <span class="witb-comp-count">58 of 158</span>
     <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:37%"></div></div>
   </div>
   <div class="witb-comp-context"><span class="witb-comp-leader">TOUR LEADER</span></div>
@@ -521,8 +521,8 @@
   <div class="witb-comp-cat"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Irons</span></div>
   <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></div></div>
   <div class="witb-comp-stat">
-    <span class="witb-comp-count">46 of 160</span>
-    <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:29%"></div></div>
+    <span class="witb-comp-count">45 of 158</span>
+    <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:28%"></div></div>
   </div>
   <div class="witb-comp-context"><span class="witb-comp-leader">TOUR LEADER</span></div>
 </div>
@@ -530,7 +530,7 @@
   <div class="witb-comp-cat"><img src="/images/icons/putter_22px.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Putter</span></div>
   <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></div></div>
   <div class="witb-comp-stat">
-    <span class="witb-comp-count">43 of 160</span>
+    <span class="witb-comp-count">42 of 158</span>
     <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:27%"></div></div>
   </div>
   <div class="witb-comp-context"><span class="witb-comp-rank">Ranked #2</span><span class="witb-comp-context-sep"></span><span class="witb-comp-note">Odyssey leads (53)</span></div>
@@ -539,7 +539,7 @@
   <div class="witb-comp-cat"><img src="/images/icons/ball.svg" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0"><span>Ball</span></div>
   <div class="witb-comp-brand"><div class="witb-cell-flex"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></div></div>
   <div class="witb-comp-stat">
-    <span class="witb-comp-count">104 of 160</span>
+    <span class="witb-comp-count">102 of 158</span>
     <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:65%"></div></div>
   </div>
   <div class="witb-comp-context"><span class="witb-comp-leader">TOUR LEADER</span></div>
@@ -2236,6 +2236,14 @@
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/feed.min.js?v=20260522"></script>
-  <script defer src="/js/search.min.js?v=20260508"></script>
+  <script defer src="/js/search.min.js?v=20260529"></script>
+  <script>
+  // Player page view tracking — fire-and-forget, mirrors brand_page_views
+  (function(pid){
+    var SB='https://cimmmmnapdthqvtifpzr.supabase.co';
+    var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
+    fetch(SB+'/rest/v1/player_page_views',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=minimal'},body:JSON.stringify({player_id:pid})}).catch(function(){});
+  })('d207ecb9-00d9-48d6-919a-058f425ef86c');
+  </script>
 </body>
 </html>

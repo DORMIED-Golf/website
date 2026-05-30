@@ -77,8 +77,8 @@ function escapeRegex(str) {
 function stripEmDashes(text) {
   if (!text) return text;
   return text
-    .replace(/\s*—\s*/g, '. ')
-    .replace(/—/g, ', ')
+    .replace(/\s*—\s*/g, ', ')
+    .replace(/,\s*,/g, ',')
     .replace(/[ \t]{2,}/g, ' ')
     .trim();
 }
@@ -353,7 +353,7 @@ function buildCountryTableRows(marketStats) {
 
 // ── HTML template ─────────────────────────────────────────────────────────────
 
-function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData }) {
+function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '' }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
   const pageTitle    = `${escHtml(brand.name)} | DORMIED Brand Profile`;
@@ -397,7 +397,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
         ...(brand.website     && { url: brand.website }),
         ...(brand.logo        && { logo: brand.logo }),
         ...(brand.founded     && { foundingDate: String(brand.founded) }),
-        ...(brand.description && { description: brand.description }),
+        ...(brand.description && { description: stripEmDashes(brand.description) }),
       },
     ],
   });
@@ -437,7 +437,6 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   const takeSectionHtml = hasTake
     ? `
       <section class="bp-take-section" id="bp-take-section">
-        <div class="container">
           <div class="bp-take-inner">
             <div class="bp-take-label-wrap">
               <span class="bp-take-label">THE READ</span>
@@ -448,11 +447,9 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
               <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
             </div>
           </div>
-        </div>
       </section>`
     : `
       <section class="bp-take-section" id="bp-take-section" hidden>
-        <div class="container">
           <div class="bp-take-inner">
             <div class="bp-take-label-wrap">
               <span class="bp-take-label">THE READ</span>
@@ -463,7 +460,6 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
               <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
             </div>
           </div>
-        </div>
       </section>`;
 
   // Key Moments — pre-render timeline from Supabase explanation rows
@@ -484,15 +480,16 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   }
 
   function expToBullets(text) {
-    if (!text) return '';
+    const cleaned = stripEmDashes(text) || '';
+    if (!cleaned) return '';
     let items;
-    if (text.indexOf('•') !== -1) {
-      items = text.split('•').map(s => s.trim()).filter(Boolean);
+    if (cleaned.indexOf('•') !== -1) {
+      items = cleaned.split('•').map(s => s.trim()).filter(Boolean);
     } else {
-      const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+      const sentences = cleaned.match(/[^.!?]+[.!?]*/g) || [cleaned];
       items = sentences.map(s => s.trim()).filter(s => s.length > 15);
     }
-    if (!items.length) return `<p>${mdLinksToHtml(text)}</p>`;
+    if (!items.length) return `<p>${mdLinksToHtml(cleaned)}</p>`;
     return '<ul class="exp-bullets">' + items.map(s => `<li>${mdLinksToHtml(s)}</li>`).join('') + '</ul>';
   }
 
@@ -500,8 +497,8 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   const explanationsSectionHtml = sortedExplanations.length > 0
     ? `
       <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading">
-        <div class="container">
           <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
+          <p class="bp-section-sub">The product, marketing, culture, and on-course moments that moved search interest in ${escHtml(brand.name)} in a given month.</p>
           <div id="bp-explanation-body" class="bp-explanation-body">
             <div class="bp-exp-timeline">
               ${sortedExplanations.map(row => {
@@ -513,14 +510,12 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
               }).join('\n              ')}
             </div>
           </div>
-        </div>
       </section>`
     : `
       <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading" hidden>
-        <div class="container">
           <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
+          <p class="bp-section-sub">The product, marketing, culture, and on-course moments that moved search interest in ${escHtml(brand.name)} in a given month.</p>
           <div id="bp-explanation-body" class="bp-explanation-body"></div>
-        </div>
       </section>`;
 
   return `<!DOCTYPE html>
@@ -571,7 +566,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260522">
+  <link rel="stylesheet" href="/css/styles.css?v=20260530">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json" id="brand-jsonld">${jsonld}</script>
@@ -720,76 +715,59 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">MoM Change</span>
-              <span class="bp-metric-val">${escHtml(momStr)}</span>
+              <span class="bp-metric-val${momPct !== null ? (momPct > 0 ? ' change-up' : momPct < 0 ? ' change-down' : ' change-flat') : ''}">${escHtml(momStr)}</span>
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">3M Trend</span>
-              <span class="bp-metric-val">${escHtml(t3mStr)}</span>
+              <span class="bp-metric-val${t3m !== null ? (t3m > 0 ? ' change-up' : t3m < 0 ? ' change-down' : ' change-flat') : ''}">${escHtml(t3mStr)}</span>
             </div>
             <div class="bp-metric-card">
               <span class="bp-metric-label">12M Trend</span>
-              <span class="bp-metric-val">${escHtml(t12mStr)}</span>
+              <span class="bp-metric-val${t12m !== null ? (t12m > 0 ? ' change-up' : t12m < 0 ? ' change-down' : ' change-flat') : ''}">${escHtml(t12mStr)}</span>
             </div>
           </div>
         </div>
       </section>
+      <div class="container">
+        <div class="bp-page-grid">
+          <div class="bp-page-main">
+
 ${takeSectionHtml}
 
-      <!-- ── Main Chart Section ── -->
-      <section class="bp-chart-section">
-        <div class="container bp-chart-container">
-          <div class="bp-chart-main">
-            <div class="bp-chart-controls">
-              <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
-              <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
-                <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
-                <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
-                <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
-                <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
+            <!-- ── ${escHtml(brand.name)} Interest Over Time ── -->
+            <section class="bp-chart-section">
+              <p class="bp-chart-heading">${escHtml(brand.name)} Interest Over Time</p>
+              <p class="bp-chart-heading-sub">How search demand for ${escHtml(brand.name)} has moved over time, indexed against the rest of the field.</p>
+              <div class="bp-chart-main">
+                <div class="bp-chart-controls">
+                  <div class="bp-market-tabs" id="bp-market-tabs" role="tablist" aria-label="Select market"></div>
+                  <div class="bp-period-tabs" id="bp-period-tabs" role="tablist" aria-label="Select time range">
+                    <button class="bp-period-btn" data-months="3"  role="tab">3M</button>
+                    <button class="bp-period-btn bp-period-btn--active" data-months="6"  role="tab">6M</button>
+                    <button class="bp-period-btn" data-months="12" role="tab">1Y</button>
+                    <button class="bp-period-btn" data-months="0" role="tab">ALL</button>
+                  </div>
+                </div>
+                <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
+                <div class="bp-chart-wrap">
+                  <canvas id="bp-chart" aria-label="Search interest chart" role="img"></canvas>
+                </div>
+                <div class="bp-chart-legend">
+                  <span class="bp-legend-item bp-legend-brand">Brand index</span>
+                  <span class="bp-legend-item bp-legend-avg">Global index avg</span>
+                  <span class="bp-legend-item bp-legend-proj">Projected</span>
+                </div>
+                <p id="bp-methodology-note" style="margin:.75rem 0 0;font-size:.75rem;color:var(--clr-muted,#6b7a6b);line-height:1.5;display:none"></p>
               </div>
-            </div>
-            <div class="bp-chart-subtitle" id="bp-chart-subtitle"></div>
-            <div class="bp-chart-wrap">
-              <canvas id="bp-chart" aria-label="Search interest chart" role="img"></canvas>
-            </div>
-            <div class="bp-chart-legend">
-              <span class="bp-legend-item bp-legend-brand">Brand index</span>
-              <span class="bp-legend-item bp-legend-avg">Global index avg</span>
-              <span class="bp-legend-item bp-legend-proj">Projected</span>
-            </div>
-            <p id="bp-methodology-note" style="margin:.75rem 0 0;font-size:.75rem;color:var(--clr-muted,#6b7a6b);line-height:1.5;display:none"></p>
-          </div>
-        </div>
-      </section>
+            </section>
 
-      <!-- AD_UNIT:mid-chart
-      <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
-        <div class="ad-leaderboard tablet-ad">
-          <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="3187856648"></ins>
-        </div>
-        <div class="ad-in-table mobile-ad">
-          <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="5011106608"></ins>
-        </div>
-      </div>
-      -->
+            <!-- ── Key Moments ── -->
+${explanationsSectionHtml}
 
-      <!-- ── Key Moments (pre-rendered; brand.js can update on period tab change) ── -->
-      ${explanationsSectionHtml}
-
-      <!-- ── Two-column layout: content + sidebar ad ── -->
-      <div class="container">
-        <div class="table-layout">
-          <div class="bp-sections-col">
-
-            <!-- ── Rankings by Market (server-rendered; brand.js overwrites on load) ── -->
+            <!-- ── Rankings by Market ── -->
             <section class="bp-section" aria-labelledby="bp-countries-heading">
               <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
+              <p class="bp-section-sub">Brand interest is not uniform. Where ${escHtml(brand.name)} is searched hardest, and where it lags, varies market to market.</p>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
                   <thead>
@@ -810,32 +788,17 @@ ${countryRows}
               <div class="bp-dominance" id="bp-dominance"></div>
             </section>
 
-            <!-- AD_UNIT:mid-rankings
-            <div class="ad-top-zone bp-mid-ad" aria-hidden="true">
-              <div class="ad-leaderboard tablet-ad">
-                <ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="3187856648"></ins>
-              </div>
-              <div class="ad-in-table mobile-ad">
-                <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-5259693727609263"
-     data-ad-slot="5011106608"></ins>
-              </div>
-            </div>
-            -->
-
             <!-- ── Category Standing (populated by brand.js) ── -->
             <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
               <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
 
+${onTourHtml}
+
             <!-- ── Similar Brands ── -->
             <section class="bp-section" aria-labelledby="bp-similar-heading">
-              <h2 class="bp-section-title" id="bp-similar-heading">Similar Brands</h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-similar-heading">Similar Brands</h2>
               <p class="bp-section-sub">Same category · closest search interest</p>
               <div class="bp-similar-grid" id="bp-similar-grid">${relatedHtml}
               </div>
@@ -843,13 +806,13 @@ ${countryRows}
 
             <!-- ── Latest on Brand ── -->
             <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading"${articles.length === 0 ? ' hidden' : ''}>
-              <h2 class="bp-section-title" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">${escHtml(brand.name)}</span></h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">${escHtml(brand.name)}</span></h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 ${articlesHtml}
               </div>
             </section>
 
-          </div><!-- /bp-sections-col -->
+          </div><!-- /bp-page-main -->
 
           <!-- Sidebar: LATEST widget -->
           <aside class="sidebar-ad-col">
@@ -871,7 +834,7 @@ ${countryRows}
             </section>
           </aside>
 
-        </div><!-- /table-layout -->
+        </div><!-- /bp-page-grid -->
       </div><!-- /container -->
 
     </div><!-- /brand-content -->
@@ -933,7 +896,7 @@ ${countryRows}
   <script defer src="/js/feed.min.js?v=20260522"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
-  <script src="/js/search.min.js?v=20260508"></script>
+  <script src="/js/search.min.js?v=20260529"></script>
 
   <!-- AD_SCRIPT
   <script>
@@ -954,9 +917,201 @@ ${countryRows}
 </html>`;
 }
 
+// ── WITB On Tour data ─────────────────────────────────────────────────────────
+
+async function witbPaginate(buildQuery, pageSize = 1000) {
+  let from = 0;
+  const rows = [];
+  while (true) {
+    const { data, error } = await buildQuery(from, from + pageSize - 1);
+    if (error) throw error;
+    if (!data || data.length === 0) break;
+    rows.push(...data);
+    if (data.length < pageSize) break;
+    from += pageSize;
+  }
+  return rows;
+}
+
+async function fetchWitbTourData(supabase) {
+  console.log('[brand-page] Fetching WITB tour data for On Tour sections...');
+
+  const { data: players, error: pErr } = await supabase
+    .from('witb_players')
+    .select('id, name, slug, owgr_rank, current_bag_id')
+    .not('owgr_rank', 'is', null)
+    .order('owgr_rank', { ascending: true });
+  if (pErr) {
+    console.warn('[brand-page] fetchWitbTourData players error:', pErr.message);
+    return { players: [], items: [], shaftItems: [] };
+  }
+
+  const bagIds = (players || []).map(p => p.current_bag_id).filter(Boolean);
+  if (!bagIds.length) return { players: players || [], items: [], shaftItems: [] };
+
+  // Paginate to bypass Supabase 1000-row default limit
+  const items = await witbPaginate((from, to) =>
+    supabase
+      .from('witb_bag_items')
+      .select('bag_id, club_type, raw_model, witb_brands!brand_id(dormied_brand_slug)')
+      .in('bag_id', bagIds)
+      .range(from, to)
+  ).catch(e => { console.warn('[brand-page] fetchWitbTourData items error:', e.message); return []; });
+
+  const shaftItemsRaw = await witbPaginate((from, to) =>
+    supabase
+      .from('witb_bag_items')
+      .select('bag_id, witb_shafts!shaft_id(dormied_brand_slug)')
+      .in('bag_id', bagIds)
+      .not('shaft_id', 'is', null)
+      .range(from, to)
+  ).catch(e => { console.warn('[brand-page] fetchWitbTourData shafts error:', e.message); return []; });
+
+  console.log(`[brand-page] On Tour: ${(players || []).length} ranked players, ${items.length} bag items, ${shaftItemsRaw.length} shaft items`);
+  return { players: players || [], items, shaftItems: shaftItemsRaw };
+}
+
+function computeOnTourData({ players, items, shaftItems }, brandSlug) {
+  if (!brandSlug || !players.length) return [];
+
+  const DISPLAY_CATS = [
+    { name: 'Drivers',       types: ['driver'],                                              modelLabel: 'driver',      shaft: false },
+    { name: 'Fairway Woods', types: ['3-wood','4-wood','5-wood','7-wood','9-wood','mini-driver'], modelLabel: 'fairway wood', shaft: false },
+    { name: 'Hybrids',       types: ['hybrid','utility','utility-iron','driving-iron'],       modelLabel: 'hybrid',      shaft: false },
+    { name: 'Irons',         types: ['iron'],                                                modelLabel: 'iron',        shaft: false },
+    { name: 'Wedges',        types: ['wedge'],                                               modelLabel: 'wedge',       shaft: false },
+    { name: 'Putters',       types: ['putter'],                                              modelLabel: 'putter',      shaft: false },
+    { name: 'Balls',         types: ['ball'],                                                modelLabel: 'ball',        shaft: false },
+    { name: 'Shafts',        types: null,                                                    modelLabel: 'shaft',       shaft: true  },
+    { name: 'Grips',         types: ['grip'],                                                modelLabel: 'grip',        shaft: false },
+  ];
+
+  const bagToPlayer = new Map(players.filter(p => p.current_bag_id).map(p => [p.current_bag_id, p]));
+  const playerById  = new Map(players.map(p => [p.id, p]));
+
+  const results = [];
+
+  for (const cat of DISPLAY_CATS) {
+    if (cat.shaft) {
+      const allShaftItems = shaftItems.filter(i => bagToPlayer.has(i.bag_id));
+      const brandShaftItems = allShaftItems.filter(i => i.witb_shafts?.dormied_brand_slug === brandSlug);
+
+      const brandPlayerSet = new Set();
+      for (const item of brandShaftItems) {
+        const p = bagToPlayer.get(item.bag_id);
+        if (p) brandPlayerSet.add(p.id);
+      }
+      if (brandPlayerSet.size === 0) continue;
+
+      const shaftBrandCounts = new Map();
+      for (const item of allShaftItems) {
+        const ds = item.witb_shafts?.dormied_brand_slug;
+        if (!ds) continue;
+        const p = bagToPlayer.get(item.bag_id);
+        if (!p) continue;
+        if (!shaftBrandCounts.has(ds)) shaftBrandCounts.set(ds, new Set());
+        shaftBrandCounts.get(ds).add(p.id);
+      }
+      const sortedShaft = [...shaftBrandCounts.entries()].sort((a, b) => b[1].size - a[1].size);
+      const rank = sortedShaft.findIndex(([ds]) => ds === brandSlug) + 1;
+      if (rank === 0) continue;
+
+      const playerList = [...brandPlayerSet]
+        .map(id => playerById.get(id)).filter(Boolean)
+        .sort((a, b) => (a.owgr_rank || 9999) - (b.owgr_rank || 9999));
+
+      results.push({ cat: cat.name, rank, playerList, topModel: null });
+      continue;
+    }
+
+    const catItems   = items.filter(i => cat.types.includes(i.club_type));
+    const brandItems = catItems.filter(i => i.witb_brands?.dormied_brand_slug === brandSlug);
+
+    const brandPlayerSet = new Set();
+    for (const item of brandItems) {
+      const p = bagToPlayer.get(item.bag_id);
+      if (p) brandPlayerSet.add(p.id);
+    }
+    if (brandPlayerSet.size === 0) continue;
+
+    const brandCounts = new Map();
+    for (const item of catItems) {
+      const ds = item.witb_brands?.dormied_brand_slug;
+      if (!ds) continue;
+      const p = bagToPlayer.get(item.bag_id);
+      if (!p) continue;
+      if (!brandCounts.has(ds)) brandCounts.set(ds, new Set());
+      brandCounts.get(ds).add(p.id);
+    }
+    const sorted = [...brandCounts.entries()].sort((a, b) => b[1].size - a[1].size);
+    const rank = sorted.findIndex(([ds]) => ds === brandSlug) + 1;
+    if (rank === 0) continue;
+
+    const brandModelCounts = new Map();
+    for (const item of brandItems) {
+      const m = item.raw_model; if (!m) continue;
+      brandModelCounts.set(m, (brandModelCounts.get(m) || 0) + 1);
+    }
+    const globalModelCounts = new Map();
+    for (const item of catItems) {
+      const m = item.raw_model; if (!m) continue;
+      globalModelCounts.set(m, (globalModelCounts.get(m) || 0) + 1);
+    }
+    const globalTop5 = [...globalModelCounts.entries()]
+      .sort((a, b) => b[1] - a[1]).slice(0, 5).map(([m]) => m);
+
+    let topModel = null;
+    if (brandModelCounts.size > 0) {
+      const brandBest = [...brandModelCounts.entries()].sort((a, b) => b[1] - a[1])[0][0];
+      const globalRank = globalTop5.indexOf(brandBest);
+      if (globalRank !== -1) topModel = { name: brandBest, globalRank: globalRank + 1, modelLabel: cat.modelLabel };
+    }
+
+    const playerList = [...brandPlayerSet]
+      .map(id => playerById.get(id)).filter(Boolean)
+      .sort((a, b) => (a.owgr_rank || 9999) - (b.owgr_rank || 9999));
+
+    results.push({ cat: cat.name, rank, playerList, topModel });
+  }
+
+  return results;
+}
+
+function buildOnTourHtml(brandName, onTourData) {
+  if (!onTourData || onTourData.length === 0) return '';
+
+  function ordinal(n) {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
+
+  const catBlocks = onTourData.map(({ cat, rank, playerList, topModel }) => {
+    let header = `${escHtml(cat)} <span class="bp-tour-rank">· ${ordinal(rank)} on tour</span>`;
+    if (topModel) {
+      header += `<span class="bp-tour-model"> · ${escHtml(topModel.name)} is the no. ${topModel.globalRank} ${escHtml(topModel.modelLabel)} model</span>`;
+    }
+    const playerLinks = playerList.map(p =>
+      `<a href="/witb/players/${escHtml(p.slug)}/" class="bp-tour-player-link">${escHtml(p.name)}</a>`
+    ).join('');
+    return `            <div class="bp-tour-cat">
+              <p class="bp-tour-cat-header">${header}</p>
+              <div class="bp-tour-players">${playerLinks}</div>
+            </div>`;
+  }).join('\n');
+
+  return `
+            <!-- ── ${escHtml(brandName)} On Tour ── -->
+            <section class="bp-section bp-on-tour-section" aria-labelledby="bp-on-tour-heading">
+              <h2 class="bp-section-title bp-section-title--green" id="bp-on-tour-heading">${escHtml(brandName)} On Tour</h2>
+              <p class="bp-section-sub">Who plays ${escHtml(brandName)} right now, pulled from the <a href="/witb/players/">DORMIED WITB</a> tour database.</p>
+${catBlocks}
+            </section>`;
+}
+
 // ── Process one brand ─────────────────────────────────────────────────────────
 
-async function processOneBrand(dormiedData, supabase, brandSlug, force) {
+async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTourData) {
   const outPath = path.join(SITE_ROOT, 'brands', brandSlug, 'index.html');
 
   // Smart skip: file exists and not forced
@@ -981,7 +1136,10 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force) {
 
   const relatedBrands = getRelatedBrands(dormiedData, brandSlug, curSearches);
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData });
+  const onTourData = witbTourData ? computeOnTourData(witbTourData, brandSlug) : [];
+  const onTourHtml = buildOnTourHtml(brand.name, onTourData);
+
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
@@ -1018,9 +1176,17 @@ async function main() {
 
   let written = 0, skipped = 0, errors = 0;
 
+  // Fetch WITB tour data once for all brands (On Tour section)
+  let witbTourData = null;
+  try {
+    witbTourData = await fetchWitbTourData(supabase);
+  } catch (e) {
+    console.warn('[brand-page] WITB tour data fetch failed (On Tour sections will be empty):', e.message);
+  }
+
   for (const slug of targets) {
     try {
-      const result = await processOneBrand(dormiedData, supabase, slug, force);
+      const result = await processOneBrand(dormiedData, supabase, slug, force, witbTourData);
       if (result.status === 'written') {
         console.log(`[brand-page] ✓ brands/${slug}/index.html`);
         written++;

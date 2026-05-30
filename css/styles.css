@@ -1821,8 +1821,11 @@ details[open] .faq-question::after { content: '−'; }
 /* ── Key Metrics Strip ───────────────────────────────────────────────────── */
 /* ── The Take ─────────────────────────────────────────────────────────────── */
 .bp-take-section {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border);
+  background: var(--bg-raised);
+  border: 1px solid var(--green-dim);
+  border-radius: var(--radius);
+  padding: 16px 14px;
+  margin-bottom: 24px;
 }
 .bp-take-inner {
   display: flex;
@@ -2863,11 +2866,131 @@ details[open] .faq-question::after { content: '−'; }
   font-family: var(--font-mono);
   font-size: 0.58rem;
 }
+
+/* ── Most Viewed WITBs cards ──────────────────────────────────────────── */
+.mv-witb-card {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 120px;
+  width: auto;
+  gap: 4px;
+}
+.mv-witb-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+}
+.mv-witb-flag { font-size: 1.1em; line-height: 1; display: inline-flex; align-items: center; }
+.mv-witb-rank {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--green);
+}
+
+/* ── WITB Leaders section ─────────────────────────────────────────────── */
+.witb-leaders-section { margin-bottom: 32px; }
+.witb-ldr-flag  { font-size: 0.85em; flex-shrink: 0; }
+.witb-ldr-rank  {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--green);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.witb-ldr-count {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.witb-ldr-brand-text {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  min-width: 20px;
+}
+.witb-ldr-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
 .mv-pct--up   { color: var(--green); }
 .mv-pct--down { color: var(--red); }
 .mv-pct--flat { color: var(--text-muted); }
 
-.h2h-section { margin-bottom: 32px; }
+/* Fix 2: Taller Most Viewed WITBs cards */
+.mv-witb-card { padding: 18px 12px; min-height: 88px; }
+
+/* Fix 3: Green border on WITB Leaders and Standings sb-cols */
+.witb-leaders-section .sb-col,
+.scoreboard-section .sb-col { border-color: var(--green-dim); }
+
+/* ── Brand page: two-column grid from The Read onwards ───────────────────── */
+.bp-page-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+@media (min-width: 1200px) {
+  .bp-page-grid {
+    grid-template-columns: 1fr var(--sidebar-w);
+    gap: var(--gap);
+    padding: 20px 0;
+  }
+}
+.bp-page-main { min-width: 0; }
+
+/* ── Brand page: Interest Over Time heading above chart ───────────────────── */
+.bp-chart-heading {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 4px;
+}
+.bp-chart-heading-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin: 0 0 12px;
+}
+
+/* ── Brand page: section-title variant ───────────────────────────────────── */
+.bp-section-title--green { color: var(--green); }
+
+/* ── Brand page: On Tour section ─────────────────────────────────────────── */
+.bp-tour-cat { margin-bottom: 16px; }
+.bp-tour-cat-header {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.bp-tour-rank { color: var(--green); font-weight: 400; text-transform: none; letter-spacing: normal; }
+.bp-tour-model { color: var(--text-muted); font-weight: 400; text-transform: none; letter-spacing: normal; }
+.bp-tour-players { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.bp-tour-player-link { font-size: 0.78rem; color: var(--text-dim); text-decoration: none; }
+.bp-tour-player-link:hover { color: var(--green); }
+
+.h2h-section {
+  margin-bottom: 32px;
+  background: var(--bg-raised);
+  border: 1px solid var(--green-dim);
+  border-radius: var(--radius);
+  padding: 16px 14px 14px;
+}
 #h2h-content {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -3129,6 +3252,11 @@ details[open] .faq-question::after { content: '−'; }
   color: #052e0e;
 }
 .btn--cta:hover { background: #1aae52; border-color: #1aae52; color: #052e0e; }
+.btn--mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
 .btn--primary {
   background: var(--green-dark);
   border-color: var(--green-dim);
