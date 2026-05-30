@@ -1937,6 +1937,10 @@ details[open] .faq-question::after { content: '−'; }
   font-weight: 700;
   color: var(--text);
 }
+/* Override base color when change class is also present */
+.bp-metric-val.change-up   { color: var(--green); }
+.bp-metric-val.change-down { color: var(--red); }
+.bp-metric-val.change-flat { color: var(--text-muted); }
 
 .bp-metric-sub {
   font-size: 0.65rem;
@@ -2631,11 +2635,19 @@ details[open] .faq-question::after { content: '−'; }
 .hero-cta:hover { background: #1aae52; text-decoration: none; }
 
 /* ── Market Pulse Strip ──────────────────────────────────────────────────────── */
+.market-pulse-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 16px 0 4px;
+}
 .market-pulse {
   display: flex;
   flex-wrap: wrap;
   gap: 5px 14px;
-  margin-top: 18px;
+  margin-top: 2px;
 }
 .mp-item {
   font-family: var(--font-mono);
@@ -2874,30 +2886,79 @@ details[open] .faq-question::after { content: '−'; }
   text-align: center;
   min-width: 120px;
   width: auto;
-  gap: 4px;
+  gap: 2px;
+}
+.mv-name--first {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.2;
+  width: 100%;
+}
+.mv-name--last {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.2;
+  width: 100%;
+  margin-bottom: 2px;
 }
 .mv-witb-meta {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   justify-content: center;
+  margin-top: 2px;
 }
-.mv-witb-flag { font-size: 1.1em; line-height: 1; display: inline-flex; align-items: center; }
+.mv-witb-flag { font-size: 1em; line-height: 1; display: inline-flex; align-items: center; }
 .mv-witb-rank {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   color: var(--green);
 }
 
 /* ── WITB Leaders section ─────────────────────────────────────────────── */
 .witb-leaders-section { margin-bottom: 32px; }
+/* Stacked name layout for World Ranking column */
+.witb-ldr-player-card { align-items: center; justify-content: center; }
+.witb-ldr-name-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1px;
+  width: 100%;
+}
+.witb-ldr-name-first {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.witb-ldr-name-last {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text);
+  line-height: 1.2;
+}
+.witb-ldr-flag-rank {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 2px;
+  font-size: 0.85em;
+}
 .witb-ldr-flag  { font-size: 0.85em; flex-shrink: 0; }
 .witb-ldr-rank  {
   font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--green);
   flex-shrink: 0;
-  margin-left: auto;
 }
 .witb-ldr-count {
   font-family: var(--font-mono);
@@ -2968,7 +3029,36 @@ details[open] .faq-question::after { content: '−'; }
 .bp-section-title--green { color: var(--green); }
 
 /* ── Brand page: On Tour section ─────────────────────────────────────────── */
-.bp-tour-cat { margin-bottom: 16px; }
+.bp-tour-cat { margin-bottom: 20px; }
+.bp-tour-model-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+.bp-tour-model-row { border-bottom: 1px solid var(--border); }
+.bp-tour-model-row:last-child { border-bottom: none; }
+.bp-tour-model-name {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text);
+  padding: 5px 8px 5px 0;
+  white-space: nowrap;
+  min-width: 80px;
+  vertical-align: top;
+}
+.bp-tour-model-count {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--green);
+  padding: 5px 10px 5px 0;
+  white-space: nowrap;
+  vertical-align: top;
+}
+.bp-tour-model-players {
+  padding: 5px 0;
+  vertical-align: top;
+}
 .bp-tour-cat-header {
   font-family: var(--font-mono);
   font-size: 0.72rem;

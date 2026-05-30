@@ -892,7 +892,7 @@ ${onTourHtml}
   <script defer src="/js/take-preview.min.js?v=20260330"></script>
   <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  <script defer src="/js/brand.min.js?v=20260514a"></script>
+  <script defer src="/js/brand.min.js?v=20260530"></script>
   <script defer src="/js/feed.min.js?v=20260522"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
@@ -1016,11 +1016,25 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
       const rank = sortedShaft.findIndex(([ds]) => ds === brandSlug) + 1;
       if (rank === 0) continue;
 
-      const playerList = [...brandPlayerSet]
-        .map(id => playerById.get(id)).filter(Boolean)
-        .sort((a, b) => (a.owgr_rank || 9999) - (b.owgr_rank || 9999));
+      // For shafts, group by shaft model
+      const shaftModelToPlayers = new Map();
+      for (const item of brandShaftItems) {
+        const m = item.witb_shafts?.shaft_model || item.raw_model || 'Unknown';
+        const p = bagToPlayer.get(item.bag_id); if (!p) continue;
+        if (!shaftModelToPlayers.has(m)) shaftModelToPlayers.set(m, new Set());
+        shaftModelToPlayers.get(m).add(p.id);
+      }
+      const shaftModelGroups = [...shaftModelToPlayers.entries()]
+        .sort((a, b) => b[1].size - a[1].size || a[0].localeCompare(b[0]))
+        .map(([model, playerIdSet]) => ({
+          model,
+          count: playerIdSet.size,
+          players: [...playerIdSet]
+            .map(id => playerById.get(id)).filter(Boolean)
+            .sort((a, b) => (a.owgr_rank || 9999) - (b.owgr_rank || 9999)),
+        }));
 
-      results.push({ cat: cat.name, rank, playerList, topModel: null });
+      results.push({ cat: cat.name, rank, modelGroups: shaftModelGroups, topModel: null });
       continue;
     }
 
@@ -1047,11 +1061,6 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
     const rank = sorted.findIndex(([ds]) => ds === brandSlug) + 1;
     if (rank === 0) continue;
 
-    const brandModelCounts = new Map();
-    for (const item of brandItems) {
-      const m = item.raw_model; if (!m) continue;
-      brandModelCounts.set(m, (brandModelCounts.get(m) || 0) + 1);
-    }
     const globalModelCounts = new Map();
     for (const item of catItems) {
       const m = item.raw_model; if (!m) continue;
@@ -1060,18 +1069,34 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
     const globalTop5 = [...globalModelCounts.entries()]
       .sort((a, b) => b[1] - a[1]).slice(0, 5).map(([m]) => m);
 
+    // Group players by the model they use (a player may carry multiple; count each item)
+    const modelToPlayers = new Map(); // model -> Set of player ids
+    for (const item of brandItems) {
+      const m = item.raw_model; if (!m) continue;
+      const p = bagToPlayer.get(item.bag_id); if (!p) continue;
+      if (!modelToPlayers.has(m)) modelToPlayers.set(m, new Set());
+      modelToPlayers.get(m).add(p.id);
+    }
+
     let topModel = null;
-    if (brandModelCounts.size > 0) {
-      const brandBest = [...brandModelCounts.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    if (modelToPlayers.size > 0) {
+      const brandBest = [...modelToPlayers.entries()].sort((a, b) => b[1].size - a[1].size)[0][0];
       const globalRank = globalTop5.indexOf(brandBest);
       if (globalRank !== -1) topModel = { name: brandBest, globalRank: globalRank + 1, modelLabel: cat.modelLabel };
     }
 
-    const playerList = [...brandPlayerSet]
-      .map(id => playerById.get(id)).filter(Boolean)
-      .sort((a, b) => (a.owgr_rank || 9999) - (b.owgr_rank || 9999));
+    // Build model groups sorted by player count desc, then model name
+    const modelGroups = [...modelToPlayers.entries()]
+      .sort((a, b) => b[1].size - a[1].size || a[0].localeCompare(b[0]))
+      .map(([model, playerIdSet]) => ({
+        model,
+        count: playerIdSet.size,
+        players: [...playerIdSet]
+          .map(id => playerById.get(id)).filter(Boolean)
+          .sort((a, b) => (a.owgr_rank || 9999) - (b.owgr_rank || 9999)),
+      }));
 
-    results.push({ cat: cat.name, rank, playerList, topModel });
+    results.push({ cat: cat.name, rank, modelGroups, topModel });
   }
 
   return results;
@@ -1086,17 +1111,30 @@ function buildOnTourHtml(brandName, onTourData) {
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
   }
 
-  const catBlocks = onTourData.map(({ cat, rank, playerList, topModel }) => {
+  const catBlocks = onTourData.map(({ cat, rank, modelGroups, topModel }) => {
     let header = `${escHtml(cat)} <span class="bp-tour-rank">· ${ordinal(rank)} on tour</span>`;
     if (topModel) {
       header += `<span class="bp-tour-model"> · ${escHtml(topModel.name)} is the no. ${topModel.globalRank} ${escHtml(topModel.modelLabel)} model</span>`;
     }
-    const playerLinks = playerList.map(p =>
-      `<a href="/witb/players/${escHtml(p.slug)}/" class="bp-tour-player-link">${escHtml(p.name)}</a>`
-    ).join('');
+
+    const modelRows = (modelGroups || []).map(({ model, count, players }) => {
+      const playerLinks = players.map(p =>
+        `<a href="/witb/players/${escHtml(p.slug)}/" class="bp-tour-player-link">${escHtml(p.name)}</a>`
+      ).join('');
+      return `              <tr class="bp-tour-model-row">
+                <td class="bp-tour-model-name">${escHtml(model)}</td>
+                <td class="bp-tour-model-count">${count}</td>
+                <td class="bp-tour-model-players">${playerLinks}</td>
+              </tr>`;
+    }).join('\n');
+
     return `            <div class="bp-tour-cat">
               <p class="bp-tour-cat-header">${header}</p>
-              <div class="bp-tour-players">${playerLinks}</div>
+              <table class="bp-tour-model-table">
+                <tbody>
+${modelRows}
+                </tbody>
+              </table>
             </div>`;
   }).join('\n');
 

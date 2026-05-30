@@ -734,7 +734,7 @@
     });
     badgesEl.innerHTML = html;
 
-    document.getElementById('bp-description').textContent = brand.description || '';
+    document.getElementById('bp-description').textContent = (brand.description || '').replace(/\s*—\s*/g, ', ').replace(/,\s*,/g, ',');
 
     // Rank block
     document.getElementById('bp-rank').textContent = `#${globalRank}`;

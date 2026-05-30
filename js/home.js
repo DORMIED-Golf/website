@@ -709,9 +709,13 @@
     var cards = displayData.map(function (v) {
       var p = playerMap[v.player_id];
       if (!p) return '';
-      var flag = flagHtml(p.country_code, p.nation);
+      var flag   = flagHtml(p.country_code, p.nation);
+      var parts  = (p.name || '').trim().split(/\s+/);
+      var first  = parts[0] || '';
+      var last   = parts.slice(1).join(' ') || '';
       return '<a href="/witb/players/' + esc(p.slug) + '/" class="mv-card mv-witb-card">'
-        + '<div class="mv-name">' + esc(p.name) + '</div>'
+        + '<div class="mv-name mv-name--first">' + esc(first) + '</div>'
+        + (last ? '<div class="mv-name mv-name--last">' + esc(last) + '</div>' : '')
         + '<div class="mv-witb-meta">'
         + (flag ? '<span class="mv-witb-flag">' + flag + '</span>' : '')
         + (p.owgr_rank ? '<span class="mv-witb-rank">#' + p.owgr_rank + '</span>' : '')
@@ -748,11 +752,16 @@
     var topCol = document.getElementById('witb-leaders-top');
     if (topCol) {
       var rows1 = (leaders.topPlayers || []).map(function (p) {
-        var flag = flagHtml(p.country_code, p.nation);
-        return '<a href="/witb/players/' + esc(p.slug) + '/" class="sb-card" style="color:var(--text)">'
-          + '<span class="witb-ldr-flag">' + flag + '</span>'
-          + '<span class="sb-card-name">' + esc(p.name) + '</span>'
-          + '<span class="witb-ldr-rank">#' + p.owgr_rank + '</span>'
+        var flag  = flagHtml(p.country_code, p.nation);
+        var parts = (p.name || '').trim().split(/\s+/);
+        var first = parts[0] || '';
+        var last  = parts.slice(1).join(' ') || '';
+        return '<a href="/witb/players/' + esc(p.slug) + '/" class="sb-card witb-ldr-player-card" style="color:var(--text)">'
+          + '<div class="witb-ldr-name-stack">'
+          + '<span class="witb-ldr-name-first">' + esc(first) + '</span>'
+          + (last ? '<span class="witb-ldr-name-last">' + esc(last) + '</span>' : '')
+          + '<span class="witb-ldr-flag-rank">' + flag + (p.owgr_rank ? ' <span class="witb-ldr-rank">#' + p.owgr_rank + '</span>' : '') + '</span>'
+          + '</div>'
           + '</a>';
       }).join('');
       topCol.innerHTML = '<div class="sb-col-title">World Ranking</div>' + rows1;
