@@ -12,7 +12,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>What's In The Bag - Tour Equipment Data | DORMIED</title>
-  <meta name="description" content="What the tour actually plays and how it lines up with what the rest of golf pays attention to. DORMIED WITB tracks 160 tour players across 33 brands.">
+  <meta name="description" content="What the tour actually plays and how it lines up with what the rest of golf pays attention to. DORMIED WITB tracks 158 tour players across 33 brands.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://dormied.com/witb/">
 
@@ -22,7 +22,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://dormied.com/witb/">
   <meta property="og:title" content="What's In The Bag - Tour Equipment Data | DORMIED">
-  <meta property="og:description" content="What the tour actually plays vs. what the rest of golf pays attention to. 160 players, 33 brands, updated weekly.">
+  <meta property="og:description" content="What the tour actually plays vs. what the rest of golf pays attention to. 158 players, 33 brands, updated weekly.">
   <meta property="og:image" content="https://dormied.com/images/og-image.jpg">
   <meta property="og:site_name" content="DORMIED">
 
@@ -83,6 +83,20 @@
     .witb-scatter-checkboxes{display:flex;flex-wrap:wrap;gap:4px 14px}
     .witb-scatter-cb-label{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);cursor:pointer;white-space:nowrap}
     .witb-scatter-cb-label input[type=checkbox]{accent-color:var(--green);cursor:pointer;width:11px;height:11px}
+    /* Find A Player section */
+    .witb-fp-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+    .witb-fp-browse-btn{display:inline-block;font-family:var(--font-mono);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);border:1px solid var(--border);border-radius:var(--radius);padding:6px 14px;white-space:nowrap;transition:border-color .15s,background .15s}
+    .witb-fp-browse-btn:hover{border-color:var(--green);background:var(--bg-raised)}
+    .witb-fp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:500px){.witb-fp-grid{grid-template-columns:1fr}}
+    .witb-fp-col-label{font-family:var(--font-mono);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:4px}
+    .witb-fp-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);transition:color .1s}
+    .witb-fp-row:last-child{border-bottom:none}
+    .witb-fp-row:hover{color:var(--green)}
+    .witb-fp-flag{font-size:.85em;line-height:1;flex-shrink:0;min-width:18px}
+    .witb-fp-name{font-family:var(--font-mono);font-size:.75rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .witb-fp-rank{font-family:var(--font-mono);font-size:.65rem;color:var(--green);flex-shrink:0}
+    .witb-fp-date{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);flex-shrink:0}
   </style>
 
   <link rel="preload" href="/css/styles.min.css?v=20260523" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -94,7 +108,7 @@
     "@context": "https://schema.org",
     "@type": "Dataset",
     "name": "DORMIED WITB - Tour Equipment Data",
-    "description": "What 160 PGA Tour players carry in their bags, updated weekly. Covers 33 brands across drivers, irons, wedges, putters, balls, and grips.",
+    "description": "What 158 PGA Tour players carry in their bags, updated weekly. Covers 33 brands across drivers, irons, wedges, putters, balls, and grips.",
     "url": "https://dormied.com/witb/",
     "dateModified": "2026-05-26T14:17:04.415Z",
     "publisher": {
@@ -187,15 +201,86 @@
 
         <!-- WIDGET 1: TOUR PULSE STRIP -->
         <div class="witb-pulse" aria-label="WITB summary stats">
-          <span><span class="witb-pulse-val">160</span> players tracked</span>
+          <span><span class="witb-pulse-val">158</span> players tracked</span>
           <span class="witb-pulse-sep">&middot;</span>
-          <span><span class="witb-pulse-val">1,563</span> items logged</span>
+          <span><span class="witb-pulse-val">1,543</span> items logged</span>
           <span class="witb-pulse-sep">&middot;</span>
           <span><span class="witb-pulse-val">33</span> brands represented</span>
           <span class="witb-pulse-sep">&middot;</span>
           <span><span class="witb-pulse-val">16</span> club categories</span>
           <span class="witb-pulse-sep">&middot;</span><span>Updated <span class="witb-pulse-val">May 26, 2026</span></span>
         </div>
+
+        <!-- FIND A PLAYER -->
+        <section class="witb-section witb-find-player" aria-labelledby="find-player-heading">
+  <div class="witb-fp-header">
+    <div>
+      <h2 class="witb-section-title" id="find-player-heading" style="margin-bottom:2px">Find a Player</h2>
+      <p class="witb-section-sub" style="margin:0">158 players tracked, sorted by world ranking</p>
+    </div>
+    <a href="/witb/players/" class="witb-fp-browse-btn">Browse All Players &rarr;</a>
+  </div>
+  <div class="witb-fp-grid">
+    <div class="witb-fp-col">
+      <div class="witb-fp-col-label">Recent Bags</div>
+      <a href="/witb/players/aaron-rai/" class="witb-fp-row">
+        <span class="witb-fp-flag"><img src="/images/flags/eng.svg" alt="England" width="14" height="9" style="display:inline-block;border-radius:1px;vertical-align:middle;flex-shrink:0"></span>
+        <span class="witb-fp-name">Aaron Rai</span>
+        <span class="witb-fp-rank">#14</span>
+        <span class="witb-fp-date">MAY 2026</span>
+      </a><a href="/witb/players/bryson-dechambeau/" class="witb-fp-row">
+        <span class="witb-fp-flag"><span aria-label="US flag">🇺🇸</span></span>
+        <span class="witb-fp-name">Bryson DeChambeau</span>
+        <span class="witb-fp-rank">#32</span>
+        <span class="witb-fp-date">MAY 2026</span>
+      </a><a href="/witb/players/alex-fitzpatrick/" class="witb-fp-row">
+        <span class="witb-fp-flag"><img src="/images/flags/eng.svg" alt="England" width="14" height="9" style="display:inline-block;border-radius:1px;vertical-align:middle;flex-shrink:0"></span>
+        <span class="witb-fp-name">Alex Fitzpatrick</span>
+        <span class="witb-fp-rank">#82</span>
+        <span class="witb-fp-date">MAY 2026</span>
+      </a><a href="/witb/players/kristoffer-reitan/" class="witb-fp-row">
+        <span class="witb-fp-flag"><span aria-label="NO flag">🇳🇴</span></span>
+        <span class="witb-fp-name">Kristoffer Reitan</span>
+        <span class="witb-fp-rank">#25</span>
+        <span class="witb-fp-date">MAY 2026</span>
+      </a><a href="/witb/players/collin-morikawa/" class="witb-fp-row">
+        <span class="witb-fp-flag"><span aria-label="US flag">🇺🇸</span></span>
+        <span class="witb-fp-name">Collin Morikawa</span>
+        <span class="witb-fp-rank">#6</span>
+        <span class="witb-fp-date">MAY 2026</span>
+      </a>
+    </div>
+    <div class="witb-fp-col">
+      <div class="witb-fp-col-label">Top Ranked</div>
+      <a href="/witb/players/scottie-scheffler/" class="witb-fp-row">
+        <span class="witb-fp-flag"><span aria-label="US flag">🇺🇸</span></span>
+        <span class="witb-fp-name">Scottie Scheffler</span>
+        <span class="witb-fp-rank">#1</span>
+        
+      </a><a href="/witb/players/rory-mcilroy/" class="witb-fp-row">
+        <span class="witb-fp-flag"><img src="/images/flags/nir.svg" alt="Northern Ireland" width="14" height="9" style="display:inline-block;border-radius:1px;vertical-align:middle;flex-shrink:0"></span>
+        <span class="witb-fp-name">Rory McIlroy</span>
+        <span class="witb-fp-rank">#2</span>
+        
+      </a><a href="/witb/players/cameron-young/" class="witb-fp-row">
+        <span class="witb-fp-flag"><span aria-label="US flag">🇺🇸</span></span>
+        <span class="witb-fp-name">Cameron Young</span>
+        <span class="witb-fp-rank">#3</span>
+        
+      </a><a href="/witb/players/matthew-fitzpatrick/" class="witb-fp-row">
+        <span class="witb-fp-flag"><img src="/images/flags/eng.svg" alt="England" width="14" height="9" style="display:inline-block;border-radius:1px;vertical-align:middle;flex-shrink:0"></span>
+        <span class="witb-fp-name">Matt Fitzpatrick</span>
+        <span class="witb-fp-rank">#4</span>
+        
+      </a><a href="/witb/players/justin-rose/" class="witb-fp-row">
+        <span class="witb-fp-flag"><img src="/images/flags/eng.svg" alt="England" width="14" height="9" style="display:inline-block;border-radius:1px;vertical-align:middle;flex-shrink:0"></span>
+        <span class="witb-fp-name">Justin Rose</span>
+        <span class="witb-fp-rank">#5</span>
+        
+      </a>
+    </div>
+  </div>
+</section>
 
         <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
         <section class="witb-section" aria-labelledby="scatter-heading">
@@ -214,95 +299,95 @@
               <div class="witb-scatter-ytitle" aria-hidden="true">DI Score</div>
               <div class="witb-scatter-inner"><svg class="witb-scatter-svg" viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg"
     role="img" aria-label="Scatter plot: tour usage vs DORMIED Index score per brand">
-    <line class="witb-scatter-grid" x1="52" y1="20" x2="52" y2="372"/><text class="witb-scatter-axis-label" x="52" y="386" text-anchor="middle">0%</text><line class="witb-scatter-grid" x1="138.85714285714283" y1="20" x2="138.85714285714283" y2="372"/><text class="witb-scatter-axis-label" x="138.85714285714283" y="386" text-anchor="middle">10%</text><line class="witb-scatter-grid" x1="225.7142857142857" y1="20" x2="225.7142857142857" y2="372"/><text class="witb-scatter-axis-label" x="225.7142857142857" y="386" text-anchor="middle">20%</text><line class="witb-scatter-grid" x1="312.57142857142856" y1="20" x2="312.57142857142856" y2="372"/><text class="witb-scatter-axis-label" x="312.57142857142856" y="386" text-anchor="middle">30%</text><line class="witb-scatter-grid" x1="399.4285714285714" y1="20" x2="399.4285714285714" y2="372"/><text class="witb-scatter-axis-label" x="399.4285714285714" y="386" text-anchor="middle">40%</text><line class="witb-scatter-grid" x1="486.2857142857143" y1="20" x2="486.2857142857143" y2="372"/><text class="witb-scatter-axis-label" x="486.2857142857143" y="386" text-anchor="middle">50%</text><line class="witb-scatter-grid" x1="573.1428571428571" y1="20" x2="573.1428571428571" y2="372"/><text class="witb-scatter-axis-label" x="573.1428571428571" y="386" text-anchor="middle">60%</text><line class="witb-scatter-grid" x1="660" y1="20" x2="660" y2="372"/><text class="witb-scatter-axis-label" x="660" y="386" text-anchor="middle">70%</text><line class="witb-scatter-grid" x1="52" y1="372" x2="660" y2="372"/><text class="witb-scatter-axis-label" x="46" y="376" text-anchor="end">0</text><line class="witb-scatter-grid" x1="52" y1="304.95238095238096" x2="660" y2="304.95238095238096"/><text class="witb-scatter-axis-label" x="46" y="308.95238095238096" text-anchor="end">20</text><line class="witb-scatter-grid" x1="52" y1="237.90476190476193" x2="660" y2="237.90476190476193"/><text class="witb-scatter-axis-label" x="46" y="241.90476190476193" text-anchor="end">40</text><line class="witb-scatter-grid" x1="52" y1="170.85714285714286" x2="660" y2="170.85714285714286"/><text class="witb-scatter-axis-label" x="46" y="174.85714285714286" text-anchor="end">60</text><line class="witb-scatter-grid" x1="52" y1="103.80952380952385" x2="660" y2="103.80952380952385"/><text class="witb-scatter-axis-label" x="46" y="107.80952380952385" text-anchor="end">80</text><line class="witb-scatter-grid" x1="52" y1="36.76190476190476" x2="660" y2="36.76190476190476"/><text class="witb-scatter-axis-label" x="46" y="40.76190476190476" text-anchor="end">100</text><line class="witb-scatter-diagonal" x1="52" y1="372" x2="660" y2="137.33333333333334"/><circle class="witb-scatter-dot" cx="616.6" cy="36.8" r="13.2"
+    <line class="witb-scatter-grid" x1="52" y1="20" x2="52" y2="372"/><text class="witb-scatter-axis-label" x="52" y="386" text-anchor="middle">0%</text><line class="witb-scatter-grid" x1="133.06666666666666" y1="20" x2="133.06666666666666" y2="372"/><text class="witb-scatter-axis-label" x="133.06666666666666" y="386" text-anchor="middle">10%</text><line class="witb-scatter-grid" x1="214.13333333333333" y1="20" x2="214.13333333333333" y2="372"/><text class="witb-scatter-axis-label" x="214.13333333333333" y="386" text-anchor="middle">20%</text><line class="witb-scatter-grid" x1="295.20000000000005" y1="20" x2="295.20000000000005" y2="372"/><text class="witb-scatter-axis-label" x="295.20000000000005" y="386" text-anchor="middle">30%</text><line class="witb-scatter-grid" x1="376.26666666666665" y1="20" x2="376.26666666666665" y2="372"/><text class="witb-scatter-axis-label" x="376.26666666666665" y="386" text-anchor="middle">40%</text><line class="witb-scatter-grid" x1="457.3333333333333" y1="20" x2="457.3333333333333" y2="372"/><text class="witb-scatter-axis-label" x="457.3333333333333" y="386" text-anchor="middle">50%</text><line class="witb-scatter-grid" x1="538.4000000000001" y1="20" x2="538.4000000000001" y2="372"/><text class="witb-scatter-axis-label" x="538.4000000000001" y="386" text-anchor="middle">60%</text><line class="witb-scatter-grid" x1="619.4666666666667" y1="20" x2="619.4666666666667" y2="372"/><text class="witb-scatter-axis-label" x="619.4666666666667" y="386" text-anchor="middle">70%</text><line class="witb-scatter-grid" x1="52" y1="372" x2="660" y2="372"/><text class="witb-scatter-axis-label" x="46" y="376" text-anchor="end">0</text><line class="witb-scatter-grid" x1="52" y1="304.95238095238096" x2="660" y2="304.95238095238096"/><text class="witb-scatter-axis-label" x="46" y="308.95238095238096" text-anchor="end">20</text><line class="witb-scatter-grid" x1="52" y1="237.90476190476193" x2="660" y2="237.90476190476193"/><text class="witb-scatter-axis-label" x="46" y="241.90476190476193" text-anchor="end">40</text><line class="witb-scatter-grid" x1="52" y1="170.85714285714286" x2="660" y2="170.85714285714286"/><text class="witb-scatter-axis-label" x="46" y="174.85714285714286" text-anchor="end">60</text><line class="witb-scatter-grid" x1="52" y1="103.80952380952385" x2="660" y2="103.80952380952385"/><text class="witb-scatter-axis-label" x="46" y="107.80952380952385" text-anchor="end">80</text><line class="witb-scatter-grid" x1="52" y1="36.76190476190476" x2="660" y2="36.76190476190476"/><text class="witb-scatter-axis-label" x="46" y="40.76190476190476" text-anchor="end">100</text><line class="witb-scatter-diagonal" x1="52" y1="372" x2="660" y2="120.57142857142856"/><circle class="witb-scatter-dot" cx="580.5" cy="36.8" r="13.1"
       data-slug="titleist" data-name="Titleist"
-      data-tour="65.0" data-di="100.0"
-      data-rank="1" data-players="104"
-      aria-label="Titleist: 65.0% tour, DI 100.0"></circle><text class="witb-scatter-label" data-slug="titleist" x="616.6" y="50.8" text-anchor="middle">Titleist</text><circle class="witb-scatter-dot" cx="432.0" cy="98.1" r="11.7"
+      data-tour="65.2" data-di="100.0"
+      data-rank="1" data-players="103"
+      aria-label="Titleist: 65.2% tour, DI 100.0"></circle><text class="witb-scatter-label" data-slug="titleist" x="580.5" y="50.8" text-anchor="middle">Titleist</text><circle class="witb-scatter-dot" cx="406.0" cy="98.1" r="11.6"
       data-slug="taylormade" data-name="TaylorMade"
-      data-tour="43.8" data-di="81.7"
-      data-rank="2" data-players="70"
-      aria-label="TaylorMade: 43.8% tour, DI 81.7"></circle><text class="witb-scatter-label" data-slug="taylormade" x="432.0" y="90.1" text-anchor="middle">TaylorMade</text><circle class="witb-scatter-dot" cx="350.6" cy="304.6" r="10.9"
+      data-tour="43.7" data-di="81.7"
+      data-rank="2" data-players="69"
+      aria-label="TaylorMade: 43.7% tour, DI 81.7"></circle><text class="witb-scatter-label" data-slug="taylormade" x="406.0" y="90.1" text-anchor="middle">TaylorMade</text><circle class="witb-scatter-dot" cx="334.2" cy="304.6" r="10.9"
       data-slug="ping" data-name="PING"
-      data-tour="34.4" data-di="20.1"
+      data-tour="34.8" data-di="20.1"
       data-rank="19" data-players="55"
-      aria-label="PING: 34.4% tour, DI 20.1"></circle><text class="witb-scatter-label" data-slug="ping" x="350.6" y="296.6" text-anchor="middle">PING</text><circle class="witb-scatter-dot" cx="339.7" cy="360.9" r="10.8"
+      aria-label="PING: 34.8% tour, DI 20.1"></circle><text class="witb-scatter-label" data-slug="ping" x="334.2" y="296.6" text-anchor="middle">PING</text><circle class="witb-scatter-dot" cx="323.9" cy="360.9" r="10.8"
       data-slug="odyssey-golf" data-name="Odyssey"
-      data-tour="33.1" data-di="3.3"
+      data-tour="33.5" data-di="3.3"
       data-rank="72" data-players="53"
-      aria-label="Odyssey: 33.1% tour, DI 3.3"></circle><text class="witb-scatter-label" data-slug="odyssey-golf" x="339.7" y="352.9" text-anchor="middle">Odyssey</text><circle class="witb-scatter-dot" cx="290.9" cy="188.3" r="10.3"
+      aria-label="Odyssey: 33.5% tour, DI 3.3"></circle><text class="witb-scatter-label" data-slug="odyssey-golf" x="323.9" y="352.9" text-anchor="middle">Odyssey</text><circle class="witb-scatter-dot" cx="272.6" cy="188.3" r="10.2"
       data-slug="callaway" data-name="Callaway"
-      data-tour="27.5" data-di="54.8"
-      data-rank="4" data-players="44"
-      aria-label="Callaway: 27.5% tour, DI 54.8"></circle><text class="witb-scatter-label" data-slug="callaway" x="290.9" y="180.3" text-anchor="middle">Callaway</text><circle class="witb-scatter-dot" cx="176.9" cy="304.6" r="8.8"
+      data-tour="27.2" data-di="54.8"
+      data-rank="4" data-players="43"
+      aria-label="Callaway: 27.2% tour, DI 54.8"></circle><text class="witb-scatter-label" data-slug="callaway" x="272.6" y="180.3" text-anchor="middle">Callaway</text><circle class="witb-scatter-dot" cx="170.0" cy="304.6" r="8.8"
       data-slug="srixon" data-name="Srixon"
-      data-tour="14.4" data-di="20.1"
+      data-tour="14.6" data-di="20.1"
       data-rank="20" data-players="23"
-      aria-label="Srixon: 14.4% tour, DI 20.1"></circle><text class="witb-scatter-label" data-slug="srixon" x="176.9" y="296.6" text-anchor="middle">Srixon</text><circle class="witb-scatter-dot" cx="144.3" cy="335.1" r="8.3"
+      aria-label="Srixon: 14.6% tour, DI 20.1"></circle><text class="witb-scatter-label" data-slug="srixon" x="170.0" y="296.6" text-anchor="middle">Srixon</text><circle class="witb-scatter-dot" cx="139.2" cy="335.1" r="8.3"
       data-slug="cleveland-golf" data-name="Cleveland"
-      data-tour="10.6" data-di="11.0"
+      data-tour="10.8" data-di="11.0"
       data-rank="31" data-players="17"
-      aria-label="Cleveland: 10.6% tour, DI 11.0"></circle><text class="witb-scatter-label" data-slug="cleveland-golf" x="144.3" y="327.1" text-anchor="middle">Cleveland</text><circle class="witb-scatter-dot" cx="106.3" cy="358.6" r="7.5"
-      data-slug="l-a-b-golf" data-name="L.A.B. Golf"
-      data-tour="6.3" data-di="4.0"
-      data-rank="62" data-players="10"
-      aria-label="L.A.B. Golf: 6.3% tour, DI 4.0"></circle><text class="witb-scatter-label" data-slug="l-a-b-golf" x="106.3" y="350.6" text-anchor="middle">L.A.B. Golf</text><circle class="witb-scatter-dot" cx="106.3" cy="304.6" r="7.5"
+      aria-label="Cleveland: 10.8% tour, DI 11.0"></circle><text class="witb-scatter-label" data-slug="cleveland-golf" x="139.2" y="327.1" text-anchor="middle">Cleveland</text><circle class="witb-scatter-dot" cx="103.3" cy="304.6" r="7.5"
       data-slug="pxg" data-name="PXG"
       data-tour="6.3" data-di="20.1"
       data-rank="15" data-players="10"
-      aria-label="PXG: 6.3% tour, DI 20.1"></circle><text class="witb-scatter-label" data-slug="pxg" x="106.3" y="296.6" text-anchor="middle">PXG</text><circle class="witb-scatter-dot" cx="100.9" cy="304.6" r="7.4"
+      aria-label="PXG: 6.3% tour, DI 20.1"></circle><text class="witb-scatter-label" data-slug="pxg" x="103.3" y="296.6" text-anchor="middle">PXG</text><circle class="witb-scatter-dot" cx="98.2" cy="304.6" r="7.4"
       data-slug="cobra" data-name="Cobra"
-      data-tour="5.6" data-di="20.1"
+      data-tour="5.7" data-di="20.1"
       data-rank="17" data-players="9"
-      aria-label="Cobra: 5.6% tour, DI 20.1"></circle><text class="witb-scatter-label" data-slug="cobra" x="100.9" y="296.6" text-anchor="middle">Cobra</text><circle class="witb-scatter-dot" cx="100.9" cy="317.0" r="7.4"
+      aria-label="Cobra: 5.7% tour, DI 20.1"></circle><text class="witb-scatter-label" data-slug="cobra" x="98.2" y="296.6" text-anchor="middle">Cobra</text><circle class="witb-scatter-dot" cx="98.2" cy="358.6" r="7.4"
+      data-slug="l-a-b-golf" data-name="L.A.B. Golf"
+      data-tour="5.7" data-di="4.0"
+      data-rank="62" data-players="9"
+      aria-label="L.A.B. Golf: 5.7% tour, DI 4.0"></circle><text class="witb-scatter-label" data-slug="l-a-b-golf" x="98.2" y="350.6" text-anchor="middle">L.A.B. Golf</text><circle class="witb-scatter-dot" cx="93.0" cy="317.0" r="7.3"
       data-slug="mizuno" data-name="Mizuno"
-      data-tour="5.6" data-di="16.4"
-      data-rank="23" data-players="9"
-      aria-label="Mizuno: 5.6% tour, DI 16.4"></circle><text class="witb-scatter-label" data-slug="mizuno" x="100.9" y="309.0" text-anchor="middle">Mizuno</text><circle class="witb-scatter-dot" cx="73.7" cy="347.2" r="6.6"
+      data-tour="5.1" data-di="16.4"
+      data-rank="23" data-players="8"
+      aria-label="Mizuno: 5.1% tour, DI 16.4"></circle><text class="witb-scatter-label" data-slug="mizuno" x="93.0" y="309.0" text-anchor="middle">Mizuno</text><circle class="witb-scatter-dot" cx="72.5" cy="347.2" r="6.6"
       data-slug="bettinardi" data-name="Bettinardi"
       data-tour="2.5" data-di="7.4"
       data-rank="48" data-players="4"
-      aria-label="Bettinardi: 2.5% tour, DI 7.4"></circle><text class="witb-scatter-label" data-slug="bettinardi" x="73.7" y="339.2" text-anchor="middle">Bettinardi</text><circle class="witb-scatter-dot" cx="68.3" cy="347.2" r="6.4"
+      aria-label="Bettinardi: 2.5% tour, DI 7.4"></circle><text class="witb-scatter-label" data-slug="bettinardi" x="72.5" y="339.2" text-anchor="middle">Bettinardi</text><circle class="witb-scatter-dot" cx="67.4" cy="347.2" r="6.4"
       data-slug="wilson" data-name="Wilson"
       data-tour="1.9" data-di="7.4"
       data-rank="42" data-players="3"
-      aria-label="Wilson: 1.9% tour, DI 7.4"></circle><text class="witb-scatter-label" data-slug="wilson" x="68.3" y="339.2" text-anchor="middle">Wilson</text><circle class="witb-scatter-dot" cx="68.3" cy="271.1" r="6.4"
+      aria-label="Wilson: 1.9% tour, DI 7.4"></circle><text class="witb-scatter-label" data-slug="wilson" x="67.4" y="339.2" text-anchor="middle">Wilson</text><circle class="witb-scatter-dot" cx="67.4" cy="271.1" r="6.4"
       data-slug="nike-golf" data-name="Nike"
       data-tour="1.9" data-di="30.1"
       data-rank="11" data-players="3"
-      aria-label="Nike: 1.9% tour, DI 30.1"></circle><text class="witb-scatter-label" data-slug="nike-golf" x="68.3" y="263.1" text-anchor="middle">Nike</text><circle class="witb-scatter-dot" cx="62.9" cy="360.9" r="6.1"
+      aria-label="Nike: 1.9% tour, DI 30.1"></circle><text class="witb-scatter-label" data-slug="nike-golf" x="67.4" y="263.1" text-anchor="middle">Nike</text><circle class="witb-scatter-dot" cx="62.3" cy="360.9" r="6.1"
       data-slug="bridgestone-golf" data-name="Bridgestone"
       data-tour="1.3" data-di="3.3"
       data-rank="68" data-players="2"
-      aria-label="Bridgestone: 1.3% tour, DI 3.3"></circle><text class="witb-scatter-label" data-slug="bridgestone-golf" x="62.9" y="352.9" text-anchor="middle">Bridgestone</text><circle class="witb-scatter-dot" cx="62.9" cy="326.7" r="6.1"
+      aria-label="Bridgestone: 1.3% tour, DI 3.3"></circle><text class="witb-scatter-label" data-slug="bridgestone-golf" x="62.3" y="352.9" text-anchor="middle">Bridgestone</text><circle class="witb-scatter-dot" cx="62.3" cy="326.7" r="6.1"
       data-slug="miura-golf" data-name="Miura"
       data-tour="1.3" data-di="13.5"
       data-rank="26" data-players="2"
-      aria-label="Miura: 1.3% tour, DI 13.5"></circle><text class="witb-scatter-label" data-slug="miura-golf" x="62.9" y="318.7" text-anchor="middle">Miura</text><circle class="witb-scatter-dot" cx="57.4" cy="188.3" r="5.8"
+      aria-label="Miura: 1.3% tour, DI 13.5"></circle><text class="witb-scatter-label" data-slug="miura-golf" x="62.3" y="318.7" text-anchor="middle">Miura</text><circle class="witb-scatter-dot" cx="57.1" cy="188.3" r="5.8"
       data-slug="mclaren-golf" data-name="McLaren Golf"
       data-tour="0.6" data-di="54.8"
       data-rank="7" data-players="1"
-      aria-label="McLaren Golf: 0.6% tour, DI 54.8"></circle><text class="witb-scatter-label" data-slug="mclaren-golf" x="57.4" y="180.3" text-anchor="middle">McLaren Golf</text><circle class="witb-scatter-dot" cx="57.4" cy="367.0" r="5.8"
+      aria-label="McLaren Golf: 0.6% tour, DI 54.8"></circle><text class="witb-scatter-label" data-slug="mclaren-golf" x="57.1" y="180.3" text-anchor="middle">McLaren Golf</text><circle class="witb-scatter-dot" cx="57.1" cy="367.0" r="5.8"
       data-slug="new-level-golf" data-name="New Level"
       data-tour="0.6" data-di="1.5"
       data-rank="107" data-players="1"
-      aria-label="New Level: 0.6% tour, DI 1.5"></circle><text class="witb-scatter-label" data-slug="new-level-golf" x="57.4" y="359.0" text-anchor="middle">New Level</text><circle class="witb-scatter-dot" cx="57.4" cy="366.0" r="5.8"
+      aria-label="New Level: 0.6% tour, DI 1.5"></circle><text class="witb-scatter-label" data-slug="new-level-golf" x="57.1" y="359.0" text-anchor="middle">New Level</text><circle class="witb-scatter-dot" cx="57.1" cy="366.0" r="5.8"
       data-slug="krank-golf" data-name="Krank"
       data-tour="0.6" data-di="1.8"
       data-rank="102" data-players="1"
-      aria-label="Krank: 0.6% tour, DI 1.8"></circle><text class="witb-scatter-label" data-slug="krank-golf" x="57.4" y="358.0" text-anchor="middle">Krank</text><circle class="witb-scatter-dot" cx="57.4" cy="362.9" r="5.8"
+      aria-label="Krank: 0.6% tour, DI 1.8"></circle><text class="witb-scatter-label" data-slug="krank-golf" x="57.1" y="358.0" text-anchor="middle">Krank</text><circle class="witb-scatter-dot" cx="57.1" cy="362.9" r="5.8"
       data-slug="avoda-golf" data-name="Avoda"
       data-tour="0.6" data-di="2.7"
       data-rank="78" data-players="1"
-      aria-label="Avoda: 0.6% tour, DI 2.7"></circle><text class="witb-scatter-label" data-slug="avoda-golf" x="57.4" y="354.9" text-anchor="middle">Avoda</text><circle class="witb-scatter-dot" cx="57.4" cy="335.1" r="5.8"
+      aria-label="Avoda: 0.6% tour, DI 2.7"></circle><text class="witb-scatter-label" data-slug="avoda-golf" x="57.1" y="354.9" text-anchor="middle">Avoda</text><circle class="witb-scatter-dot" cx="57.1" cy="335.1" r="5.8"
       data-slug="swag-golf" data-name="Swag Golf"
       data-tour="0.6" data-di="11.0"
       data-rank="36" data-players="1"
-      aria-label="Swag Golf: 0.6% tour, DI 11.0"></circle><text class="witb-scatter-label" data-slug="swag-golf" x="57.4" y="327.1" text-anchor="middle">Swag Golf</text><circle class="witb-scatter-dot" cx="57.4" cy="360.9" r="5.8"
+      aria-label="Swag Golf: 0.6% tour, DI 11.0"></circle><text class="witb-scatter-label" data-slug="swag-golf" x="57.1" y="327.1" text-anchor="middle">Swag Golf</text><circle class="witb-scatter-dot" cx="57.1" cy="360.9" r="5.8"
       data-slug="honma" data-name="Honma"
       data-tour="0.6" data-di="3.3"
       data-rank="70" data-players="1"
-      aria-label="Honma: 0.6% tour, DI 3.3"></circle><text class="witb-scatter-label" data-slug="honma" x="57.4" y="352.9" text-anchor="middle">Honma</text>
+      aria-label="Honma: 0.6% tour, DI 3.3"></circle><text class="witb-scatter-label" data-slug="honma" x="57.1" y="352.9" text-anchor="middle">Honma</text>
     <text class="witb-scatter-axis-label" x="356" y="416" text-anchor="middle">Tour Usage (%)</text>
     <text class="witb-scatter-axis-label" x="10" y="196" text-anchor="middle" transform="rotate(-90,10,196)">DI Score</text>
   
@@ -331,7 +416,7 @@
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></span>
-      <span class="witb-lb-count">59</span>
+      <span class="witb-lb-count">58</span>
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
       </span>
@@ -340,14 +425,14 @@
       <span class="witb-lb-name"><img src="/images/logos/ping.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">PI</span><a href="/brands/ping/">PING</a></span>
       <span class="witb-lb-count">41</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:69%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:71%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">3</span>
       <span class="witb-lb-name"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></span>
       <span class="witb-lb-count">28</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:47%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:48%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">4</span>
@@ -372,17 +457,17 @@
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">7</span>
-      <span class="witb-lb-name"><img src="/images/logos/mizuno.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">MI</span><a href="/brands/mizuno/">Mizuno</a></span>
+      <span class="witb-lb-name"><img src="/images/logos/pxg.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">PX</span><a href="/brands/pxg/">PXG</a></span>
       <span class="witb-lb-count">3</span>
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:5%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">8</span>
-      <span class="witb-lb-name"><img src="/images/logos/pxg.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">PX</span><a href="/brands/pxg/">PXG</a></span>
-      <span class="witb-lb-count">3</span>
+      <span class="witb-lb-name"><img src="/images/logos/mizuno.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">MI</span><a href="/brands/mizuno/">Mizuno</a></span>
+      <span class="witb-lb-count">2</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:5%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:3%"></div></div>
       </span>
     </div>
   </div>
@@ -391,14 +476,14 @@
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></span>
-      <span class="witb-lb-count">67</span>
+      <span class="witb-lb-count">66</span>
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">2</span>
       <span class="witb-lb-name"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></span>
-      <span class="witb-lb-count">35</span>
+      <span class="witb-lb-count">34</span>
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:52%"></div></div>
       </span>
@@ -407,42 +492,42 @@
       <span class="witb-lb-name"><img src="/images/logos/ping.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">PI</span><a href="/brands/ping/">PING</a></span>
       <span class="witb-lb-count">34</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:51%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:52%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">4</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></span>
       <span class="witb-lb-count">31</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:46%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:47%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">5</span>
       <span class="witb-lb-name"><img src="/images/logos/cobra.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CO</span><a href="/brands/cobra/">Cobra</a></span>
       <span class="witb-lb-count">5</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:7%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:8%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">6</span>
       <span class="witb-lb-name"><img src="/images/logos/pxg.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">PX</span><a href="/brands/pxg/">PXG</a></span>
       <span class="witb-lb-count">3</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:4%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:5%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">7</span>
       <span class="witb-lb-name"><img src="/images/logos/krank-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">KR</span><a href="/brands/krank-golf/">Krank</a></span>
       <span class="witb-lb-count">1</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:1%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:2%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">8</span>
       <span class="witb-lb-name"><img src="/images/logos/srixon.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">SR</span><a href="/brands/srixon/">Srixon</a></span>
       <span class="witb-lb-count">1</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:1%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:2%"></div></div>
       </span>
     </div>
   </div>
@@ -504,7 +589,7 @@
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></span>
-      <span class="witb-lb-count">46</span>
+      <span class="witb-lb-count">45</span>
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
       </span>
@@ -513,42 +598,42 @@
       <span class="witb-lb-name"><img src="/images/logos/callaway.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CA</span><a href="/brands/callaway/">Callaway</a></span>
       <span class="witb-lb-count">29</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:63%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:64%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">3</span>
       <span class="witb-lb-name"><img src="/images/logos/ping.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">PI</span><a href="/brands/ping/">PING</a></span>
       <span class="witb-lb-count">25</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:54%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:56%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">4</span>
       <span class="witb-lb-name"><img src="/images/logos/srixon.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">SR</span><a href="/brands/srixon/">Srixon</a></span>
       <span class="witb-lb-count">23</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:50%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:51%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">5</span>
       <span class="witb-lb-name"><img src="/images/logos/taylormade.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TA</span><a href="/brands/taylormade/">TaylorMade</a></span>
       <span class="witb-lb-count">19</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:41%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:42%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">6</span>
       <span class="witb-lb-name"><img src="/images/logos/mizuno.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">MI</span><a href="/brands/mizuno/">Mizuno</a></span>
-      <span class="witb-lb-count">9</span>
+      <span class="witb-lb-count">8</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:20%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:18%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">7</span>
       <span class="witb-lb-name"><img src="/images/logos/pxg.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">PX</span><a href="/brands/pxg/">PXG</a></span>
       <span class="witb-lb-count">8</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:17%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:18%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">8</span>
@@ -564,7 +649,7 @@
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></span>
-      <span class="witb-lb-count">92</span>
+      <span class="witb-lb-count">91</span>
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
       </span>
@@ -587,7 +672,7 @@
       <span class="witb-lb-name"><img src="/images/logos/cleveland-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">CL</span><a href="/brands/cleveland-golf/">Cleveland</a></span>
       <span class="witb-lb-count">17</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:18%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:19%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">5</span>
@@ -613,9 +698,9 @@
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">8</span>
       <span class="witb-lb-name"><img src="/images/logos/mizuno.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">MI</span><a href="/brands/mizuno/">Mizuno</a></span>
-      <span class="witb-lb-count">4</span>
+      <span class="witb-lb-count">3</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:4%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:3%"></div></div>
       </span>
     </div>
   </div>
@@ -631,9 +716,9 @@
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">2</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></span>
-      <span class="witb-lb-count">43</span>
+      <span class="witb-lb-count">42</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:81%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:79%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">3</span>
@@ -652,9 +737,9 @@
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">5</span>
       <span class="witb-lb-name"><img src="/images/logos/l-a-b-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">LA</span><a href="/brands/l-a-b-golf/">L.A.B. Golf</a></span>
-      <span class="witb-lb-count">10</span>
+      <span class="witb-lb-count">9</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:19%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:17%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">6</span>
@@ -684,7 +769,7 @@
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist</a></span>
-      <span class="witb-lb-count">104</span>
+      <span class="witb-lb-count">102</span>
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
       </span>
@@ -723,14 +808,14 @@
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:1%"></div></div>
       </span>
-    </div><p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em">139 of 160 players in dataset</p>
+    </div><p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em">137 of 158 players in dataset</p>
   </div>
 <div class="witb-lb-section" id="grips">
     <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/grip.svg" width="16" height="16" alt=""></span>Grips</div>
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride</a></span>
-      <span class="witb-lb-count">129</span>
+      <span class="witb-lb-count">127</span>
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
       </span>
@@ -739,7 +824,7 @@
       <span class="witb-lb-name"><img src="/images/logos/superstroke.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">SU</span><a href="/brands/superstroke/">SuperStroke</a></span>
       <span class="witb-lb-count">43</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:33%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:34%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">3</span>
@@ -783,14 +868,14 @@
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:1%"></div></div>
       </span>
-    </div><p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em">146 of 160 players in dataset</p>
+    </div><p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em">144 of 158 players in dataset</p>
   </div>
 <div class="witb-lb-section" id="shafts">
     <div class="witb-lb-title"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/shaft.svg" width="16" height="16" alt=""></span>Shafts</div>
     <div class="witb-lb-row">
       <span class="witb-lb-rank">1</span>
       <span class="witb-lb-name"><img src="/images/logos/true-temper.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TR</span><a href="/brands/true-temper/">True Temper</a></span>
-      <span class="witb-lb-count">135</span>
+      <span class="witb-lb-count">134</span>
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:100%"></div></div>
       </span>
@@ -799,14 +884,14 @@
       <span class="witb-lb-name"><img src="/images/logos/fujikura.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">FU</span><a href="/brands/fujikura/">Fujikura</a></span>
       <span class="witb-lb-count">88</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:65%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:66%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">3</span>
       <span class="witb-lb-name"><img src="/images/logos/mitsubishi-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">MI</span><a href="/brands/mitsubishi-golf/">Mitsubishi</a></span>
       <span class="witb-lb-count">72</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:53%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:54%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">4</span>
@@ -818,9 +903,9 @@
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">5</span>
       <span class="witb-lb-name"><img src="/images/logos/kbs-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">KB</span><a href="/brands/kbs-golf/">KBS</a></span>
-      <span class="witb-lb-count">35</span>
+      <span class="witb-lb-count">34</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:26%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:25%"></div></div>
       </span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">6</span>
@@ -839,9 +924,9 @@
     </div><div class="witb-lb-row">
       <span class="witb-lb-rank">8</span>
       <span class="witb-lb-name"><img src="/images/logos/ust-mamiya.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">US</span><a href="/brands/ust-mamiya/">UST Mamiya</a></span>
-      <span class="witb-lb-count">8</span>
+      <span class="witb-lb-count">6</span>
       <span class="witb-lb-bar-wrap">
-        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:6%"></div></div>
+        <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:4%"></div></div>
       </span>
     </div>
   </div>
@@ -867,7 +952,7 @@
     </div><div class="witb-lb-row">
       <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/golf_iron_icon_22px.svg" width="16" height="16" alt=""></span>Irons</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist T100</a></span>
-      <span class="witb-lb-count">28</span>
+      <span class="witb-lb-count">27</span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/wedge_22px.svg" width="14" height="14" alt=""></span>Wedges</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist Vokey Design SM10</a></span>
@@ -879,15 +964,15 @@
     </div><div class="witb-lb-row">
       <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/ball.svg" width="14" height="14" alt=""></span>Balls</span>
       <span class="witb-lb-name"><img src="/images/logos/titleist.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TI</span><a href="/brands/titleist/">Titleist Pro V1</a></span>
-      <span class="witb-lb-count">50</span>
+      <span class="witb-lb-count">49</span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/grip.svg" width="14" height="14" alt=""></span>Grips</span>
       <span class="witb-lb-name"><img src="/images/logos/golf-pride.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">GO</span><a href="/brands/golf-pride/">Golf Pride Tour Velvet</a></span>
-      <span class="witb-lb-count">46</span>
+      <span class="witb-lb-count">45</span>
     </div><div class="witb-lb-row">
       <span class="witb-lb-name" style="color:var(--text-muted);min-width:90px;max-width:90px;font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase"><span class="witb-cat-icon" aria-hidden="true"><img src="/images/icons/shaft.svg" width="14" height="14" alt=""></span>Shafts</span>
       <span class="witb-lb-name"><img src="/images/logos/true-temper.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">TR</span><a href="/brands/true-temper/">True Temper Dynamic Gold Tour Issue S400</a></span>
-      <span class="witb-lb-count">75</span>
+      <span class="witb-lb-count">74</span>
     </div>
           </div>
         </section>
@@ -899,7 +984,7 @@
 
           <div class="witb-treemap-group">
             <div class="witb-treemap-title">Clubs (drivers, woods, hybrids, irons, wedges, putters)</div>
-            <div class="witb-prop-bar"><div class="witb-prop-seg" style="width:33.28%;background:#22c55e"><a href="/brands/titleist/" title="Titleist 33%" style="font-family:var(--font-mono);font-size:.68rem">Titleist</a></div><div class="witb-prop-seg" style="width:16.39%;background:#16a34a"><a href="/brands/taylormade/" title="TaylorMade 16%" style="font-family:var(--font-mono);font-size:.68rem">TaylorMade</a></div><div class="witb-prop-seg" style="width:16.07%;background:#15803d"><a href="/brands/ping/" title="PING 16%" style="font-family:var(--font-mono);font-size:.68rem">PING</a></div><div class="witb-prop-seg" style="width:14.52%;background:#166534"><a href="/brands/callaway/" title="Callaway 15%" style="font-family:var(--font-mono);font-size:.68rem">Callaway</a></div><div class="witb-prop-seg" style="width:4.49%;background:#14532d"><a href="/brands/odyssey-golf/" title="Odyssey 4%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:3.75%;background:#4ade80"><a href="/brands/srixon/" title="Srixon 4%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:2.45%;background:#86efac"><a href="/brands/pxg/" title="PXG 2%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:1.96%;background:#bbf7d0"><a href="/brands/cobra/" title="Cobra 2%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:7.10%;background:#dcfce7"><span title="Other 7%" style="font-family:var(--font-mono);font-size:.68rem"></span></div></div><div class="witb-prop-legend"><span class="witb-prop-legend-item">
+            <div class="witb-prop-bar"><div class="witb-prop-seg" style="width:33.22%;background:#22c55e"><a href="/brands/titleist/" title="Titleist 33%" style="font-family:var(--font-mono);font-size:.68rem">Titleist</a></div><div class="witb-prop-seg" style="width:16.36%;background:#16a34a"><a href="/brands/taylormade/" title="TaylorMade 16%" style="font-family:var(--font-mono);font-size:.68rem">TaylorMade</a></div><div class="witb-prop-seg" style="width:16.28%;background:#15803d"><a href="/brands/ping/" title="PING 16%" style="font-family:var(--font-mono);font-size:.68rem">PING</a></div><div class="witb-prop-seg" style="width:14.55%;background:#166534"><a href="/brands/callaway/" title="Callaway 15%" style="font-family:var(--font-mono);font-size:.68rem">Callaway</a></div><div class="witb-prop-seg" style="width:4.55%;background:#14532d"><a href="/brands/odyssey-golf/" title="Odyssey 5%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:3.80%;background:#4ade80"><a href="/brands/srixon/" title="Srixon 4%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:2.48%;background:#86efac"><a href="/brands/pxg/" title="PXG 2%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:1.98%;background:#bbf7d0"><a href="/brands/cobra/" title="Cobra 2%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:6.78%;background:#dcfce7"><span title="Other 7%" style="font-family:var(--font-mono);font-size:.68rem"></span></div></div><div class="witb-prop-legend"><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#22c55e"></span>
       <a href="/brands/titleist/" style="color:inherit">Titleist</a> <span style="color:var(--text-muted)">33%</span>
     </span><span class="witb-prop-legend-item">
@@ -913,7 +998,7 @@
       <a href="/brands/callaway/" style="color:inherit">Callaway</a> <span style="color:var(--text-muted)">15%</span>
     </span><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#14532d"></span>
-      <a href="/brands/odyssey-golf/" style="color:inherit">Odyssey</a> <span style="color:var(--text-muted)">4%</span>
+      <a href="/brands/odyssey-golf/" style="color:inherit">Odyssey</a> <span style="color:var(--text-muted)">5%</span>
     </span><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#4ade80"></span>
       <a href="/brands/srixon/" style="color:inherit">Srixon</a> <span style="color:var(--text-muted)">4%</span>
@@ -930,9 +1015,9 @@
           </div>
           <div class="witb-treemap-group">
             <div class="witb-treemap-title">Balls</div>
-            <div class="witb-prop-bar"><div class="witb-prop-seg" style="width:74.82%;background:#22c55e"><a href="/brands/titleist/" title="Titleist 75%" style="font-family:var(--font-mono);font-size:.68rem">Titleist</a></div><div class="witb-prop-seg" style="width:9.35%;background:#16a34a"><a href="/brands/callaway/" title="Callaway 9%" style="font-family:var(--font-mono);font-size:.68rem">Callaway</a></div><div class="witb-prop-seg" style="width:7.19%;background:#15803d"><a href="/brands/srixon/" title="Srixon 7%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:4.32%;background:#166534"><a href="/brands/taylormade/" title="TaylorMade 4%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:3.60%;background:#14532d"><a href="/brands/bridgestone-golf/" title="Bridgestone 4%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:0.72%;background:#4ade80"><a href="/brands/maxfli/" title="Maxfli 1%" style="font-family:var(--font-mono);font-size:.68rem"></a></div></div><div class="witb-prop-legend"><span class="witb-prop-legend-item">
+            <div class="witb-prop-bar"><div class="witb-prop-seg" style="width:74.45%;background:#22c55e"><a href="/brands/titleist/" title="Titleist 74%" style="font-family:var(--font-mono);font-size:.68rem">Titleist</a></div><div class="witb-prop-seg" style="width:9.49%;background:#16a34a"><a href="/brands/callaway/" title="Callaway 9%" style="font-family:var(--font-mono);font-size:.68rem">Callaway</a></div><div class="witb-prop-seg" style="width:7.30%;background:#15803d"><a href="/brands/srixon/" title="Srixon 7%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:4.38%;background:#166534"><a href="/brands/taylormade/" title="TaylorMade 4%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:3.65%;background:#14532d"><a href="/brands/bridgestone-golf/" title="Bridgestone 4%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:0.73%;background:#4ade80"><a href="/brands/maxfli/" title="Maxfli 1%" style="font-family:var(--font-mono);font-size:.68rem"></a></div></div><div class="witb-prop-legend"><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#22c55e"></span>
-      <a href="/brands/titleist/" style="color:inherit">Titleist</a> <span style="color:var(--text-muted)">75%</span>
+      <a href="/brands/titleist/" style="color:inherit">Titleist</a> <span style="color:var(--text-muted)">74%</span>
     </span><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#16a34a"></span>
       <a href="/brands/callaway/" style="color:inherit">Callaway</a> <span style="color:var(--text-muted)">9%</span>
@@ -952,9 +1037,9 @@
           </div>
           <div class="witb-treemap-group">
             <div class="witb-treemap-title">Grips</div>
-            <div class="witb-prop-bar"><div class="witb-prop-seg" style="width:66.67%;background:#22c55e"><a href="/brands/golf-pride/" title="Golf Pride 67%" style="font-family:var(--font-mono);font-size:.68rem">Golf Pride</a></div><div class="witb-prop-seg" style="width:23.23%;background:#16a34a"><a href="/brands/superstroke/" title="SuperStroke 23%" style="font-family:var(--font-mono);font-size:.68rem">SuperStroke</a></div><div class="witb-prop-seg" style="width:4.55%;background:#15803d"><a href="/brands/lamkin/" title="Lamkin 5%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:2.53%;background:#166534"><a href="/brands/ping/" title="PING 3%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:1.01%;background:#14532d"><a href="/brands/jumbomax/" title="JumboMax 1%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:0.51%;background:#4ade80"><span title="Iomic 1%" style="font-family:var(--font-mono);font-size:.68rem"></span></div><div class="witb-prop-seg" style="width:0.51%;background:#86efac"><a href="/brands/l-a-b-golf/" title="L.A.B. Golf 1%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:0.51%;background:#bbf7d0"><a href="/brands/titleist/" title="Titleist 1%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:0.51%;background:#dcfce7"><span title="Other 1%" style="font-family:var(--font-mono);font-size:.68rem"></span></div></div><div class="witb-prop-legend"><span class="witb-prop-legend-item">
+            <div class="witb-prop-bar"><div class="witb-prop-seg" style="width:66.33%;background:#22c55e"><a href="/brands/golf-pride/" title="Golf Pride 66%" style="font-family:var(--font-mono);font-size:.68rem">Golf Pride</a></div><div class="witb-prop-seg" style="width:23.47%;background:#16a34a"><a href="/brands/superstroke/" title="SuperStroke 23%" style="font-family:var(--font-mono);font-size:.68rem">SuperStroke</a></div><div class="witb-prop-seg" style="width:4.59%;background:#15803d"><a href="/brands/lamkin/" title="Lamkin 5%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:2.55%;background:#166534"><a href="/brands/ping/" title="PING 3%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:1.02%;background:#14532d"><a href="/brands/jumbomax/" title="JumboMax 1%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:0.51%;background:#4ade80"><span title="Iomic 1%" style="font-family:var(--font-mono);font-size:.68rem"></span></div><div class="witb-prop-seg" style="width:0.51%;background:#86efac"><a href="/brands/l-a-b-golf/" title="L.A.B. Golf 1%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:0.51%;background:#bbf7d0"><a href="/brands/titleist/" title="Titleist 1%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:0.51%;background:#dcfce7"><span title="Other 1%" style="font-family:var(--font-mono);font-size:.68rem"></span></div></div><div class="witb-prop-legend"><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#22c55e"></span>
-      <a href="/brands/golf-pride/" style="color:inherit">Golf Pride</a> <span style="color:var(--text-muted)">67%</span>
+      <a href="/brands/golf-pride/" style="color:inherit">Golf Pride</a> <span style="color:var(--text-muted)">66%</span>
     </span><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#16a34a"></span>
       <a href="/brands/superstroke/" style="color:inherit">SuperStroke</a> <span style="color:var(--text-muted)">23%</span>
@@ -983,12 +1068,12 @@
           </div>
           <div class="witb-treemap-group">
             <div class="witb-treemap-title">Shafts</div>
-            <div class="witb-prop-bar"><div class="witb-prop-seg" style="width:31.11%;background:#22c55e"><a href="/brands/true-temper/" title="True Temper 31%" style="font-family:var(--font-mono);font-size:.68rem">True Temper</a></div><div class="witb-prop-seg" style="width:20.28%;background:#16a34a"><a href="/brands/fujikura/" title="Fujikura 20%" style="font-family:var(--font-mono);font-size:.68rem">Fujikura</a></div><div class="witb-prop-seg" style="width:16.59%;background:#15803d"><a href="/brands/mitsubishi-golf/" title="Mitsubishi 17%" style="font-family:var(--font-mono);font-size:.68rem">Mitsubishi</a></div><div class="witb-prop-seg" style="width:8.99%;background:#166534"><a href="/brands/graphite-design/" title="Graphite Design 9%" style="font-family:var(--font-mono);font-size:.68rem">Graphite Design</a></div><div class="witb-prop-seg" style="width:8.06%;background:#14532d"><a href="/brands/kbs-golf/" title="KBS 8%" style="font-family:var(--font-mono);font-size:.68rem">KBS</a></div><div class="witb-prop-seg" style="width:5.76%;background:#4ade80"><a href="/brands/nippon-shaft/" title="Nippon 6%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:2.07%;background:#86efac"><a href="/brands/aldila/" title="Aldila 2%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:1.84%;background:#bbf7d0"><a href="/brands/ust-mamiya/" title="UST Mamiya 2%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:5.30%;background:#dcfce7"><span title="Other 5%" style="font-family:var(--font-mono);font-size:.68rem"></span></div></div><div class="witb-prop-legend"><span class="witb-prop-legend-item">
+            <div class="witb-prop-bar"><div class="witb-prop-seg" style="width:31.24%;background:#22c55e"><a href="/brands/true-temper/" title="True Temper 31%" style="font-family:var(--font-mono);font-size:.68rem">True Temper</a></div><div class="witb-prop-seg" style="width:20.51%;background:#16a34a"><a href="/brands/fujikura/" title="Fujikura 21%" style="font-family:var(--font-mono);font-size:.68rem">Fujikura</a></div><div class="witb-prop-seg" style="width:16.78%;background:#15803d"><a href="/brands/mitsubishi-golf/" title="Mitsubishi 17%" style="font-family:var(--font-mono);font-size:.68rem">Mitsubishi</a></div><div class="witb-prop-seg" style="width:9.09%;background:#166534"><a href="/brands/graphite-design/" title="Graphite Design 9%" style="font-family:var(--font-mono);font-size:.68rem">Graphite Design</a></div><div class="witb-prop-seg" style="width:7.93%;background:#14532d"><a href="/brands/kbs-golf/" title="KBS 8%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:5.83%;background:#4ade80"><a href="/brands/nippon-shaft/" title="Nippon 6%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:2.10%;background:#86efac"><a href="/brands/aldila/" title="Aldila 2%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:1.40%;background:#bbf7d0"><a href="/brands/ust-mamiya/" title="UST Mamiya 1%" style="font-family:var(--font-mono);font-size:.68rem"></a></div><div class="witb-prop-seg" style="width:5.13%;background:#dcfce7"><span title="Other 5%" style="font-family:var(--font-mono);font-size:.68rem"></span></div></div><div class="witb-prop-legend"><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#22c55e"></span>
       <a href="/brands/true-temper/" style="color:inherit">True Temper</a> <span style="color:var(--text-muted)">31%</span>
     </span><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#16a34a"></span>
-      <a href="/brands/fujikura/" style="color:inherit">Fujikura</a> <span style="color:var(--text-muted)">20%</span>
+      <a href="/brands/fujikura/" style="color:inherit">Fujikura</a> <span style="color:var(--text-muted)">21%</span>
     </span><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#15803d"></span>
       <a href="/brands/mitsubishi-golf/" style="color:inherit">Mitsubishi</a> <span style="color:var(--text-muted)">17%</span>
@@ -1006,7 +1091,7 @@
       <a href="/brands/aldila/" style="color:inherit">Aldila</a> <span style="color:var(--text-muted)">2%</span>
     </span><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#bbf7d0"></span>
-      <a href="/brands/ust-mamiya/" style="color:inherit">UST Mamiya</a> <span style="color:var(--text-muted)">2%</span>
+      <a href="/brands/ust-mamiya/" style="color:inherit">UST Mamiya</a> <span style="color:var(--text-muted)">1%</span>
     </span><span class="witb-prop-legend-item">
       <span class="witb-prop-legend-dot" style="background:#dcfce7"></span>
       Other <span style="color:var(--text-muted)">5%</span>
@@ -1021,19 +1106,19 @@
           <div class="witb-dyk-grid"><div class="witb-dyk-card">
       <div class="witb-dyk-stat" style="color:var(--text)">9.4&deg;</div>
       <div class="witb-dyk-label">Avg Driver Loft</div>
-      <div class="witb-dyk-detail">Across 162 drivers with parsed loft data</div>
+      <div class="witb-dyk-detail">Across 160 drivers with parsed loft data</div>
     </div><div class="witb-dyk-card">
       <div class="witb-dyk-stat" style="color:var(--text)">6&deg;</div>
       <div class="witb-dyk-label">Lowest Driver Loft</div>
       <div class="witb-dyk-detail">The flattest driver currently in play on tour</div>
     </div><div class="witb-dyk-card">
-      <div class="witb-dyk-stat" style="color:var(--text)">142 vs 14</div>
+      <div class="witb-dyk-stat" style="color:var(--text)">140 vs 14</div>
       <div class="witb-dyk-label">3-Wood vs Mini-Driver</div>
-      <div class="witb-dyk-detail">142 players carry a traditional 3-wood; 14 carry a mini-driver</div>
+      <div class="witb-dyk-detail">140 players carry a traditional 3-wood; 14 carry a mini-driver</div>
     </div><div class="witb-dyk-card">
-      <div class="witb-dyk-stat" style="color:var(--text)">44</div>
+      <div class="witb-dyk-stat" style="color:var(--text)">42</div>
       <div class="witb-dyk-label">Players with 7-Wood+</div>
-      <div class="witb-dyk-detail">44 players carry a 7-wood or higher on tour this season</div>
+      <div class="witb-dyk-detail">42 players carry a 7-wood or higher on tour this season</div>
     </div></div>
         </section>
 
@@ -1091,7 +1176,7 @@
               <span class="witb-lb-count">-</span>
             </div><div class="witb-lb-row">
               <span class="witb-lb-rank">8</span>
-              <span class="witb-lb-name"><img src="/images/logos/l-a-b-golf.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">LA</span><a href="/brands/l-a-b-golf/">L.A.B. Golf</a></span>
+              <span class="witb-lb-name"><img src="/images/logos/pxg.jpg" alt="" class="witb-brand-logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="witb-brand-monogram" style="display:none">PX</span><a href="/brands/pxg/">PXG</a></span>
               <span class="witb-lb-count">-</span>
               <span class="witb-lb-count">-</span>
               <span class="witb-lb-count">-</span>
@@ -1105,17 +1190,17 @@
           <h2 class="witb-section-title" id="method-heading">Methodology</h2>
           <div class="witb-methodology">
             <h2>What This Data Is</h2>
-            <p>The DORMIED WITB dataset tracks the current equipment setup of 160 professional golfers, pulling current bag data on a weekly basis. Each player's bag is recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball, and grips. Brand, model, shaft, and loft are captured where available. The dataset covers 33 distinct equipment brands and is refreshed every Tuesday at 9am ET.</p>
+            <p>The DORMIED WITB dataset tracks the current equipment setup of 158 professional golfers, pulling current bag data on a weekly basis. Each player's bag is recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball, and grips. Brand, model, shaft, and loft are captured where available. The dataset covers 33 distinct equipment brands and is refreshed every Tuesday at 9am ET.</p>
 
             <p>This is equipment-in-play data, not equipment-sold data. A brand appearing here means a tour-level professional has chosen it in competition - which is a meaningfully different signal than market share, retail velocity, or endorsement deals. Some of the most tour-popular brands barely register in amateur golfers' awareness. That gap is the most interesting thing this page exists to show.</p>
 
             <h2>Reading the Tour Usage vs. Amateur Attention Chart</h2>
-            <p>The signature chart plots two independent signals against each other. The X axis is tour usage share: what percentage of the 160 tracked players carry at least one product from that brand in their bag. The Y axis is the DORMIED Index (DI) score for that brand in April 2026, which measures global search interest relative to the highest-scoring brand in the Index that month. Both axes use the same time period.</p>
+            <p>The signature chart plots two independent signals against each other. The X axis is tour usage share: what percentage of the 158 tracked players carry at least one product from that brand in their bag. The Y axis is the DORMIED Index (DI) score for that brand in April 2026, which measures global search interest relative to the highest-scoring brand in the Index that month. Both axes use the same time period.</p>
 
             <p>The dashed diagonal is a reference line, not a regression. Brands sitting above the line are pro favorites the amateur game has not yet matched with search attention - either because the brand does not market aggressively, serves a niche the mainstream has not discovered, or benefits from tour contracts that do not translate to retail awareness. Brands sitting below the line command more amateur attention than their tour presence suggests - often large heritage brands with strong retail and marketing footprints even when pros have shifted toward competitors.</p>
 
             <h2>How the Tour-Usage-to-DI Join Works</h2>
-            <p>The WITB brand database maps each equipment brand to its corresponding entry in the <a href="/rankings/">DORMIED Index</a>. Not every tour brand has a DORMIED Index entry - particularly grip companies and shaft manufacturers that do not compete in the retail consumer markets tracked by the Index. Brands without a mapping appear in the leaderboards and share views but are excluded from the scatter chart, which requires both a tour usage figure and a DI score to plot. As of this writing, 6 of 33 tracked equipment brands lack a DI mapping; those brands render as plain text throughout this page rather than as hyperlinks to brand pages.</p>
+            <p>The WITB brand database maps each equipment brand to its corresponding entry in the <a href="/rankings/">DORMIED Index</a>. Not every tour brand has a DORMIED Index entry - particularly grip companies and shaft manufacturers that do not compete in the retail consumer markets tracked by the Index. Brands without a mapping appear in the leaderboards and share views but are excluded from the scatter chart, which requires both a tour usage figure and a DI score to plot. As of this writing, 12 of 40 tracked equipment brands lack a DI mapping; those brands render as plain text throughout this page rather than as hyperlinks to brand pages.</p>
 
             <p>The DORMIED Index measures consumer search interest, not brand sentiment or purchase intent. A high DI score means many people are searching for a brand globally. A low score means the brand is either niche, regional, or simply not a household name outside the sport. For equipment brands especially, the gap between tour presence and public awareness can be dramatic - and that gap tells you something about where the market might be heading, or where it is already moving without the mainstream noticing yet.</p>
 
@@ -1193,7 +1278,7 @@
   <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
 
   <!-- Scatter data for JS tooltip layer -->
-  <script>window.__WITB_SCATTER__ = [{"slug":"titleist","name":"Titleist","tourPct":65,"diScore":100,"diRank":1,"playerCount":104},{"slug":"taylormade","name":"TaylorMade","tourPct":43.8,"diScore":81.7,"diRank":2,"playerCount":70},{"slug":"ping","name":"PING","tourPct":34.4,"diScore":20.1,"diRank":19,"playerCount":55},{"slug":"odyssey-golf","name":"Odyssey","tourPct":33.1,"diScore":3.3,"diRank":72,"playerCount":53},{"slug":"callaway","name":"Callaway","tourPct":27.5,"diScore":54.8,"diRank":4,"playerCount":44},{"slug":"srixon","name":"Srixon","tourPct":14.4,"diScore":20.1,"diRank":20,"playerCount":23},{"slug":"cleveland-golf","name":"Cleveland","tourPct":10.6,"diScore":11,"diRank":31,"playerCount":17},{"slug":"l-a-b-golf","name":"L.A.B. Golf","tourPct":6.3,"diScore":4,"diRank":62,"playerCount":10},{"slug":"pxg","name":"PXG","tourPct":6.3,"diScore":20.1,"diRank":15,"playerCount":10},{"slug":"cobra","name":"Cobra","tourPct":5.6,"diScore":20.1,"diRank":17,"playerCount":9},{"slug":"mizuno","name":"Mizuno","tourPct":5.6,"diScore":16.4,"diRank":23,"playerCount":9},{"slug":"bettinardi","name":"Bettinardi","tourPct":2.5,"diScore":7.4,"diRank":48,"playerCount":4},{"slug":"wilson","name":"Wilson","tourPct":1.9,"diScore":7.4,"diRank":42,"playerCount":3},{"slug":"nike-golf","name":"Nike","tourPct":1.9,"diScore":30.1,"diRank":11,"playerCount":3},{"slug":"bridgestone-golf","name":"Bridgestone","tourPct":1.3,"diScore":3.3,"diRank":68,"playerCount":2},{"slug":"miura-golf","name":"Miura","tourPct":1.3,"diScore":13.5,"diRank":26,"playerCount":2},{"slug":"mclaren-golf","name":"McLaren Golf","tourPct":0.6,"diScore":54.8,"diRank":7,"playerCount":1},{"slug":"new-level-golf","name":"New Level","tourPct":0.6,"diScore":1.5,"diRank":107,"playerCount":1},{"slug":"krank-golf","name":"Krank","tourPct":0.6,"diScore":1.8,"diRank":102,"playerCount":1},{"slug":"avoda-golf","name":"Avoda","tourPct":0.6,"diScore":2.7,"diRank":78,"playerCount":1},{"slug":"swag-golf","name":"Swag Golf","tourPct":0.6,"diScore":11,"diRank":36,"playerCount":1},{"slug":"honma","name":"Honma","tourPct":0.6,"diScore":3.3,"diRank":70,"playerCount":1}];</script>
+  <script>window.__WITB_SCATTER__ = [{"slug":"titleist","name":"Titleist","tourPct":65.2,"diScore":100,"diRank":1,"playerCount":103},{"slug":"taylormade","name":"TaylorMade","tourPct":43.7,"diScore":81.7,"diRank":2,"playerCount":69},{"slug":"ping","name":"PING","tourPct":34.8,"diScore":20.1,"diRank":19,"playerCount":55},{"slug":"odyssey-golf","name":"Odyssey","tourPct":33.5,"diScore":3.3,"diRank":72,"playerCount":53},{"slug":"callaway","name":"Callaway","tourPct":27.2,"diScore":54.8,"diRank":4,"playerCount":43},{"slug":"srixon","name":"Srixon","tourPct":14.6,"diScore":20.1,"diRank":20,"playerCount":23},{"slug":"cleveland-golf","name":"Cleveland","tourPct":10.8,"diScore":11,"diRank":31,"playerCount":17},{"slug":"pxg","name":"PXG","tourPct":6.3,"diScore":20.1,"diRank":15,"playerCount":10},{"slug":"cobra","name":"Cobra","tourPct":5.7,"diScore":20.1,"diRank":17,"playerCount":9},{"slug":"l-a-b-golf","name":"L.A.B. Golf","tourPct":5.7,"diScore":4,"diRank":62,"playerCount":9},{"slug":"mizuno","name":"Mizuno","tourPct":5.1,"diScore":16.4,"diRank":23,"playerCount":8},{"slug":"bettinardi","name":"Bettinardi","tourPct":2.5,"diScore":7.4,"diRank":48,"playerCount":4},{"slug":"wilson","name":"Wilson","tourPct":1.9,"diScore":7.4,"diRank":42,"playerCount":3},{"slug":"nike-golf","name":"Nike","tourPct":1.9,"diScore":30.1,"diRank":11,"playerCount":3},{"slug":"bridgestone-golf","name":"Bridgestone","tourPct":1.3,"diScore":3.3,"diRank":68,"playerCount":2},{"slug":"miura-golf","name":"Miura","tourPct":1.3,"diScore":13.5,"diRank":26,"playerCount":2},{"slug":"mclaren-golf","name":"McLaren Golf","tourPct":0.6,"diScore":54.8,"diRank":7,"playerCount":1},{"slug":"new-level-golf","name":"New Level","tourPct":0.6,"diScore":1.5,"diRank":107,"playerCount":1},{"slug":"krank-golf","name":"Krank","tourPct":0.6,"diScore":1.8,"diRank":102,"playerCount":1},{"slug":"avoda-golf","name":"Avoda","tourPct":0.6,"diScore":2.7,"diRank":78,"playerCount":1},{"slug":"swag-golf","name":"Swag Golf","tourPct":0.6,"diScore":11,"diRank":36,"playerCount":1},{"slug":"honma","name":"Honma","tourPct":0.6,"diScore":3.3,"diRank":70,"playerCount":1}];</script>
 
   <!-- Mobile nav hamburger -->
   <script>
@@ -1390,6 +1475,7 @@
   </script>
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
+  <script defer src="/js/data.min.js?v=20260518"></script>
   <script defer src="/js/feed.min.js?v=20260522"></script>
   <script defer src="/js/search.min.js?v=20260508"></script>
 </body>

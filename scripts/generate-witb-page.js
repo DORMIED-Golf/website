@@ -112,9 +112,9 @@ async function fetchAllData() {
   const currentItems = items.filter(i => i.witb_bags?.is_current === true);
   console.log(`  Items: ${items.length} total, ${currentItems.length} current`);
 
-  // 2. Players
+  // 2. Players (include fields needed for Find A Player section)
   const players = await paginate((from, to) =>
-    sb.from('witb_players').select('id, name, slug, owgr_rank').range(from, to)
+    sb.from('witb_players').select('id, name, slug, owgr_rank, current_bag_id, country_code, nation').range(from, to)
   );
   const playerMap = new Map(players.map(p => [p.id, p]));
   console.log(`  Players: ${players.length}`);
@@ -156,13 +156,20 @@ async function fetchAllData() {
   const shaftItems = shaftItemsRaw.filter(i => i.witb_bags?.is_current === true);
   console.log(`  Shaft items (current bags with shaft data): ${shaftItems.length}`);
 
-  return { currentItems, playerMap, brands, diBySlug, changes: changes || [], lastCrawl, shaftItems };
+  // 8. Current bag dates (for Find A Player section recent-bags list)
+  const currentBagsRaw = await paginate((from, to) =>
+    sb.from('witb_bags').select('id, bag_date').eq('is_current', true).range(from, to)
+  );
+  const bagDateMap = new Map(currentBagsRaw.map(b => [b.id, b.bag_date]));
+  console.log(`  Current bags with dates: ${bagDateMap.size}`);
+
+  return { currentItems, players, playerMap, brands, diBySlug, changes: changes || [], lastCrawl, shaftItems, bagDateMap };
 }
 
 // ── Widget computations ────────────────────────────────────────────────────
 
-function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftItems }) {
-  const totalPlayers = 160;
+function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftItems, totalPlayers }) {
+  // totalPlayers is passed in from buildPage (count of ranked players with non-null OWGR)
 
   // Club type groups
   const CLUB_TYPES   = ['driver','3-wood','4-wood','5-wood','7-wood','9-wood','mini-driver','hybrid','utility','utility-iron','driving-iron','iron','wedge','putter'];
@@ -587,17 +594,104 @@ function buildDykHtml(dyk) {
     : `<p style="color:var(--text-muted);font-size:.85rem">Not enough loft data to compute spec stats yet.</p>`;
 }
 
+// ── Find A Player section ──────────────────────────────────────────────────
+
+function buildFlagHtmlInline(countryCode, nation) {
+  const HOME = {
+    ENG: { file: 'eng', label: 'England' },
+    NIR: { file: 'nir', label: 'Northern Ireland' },
+    SCO: { file: 'sco', label: 'Scotland' },
+    WAL: { file: 'wal', label: 'Wales' },
+  };
+  if (nation && HOME[nation]) {
+    const { file, label } = HOME[nation];
+    return `<img src="/images/flags/${file}.svg" alt="${esc(label)}" width="14" height="9" style="display:inline-block;border-radius:1px;vertical-align:middle;flex-shrink:0">`;
+  }
+  if (countryCode && countryCode.length === 2) {
+    const base = 0x1F1E6;
+    const c1 = countryCode.charCodeAt(0) - 65;
+    const c2 = countryCode.charCodeAt(1) - 65;
+    if (c1 >= 0 && c1 <= 25 && c2 >= 0 && c2 <= 25) {
+      return `<span aria-label="${esc(countryCode)} flag">${String.fromCodePoint(base + c1)}${String.fromCodePoint(base + c2)}</span>`;
+    }
+  }
+  return '';
+}
+
+function fmtBagDateShort(isoDate) {
+  if (!isoDate) return '';
+  const d   = new Date(isoDate + 'T00:00:00Z');
+  const mon = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][d.getUTCMonth()];
+  return `${mon} ${d.getUTCFullYear()}`;
+}
+
+function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
+  // Recent bags: 5 players with the most recent current bag_date
+  const withDate = rankedPlayers.filter(p => p.current_bag_id && bagDateMap.has(p.current_bag_id));
+  const recentBags = [...withDate]
+    .sort((a, b) => (bagDateMap.get(b.current_bag_id) || '').localeCompare(bagDateMap.get(a.current_bag_id) || ''))
+    .slice(0, 5);
+
+  // Top ranked: 5 lowest OWGR (ascending)
+  const topRanked = [...rankedPlayers]
+    .sort((a, b) => a.owgr_rank - b.owgr_rank)
+    .slice(0, 5);
+
+  function playerRow(p, showDate) {
+    const flag    = buildFlagHtmlInline(p.country_code, p.nation);
+    const rankStr = `#${p.owgr_rank}`;
+    const dateStr = showDate ? fmtBagDateShort(bagDateMap.get(p.current_bag_id)) : '';
+    return `<a href="/witb/players/${esc(p.slug)}/" class="witb-fp-row">
+        <span class="witb-fp-flag">${flag}</span>
+        <span class="witb-fp-name">${esc(p.name)}</span>
+        <span class="witb-fp-rank">${esc(rankStr)}</span>
+        ${dateStr ? `<span class="witb-fp-date">${esc(dateStr)}</span>` : ''}
+      </a>`;
+  }
+
+  const recentHtml = recentBags.map(p => playerRow(p, true)).join('');
+  const topHtml    = topRanked.map(p => playerRow(p, false)).join('');
+
+  return `<section class="witb-section witb-find-player" aria-labelledby="find-player-heading">
+  <div class="witb-fp-header">
+    <div>
+      <h2 class="witb-section-title" id="find-player-heading" style="margin-bottom:2px">Find a Player</h2>
+      <p class="witb-section-sub" style="margin:0">${fmt(rankedPlayers.length)} players tracked, sorted by world ranking</p>
+    </div>
+    <a href="/witb/players/" class="witb-fp-browse-btn">Browse All Players &rarr;</a>
+  </div>
+  <div class="witb-fp-grid">
+    <div class="witb-fp-col">
+      <div class="witb-fp-col-label">Recent Bags</div>
+      ${recentHtml}
+    </div>
+    <div class="witb-fp-col">
+      <div class="witb-fp-col-label">Top Ranked</div>
+      ${topHtml}
+    </div>
+  </div>
+</section>`;
+}
+
 // ── Full page HTML ─────────────────────────────────────────────────────────
 
-function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems }) {
+function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap }) {
+  // Canonical set: players with a non-null OWGR rank (158 today; sentinel 4990 included)
+  const rankedPlayers      = players.filter(p => p.owgr_rank !== null);
+  const rankedBagIds       = new Set(rankedPlayers.map(p => p.current_bag_id).filter(Boolean));
+  const rankedCurrentItems = currentItems.filter(i => rankedBagIds.has(i.bag_id));
+  const rankedShaftItems   = shaftItems.filter(i => rankedBagIds.has(i.bag_id));
+
+  // All stats derived from the canonical set so every figure reconciles
+  const totalPlayers    = rankedPlayers.length;
+  const totalItems      = rankedCurrentItems.length;
+  const totalBrands     = new Set(rankedCurrentItems.filter(i => i.witb_brands?.slug).map(i => i.witb_brands.slug)).size;
+  const uniqueClubTypes = new Set(rankedCurrentItems.map(i => i.club_type)).size;
+
   const {
     scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, treemapShaft,
-    dyk, gainLoss, totalPlayers, topShaftModel, topClubBrands
-  } = computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftItems });
-
-  const totalItems  = currentItems.length;
-  const totalBrands = brands.length;
-  const uniqueClubTypes = [...new Set(currentItems.map(i => i.club_type))].length;
+    dyk, gainLoss, topShaftModel, topClubBrands
+  } = computeWidgetData({ currentItems: rankedCurrentItems, playerMap, brands, diBySlug, shaftItems: rankedShaftItems, totalPlayers });
 
   const scatterSVG     = buildScatterSVG(scatterData);
   const changesHtml    = buildChangesHtml(changes);
@@ -782,6 +876,20 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
     .witb-scatter-checkboxes{display:flex;flex-wrap:wrap;gap:4px 14px}
     .witb-scatter-cb-label{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);cursor:pointer;white-space:nowrap}
     .witb-scatter-cb-label input[type=checkbox]{accent-color:var(--green);cursor:pointer;width:11px;height:11px}
+    /* Find A Player section */
+    .witb-fp-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+    .witb-fp-browse-btn{display:inline-block;font-family:var(--font-mono);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);border:1px solid var(--border);border-radius:var(--radius);padding:6px 14px;white-space:nowrap;transition:border-color .15s,background .15s}
+    .witb-fp-browse-btn:hover{border-color:var(--green);background:var(--bg-raised)}
+    .witb-fp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:500px){.witb-fp-grid{grid-template-columns:1fr}}
+    .witb-fp-col-label{font-family:var(--font-mono);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:4px}
+    .witb-fp-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);transition:color .1s}
+    .witb-fp-row:last-child{border-bottom:none}
+    .witb-fp-row:hover{color:var(--green)}
+    .witb-fp-flag{font-size:.85em;line-height:1;flex-shrink:0;min-width:18px}
+    .witb-fp-name{font-family:var(--font-mono);font-size:.75rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .witb-fp-rank{font-family:var(--font-mono);font-size:.65rem;color:var(--green);flex-shrink:0}
+    .witb-fp-date{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);flex-shrink:0}
   </style>
 
   <link rel="preload" href="/css/styles.min.css?v=20260523" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -895,6 +1003,9 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
           <span><span class="witb-pulse-val">${fmt(uniqueClubTypes)}</span> club categories</span>
           ${lastUpdatedDisplay ? `<span class="witb-pulse-sep">&middot;</span><span>Updated <span class="witb-pulse-val">${esc(lastUpdatedDisplay)}</span></span>` : ''}
         </div>
+
+        <!-- FIND A PLAYER -->
+        ${buildFindPlayerHtml(rankedPlayers, bagDateMap)}
 
         <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
         <section class="witb-section" aria-labelledby="scatter-heading">
@@ -1050,7 +1161,7 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
             <p>The dashed diagonal is a reference line, not a regression. Brands sitting above the line are pro favorites the amateur game has not yet matched with search attention - either because the brand does not market aggressively, serves a niche the mainstream has not discovered, or benefits from tour contracts that do not translate to retail awareness. Brands sitting below the line command more amateur attention than their tour presence suggests - often large heritage brands with strong retail and marketing footprints even when pros have shifted toward competitors.</p>
 
             <h2>How the Tour-Usage-to-DI Join Works</h2>
-            <p>The WITB brand database maps each equipment brand to its corresponding entry in the <a href="/rankings/">DORMIED Index</a>. Not every tour brand has a DORMIED Index entry - particularly grip companies and shaft manufacturers that do not compete in the retail consumer markets tracked by the Index. Brands without a mapping appear in the leaderboards and share views but are excluded from the scatter chart, which requires both a tour usage figure and a DI score to plot. As of this writing, ${brands.filter(b => !b.dormied_brand_slug).length} of ${totalBrands} tracked equipment brands lack a DI mapping; those brands render as plain text throughout this page rather than as hyperlinks to brand pages.</p>
+            <p>The WITB brand database maps each equipment brand to its corresponding entry in the <a href="/rankings/">DORMIED Index</a>. Not every tour brand has a DORMIED Index entry - particularly grip companies and shaft manufacturers that do not compete in the retail consumer markets tracked by the Index. Brands without a mapping appear in the leaderboards and share views but are excluded from the scatter chart, which requires both a tour usage figure and a DI score to plot. As of this writing, ${brands.filter(b => !b.dormied_brand_slug).length} of ${brands.length} tracked equipment brands lack a DI mapping; those brands render as plain text throughout this page rather than as hyperlinks to brand pages.</p>
 
             <p>The DORMIED Index measures consumer search interest, not brand sentiment or purchase intent. A high DI score means many people are searching for a brand globally. A low score means the brand is either niche, regional, or simply not a household name outside the sport. For equipment brands especially, the gap between tour presence and public awareness can be dramatic - and that gap tells you something about where the market might be heading, or where it is already moving without the mainstream noticing yet.</p>
 
@@ -1325,6 +1436,7 @@ function buildPage({ currentItems, playerMap, brands, diBySlug, changes, lastCra
   </script>
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
+  <script defer src="/js/data.min.js?v=20260518"></script>
   <script defer src="/js/feed.min.js?v=20260522"></script>
   <script defer src="/js/search.min.js?v=20260508"></script>
 </body>
