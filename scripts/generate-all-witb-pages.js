@@ -6,7 +6,7 @@
  * Calls generate-witb-player-page.js per player (sequential, includes Opus lede caching).
  *
  * Usage:
- *   node scripts/generate-all-witb-pages.js          # all 160 players ordered by owgr_rank
+ *   node scripts/generate-all-witb-pages.js          # all 158 ranked players ordered by owgr_rank
  *   node scripts/generate-all-witb-pages.js --dry-run # list slugs, no generation
  *   node scripts/generate-all-witb-pages.js --from scottie-scheffler  # resume from slug
  *
@@ -41,10 +41,13 @@ async function main() {
 
   const sb = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  // Load all players ordered by owgr_rank
+  // Load ranked players only (owgr_rank IS NOT NULL).
+  // Unranked players (Grayson Murray, Scott Stallings) have owgr_rank = null and must be skipped.
+  // Tiger Woods and Ian Poulter carry sentinel rank 4990 — they are NOT null and are included.
   const { data: players, error } = await sb
     .from('witb_players')
     .select('slug, name, owgr_rank')
+    .not('owgr_rank', 'is', null)
     .order('owgr_rank', { ascending: true });
   if (error) throw new Error(`Could not load witb_players: ${error.message}`);
 

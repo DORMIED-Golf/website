@@ -758,13 +758,18 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
                       + compWords
                       + bagItemWords
                       + histItemWords;
-  // Gate on bag completeness only — a ranked player with a current bag is always indexable.
-  // Drop the word-count floor: generated ledes satisfy it anyway, and it was silently
-  // noindexing valid pages for players whose lede cache hadn't been seeded yet.
-  const hasCore = currentItems.length > 0;
-  const noindex = !hasCore;
-  if (noindex) warn(`Page for ${slug} will be noindex (empty bag)`);
-  else         log(`Bag items: ${currentItems.length} — page is indexable`);
+  // Index gate: driver (or mini-driver) + at least one iron + putter.
+  // Ball is intentionally excluded — it is frequently not logged for otherwise-complete bags.
+  // Word-count floor is dropped: generated ledes satisfy it and it was silently
+  // noindexing valid ranked pages when the lede cache hadn't been seeded yet.
+  // Players that fail this gate get noindex, not deletion (empty stubs, not bad data).
+  const hasDriver = currentItems.some(i => i.club_type === 'driver' || i.club_type === 'mini-driver');
+  const hasIron   = currentItems.some(i => ['iron', 'utility-iron', 'driving-iron', 'utility'].includes(i.club_type));
+  const hasPutter = currentItems.some(i => i.club_type === 'putter');
+  const hasCore   = hasDriver && hasIron && hasPutter;
+  const noindex   = !hasCore;
+  if (noindex) warn(`Page for ${slug} will be noindex (driver=${hasDriver}, iron=${hasIron}, putter=${hasPutter})`);
+  else         log(`Bag items: ${currentItems.length} — page is indexable (driver=${hasDriver}, iron=${hasIron}, putter=${hasPutter})`);
 
   // ── JSON-LD ───────────────────────────────────────────────────────────────
   const bagItemsLd = currentItems.map((item, i) => ({
@@ -1314,6 +1319,14 @@ async function main() {
 
   const player = await fetchPlayerData(sb, PLAYER_SLUG);
   log(`Player: ${player.name}, OWGR #${player.owgr_rank}`);
+
+  // Guard: skip unranked players (owgr_rank IS NULL).
+  // These players have no active world ranking and must not have pages on the site.
+  // Tiger Woods and Ian Poulter use sentinel value 4990 — they are NOT null and are kept.
+  if (player.owgr_rank === null) {
+    warn(`Skipping ${player.name} (${PLAYER_SLUG}) — owgr_rank is null. If an HTML file exists, delete it manually.`);
+    process.exit(0);
+  }
 
   const bags = await fetchBagsWithItems(sb, player.id);
   const currentBag = bags.find(b => b.is_current);
