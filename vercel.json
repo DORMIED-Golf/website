@@ -1,4 +1,10 @@
 {
+  "images": {
+    "domains": ["cimmmmnapdthqvtifpzr.supabase.co"],
+    "sizes": [80, 160, 400, 800, 1200],
+    "minimumCacheTTL": 2592000,
+    "formats": ["image/avif", "image/webp"]
+  },
   "redirects": [
     {
       "source": "/brands/travismatthew",

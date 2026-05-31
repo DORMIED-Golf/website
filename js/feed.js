@@ -60,6 +60,12 @@
     return id;
   }
 
+  /* ── Vercel Image Optimization proxy ────────────────────────────────────── */
+  function vitUrl(src, w) {
+    if (!src) return src;
+    return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+  }
+
   /* ── Brand month-over-month change from DORMIED_DATA ───────────────────── */
   function getBrandChange(id) {
     try {
@@ -95,8 +101,12 @@
   function renderArticleCard(article, showBrandTags, allBrands) {
     var thumb = '';
     if (article.imageUrl) {
-      thumb = '<img class="feed-card-thumb" src="' + escHtml(article.imageUrl) +
-              '" width="400" height="250" loading="lazy" alt="" onerror="this.remove()">';
+      thumb = '<img class="feed-card-thumb"'
+            + ' src="'    + escHtml(vitUrl(article.imageUrl, 160)) + '"'
+            + ' srcset="' + escHtml(vitUrl(article.imageUrl,  80)) + ' 80w,'
+                          + escHtml(vitUrl(article.imageUrl, 160)) + ' 160w"'
+            + ' sizes="80px"'
+            + ' width="80" height="60" loading="lazy" alt="" onerror="this.remove()">';
     }
 
     var tags = '';
@@ -152,8 +162,13 @@
       var imgAttrs = isLCP
         ? 'loading="eager" fetchpriority="high"'
         : 'loading="lazy"';
-      thumb = '<img class="feed-card-thumb feed-card-thumb--lg" src="' + escHtml(article.imageUrl) +
-              '" width="600" height="375" ' + imgAttrs + ' alt="" onerror="this.remove()">';
+      thumb = '<img class="feed-card-thumb feed-card-thumb--lg"'
+            + ' src="'    + escHtml(vitUrl(article.imageUrl,  800)) + '"'
+            + ' srcset="' + escHtml(vitUrl(article.imageUrl,  400)) + ' 400w,'
+                          + escHtml(vitUrl(article.imageUrl,  800)) + ' 800w,'
+                          + escHtml(vitUrl(article.imageUrl, 1200)) + ' 1200w"'
+            + ' sizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw"'
+            + ' width="600" height="375" ' + imgAttrs + ' alt="" onerror="this.remove()">';
     }
 
     var excerpt = '';

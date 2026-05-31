@@ -45,6 +45,12 @@ const HERO_ARTICLE = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+/** Vercel Image Optimization proxy URL — returns WebP/AVIF at width w. */
+function vitUrl(src, w) {
+  if (!src) return src;
+  return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+}
+
 function esc(s) {
   return String(s || '')
     .replace(/&/g, '&amp;')
@@ -233,8 +239,10 @@ function generateWitbLeaderSections(leaders) {
 
 function generateHeroArticle() {
   const h = HERO_ARTICLE;
+  const imgSrc    = vitUrl(h.imageUrl, 800);
+  const imgSrcset = `${vitUrl(h.imageUrl, 400)} 400w,${vitUrl(h.imageUrl, 800)} 800w,${vitUrl(h.imageUrl, 1200)} 1200w`;
   return '<article class="feed-card feed-card--full feed-card--dormied">'
-       + `<img class="feed-card-thumb feed-card-thumb--lg" src="${esc(h.imageUrl)}" width="600" height="375" loading="eager" fetchpriority="high" alt="">`
+       + `<img class="feed-card-thumb feed-card-thumb--lg" src="${esc(imgSrc)}" srcset="${esc(imgSrcset)}" sizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw" width="600" height="375" loading="eager" fetchpriority="high" alt="">`
        + '<div class="feed-card-body">'
        + `<div class="feed-card-meta"><span class="feed-time">${esc(h.pubDate)}</span></div>`
        + `<a href="/news/${esc(h.slug)}/" class="feed-card-title feed-card-title--lg">${esc(h.title)}</a>`
