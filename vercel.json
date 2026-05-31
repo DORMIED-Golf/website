@@ -1,6 +1,6 @@
 {
   "images": {
-    "domains": ["cimmmmnapdthqvtifpzr.supabase.co"],
+    "domains": ["cimmmmnapdthqvtifpzr.supabase.co", "dormied.com"],
     "sizes": [80, 160, 400, 800, 1200],
     "minimumCacheTTL": 2592000,
     "formats": ["image/avif", "image/webp"]

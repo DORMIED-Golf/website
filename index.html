@@ -105,6 +105,14 @@
     @media(min-width:600px){#home-dormied-section{min-height:860px}}
     @media(min-width:1100px){#home-dormied-section{min-height:600px}}
     .market-pulse{min-height:36px}
+    /* JS-populated sections: hold height from first paint */
+    #h2h-content{min-height:360px}
+    #most-viewed-witb-list{min-height:92px}
+    #most-viewed-list{min-height:92px}
+    #home-stories-list{min-height:1000px}
+    /* Backstop: home-layout total height — prevents footer shifting while JS hydrates */
+    .home-layout{min-height:3800px}
+    @media(min-width:1200px){.home-layout{min-height:2400px}}
     #scorecard-home-card[hidden]{display:block !important;visibility:hidden;pointer-events:none;overflow:hidden;min-height:400px}
     @media(min-width:768px){#scorecard-home-card[hidden]{min-height:340px}}
   </style>

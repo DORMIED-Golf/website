@@ -687,28 +687,53 @@
   /* ── MOST VIEWED WITBs ────────────────────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────────────── */
   function fetchMostViewedPlayers() {
-    return fetch(SUPABASE_URL + '/rest/v1/player_views_7d?limit=10', {
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
-    }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
+    var hdrs = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY };
+
+    // Step 1: top 10 by view_count descending
+    return fetch(SUPABASE_URL + '/rest/v1/player_views_7d?select=player_id,view_count&order=view_count.desc&limit=10', {
+      headers: hdrs
+    })
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(function (rows) {
+      if (!rows || !rows.length) return [];
+
+      // Step 2: fetch player details for these IDs
+      // player_views_7d.player_id is text; witb_players.id is uuid — Supabase casts automatically
+      var ids = rows.map(function (v) { return v.player_id; }).join(',');
+      return fetch(SUPABASE_URL + '/rest/v1/witb_players?select=id,name,slug,owgr_rank,country_code,nation&id=in.(' + ids + ')', {
+        headers: hdrs
+      })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (players) {
+        var pm = {};
+        players.forEach(function (p) { pm[p.id] = p; });
+
+        // Step 3: join and sort by view_count desc, owgr_rank asc for ties
+        var joined = rows.map(function (v) {
+          return { view_count: v.view_count, player: pm[v.player_id] };
+        }).filter(function (x) { return x.player; });
+
+        joined.sort(function (a, b) {
+          if (b.view_count !== a.view_count) return b.view_count - a.view_count;
+          return (a.player.owgr_rank || 9999) - (b.player.owgr_rank || 9999);
+        });
+
+        return joined;
+      });
+    })
+    .catch(function () { return []; });
   }
 
-  function renderMostViewedPlayers(viewData, leaders) {
+  function renderMostViewedPlayers(viewData) {
     var el = document.getElementById('most-viewed-witb-list');
-    if (!el || !leaders) return;
-    var allPlayers = leaders.allPlayers || leaders.topPlayers || [];
-    var playerMap  = {};
-    allPlayers.forEach(function (p) { playerMap[p.id] = p; });
-
-    var displayData;
-    if (!viewData || viewData.length < 3) {
-      displayData = allPlayers.map(function (p) { return { player_id: p.id }; });
-    } else {
-      displayData = viewData;
+    if (!el) return;
+    if (!viewData || !viewData.length) {
+      el.innerHTML = '';
+      return;
     }
 
-    var cards = displayData.map(function (v) {
-      var p = playerMap[v.player_id];
-      if (!p) return '';
+    var cards = viewData.map(function (item) {
+      var p      = item.player;
       var flag   = flagHtml(p.country_code, p.nation);
       var parts  = (p.name || '').trim().split(/\s+/);
       var first  = parts[0] || '';
@@ -806,7 +831,7 @@
     if (witbLeaders) {
       renderWitbLeaders(witbLeaders);
       fetchMostViewedPlayers().then(function (data) {
-        renderMostViewedPlayers(data, witbLeaders);
+        renderMostViewedPlayers(data);
       });
     }
 
