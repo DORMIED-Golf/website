@@ -612,10 +612,22 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
+        <a href="/witb/"      class="site-nav-link">WITB</a>
         <a href="/scorecard/" class="site-nav-link">Scorecard</a>
         <a href="/news/"      class="site-nav-link">News</a>
         <a href="/brands/"    class="site-nav-link site-nav-link--active">Brands</a>
       </nav>
+
+      <!-- Hamburger (mobile only) -->
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
+        aria-expanded="false" aria-controls="mobile-nav-panel">
+        <span class="bars" aria-hidden="true">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </span>
+      </button>
+
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -634,6 +646,16 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
         </div>
       </div>
     </div>
+
+    <!-- Mobile nav panel -->
+    <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
+      <a href="/rankings/"  class="mobile-nav-link">Index</a>
+      <a href="/witb/"      class="mobile-nav-link">WITB</a>
+      <a href="/scorecard/" class="mobile-nav-link">Scorecard</a>
+      <a href="/news/"      class="mobile-nav-link">News</a>
+      <a href="/brands/"    class="mobile-nav-link">Brands</a>
+    </nav>
+
   </header>
 
   <!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
@@ -860,6 +882,7 @@ ${onTourHtml}
       </div>
       <nav class="footer-nav" aria-label="Footer navigation">
         <a href="/rankings/">Index</a>
+        <a href="/witb/">WITB</a>
         <a href="/scorecard/">Scorecard</a>
         <a href="/news/">News</a>
         <a href="/brands/">Brands</a>
@@ -897,6 +920,21 @@ ${onTourHtml}
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/search.min.js?v=20260529"></script>
+
+  <!-- Mobile nav hamburger -->
+  <script>
+  (function(){
+    var btn=document.getElementById('nav-hamburger');
+    var panel=document.getElementById('mobile-nav-panel');
+    if(!btn||!panel)return;
+    function openNav(){btn.setAttribute('aria-expanded','true');panel.classList.add('open');panel.removeAttribute('hidden');}
+    function closeNav(){btn.setAttribute('aria-expanded','false');panel.classList.remove('open');panel.setAttribute('hidden','');}
+    btn.addEventListener('click',function(){btn.getAttribute('aria-expanded')==='true'?closeNav():openNav();});
+    panel.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeNav);});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav();});
+    document.addEventListener('click',function(e){if(!btn.contains(e.target)&&!panel.contains(e.target))closeNav();});
+  })();
+  </script>
 
   <!-- AD_SCRIPT
   <script>
@@ -1102,6 +1140,30 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
   return results;
 }
 
+function getCatIcon(cat) {
+  const icons = {
+    'Drivers':
+      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><ellipse cx="7" cy="19" rx="6.5" ry="4" fill="currentColor"/><line x1="12" y1="16" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
+    'Fairway Woods':
+      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><ellipse cx="7" cy="19.5" rx="5.5" ry="3.5" fill="currentColor"/><line x1="11.5" y1="17" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
+    'Hybrids':
+      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><ellipse cx="7.5" cy="20" rx="4.5" ry="3" fill="currentColor"/><line x1="11" y1="17.5" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
+    'Irons':
+      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><rect x="1" y="18" width="12" height="4" rx="1" fill="currentColor"/><line x1="12" y1="18.5" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
+    'Wedges':
+      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><path d="M2 22L11 17L13 21Q7 24 2 22Z" fill="currentColor"/><line x1="12" y1="17.5" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
+    'Putters':
+      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><rect x="1" y="19" width="12" height="3.5" rx="0.8" fill="currentColor"/><line x1="9" y1="19.5" x2="14" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
+    'Balls':
+      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><circle cx="12" cy="12" r="9" fill="currentColor"/></svg>',
+    'Grips':
+      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><rect x="9" y="2" width="6" height="9" rx="3" fill="currentColor"/><rect x="10.5" y="10" width="3" height="12" rx="1.5" fill="currentColor"/></svg>',
+    'Shafts':
+      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><rect x="10.5" y="1" width="3" height="22" rx="1.5" fill="currentColor"/></svg>',
+  };
+  return icons[cat] || '';
+}
+
 function buildOnTourHtml(brandName, onTourData) {
   if (!onTourData || onTourData.length === 0) return '';
 
@@ -1112,9 +1174,10 @@ function buildOnTourHtml(brandName, onTourData) {
   }
 
   const catBlocks = onTourData.map(({ cat, rank, modelGroups, topModel }) => {
-    let header = `${escHtml(cat)} <span class="bp-tour-rank">· ${ordinal(rank)} on tour</span>`;
+    const icon = getCatIcon(cat);
+    let headerInner = `${icon}${escHtml(cat)} <span class="bp-tour-rank">· ${ordinal(rank)} on tour</span>`;
     if (topModel) {
-      header += `<span class="bp-tour-model"> · ${escHtml(topModel.name)} is the no. ${topModel.globalRank} ${escHtml(topModel.modelLabel)} model</span>`;
+      headerInner += `<span class="bp-tour-model"> · ${escHtml(topModel.name)} is the no. ${topModel.globalRank} ${escHtml(topModel.modelLabel)} model</span>`;
     }
 
     const modelRows = (modelGroups || []).map(({ model, count, players }) => {
@@ -1131,7 +1194,7 @@ function buildOnTourHtml(brandName, onTourData) {
     }).join('\n');
 
     return `            <div class="bp-tour-cat">
-              <p class="bp-tour-cat-header">${header}</p>
+              <p class="bp-tour-cat-header">${headerInner}</p>
               <table class="bp-tour-model-table">
                 <tbody>
 ${modelRows}
