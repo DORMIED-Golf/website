@@ -152,7 +152,7 @@ function newsEntry(slug, lastmod, imageUrl, imageTitle) {
     `  <url>`,
     `    <loc>${xmlEsc(loc)}</loc>`,
     `    <lastmod>${lastmod}</lastmod>`,
-    `    <changefreq>never</changefreq>`,
+    `    <changefreq>weekly</changefreq>`,
     `    <priority>0.7</priority>`,
   ];
   if (imageBlock) lines.push(imageBlock);
