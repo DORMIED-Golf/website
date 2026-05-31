@@ -37,7 +37,56 @@
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.min.css?v=20260523">
+  <link rel="stylesheet" href="/css/styles.min.css?v=20260530">
+  <style>
+    .contact-body {
+      max-width: 720px;
+    }
+    .contact-section-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 40px;
+      margin-bottom: 16px;
+    }
+    .contact-section-title:first-child {
+      margin-top: 0;
+    }
+    .contact-p {
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      margin-bottom: 18px;
+      max-width: 720px;
+    }
+    .contact-p a {
+      color: var(--green);
+      text-decoration: none;
+    }
+    .contact-p a:hover {
+      text-decoration: underline;
+    }
+    .contact-list {
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      padding-left: 1.4em;
+      margin: 0 0 18px;
+      max-width: 720px;
+    }
+    .contact-list li {
+      margin-bottom: 6px;
+    }
+    @media (max-width: 600px) {
+      .index-section { padding: 40px 0 0; }
+    }
+  </style>
 
   <!-- ── Structured Data ── -->
   <script type="application/ld+json">
@@ -127,7 +176,7 @@
         <div class="hero-content">
           <div class="hero-text">
             <h1 id="contact-title" class="hero-title">Contact</h1>
-            <p class="hero-desc">Questions, corrections, feedback, or press enquiries — we read everything.</p>
+            <p class="hero-desc">Questions, corrections, feedback, or press enquiries. We read everything.</p>
           </div>
         </div>
       </div>
@@ -135,46 +184,47 @@
 
     <section class="index-section">
       <div class="container">
-        <div class="about-layout" style="max-width:720px;margin:0 auto">
+        <div class="contact-body" style="margin:0 auto">
 
-          <div class="about-body" style="line-height:1.75;font-size:1rem">
+          <h2 class="contact-section-title">Get In Touch</h2>
 
-            <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:0 0 1rem">Get In Touch</h2>
+          <p class="contact-p">The best way to reach us is by email. We aim to respond to all enquiries within two business days.</p>
 
-            <p>The best way to reach us is by email. We aim to respond to all enquiries within two business days.</p>
+          <p class="contact-p"><strong>General &amp; Editorial:</strong><br>
+          <a href="mailto:dormiedgolf@gmail.com">dormiedgolf@gmail.com</a></p>
 
-            <p><strong>General &amp; Editorial:</strong><br>
-            <a href="mailto:dormiedgolf@gmail.com" style="color:inherit">dormiedgolf@gmail.com</a></p>
+          <h2 class="contact-section-title">We Welcome</h2>
 
-            <p>We welcome:</p>
-            <ul style="padding-left:1.4em;margin:.5rem 0 1rem">
-              <li>Corrections or factual challenges to our rankings or articles</li>
-              <li>Tips on brand news we should be covering</li>
-              <li>Feedback on the DORMIED Index methodology</li>
-              <li>Media and press enquiries</li>
-              <li>Partnership and advertising discussions</li>
-            </ul>
+          <ul class="contact-list">
+            <li>Corrections or factual challenges to our rankings or articles</li>
+            <li>Tips on brand news we should be covering</li>
+            <li>Feedback on the DORMIED Index methodology</li>
+            <li>Media and press enquiries</li>
+            <li>Partnership and advertising discussions</li>
+            <li>Guest article pitches, research contributions, and collaborations from people passionate about golf brands and culture</li>
+          </ul>
 
-            <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:2rem 0 1rem">Who We Are</h2>
+          <h2 class="contact-section-title">Who We Are</h2>
 
-            <p>DORMIED is an independent golf brand intelligence platform. We track search interest across 175 golf brands globally, produce original editorial coverage, and publish the DORMIED Index — a monthly ranking of golf brand health by consumer search demand.</p>
+          <p class="contact-p">DORMIED is an independent golf brand intelligence platform. We track search interest across 175 golf brands globally, produce original editorial coverage, and publish the DORMIED Index, a monthly ranking of golf brand health by consumer search demand.</p>
 
-            <p>The platform is run by <strong>Travis</strong> (rankings, data, equipment &amp; general coverage) and <strong>Adam</strong> (apparel, footwear, and bags coverage).</p>
+          <p class="contact-p">The platform is run by <strong>Travis</strong> (rankings, data, equipment &amp; general coverage) and <strong>Adam</strong> (apparel, footwear, and bags coverage).</p>
 
-            <p>We are not affiliated with any golf brand. Rankings and editorial opinions are entirely independent.</p>
+          <p class="contact-p">We are not affiliated with any golf brand. Rankings and editorial opinions are entirely independent.</p>
 
-            <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:2rem 0 1rem">Corrections Policy</h2>
+          <h2 class="contact-section-title">Corrections Policy</h2>
 
-            <p>We take accuracy seriously. If you believe something we have published contains a factual error, email us with the article URL and the specific correction. We will review it and update the article with a correction note if warranted.</p>
+          <p class="contact-p">We take accuracy seriously. If you believe something we have published contains a factual error, email us with the article URL and the specific correction. We will review it and update the article with a correction note if warranted.</p>
 
-            <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:2rem 0 1rem">Social</h2>
+          <h2 class="contact-section-title">Social</h2>
 
-            <p>You can also find us on <a href="https://x.com/DORMIED_GOLF" target="_blank" rel="noopener" style="color:inherit">X (@DORMIED_GOLF)</a>, <a href="https://www.instagram.com/dormiedgolf" target="_blank" rel="noopener" style="color:inherit">Instagram (@dormiedgolf)</a>, and <a href="https://dormiedgolf.substack.com/" target="_blank" rel="noopener" style="color:inherit">Substack</a>.</p>
+          <p class="contact-p">You can also find us on <a href="https://x.com/DORMIED_GOLF" target="_blank" rel="noopener">X (@DORMIED_GOLF)</a>, <a href="https://www.instagram.com/dormiedgolf" target="_blank" rel="noopener">Instagram (@dormiedgolf)</a>, and <a href="https://dormiedgolf.substack.com/" target="_blank" rel="noopener">Substack</a>.</p>
 
-          </div>
         </div>
       </div>
     </section>
+
+    <div style="height:80px"></div>
 
   </main>
 
