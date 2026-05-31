@@ -758,11 +758,13 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
                       + compWords
                       + bagItemWords
                       + histItemWords;
-  const hasCore = currentItems.some(i => i.club_type === 'driver') &&
-                  currentItems.some(i => i.club_type === 'putter');
-  const noindex = proseWords < 500 || !hasCore;
-  if (noindex) warn(`Page for ${slug} will be noindex (words=${proseWords}, hasCore=${hasCore})`);
-  else         log(`Word count: ~${proseWords} (threshold 500, hasCore=${hasCore})`);
+  // Gate on bag completeness only — a ranked player with a current bag is always indexable.
+  // Drop the word-count floor: generated ledes satisfy it anyway, and it was silently
+  // noindexing valid pages for players whose lede cache hadn't been seeded yet.
+  const hasCore = currentItems.length > 0;
+  const noindex = !hasCore;
+  if (noindex) warn(`Page for ${slug} will be noindex (empty bag)`);
+  else         log(`Bag items: ${currentItems.length} — page is indexable`);
 
   // ── JSON-LD ───────────────────────────────────────────────────────────────
   const bagItemsLd = currentItems.map((item, i) => ({

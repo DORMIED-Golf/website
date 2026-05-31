@@ -69,6 +69,16 @@ function extractPublishedDate(html) {
   return m ? m[1].slice(0, 10) : null;
 }
 
+/** Return true if an HTML file is NOT noindex (i.e. safe to include in sitemap). */
+function isIndexable(filePath) {
+  try {
+    const html = fs.readFileSync(filePath, 'utf8');
+    return !html.includes('content="noindex');
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Walk a directory one level deep, returning subdirectory names
  * whose index.html is >= MIN_BYTES. Skips the listing directories
@@ -167,20 +177,49 @@ function regenerateSitemap() {
   const privacyLastmod     = mtimeDate(path.join(SITE_ROOT, 'privacy',   'index.html'));
   const termsLastmod       = mtimeDate(path.join(SITE_ROOT, 'terms',     'index.html'));
 
+  const witbIndexLastmod   = mtimeDate(path.join(SITE_ROOT, 'witb', 'index.html'));
+  const witbPlayersLastmod = mtimeDate(path.join(SITE_ROOT, 'witb', 'players', 'index.html'));
+
   const staticEntries = [
     `  <!-- ── Static pages ── -->`,
-    staticEntry('/',            staticIndexLastmod, 'monthly', '1.0'),
-    staticEntry('/rankings/',   rankLastmod,        'monthly', '0.9'),
-    staticEntry('/scorecard/',  scIndexLastmod,     'monthly', '0.9'),
-    staticEntry('/news/',       newsIndexLastmod,   'daily',   '0.8'),
-    staticEntry('/brands/',     brandsIndexLastmod, 'daily',   '0.8'),
-    staticEntry('/about/',      aboutLastmod,       'monthly', '0.6'),
-    staticEntry('/contact/',    contactLastmod,     'monthly', '0.6'),
-    staticEntry('/privacy/',    privacyLastmod,     'monthly', '0.5'),
-    staticEntry('/terms/',      termsLastmod,       'monthly', '0.5'),
+    staticEntry('/',               staticIndexLastmod, 'monthly', '1.0'),
+    staticEntry('/rankings/',      rankLastmod,        'monthly', '0.9'),
+    staticEntry('/witb/',          witbIndexLastmod,   'weekly',  '0.9'),
+    staticEntry('/witb/players/',  witbPlayersLastmod, 'weekly',  '0.8'),
+    staticEntry('/scorecard/',     scIndexLastmod,     'monthly', '0.9'),
+    staticEntry('/news/',          newsIndexLastmod,   'daily',   '0.8'),
+    staticEntry('/brands/',        brandsIndexLastmod, 'daily',   '0.8'),
+    staticEntry('/about/',         aboutLastmod,       'monthly', '0.6'),
+    staticEntry('/contact/',       contactLastmod,     'monthly', '0.6'),
+    staticEntry('/privacy/',       privacyLastmod,     'monthly', '0.5'),
+    staticEntry('/terms/',         termsLastmod,       'monthly', '0.5'),
   ];
 
-  // ── 2. Scorecard issues ────────────────────────────────────────────────────
+  // ── 2. WITB player pages ─────────────────────────────────────────────────
+  // Walk witb/players/* — include only indexable pages (not noindex).
+  // lastmod uses file mtime, which equals the last time the bag was regenerated.
+  const witbPlayerPages = walkSubdirs('witb/players', []);
+  const witbPlayerEntries = witbPlayerPages.length
+    ? [
+        `\n  <!-- ── WITB player pages (${witbPlayerPages.length}) ── -->`,
+        ...witbPlayerPages
+          .filter(p => isIndexable(p.filePath))
+          .map(p => {
+            const lastmod = p.mtime.toISOString().slice(0, 10);
+            const loc     = `${SITE_BASE}/witb/players/${xmlEsc(p.slug)}/`;
+            return [
+              `  <url>`,
+              `    <loc>${loc}</loc>`,
+              `    <lastmod>${lastmod}</lastmod>`,
+              `    <changefreq>weekly</changefreq>`,
+              `    <priority>0.7</priority>`,
+              `  </url>`,
+            ].join('\n');
+          }),
+      ]
+    : [];
+
+  // ── 3. Scorecard issues ────────────────────────────────────────────────────
   const scorecardPages = walkSubdirs('scorecard');
   const scorecardEntries = scorecardPages.length
     ? [
@@ -241,6 +280,7 @@ function regenerateSitemap() {
   // ── Assemble ───────────────────────────────────────────────────────────────
   const allEntries = [
     ...staticEntries,
+    ...witbPlayerEntries,
     ...scorecardEntries,
     ...brandEntries,
     ...newsEntries,
@@ -259,8 +299,9 @@ function regenerateSitemap() {
 
   fs.writeFileSync(OUT_PATH, xml, 'utf8');
 
-  const total = staticEntries.filter(e => e.includes('<url>')).length + scorecardPages.length + brandPages.length + newsPages.length + newsPageDirs.length;
-  console.log(`[sitemap] ✓ Regenerated sitemap.xml — ${total} URLs (${newsPages.length} articles, ${brandPages.length} brands, ${scorecardPages.length} scorecard issues)`);
+  const witbIndexableCount = witbPlayerPages.filter(p => isIndexable(p.filePath)).length;
+  const total = staticEntries.filter(e => e.includes('<url>')).length + witbIndexableCount + scorecardPages.length + brandPages.length + newsPages.length + newsPageDirs.length;
+  console.log(`[sitemap] ✓ Regenerated sitemap.xml — ${total} URLs (${newsPages.length} articles, ${brandPages.length} brands, ${witbIndexableCount} WITB players, ${scorecardPages.length} scorecard issues)`);
   return total;
 }
 
