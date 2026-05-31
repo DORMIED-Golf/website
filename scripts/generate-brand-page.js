@@ -1141,27 +1141,20 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
 }
 
 function getCatIcon(cat) {
-  const icons = {
-    'Drivers':
-      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><ellipse cx="7" cy="19" rx="6.5" ry="4" fill="currentColor"/><line x1="12" y1="16" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
-    'Fairway Woods':
-      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><ellipse cx="7" cy="19.5" rx="5.5" ry="3.5" fill="currentColor"/><line x1="11.5" y1="17" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
-    'Hybrids':
-      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><ellipse cx="7.5" cy="20" rx="4.5" ry="3" fill="currentColor"/><line x1="11" y1="17.5" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
-    'Irons':
-      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><rect x="1" y="18" width="12" height="4" rx="1" fill="currentColor"/><line x1="12" y1="18.5" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
-    'Wedges':
-      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><path d="M2 22L11 17L13 21Q7 24 2 22Z" fill="currentColor"/><line x1="12" y1="17.5" x2="22" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
-    'Putters':
-      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><rect x="1" y="19" width="12" height="3.5" rx="0.8" fill="currentColor"/><line x1="9" y1="19.5" x2="14" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
-    'Balls':
-      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><circle cx="12" cy="12" r="9" fill="currentColor"/></svg>',
-    'Grips':
-      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><rect x="9" y="2" width="6" height="9" rx="3" fill="currentColor"/><rect x="10.5" y="10" width="3" height="12" rx="1.5" fill="currentColor"/></svg>',
-    'Shafts':
-      '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0"><rect x="10.5" y="1" width="3" height="22" rx="1.5" fill="currentColor"/></svg>',
+  const iconMap = {
+    'Drivers':       'driver',
+    'Fairway Woods': 'fairway-wood',
+    'Hybrids':       'hybrid',
+    'Irons':         'iron',
+    'Wedges':        'wedge',
+    'Putters':       'putter',
+    'Balls':         'ball',
+    'Grips':         'grip',
+    'Shafts':        'shaft',
   };
-  return icons[cat] || '';
+  const name = iconMap[cat];
+  if (!name) return '';
+  return `<img src="/images/icons/${name}.svg" alt="" aria-hidden="true" width="18" height="18" style="flex-shrink:0;filter:brightness(0)invert(1);vertical-align:middle">`;
 }
 
 function buildOnTourHtml(brandName, onTourData) {
