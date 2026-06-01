@@ -647,7 +647,7 @@ async function main() {
     imageUrl:        finalImageUrl,
     ogImageUrl,
     localUrl,
-    imageAlt:        `${brandInfo.brand.name} — ${category}`,
+    imageAlt:        `${brandInfo.brand.name}: ${category}`,
     slug, category,
     published_at:    publishedAt,
     source_url:      sourceUrl,

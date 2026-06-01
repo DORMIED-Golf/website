@@ -375,8 +375,13 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   if (brand.headquarters) metaParts.push(brand.headquarters);
   const metaLine = metaParts.join(' · ');
 
-  // Take
-  const hasTake       = !!(take && take.take);
+  // Take — only show if the take.month matches the current snapshot month
+  const currentMonthYYYYMM = (() => {
+    const [mon, year] = (stats.currentMonth || '').split(' ');
+    const idx = MONTH_NAMES.indexOf(mon);
+    return idx >= 0 && year ? `${year}-${String(idx + 1).padStart(2, '0')}` : null;
+  })();
+  const hasTake       = !!(take && take.take && currentMonthYYYYMM && take.month === currentMonthYYYYMM);
   const takeMonthLabel = hasTake ? fmtMonth(take.month) : '';
 
   // JSON-LD
@@ -606,7 +611,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="site-logo" aria-label="DORMIED home">
-        <img src="/images/dormied-logo-colour.png" alt="DORMIED — Golf's Brand Desk" class="logo-img"
+        <img src="/images/dormied-logo-colour.png" alt="DORMIED | Golf's Brand Desk" class="logo-img"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <span class="logo-text-fallback" style="display:none">DORMIED</span>
       </a>

@@ -687,39 +687,37 @@
   /* ── MOST VIEWED WITBs ────────────────────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────────────── */
   function fetchMostViewedPlayers() {
+    // Build in-memory lookup from allPlayers (full ranked set, built at build time under service key).
+    // This avoids a second anon-key fetch to witb_players which is RLS-protected.
+    var leaders    = window.DORMIED_WITB_LEADERS;
+    var allPlayers = (leaders && leaders.allPlayers) || [];
+    var pm = {};
+    allPlayers.forEach(function (p) { pm[String(p.id)] = p; });
+
     var hdrs = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY };
 
-    // Step 1: top 10 by view_count descending
+    // Single fetch: top 10 by view_count descending
     return fetch(SUPABASE_URL + '/rest/v1/player_views_7d?select=player_id,view_count&order=view_count.desc&limit=10', {
       headers: hdrs
     })
     .then(function (r) { return r.ok ? r.json() : []; })
     .then(function (rows) {
+      console.log('[WITB] player_views_7d rows:', rows.length, '| allPlayers loaded:', allPlayers.length);
       if (!rows || !rows.length) return [];
 
-      // Step 2: fetch player details for these IDs
-      // player_views_7d.player_id is text; witb_players.id is uuid — Supabase casts automatically
-      var ids = rows.map(function (v) { return v.player_id; }).join(',');
-      return fetch(SUPABASE_URL + '/rest/v1/witb_players?select=id,name,slug,owgr_rank,country_code,nation&id=in.(' + ids + ')', {
-        headers: hdrs
-      })
-      .then(function (r) { return r.ok ? r.json() : []; })
-      .then(function (players) {
-        var pm = {};
-        players.forEach(function (p) { pm[p.id] = p; });
+      // Join against in-memory map (String() normalization on both sides)
+      var joined = rows.map(function (v) {
+        return { view_count: v.view_count, player: pm[String(v.player_id)] };
+      }).filter(function (x) { return x.player; });
 
-        // Step 3: join and sort by view_count desc, owgr_rank asc for ties
-        var joined = rows.map(function (v) {
-          return { view_count: v.view_count, player: pm[v.player_id] };
-        }).filter(function (x) { return x.player; });
+      console.log('[WITB] joined:', joined.length);
 
-        joined.sort(function (a, b) {
-          if (b.view_count !== a.view_count) return b.view_count - a.view_count;
-          return (a.player.owgr_rank || 9999) - (b.player.owgr_rank || 9999);
-        });
-
-        return joined;
+      joined.sort(function (a, b) {
+        if (b.view_count !== a.view_count) return b.view_count - a.view_count;
+        return (a.player.owgr_rank || 9999) - (b.player.owgr_rank || 9999);
       });
+
+      return joined;
     })
     .catch(function () { return []; });
   }
@@ -728,7 +726,10 @@
     var el = document.getElementById('most-viewed-witb-list');
     if (!el) return;
     if (!viewData || !viewData.length) {
-      el.innerHTML = '';
+      // Fail-safe: hide section and release reserved min-height so no empty box shows
+      var sec = el.closest('.most-viewed-witb-section') || document.querySelector('.most-viewed-witb-section');
+      if (sec) sec.style.display = 'none';
+      el.style.minHeight = '0';
       return;
     }
 

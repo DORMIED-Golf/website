@@ -430,14 +430,14 @@ function generateBrands() {
 
   /* Update title, meta, OG/Twitter */
   html = updateHeadMeta(html, {
-    title:       'The Field — Golf Brand Directory | DORMIED',
+    title:       'The Field | Golf Brand Directory | DORMIED',
     description: `Every golf brand we track on the DORMIED Index. ${n} brands across 10 global markets, ranked monthly by attention. Search, filter, see who's moving.`,
   });
 
   /* Update JSON-LD CollectionPage name dynamically so brand count never goes stale */
   html = html.replace(
-    /"name":\s*"Golf Brand Directory — \d+ Brands \| DORMIED"/,
-    `"name": "Golf Brand Directory — ${n} Brands | DORMIED"`,
+    /"name":\s*"Golf Brand Directory (?:—|\|) \d+ Brands \| DORMIED"/,
+    `"name": "Golf Brand Directory | ${n} Brands | DORMIED"`,
   );
 
   /* Inject intro copy and subhead into hero section */
@@ -835,9 +835,9 @@ async function generateScorecard() {
 
   /* Update title, meta, OG/Twitter */
   html = updateHeadMeta(html, {
-    title:         'The Scorecard — Monthly Golf Brand Newsletter | DORMIED',
+    title:         'The Scorecard | Monthly Golf Brand Newsletter | DORMIED',
     description:   'The monthly editorial issue from golf\'s brand desk. What the Index numbers actually mean, who moved, who faded, and what to watch.',
-    ogTitle:       'The Scorecard — Monthly Golf Brand Newsletter | DORMIED',
+    ogTitle:       'The Scorecard | Monthly Golf Brand Newsletter | DORMIED',
     ogDescription: 'The monthly editorial issue from golf\'s brand desk. What the Index numbers actually mean, who moved, who faded, and what to watch.',
   });
 

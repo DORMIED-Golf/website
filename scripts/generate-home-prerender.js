@@ -6,24 +6,28 @@
  * links, and the LCP hero image is present in the initial document.
  *
  * Sections patched (using idempotent marker comments):
- *   #home-dormied-list    — hero article card with LCP image
- *   #witb-leaders-top     — top 5 ranked players (links to /witb/players/{slug}/)
- *   #witb-leaders-drivers — top 5 driver brands (links to /brands/{slug}/)
- *   #witb-leaders-putters — top 5 putter brands (links to /brands/{slug}/)
- *   #sb-top               — top 5 brands by DI score (links to /brands/{id}/)
- *   #sb-movers            — biggest monthly gainers
- *   #sb-drops             — biggest monthly losers
+ *   hero-preload              — <link rel="preload"> in <head> for the LCP image
+ *   dormied-latest            — hero article card with LCP image
+ *   witb-leaders-top          — top 5 ranked players (links to /witb/players/{slug}/)
+ *   witb-leaders-drivers      — top 5 driver brands (links to /brands/{slug}/)
+ *   witb-leaders-putters      — top 5 putter brands (links to /brands/{slug}/)
+ *   sb-top                    — top 5 brands by DI score (links to /brands/{id}/)
+ *   sb-movers                 — biggest monthly gainers
+ *   sb-drops                  — biggest monthly losers
  *
  * Usage:
  *   node scripts/generate-home-prerender.js
  *
  * Re-running is safe — replaces between the markers, does not duplicate.
  *
- * To add a new hero article: update HERO_ARTICLE below, then re-run.
- * The preload hint in <head> must also be updated to match.
+ * Hero article is fetched live from Supabase (requires SUPABASE_URL +
+ * SUPABASE_SERVICE_KEY). If those env vars are absent the hero and preload
+ * sections are left unchanged; the scoreboard/WITB sections still update.
  */
 
 'use strict';
+
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 const fs   = require('fs');
 const path = require('path');
@@ -32,16 +36,6 @@ const SITE_ROOT  = path.resolve(__dirname, '..');
 const INDEX_HTML = path.join(SITE_ROOT, 'index.html');
 const DATA_JS    = path.join(SITE_ROOT, 'js', 'data-home.js');
 const LEADERS_JS = path.join(SITE_ROOT, 'js', 'witb-leaders.js');
-
-// ── Hero article (update when the featured article changes) ───────────────────
-// Must match the <link rel="preload" as="image"> in index.html <head>.
-const HERO_ARTICLE = {
-  slug:     'scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29',
-  title:    "Scotty Cameron's Newport 2 Finishes Fourth in Short Putt Testing, and That Might Be Fine",
-  imageUrl: 'https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/scotty-camerons-newport-2-finishes-fourth-in-short-putt-testing-and-that-2026-04-29-hero.jpg',
-  pubDate:  '2026-04-29',
-  author:   'Travis',
-};
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -83,6 +77,48 @@ function flagEmoji(countryCode) {
   const c2   = countryCode.charCodeAt(1) - 65;
   if (c1 < 0 || c1 > 25 || c2 < 0 || c2 > 25) return '';
   return String.fromCodePoint(base + c1) + String.fromCodePoint(base + c2);
+}
+
+// ── Fetch latest published article from Supabase ──────────────────────────────
+
+async function fetchLatestArticle() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  if (!url || !key) {
+    console.warn('[prerender] SUPABASE_URL / SUPABASE_SERVICE_KEY not set — hero/preload sections unchanged');
+    return null;
+  }
+  const endpoint = url + '/rest/v1/dormied_articles'
+    + '?select=slug,title,image_url,published_at,author'
+    + '&status=eq.published'
+    + '&order=published_at.desc'
+    + '&limit=1';
+  let res;
+  try {
+    res = await fetch(endpoint, {
+      headers: { apikey: key, Authorization: 'Bearer ' + key },
+    });
+  } catch (err) {
+    console.warn('[prerender] Supabase fetch failed:', err.message, '— hero/preload sections unchanged');
+    return null;
+  }
+  if (!res.ok) {
+    console.warn('[prerender] Supabase error ' + res.status + ' — hero/preload sections unchanged');
+    return null;
+  }
+  const rows = await res.json();
+  if (!rows || !rows.length) {
+    console.warn('[prerender] No published articles found — hero/preload sections unchanged');
+    return null;
+  }
+  const r = rows[0];
+  return {
+    slug:     r.slug     || '',
+    title:    r.title    || '',
+    imageUrl: r.image_url || '',
+    pubDate:  (r.published_at || '').slice(0, 10),
+    author:   r.author   || 'Travis',
+  };
 }
 
 // ── Parse JS data files ────────────────────────────────────────────────────────
@@ -237,12 +273,25 @@ function generateWitbLeaderSections(leaders) {
   };
 }
 
-function generateHeroArticle() {
-  const h = HERO_ARTICLE;
-  const imgSrc    = vitUrl(h.imageUrl, 800);
-  const imgSrcset = `${vitUrl(h.imageUrl, 400)} 400w,${vitUrl(h.imageUrl, 800)} 800w,${vitUrl(h.imageUrl, 1200)} 1200w`;
+/** <link rel="preload"> hint for the hero article's LCP image. */
+function generatePreloadLink(h) {
+  if (!h || !h.imageUrl) return '';
+  const srcset = [400, 800, 1200]
+    .map(w => esc(vitUrl(h.imageUrl, w)) + ' ' + w + 'w')
+    .join(', ');
+  return '<link rel="preload" as="image" fetchpriority="high"\n'
+       + '    imagesrcset="' + srcset + '"\n'
+       + '    imagesizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw">';
+}
+
+/** Hero article card — the LCP element baked into #home-dormied-list. */
+function generateHeroArticle(h) {
+  const imgSrc    = esc(vitUrl(h.imageUrl, 800));
+  const imgSrcset = [400, 800, 1200]
+    .map(w => esc(vitUrl(h.imageUrl, w)) + ' ' + w + 'w')
+    .join(',');
   return '<article class="feed-card feed-card--full feed-card--dormied">'
-       + `<img class="feed-card-thumb feed-card-thumb--lg" src="${esc(imgSrc)}" srcset="${esc(imgSrcset)}" sizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw" width="600" height="375" loading="eager" fetchpriority="high" alt="">`
+       + `<img class="feed-card-thumb feed-card-thumb--lg" src="${imgSrc}" srcset="${imgSrcset}" sizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw" width="600" height="375" loading="eager" fetchpriority="high" alt="">`
        + '<div class="feed-card-body">'
        + `<div class="feed-card-meta"><span class="feed-time">${esc(h.pubDate)}</span></div>`
        + `<a href="/news/${esc(h.slug)}/" class="feed-card-title feed-card-title--lg">${esc(h.title)}</a>`
@@ -268,7 +317,10 @@ function injectBetweenMarkers(html, key, content) {
 
 // ── Main ───────────────────────────────────────────────────────────────────────
 
-function run() {
+async function run() {
+  // Fetch latest published article (requires Supabase env vars)
+  const article = await fetchLatestArticle();
+
   const data    = loadDataHomeJs();
   const leaders = loadWitbLeadersJs();
   const ranked  = computeHomeRankings(data);
@@ -276,8 +328,14 @@ function run() {
   const sections = {
     ...generateScoreboardSections(ranked),
     ...generateWitbLeaderSections(leaders),
-    'dormied-latest': generateHeroArticle(),
   };
+
+  // Hero and preload only update when Supabase fetch succeeds
+  if (article) {
+    sections['dormied-latest'] = generateHeroArticle(article);
+    sections['hero-preload']   = generatePreloadLink(article);
+    console.log('[prerender] Hero article: "' + article.title.slice(0, 60) + '" (' + article.pubDate + ')');
+  }
 
   let html = fs.readFileSync(INDEX_HTML, 'utf8');
   for (const [key, content] of Object.entries(sections)) {
@@ -287,19 +345,19 @@ function run() {
 
   const playerCount = (leaders.topPlayers || []).slice(0, 5).length;
   console.log(
-    `[prerender] ✓ index.html patched — `
-    + `${ranked.length} brands ranked, top ${playerCount} players, `
-    + `${(leaders.topDrivers || []).length} drivers, ${(leaders.topPutters || []).length} putters`
+    '[prerender] ✓ index.html patched — '
+    + ranked.length + ' brands ranked, top ' + playerCount + ' players, '
+    + (leaders.topDrivers || []).length + ' drivers, '
+    + (leaders.topPutters || []).length + ' putters'
+    + (article ? '' : ' (hero unchanged)')
   );
 }
 
 if (require.main === module) {
-  try {
-    run();
-  } catch (err) {
+  run().catch(err => {
     console.error('[prerender] Fatal:', err.message);
     process.exit(1);
-  }
+  });
 }
 
 module.exports = { run };

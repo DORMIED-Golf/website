@@ -710,7 +710,7 @@ async function main() {
       imageUrl:        finalImageUrl,
       ogImageUrl,
       localUrl,
-      imageAlt:        `${primaryBrand.name} — ${art.category}`,
+      imageAlt:        `${primaryBrand.name}: ${art.category}`,
       slug:            art.slug,
       category:        art.category,
       published_at:    publishedAt,

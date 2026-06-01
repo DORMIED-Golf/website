@@ -1178,7 +1178,7 @@ async function main() {
           bodyHtml:         bHtml,
           imageUrl:         row.image_url || '',
           ogImageUrl:       row.image_url || 'https://dormied.com/images/og-image.jpg',
-          imageAlt:         `${bName} — ${correctCategory}`,
+          imageAlt:         `${bName}: ${correctCategory}`,
           slug:             row.slug,
           category:         correctCategory,
           published_at:     row.published_at,
@@ -1296,7 +1296,7 @@ async function main() {
         bodyHtml:        bHtml,
         imageUrl:        row.image_url || '',
         ogImageUrl:      row.image_url || 'https://dormied.com/images/og-image.jpg',
-        imageAlt:        `${bName} — ${backfillCategory}`,
+        imageAlt:        `${bName}: ${backfillCategory}`,
         slug:            row.slug,
         category:        backfillCategory,
         published_at:    row.published_at,
@@ -1544,7 +1544,7 @@ async function main() {
     // Step 1: write candidate HTML
     const html = generateArticleHtml({
       title, bodyHtml, imageUrl, ogImageUrl, localUrl,
-      imageAlt:        `${brandInfo.brand.name} — ${articleCategory}`,
+      imageAlt:        `${brandInfo.brand.name}: ${articleCategory}`,
       slug, category:  articleCategory,
       published_at:    publishedAt,
       source_url:      raw.source_url,
