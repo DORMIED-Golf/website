@@ -60,6 +60,15 @@ jobs:
           fi
           node scripts/witb-scrape.js $ARGS
 
+      - name: Refresh OWGR rankings
+        # Runs after bag scrape so the rebuilt page gets fresh ranks in the
+        # same commit. owgr.com publishes new rankings every Monday, so running
+        # this on Tuesday captures the week's update.
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/witb-owgr-refresh.js
+
       - name: Rebuild WITB page
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -70,11 +79,11 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add witb/index.html
+          git add witb/index.html js/witb-leaders.js
           if git diff --cached --quiet; then
-            echo "No changes to witb/index.html — skipping commit"
+            echo "No changes — skipping commit"
           else
-            git commit -m "WITB weekly rebuild: $(date -u '+%Y-%m-%d')"
+            git commit -m "WITB weekly rebuild + OWGR refresh: $(date -u '+%Y-%m-%d')"
             git push
           fi
 
