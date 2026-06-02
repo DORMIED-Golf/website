@@ -71,6 +71,15 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: node scripts/witb-owgr-refresh.js
 
+      - name: Patch OWGR ranks on player pages
+        # Lightweight: reads each player's HTML file and updates only the
+        # rank span + updated date. No Anthropic API calls. Runs in <5s.
+        # Must run after witb-owgr-refresh.js so the DB has fresh ranks.
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/patch-witb-owgr-ranks.js
+
       - name: Rebuild WITB page
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -81,7 +90,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add witb/index.html js/witb-leaders.js
+          git add witb/index.html js/witb-leaders.js witb/players/
           if git diff --cached --quiet; then
             echo "No changes — skipping commit"
           else
