@@ -27,6 +27,8 @@ jobs:
     name: WITB Data Refresh
     runs-on: ubuntu-latest
     timeout-minutes: 180   # 3 hours max (covers a full initial scrape)
+    permissions:
+      contents: write      # required for git push after rebuild
 
     steps:
       - name: Checkout repository
