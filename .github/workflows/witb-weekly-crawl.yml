@@ -80,6 +80,14 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: node scripts/patch-witb-owgr-ranks.js
 
+      - name: Rebuild WITB players directory
+        # Regenerates /witb/players/index.html (the player grid/listing).
+        # Reads OWGR ranks directly from DB so always matches the refresh above.
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/generate-witb-players-page.js
+
       - name: Rebuild WITB page
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
