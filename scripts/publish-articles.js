@@ -86,7 +86,7 @@ async function main() {
 
     const { error: updateErr } = await supabase
       .from('dormied_articles')
-      .update({ status: 'published' })
+      .update({ status: 'published', published_at: new Date().toISOString() })
       .eq('id', article.id);
 
     if (updateErr) {
