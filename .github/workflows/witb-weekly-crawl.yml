@@ -48,6 +48,7 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         run: node scripts/witb-scrape.js --mode=weekly
 
       - name: Run WITB scrape (manual trigger)
@@ -55,6 +56,7 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         run: |
           ARGS="--mode=${{ inputs.mode }}"
           if [ "${{ inputs.no_history }}" = "true" ]; then

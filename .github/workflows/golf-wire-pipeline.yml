@@ -105,6 +105,7 @@ jobs:
         env:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          INDEXNOW_KEY:         ${{ secrets.INDEXNOW_KEY }}
 
       - name: Regenerate news index after publish
         # Articles are now published in Supabase — regenerate /news/ so the static
