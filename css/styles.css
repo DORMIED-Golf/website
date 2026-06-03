@@ -4166,7 +4166,27 @@ details[open] .faq-question::after { content: '−'; }
   font-size: 14px;
   line-height: 1.65;
   color: var(--text-dim);
+  margin: 0 0 14px;
+}
+.signup-popup-bullets {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-dim);
   margin: 0 0 20px;
+  padding-left: 0;
+  list-style: none;
+}
+.signup-popup-bullets li {
+  padding-left: 16px;
+  position: relative;
+}
+.signup-popup-bullets li::before {
+  content: '*';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
 }
 .signup-popup-form {
   display: flex;
