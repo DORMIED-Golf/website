@@ -21,6 +21,7 @@ const path             = require('path');
 const vm               = require('vm');
 const cheerio          = require('cheerio');
 const { createClient } = require('@supabase/supabase-js');
+const { submitUrls }   = require('../lib/indexnow');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -774,6 +775,7 @@ async function runWeeklyCrawl(supabase) {
   let bags_added       = 0;
   let changes_detected = 0;
   const errors         = [];
+  const changedSlugs   = []; // slugs of players whose bag actually changed this run
 
   log('Weekly crawl starting...');
   const allPlayers = await fetchAllPlayers();
@@ -800,7 +802,10 @@ async function runWeeklyCrawl(supabase) {
         // New player: do a full scrape
         log(`  New player found: ${playerInfo.name}`);
         const res = await scrapePlayer(supabase, playerInfo, { fetchHistory: false });
-        if (res.player_id) players_scraped++;
+        if (res.player_id) {
+          players_scraped++;
+          changedSlugs.push(playerInfo.slug);
+        }
         bags_added += res.bags_added;
         errors.push(...res.errors);
         continue;
@@ -851,6 +856,7 @@ async function runWeeklyCrawl(supabase) {
               currentBag.bag_date, bag_date);
             changes_detected += n;
           }
+          changedSlugs.push(playerInfo.slug);
         }
         players_scraped++;
       }
@@ -880,6 +886,20 @@ async function runWeeklyCrawl(supabase) {
   log(`\nWeekly crawl complete: ${players_scraped} updated, ${bags_added} new bags, ${changes_detected} changes, ${errors.length} errors`);
   if (unmapped.length) {
     log(`Unmapped brands (${unmapped.length}): ${unmapped.map(b => b.slug).join(', ')}`);
+  }
+
+  // Notify IndexNow for players whose bag actually changed this run.
+  // Submit only changed slugs — do not send the full roster every week.
+  if (changedSlugs.length > 0) {
+    const witbUrls = changedSlugs.map(s => `https://dormied.com/witb/players/${s}/`);
+    try {
+      await submitUrls(witbUrls);
+    } catch (err) {
+      // Never let an IndexNow failure fail the crawl job
+      console.warn(`[indexnow] submitUrls threw unexpectedly: ${err.message}`);
+    }
+  } else {
+    log('[indexnow] No bag changes this run — nothing to submit');
   }
 
   // Alert on failure

@@ -17,6 +17,8 @@
 
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
+const { submitUrls } = require('../lib/indexnow');
+
 const fs            = require('fs');
 const path          = require('path');
 const { spawnSync } = require('child_process');
@@ -60,8 +62,9 @@ async function main() {
 
   console.log(`[publish] ${drafts.length} draft article(s) found.`);
 
-  let published = 0;
-  let skipped   = 0;
+  let published       = 0;
+  let skipped         = 0;
+  const publishedUrls = [];
 
   for (const article of drafts) {
     const relPath = path.join('news', article.slug, 'index.html');
@@ -91,11 +94,17 @@ async function main() {
       skipped++;
     } else {
       console.log(`[publish] ✓ Published: "${article.title}"`);
+      publishedUrls.push(`https://dormied.com/news/${article.slug}/`);
       published++;
     }
   }
 
   console.log(`[publish] Done — published: ${published}, skipped: ${skipped}`);
+
+  // Notify IndexNow for every freshly published article URL
+  if (publishedUrls.length > 0) {
+    await submitUrls(publishedUrls);
+  }
 }
 
 main().catch(err => {
