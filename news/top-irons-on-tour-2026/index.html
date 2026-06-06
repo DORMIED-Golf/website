@@ -205,71 +205,6 @@
   }
   .tiotc-sub b { color: var(--text); font-weight: 600; }
 
-  /* Chart 1: bar rows */
-  .tiotc-bars { display: flex; flex-direction: column; }
-  .tiotc-bar-row {
-    display: grid;
-    grid-template-columns: 34px minmax(130px, 190px) 1fr 52px;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 6px;
-    margin: 0 -6px;
-    border-radius: var(--radius-sm);
-    border-bottom: 1px solid var(--border);
-  }
-  .tiotc-bar-row:last-child { border-bottom: none; }
-  .tiotc-bar-row:hover { background: var(--bg-hover); }
-  .tiotc-rk {
-    font-family: var(--font-mono); font-weight: 700; font-size: 0.78rem;
-    color: var(--text-muted); text-align: center; letter-spacing: -0.02em;
-  }
-  .tiotc-bar-row.is-lead .tiotc-rk { color: var(--green); }
-  .tiotc-lbl { min-width: 0; }
-  .tiotc-model {
-    font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
-    color: var(--text-dim); line-height: 1.15; white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis;
-  }
-  .tiotc-bar-row.is-lead .tiotc-model { color: var(--text); }
-  .tiotc-brand {
-    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--text-muted); margin-top: 3px;
-  }
-  .tiotc-bar-row.is-lead .tiotc-brand { color: var(--green-dim); }
-  .tiotc-track {
-    height: 12px; width: 100%;
-    background: var(--bg-raised); border-radius: 3px; overflow: hidden;
-  }
-  .tiotc-fill {
-    height: 100%; width: var(--w); border-radius: 3px;
-    background: rgba(150,180,150,0.45);
-  }
-  .tiotc-bar-row.is-lead .tiotc-fill {
-    background: linear-gradient(90deg, var(--green-dim), var(--green));
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .tiotc-bars.animate .tiotc-fill {
-      animation: tiotcGrowX 0.8s cubic-bezier(0.2,0.8,0.2,1) backwards;
-    }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(1)  .tiotc-fill { animation-delay: 0.04s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(2)  .tiotc-fill { animation-delay: 0.08s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(3)  .tiotc-fill { animation-delay: 0.12s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(4)  .tiotc-fill { animation-delay: 0.16s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(5)  .tiotc-fill { animation-delay: 0.20s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(6)  .tiotc-fill { animation-delay: 0.24s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(7)  .tiotc-fill { animation-delay: 0.28s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(8)  .tiotc-fill { animation-delay: 0.32s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(9)  .tiotc-fill { animation-delay: 0.36s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(10) .tiotc-fill { animation-delay: 0.40s; }
-    .tiotc-bars.animate .tiotc-bar-row:nth-child(11) .tiotc-fill { animation-delay: 0.44s; }
-  }
-  @keyframes tiotcGrowX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  .tiotc-val {
-    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
-    color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums;
-  }
-  .tiotc-bar-row.is-lead .tiotc-val { color: var(--green); }
-
   /* Chart 2: donut + legend */
   .tiotc-donut-wrap {
     display: grid;
@@ -413,15 +348,15 @@
 
               <p style="font-style:italic;font-size:.875rem;color:var(--text-muted);border-left:3px solid var(--border);padding-left:12px;margin-bottom:24px">Travis covers equipment, shafts, and the DORMIED Index data for DORMIED. He is the data co-founder and has been tracking the golf brand market since 2018. Adam covers apparel, accessories, and golf culture for DORMIED. He has been tracking brand drops and collaborations since 2018.</p>
 
-              <p>Top irons on tour in 2026 are concentrated in a small group of models that elite players actually game week to week: <a href="/brands/titleist/" class="da-brand-link">Titleist</a>'s T100 leads the field, followed by the T200, <a href="/brands/callaway/" class="da-brand-link">Callaway</a>'s Apex TCB, <a href="/brands/titleist/" class="da-brand-link">Titleist</a>'s 620 MB and 620 CB, and <a href="/brands/ping/" class="da-brand-link">PING</a>'s Blueprint S and i210. Combined, those few models cover the meaningful share of professional bags. The list below is built from DORMIED's WITB database (160 current tour bags), counted at the model level the way real iron use works: one bag per model, not one bag per club, so a player gaming 7-iron through PW of the same model counts as one.</p>
+              <p>Top irons on tour in 2026 are concentrated in a small group of models that elite players actually game week to week: <a href="/brands/titleist/" class="da-brand-link">Titleist</a>'s T100 leads the field, followed by the T200, <a href="/brands/callaway/" class="da-brand-link">Callaway</a>'s Apex TCB, <a href="/brands/titleist/" class="da-brand-link">Titleist</a>'s 620 MB and 620 CB, and <a href="/brands/ping/" class="da-brand-link">PING</a>'s Blueprint S and i210. Combined, those few models cover the meaningful share of professional bags. The list below is built from <a href="/witb/" class="da-brand-link">DORMIED's WITB database</a> (160 current tour bags), counted at the model level the way real iron use works: one bag per model, not one bag per club, so a player gaming 7-iron through PW of the same model counts as one.</p>
 
               <p>That methodology matters because tour irons are not a one-club decision. They are a six-club decision, often two combined model lines, and the data shows tour pros treat irons like a set of tools rather than a single product choice. This is what that looks like right now.</p>
 
               <h2>What the data shows</h2>
 
-              <p>In one sentence: in 2026, <a href="/brands/titleist/" class="da-brand-link">Titleist</a> is the dominant iron brand on tour with nearly 29 percent of current bags carrying at least one Titleist iron model, and the T100 is the single most-gamed iron in professional golf at 17.5 percent of the field.</p>
+              <p>In one sentence: in 2026, <a href="/brands/titleist/" class="da-brand-link">Titleist</a> is the dominant iron brand on tour with nearly 29 percent of current bags carrying at least one <a href="/brands/titleist/" class="da-brand-link">Titleist</a> iron model, and the T100 is the single most-gamed iron in professional golf at 17.5 percent of the field.</p>
 
-              <p>The table below shows the top iron models by number of current tour bags using them, drawn from DORMIED's WITB tracking. Percentage of field is calculated against the 160 currently tracked tour bags, so a player carrying a model only counts once regardless of how many irons in that model they actually game.</p>
+              <p>The table below shows the top iron models by number of current tour bags using them, drawn from <a href="/witb/" class="da-brand-link">DORMIED's WITB tracking</a>. Percentage of field is calculated against the 160 currently tracked tour bags, so a player carrying a model only counts once regardless of how many irons in that model they actually game.</p>
 
               <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:20px 0">
                 <table style="width:100%;border-collapse:collapse;font-size:.875rem;min-width:520px">
@@ -453,19 +388,10 @@
                 </table>
               </div>
 
-              <p style="font-size:.8rem;color:var(--text-muted);font-style:italic">Source: DORMIED WITB tracking, 160 current tour bags as of May 2026. A bag counts once per model regardless of how many irons of that model the player carries.</p>
-              <!-- ══ CHART 1: Top Iron Models ══ -->
-              <div class="tiotc" aria-label="Top iron models on tour by share of field">
-                <div class="tiotc-head">
-                  <span class="tiotc-eyebrow">Most-Gamed Irons &middot; 2026</span>
-                  <h3 class="tiotc-title">Top Irons on Tour</h3>
-                  <p class="tiotc-sub">Share of <b>160 current tour bags</b> running each model. Counted once per bag per model. <b>Titleist</b> models in green.</p>
-                </div>
-                <div class="tiotc-bars" id="tiotc-bars"></div>
-                <p class="tiotc-src">&#x25cf; Source: DORMIED WITB tracking &nbsp;&middot;&nbsp; 160 current tour bags &nbsp;&middot;&nbsp; as of May 2026</p>
-              </div>
+              <p style="font-size:.8rem;color:var(--text-muted);font-style:italic">Source: <a href="/witb/" class="da-brand-link">DORMIED WITB tracking</a>, 160 current tour bags as of May 2026. A bag counts once per model regardless of how many irons of that model the player carries.</p>
+              
 
-              <p>The headline is Titleist. The T100 is in 28 bags, almost double the next model on the list. Add the T200, T150, 620 MB and 620 CB and Titleist holds five of the top eight slots. At the brand level, <a href="/brands/titleist/" class="da-brand-link">Titleist</a> appears in 46 current bags, 28.8 percent of the field; <a href="/brands/callaway/" class="da-brand-link">Callaway</a> is next at 29 bags (18.1 percent), then <a href="/brands/ping/" class="da-brand-link">PING</a> at 25 (15.6 percent), <a href="/brands/srixon/" class="da-brand-link">Srixon</a> at 23 (14.4 percent), and <a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> at 19 (11.9 percent). <a href="/brands/mizuno/" class="da-brand-link">Mizuno</a>, the most lore-heavy iron brand in the game, sits at 9 bags, partly because its tour share is split across many models rather than concentrated in one.</p>
+              <p>The headline is <a href="/brands/titleist/" class="da-brand-link">Titleist</a>. The T100 is in 28 bags, almost double the next model on the list. Add the T200, T150, 620 MB and 620 CB and <a href="/brands/titleist/" class="da-brand-link">Titleist</a> holds five of the top eight slots. At the brand level, <a href="/brands/titleist/" class="da-brand-link">Titleist</a> appears in 46 current bags, 28.8 percent of the field; <a href="/brands/callaway/" class="da-brand-link">Callaway</a> is next at 29 bags (18.1 percent), then <a href="/brands/ping/" class="da-brand-link">PING</a> at 25 (15.6 percent), <a href="/brands/srixon/" class="da-brand-link">Srixon</a> at 23 (14.4 percent), and <a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> at 19 (11.9 percent). <a href="/brands/mizuno/" class="da-brand-link">Mizuno</a>, the most lore-heavy iron brand in the game, sits at 9 bags, partly because its tour share is split across many models rather than concentrated in one.</p>
 
               <h2>The headline finding: tour irons are combo sets, not single-model decisions</h2>
 
@@ -473,98 +399,97 @@
 
               <p>Of the 160 current tour bags tracked, 111 carry two or more different iron models. That is 69.4 percent. Combo sets are the norm on tour, not the exception, and that has direct implications for how to read the numbers above. The T100 leads the field at 17.5 percent partly because it is the most common long-iron-half of a combo set, not because 28 players are running T100 4-iron through PW. <a href="/witb/players/cameron-young/" class="da-brand-link">Cameron Young</a> carries both a T100 and a T200. <a href="/witb/players/justin-thomas/" class="da-brand-link">Justin Thomas</a> does the same. The pattern repeats across the leaderboard.</p>
 
-              <p>This is the modern tour bag in practice: a forgiving, slightly hollow-bodied long iron for distance and launch, paired with a tighter, more workable short iron for scoring control. Equipment companies have built their iron lines around this behavior, which is why the data shows several Titleist models in the top eight rather than one runaway winner.</p>
+              <p>This is the modern tour bag in practice: a forgiving, slightly hollow-bodied long iron for distance and launch, paired with a tighter, more workable short iron for scoring control. Equipment companies have built their iron lines around this behavior, which is why the data shows several <a href="/brands/titleist/" class="da-brand-link">Titleist</a> models in the top eight rather than one runaway winner.</p>
 
               <h2>The model breakdown</h2>
 
-              <h3>Titleist T100: the default</h3>
+              <h3><a href="/brands/titleist/" class="da-brand-link">Titleist</a> T100: the default</h3>
 
               <p>The T100 is the most-gamed iron in professional golf. <a href="/witb/players/cameron-young/" class="da-brand-link">Cameron Young</a> (OWGR 3), <a href="/witb/players/russell-henley/" class="da-brand-link">Russell Henley</a> (5), <a href="/witb/players/ludvig-aberg/" class="da-brand-link">Ludvig Aberg</a> (15), and <a href="/witb/players/justin-thomas/" class="da-brand-link">Justin Thomas</a> (16) all game it currently. The T100 is a forged tour cavity in look but engineered with enough forgiveness to be a real all-bag option, which is why it shows up both as a full set and as the long-iron side of combos. <a href="/brands/titleist/" class="da-brand-link">Titleist</a>'s tour staff and fitting infrastructure compound the effect: when a model already works for elite players, the easiest decision in golf is to stay with it.</p>
 
-              <h3>Titleist T200: the long-iron half</h3>
+              <h3><a href="/brands/titleist/" class="da-brand-link">Titleist</a> T200: the long-iron half</h3>
 
               <figure style="margin:24px 0">
                 <picture>
                   <source srcset="/images/articles/top-irons-titleist-t200.webp" type="image/webp">
-                  <img src="/images/articles/top-irons-titleist-t200.webp" alt="Titleist T200 iron, commonly used as the long-iron half of combo sets on tour" width="1200" height="800" loading="lazy" style="width:100%;height:auto;border-radius:4px">
+                  <img src="/images/articles/top-irons-titleist-t200.webp" alt="<a href="/brands/titleist/" class="da-brand-link">Titleist</a> T200 iron, commonly used as the long-iron half of combo sets on tour" width="1200" height="800" loading="lazy" style="width:100%;height:auto;border-radius:4px">
                 </picture>
-                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The Titleist T200, the most common second model in T100-combo bags. Its job is to launch easier and travel further in the long-iron slots.</figcaption>
+                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The <a href="/brands/titleist/" class="da-brand-link">Titleist</a> T200, the most common second model in T100-combo bags. Its job is to launch easier and travel further in the long-iron slots.</figcaption>
               </figure>
 
               <p>The T200 is the most common second-model in T100-combo bags. <a href="/witb/players/cameron-young/" class="da-brand-link">Cameron Young</a>, <a href="/witb/players/justin-thomas/" class="da-brand-link">Justin Thomas</a>, <a href="/witb/players/garrick-higgo/" class="da-brand-link">Garrick Higgo</a>, and <a href="/witb/players/tom-hoge/" class="da-brand-link">Tom Hoge</a> all run it. It sits in the bag as a 3, 4, and 5-iron more often than as a full set. The T200's job is to launch easier and travel further than the T100 would in those slots while looking close enough at address to not break the player's eye.</p>
 
-              <h3>Callaway Apex TCB: the elite ball-striker's pick</h3>
+              <h3><a href="/brands/callaway/" class="da-brand-link">Callaway</a> Apex TCB: the elite ball-striker's pick</h3>
 
               <figure style="margin:24px 0">
                 <picture>
                   <source srcset="/images/articles/top-irons-callaway-apex-tcb.webp" type="image/webp">
-                  <img src="/images/articles/top-irons-callaway-apex-tcb.webp" alt="Callaway Apex TCB iron, gamed by Xander Schauffele and Jon Rahm" width="1200" height="800" loading="lazy" style="width:100%;height:auto;border-radius:4px">
+                  <img src="/images/articles/top-irons-callaway-apex-tcb.webp" alt="<a href="/brands/callaway/" class="da-brand-link">Callaway</a> Apex TCB iron, gamed by <a href="/witb/players/xander-schauffele/" class="da-brand-link">Xander Schauffele</a> and <a href="/witb/players/jon-rahm/" class="da-brand-link">Jon Rahm</a>" width="1200" height="800" loading="lazy" style="width:100%;height:auto;border-radius:4px">
                 </picture>
-                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The Callaway Apex TCB, a tour cavity designed for feel and shotmaking control. The player list is heavy for a model with only 11 bags.</figcaption>
+                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The <a href="/brands/callaway/" class="da-brand-link">Callaway</a> Apex TCB, a tour cavity designed for feel and shotmaking control. The player list is heavy for a model with only 11 bags.</figcaption>
               </figure>
 
-              <p>Callaway's Apex TCB is the smallest top-five number (11 bags) but the player list is heavy. <a href="/witb/players/xander-schauffele/" class="da-brand-link">Xander Schauffele</a> (OWGR 10), <a href="/witb/players/jon-rahm/" class="da-brand-link">Jon Rahm</a> (12), <a href="/witb/players/alex-noren/" class="da-brand-link">Alex Noren</a> (21), and <a href="/witb/players/sam-burns/" class="da-brand-link">Sam Burns</a> (34) all game it. TCB is a tour cavity disguised as a blade, the kind of club that gets chosen for feel and shotmaking control rather than launch help. <a href="/brands/callaway/" class="da-brand-link">Callaway</a>'s overall iron count of 29 bags is built mostly on Apex TCB, Apex MB, X Forged UT, and Apex Pro, all in the same forged-players-iron family.</p>
+              <p><a href="/brands/callaway/" class="da-brand-link">Callaway</a>'s Apex TCB is the smallest top-five number (11 bags) but the player list is heavy. <a href="/witb/players/xander-schauffele/" class="da-brand-link">Xander Schauffele</a> (OWGR 10), <a href="/witb/players/jon-rahm/" class="da-brand-link">Jon Rahm</a> (12), <a href="/witb/players/alex-noren/" class="da-brand-link">Alex Noren</a> (21), and <a href="/witb/players/sam-burns/" class="da-brand-link">Sam Burns</a> (34) all game it. TCB is a tour cavity disguised as a blade, the kind of club that gets chosen for feel and shotmaking control rather than launch help. <a href="/brands/callaway/" class="da-brand-link">Callaway</a>'s overall iron count of 29 bags is built mostly on Apex TCB, Apex MB, X Forged UT, and Apex Pro, all in the same forged-players-iron family.</p>
 
-              <h3>Titleist 620 MB and 620 CB: the survivors</h3>
+              <h3><a href="/brands/titleist/" class="da-brand-link">Titleist</a> 620 MB and 620 CB: the survivors</h3>
 
               <figure style="margin:24px 0">
                 <picture>
                   <source srcset="/images/articles/top-irons-titleist-620-mb-cb.webp" type="image/webp">
-                  <img src="/images/articles/top-irons-titleist-620-mb-cb.webp" alt="Titleist 620 MB and 620 CB irons, still in 16 combined tour bags six years post-launch" width="1200" height="480" loading="lazy" style="width:100%;height:auto;border-radius:4px">
+                  <img src="/images/articles/top-irons-titleist-620-mb-cb.webp" alt="<a href="/brands/titleist/" class="da-brand-link">Titleist</a> 620 MB and 620 CB irons, still in 16 combined tour bags six years post-launch" width="1200" height="480" loading="lazy" style="width:100%;height:auto;border-radius:4px">
                 </picture>
-                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The Titleist 620 MB and 620 CB, launched in 2019 and still in 16 combined current tour bags. Tour pros do not change irons for marketing reasons.</figcaption>
+                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The <a href="/brands/titleist/" class="da-brand-link">Titleist</a> 620 MB and 620 CB, launched in 2019 and still in 16 combined current tour bags. Tour pros do not change irons for marketing reasons.</figcaption>
               </figure>
 
               <p>The 620 series launched in 2019 and is still in 16 current tour bags combined. That is unusual. Most iron platforms turn over every two or three years on tour as brands push new releases. The 620 series has not, because the players using it (<a href="/witb/players/robert-macintyre/" class="da-brand-link">Robert MacIntyre</a>, <a href="/witb/players/brian-harman/" class="da-brand-link">Brian Harman</a>, <a href="/witb/players/tom-hoge/" class="da-brand-link">Tom Hoge</a>, others) have not seen anything that beats them at what they do. Tour pros do not change irons for marketing reasons. They change for performance.</p>
 
-              <h3>PING i210 and Blueprint S: the contrarian's choice</h3>
+              <h3><a href="/brands/ping/" class="da-brand-link">PING</a> i210 and Blueprint S: the contrarian's choice</h3>
 
               <figure style="margin:24px 0">
                 <picture>
                   <source srcset="/images/articles/top-irons-ping-i210.webp" type="image/webp">
-                  <img src="/images/articles/top-irons-ping-i210.webp" alt="PING i210 iron, still in the bag of Matt Fitzpatrick and Viktor Hovland" width="730" height="457" loading="lazy" style="width:100%;height:auto;border-radius:4px">
+                  <img src="/images/articles/top-irons-ping-i210.webp" alt="<a href="/brands/ping/" class="da-brand-link">PING</a> i210 iron, still in the bag of <a href="/witb/players/matthew-fitzpatrick/" class="da-brand-link">Matt Fitzpatrick</a> and <a href="/witb/players/viktor-hovland/" class="da-brand-link">Viktor Hovland</a>" width="730" height="457" loading="lazy" style="width:100%;height:auto;border-radius:4px">
                 </picture>
-                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The PING i210, released in 2018 and still in the bags of top-ranked players. Iron loyalty on tour runs deeper than any marketing cycle.</figcaption>
+                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The <a href="/brands/ping/" class="da-brand-link">PING</a> i210, released in 2018 and still in the bags of top-ranked players. Iron loyalty on tour runs deeper than any marketing cycle.</figcaption>
               </figure>
 
-              <!-- TRAVIS: Confirm this is Matt Fitzpatrick before removing this note -->
-              <figure style="margin:24px 0" data-pending-confirm="true">
+              <figure style="margin:24px 0">
                 <picture>
                   <source srcset="/images/articles/top-irons-matt-fitzpatrick.webp" type="image/webp">
-                  <img src="/images/articles/top-irons-matt-fitzpatrick.webp" alt="Matt Fitzpatrick, OWGR 4, games PING i210 irons on tour" width="1694" height="934" loading="lazy" style="width:100%;height:auto;border-radius:4px">
+                  <img src="/images/articles/top-irons-matt-fitzpatrick.webp" alt="<a href="/witb/players/matthew-fitzpatrick/" class="da-brand-link">Matt Fitzpatrick</a>, OWGR 4, games <a href="/brands/ping/" class="da-brand-link">PING</a> i210 irons on tour" width="1694" height="934" loading="lazy" style="width:100%;height:auto;border-radius:4px">
                 </picture>
-                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">Matt Fitzpatrick (OWGR 4), still gaming PING i210 irons, a model released in 2018. One of the best ball-strikers in the world has not switched.</figcaption>
+                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic"><a href="/witb/players/matthew-fitzpatrick/" class="da-brand-link">Matt Fitzpatrick</a> (OWGR 4), still gaming <a href="/brands/ping/" class="da-brand-link">PING</a> i210 irons, a model released in 2018. One of the best ball-strikers in the world has not switched.</figcaption>
               </figure>
 
-              <p><a href="/witb/players/matthew-fitzpatrick/" class="da-brand-link">Matt Fitzpatrick</a> (OWGR 4) is still gaming the PING i210, a model released in 2018. He is one of the best ball-strikers in the world, and he has not switched, which says more about iron loyalty on tour than any new release marketing budget will. <a href="/witb/players/viktor-hovland/" class="da-brand-link">Viktor Hovland</a> is also in i210.</p>
+              <p><a href="/witb/players/matthew-fitzpatrick/" class="da-brand-link">Matt Fitzpatrick</a> (OWGR 4) is still gaming the <a href="/brands/ping/" class="da-brand-link">PING</a> i210, a model released in 2018. He is one of the best ball-strikers in the world, and he has not switched, which says more about iron loyalty on tour than any new release marketing budget will. <a href="/witb/players/viktor-hovland/" class="da-brand-link">Viktor Hovland</a> is also in i210.</p>
 
               <figure style="margin:24px 0">
                 <picture>
                   <source srcset="/images/articles/top-irons-ping-blueprint-s.webp" type="image/webp">
-                  <img src="/images/articles/top-irons-ping-blueprint-s.webp" alt="PING Blueprint S iron, gamed by Tyrrell Hatton, Daniel Berger, and Joaquin Niemann" width="1280" height="720" loading="lazy" style="width:100%;height:auto;border-radius:4px">
+                  <img src="/images/articles/top-irons-ping-blueprint-s.webp" alt="<a href="/brands/ping/" class="da-brand-link">PING</a> Blueprint S iron, gamed by <a href="/witb/players/tyrrell-hatton/" class="da-brand-link">Tyrrell Hatton</a>, <a href="/witb/players/daniel-berger/" class="da-brand-link">Daniel Berger</a>, and <a href="/witb/players/joaquin-niemann/" class="da-brand-link">Joaquin Niemann</a>" width="1280" height="720" loading="lazy" style="width:100%;height:auto;border-radius:4px">
                 </picture>
-                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The PING Blueprint S, the brand's newer blade. In the bags of Tyrrell Hatton, Daniel Berger, and Joaquin Niemann.</figcaption>
+                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The <a href="/brands/ping/" class="da-brand-link">PING</a> Blueprint S, the brand's newer blade. In the bags of <a href="/witb/players/tyrrell-hatton/" class="da-brand-link">Tyrrell Hatton</a>, <a href="/witb/players/daniel-berger/" class="da-brand-link">Daniel Berger</a>, and <a href="/witb/players/joaquin-niemann/" class="da-brand-link">Joaquin Niemann</a>.</figcaption>
               </figure>
 
-              <p>The Blueprint S, PING's newer blade, has <a href="/witb/players/tyrrell-hatton/" class="da-brand-link">Tyrrell Hatton</a>, <a href="/witb/players/daniel-berger/" class="da-brand-link">Daniel Berger</a>, and <a href="/witb/players/joaquin-niemann/" class="da-brand-link">Joaquin Niemann</a> gaming it. PING's iron presence on tour is not loud, but it is durable.</p>
+              <p>The Blueprint S, <a href="/brands/ping/" class="da-brand-link">PING</a>'s newer blade, has <a href="/witb/players/tyrrell-hatton/" class="da-brand-link">Tyrrell Hatton</a>, <a href="/witb/players/daniel-berger/" class="da-brand-link">Daniel Berger</a>, and <a href="/witb/players/joaquin-niemann/" class="da-brand-link">Joaquin Niemann</a> gaming it. <a href="/brands/ping/" class="da-brand-link">PING</a>'s iron presence on tour is not loud, but it is durable.</p>
 
-              <h3>Srixon ZXi7 and ZX7 MKII: the share story</h3>
+              <h3><a href="/brands/srixon/" class="da-brand-link">Srixon</a> ZXi7 and ZX7 MKII: the share story</h3>
 
               <figure style="margin:24px 0">
                 <picture>
                   <source srcset="/images/articles/top-irons-srixon-zxi7.webp" type="image/webp">
-                  <img src="/images/articles/top-irons-srixon-zxi7.webp" alt="Srixon ZXi7 iron, gamed by JJ Spaun, Sepp Straka, Shane Lowry, and Ryan Fox" width="1280" height="720" loading="lazy" style="width:100%;height:auto;border-radius:4px">
+                  <img src="/images/articles/top-irons-srixon-zxi7.webp" alt="<a href="/brands/srixon/" class="da-brand-link">Srixon</a> ZXi7 iron, gamed by JJ Spaun, <a href="/witb/players/sepp-straka/" class="da-brand-link">Sepp Straka</a>, <a href="/witb/players/shane-lowry/" class="da-brand-link">Shane Lowry</a>, and <a href="/witb/players/ryan-fox/" class="da-brand-link">Ryan Fox</a>" width="1280" height="720" loading="lazy" style="width:100%;height:auto;border-radius:4px">
                 </picture>
-                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The Srixon ZXi7. In the bags of OWGR top-60 players including J.J. Spaun, Sepp Straka, Shane Lowry, and Ryan Fox.</figcaption>
+                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The <a href="/brands/srixon/" class="da-brand-link">Srixon</a> ZXi7. In the bags of OWGR top-60 players including <a href="/witb/players/j-j-spaun/" class="da-brand-link">J.J. Spaun</a>, <a href="/witb/players/sepp-straka/" class="da-brand-link">Sepp Straka</a>, <a href="/witb/players/shane-lowry/" class="da-brand-link">Shane Lowry</a>, and <a href="/witb/players/ryan-fox/" class="da-brand-link">Ryan Fox</a>.</figcaption>
               </figure>
 
-              <p>Srixon's 23 bags is the surprise of the brand-level data. The ZXi7 is in <a href="/witb/players/j-j-spaun/" class="da-brand-link">J.J. Spaun</a>'s bag (OWGR 9), <a href="/witb/players/sepp-straka/" class="da-brand-link">Sepp Straka</a>'s (18), <a href="/witb/players/shane-lowry/" class="da-brand-link">Shane Lowry</a>'s (41), and <a href="/witb/players/ryan-fox/" class="da-brand-link">Ryan Fox</a>'s (58). The ZX7 MKII has <a href="/witb/players/keegan-bradley/" class="da-brand-link">Keegan Bradley</a> and <a href="/witb/players/lucas-glover/" class="da-brand-link">Lucas Glover</a>. Srixon's tour presence punches above its retail share, and the ZXi7's elite-player adoption is the kind of data point that explains why the brand keeps gaining attention from serious players who do not need a name on the bag.</p>
+              <p><a href="/brands/srixon/" class="da-brand-link">Srixon</a>'s 23 bags is the surprise of the brand-level data. The ZXi7 is in <a href="/witb/players/j-j-spaun/" class="da-brand-link">J.J. Spaun</a>'s bag (OWGR 9), <a href="/witb/players/sepp-straka/" class="da-brand-link">Sepp Straka</a>'s (18), <a href="/witb/players/shane-lowry/" class="da-brand-link">Shane Lowry</a>'s (41), and <a href="/witb/players/ryan-fox/" class="da-brand-link">Ryan Fox</a>'s (58). The ZX7 MKII has <a href="/witb/players/keegan-bradley/" class="da-brand-link">Keegan Bradley</a> and <a href="/witb/players/lucas-glover/" class="da-brand-link">Lucas Glover</a>. <a href="/brands/srixon/" class="da-brand-link">Srixon</a>'s tour presence punches above its retail share, and the ZXi7's elite-player adoption is the kind of data point that explains why the brand keeps gaining attention from serious players who do not need a name on the bag.</p>
 
-              <h3>TaylorMade P7TW: the prestige piece</h3>
+              <h3><a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> P7TW: the prestige piece</h3>
 
-              <p><a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> has 19 bags overall, with P7TW (Tiger's iron, in 6 bags) as the leading single model. P7TW is a true blade with elite-only appeal. The broader TaylorMade lineup spreads across P770, P7CB, and others, which is why no single TaylorMade model cracks the top three.</p>
+              <p><a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> has 19 bags overall, with P7TW (Tiger's iron, in 6 bags) as the leading single model. P7TW is a true blade with elite-only appeal. The broader <a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> lineup spreads across P770, P7CB, and others, which is why no single <a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> model cracks the top three.</p>
 
-              <h2>Why Titleist dominates the iron market on tour</h2>
+              <h2>Why <a href="/brands/titleist/" class="da-brand-link">Titleist</a> dominates the iron market on tour</h2>
               <!-- ══ CHART 2: Brand Share Donut ══ -->
               <div class="tiotc" aria-label="Iron brand share on tour">
                 <div class="tiotc-head">
@@ -574,7 +499,7 @@
                 </div>
                 <div class="tiotc-donut-wrap">
                   <div class="tiotc-donut-fig">
-                    <svg class="tiotc-donut-svg" width="210" height="210" viewBox="0 0 200 200" role="img" aria-label="Brand share donut chart: Titleist 28.8%, Callaway 18.1%, PING 15.6%, Srixon 14.4%, TaylorMade 11.9%, Other 11.2%">
+                    <svg class="tiotc-donut-svg" width="210" height="210" viewBox="0 0 200 200" role="img" aria-label="Brand share donut chart: <a href="/brands/titleist/" class="da-brand-link">Titleist</a> 28.8%, <a href="/brands/callaway/" class="da-brand-link">Callaway</a> 18.1%, <a href="/brands/ping/" class="da-brand-link">PING</a> 15.6%, <a href="/brands/srixon/" class="da-brand-link">Srixon</a> 14.4%, <a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> 11.9%, Other 11.2%">
                       <path d="M 100.00 8.00 A 92 92 0 0 1 189.96 119.25 L 154.76 111.72 A 56 56 0 0 0 100.00 44.00 Z" style="fill:#22c55e"></path>
                       <path d="M 189.39 121.76 A 92 92 0 0 1 120.32 189.73 L 112.37 154.62 A 56 56 0 0 0 154.41 113.24 Z" style="fill:#16a34a"></path>
                       <path d="M 117.81 190.26 A 92 92 0 0 1 36.79 166.84 L 61.52 140.69 A 56 56 0 0 0 110.84 154.94 Z" style="fill:#15803d"></path>
@@ -583,22 +508,22 @@
                       <path d="M 40.47 29.86 A 92 92 0 0 1 97.43 8.04 L 98.44 44.02 A 56 56 0 0 0 63.76 57.30 Z" style="fill:#4d6b4d"></path>
                     </svg>
                     <div class="tiotc-donut-center">
-                      <span class="tiotc-dc-brand">Titleist</span>
+                      <span class="tiotc-dc-brand"><a href="/brands/titleist/" class="da-brand-link">Titleist</a></span>
                       <span class="tiotc-dc-num">28.8%</span>
                       <span class="tiotc-dc-cap">Tour iron lead</span>
                     </div>
                   </div>
                   <div class="tiotc-legend" id="tiotc-legend"></div>
                 </div>
-                <p class="tiotc-src">&#x25cf; Source: DORMIED WITB tracking &nbsp;&middot;&nbsp; 160 current tour bags &nbsp;&middot;&nbsp; "Other" includes Mizuno, Cobra, Wilson and the rest of the field</p>
+                <p class="tiotc-src">&#x25cf; Source: <a href="/witb/" class="da-brand-link">DORMIED WITB tracking</a> &nbsp;&middot;&nbsp; 160 current tour bags &nbsp;&middot;&nbsp; "Other" includes <a href="/brands/mizuno/" class="da-brand-link">Mizuno</a>, Cobra, Wilson and the rest of the field</p>
               </div>
 
               <figure style="margin:24px 0">
                 <picture>
                   <source srcset="/images/articles/top-irons-titleist-t150.webp" type="image/webp">
-                  <img src="/images/articles/top-irons-titleist-t150.webp" alt="Titleist T150 iron, part of the T-series lineup that fills five of the top eight slots" width="1200" height="800" loading="lazy" style="width:100%;height:auto;border-radius:4px">
+                  <img src="/images/articles/top-irons-titleist-t150.webp" alt="<a href="/brands/titleist/" class="da-brand-link">Titleist</a> T150 iron, part of the T-series lineup that fills five of the top eight slots" width="1200" height="800" loading="lazy" style="width:100%;height:auto;border-radius:4px">
                 </picture>
-                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The Titleist T150, part of the T-series platform engineered for the combo-set bags most pros now build.</figcaption>
+                <figcaption style="font-size:.8rem;color:var(--text-muted);margin-top:6px;font-style:italic">The <a href="/brands/titleist/" class="da-brand-link">Titleist</a> T150, part of the T-series platform engineered for the combo-set bags most pros now build.</figcaption>
               </figure>
 
               <p><a href="/brands/titleist/" class="da-brand-link">Titleist</a>'s 28.8 percent brand share is the highest in the iron category by a meaningful margin, and the gap is not about product alone. Three factors compound:</p>
@@ -617,30 +542,30 @@
 
               <p>The brands gaining ground (<a href="/brands/srixon/" class="da-brand-link">Srixon</a> at 14.4 percent on a smaller global footprint, <a href="/brands/callaway/" class="da-brand-link">Callaway</a>'s Apex line as the chosen iron of elite ball-strikers) are doing it the slow way too. There is no shortcut into a tour iron bag. The model that makes the list above does so because the player picked it after testing every alternative, and that is the cleanest brand signal equipment data produces.</p>
 
-              <p>For where each of these brands sits in DORMIED's broader brand-momentum tracking, the <a href="/" class="da-brand-link">DORMIED Index</a> covers movement across all 175 brands month over month, and the WITB section tracks every current tour bag in the database.</p>
+              <p>For where each of these brands sits in DORMIED's broader brand-momentum tracking, the <a href="/" class="da-brand-link">DORMIED Index</a> covers movement across all 175 brands month over month, and the <a href="/witb/" class="da-brand-link">WITB section</a> tracks every current tour bag in the database.</p>
 
               <h2>FAQ</h2>
 
               <h3>What is the most used iron on tour in 2026?</h3>
-              <p>The Titleist T100 is the most used iron on tour, found in 28 of the 160 current tour bags DORMIED tracks (17.5 percent of the field). It is gamed by elite players including Cameron Young, Russell Henley, Ludvig Aberg, and Justin Thomas.</p>
+              <p>The <a href="/brands/titleist/" class="da-brand-link">Titleist</a> T100 is the most used iron on tour, found in 28 of the 160 current tour bags DORMIED tracks (17.5 percent of the field). It is gamed by elite players including <a href="/witb/players/cameron-young/" class="da-brand-link">Cameron Young</a>, <a href="/witb/players/russell-henley/" class="da-brand-link">Russell Henley</a>, <a href="/witb/players/ludvig-aberg/" class="da-brand-link">Ludvig Aberg</a>, and <a href="/witb/players/justin-thomas/" class="da-brand-link">Justin Thomas</a>.</p>
 
               <h3>What brand of irons do most tour pros use?</h3>
-              <p>Titleist holds the largest iron share on tour at 28.8 percent of current bags, followed by Callaway (18.1 percent), PING (15.6 percent), Srixon (14.4 percent), and TaylorMade (11.9 percent).</p>
+              <p><a href="/brands/titleist/" class="da-brand-link">Titleist</a> holds the largest iron share on tour at 28.8 percent of current bags, followed by <a href="/brands/callaway/" class="da-brand-link">Callaway</a> (18.1 percent), <a href="/brands/ping/" class="da-brand-link">PING</a> (15.6 percent), <a href="/brands/srixon/" class="da-brand-link">Srixon</a> (14.4 percent), and <a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> (11.9 percent).</p>
 
               <h3>Do tour pros use combo iron sets?</h3>
               <p>Yes. 69.4 percent of current tour bags carry two or more different iron models. Combo sets, typically a more forgiving long iron paired with a tighter short iron, are now the norm on tour rather than the exception.</p>
 
-              <h3>What irons does Xander Schauffele use?</h3>
-              <p>Xander Schauffele games Callaway Apex TCB irons, which is the third-most-used iron model on tour overall and the leading model among elite Callaway players.</p>
+              <h3>What irons does <a href="/witb/players/xander-schauffele/" class="da-brand-link">Xander Schauffele</a> use?</h3>
+              <p><a href="/witb/players/xander-schauffele/" class="da-brand-link">Xander Schauffele</a> games <a href="/brands/callaway/" class="da-brand-link">Callaway</a> Apex TCB irons, which is the third-most-used iron model on tour overall and the leading model among elite <a href="/brands/callaway/" class="da-brand-link">Callaway</a> players.</p>
 
-              <h3>What irons does Matt Fitzpatrick use?</h3>
-              <p>Matt Fitzpatrick games PING i210 irons, a model originally released in 2018. He is one of the few top-5 OWGR players still using an older-generation iron design, which speaks to how rarely tour pros switch irons once a model works.</p>
+              <h3>What irons does <a href="/witb/players/matthew-fitzpatrick/" class="da-brand-link">Matt Fitzpatrick</a> use?</h3>
+              <p><a href="/witb/players/matthew-fitzpatrick/" class="da-brand-link">Matt Fitzpatrick</a> games <a href="/brands/ping/" class="da-brand-link">PING</a> i210 irons, a model originally released in 2018. He is one of the few top-5 OWGR players still using an older-generation iron design, which speaks to how rarely tour pros switch irons once a model works.</p>
 
-              <h3>Why are Titleist irons so popular on tour?</h3>
-              <p>Titleist's tour share is driven by three factors: the deepest tour fitting and service operation in golf, an iron lineup (T100, T150, T200, T250) engineered specifically for the combo-set bags most pros now build, and a track record long enough that switching away is rarely worth the risk.</p>
+              <h3>Why are <a href="/brands/titleist/" class="da-brand-link">Titleist</a> irons so popular on tour?</h3>
+              <p><a href="/brands/titleist/" class="da-brand-link">Titleist</a>'s tour share is driven by three factors: the deepest tour fitting and service operation in golf, an iron lineup (T100, T150, T200, T250) engineered specifically for the combo-set bags most pros now build, and a track record long enough that switching away is rarely worth the risk.</p>
 
               <h3>What iron is most used in elite player bags?</h3>
-              <p>Among players ranked inside the OWGR top 20, the Titleist T100 and Callaway Apex TCB are the two most-gamed iron models. Both are forged players' irons with enough forgiveness to suit elite ball-strikers across full sets and combo builds.</p>
+              <p>Among players ranked inside the OWGR top 20, the <a href="/brands/titleist/" class="da-brand-link">Titleist</a> T100 and <a href="/brands/callaway/" class="da-brand-link">Callaway</a> Apex TCB are the two most-gamed iron models. Both are forged players' irons with enough forgiveness to suit elite ball-strikers across full sets and combo builds.</p>
 
               <h3>How does DORMIED count "top irons on tour"?</h3>
               <p>DORMIED counts at the bag-model level: each current tour bag in the WITB database counts once per iron model, regardless of how many irons of that model the player carries. This avoids inflating a model's apparent share when a player runs a full 4-iron through PW set, and it gives an accurate read on which models pros are actually choosing.</p>
@@ -738,40 +663,7 @@
   <script>
   /* ── Inline charts: Top Irons on Tour 2026 ── */
   (function(){
-    var models = [
-      { rk:'1',  model:'T100',        brand:'Titleist',   bags:28, pct:17.5, lead:true  },
-      { rk:'2',  model:'T200',        brand:'Titleist',   bags:13, pct:8.1,  lead:true  },
-      { rk:'3',  model:'Apex TCB',    brand:'Callaway',   bags:11, pct:6.9,  lead:false },
-      { rk:'T4', model:'620 MB',      brand:'Titleist',   bags:8,  pct:5.0,  lead:true  },
-      { rk:'T4', model:'620 CB',      brand:'Titleist',   bags:8,  pct:5.0,  lead:true  },
-      { rk:'T4', model:'i210',        brand:'PING',       bags:8,  pct:5.0,  lead:false },
-      { rk:'T4', model:'Blueprint S', brand:'PING',       bags:8,  pct:5.0,  lead:false },
-      { rk:'T8', model:'T150',        brand:'Titleist',   bags:7,  pct:4.4,  lead:true  },
-      { rk:'T8', model:'ZXi7',        brand:'Srixon',     bags:7,  pct:4.4,  lead:false },
-      { rk:'T8', model:'Apex MB',     brand:'Callaway',   bags:7,  pct:4.4,  lead:false },
-      { rk:'T8', model:'ZX7 MKII',    brand:'Srixon',     bags:7,  pct:4.4,  lead:false },
-    ];
-    var maxPct = Math.max.apply(null, models.map(function(m){ return m.pct; }));
-    var barsEl = document.getElementById('tiotc-bars');
-    if (barsEl) {
-      barsEl.innerHTML = models.map(function(m){
-        var w = (m.pct / maxPct * 100).toFixed(1);
-        var lead = m.lead ? ' is-lead' : '';
-        return '<div class="tiotc-bar-row'+lead+'">'
-          +'<div class="tiotc-rk">'+m.rk+'</div>'
-          +'<div class="tiotc-lbl"><div class="tiotc-model">'+m.model+'</div><div class="tiotc-brand">'+m.brand+'</div></div>'
-          +'<div class="tiotc-track"><div class="tiotc-fill" style="--w:'+w+'%"></div></div>'
-          +'<div class="tiotc-val">'+m.pct.toFixed(1)+'%</div>'
-          +'</div>';
-      }).join('');
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        requestAnimationFrame(function(){
-          barsEl.classList.add('animate');
-          setTimeout(function(){ barsEl.classList.remove('animate'); }, 1500);
-        });
-      }
-    }
-    var brands = [
+        var brands = [
       { name:'Titleist',   bags:46, pct:28.8, color:'#22c55e' },
       { name:'Callaway',   bags:29, pct:18.1, color:'#16a34a' },
       { name:'PING',       bags:25, pct:15.6, color:'#15803d' },
@@ -785,7 +677,7 @@
         var other = b.other ? ' is-other' : '';
         return '<div class="tiotc-leg-row'+other+'">'
           +'<span class="tiotc-leg-sw" style="background:'+b.color+'"></span>'
-          +'<span class="tiotc-leg-name">'+b.name+'</span>'
+          +(b.other?'<span class="tiotc-leg-name">'+b.name+'</span>':'<span class="tiotc-leg-name"><a href="/brands/'+b.name.toLowerCase().replace(/ /g,"-")+'/" class="da-brand-link">'+b.name+'</a></span>')
           +'<span class="tiotc-leg-bags">'+b.bags+' bags</span>'
           +'<span class="tiotc-leg-pct">'+b.pct.toFixed(1)+'%</span>'
           +'</div>';
