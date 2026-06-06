@@ -205,6 +205,74 @@
   }
   .tiotc-sub b { color: var(--text); font-weight: 600; }
 
+
+  /* Chart 1: bar chart (matches uploaded standalone design) */
+  .tiotc-bars { display: flex; flex-direction: column; }
+  .tiotc-bar-row {
+    display: grid;
+    grid-template-columns: 34px minmax(140px, 200px) 1fr 52px;
+    align-items: center;
+    gap: 14px;
+    padding: 9px 8px;
+    margin: 0 -8px;
+    border-radius: var(--radius-sm);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s ease;
+  }
+  .tiotc-bar-row:last-child { border-bottom: none; }
+  .tiotc-bar-row:hover { background: var(--bg-hover); }
+  .tiotc-rk {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    color: var(--text-muted); text-align: center; letter-spacing: -0.02em;
+  }
+  .tiotc-bar-row.is-lead .tiotc-rk { color: var(--green); }
+  .tiotc-lbl { min-width: 0; }
+  .tiotc-model {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.92rem;
+    color: var(--text-dim); line-height: 1.15; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .tiotc-bar-row.is-lead .tiotc-model { color: var(--text); }
+  .tiotc-brand-sub {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-top: 3px;
+  }
+  .tiotc-bar-row.is-lead .tiotc-brand-sub { color: var(--green-dim); }
+  .tiotc-track {
+    height: 12px; width: 100%;
+    background: var(--bg-raised); border-radius: 3px; overflow: hidden;
+  }
+  .tiotc-fill {
+    height: 100%; width: var(--w); border-radius: 3px;
+    transform-origin: left center;
+    background: rgba(150,180,150,0.5);
+  }
+  .tiotc-bar-row.is-lead .tiotc-fill {
+    background: linear-gradient(90deg, var(--green-dim), var(--green));
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .tiotc-bars.animate .tiotc-fill {
+      animation: tiotcGrowX 0.8s cubic-bezier(0.2,0.8,0.2,1) backwards;
+    }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(1)  .tiotc-fill { animation-delay: 0.04s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(2)  .tiotc-fill { animation-delay: 0.08s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(3)  .tiotc-fill { animation-delay: 0.12s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(4)  .tiotc-fill { animation-delay: 0.16s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(5)  .tiotc-fill { animation-delay: 0.20s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(6)  .tiotc-fill { animation-delay: 0.24s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(7)  .tiotc-fill { animation-delay: 0.28s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(8)  .tiotc-fill { animation-delay: 0.32s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(9)  .tiotc-fill { animation-delay: 0.36s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(10) .tiotc-fill { animation-delay: 0.40s; }
+    .tiotc-bars.animate .tiotc-bar-row:nth-child(11) .tiotc-fill { animation-delay: 0.44s; }
+  }
+  @keyframes tiotcGrowX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .tiotc-val {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.82rem;
+    color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums;
+  }
+  .tiotc-bar-row.is-lead .tiotc-val { color: var(--green); }
+
   /* Chart 2: donut + legend */
   .tiotc-donut-wrap {
     display: grid;
@@ -357,38 +425,18 @@
               <p>In one sentence: in 2026, <a href="/brands/titleist/" class="da-brand-link">Titleist</a> is the dominant iron brand on tour with nearly 29 percent of current bags carrying at least one <a href="/brands/titleist/" class="da-brand-link">Titleist</a> iron model, and the T100 is the single most-gamed iron in professional golf at 17.5 percent of the field.</p>
 
               <p>The table below shows the top iron models by number of current tour bags using them, drawn from <a href="/witb/" class="da-brand-link">DORMIED's WITB tracking</a>. Percentage of field is calculated against the 160 currently tracked tour bags, so a player carrying a model only counts once regardless of how many irons in that model they actually game.</p>
-
-              <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:20px 0">
-                <table style="width:100%;border-collapse:collapse;font-size:.875rem;min-width:520px">
-                  <thead>
-                    <tr style="border-bottom:2px solid var(--border)">
-                      <th style="text-align:left;padding:8px 12px;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);white-space:nowrap">Rank</th>
-                      <th style="text-align:left;padding:8px 12px;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);white-space:nowrap">Brand</th>
-                      <th style="text-align:left;padding:8px 12px;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);white-space:nowrap">Model</th>
-                      <th style="text-align:left;padding:8px 12px;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);white-space:nowrap">Bags Using</th>
-                      <th style="text-align:left;padding:8px 12px;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);white-space:nowrap">% of Field</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">1</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/titleist/" class="da-brand-link">Titleist</a></td><td style="padding:10px 12px;vertical-align:top">T100</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">28</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">17.5%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">2</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/titleist/" class="da-brand-link">Titleist</a></td><td style="padding:10px 12px;vertical-align:top">T200</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">13</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">8.1%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">3</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/callaway/" class="da-brand-link">Callaway</a></td><td style="padding:10px 12px;vertical-align:top">Apex TCB</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">11</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">6.9%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T4</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/titleist/" class="da-brand-link">Titleist</a></td><td style="padding:10px 12px;vertical-align:top">620 MB</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">8</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">5.0%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T4</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/titleist/" class="da-brand-link">Titleist</a></td><td style="padding:10px 12px;vertical-align:top">620 CB</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">8</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">5.0%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T4</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/ping/" class="da-brand-link">PING</a></td><td style="padding:10px 12px;vertical-align:top">i210</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">8</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">5.0%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T4</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/ping/" class="da-brand-link">PING</a></td><td style="padding:10px 12px;vertical-align:top">Blueprint S</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">8</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">5.0%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T8</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/titleist/" class="da-brand-link">Titleist</a></td><td style="padding:10px 12px;vertical-align:top">T150</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">7</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">4.4%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T8</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/srixon/" class="da-brand-link">Srixon</a></td><td style="padding:10px 12px;vertical-align:top">ZXi7</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">7</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">4.4%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T8</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/callaway/" class="da-brand-link">Callaway</a></td><td style="padding:10px 12px;vertical-align:top">Apex MB</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">7</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">4.4%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T8</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/srixon/" class="da-brand-link">Srixon</a></td><td style="padding:10px 12px;vertical-align:top">ZX7 MKII</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">7</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">4.4%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T12</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/ping/" class="da-brand-link">PING</a></td><td style="padding:10px 12px;vertical-align:top">i230</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">6</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">3.8%</td></tr>
-                    <tr style="border-bottom:1px solid var(--border-lite)"><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T12</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/srixon/" class="da-brand-link">Srixon</a></td><td style="padding:10px 12px;vertical-align:top">ZXi5</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">6</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">3.8%</td></tr>
-                    <tr><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">T12</td><td style="padding:10px 12px;vertical-align:top"><a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a></td><td style="padding:10px 12px;vertical-align:top">P7TW</td><td style="padding:10px 12px;vertical-align:top;font-weight:600;color:var(--green)">6</td><td style="padding:10px 12px;vertical-align:top;color:var(--text-muted)">3.8%</td></tr>
-                  </tbody>
-                </table>
-              </div>
-
               <p style="font-size:.8rem;color:var(--text-muted);font-style:italic">Source: <a href="/witb/" class="da-brand-link">DORMIED WITB tracking</a>, 160 current tour bags as of May 2026. A bag counts once per model regardless of how many irons of that model the player carries.</p>
+
+              <!-- Bar chart: top iron models (uploaded design) -->
+              <div class="tiotc" aria-label="Top iron models on tour by share of field">
+                <div class="tiotc-head">
+                  <span class="tiotc-eyebrow">Most-Gamed Irons &middot; 2026</span>
+                  <h3 class="tiotc-title">Top Irons on Tour</h3>
+                  <p class="tiotc-sub">Share of <b>160 current tour bags</b> running each model. Counted once per bag per model. <b>Titleist</b> models highlighted.</p>
+                </div>
+                <div class="tiotc-bars" id="tiotc-bars"></div>
+                <p class="tiotc-src">&#x25cf; Source: <a href="/witb/" class="da-brand-link">DORMIED WITB tracking</a> &nbsp;&middot;&nbsp; 160 current tour bags &nbsp;&middot;&nbsp; as of May 2026</p>
+              </div>
               
 
               <p>The headline is <a href="/brands/titleist/" class="da-brand-link">Titleist</a>. The T100 is in 28 bags, almost double the next model on the list. Add the T200, T150, 620 MB and 620 CB and <a href="/brands/titleist/" class="da-brand-link">Titleist</a> holds five of the top eight slots. At the brand level, <a href="/brands/titleist/" class="da-brand-link">Titleist</a> appears in 46 current bags, 28.8 percent of the field; <a href="/brands/callaway/" class="da-brand-link">Callaway</a> is next at 29 bags (18.1 percent), then <a href="/brands/ping/" class="da-brand-link">PING</a> at 25 (15.6 percent), <a href="/brands/srixon/" class="da-brand-link">Srixon</a> at 23 (14.4 percent), and <a href="/brands/taylormade/" class="da-brand-link">TaylorMade</a> at 19 (11.9 percent). <a href="/brands/mizuno/" class="da-brand-link">Mizuno</a>, the most lore-heavy iron brand in the game, sits at 9 bags, partly because its tour share is split across many models rather than concentrated in one.</p>
@@ -656,6 +704,7 @@
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/search.min.js?v=20260529"></script>
   <script src="/js/brand-data/titleist.js?v=20260518"></script>
+  <script src="/js/data.min.js?v=20260518"></script>
   <script src="/js/feed.min.js?v=20260601a"></script>
   <script src="/js/da-article.min.js?v=20260522"></script>
 
@@ -663,7 +712,43 @@
   <script>
   /* ── Inline charts: Top Irons on Tour 2026 ── */
   (function(){
-        var brands = [
+        var models = [
+      { rk:'1',  model:'T100',        brand:'Titleist',   bags:28, pct:17.5, lead:true  },
+      { rk:'2',  model:'T200',        brand:'Titleist',   bags:13, pct:8.1,  lead:true  },
+      { rk:'3',  model:'Apex TCB',    brand:'Callaway',   bags:11, pct:6.9,  lead:false },
+      { rk:'T4', model:'620 MB',      brand:'Titleist',   bags:8,  pct:5.0,  lead:true  },
+      { rk:'T4', model:'620 CB',      brand:'Titleist',   bags:8,  pct:5.0,  lead:true  },
+      { rk:'T4', model:'i210',        brand:'PING',       bags:8,  pct:5.0,  lead:false },
+      { rk:'T4', model:'Blueprint S', brand:'PING',       bags:8,  pct:5.0,  lead:false },
+      { rk:'T8', model:'T150',        brand:'Titleist',   bags:7,  pct:4.4,  lead:true  },
+      { rk:'T8', model:'ZXi7',        brand:'Srixon',     bags:7,  pct:4.4,  lead:false },
+      { rk:'T8', model:'Apex MB',     brand:'Callaway',   bags:7,  pct:4.4,  lead:false },
+      { rk:'T8', model:'ZX7 MKII',    brand:'Srixon',     bags:7,  pct:4.4,  lead:false },
+    ];
+    var maxPct = Math.max.apply(null, models.map(function(m){ return m.pct; }));
+    var barsEl = document.getElementById('tiotc-bars');
+    if (barsEl) {
+      barsEl.innerHTML = models.map(function(m){
+        var w = (m.pct / maxPct * 100).toFixed(1);
+        var lead = m.lead ? ' is-lead' : '';
+        var brandLink = m.lead
+          ? '<a href="/brands/titleist/" class="da-brand-link" style="color:inherit;text-decoration:none">' + m.brand + '</a>'
+          : '<a href="/brands/' + m.brand.toLowerCase().replace(/ /g,'-') + '/" class="da-brand-link" style="color:inherit;text-decoration:none">' + m.brand + '</a>';
+        return '<div class="tiotc-bar-row'+lead+'">'
+          +'<div class="tiotc-rk">'+m.rk+'</div>'
+          +'<div class="tiotc-lbl"><div class="tiotc-model">'+m.model+'</div><div class="tiotc-brand-sub">'+brandLink+'</div></div>'
+          +'<div class="tiotc-track"><div class="tiotc-fill" style="--w:'+w+'%"></div></div>'
+          +'<div class="tiotc-val">'+m.pct.toFixed(1)+'%</div>'
+          +'</div>';
+      }).join('');
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        requestAnimationFrame(function(){
+          barsEl.classList.add('animate');
+          setTimeout(function(){ barsEl.classList.remove('animate'); }, 1500);
+        });
+      }
+    }
+    var brands = [
       { name:'Titleist',   bags:46, pct:28.8, color:'#22c55e' },
       { name:'Callaway',   bags:29, pct:18.1, color:'#16a34a' },
       { name:'PING',       bags:25, pct:15.6, color:'#15803d' },
