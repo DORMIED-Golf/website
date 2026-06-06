@@ -543,10 +543,12 @@
       var large     = articles.slice(0, 2);
       var compact   = articles.slice(2, 5);
 
-      var html = large.map(function (a) {
-        // Same as Latest from DORMIED lead card but lazy (below fold)
-        return renderFeedPageCard(a, allBrands, false);
-      }).join('');
+      // Wrap large cards so they inherit the full-width hero CSS (.home-featured-large)
+      var html = '<div class="home-featured-large">'
+        + large.map(function (a) {
+            return renderFeedPageCard(a, allBrands, false);
+          }).join('')
+        + '</div>';
 
       if (compact.length) {
         html += '<div class="home-featured-3up">'
