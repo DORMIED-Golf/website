@@ -86,7 +86,7 @@
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="site-logo" aria-label="DORMIED home">
-        <img src="/images/dormied-logo-colour.png" alt="DORMIED — Golf's Brand Desk" class="logo-img"
+        <img src="/images/dormied-logo-colour.png" alt="DORMIED | Golf's Brand Desk" class="logo-img"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <span class="logo-text-fallback" style="display:none">DORMIED</span>
       </a>
@@ -239,14 +239,14 @@ New Level targets serious golfers, typically single-digit handicaps and aspiring
           <div class="bp-page-main">
 
 
-      <section class="bp-take-section" id="bp-take-section">
+      <section class="bp-take-section" id="bp-take-section" hidden>
           <div class="bp-take-inner">
             <div class="bp-take-label-wrap">
               <span class="bp-take-label">THE READ</span>
-              <span class="bp-take-month" id="bp-take-month">Mar 2026</span>
+              <span class="bp-take-month" id="bp-take-month"></span>
             </div>
             <div class="bp-take-body">
-              <p class="bp-take-text" id="bp-take-text">A 51% month-over-month spike with zero media coverage is the signature move of a brand that lives entirely in forum threads and fitting studio whispers. New Level has been quietly climbing all year without a single headline to show for it, which either means their direct-to-consumer flywheel is finally turning or someone on GolfWRX just discovered them. Still 15 spots off their peak from early 2023, so the momentum is real but the ceiling remains unproven.</p>
+              <p class="bp-take-text" id="bp-take-text"></p>
               <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
             </div>
           </div>
@@ -474,6 +474,12 @@ New Level targets serious golfers, typically single-digit handicaps and aspiring
             <section class="home-stories-section latest-feed-section" aria-labelledby="bp-dormied-latest-heading">
               <h2 class="latest-feed-heading" id="bp-dormied-latest-heading">Latest</h2>
               <div id="dormied-latest-list" class="latest-feed-list">
+                <p class="latest-feed-loading">Loading&#x2026;</p>
+              </div>
+            </section>
+            <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="bp-featured-heading" hidden>
+              <h2 class="latest-feed-heading" id="bp-featured-heading">Featured</h2>
+              <div id="featured-list" class="latest-feed-list">
                 <p class="latest-feed-loading">Loading&#x2026;</p>
               </div>
             </section>

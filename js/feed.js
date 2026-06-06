@@ -494,17 +494,107 @@
     });
   }
 
+  /* ── Fetch: featured articles (curated, featured 1-5 asc) ─────────────── */
+  function fetchFeaturedArticles(cb) {
+    var headers = { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON };
+    var url = SB_URL + '/rest/v1/dormied_articles'
+      + '?select=id,brand_slug,secondary_brand_slugs,title,meta_description,image_url,slug,category,published_at,author,featured'
+      + '&status=eq.published'
+      + '&featured=not.is.null'
+      + '&order=featured.asc'
+      + '&limit=5';
+    fetch(url, { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (rows) {
+        cb((rows || []).map(function (a) {
+          return {
+            id:          a.id,
+            title:       a.title,
+            url:         '/news/' + a.slug + '/',
+            author:      a.author || authorFromCategory(a.category),
+            sourceName:  'DORMIED',
+            sourceId:    'dormied',
+            pubDate:     a.published_at,
+            description: a.meta_description || '',
+            imageUrl:    a.image_url || null,
+            brandIds:    [a.brand_slug].concat(a.secondary_brand_slugs || []).filter(Boolean),
+            isDormied:   true,
+            category:    a.category || '',
+            slug:        a.slug,
+            featured:    a.featured,
+          };
+        }));
+      })
+      .catch(function () { cb([]); });
+  }
+
+  /* ── Render: homepage FEATURED section (slots 1-2 large, 3-5 compact 3-up) */
+  function renderFeaturedSection() {
+    var contentEl = document.getElementById('home-featured-section');
+    var wrapEl    = document.getElementById('home-featured');
+    if (!contentEl) return;
+
+    fetchFeaturedArticles(function (articles) {
+      if (!articles.length) {
+        if (wrapEl) wrapEl.hidden = true;
+        return;
+      }
+      var allBrands = getAllBrands();
+      var large     = articles.slice(0, 2);
+      var compact   = articles.slice(2, 5);
+
+      var html = large.map(function (a) {
+        // Same as Latest from DORMIED lead card but lazy (below fold)
+        return renderFeedPageCard(a, allBrands, false);
+      }).join('');
+
+      if (compact.length) {
+        html += '<div class="home-featured-3up">'
+          + compact.map(function (a) {
+              return renderArticleCard(a, true, allBrands);
+            }).join('')
+          + '</div>';
+      }
+
+      contentEl.innerHTML = html;
+      if (wrapEl) wrapEl.hidden = false;
+    });
+  }
+
+  /* ── Render: sidebar FEATURED widget (/rankings, /brands) ─────────────── */
+  function renderFeaturedWidget() {
+    var el      = document.getElementById('featured-list');
+    var wrapEl  = document.getElementById('featured-widget');
+    if (!el) return;
+
+    fetchFeaturedArticles(function (articles) {
+      if (!articles.length) {
+        if (wrapEl) wrapEl.hidden = true;
+        return;
+      }
+      var allBrands = getAllBrands();
+      el.innerHTML = articles.map(function (a) {
+        return renderArticleCard(a, true, allBrands);
+      }).join('');
+      if (wrapEl) wrapEl.hidden = false;
+    });
+  }
+
   /* ── Main init ─────────────────────────────────────────────────────────── */
   function initFeed() {
     var isBrand        = !!document.getElementById('bp-latest-list');
     var isHome         = !!document.getElementById('home-stories-list');
     var hasHomeDormied = !!document.getElementById('home-dormied-list');
     var hasLatest      = !!document.getElementById('dormied-latest-list');
-    if (!isBrand && !isHome && !hasHomeDormied && !hasLatest) return;
+    var hasFeatured    = !!document.getElementById('home-featured-section');
+    var hasFeatWidget  = !!document.getElementById('featured-list');
+    if (!isBrand && !isHome && !hasHomeDormied && !hasLatest && !hasFeatured && !hasFeatWidget) return;
 
     if (hasHomeDormied) renderLatestFromDormied();
     if (isHome)         renderHomeStories();
     if (hasLatest)      renderLatestWidget('dormied-latest-list', window.__DA_ARTICLE_SLUG__ || '');
+    if (hasFeatured)    renderFeaturedSection();
+    if (hasFeatWidget)  renderFeaturedWidget();
     if (isBrand) {
       var slug = getCurrentBrandSlug();
       renderLatestBrand(slug, getBrandDisplayName(slug));

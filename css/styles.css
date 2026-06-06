@@ -3043,7 +3043,7 @@ details[open] .faq-question::after { content: '−'; }
   font-weight: 700;
   color: var(--text);
   padding: 6px 10px 6px 0;
-  width: 100px;
+  width: 200px;
   word-break: break-word;
   vertical-align: top;
 }
@@ -3072,7 +3072,7 @@ details[open] .faq-question::after { content: '−'; }
     border-bottom: 1px solid var(--border);
   }
   .bp-tour-model-row:last-child { border-bottom: none; }
-  .bp-tour-model-name { width: auto; max-width: 120px; padding: 0; }
+  .bp-tour-model-name { width: auto; max-width: 240px; padding: 0; }
   .bp-tour-model-count { width: auto; padding: 0; }
   .bp-tour-model-players { flex: 0 0 100%; padding: 3px 0 0; }
 }
@@ -5595,6 +5595,20 @@ details[open] .faq-question::after { content: '−'; }
 }
 @media (min-width: 1100px) {
   #home-dormied-section[hidden] { min-height: 600px; }
+}
+
+/* ── FEATURED section: 3-up compact card grid (slots 3-5) ────────────────── */
+.home-featured-3up {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+@media (max-width: 700px) {
+  .home-featured-3up { grid-template-columns: 1fr; }
+}
+@media (min-width: 701px) and (max-width: 1000px) {
+  .home-featured-3up { grid-template-columns: repeat(2, 1fr); }
 }
 
 #scorecard-home-card[hidden] {

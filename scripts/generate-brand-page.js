@@ -859,6 +859,12 @@ ${onTourHtml}
                 <p class="latest-feed-loading">Loading&#x2026;</p>
               </div>
             </section>
+            <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="bp-featured-heading" hidden>
+              <h2 class="latest-feed-heading" id="bp-featured-heading">Featured</h2>
+              <div id="featured-list" class="latest-feed-list">
+                <p class="latest-feed-loading">Loading&#x2026;</p>
+              </div>
+            </section>
           </aside>
 
         </div><!-- /bp-page-grid -->
@@ -1004,7 +1010,7 @@ async function fetchWitbTourData(supabase) {
   const shaftItemsRaw = await witbPaginate((from, to) =>
     supabase
       .from('witb_bag_items')
-      .select('bag_id, witb_shafts!shaft_id(dormied_brand_slug)')
+      .select('bag_id, witb_shafts!shaft_id(dormied_brand_slug, model)')
       .in('bag_id', bagIds)
       .not('shaft_id', 'is', null)
       .range(from, to)
@@ -1062,7 +1068,15 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
       // For shafts, group by shaft model
       const shaftModelToPlayers = new Map();
       for (const item of brandShaftItems) {
-        const m = item.witb_shafts?.shaft_model || item.raw_model || 'Unknown';
+        // witb_shafts.model includes brand prefix (e.g. "Fujikura Ventus Black 7 X").
+        // Strip the leading brand name on the brand's own page so it reads "Ventus Black 7 X".
+        const rawModel = item.witb_shafts?.model || item.raw_model || 'Unknown';
+        const brandPrefix = typeof brandSlug === 'string'
+          ? brandSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) // slug -> Title Case
+          : '';
+        const m = (brandPrefix && rawModel.toLowerCase().startsWith(brandPrefix.toLowerCase()))
+          ? rawModel.slice(brandPrefix.length).trimStart()
+          : rawModel;
         const p = bagToPlayer.get(item.bag_id); if (!p) continue;
         if (!shaftModelToPlayers.has(m)) shaftModelToPlayers.set(m, new Set());
         shaftModelToPlayers.get(m).add(p.id);

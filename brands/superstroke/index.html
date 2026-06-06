@@ -86,7 +86,7 @@
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="site-logo" aria-label="DORMIED home">
-        <img src="/images/dormied-logo-colour.png" alt="DORMIED — Golf's Brand Desk" class="logo-img"
+        <img src="/images/dormied-logo-colour.png" alt="DORMIED | Golf's Brand Desk" class="logo-img"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <span class="logo-text-fallback" style="display:none">DORMIED</span>
       </a>
@@ -235,14 +235,14 @@
           <div class="bp-page-main">
 
 
-      <section class="bp-take-section" id="bp-take-section">
+      <section class="bp-take-section" id="bp-take-section" hidden>
           <div class="bp-take-inner">
             <div class="bp-take-label-wrap">
               <span class="bp-take-label">THE READ</span>
-              <span class="bp-take-month" id="bp-take-month">Mar 2026</span>
+              <span class="bp-take-month" id="bp-take-month"></span>
             </div>
             <div class="bp-take-body">
-              <p class="bp-take-text" id="bp-take-text">A quiet 41% climb over three months with zero media coverage to explain it. SuperStroke is grinding its way back toward relevance on grip loyalty alone, which is exactly how a grip company should build momentum. Still a long way from that May 2025 peak at 21, but the trajectory suggests someone is putting better and telling their friends.</p>
+              <p class="bp-take-text" id="bp-take-text"></p>
               <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
             </div>
           </div>
@@ -446,7 +446,7 @@
               <tr class="bp-tour-model-row">
                 <td class="bp-tour-model-name">Zenergy</td>
                 <td class="bp-tour-model-count">2</td>
-                <td class="bp-tour-model-players"><div class="bp-tour-players"><a href="/witb/players/joe-highsmith/" class="bp-tour-player-link">Joe Highsmith</a><a href="/witb/players/adam-schenk/" class="bp-tour-player-link">Adam Schenk</a></div></td>
+                <td class="bp-tour-model-players"><div class="bp-tour-players"><a href="/witb/players/adam-schenk/" class="bp-tour-player-link">Adam Schenk</a><a href="/witb/players/joe-highsmith/" class="bp-tour-player-link">Joe Highsmith</a></div></td>
               </tr>
               <tr class="bp-tour-model-row">
                 <td class="bp-tour-model-name">Zenergy Pistol 1.0</td>
@@ -654,6 +654,12 @@
             <section class="home-stories-section latest-feed-section" aria-labelledby="bp-dormied-latest-heading">
               <h2 class="latest-feed-heading" id="bp-dormied-latest-heading">Latest</h2>
               <div id="dormied-latest-list" class="latest-feed-list">
+                <p class="latest-feed-loading">Loading&#x2026;</p>
+              </div>
+            </section>
+            <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="bp-featured-heading" hidden>
+              <h2 class="latest-feed-heading" id="bp-featured-heading">Featured</h2>
+              <div id="featured-list" class="latest-feed-list">
                 <p class="latest-feed-loading">Loading&#x2026;</p>
               </div>
             </section>
