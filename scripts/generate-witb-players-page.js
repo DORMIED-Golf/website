@@ -233,6 +233,8 @@ function buildPage(players, brandNames) {
     .player-dir-logos-more{font-family:var(--font-mono);font-size:.55rem;color:var(--text-muted);white-space:nowrap}
     /* Grid: reuse brands-grid from styles.min.css (3 cols desktop, 2 cols mobile, 10px gap, 16px top padding) */
   </style>
+  <!-- Grow.me -->
+  <script data-grow-initializer="">!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTowNjk5NTY3Ny0xMzU0LTQ5M2YtOWEyYi03Y2NkOTlkNWE3YWQ=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();</script>
 </head>
 
 <body>
