@@ -326,9 +326,6 @@
     "api/dormied-articles.js": {
       "maxDuration": 10
     },
-    "api/originals-feed.js": {
-      "maxDuration": 10
-    },
     "api/post-to-x.js": {
       "maxDuration": 30
     }
