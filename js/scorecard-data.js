@@ -22,7 +22,7 @@ window.DORMIED_SCORECARD_DATA = {
     /* ── JUNE 2026 ─────────────────────────────────────────────────────── */
     {
       slug:       "june-2026",
-      title:      "The Scorecard | June 2026",
+      title:      "The Quiet Man Won the Loud Major | The Scorecard | June 2026",
       subtitle:   "Aaron Rai won a major with a driver older than some TGL franchises and moved four brands doing it.",
       date:       "Jun 11, 2026",
       dateISO:    "2026-06-11",
@@ -31,6 +31,8 @@ window.DORMIED_SCORECARD_DATA = {
         hero:  null,
         strip: [
           { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fea7efba2-07ab-4bc7-be2e-d4e398c68727_960x640.jpeg", label: "Aaron Rai, 2026 PGA Championship" },
+          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe6c3250f-8d67-4c69-bed2-93f9f678be79_1036x583.jpeg", label: "The Field" },
+          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc2349fd3-d4fe-4a77-a493-82347df9e169_1200x799.jpeg", label: "The Drop Zone" },
         ],
       },
       toc: [
