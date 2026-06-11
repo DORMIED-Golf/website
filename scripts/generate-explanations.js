@@ -85,6 +85,17 @@ function hasMetaCommentary(text) {
   return false;
 }
 
+// Task B: every non-empty line must start with "• "
+function isBulletOnly(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  return lines.length > 0 && lines.every(l => l.startsWith('• '));
+}
+
+// Normalize: rejoin trimmed bullet lines, collapsing blank lines
+function normalizeBullets(text) {
+  return text.split('\n').map(l => l.trim()).filter(Boolean).join('\n');
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function yyyymmToLabel(yyyymm) {
@@ -165,6 +176,8 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
     'You have access to a web search tool. Use it silently. The user will never see your search process, your reasoning, your hesitation, your hedging, or any commentary about what you did or did not find. ' +
     'Your output is the final published artifact. It appears on a brand\'s page on dormied.com. ' +
     'Treat the output the way a published columnist treats a column: only what makes the page. No drafts, no notes, no thinking-out-loud, no apology for what wasn\'t found. ' +
+    '\n\n' +
+    'Every text you produce is captured, including text written between searches. Do not narrate between tool calls. Do not summarize findings, weigh candidates, or draft bullets mid-search. Write nothing until you are done searching, then write only the final bullets. ' +
     '\n\n' +
     'BANNED OUTPUT PATTERNS (these will be rejected): ' +
     '- Any sentence that begins with "Based on", "According to", "Let me", "I need to", "I found", "I cannot", "I have not", "I can see", "I also see", "Despite", "However", "After searching", "After reviewing", "My search", "My research", "The search results". ' +
@@ -260,14 +273,17 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
   const u1 = response.usage || {};
   console.log(`        tokens — input: ${u1.input_tokens ?? 0}, cache_read: ${u1.cache_read_input_tokens ?? 0}, cache_creation: ${u1.cache_creation_input_tokens ?? 0}, output: ${u1.output_tokens ?? 0} [cache: no-op, system prompt below 2048-token floor]`);
 
-  let output = response.content
-    .filter(block => block.type === 'text')
-    .map(block => block.text)
-    .join('')
-    .trim();
+  // Task A: take only the final text block — intermediate blocks are search narration
+  const textBlocks1 = response.content.filter(block => block.type === 'text');
+  let output = textBlocks1.length ? textBlocks1[textBlocks1.length - 1].text.trim() : '';
 
-  if (hasMetaCommentary(output)) {
-    console.log(`        Meta-commentary detected, retrying...`);
+  // Task B: bullet-only check runs before (and in addition to) the existing meta-commentary check
+  if (!isBulletOnly(output) || hasMetaCommentary(output)) {
+    if (!isBulletOnly(output)) {
+      console.log(`        Non-bullet output detected, retrying...`);
+    } else {
+      console.log(`        Meta-commentary detected, retrying...`);
+    }
     const retryUserPrompt =
       `Your previous response contained banned meta-commentary (research narration, "Based on...", "Let me search...", "I cannot find...", or similar). ` +
       `Rewrite your response. Output only the bullet list or the fallback line. No preamble. No explanation of what you searched for. No apology for what was not found.`;
@@ -289,17 +305,18 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
     const u2 = response.usage || {};
     console.log(`        retry tokens — input: ${u2.input_tokens ?? 0}, cache_read: ${u2.cache_read_input_tokens ?? 0}, output: ${u2.output_tokens ?? 0} [cache: no-op, system prompt below 2048-token floor]`);
 
-    output = response.content
-      .filter(block => block.type === 'text')
-      .map(block => block.text)
-      .join('')
-      .trim();
+    // Task A (retry): take only the final text block
+    const textBlocks2 = response.content.filter(block => block.type === 'text');
+    output = textBlocks2.length ? textBlocks2[textBlocks2.length - 1].text.trim() : '';
 
-    if (hasMetaCommentary(output)) {
-      console.warn(`        Retry still contained meta-commentary. Falling back to safe text.`);
+    if (!isBulletOnly(output) || hasMetaCommentary(output)) {
+      console.warn(`        Retry still failed validation. Falling back to safe text.`);
       output = FALLBACK_TEXT;
     }
   }
+
+  // Normalize: collapse blank lines, trim each bullet line
+  output = normalizeBullets(output);
 
   return output;
 }
