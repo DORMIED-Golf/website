@@ -19,6 +19,87 @@ window.DORMIED_SCORECARD_DATA = {
 
   issues: [
 
+    /* ── JUNE 2026 ─────────────────────────────────────────────────────── */
+    {
+      slug:       "june-2026",
+      title:      "The Scorecard | June 2026",
+      subtitle:   "Aaron Rai won a major with a driver older than some TGL franchises and moved four brands doing it.",
+      date:       "Jun 11, 2026",
+      dateISO:    "2026-06-11",
+      monthLabel: "June 2026",
+      images: {
+        hero:  null,
+        strip: [
+          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fea7efba2-07ab-4bc7-be2e-d4e398c68727_960x640.jpeg", label: "Aaron Rai, 2026 PGA Championship" },
+        ],
+      },
+      toc: [
+        { id: "at-the-top",       label: "At The Top"       },
+        { id: "the-biggest-move", label: "The Biggest Move" },
+        { id: "the-field",        label: "The Field"        },
+        { id: "the-drop-zone",    label: "The Drop Zone"    },
+        { id: "the-long-game",    label: "The Long Game"    },
+        { id: "global-dispatch",  label: "Global Dispatch"  },
+        { id: "closing",          label: "Closing"          },
+      ],
+      sections: [
+        {
+          id:      "intro",
+          heading: null,
+          body:    "<p>Golf spent the last decade convincing itself that speed is everything. Then Aaron Rai won the PGA Championship at Aronimink with a seven-year-old TaylorMade M6 driver, ranking among the shortest hitters in the field, hitting fairways while everyone around him chased ball speed. May's major did not just crown an unlikely champion. It quietly indicted half the industry's marketing. The training aids selling speed gains, the launch monitors measuring them, the $375 irons engineered like Formula 1 parts: all of it had a rough month on the index while the winner's bag told a story about precision, patience, and equipment old enough to be in second grade. Our game has a habit of humbling whatever it just finished hyping. May was that month, and the data caught nearly every casualty.</p>",
+        },
+        {
+          id:      "at-the-top",
+          heading: "At The Top",
+          body:    "<p>Titleist holds the top spot for the fifth consecutive month, and it is sitting at a 52-week peak while doing it. TaylorMade is steady in second at 81.7, also at a 52-week high, with the M6 driver win at Aronimink providing the strangest possible marketing for a brand whose entire model depends on you replacing that club. TravisMathew holds third at 54.8 for the fourth straight month, the quietest sustained run in the top five. Callaway and FootJoy share fourth at 44.9, both giving back 18.2% but holding their ranks. The story beneath them is Takomo Golf at 11, knocking on the top-10 door after its 101 MKII beat Callaway, PING, and TaylorMade in MyGolfSpy's game-improvement iron test at $579 a set.</p>",
+        },
+        {
+          id:      "the-biggest-move",
+          heading: "The Biggest Move",
+          body:    "<p>A month ago McLaren Golf posted the largest move in this index's history, up 307.4% on a launch timed to the Miami Grand Prix. We wrote that whether it could convert attention into sustained presence was the question the next six months would answer. It took one. McLaren fell 63.3% in May, dropping five spots to 12th. The launch coverage carried into early May, but then Justin Rose had to actually play the clubs. He finished T65 at the Cadillac Championship in the debut, added another poor week at the Truist, and MyGolfSpy noted he went from 16 under in his two starts before the switch to a combined one over in his first two with the new irons. A mid-May community sentiment piece cataloguing skepticism about the $375-per-club price kept the conversation alive for all the wrong reasons. None of this means McLaren is finished. A DI of 20.1 still puts a one-month-old brand ahead of names that have been in golf for decades. But the gap between launch attention and earned attention is where new equipment brands go to die, and McLaren is now standing in it. PXG survived this exact valley because Bob Parsons kept spending through it. McLaren's resolve gets tested next.</p>",
+        },
+        {
+          id:      "the-field",
+          heading: "The Field",
+          body:    "<p>ACCRA posted the month's biggest gain, up 131.6% and 25 spots to a 52-week peak, after Wyndham Clark won the CJ Cup Byron Nelson with an ACCRA putter shaft in his L.A.B. Golf OZ.1i. A putter shaft brand cracking winning-bag coverage is rare. Two waves of it in one month, after a player running ACCRA woods shafts showed up in PGA Championship WITB coverage, is how a component brand has its best month ever.</p>\n<p>Aldila rose 23.1% because Rai's winning driver, ancient as the head was, carried a recently swapped Aldila Synergy Blue 70 TX. The shaft was newer than the club. Graphite Design climbed 22.2% after a first-weekend-of-May sweep put its shafts in winners' bags on the LPGA, PGA Tour Champions, and JGTO simultaneously. And KBS Golf rose 22.3% after Kristoffer Reitan won the Truist Championship with KBS Tour X shafts. Three shaft brands and a putter shaft specialist all moving on tour results in the same month tells you the WITB audience is reading deeper into the bag than the equipment giants would like.</p>\n<p>Elsewhere, the Greg Norman Collection jumped 50% to a 52-week peak after Norman's viral Instagram post congratulating Rai put the Shark back in golf's mainstream conversation, his first cultural moment since leaving LIV behind and returning full-time to his apparel company. Breezy Golf climbed 22.4% to 28th, a 52-week peak, on the back of Bob Does Sports' Shinnecock video and a sold-out U.S. Open collection. And Vuori made our Long Game call from last month look good, rising another 22.2% to its best rank ever as the second Tom Holland golf collection dropped May 12. Two consecutive months of gains on the Holland strategy. The template is working.</p>",
+        },
+        {
+          id:      "the-drop-zone",
+          heading: "The Drop Zone",
+          body:    "<p>Malbon fell 33.3% in a month that tested how much cultural heat one brand can absorb. Jason Day's camo shorts at the PGA Championship went viral for the wrong reasons, with fans at Aronimink openly calling for him to drop the brand. A Tustin warehouse sale offering 70% off ran the same month, and discount channels are not where premium streetwear brands want their inventory moving. Malbon holds 6th on the index, so this is a correction from the Augusta-fueled April high rather than a collapse. But the backlash is worth watching because it is the first sign the brand's ubiquity is generating friction.</p>\n<p>Sun Day Red dropped 33% in the worst news month of the brand's short life. Tiger Woods confirmed he will miss all four majors in 2026, his DUI case kept the founder in a damaging news cycle, and the brand ran a 30% off Archive Sale that signals inventory pressure. The first women's collection launched into that headwind with no tour athlete to anchor it. A brand built entirely on one man's aura has no shock absorbers when the man is the problem.</p>\n<p>Peter Millar gave back 33.3% of last month's Cameron Young surge after a MyGolfSpy piece exposed the brand's inventory sitting behind TJ Maxx's \"Reveal Designer\" button. Over 500 women's pieces at off-price retail is a hard thing to square with pro shop pricing, and the search data suggests readers noticed. Krank Golf fell 33.3% as Bryson DeChambeau missed the cut at the PGA and withdrew from LIV Mexico City with a wrist injury. The one-ambassador risk cuts both ways. And The Stack System dropped 31.6% in the cruelest data point of the month: the year's second major was won by one of the shortest hitters on tour, swinging a seven-year-old driver, the week speed training was supposed to matter most.</p>\n<p>Nike Golf fell 33.1% despite launching the Pegasus 1 Golf on May 1. MyGolfSpy named the Roshe G among the most overrated shoes of 2026 on May 19, and Rai won the PGA in Eccos the same week Nike dropped its limited championship shoe pack at Aronimink. L.A.B. Golf slid another 18.2%, its fourth consecutive monthly decline, though Clark winning with a L.A.B. putter in his hands is the kind of result that has historically preceded the brand's surges. The floor may finally be in sight.</p>",
+        },
+        {
+          id:      "the-long-game",
+          heading: "The Long Game",
+          body:    "<p>Tour Edge. The Batavia, Illinois brand has spent thirty years as golf's value afterthought, and May was the month the lab results stopped cooperating with that story. The Exotics CB topped MyGolfSpy's Most Wanted Players' Iron test in Strokes Gained against a 15-iron field that included every major OEM. The Zero T putter line launched at $199.99, claiming the value end of the zero-torque category before anyone else thought to. The Exotics Mini Driver debuted at 280cc with a MyGolfSpy first look. Three product news cycles in one month, a 52-week peak, and independent testing wins stacking up since April's driver results. The brand is up 22.7% and sitting at 49th. If the testing dominance continues through the summer equipment cycle, Tour Edge will not stay outside the top 40 for long. Watch it through August.</p>",
+        },
+        {
+          id:      "global-dispatch",
+          heading: "Global Dispatch",
+          body:    "<p>While Malbon was taking its lumps in the American conversation, it was making a very different move in South Korea. The brand launched a Ballantine's collaboration in Seoul on May 28, a co-branded whisky and capsule apparel collection aimed at Korea's travel retail market. Korea has long been Malbon's strongest international story, with standalone retail and a customer base that treats golf apparel as a luxury category rather than sportswear. The timing is instructive: the same month US sentiment turned and inventory hit discount channels at home, the brand deepened its position in the market where premium golf streetwear still commands full price. Korea is not Malbon's hedge against an American correction. It might be the core business.</p>",
+        },
+        {
+          id:      "closing",
+          heading: "Closing",
+          body:    "<p>Four issues in, May taught the clearest lesson yet. McLaren spent a fortune announcing itself and lost two-thirds of its attention in thirty days. Aaron Rai spent nothing, won a major with a driver older than some TGL franchises, and moved four brands in the process, including two shaft companies most golfers could not name. Attention that arrives through performance compounds. Attention that arrives through spectacle decays. Every brand on this index is somewhere on that spectrum, and every month the data tells us who is which. The U.S. Open at Shinnecock is three days away. Somebody's July number is about to be made.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>\n<p class=\"scorecard-substack-link\"><a href=\"https://dormiedgolf.substack.com/p/the-quiet-man-won-the-loud-major\" target=\"_blank\" rel=\"noopener\">Read on Substack <span aria-hidden=\"true\">→</span></a></p>",
+        },
+      ],
+      indexSnapshot: [
+        { rank: 1, id: "titleist",    name: "Titleist",    di: 100,  mom: 0    },
+        { rank: 2, id: "taylormade",  name: "TaylorMade",  di: 81.7, mom: 0    },
+        { rank: 3, id: "travismathew",name: "TravisMathew",di: 54.8, mom: 0    },
+        { rank: 4, id: "callaway",    name: "Callaway",    di: 44.9, mom: -18.2 },
+        { rank: 4, id: "footjoy",     name: "FootJoy",     di: 44.9, mom: -18.2 },
+      ],
+      brandMentions: [
+        "titleist", "taylormade", "travismathew", "callaway", "footjoy",
+        "takomo-golf", "mclaren-golf", "accra", "aldila", "graphite-design",
+        "kbs-golf", "greg-norman-collection", "breezy-golf", "vuori",
+        "malbon", "sun-day-red", "peter-millar", "krank-golf", "the-stack-system",
+        "nike-golf", "l-a-b-golf", "tour-edge", "pxg",
+      ],
+    },
+
     /* ── MAY 2026 ──────────────────────────────────────────────────────── */
     {
       slug:       "may-2026",
