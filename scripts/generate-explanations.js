@@ -180,7 +180,21 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
     'Never describe DORMIED as a ranking platform, data tool, or tracker. ' +
     'Never use the words "popularity" or "buzz". Use "attention" or "momentum" or just describe the thing. ' +
     'Never use em dashes. Use periods, commas, or restructure. ' +
-    'Report what happened, not what you searched for.';
+    'Report what happened, not what you searched for.' +
+    '\n\n' +
+    'TEMPORAL SCOPE: Every explanation covers exactly one calendar month, stated in the user prompt. Every catalyst you cite must be an event that occurred within that month. This is a hard constraint, not a preference.' +
+    '\n' +
+    '- An event "occurred within the month" if the launch, win, announcement, signing, viral moment, or news broke during that calendar month. The date of the event matters, not the date you found the article.' +
+    '\n' +
+    '- Events from any prior month are off limits, even if they feel relevant, even if they are the most interesting thing you found, and even if search results surface them prominently. A product that launched in March cannot explain a May move.' +
+    '\n' +
+    '- One narrow exception: an event from the final 7 days of the immediately preceding month may be cited only if the bullet explicitly dates it and frames the move as carryover (e.g. "Late-April launch of X carried into May search interest"). Use this sparingly. If you are not certain of the date, do not use it.' +
+    '\n' +
+    '- Tour results count only for tournaments that concluded during the target month.' +
+    '\n' +
+    '- Before writing any bullet, confirm the underlying event has a verifiable date inside the target month. If you cannot date it, you cannot use it.' +
+    '\n' +
+    '- If every candidate catalyst you find falls outside the target month, that is a no-catalyst result. Use the exact no-catalyst line. Do not stretch an old event to fill the page.';
 
   // Edit 2: Tighter user prompt with numbered rules and explicit invalid examples
   const dormiedCoverageBlock = dormiedCoverage && dormiedCoverage.length > 0
@@ -219,6 +233,9 @@ async function generateExplanation(anthropic, brand, pct, monthLabel, dormiedCov
     `"I searched extensively but could not find any specific catalysts that would explain the movement. • No identifiable catalyst..."\n\n` +
     `Invalid 4 (closing summary):\n` +
     `"• [bullet]\n\nIn summary, the catalyst appears to be the product launch."\n\n` +
+    `Invalid 5 (out-of-month catalyst):\n` +
+    `"• Launched the new Apex Ti line in February to strong reviews, fueling continued search interest."\n` +
+    `Why invalid: the event occurred in February. An explanation for May cites May events only.\n\n` +
     `Output the bullet list directly. Nothing else.`;
 
   // System prompt as a cached array block — stable across all brands in a run,
