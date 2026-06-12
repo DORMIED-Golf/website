@@ -24,6 +24,7 @@ const Anthropic        = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
 let   sharp;
 try { sharp = require('sharp'); } catch { sharp = null; }
+const feedBake = require('./feed-bake');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -648,7 +649,7 @@ function generateArticleHtml(opts) {
     title, bodyHtml, imageUrl, ogImageUrl, localUrl, imageAlt, slug, category,
     published_at, source_url, source_name, meta_description, seo_keywords,
     brandSlug, brandName, brandLogo, dataVersion,
-    readTime, author, dormiedData,
+    readTime, author, dormiedData, dormiedLatestHtml,
     secondaryBrands = [], // Array<{slug, name, logo}>
   } = opts;
 
@@ -968,7 +969,7 @@ function generateArticleHtml(opts) {
             <section class="home-stories-section latest-feed-section" aria-labelledby="article-latest-heading">
               <h2 class="latest-feed-heading" id="article-latest-heading">Latest</h2>
               <div id="dormied-latest-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading&#x2026;</p>
+                ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
             </section>
           </aside>
@@ -1116,6 +1117,14 @@ async function main() {
   const dormiedData = loadDormiedData();
   loadBrands(); // validate file exists
 
+  // Pre-fetch latest articles once for all sidebar bakes; filter per article below
+  let allLatestArticles = [];
+  try {
+    allLatestArticles = await feedBake.fetchLatestArticles(supabase, 13, null);
+  } catch (e) {
+    console.warn('[generate] Feed bake pre-fetch failed:', e.message);
+  }
+
   // --force-id=<golf_wire_matched uuid>  bypass all cooldown/dedup checks for one article
   const forceArg = process.argv.find(a => a.startsWith('--force-id='));
   const FORCE_IDS = forceArg ? new Set(forceArg.replace('--force-id=','').split(',')) : new Set();
@@ -1174,6 +1183,10 @@ async function main() {
           .map(s => { const b = regenBrandsMap.get(s); return b ? { slug: s, name: b.name, logo: b.logo || '' } : null; })
           .filter(Boolean);
         const bHtml = bodyToHtml(row.body, bSlug, bName, secondaryBrands);
+        const filteredLatest = allLatestArticles.filter(a => a.slug !== row.slug).slice(0, 10);
+        const dormiedLatestHtml = allLatestArticles.length
+          ? feedBake.renderLatestFeedHtml(filteredLatest, dormiedData)
+          : null;
 
         const html = generateArticleHtml({
           title:            row.title,
@@ -1195,6 +1208,7 @@ async function main() {
           readTime:         rTime,
           author,
           dormiedData,
+          dormiedLatestHtml,
           secondaryBrands,
         });
 
@@ -1292,6 +1306,10 @@ async function main() {
         })
         .filter(Boolean);
       const bHtml = bodyToHtml(row.body, bSlug, bName, secondaryBrands);
+      const filteredLatestB = allLatestArticles.filter(a => a.slug !== row.slug).slice(0, 10);
+      const dormiedLatestHtmlB = allLatestArticles.length
+        ? feedBake.renderLatestFeedHtml(filteredLatestB, dormiedData)
+        : null;
 
       const html = generateArticleHtml({
         title:           row.title,
@@ -1313,6 +1331,7 @@ async function main() {
         readTime:        rTime,
         author,
         dormiedData,
+        dormiedLatestHtml: dormiedLatestHtmlB,
         secondaryBrands,
       });
 
@@ -1544,6 +1563,10 @@ async function main() {
     fs.mkdirSync(articleDir, { recursive: true });
 
     // Step 1: write candidate HTML
+    const filteredLatestNew = allLatestArticles.filter(a => a.slug !== slug).slice(0, 10);
+    const dormiedLatestHtmlNew = allLatestArticles.length
+      ? feedBake.renderLatestFeedHtml(filteredLatestNew, dormiedData)
+      : null;
     const html = generateArticleHtml({
       title, bodyHtml, imageUrl, ogImageUrl, localUrl,
       imageAlt:        `${brandInfo.brand.name}: ${articleCategory}`,
@@ -1560,6 +1583,7 @@ async function main() {
       readTime,
       author,
       dormiedData,
+      dormiedLatestHtml: dormiedLatestHtmlNew,
       secondaryBrands,
     });
 

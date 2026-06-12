@@ -402,7 +402,9 @@
     fetchDormiedArticles(null, HOME_LIMIT, function (articles) {
       var allBrands = getAllBrands();
       if (!articles.length) {
-        el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
+        if (!el.querySelector('a')) {
+          el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
+        }
         return;
       }
       el.innerHTML = articles.map(function (a) {
@@ -440,7 +442,9 @@
       filtered = filtered.slice(0, LATEST_LIMIT);
 
       if (!filtered.length) {
-        el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
+        if (!el.querySelector('a')) {
+          el.innerHTML = '<p class="latest-feed-loading">No articles available.</p>';
+        }
         return;
       }
 

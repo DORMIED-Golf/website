@@ -23,6 +23,7 @@ const fs               = require('fs');
 const path             = require('path');
 const vm               = require('vm');
 const { createClient } = require('@supabase/supabase-js');
+const feedBake         = require('./feed-bake');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -353,7 +354,7 @@ function buildCountryTableRows(marketStats) {
 
 // ── HTML template ─────────────────────────────────────────────────────────────
 
-function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '' }) {
+function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', dormiedLatestHtml }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
   const pageTitle    = `${escHtml(brand.name)} | DORMIED Brand Profile`;
@@ -858,7 +859,7 @@ ${onTourHtml}
             <section class="home-stories-section latest-feed-section" aria-labelledby="bp-dormied-latest-heading">
               <h2 class="latest-feed-heading" id="bp-dormied-latest-heading">Latest</h2>
               <div id="dormied-latest-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading&#x2026;</p>
+                ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
             </section>
           </aside>
@@ -1238,19 +1239,23 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTour
 
   const { brand, curSearches } = stats;
 
-  // Fetch take, explanations, and recent articles in parallel
-  const [take, explanations, articles] = await Promise.all([
+  // Fetch take, explanations, recent articles, and global latest feed in parallel
+  const [take, explanations, articles, latestFeedArticles] = await Promise.all([
     fetchTake(supabase, brandSlug),
     fetchExplanations(supabase, brandSlug),
     fetchRecentArticles(supabase, brandSlug),
+    feedBake.fetchLatestArticles(supabase, 10, null),
   ]);
+  const dormiedLatestHtml = latestFeedArticles.length
+    ? feedBake.renderLatestFeedHtml(latestFeedArticles, dormiedData)
+    : null;
 
   const relatedBrands = getRelatedBrands(dormiedData, brandSlug, curSearches);
 
   const onTourData = witbTourData ? computeOnTourData(witbTourData, brandSlug) : [];
   const onTourHtml = buildOnTourHtml(brand.name, onTourData);
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml });
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml, dormiedLatestHtml });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });

@@ -22,8 +22,18 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../.env'), 
 
 const fs              = require('fs');
 const path            = require('path');
+const vm              = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const Anthropic        = require('@anthropic-ai/sdk');
+const feedBake         = require('./feed-bake');
+
+function loadDormiedData() {
+  const raw = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
+  const ctx = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(raw, ctx);
+  return ctx.window.DORMIED_DATA;
+}
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -616,7 +626,7 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
-function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today }) {
+function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml }) {
   const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
@@ -1062,7 +1072,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
           <section class="home-stories-section latest-feed-section" aria-labelledby="player-latest-heading">
             <h2 class="latest-feed-heading" id="player-latest-heading">Latest</h2>
             <div id="dormied-latest-list" class="latest-feed-list">
-              <p class="latest-feed-loading">Loading&hellip;</p>
+              ${latestFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
             </div>
           </section>
         </aside>
@@ -1361,7 +1371,16 @@ async function main() {
 
   log(`Lede (${wordCount(ledes.lede)} words): ${ledes.lede?.slice(0, 100)}...`);
 
-  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today });
+  const dormiedData = loadDormiedData();
+  let latestFeedHtml = null;
+  try {
+    const latestArticles = await feedBake.fetchLatestArticles(sb, 10, null);
+    if (latestArticles.length) latestFeedHtml = feedBake.renderLatestFeedHtml(latestArticles, dormiedData);
+  } catch (e) {
+    console.warn('[witb-player-page] Feed bake failed:', e.message);
+  }
+
+  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml });
 
   const noindex = html.includes('noindex');
 

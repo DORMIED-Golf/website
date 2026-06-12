@@ -14,7 +14,9 @@
 require('dotenv').config();
 const fs   = require('fs');
 const path = require('path');
+const vm   = require('vm');
 const { createClient } = require('@supabase/supabase-js');
+const feedBake = require('./feed-bake');
 
 const ROOT   = path.resolve(__dirname, '..');
 const OUT    = path.join(ROOT, 'witb', 'index.html');
@@ -23,6 +25,14 @@ const SB_URL = process.env.SUPABASE_URL;
 
 if (!SB_URL || !SB_KEY) { console.error('Missing SUPABASE env vars'); process.exit(1); }
 const sb = createClient(SB_URL, SB_KEY);
+
+function loadDormiedData() {
+  const raw = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
+  const ctx = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(raw, ctx);
+  return ctx.window.DORMIED_DATA;
+}
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -672,7 +682,7 @@ function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
 
 // ── Full page HTML ─────────────────────────────────────────────────────────
 
-function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap }) {
+function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap, latestFeedHtml, topStoriesHtml }) {
   // Canonical set: players with a non-null OWGR rank (158 today; sentinel 4990 included)
   const rankedPlayers      = players.filter(p => p.owgr_rank !== null);
   const rankedBagIds       = new Set(rankedPlayers.map(p => p.current_bag_id).filter(Boolean));
@@ -1184,13 +1194,13 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
         <section class="home-stories-section latest-feed-section" aria-labelledby="witb-stories-heading">
           <h2 class="latest-feed-heading" id="witb-stories-heading">Top Stories</h2>
           <div id="home-stories-list" class="latest-feed-list">
-            <p class="latest-feed-loading">Loading&#x2026;</p>
+            ${topStoriesHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
           </div>
         </section>
         <section class="home-stories-section latest-feed-section" aria-labelledby="witb-latest-heading">
           <h2 class="latest-feed-heading" id="witb-latest-heading">Latest</h2>
           <div id="dormied-latest-list" class="latest-feed-list">
-            <p class="latest-feed-loading">Loading&#x2026;</p>
+            ${latestFeedHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
           </div>
         </section>
       </aside>
@@ -1516,9 +1526,24 @@ function writeWitbLeadersData({ players, currentItems }) {
 // ── Run ────────────────────────────────────────────────────────────────────
 
 async function main() {
+  const dormiedData = loadDormiedData();
   const data = await fetchAllData();
+
+  let latestFeedHtml = null;
+  let topStoriesHtml = null;
+  try {
+    const [latestArticles, topStoriesArticles] = await Promise.all([
+      feedBake.fetchLatestArticles(sb, 10, null),
+      feedBake.fetchTopStoriesArticles(sb, dormiedData, 10),
+    ]);
+    latestFeedHtml = latestArticles.length  ? feedBake.renderLatestFeedHtml(latestArticles,    dormiedData) : null;
+    topStoriesHtml = topStoriesArticles.length ? feedBake.renderLatestFeedHtml(topStoriesArticles, dormiedData) : null;
+  } catch (e) {
+    console.warn('[witb-page] Feed bake failed:', e.message);
+  }
+
   console.log('\nBuilding page HTML...');
-  const html = buildPage(data);
+  const html = buildPage({ ...data, latestFeedHtml, topStoriesHtml });
   writeWitbLeadersData(data);
 
   // Ensure /witb directory exists
@@ -1529,11 +1554,15 @@ async function main() {
   const kb = (fs.statSync(OUT).size / 1024).toFixed(1);
   console.log(`\nWritten: ${OUT} (${kb} KB)`);
 
-  // Quick validation
+  // Quick validation — exclude baked feed sections from em-dash check since article
+  // titles sourced from the DB may legitimately contain em dashes.
+  const htmlNoFeed = html
+    .replace(/(<div id="home-stories-list"[^>]*>)[\s\S]*?(<\/div>\s*<\/section>)/, '$1$2')
+    .replace(/(<div id="dormied-latest-list"[^>]*>)[\s\S]*?(<\/div>\s*<\/section>)/, '$1$2');
   const checks = [
     ['Titleist in HTML',    html.includes('Titleist')],
     ['TaylorMade in HTML',  html.includes('TaylorMade')],
-    ['No em dash',         !html.includes('—')],
+    ['No em dash',         !htmlNoFeed.includes('—')],
     ['No shaft placeholder',!html.includes('next update')],
     ['Scatter SVG',         html.includes('witb-scatter-svg')],
     ['Leaderboard anchor',  html.includes('id="driver"')],

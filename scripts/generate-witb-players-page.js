@@ -17,7 +17,17 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../.env'), 
 
 const fs              = require('fs');
 const path            = require('path');
+const vm              = require('vm');
 const { createClient } = require('@supabase/supabase-js');
+const feedBake        = require('./feed-bake');
+
+function loadDormiedData() {
+  const raw = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
+  const ctx = { window: {} };
+  vm.createContext(ctx);
+  vm.runInContext(raw, ctx);
+  return ctx.window.DORMIED_DATA;
+}
 
 const ROOT    = path.resolve(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'witb', 'players');
@@ -145,7 +155,7 @@ function buildPlayerCard(player, bagDate, filterMap, logoList) {
 
 // ── Generate HTML page ────────────────────────────────────────────────────────
 
-function buildPage(players, brandNames) {
+function buildPage(players, brandNames, latestFeedHtml, topStoriesHtml) {
   // brandNames: Map of dormied_brand_slug -> display name
   const brandNamesJson = JSON.stringify(Object.fromEntries(brandNames));
 
@@ -364,13 +374,13 @@ ${gridHtml}
             <section class="home-stories-section latest-feed-section" aria-labelledby="players-stories-heading">
               <h2 class="latest-feed-heading" id="players-stories-heading">Top Stories</h2>
               <div id="home-stories-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading...</p>
+                ${topStoriesHtml || '<p class="latest-feed-loading">Loading...</p>'}
               </div>
             </section>
             <section class="home-stories-section latest-feed-section" aria-labelledby="players-latest-heading">
               <h2 class="latest-feed-heading" id="players-latest-heading">Latest</h2>
               <div id="dormied-latest-list" class="latest-feed-list">
-                <p class="latest-feed-loading">Loading...</p>
+                ${latestFeedHtml || '<p class="latest-feed-loading">Loading...</p>'}
               </div>
             </section>
           </aside>
@@ -567,8 +577,23 @@ async function main() {
     playersWithCards.push(player);
   }
 
-  // 7. Generate and write page
-  const html = buildPage(playersWithCards, brandNames);
+  // 7. Fetch feed articles and bake sidebar HTML
+  const dormiedData = loadDormiedData();
+  let latestFeedHtml = null;
+  let topStoriesHtml = null;
+  try {
+    const [latestArticles, topStoriesArticles] = await Promise.all([
+      feedBake.fetchLatestArticles(sb, 10, null),
+      feedBake.fetchTopStoriesArticles(sb, dormiedData, 10),
+    ]);
+    latestFeedHtml = latestArticles.length    ? feedBake.renderLatestFeedHtml(latestArticles,    dormiedData) : null;
+    topStoriesHtml = topStoriesArticles.length ? feedBake.renderLatestFeedHtml(topStoriesArticles, dormiedData) : null;
+  } catch (e) {
+    console.warn('[witb-players-page] Feed bake failed:', e.message);
+  }
+
+  // 8. Generate and write page
+  const html = buildPage(playersWithCards, brandNames, latestFeedHtml, topStoriesHtml);
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
   fs.writeFileSync(OUT, html, 'utf8');
 
