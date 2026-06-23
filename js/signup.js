@@ -95,7 +95,7 @@
   +   '<div class="signup-popup">'
   +     '<button class="signup-popup-close" id="popup-close" aria-label="Close">&times;</button>'
   +     '<div class="signup-popup-inner">'
-  +       '<img class="signup-popup-img" src="/images/scorecard-cover.jpg" alt="DORMIED — The Scorecard" loading="lazy">'
+  +       '<img class="signup-popup-img" src="/_vercel/image?url=%2Fimages%2Fscorecard-cover.jpg&w=400&q=75" alt="DORMIED, The Scorecard" width="180" height="320" loading="lazy">'
   +       '<div class="signup-popup-content">'
   +         '<h2 class="signup-popup-heading" id="popup-heading">Get The Scorecard.</h2>'
   +         '<p class="signup-popup-body">Your group chat will be talking about these brands next month. You\'ll already know why.</p>'

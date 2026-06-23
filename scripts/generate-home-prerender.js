@@ -65,7 +65,7 @@ function logoImg(brand, cls, size) {
   const ini      = esc(initials(brand.name));
   const fallback = "this.style.display='none';this.nextElementSibling.style.display='flex'";
   if (brand.logo) {
-    return `<img class="${cls}" src="${esc(brand.logo)}" alt="" width="${size}" height="${size}" loading="lazy" onerror="${fallback}"><span class="brand-initials-fallback ${cls}-fallback" style="display:none">${ini}</span>`;
+    return `<img class="${cls}" src="${esc(vitUrl(brand.logo, size * 2))}" alt="" width="${size}" height="${size}" loading="lazy" onerror="${fallback}"><span class="brand-initials-fallback ${cls}-fallback" style="display:none">${ini}</span>`;
   }
   return `<span class="brand-initials-fallback ${cls}-fallback">${ini}</span>`;
 }
