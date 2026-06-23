@@ -78,8 +78,9 @@ function buildSearchText(title, body) {
   return title + ' ' + first200Words;
 }
 
-function matchBrands(searchText, brands) {
+function matchBrands(searchText, brands, title) {
   const textLower = searchText.toLowerCase();
+  const titleLower = title.toLowerCase();
   const matched   = [];
 
   for (const brand of brands) {
@@ -93,8 +94,7 @@ function matchBrands(searchText, brands) {
       const re = new RegExp(`(?<![a-z0-9])${escaped}(?![a-z0-9])`, 'i');
 
       if (re.test(textLower)) {
-        // Apply exclusion list: skip if term is in exclusion list AND not in title
-        const titleLower = searchText.split(' ').slice(0, 20).join(' ').toLowerCase();
+        // Apply exclusion list: skip if term is in exclusion list AND not in the actual title
         if (EXCLUSION_LIST.includes(termLower) && !re.test(titleLower)) {
           continue;
         }
@@ -154,7 +154,7 @@ async function main() {
 
   for (const article of articles) {
     const searchText   = buildSearchText(article.title, article.body);
-    const allSlugs     = matchBrands(searchText, brands);
+    const allSlugs     = matchBrands(searchText, brands, article.title);
     const primarySlug  = pickPrimaryBrand(article.title, allSlugs, brands);
 
     if (!primarySlug) {
