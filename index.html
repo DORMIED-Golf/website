@@ -437,18 +437,41 @@
   <script>
     document.getElementById('footer-year').textContent = new Date().getFullYear();
   </script>
-  <script defer src="js/utils.min.js?v=20260318"></script>
-  <script defer src="js/data-home.js?v=20260518"></script>
-  <script defer src="js/scorecard-data.min.js?v=20260611"></script>
-  <script defer src="js/take-preview.min.js?v=20260330"></script>
-  <script defer src="js/explanations.min.js?v=20260318"></script>
-  <script defer src="js/witb-leaders.js?v=20260601"></script>
-  <script defer src="js/home.min.js?v=20260601"></script>
-  <script defer src="js/scorecard-home.min.js?v=20260408"></script>
-  <script defer src="js/feed.min.js?v=20260606a"></script>
-  <script defer src="js/analytics.min.js?v=20260320a"></script>
-  <script defer src="js/signup.min.js?v=20260324d"></script>
-  <script defer src="js/search.min.js?v=20260529"></script>
+  <!-- First-party JS loaded after the load event (async=false preserves order +
+       dependencies) so it does not contend with the LCP paint on mobile.
+       Above-the-fold content is prerendered; these hydrate below-fold/interactive
+       sections. Capped fallback timer in case load is delayed by images. -->
+  <script>
+  (function(){
+    var scripts = [
+      'js/utils.min.js?v=20260318',
+      'js/data-home.js?v=20260518',
+      'js/scorecard-data.min.js?v=20260611',
+      'js/take-preview.min.js?v=20260330',
+      'js/explanations.min.js?v=20260318',
+      'js/witb-leaders.js?v=20260601',
+      'js/home.min.js?v=20260601',
+      'js/scorecard-home.min.js?v=20260408',
+      'js/feed.min.js?v=20260606a',
+      'js/analytics.min.js?v=20260320a',
+      'js/signup.min.js?v=20260324d',
+      'js/search.min.js?v=20260529'
+    ];
+    var started = false;
+    function start(){
+      if (started) return; started = true;
+      for (var i = 0; i < scripts.length; i++) {
+        var s = document.createElement('script');
+        s.src = scripts[i];
+        s.async = false; // execute in array order, download in parallel
+        document.body.appendChild(s);
+      }
+    }
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start);
+    setTimeout(start, 4000); // fallback cap if load is delayed by images
+  })();
+  </script>
 
 
   <!-- AD_SCRIPT
