@@ -130,16 +130,100 @@ function renderArticleCard(article, dormiedData) {
        + '</article>';
 }
 
+/* ── Feed page card (full card with excerpt — homepage LATEST hero) ──────────
+   Mirrors feed.js renderFeedPageCard(article, allBrands, isLCP) exactly so the
+   baked hero matches the runtime render and does not shift when feed.js
+   refreshes it. */
+function renderFeedPageCard(article, dormiedData, isLCP) {
+  var thumb = '';
+  if (article.imageUrl) {
+    var imgAttrs = isLCP
+      ? 'loading="eager" fetchpriority="high"'
+      : 'loading="lazy"';
+    thumb = '<img class="feed-card-thumb feed-card-thumb--lg"'
+          + ' src="'    + escHtml(vitUrl(article.imageUrl,  800)) + '"'
+          + ' srcset="' + escHtml(vitUrl(article.imageUrl,  400)) + ' 400w,'
+                        + escHtml(vitUrl(article.imageUrl,  800)) + ' 800w,'
+                        + escHtml(vitUrl(article.imageUrl, 1200)) + ' 1200w"'
+          + ' sizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw"'
+          + ' width="600" height="375" ' + imgAttrs + ' alt="" onerror="this.remove()">';
+  }
+
+  var excerpt = '';
+  if (article.description) {
+    var text = article.description.trim();
+    if (text.length > 180) text = text.slice(0, 180).replace(/\s\S+$/, '') + '…';
+    excerpt = '<p class="feed-card-excerpt">' + escHtml(text) + '</p>';
+  }
+
+  var tags = '';
+  if (article.brandIds && article.brandIds.length) {
+    var MAX_CHIPS = 3;
+    var visibleIds    = article.brandIds.slice(0, MAX_CHIPS);
+    var overflowCount = Math.max(0, article.brandIds.length - MAX_CHIPS);
+    var chips = visibleIds.map(function (bid) {
+      var bname = brandNameFromData(dormiedData, bid);
+      if (!bname) return '';
+      var change  = getBrandChange(dormiedData, bid);
+      var cls     = 'feed-brand-tag' + (change ? ' ' + change.cls : '');
+      var pctHtml = change
+        ? ' <span class="feed-tag-pct">' + escHtml(change.pct) + '</span>'
+        : '';
+      return '<a href="/brands/' + escHtml(bid) + '/" class="' + cls + '">'
+           + escHtml(bname) + pctHtml + '</a>';
+    }).filter(Boolean).join('');
+    var overflowHtml = overflowCount > 0
+      ? '<span class="feed-brand-tag-overflow">+' + overflowCount + ' more</span>'
+      : '';
+    if (chips) tags = '<div class="feed-card-tags">' + chips + overflowHtml + '</div>';
+  }
+
+  var byline = 'By ' + escHtml(article.author || 'Travis');
+
+  return '<article class="feed-card feed-card--full feed-card--dormied">'
+       + thumb
+       + '<div class="feed-card-body">'
+       +   '<div class="feed-card-meta">'
+       +     '<span class="feed-time">' + escHtml(timeAgo(article.pubDate)) + '</span>'
+       +   '</div>'
+       +   '<a href="' + escHtml(article.url) + '" class="feed-card-title feed-card-title--lg"'
+       +      ' data-track-title="'   + escHtml(article.title) + '"'
+       +      ' data-track-source="DORMIED"'
+       +      ' data-track-url="'     + escHtml(article.url) + '"'
+       +      ' data-track-brands="'  + escHtml(JSON.stringify(article.brandIds || [])) + '"'
+       +      ' data-track-image="'   + escHtml(article.imageUrl  || '') + '"'
+       +      ' data-track-pubdate="' + escHtml(article.pubDate   || '') + '">'
+       +     escHtml(article.title)
+       +   '</a>'
+       +   '<p class="feed-card-byline">' + byline + '</p>'
+       +   excerpt
+       +   tags
+       + '</div>'
+       + '</article>';
+}
+
+/* Homepage "Latest from DORMIED" — hero (LCP) + up to 5 supporting cards.
+   Mirrors feed.js renderLatestFromDormied so the baked markup equals the
+   runtime render (no layout shift when feed.js refreshes). */
+function renderHomeLatestHtml(articles, dormiedData) {
+  if (!articles || !articles.length) return '';
+  var hero       = articles[0];
+  var supporting = articles.slice(1, 6);
+  return renderFeedPageCard(hero, dormiedData, true)
+       + supporting.map(function (a) { return renderArticleCard(a, dormiedData); }).join('');
+}
+
 function normalizeDormiedRow(a) {
   return {
-    id:       a.id,
-    title:    a.title,
-    url:      '/news/' + a.slug + '/',
-    author:   a.author || authorFromCategory(a.category),
-    pubDate:  a.published_at,
-    imageUrl: a.image_url || null,
-    brandIds: [a.brand_slug].concat(a.secondary_brand_slugs || []).filter(Boolean),
-    slug:     a.slug,
+    id:          a.id,
+    title:       a.title,
+    url:         '/news/' + a.slug + '/',
+    author:      a.author || authorFromCategory(a.category),
+    pubDate:     a.published_at,
+    description: a.meta_description || '',
+    imageUrl:    a.image_url || null,
+    brandIds:    [a.brand_slug].concat(a.secondary_brand_slugs || []).filter(Boolean),
+    slug:        a.slug,
   };
 }
 
@@ -211,4 +295,4 @@ function renderLatestFeedHtml(articles, dormiedData) {
   return articles.map(function (a) { return renderArticleCard(a, dormiedData); }).join('');
 }
 
-module.exports = { fetchLatestArticles, fetchTopStoriesArticles, renderLatestFeedHtml };
+module.exports = { fetchLatestArticles, fetchTopStoriesArticles, renderLatestFeedHtml, renderFeedPageCard, renderHomeLatestHtml };

@@ -31,6 +31,7 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') }
 
 const fs   = require('fs');
 const path = require('path');
+const feedBake = require('./feed-bake');
 
 const SITE_ROOT  = path.resolve(__dirname, '..');
 const INDEX_HTML = path.join(SITE_ROOT, 'index.html');
@@ -77,48 +78,6 @@ function flagEmoji(countryCode) {
   const c2   = countryCode.charCodeAt(1) - 65;
   if (c1 < 0 || c1 > 25 || c2 < 0 || c2 > 25) return '';
   return String.fromCodePoint(base + c1) + String.fromCodePoint(base + c2);
-}
-
-// ── Fetch latest published article from Supabase ──────────────────────────────
-
-async function fetchLatestArticle() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_KEY;
-  if (!url || !key) {
-    console.warn('[prerender] SUPABASE_URL / SUPABASE_SERVICE_KEY not set — hero/preload sections unchanged');
-    return null;
-  }
-  const endpoint = url + '/rest/v1/dormied_articles'
-    + '?select=slug,title,image_url,published_at,author'
-    + '&status=eq.published'
-    + '&order=published_at.desc'
-    + '&limit=1';
-  let res;
-  try {
-    res = await fetch(endpoint, {
-      headers: { apikey: key, Authorization: 'Bearer ' + key },
-    });
-  } catch (err) {
-    console.warn('[prerender] Supabase fetch failed:', err.message, '— hero/preload sections unchanged');
-    return null;
-  }
-  if (!res.ok) {
-    console.warn('[prerender] Supabase error ' + res.status + ' — hero/preload sections unchanged');
-    return null;
-  }
-  const rows = await res.json();
-  if (!rows || !rows.length) {
-    console.warn('[prerender] No published articles found — hero/preload sections unchanged');
-    return null;
-  }
-  const r = rows[0];
-  return {
-    slug:     r.slug     || '',
-    title:    r.title    || '',
-    imageUrl: r.image_url || '',
-    pubDate:  (r.published_at || '').slice(0, 10),
-    author:   r.author   || 'Travis',
-  };
 }
 
 // ── Parse JS data files ────────────────────────────────────────────────────────
@@ -284,21 +243,6 @@ function generatePreloadLink(h) {
        + '    imagesizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw">';
 }
 
-/** Hero article card — the LCP element baked into #home-dormied-list. */
-function generateHeroArticle(h) {
-  const imgSrc    = esc(vitUrl(h.imageUrl, 800));
-  const imgSrcset = [400, 800, 1200]
-    .map(w => esc(vitUrl(h.imageUrl, w)) + ' ' + w + 'w')
-    .join(',');
-  return '<article class="feed-card feed-card--full feed-card--dormied">'
-       + `<img class="feed-card-thumb feed-card-thumb--lg" src="${imgSrc}" srcset="${imgSrcset}" sizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw" width="600" height="375" loading="eager" fetchpriority="high" alt="">`
-       + '<div class="feed-card-body">'
-       + `<div class="feed-card-meta"><span class="feed-time">${esc(h.pubDate)}</span></div>`
-       + `<a href="/news/${esc(h.slug)}/" class="feed-card-title feed-card-title--lg">${esc(h.title)}</a>`
-       + `<p class="feed-card-byline">By ${esc(h.author)}</p>`
-       + '</div></article>';
-}
-
 // ── Idempotent marker injection ───────────────────────────────────────────────
 
 function escapeRegExp(s) {
@@ -318,9 +262,6 @@ function injectBetweenMarkers(html, key, content) {
 // ── Main ───────────────────────────────────────────────────────────────────────
 
 async function run() {
-  // Fetch latest published article (requires Supabase env vars)
-  const article = await fetchLatestArticle();
-
   const data    = loadDataHomeJs();
   const leaders = loadWitbLeadersJs();
   const ranked  = computeHomeRankings(data);
@@ -330,11 +271,29 @@ async function run() {
     ...generateWitbLeaderSections(leaders),
   };
 
-  // Hero and preload only update when Supabase fetch succeeds
-  if (article) {
-    sections['dormied-latest'] = generateHeroArticle(article);
-    sections['hero-preload']   = generatePreloadLink(article);
-    console.log('[prerender] Hero article: "' + article.title.slice(0, 60) + '" (' + article.pubDate + ')');
+  // LATEST FROM DORMIED: bake the full hero + 5 supporting cards so the painted
+  // markup equals feed.js renderLatestFromDormied. This removes the 1->6 card
+  // expansion on hydration that caused desktop CLS. Only updates when Supabase
+  // env is present; otherwise the existing baked section is left unchanged.
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  if (url && key) {
+    try {
+      const { createClient } = require('@supabase/supabase-js');
+      const supabase = createClient(url, key);
+      const articles = await feedBake.fetchLatestArticles(supabase, 6, null);
+      if (articles.length) {
+        sections['dormied-latest'] = feedBake.renderHomeLatestHtml(articles, data);
+        sections['hero-preload']   = generatePreloadLink(articles[0]);
+        console.log('[prerender] LATEST baked: ' + articles.length + ' cards, hero "' + articles[0].title.slice(0, 60) + '"');
+      } else {
+        console.warn('[prerender] No published articles — hero/preload sections unchanged');
+      }
+    } catch (e) {
+      console.warn('[prerender] LATEST bake failed:', e.message, '— hero/preload sections unchanged');
+    }
+  } else {
+    console.warn('[prerender] SUPABASE_URL / SUPABASE_SERVICE_KEY not set — hero/preload sections unchanged');
   }
 
   let html = fs.readFileSync(INDEX_HTML, 'utf8');
@@ -349,7 +308,6 @@ async function run() {
     + ranked.length + ' brands ranked, top ' + playerCount + ' players, '
     + (leaders.topDrivers || []).length + ' drivers, '
     + (leaders.topPutters || []).length + ' putters'
-    + (article ? '' : ' (hero unchanged)')
   );
 }
 

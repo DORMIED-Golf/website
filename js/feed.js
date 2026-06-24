@@ -297,6 +297,14 @@
     var section = document.getElementById('home-dormied-section');
     if (!listEl) return;
 
+    // If the prerender already baked article cards here, leave them in place.
+    // Re-rendering identical content on hydration triggered a layout shift
+    // (desktop CLS). The prerender refreshes this section on every deploy.
+    if (listEl.querySelector('article')) {
+      if (section) section.hidden = false;
+      return;
+    }
+
     fetchDormiedArticles(null, 6, function (articles) {
       if (!articles.length) {
         if (section) section.hidden = true;
