@@ -1243,7 +1243,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   </style>
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
-  <script defer src="/js/feed.min.js?v=20260522"></script>
+  <script defer src="/js/feed.min.js?v=20260625"></script>
   <script defer src="/js/search.min.js?v=20260529"></script>
   <script>
   // Player page view tracking — fire-and-forget, mirrors brand_page_views
