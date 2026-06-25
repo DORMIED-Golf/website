@@ -5325,6 +5325,38 @@ details[open] .faq-question::after { content: '−'; }
   color: var(--green);
   border-bottom-color: var(--green);
 }
+/* Feature article: section subheadings, inline figures, captions, divider */
+.da-article-body .sc-main-heading {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  margin: 36px 0 16px;
+}
+.da-figure { margin: 28px 0; }
+.da-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.da-figcaption {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  font-style: italic;
+}
+.da-figcaption a { font-style: normal; }
+.da-article-hr {
+  border: none;
+  border-top: 1px solid var(--border-lite);
+  margin: 36px 0;
+}
 
 /* ── Brand card ──────────────────────────────────────────────────────────── */
 .da-brand-card {
