@@ -438,6 +438,27 @@
     var el = document.getElementById(targetId);
     if (!el) return;
 
+    function ensureSeeAll() {
+      var seeAllId = targetId + '-see-all';
+      if (!document.getElementById(seeAllId)) {
+        var div = document.createElement('div');
+        div.id        = seeAllId;
+        div.className = 'bp-latest-see-all';
+        div.innerHTML = '<a href="/news/">See All News</a>';
+        el.parentNode.appendChild(div);
+      }
+    }
+
+    // If the sidebar is already prerendered with article cards AND this page did
+    // not load the full DORMIED_DATA, keep the baked cards. A runtime re-render
+    // without DORMIED_DATA downgrades the brand chips (names collapse to slugs
+    // and the % change is dropped). Pages that do load DORMIED_DATA (brand /
+    // WITB) fall through and refresh fresh + correct.
+    if (el.querySelector('article') && !(window.DORMIED_DATA && window.DORMIED_DATA.brands)) {
+      ensureSeeAll();
+      return;
+    }
+
     // Fetch a few extra so we can filter out the excluded article
     var fetchLimit = excludeSlug ? LATEST_LIMIT + 3 : LATEST_LIMIT;
 
@@ -460,14 +481,7 @@
         return renderArticleCard(a, true, allBrands);
       }).join('');
 
-      var seeAllId = targetId + '-see-all';
-      if (!document.getElementById(seeAllId)) {
-        var div = document.createElement('div');
-        div.id        = seeAllId;
-        div.className = 'bp-latest-see-all';
-        div.innerHTML = '<a href="/news/">See All News</a>';
-        el.parentNode.appendChild(div);
-      }
+      ensureSeeAll();
     });
   }
 
