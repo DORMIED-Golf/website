@@ -5,7 +5,7 @@
   <!-- ── Static pages ── -->
   <url>
     <loc>https://dormied.com/</loc>
-    <lastmod>2026-06-24</lastmod>
+    <lastmod>2026-06-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -2098,7 +2098,37 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (328) ── -->
+  <!-- ── News articles (331) ── -->
+  <url>
+    <loc>https://dormied.com/news/the-quiet-luxury-pitch-hits-frisco-williams-athletic-club-bets-on-the-2026-06-24/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-quiet-luxury-pitch-hits-frisco-williams-athletic-club-bets-on-the-2026-06-24-hero.jpg</image:loc>
+      <image:title>The Quiet Luxury Pitch Hits Frisco: Williams Athletic Club Bets on the Underserved Half of the Pro Shop</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/superstrokes-tie-dye-putter-grip-is-a-holiday-drop-calendar-in-disguise-2026-06-24/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/superstrokes-tie-dye-putter-grip-is-a-holiday-drop-calendar-in-disguise-2026-06-24-hero.jpg</image:loc>
+      <image:title>SuperStroke&apos;s Tie Dye Putter Grip Is a Holiday Drop Calendar in Disguise</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/golf-pride-times-a-patriotic-putter-grip-to-americas-250th-the-read-is-2026-06-24/</loc>
+    <lastmod>2026-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/golf-pride-times-a-patriotic-putter-grip-to-americas-250th-the-read-is-2026-06-24-hero.jpg</image:loc>
+      <image:title>Golf Pride Times a Patriotic Putter Grip to America&apos;s 250th. The Read is Bigger Than the Colorway.</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/confidential-sources/</loc>
     <lastmod>2026-06-25</lastmod>
