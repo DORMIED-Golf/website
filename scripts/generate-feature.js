@@ -129,7 +129,30 @@ function formatDate(iso) {
 function readTime(words) { return Math.max(1, Math.round(words / 200)) + ' min read'; }
 
 /** Inline Markdown: links [text](url), **strong**, *emphasis*. Escapes the rest. */
-function inlineMd(text) {
+function autoLinkBrands(html, ctx) {
+  if (!ctx) return html;
+  for (const { name, slug } of ctx.brands) {
+    if (ctx.linked.has(slug)) continue;
+    const escapedName = escHtml(name);
+    const pat = escapedName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`(?<![\\w/"\\-])${pat}(?![\\w"\\-])`);
+    if (re.test(html)) {
+      html = html.replace(re, `<a href="/brands/${slug}/" class="da-brand-link">${escapedName}</a>`);
+      ctx.linked.add(slug);
+    }
+  }
+  return html;
+}
+
+function buildBrandCtx(dormiedData) {
+  const brands = ((dormiedData && dormiedData.brands) || [])
+    .filter(b => b.id && b.name)
+    .map(b => ({ name: b.name, slug: b.id }))
+    .sort((a, b) => b.name.length - a.name.length);
+  return { brands, linked: new Set() };
+}
+
+function inlineMd(text, brandCtx) {
   const links = [];
   let t = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m, anchor, url) => {
     links.push({ anchor, url });
@@ -138,6 +161,7 @@ function inlineMd(text) {
   t = escHtml(t);
   t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   t = t.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  if (brandCtx) t = autoLinkBrands(t, brandCtx);
   t = t.replace(/L(\d+)/g, (m, i) => {
     const { anchor, url } = links[+i];
     const external = !/^https?:\/\/(www\.)?dormied\.com(\/|$)/i.test(url.trim());
@@ -188,8 +212,9 @@ function tableHtml(block) {
 }
 
 // ── Markdown parse ───────────────────────────────────────────────────────────────
-function parseMarkdown(md, F) {
+function parseMarkdown(md, F, dormiedData) {
   const blocks = md.replace(/\r\n/g, '\n').split(/\n\n+/).map(b => b.trim()).filter(Boolean);
+  const brandCtx = buildBrandCtx(dormiedData);  // auto-links brand names in prose
   const out = [];
   const faqs = [];
   let lead = '';
@@ -252,13 +277,13 @@ function parseMarkdown(md, F) {
       const aRaw = nl === -1 ? '' : b.slice(nl + 1).trim();
       words += b.split(/\s+/).length;
       faqs.push({ q: qRaw, a: aRaw });
-      out.push(`<div class="da-faq-item"><h3 class="da-faq-q">${inlineMd(qRaw)}</h3><p class="da-faq-a">${inlineMd(aRaw)}</p></div>`);
+      out.push(`<div class="da-faq-item"><h3 class="da-faq-q">${inlineMd(qRaw)}</h3><p class="da-faq-a">${inlineMd(aRaw, brandCtx)}</p></div>`);
       continue;
     }
 
     // Paragraph
     words += b.replace(/\[[^\]]*\]\([^)]*\)/g, m => m.replace(/\([^)]*\)/, '')).split(/\s+/).length;
-    out.push(`<p>${inlineMd(b)}</p>`);
+    out.push(`<p>${inlineMd(b, brandCtx)}</p>`);
   }
   flushSection();
   return { lead, bodyHtml: out.join('\n              '), wordCount: words, faqs };
@@ -540,7 +565,8 @@ async function main() {
   F.outDir = path.join(ROOT, 'news', F.slug);
 
   const md = fs.readFileSync(F.mdPath, 'utf8');
-  const parsed = parseMarkdown(md, F);
+  const dormiedData = loadDormiedData();   // for brand auto-linking + sidebar chips
+  const parsed = parseMarkdown(md, F, dormiedData);
 
   // LATEST sidebar bake (excludes this slug)
   let dormiedLatestHtml = null;
@@ -548,7 +574,6 @@ async function main() {
   if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
     try {
       const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-      const dormiedData = loadDormiedData();
       const latest = await feedBake.fetchLatestArticles(supabase, 10, F.slug);
       if (latest.length) dormiedLatestHtml = feedBake.renderLatestFeedHtml(latest, dormiedData);
     } catch (e) { console.warn('[feature] LATEST sidebar bake failed:', e.message); }
