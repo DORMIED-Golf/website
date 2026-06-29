@@ -1152,9 +1152,10 @@ async function main() {
     let regen = 0; let skipped = 0;
     for (const row of allRows || []) {
       if (!row.slug || !row.body) { skipped++; continue; }
-      // Brandless feature articles (brand_slug='') are owned by generate-feature.js,
-      // not the brand-article template. Skip so we never clobber their HTML.
-      if (!row.brand_slug) { skipped++; continue; }
+      // Feature articles (category 'Feature') are owned by generate-feature.js,
+      // not the brand-article template, whether or not they tag a brand. Skip so
+      // we never clobber their HTML.
+      if (row.category === 'Feature' || !row.brand_slug) { skipped++; continue; }
 
       const bSlug  = row.brand_slug || '';
       const brand  = regenBrandsMap.get(bSlug) || {};

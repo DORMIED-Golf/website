@@ -5357,6 +5357,26 @@ details[open] .faq-question::after { content: '−'; }
   border-top: 1px solid var(--border-lite);
   margin: 36px 0;
 }
+.da-article-body .sc-sub-heading {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text);
+  margin: 28px 0 12px;
+}
+.da-article-body .da-bio { color: var(--text-dim); font-size: 0.9rem; margin: 0 0 24px; }
+.da-article-body .da-last-updated { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.66rem; margin: 6px 0 0; }
+/* Two-up image row + gallery grid (stack on mobile) */
+.da-figure-row { display: flex; flex-wrap: wrap; gap: 16px; margin: 28px 0; }
+.da-figure-row .da-figure { flex: 1 1 0; min-width: 0; margin: 0; }
+.da-figure-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 28px 0; }
+.da-figure-grid .da-figure { margin: 0; }
+@media (max-width: 560px) { .da-figure-row { flex-direction: column; } }
+/* FAQ */
+.da-faq-item { margin: 0 0 22px; }
+.da-faq-q { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; font-style: italic; color: var(--text); margin: 0 0 6px; }
+.da-faq-a { margin: 0; }
 
 /* ── Brand card ──────────────────────────────────────────────────────────── */
 .da-brand-card {
