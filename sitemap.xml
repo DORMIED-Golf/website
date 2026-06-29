@@ -5,7 +5,7 @@
   <!-- ── Static pages ── -->
   <url>
     <loc>https://dormied.com/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-06-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -2104,7 +2104,107 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (334) ── -->
+  <!-- ── News articles (344) ── -->
+  <url>
+    <loc>https://dormied.com/news/vessels-player-carbon-air-is-the-brand-quietly-answering-its-biggest-2026-06-29/</loc>
+    <lastmod>2026-06-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/vessels-player-carbon-air-is-the-brand-quietly-answering-its-biggest-2026-06-29-hero.jpg</image:loc>
+      <image:title>Vessel&apos;s Player Carbon Air Is the Brand Quietly Answering Its Biggest Criticism</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-quiet-case-against-the-rangefinder-has-been-building-for-a-decade-2026-06-29/</loc>
+    <lastmod>2026-06-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-quiet-case-against-the-rangefinder-has-been-building-for-a-decade-2026-06-29-hero.jpg</image:loc>
+      <image:title>The Quiet Case Against the Rangefinder Has Been Building for a Decade</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-youtube-golf-power-rankings-are-quietly-becoming-golfs-most-honest-2026-06-23/</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-youtube-golf-power-rankings-are-quietly-becoming-golfs-most-honest-2026-06-23-hero.jpg</image:loc>
+      <image:title>The YouTube Golf Power Rankings Are Quietly Becoming Golf&apos;s Most Honest Leaderboard</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-belfry-just-made-indoor-golf-tilt-trackman-is-along-for-the-ride-2026-06-25/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-belfry-just-made-indoor-golf-tilt-trackman-is-along-for-the-ride-2026-06-25-hero.jpg</image:loc>
+      <image:title>The Belfry Just Made Indoor Golf Tilt. Trackman Is Along for the Ride.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/taylormade-has-won-all-three-majors-titleist-has-won-more-tournaments-both-2026-06-29/</loc>
+    <lastmod>2026-06-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/taylormade-has-won-all-three-majors-titleist-has-won-more-tournaments-both-2026-06-29-hero.jpg</image:loc>
+      <image:title>TaylorMade Has Won All Three Majors. Titleist Has Won More Tournaments. Both Things Matter.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/taylormade-x-tag-heuer-a-2550-smart-watch-and-a-putter-that-doubles-as-a-2026-06-26/</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/taylormade-x-tag-heuer-a-2550-smart-watch-and-a-putter-that-doubles-as-a-2026-06-26-hero.jpg</image:loc>
+      <image:title>TaylorMade x TAG Heuer: A $2,550 Smart Watch and a Putter That Doubles as a Marketing Asset</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/sun-mountain-signs-the-montana-kid-who-won-the-aussie-open-ranked-954th-2026-06-25/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/sun-mountain-signs-the-montana-kid-who-won-the-aussie-open-ranked-954th-2026-06-25-hero.jpg</image:loc>
+      <image:title>Sun Mountain Signs the Montana Kid Who Won the Aussie Open Ranked 954th</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/garmins-z30-hits-30-off-as-the-rangefinder-category-starts-eating-itself-2026-06-26/</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/garmins-z30-hits-30-off-as-the-rangefinder-category-starts-eating-itself-2026-06-26-hero.jpg</image:loc>
+      <image:title>Garmin&apos;s Z30 Hits 30% Off as the Rangefinder Category Starts Eating Itself</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/ecco-quietly-builds-a-danish-pipeline-with-smilla-snderby-signing-2026-06-25/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/ecco-quietly-builds-a-danish-pipeline-with-smilla-snderby-signing-2026-06-25-hero.jpg</image:loc>
+      <image:title>Ecco Quietly Builds a Danish Pipeline With Smilla Sønderby Signing</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/cobras-3d-printed-mb-is-the-most-interesting-iron-nobodys-talking-about-2026-06-25/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/cobras-3d-printed-mb-is-the-most-interesting-iron-nobodys-talking-about-2026-06-25-hero.png</image:loc>
+      <image:title>Cobra&apos;s 3D-Printed MB Is the Most Interesting Iron Nobody&apos;s Talking About</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/vice-golf-balls/</loc>
     <lastmod>2026-06-29</lastmod>
