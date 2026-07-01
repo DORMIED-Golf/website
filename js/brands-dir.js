@@ -269,26 +269,7 @@
     if (csSubCat) { csSubCat.refresh(); } else { csSubCat = buildCustomSelect(sel); }
   }
 
-  /* ── Ad slot HTML ───────────────────────────────────────────────────────── */
-  /* AD_UNIT:brands-in-grid — uncomment when AdSense approved
-  function adSlotHtml() {
-    return '<div class="brands-ad-row" aria-hidden="true">' +
-             '<div class="ad-in-table desktop-ad">' +
-               '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263" crossorigin="anonymous"><\/script>' +
-               '<!-- Brand Pages - Body - 728x90 -->' +
-               '<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-5259693727609263" data-ad-slot="3187856648"><\/ins>' +
-               '<script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>' +
-             '</div>' +
-             '<div class="ad-in-table mobile-ad">' +
-               '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263" crossorigin="anonymous"><\/script>' +
-               '<!-- Brand Pages - Body - 300x250 -->' +
-               '<ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px" data-ad-client="ca-pub-5259693727609263" data-ad-slot="5011106608"><\/ins>' +
-               '<script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>' +
-             '</div>' +
-           '</div>';
-  }
-  */
-  function adSlotHtml() { return ''; } // AD_PLACEHOLDER: re-enable above when AdSense approved
+  function adSlotHtml() { return ''; }
 
   /* ── Render a single brand card ─────────────────────────────────────────── */
   function brandCardHtml(b) {

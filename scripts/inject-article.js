@@ -407,7 +407,6 @@ function generateArticleHtml(opts) {
   <meta name="twitter:description" content="${escHtml(meta_description)}">
   <meta name="twitter:image" content="${escHtml(ogImage)}">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
-  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
   <link rel="stylesheet" href="/css/fonts.css">
   <link rel="stylesheet" href="/css/styles.css?v=20260409">
   <script type="application/ld+json">
@@ -434,16 +433,6 @@ function generateArticleHtml(opts) {
 </head>
 <body>
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N4Q8J6L3" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <div class="ad-top-zone" aria-hidden="true">
-    <div class="ad-leaderboard tablet-ad">
-      <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px"
-           data-ad-client="ca-pub-5259693727609263" data-ad-slot="2855716557"></ins>
-    </div>
-    <div class="ad-mobile-banner mobile-ad">
-      <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px"
-           data-ad-client="ca-pub-5259693727609263" data-ad-slot="6216377061"></ins>
-    </div>
-  </div>
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="site-logo" aria-label="DORMIED home">
@@ -507,12 +496,6 @@ function generateArticleHtml(opts) {
             </section>
           </div>
           <aside class="sidebar-ad-col">
-            <div class="sidebar-sticky-zone" aria-hidden="true">
-              <div class="ad-skyscraper">
-                <ins class="adsbygoogle" style="display:inline-block;width:160px;height:600px"
-                     data-ad-client="ca-pub-5259693727609263" data-ad-slot="6935529969"></ins>
-              </div>
-            </div>
           </aside>
         </div>
       </div>
@@ -570,18 +553,6 @@ function generateArticleHtml(opts) {
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js"></script>
   <script src="/js/da-article.min.js?v=20260522"></script>
-  <script>
-  window.addEventListener('load',function(){
-    var s=document.createElement('script');
-    s.async=true;s.crossOrigin='anonymous';
-    s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263';
-    document.head.appendChild(s);
-    s.onload=function(){
-      var ads=document.querySelectorAll('.adsbygoogle');
-      for(var i=0;i<ads.length;i++){(adsbygoogle=window.adsbygoogle||[]).push({});}
-    };
-  });
-  </script>
 </body>
 </html>`;
 }

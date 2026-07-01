@@ -219,40 +219,22 @@ The country filter tabs on the Index page and brand pages are generated dynamica
 
 ---
 
-## How to Update Ad Tags
+## Ads
 
-When you have real ad tags from Google AdSense or another network, replace the placeholder divs in the JavaScript files.
+Ads are served by **Mediavine Journey**, which requires ad-network exclusivity —
+no other programmatic ad code (Google AdSense, etc.) may run on the site.
 
-### In-table ads (Rankings page)
+The Journey tag is loaded in the `<head>` of every page (and in every page
+generator) alongside the Grow.me pixel:
 
-Open `js/app.js`. Search for `ad-placeholder`. You'll find a function that renders ad HTML every 30 rows. Replace the placeholder div with your real ad tag:
-
-```js
-// Find this:
-<div class="ad-placeholder" data-ad-size="728x90">...</div>
-
-// Replace with your real tag, e.g.:
-<ins class="adsbygoogle" ...></ins>
-```
-
-### In-directory ads (Brand directory)
-
-Same process in `js/brands-dir.js` — ads appear every 24 brand cards.
-
-### In-feed ads (News page)
-
-Same process in `js/feed-page.js` — ads appear every 10 articles.
-
-### Top banner ads (all pages)
-
-In each HTML file, find the `.ad-billboard` or `.ad-mobile-banner` div and replace the placeholder with your real tag.
-
-### AdSense auto-ads
-
-If you're using AdSense auto-ads, you only need to ensure the AdSense script is in the `<head>` of every page. It's already there:
 ```html
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263">
+<script type="text/javascript" async="async" data-noptimize="1" data-cfasync="false"
+        src="//scripts.scriptwrapper.com/tags/06995677-1354-493f-9a2b-7ccd99d5a7ad.js"></script>
 ```
+
+Journey places ads automatically, so there are no manual ad-slot divs to maintain.
+Do not add Google AdSense or any other programmatic ad-network code — doing so
+violates the Journey exclusivity requirement.
 
 ---
 

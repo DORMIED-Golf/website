@@ -6215,24 +6215,6 @@ details[open] .faq-question::after { content: '−'; }
   font-size: 0.75rem;
 }
 
-/* ── Ad units disabled (pending AdSense approval) ──────────────────────────────
-   All ad wrappers and ins elements are hidden until approval is granted.
-   To re-enable: remove this block and uncomment AD_UNIT / AD_SCRIPT markers
-   in generate-article.js, generate-brand-page.js, app.js, feed-page.js,
-   brands-dir.js, and the static template HTML files.                         */
-.adsbygoogle,
-.ad-top-zone,
-.ad-leaderboard,
-.ad-billboard,
-.ad-mobile-banner,
-.ad-skyscraper,
-.ad-in-table,
-.feed-ad-slot,
-.brands-ad-row,
-.bp-mid-ad {
-  display: none !important;
-}
-
 /* ── Mobile nav (hamburger) ─────────────────────────────────────────────────
    Hamburger hidden at desktop (>768px). At <=768px: nav links move into a
    slide-down panel; hamburger button appears; search stays in top bar.      */

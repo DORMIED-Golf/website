@@ -285,26 +285,7 @@
     }
   }
 
-  /* ── In-feed ad slot HTML ────────────────────────────────────────────────── */
-  /* AD_UNIT:in-feed — uncomment when AdSense approved
-  function adSlotHtml() {
-    return '<div class="feed-ad-slot" aria-hidden="true">' +
-             '<div class="ad-in-table desktop-ad">' +
-               '<ins class="adsbygoogle"' +
-               ' style="display:inline-block;width:728px;height:90px"' +
-               ' data-ad-client="ca-pub-5259693727609263"' +
-               ' data-ad-slot="4704685543"></ins>' +
-             '</div>' +
-             '<div class="ad-in-table mobile-ad">' +
-               '<ins class="adsbygoogle"' +
-               ' style="display:inline-block;width:300px;height:250px"' +
-               ' data-ad-client="ca-pub-5259693727609263"' +
-               ' data-ad-slot="8108043234"></ins>' +
-             '</div>' +
-           '</div>';
-  }
-  */
-  function adSlotHtml() { return ''; } // AD_PLACEHOLDER: re-enable above when AdSense approved
+  function adSlotHtml() { return ''; }
 
   /* ── Render article list ────────────────────────────────────────────────── */
   function renderFeedList(articles) {
@@ -329,11 +310,6 @@
       html += renderer(a, allBrands);
     });
     el.innerHTML = html;
-
-    // AD_PUSH: re-enable when AdSense approved
-    // el.querySelectorAll('.adsbygoogle').forEach(function () {
-    //   (window.adsbygoogle = window.adsbygoogle || []).push({});
-    // });
   }
 
   /* ── Render pagination controls ─────────────────────────────────────────── */

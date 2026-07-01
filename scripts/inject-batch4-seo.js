@@ -617,14 +617,6 @@ function generateArticleHtml(opts) {
           <!-- Sidebar: LATEST widget -->
           <aside class="sidebar-ad-col">
             <!-- AD_UNIT:sidebar
-            <div class="sidebar-sticky-zone" aria-hidden="true">
-              <div class="ad-skyscraper">
-                <ins class="adsbygoogle"
-                     style="display:inline-block;width:160px;height:600px"
-                     data-ad-client="ca-pub-5259693727609263"
-                     data-ad-slot="6935529969"></ins>
-              </div>
-            </div>
             -->
             <section class="home-stories-section latest-feed-section" aria-labelledby="article-latest-heading">
               <h2 class="latest-feed-heading" id="article-latest-heading">Latest</h2>
@@ -689,18 +681,6 @@ function generateArticleHtml(opts) {
   <script src="/js/feed.min.js?v=20260522"></script>
   <script src="/js/da-article.min.js?v=20260522"></script>
   <!-- AD_SCRIPT
-  <script>
-  window.addEventListener('load',function(){
-    var s=document.createElement('script');
-    s.async=true;s.crossOrigin='anonymous';
-    s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5259693727609263';
-    document.head.appendChild(s);
-    s.onload=function(){
-      var ads=document.querySelectorAll('.adsbygoogle');
-      for(var i=0;i<ads.length;i++){(adsbygoogle=window.adsbygoogle||[]).push({});}
-    };
-  });
-  </script>
   -->
 </body>
 </html>`;

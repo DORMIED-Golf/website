@@ -432,32 +432,7 @@
     return tr;
   }
 
-  /* AD_UNIT:scorecard-table — uncomment when AdSense approved
-  function createAdRow() {
-    const tr = document.createElement('tr');
-    tr.className = 'ad-row';
-    tr.setAttribute('aria-hidden', 'true');
-    tr.innerHTML = `
-      <td colspan="7">
-        <div class="ad-in-table desktop-ad">
-          <ins class="adsbygoogle"
-               style="display:inline-block;width:728px;height:90px"
-               data-ad-client="ca-pub-5259693727609263"
-               data-ad-slot="2308921645"></ins>
-        </div>
-        <div class="ad-in-table mobile-ad">
-          <ins class="adsbygoogle"
-               style="display:inline-block;width:300px;height:250px"
-               data-ad-client="ca-pub-5259693727609263"
-               data-ad-slot="9821280850"></ins>
-        </div>
-      </td>`;
-    // Do NOT push here — ins elements must be in the DOM first.
-    // renderTable() pushes after tbody.appendChild().
-    return tr;
-  }
-  */
-  function createAdRow() { return null; } // AD_PLACEHOLDER: re-enable above when AdSense approved
+  function createAdRow() { return null; }
 
   // ─── Table Renderer ────────────────────────────────────────────────────────
   function renderTable() {
@@ -481,18 +456,13 @@
     sorted.forEach(brand => {
       if (dataRowCount > 0 && dataRowCount % AD_EVERY_N_ROWS === 0) {
         const adRow = createAdRow();
-        if (adRow) fragment.appendChild(adRow); // AD_PLACEHOLDER: adRow is null until AdSense approved
+        if (adRow) fragment.appendChild(adRow);
       }
       fragment.appendChild(createBrandRow(brand));
       dataRowCount++;
     });
 
     tbody.appendChild(fragment);
-
-    // AD_PUSH: re-enable when AdSense approved
-    // tbody.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])').forEach(() => {
-    //   (window.adsbygoogle = window.adsbygoogle || []).push({});
-    // });
 
     // Update count
     const countEl = document.getElementById('results-count');

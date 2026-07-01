@@ -81,8 +81,7 @@ for (const issue of issues) {
   check('meta description non-empty', descText.length > 0, true);
   if (descText) descs.push({ slug: issue.slug, desc: descText });
 
-  // no fetch( loading content
-  // The adsbygoogle loader does not use fetch — we check for the pattern the old shell used
+  // no fetch( loading content (page content must be static, not client-fetched)
   const fetchCount = (html.match(/fetch\(/g) || []).length;
   check('no fetch( calls', fetchCount === 0, true);
 
