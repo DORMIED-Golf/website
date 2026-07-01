@@ -1024,7 +1024,7 @@ function generateArticleHtml(opts) {
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>
-  <script src="/js/feed.min.js?v=20260625"></script>
+  <script src="/js/feed.min.js?v=20260701"></script>
   <script src="/js/da-article.min.js?v=20260522"></script>
 
 </body>

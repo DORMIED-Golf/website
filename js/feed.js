@@ -40,6 +40,22 @@
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
+  /* ── Refresh baked timestamps on prerendered cards ─────────────────────────
+     Prerendered feed cards (e.g. home-dormied-list) keep their build-time
+     "Xm ago" text to avoid a hydration layout shift. Recompute just the
+     .feed-time text from the card's absolute data-track-pubdate so the times
+     stay live between prerender builds. Text-only update = no reflow. */
+  function refreshFeedTimes(root) {
+    var cards = (root || document).querySelectorAll('.feed-card');
+    for (var i = 0; i < cards.length; i++) {
+      var timeEl = cards[i].querySelector('.feed-time');
+      var pubEl  = cards[i].querySelector('[data-track-pubdate]');
+      if (!timeEl || !pubEl) continue;
+      var t = timeAgo(pubEl.getAttribute('data-track-pubdate'));
+      if (t) timeEl.textContent = t;
+    }
+  }
+
   /* ── HTML escape ───────────────────────────────────────────────────────── */
   function escHtml(str) {
     if (!str) return '';
@@ -302,6 +318,7 @@
     // (desktop CLS). The prerender refreshes this section on every deploy.
     if (listEl.querySelector('article')) {
       if (section) section.hidden = false;
+      refreshFeedTimes(listEl);
       return;
     }
 
@@ -627,6 +644,10 @@
       var slug = getCurrentBrandSlug();
       renderLatestBrand(slug, getBrandDisplayName(slug));
     }
+
+    // Catch any prerendered cards left in place (kept to avoid CLS) so their
+    // build-time "Xm ago" text reflects the real elapsed time on load.
+    refreshFeedTimes(document);
   }
 
   /* ── Boot ──────────────────────────────────────────────────────────────── */
