@@ -6639,6 +6639,8 @@ details[open] .faq-question::after { content: '−'; }
   flex: 1.2;
   min-width: 0;
 }
+.witb-move-player a { color: var(--text); }
+.witb-move-player a:hover { color: var(--green); }
 .witb-move-club {
   font-family: var(--font-mono);
   font-size: .72rem;

@@ -564,8 +564,21 @@ function buildChangesHtml(changes, brands, playerMap) {
     return esc(val);
   };
 
+  // Player slugs that have a generated WITB page, so we never link to a 404.
+  let playerPages = new Set();
+  try {
+    playerPages = new Set(
+      fs.readdirSync(path.join(ROOT, 'witb', 'players'), { withFileTypes: true })
+        .filter(d => d.isDirectory()).map(d => d.name)
+    );
+  } catch { /* players dir not built yet */ }
+
   return changes.map(c => {
-    const player = playerMap?.get(c.player_id)?.name || 'Unknown player';
+    const p = playerMap?.get(c.player_id);
+    const name = p?.name || 'Unknown player';
+    const player = (p?.slug && playerPages.has(p.slug))
+      ? `<a href="/witb/players/${esc(p.slug)}/">${esc(name)}</a>`
+      : esc(name);
     const date = c.detected_at ? new Date(c.detected_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
     let moveHtml;
     if (c.change_type === 'added') {
@@ -576,7 +589,7 @@ function buildChangesHtml(changes, brands, playerMap) {
       moveHtml = `${linkValue(c.old_value)} <span class="witb-move-arrow">&rarr;</span> ${linkValue(c.new_value)}`;
     }
     return `<div class="witb-lb-row">
-      <span class="witb-move-player">${esc(player)}</span>
+      <span class="witb-move-player">${player}</span>
       <span class="witb-move-club">${esc(c.club_type)}</span>
       <span class="witb-move-detail">${moveHtml}</span>
       <span class="witb-move-date">${date}</span>
