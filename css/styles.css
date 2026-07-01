@@ -6631,6 +6631,50 @@ details[open] .faq-question::after { content: '−'; }
   border-radius: 2px;
 }
 
+/* Bag Moves rows — reuse .witb-lb-row base, match leaderboard type scale */
+.witb-move-player {
+  font-family: var(--font-body);
+  font-size: .875rem;
+  color: var(--text);
+  flex: 1.2;
+  min-width: 0;
+}
+.witb-move-club {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  width: 54px;
+  flex-shrink: 0;
+}
+.witb-move-detail {
+  font-family: var(--font-body);
+  font-size: .8125rem;
+  color: var(--text);
+  flex: 2;
+  min-width: 0;
+}
+.witb-move-detail a { color: var(--text); }
+.witb-move-detail a:hover { color: var(--green); }
+.witb-move-arrow { color: var(--text-muted); padding: 0 3px; }
+.witb-move-tag {
+  font-family: var(--font-mono);
+  font-size: .64rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-right: 5px;
+}
+.witb-move-tag--added { color: var(--green); }
+.witb-move-tag--removed { color: var(--text-muted); }
+.witb-move-date {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* Leaderboard grid for categories */
 .witb-lb-grid {
   display: grid;

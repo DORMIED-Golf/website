@@ -569,17 +569,17 @@ function buildChangesHtml(changes, brands, playerMap) {
     const date = c.detected_at ? new Date(c.detected_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
     let moveHtml;
     if (c.change_type === 'added') {
-      moveHtml = `<span style="color:var(--green)">Added</span> ${linkValue(c.new_value)}`;
+      moveHtml = `<span class="witb-move-tag witb-move-tag--added">Added</span>${linkValue(c.new_value)}`;
     } else if (c.change_type === 'removed') {
-      moveHtml = `<span style="color:var(--text-muted)">Removed</span> ${linkValue(c.old_value)}`;
+      moveHtml = `<span class="witb-move-tag witb-move-tag--removed">Removed</span>${linkValue(c.old_value)}`;
     } else {
-      moveHtml = `${linkValue(c.old_value)} <span style="color:var(--text-muted)">&rarr;</span> ${linkValue(c.new_value)}`;
+      moveHtml = `${linkValue(c.old_value)} <span class="witb-move-arrow">&rarr;</span> ${linkValue(c.new_value)}`;
     }
     return `<div class="witb-lb-row">
-      <span style="flex:1;font-size:.85rem">${esc(player)}</span>
-      <span style="font-size:.78rem;color:var(--text-muted);white-space:nowrap">${esc(c.club_type)}</span>
-      <span style="flex:2;font-size:.78rem">${moveHtml}</span>
-      <span style="font-size:.72rem;color:var(--text-muted);white-space:nowrap">${date}</span>
+      <span class="witb-move-player">${esc(player)}</span>
+      <span class="witb-move-club">${esc(c.club_type)}</span>
+      <span class="witb-move-detail">${moveHtml}</span>
+      <span class="witb-move-date">${date}</span>
     </div>`;
   }).join('');
 }
