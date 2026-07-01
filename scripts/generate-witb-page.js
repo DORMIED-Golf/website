@@ -953,11 +953,17 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
     "description": "What ${totalPlayers} PGA Tour players carry in their bags, updated weekly. Covers ${totalBrands} brands across drivers, irons, wedges, putters, balls, and grips.",
     "url": "https://dormied.com/witb/",
     "dateModified": "${dateModified}",
+    "creator": {
+      "@type": "Organization",
+      "name": "DORMIED",
+      "url": "https://dormied.com"
+    },
     "publisher": {
       "@type": "Organization",
       "name": "DORMIED",
       "url": "https://dormied.com"
     },
+    "license": "https://dormied.com/terms/",
     "includedInDataCatalog": {
       "@type": "DataCatalog",
       "name": "DORMIED Index"
