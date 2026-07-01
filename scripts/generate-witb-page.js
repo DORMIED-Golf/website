@@ -143,10 +143,11 @@ async function fetchAllData() {
   console.log(`  DI rows (Apr 2026): ${diRows?.length}`);
 
   // 5. Recent bag changes (for Widget 3)
-  const { data: changes } = await sb.from('witb_changes')
-    .select('player_id, club_type, old_brand, old_model, new_brand, new_model, detected_at, witb_brands!new_brand_id(name, dormied_brand_slug), witb_players!player_id(name)')
+  const { data: changes, error: changesErr } = await sb.from('witb_changes')
+    .select('player_id, club_type, change_type, old_value, new_value, detected_at')
     .order('detected_at', { ascending: false })
     .limit(15);
+  if (changesErr) console.error('  witb_changes query error:', changesErr.message);
   console.log(`  Changes: ${changes?.length || 0}`);
 
   // 6. Latest crawl run timestamp
@@ -540,23 +541,44 @@ function buildLeaderboard(cat) {
 
 // ── Changes / Bag Moves HTML ───────────────────────────────────────────────
 
-function buildChangesHtml(changes) {
+function buildChangesHtml(changes, brands, playerMap) {
   if (!changes || changes.length === 0) {
     return `<div class="witb-moves-empty">No bag changes recorded yet. Check back after Tuesday's update.</div>`;
   }
 
+  // Brand name -> dormied slug, longest name first so multi-word brands match
+  // before a shorter prefix. Values like "Callaway Quantum Triple Diamond" begin
+  // with the brand name, so we link the leading brand token (exact match or none).
+  const brandList = (brands || [])
+    .filter(b => b.name && b.dormied_brand_slug)
+    .map(b => ({ name: b.name, slug: b.dormied_brand_slug }))
+    .sort((a, b) => b.name.length - a.name.length);
+
+  const linkValue = (val) => {
+    if (!val) return '';
+    for (const b of brandList) {
+      if (val === b.name || val.startsWith(b.name + ' ')) {
+        return `<a href="/brands/${esc(b.slug)}/">${esc(b.name)}</a>${esc(val.slice(b.name.length))}`;
+      }
+    }
+    return esc(val);
+  };
+
   return changes.map(c => {
-    const player  = c.witb_players?.name || 'Unknown player';
-    const brand   = c.witb_brands?.name  || c.new_brand || '';
-    const dslug   = c.witb_brands?.dormied_brand_slug || null;
-    const brandHtml = dslug
-      ? `<a href="/brands/${esc(dslug)}/">${esc(brand)}</a>`
-      : esc(brand);
+    const player = playerMap?.get(c.player_id)?.name || 'Unknown player';
     const date = c.detected_at ? new Date(c.detected_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+    let moveHtml;
+    if (c.change_type === 'added') {
+      moveHtml = `<span style="color:var(--green)">Added</span> ${linkValue(c.new_value)}`;
+    } else if (c.change_type === 'removed') {
+      moveHtml = `<span style="color:var(--text-muted)">Removed</span> ${linkValue(c.old_value)}`;
+    } else {
+      moveHtml = `${linkValue(c.old_value)} <span style="color:var(--text-muted)">&rarr;</span> ${linkValue(c.new_value)}`;
+    }
     return `<div class="witb-lb-row">
       <span style="flex:1;font-size:.85rem">${esc(player)}</span>
-      <span style="font-size:.78rem;color:var(--text-muted)">${esc(c.club_type)}</span>
-      <span style="font-size:.78rem">${brandHtml} ${esc(c.new_model || '')}</span>
+      <span style="font-size:.78rem;color:var(--text-muted);white-space:nowrap">${esc(c.club_type)}</span>
+      <span style="flex:2;font-size:.78rem">${moveHtml}</span>
       <span style="font-size:.72rem;color:var(--text-muted);white-space:nowrap">${date}</span>
     </div>`;
   }).join('');
@@ -707,7 +729,7 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
   } = computeWidgetData({ currentItems: rankedCurrentItems, playerMap, brands, diBySlug, shaftItems: rankedShaftItems, totalPlayers });
 
   const scatterSVG     = buildScatterSVG(scatterData);
-  const changesHtml    = buildChangesHtml(changes);
+  const changesHtml    = buildChangesHtml(changes, brands, playerMap);
   const leaderboardsHtml = leaderboards.map(buildLeaderboard).join('\n');
   const dykHtml        = buildDykHtml(dyk);
 
