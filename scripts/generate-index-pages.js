@@ -710,9 +710,14 @@ function dedupeRelLinks(html, p, totalPages) {
   let relLinks = '';
   if (p > 1)          relLinks += `  <link rel="prev" href="${prevUrl}">\n`;
   if (p < totalPages) relLinks += `  <link rel="next" href="${nextUrl}">\n`;
+  if (!relLinks) return html;
 
-  const GROW_SCRIPT = '  <!-- Grow.me -->\n  <script data-grow-initializer="">!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTowNjk5NTY3Ny0xMzU0LTQ5M2YtOWEyYi03Y2NkOTlkNWE3YWQ=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();<\/script>\n<\/head>';
-  return html.replace(GROW_SCRIPT, relLinks + GROW_SCRIPT);
+  // Insert the rel links just before the Grow.me block. Anchor on the stable
+  // "<!-- Grow.me -->" comment rather than the full Grow <script>…</head> string,
+  // so this keeps working when other <head> tags (e.g. the Journey ads script)
+  // are added between the Grow script and </head>.
+  const GROW_MARKER = '  <!-- Grow.me -->';
+  return html.replace(GROW_MARKER, relLinks + GROW_MARKER);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
