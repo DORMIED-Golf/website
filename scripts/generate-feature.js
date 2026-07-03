@@ -563,7 +563,10 @@ async function main() {
     console.error('Usage: node scripts/generate-feature.js <feature-key>\n  keys: ' + Object.keys(FEATURES).join(', '));
     process.exit(1);
   }
-  F.publishedAt = F.publishedAt || new Date().toISOString();
+  // A fixed config date always wins; otherwise the existing row's published_at is
+  // preserved on rebuild (looked up below); only a genuinely new feature falls back
+  // to now(). This stops a rebuild from resetting published_at and reposting the feature.
+  const configPublishedAt = F.publishedAt || null;
   F.outDir = path.join(ROOT, 'news', F.slug);
 
   const md = fs.readFileSync(F.mdPath, 'utf8');
@@ -572,14 +575,21 @@ async function main() {
 
   // LATEST sidebar bake (excludes this slug)
   let dormiedLatestHtml = null;
+  let existingPublishedAt = null;
   const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
   if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
     try {
       const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
       const latest = await feedBake.fetchLatestArticles(supabase, 10, F.slug);
       if (latest.length) dormiedLatestHtml = feedBake.renderLatestFeedHtml(latest, dormiedData);
+      const { data: existing } = await supabase
+        .from('dormied_articles').select('published_at').eq('slug', F.slug).maybeSingle();
+      if (existing && existing.published_at) existingPublishedAt = existing.published_at;
     } catch (e) { console.warn('[feature] LATEST sidebar bake failed:', e.message); }
   }
+
+  // Resolve the effective publish date now that we know whether the feature already exists.
+  F.publishedAt = configPublishedAt || existingPublishedAt || new Date().toISOString();
 
   const html = buildPage(F, parsed, dormiedLatestHtml);
   if (html.includes('—')) throw new Error('[feature] Em dash found in output — aborting');
@@ -601,9 +611,13 @@ async function main() {
         published_at: F.publishedAt, status: 'published', slug: F.slug,
         category: F.category, author: F.byline,
       };
-      await supabase.from('dormied_articles').delete().eq('slug', F.slug);
-      const { error } = await supabase.from('dormied_articles').insert(row);
-      if (error) console.warn('[feature] DB insert failed:', error.message);
+      // Upsert on the unique slug — never delete. On an existing row only the content
+      // fields + published_at (already resolved to the preserved/config value) in `row`
+      // are written; x_posted_at, x_post_text, x_post_id, threads_post_id,
+      // threads_posted_at, featured, created_at and id are omitted, so ON CONFLICT
+      // leaves them intact (no repost, no re-tweet).
+      const { error } = await supabase.from('dormied_articles').upsert(row, { onConflict: 'slug' });
+      if (error) console.warn('[feature] DB upsert failed:', error.message);
       else console.log(`[feature] dormied_articles row upserted (brand_slug="${F.brandSlug || ''}")`);
     } catch (e) { console.warn('[feature] DB upsert error:', e.message); }
   }
