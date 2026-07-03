@@ -901,7 +901,7 @@ function generateArticleHtml(opts) {
     <!-- ══ ARTICLE ════════════════════════════════════════════════════════════ -->
     <section class="da-article-section">
       <div class="container">
-        <div class="table-layout">
+        <div class="table-layout table-layout--post">
 
           <!-- ── Main Content ── -->
           <div class="sc-article-main">

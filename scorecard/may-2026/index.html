@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.min.css?v=20260609">
+  <link rel="stylesheet" href="/css/styles.css?v=20260508">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","headline":"The Scorecard | May 2026","datePublished":"2026-05-19","dateModified":"2026-05-19","author":[{"@type":"Person","name":"Adam"},{"@type":"Person","name":"Travis"}],"publisher":{"@type":"Organization","name":"DORMIED","url":"https://dormied.com","logo":{"@type":"ImageObject","url":"https://dormied.com/images/dormied-logo-colour.png"}},"description":"A Formula 1 team launched golf clubs in April. Not a licensing deal on a headcover. Not a co-branded polo. Actual irons, engineered from the ground up using…","mainEntityOfPage":{"@type":"WebPage","@id":"https://dormied.com/scorecard/may-2026/"}}</script>
@@ -72,28 +72,16 @@
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="site-logo" aria-label="DORMIED home">
-        <img src="/images/dormied-logo-colour.png" alt="DORMIED — Golf's Brand Desk" class="logo-img"
+        <img src="/images/dormied-logo-colour.png" alt="DORMIED | Golf's Brand Desk" class="logo-img"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <span class="logo-text-fallback" style="display:none">DORMIED</span>
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="/rankings/"  class="site-nav-link">Index</a>
-        <a href="/witb/"      class="site-nav-link">WITB</a>
         <a href="/scorecard/" class="site-nav-link site-nav-link--active">Scorecard</a>
         <a href="/news/"      class="site-nav-link">News</a>
         <a href="/brands/"    class="site-nav-link">Brands</a>
       </nav>
-
-      <!-- Hamburger (mobile only) -->
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu"
-        aria-expanded="false" aria-controls="mobile-nav-panel">
-        <span class="bars" aria-hidden="true">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </span>
-      </button>
-
       <div class="site-search">
         <button class="site-search-trigger" aria-label="Search" aria-haspopup="true" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -112,16 +100,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Mobile nav panel -->
-    <nav class="mobile-nav-panel" id="mobile-nav-panel" aria-label="Mobile navigation" hidden>
-      <a href="/rankings/"  class="mobile-nav-link">Index</a>
-      <a href="/witb/"      class="mobile-nav-link">WITB</a>
-      <a href="/scorecard/" class="mobile-nav-link">Scorecard</a>
-      <a href="/news/"      class="mobile-nav-link">News</a>
-      <a href="/brands/"    class="mobile-nav-link">Brands</a>
-    </nav>
-
   </header>
 
   <!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
@@ -153,7 +131,7 @@
 
       <!-- ── Two-column layout: article content + sidebar ad ── -->
       <div class="container">
-        <div class="table-layout">
+        <div class="table-layout table-layout--post">
 
           <!-- ── Main column ── -->
           <div class="sc-article-main">
@@ -178,25 +156,25 @@
             <!-- ── Mid-article Ad ── -->
 
             <!-- ── Article body ── -->
-            <div class="sc-article-body">
+            <div class="sc-article-body da-article-body">
 
     <section class="sc-article-section" id="intro">
       <div class="section-body">
-        <p>A Formula 1 team launched golf clubs in April. Not a licensing deal on a headcover. Not a co-branded polo. Actual irons, engineered from the ground up using metal injection moulding, debuted by a world top-five player at a PGA Tour Signature Event the same week as the Miami Grand Prix. <a href="/brands/mclaren-golf/">McLaren Golf</a> did not tiptoe into our game. It kicked in the door at $375 a club with <a href="/witb/players/justin-rose/">Justin Rose</a>, Michelle Wie West, and Ian Poulter signed on not just as ambassadors but as investors. The last time a new entrant made this much noise on arrival, Bob Parsons was writing checks for <a href="/brands/pxg/">PXG</a> in 2015. Whether McLaren follows that trajectory or flames out like every other luxury crossover that has tried golf remains the only question that matters. April's data suggests the market is at least paying attention.</p>
+        <p>A Formula 1 team launched golf clubs in April. Not a licensing deal on a headcover. Not a co-branded polo. Actual irons, engineered from the ground up using metal injection moulding, debuted by a world top-five player at a PGA Tour Signature Event the same week as the Miami Grand Prix. <a href="/brands/mclaren-golf/">McLaren Golf</a> did not tiptoe into our game. It kicked in the door at $375 a club with Justin Rose, Michelle Wie West, and Ian Poulter signed on not just as ambassadors but as investors. The last time a new entrant made this much noise on arrival, Bob Parsons was writing checks for <a href="/brands/pxg/">PXG</a> in 2015. Whether McLaren follows that trajectory or flames out like every other luxury crossover that has tried golf remains the only question that matters. April's data suggests the market is at least paying attention.</p>
       </div>
     </section>
 
     <section class="sc-article-section">
       <h2 class="sc-main-heading" id="at-the-top">At The Top</h2>
       <div class="section-body">
-        <p><a href="/brands/titleist/">Titleist</a> holds the top spot for the fourth consecutive month, as steady as the brand itself. <a href="/brands/taylormade/">TaylorMade</a> sits second at 81.7, buoyed by <a href="/witb/players/rory-mcilroy/">Rory McIlroy</a>'s second consecutive Masters win with the Qi4D driver and 2026 TP5 ball. Only the fourth player in 90 years to go back-to-back at Augusta. <a href="/brands/travismathew/">TravisMathew</a>, <a href="/brands/callaway/">Callaway</a>, and <a href="/brands/footjoy/">Footjoy</a> share third at 54.8. FootJoy's arrival in the top five is the story here. The Aime Leon Dore collaboration, the Premiere Series relaunch, and Cameron Young winning The Players in FootJoy pushed the brand to heights it has not reached on the index before.</p>
+        <p><a href="/brands/titleist/">Titleist</a> holds the top spot for the fourth consecutive month, as steady as the brand itself. <a href="/brands/taylormade/">TaylorMade</a> sits second at 81.7, buoyed by Rory McIlroy's second consecutive Masters win with the Qi4D driver and 2026 TP5 ball. Only the fourth player in 90 years to go back-to-back at Augusta. <a href="/brands/travismathew/">TravisMathew</a>, <a href="/brands/callaway/">Callaway</a>, and <a href="/brands/footjoy/">Footjoy</a> share third at 54.8. FootJoy's arrival in the top five is the story here. The Aime Leon Dore collaboration, the Premiere Series relaunch, and Cameron Young winning The Players in FootJoy pushed the brand to heights it has not reached on the index before.</p>
       </div>
     </section>
 
     <section class="sc-article-section">
       <h2 class="sc-main-heading" id="the-biggest-move">The Biggest Move</h2>
       <div class="section-body">
-        <p><a href="/brands/mclaren-golf/">McLaren Golf</a> surged 307.4% in April, climbing 18 spots to a DI of 54.8. That puts a brand that did not exist in the index three months ago in a tie for third place. The launch was orchestrated with the precision you would expect from a company that builds cars for a living. <a href="/witb/players/justin-rose/">Rose</a>, who leads the PGA Tour in greens in regulation this season and already won the Farmers Insurance Open wire-to-wire in January, debuted the Series 1 blades at the Cadillac Championship the same week Lando Norris was racing in Miami. CEO Neil Howie spent over 25 years at <a href="/brands/callaway/">Callaway</a>. The irons use metal injection moulding with an internal structural mesh and hidden tungsten weighting. <a href="/witb/players/justin-rose/">Rose</a> has been involved in development for nearly two years. The <a href="/brands/pxg/">PXG</a> comparison is inevitable: premium price, tour validation from day one, bold entry into a crowded market. The difference is McLaren already has a globally recognized brand worth billions behind it. Whether it can convert attention into sustained market presence is what the next six months will answer.</p>
+        <p><a href="/brands/mclaren-golf/">McLaren Golf</a> surged 307.4% in April, climbing 18 spots to a DI of 54.8. That puts a brand that did not exist in the index three months ago in a tie for third place. The launch was orchestrated with the precision you would expect from a company that builds cars for a living. Rose, who leads the PGA Tour in greens in regulation this season and already won the Farmers Insurance Open wire-to-wire in January, debuted the Series 1 blades at the Cadillac Championship the same week Lando Norris was racing in Miami. CEO Neil Howie spent over 25 years at <a href="/brands/callaway/">Callaway</a>. The irons use metal injection moulding with an internal structural mesh and hidden tungsten weighting. Rose has been involved in development for nearly two years. The <a href="/brands/pxg/">PXG</a> comparison is inevitable: premium price, tour validation from day one, bold entry into a crowded market. The difference is McLaren already has a globally recognized brand worth billions behind it. Whether it can convert attention into sustained market presence is what the next six months will answer.</p>
       </div>
     </section>
 
@@ -205,15 +183,15 @@
       <div class="section-body">
         <p><a href="/brands/vuori/">Vuori</a> jumped 176.9% to a DI of 1.2, climbing 17 spots. Last month we reported the brand dropping 18.8% after the Fleetwood speculation ended. This month Tom Holland was announced as a global ambassador, creative partner, and financial investor, with the golf-centric "Play It as It Lies" campaign launching the same week as the Masters. Spider-Man playing golf in Portugal is a very different brand strategy than chasing a PGA Tour apparel deal, and the data says it worked.</p>
 <p><a href="/brands/ben-hogan-golf/">Ben Hogan Golf</a> climbed 172.5% to a DI of 20.1 on the strength of the GS53 golf ball launch, the brand's first entry into the ball category. Named after Hogan's legendary 1953 Triple Crown, the four-piece premium construction at $50 a dozen is pitched directly at the ProV1 buyer who wants to feel something when they read the name on the ball. Whether nostalgia converts to sustained purchase behavior is another question.</p>
-<p><a href="/brands/peter-millar/">Peter Millar</a> surged 124.2% after <a href="/witb/players/cameron-young/">Cameron Young</a> wore the brand during his Players Championship win in March. The quiet luxury play is working. <a href="/brands/bettinardi/">Bettinardi</a> rose 50% as <a href="/witb/players/matthew-fitzpatrick/">Matt Fitzpatrick</a> won twice in three weeks, the Valspar Championship and the Zurich Classic, becoming the only player this season winning with a blade putter. The BB 6.0 and BB 7.0 also swept first and second in MyGolfSpy's mallet test.</p>
+<p><a href="/brands/peter-millar/">Peter Millar</a> surged 124.2% after Cameron Young wore the brand during his Players Championship win in March. The quiet luxury play is working. <a href="/brands/bettinardi/">Bettinardi</a> rose 50% as Matt Fitzpatrick won twice in three weeks, the Valspar Championship and the Zurich Classic, becoming the only player this season winning with a blade putter. The BB 6.0 and BB 7.0 also swept first and second in MyGolfSpy's mallet test.</p>
       </div>
     </section>
 
     <section class="sc-article-section">
       <h2 class="sc-main-heading" id="the-drop-zone">The Drop Zone</h2>
       <div class="section-body">
-        <p><a href="/brands/l-a-b-golf/">L.A.B. Golf</a> fell another 18.2%, marking the third consecutive monthly decline since February's 174% spike. The LINK 2.1 and 2.2 launched in April. <a href="/witb/players/rickie-fowler/">Rickie Fowler</a> ditched his L.A.B. DF3 for a 14-year-old <a href="/brands/scotty-cameron/">Scotty Cameron</a> Golo. The brand is still meaningfully higher than where it sat six months ago, but the trajectory since the Cognizant Classic peak now looks like a classic spike-and-settle pattern. The floor has not been established yet.</p>
-<p><a href="/brands/ust-mamiya/">UST Mamiya</a> dropped 19.4% in the same month they signed <a href="/witb/players/rickie-fowler/">Rickie Fowler</a>, giving the shaft maker its biggest name in years. A signing alone does not move search volume. Product and results do. <a href="/brands/the-stack-system/">The Stack System</a> and <a href="/brands/perfect-practice/">Perfect Practice</a> both fell roughly 21%, suggesting the training aid category is cooling after a hot start to the season.</p>
+        <p><a href="/brands/l-a-b-golf/">L.A.B. Golf</a> fell another 18.2%, marking the third consecutive monthly decline since February's 174% spike. The LINK 2.1 and 2.2 launched in April. Rickie Fowler ditched his L.A.B. DF3 for a 14-year-old <a href="/brands/scotty-cameron/">Scotty Cameron</a> Golo. The brand is still meaningfully higher than where it sat six months ago, but the trajectory since the Cognizant Classic peak now looks like a classic spike-and-settle pattern. The floor has not been established yet.</p>
+<p><a href="/brands/ust-mamiya/">UST Mamiya</a> dropped 19.4% in the same month they signed Rickie Fowler, giving the shaft maker its biggest name in years. A signing alone does not move search volume. Product and results do. <a href="/brands/the-stack-system/">The Stack System</a> and <a href="/brands/perfect-practice/">Perfect Practice</a> both fell roughly 21%, suggesting the training aid category is cooling after a hot start to the season.</p>
       </div>
     </section>
 
@@ -234,7 +212,7 @@
     <section class="sc-article-section">
       <h2 class="sc-main-heading" id="closing">Closing</h2>
       <div class="section-body">
-        <p><a href="/witb/players/justin-rose/">Justin Rose</a> drove a papaya McLaren GTS to the McLaren Technology Centre, walked past the set of a Brad Pitt movie, and sat down with engineers to finalize the irons he would play that week in Miami. Two years of development, one launch day timed to a Formula 1 race, and a 307% move on the index. Whether that translates to a real equipment business or an expensive vanity project is a story we will be telling for the rest of the year. But this much is already clear: the barrier to entry in golf equipment has never been lower and the cost of attention has never been higher. McLaren just paid both prices at once.</p>
+        <p>Justin Rose drove a papaya McLaren GTS to the McLaren Technology Centre, walked past the set of a Brad Pitt movie, and sat down with engineers to finalize the irons he would play that week in Miami. Two years of development, one launch day timed to a Formula 1 race, and a 307% move on the index. Whether that translates to a real equipment business or an expensive vanity project is a story we will be telling for the rest of the year. But this much is already clear: the barrier to entry in golf equipment has never been lower and the cost of attention has never been higher. McLaren just paid both prices at once.</p>
 <p class="scorecard-signature">Adam and Travis, DORMIED</p>
 <p class="scorecard-substack-link"><a href="https://dormiedgolf.substack.com/p/the-scorecard-may-2026" target="_blank" rel="noopener">Read on Substack <span aria-hidden="true">→</span></a></p>
       </div>
@@ -298,6 +276,7 @@
     <section class="sc-more-issues">
       <h2 class="sc-section-heading">More from The Scorecard</h2>
       <ul class="scorecard-related-list">
+      <li class="scorecard-related-card"><a href="/scorecard/june-2026/"><span class="scorecard-related-eyebrow">The Scorecard</span><span class="scorecard-related-title">June 2026</span><span class="scorecard-related-date">Jun 11, 2026</span></a></li>
       <li class="scorecard-related-card"><a href="/scorecard/april-2026/"><span class="scorecard-related-eyebrow">The Scorecard</span><span class="scorecard-related-title">April 2026</span><span class="scorecard-related-date">Apr 8, 2026</span></a></li>
       <li class="scorecard-related-card"><a href="/scorecard/march-2026/"><span class="scorecard-related-eyebrow">The Scorecard</span><span class="scorecard-related-title">March 2026</span><span class="scorecard-related-date">Mar 24, 2026</span></a></li>
       </ul>
@@ -311,7 +290,7 @@
 
     <nav class="scorecard-pagination" aria-label="Scorecard issues">
       <a href="/scorecard/april-2026/" class="scorecard-pagination-prev"><span class="scorecard-pagination-direction">← Previous issue</span><span class="scorecard-pagination-title">April 2026</span></a>
-      
+      <a href="/scorecard/june-2026/" class="scorecard-pagination-next"><span class="scorecard-pagination-direction">Next issue →</span><span class="scorecard-pagination-title">June 2026</span></a>
     </nav>
 
           </div><!-- /sc-article-main -->
@@ -346,7 +325,6 @@
       </div>
       <nav class="footer-nav" aria-label="Footer navigation">
         <a href="/rankings/">Index</a>
-        <a href="/witb/">WITB</a>
         <a href="/scorecard/">Scorecard</a>
         <a href="/news/">News</a>
         <a href="/brands/">Brands</a>
@@ -379,28 +357,8 @@
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
-  <script defer src="/js/search.min.js?v=20260529"></script>
+  <script defer src="/js/search.min.js?v=20260508"></script>
 
-
-
-  <!-- Mobile nav hamburger -->
-  <script>
-  (function(){
-    var btn   = document.getElementById('nav-hamburger');
-    var panel = document.getElementById('mobile-nav-panel');
-    if (!btn || !panel) return;
-    function openNav()  { btn.setAttribute('aria-expanded','true');  panel.classList.add('open');    panel.removeAttribute('hidden'); }
-    function closeNav() { btn.setAttribute('aria-expanded','false'); panel.classList.remove('open'); panel.setAttribute('hidden',''); }
-    btn.addEventListener('click', function() {
-      btn.getAttribute('aria-expanded') === 'true' ? closeNav() : openNav();
-    });
-    panel.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeNav); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
-    document.addEventListener('click', function(e) {
-      if (!btn.contains(e.target) && !panel.contains(e.target)) closeNav();
-    });
-  })();
-  </script>
 
 </body>
 </html>

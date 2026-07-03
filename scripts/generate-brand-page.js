@@ -405,6 +405,20 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
         ...(brand.founded     && { foundingDate: String(brand.founded) }),
         ...(brand.description && { description: stripEmDashes(brand.description) }),
       },
+      {
+        '@type': 'Article',
+        headline: `${brand.name}: Golf Brand Profile, Rankings & News`,
+        description: stripEmDashes(brand.description || `${brand.name} on the DORMIED Index.`),
+        ...(brand.logo && { image: brand.logo }),
+        ...((articles[0] && articles[0].published_at) && {
+          datePublished: articles[0].published_at.slice(0, 10),
+          dateModified:  articles[0].published_at.slice(0, 10),
+        }),
+        author:    { '@type': 'Organization', name: 'DORMIED', url: 'https://dormied.com' },
+        publisher: { '@type': 'Organization', name: 'DORMIED', url: 'https://dormied.com' },
+        mainEntityOfPage: `https://dormied.com/brands/${slug}/`,
+        url: `https://dormied.com/brands/${slug}/`,
+      },
     ],
   });
 
@@ -739,7 +753,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
       </section>
       <div class="container">
         <div class="bp-page-grid">
-          <div class="bp-page-main">
+          <article class="bp-page-main da-article-body">
 
 ${takeSectionHtml}
 
@@ -821,7 +835,7 @@ ${onTourHtml}
               </div>
             </section>
 
-          </div><!-- /bp-page-main -->
+          </article><!-- /bp-page-main -->
 
           <!-- Sidebar: LATEST widget -->
           <aside class="sidebar-ad-col">

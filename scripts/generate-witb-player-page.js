@@ -815,6 +815,18 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
         numberOfItems:   currentItems.length,
         itemListElement: bagItemsLd,
       },
+      {
+        '@type':            'Article',
+        headline:           `${name}: What's In The Bag`,
+        description:        `${name} tour equipment bag, tracked across ${bags.length} snapshots by DORMIED.`,
+        image:              'https://dormied.com/images/og-image.jpg',
+        datePublished:      currentBag.bag_date,
+        dateModified:       currentBag.bag_date,
+        author:             { '@type': 'Organization', name: 'DORMIED', url: 'https://dormied.com' },
+        publisher:          { '@type': 'Organization', name: 'DORMIED', url: 'https://dormied.com' },
+        mainEntityOfPage:   canonicalUrl,
+        url:                canonicalUrl,
+      },
     ],
   }, null, 2);
 
@@ -995,10 +1007,10 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
 
     <!-- TWO-COLUMN LAYOUT: main content + sidebar -->
     <div class="container">
-      <div class="table-layout">
+      <div class="table-layout table-layout--post">
 
         <!-- MAIN CONTENT COLUMN -->
-        <div class="bp-sections-col">
+        <article class="bp-sections-col da-article-body">
 
           <!-- 1. LEDE -- full content width, no max-width cap -->
           <section class="witb-section" style="padding-top:24px;border-bottom:none" aria-label="Equipment overview">
@@ -1067,7 +1079,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
             <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
           </section>
 
-        </div><!-- /bp-sections-col -->
+        </article><!-- /bp-sections-col -->
 
         <!-- SIDEBAR: Latest only -->
         <aside class="sidebar-ad-col">

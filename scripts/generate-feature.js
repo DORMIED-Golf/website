@@ -459,7 +459,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
 
     <section class="da-article-section">
       <div class="container">
-        <div class="table-layout">
+        <div class="table-layout table-layout--post">
 
           <div class="sc-article-main">
 

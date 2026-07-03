@@ -419,6 +419,18 @@ button, select, input {
   }
 }
 
+/* Journey post/detail pages: widen the sidebar to >=300px content width so the
+   sidebar ad slot qualifies. Scoped to .table-layout--post (post templates only)
+   so home/index/hub layouts keep the narrow --sidebar-w column. */
+@media (min-width: 1200px) {
+  .table-layout--post {
+    grid-template-columns: 1fr 300px;
+  }
+  .table-layout--post .sidebar-ad-col {
+    width: 300px;
+  }
+}
+
 /* ── Country Nav ─────────────────────────────────────────────────────────────── */
 .country-nav {
   padding: 12px 0 0;
@@ -3000,10 +3012,13 @@ details[open] .faq-question::after { content: '−'; }
 }
 @media (min-width: 1200px) {
   .bp-page-grid {
-    grid-template-columns: 1fr var(--sidebar-w);
+    /* 300px sidebar so the Journey sidebar ad slot qualifies (brand pages are
+       all detail/post pages; this grid is used only here). */
+    grid-template-columns: 1fr 300px;
     gap: var(--gap);
     padding: 20px 0;
   }
+  .bp-page-grid .sidebar-ad-col { width: 300px; }
 }
 .bp-page-main { min-width: 0; }
 

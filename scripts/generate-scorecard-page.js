@@ -504,7 +504,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
 
       <!-- ── Two-column layout: article content + sidebar ad ── -->
       <div class="container">
-        <div class="table-layout">
+        <div class="table-layout table-layout--post">
 
           <!-- ── Main column ── -->
           <div class="sc-article-main">
@@ -516,7 +516,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
             <!-- ── Mid-article Ad ── -->
 
             <!-- ── Article body ── -->
-            <div class="sc-article-body">
+            <div class="sc-article-body da-article-body">
 
 ${sectionsHtml}
 
