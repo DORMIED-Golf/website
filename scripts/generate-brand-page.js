@@ -385,6 +385,23 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   const hasTake       = !!(take && take.take && currentMonthYYYYMM && take.month === currentMonthYYYYMM);
   const takeMonthLabel = hasTake ? fmtMonth(take.month) : '';
 
+  // Stable first-publish date = earliest month on record for this brand (MIN
+  // snapshot month). Independent of the current snapshot, so it does not move
+  // when new monthly data lands. dateModified carries the current data month.
+  const toISODate = (label) => {
+    const [mon, yr] = (label || '').split(' ');
+    const idx = MONTH_NAMES.indexOf(mon);
+    return idx >= 0 && yr ? `${yr}-${String(idx + 1).padStart(2, '0')}-01` : null;
+  };
+  const brandMonths = Object.keys(brand.searchesByMarket?.global || {});
+  const firstMonthLabel = brandMonths.length
+    ? brandMonths
+        .map(m => { const [mo, yr] = m.split(' '); return { m, k: parseInt(yr) * 12 + MONTH_NAMES.indexOf(mo) }; })
+        .sort((a, b) => a.k - b.k)[0].m
+    : null;
+  const brandDatePublished = toISODate(firstMonthLabel);
+  const brandDateModified  = currentMonthYYYYMM ? `${currentMonthYYYYMM}-01` : brandDatePublished;
+
   // JSON-LD
   const jsonld = JSON.stringify({
     '@context': 'https://schema.org',
@@ -409,13 +426,18 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
         '@type': 'Article',
         headline: `${brand.name}: Golf Brand Profile, Rankings & News`,
         description: stripEmDashes(brand.description || `${brand.name} on the DORMIED Index.`),
-        ...(brand.logo && { image: brand.logo }),
-        ...((articles[0] && articles[0].published_at) && {
-          datePublished: articles[0].published_at.slice(0, 10),
-          dateModified:  articles[0].published_at.slice(0, 10),
+        image: brand.logo || 'https://dormied.com/images/og-image.jpg',
+        ...(brandDatePublished && {
+          datePublished: brandDatePublished,
+          dateModified:  brandDateModified,
         }),
         author:    { '@type': 'Organization', name: 'DORMIED', url: 'https://dormied.com' },
-        publisher: { '@type': 'Organization', name: 'DORMIED', url: 'https://dormied.com' },
+        publisher: {
+          '@type': 'Organization',
+          name: 'DORMIED',
+          url: 'https://dormied.com',
+          logo: { '@type': 'ImageObject', url: 'https://dormied.com/images/dormied-logo-colour.png' },
+        },
         mainEntityOfPage: `https://dormied.com/brands/${slug}/`,
         url: `https://dormied.com/brands/${slug}/`,
       },

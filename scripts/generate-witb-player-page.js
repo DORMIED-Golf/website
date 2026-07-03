@@ -470,7 +470,7 @@ Return valid JSON only, no markdown fences:
 async function fetchPlayerData(sb, slug) {
   const { data: player, error } = await sb
     .from('witb_players')
-    .select('id, name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation')
+    .select('id, name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation, first_seen, last_updated')
     .eq('slug', slug)
     .single();
   if (error) throw new Error(`Player not found (slug="${slug}"): ${error.message}`);
@@ -789,6 +789,15 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     description: clubLabel(item.club_type),
   }));
 
+  // Stable first-publish date: the earliest of the player's first_seen timestamp and
+  // the earliest bag snapshot on record. Both are fixed values that do not move when
+  // new bag data lands, and taking the minimum keeps datePublished <= dateModified
+  // (the current snapshot). dateModified carries the rolling date.
+  const earliestBag = bags.length ? [...bags].map(b => b.bag_date).sort()[0] : currentBag.bag_date;
+  const firstPublished = [player.first_seen ? player.first_seen.slice(0, 10) : null, earliestBag]
+    .filter(Boolean)
+    .sort()[0];
+
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
@@ -820,10 +829,15 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
         headline:           `${name}: What's In The Bag`,
         description:        `${name} tour equipment bag, tracked across ${bags.length} snapshots by DORMIED.`,
         image:              'https://dormied.com/images/og-image.jpg',
-        datePublished:      currentBag.bag_date,
+        datePublished:      firstPublished,
         dateModified:       currentBag.bag_date,
         author:             { '@type': 'Organization', name: 'DORMIED', url: 'https://dormied.com' },
-        publisher:          { '@type': 'Organization', name: 'DORMIED', url: 'https://dormied.com' },
+        publisher:          {
+          '@type': 'Organization',
+          name: 'DORMIED',
+          url: 'https://dormied.com',
+          logo: { '@type': 'ImageObject', url: 'https://dormied.com/images/dormied-logo-colour.png' },
+        },
         mainEntityOfPage:   canonicalUrl,
         url:                canonicalUrl,
       },

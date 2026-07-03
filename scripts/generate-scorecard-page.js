@@ -356,7 +356,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
       },
     },
     description: metaDesc,
-    ...(issue.images && issue.images.hero ? { image: issue.images.hero } : {}),
+    image: (issue.images && issue.images.hero) || 'https://dormied.com/images/og-image.jpg',
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
   });
 
