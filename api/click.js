@@ -31,6 +31,22 @@ module.exports = async (req, res) => {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   try {
+    // Resolve pub_date from the source of truth. For a DORMIED article URL
+    // (/news/{slug}/) always use the live dormied_articles.published_at and ignore
+    // the client-supplied value, so a published_at correction self-heals on the next
+    // click and a stale page can never re-stamp an old date. Fall back to the client
+    // value ONLY when the URL has no matching article row (external/wire links).
+    let resolvedPubDate = pub_date || null;
+    const slugMatch = url.match(/^\/news\/([^/]+)\/?$/);
+    if (slugMatch) {
+      const { data: article } = await supabase
+        .from('dormied_articles')
+        .select('published_at')
+        .eq('slug', slugMatch[1])
+        .maybeSingle();
+      if (article && article.published_at) resolvedPubDate = article.published_at;
+    }
+
     const { data: existing } = await supabase
       .from('article_clicks')
       .select('click_count')
@@ -46,14 +62,14 @@ module.exports = async (req, res) => {
           // Refresh metadata in case it changed
           title, source_name, image_url,
           brand_ids:    brand_ids  || [],
-          pub_date:     pub_date   || null,
+          pub_date:     resolvedPubDate,
         })
         .eq('url', url);
     } else {
       await supabase.from('article_clicks').insert({
         url, title, source_name, image_url,
         brand_ids:    brand_ids || [],
-        pub_date:     pub_date  || null,
+        pub_date:     resolvedPubDate,
         click_count:  1,
         last_clicked: new Date().toISOString(),
       });
