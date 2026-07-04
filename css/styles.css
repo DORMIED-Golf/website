@@ -49,7 +49,7 @@
 
   /* Layout */
   --content-max: 1440px;
-  --sidebar-w:   180px;
+  --sidebar-w:   300px;
   --gap:         24px;
 }
 
@@ -416,18 +416,6 @@ button, select, input {
     gap: var(--gap);
     align-items: start;
     padding: 20px 0;
-  }
-}
-
-/* Journey post/detail pages: widen the sidebar to >=300px content width so the
-   sidebar ad slot qualifies. Scoped to .table-layout--post (post templates only)
-   so home/index/hub layouts keep the narrow --sidebar-w column. */
-@media (min-width: 1200px) {
-  .table-layout--post {
-    grid-template-columns: 1fr 300px;
-  }
-  .table-layout--post .sidebar-ad-col {
-    width: 300px;
   }
 }
 
@@ -3012,13 +3000,10 @@ details[open] .faq-question::after { content: '−'; }
 }
 @media (min-width: 1200px) {
   .bp-page-grid {
-    /* 300px sidebar so the Journey sidebar ad slot qualifies (brand pages are
-       all detail/post pages; this grid is used only here). */
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr var(--sidebar-w);
     gap: var(--gap);
     padding: 20px 0;
   }
-  .bp-page-grid .sidebar-ad-col { width: 300px; }
 }
 .bp-page-main { min-width: 0; }
 
