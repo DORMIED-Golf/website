@@ -36,6 +36,10 @@ function getSupabase() {
 
 const SITE_ROOT = path.resolve(__dirname, '..');
 
+// Baked standard sidebar for issue pages (Top Stories + Latest + modules).
+// Set once in main(); '' when Supabase is unavailable.
+let SC_SIDEBAR_HTML = '';
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function escHtml(str) {
@@ -536,8 +540,9 @@ ${prevNextHtml}
 
           </div><!-- /sc-article-main -->
 
-          <!-- ── Sidebar: skyscraper ad ── -->
+          <!-- ── Sidebar: standard (Top Stories + Latest + baked modules) ── -->
           <aside class="sidebar-ad-col">
+${SC_SIDEBAR_HTML}
           </aside>
 
         </div><!-- /table-layout -->
@@ -674,7 +679,7 @@ function processOneIssue(issue, allIssues, brandNameMap, force) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
-function main() {
+async function main() {
   const args    = process.argv.slice(2);
   const force   = args.includes('--force');
   const slugArg = (args.find(a => a.startsWith('--slug=')) || '').replace('--slug=', '');
@@ -682,6 +687,35 @@ function main() {
   const scorecardData = loadScorecardData();
   const dormiedData   = loadDormiedData();
   const brandNameMap  = buildBrandNameMap(dormiedData);
+
+  // Standard sidebar for issue pages (Top Stories + Latest + baked modules),
+  // fetched once per run and baked statically — no client-side fetch, text/cards only.
+  try {
+    const sb = getSupabase();
+    const feedBake = require('./feed-bake');
+    const [topStories, latest, modsHtml] = await Promise.all([
+      feedBake.fetchTopStoriesArticles(sb, 5),
+      feedBake.fetchLatestArticles(sb, 10, null),
+      feedBake.fetchSidebarModulesHtml(sb, dormiedData),
+    ]);
+    let aside = '';
+    if (topStories.length) {
+      aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-stories-heading">
+              <h2 class="latest-feed-heading" id="sc-issue-stories-heading">Top Stories</h2>
+              <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(topStories, dormiedData)}</div>
+            </section>\n`;
+    }
+    if (latest.length) {
+      aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-latest-heading">
+              <h2 class="latest-feed-heading" id="sc-issue-latest-heading">Latest</h2>
+              <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(latest, dormiedData)}</div>
+            </section>\n`;
+    }
+    if (modsHtml) aside += `            ${modsHtml}`;
+    SC_SIDEBAR_HTML = aside;
+  } catch (e) {
+    console.warn('[scorecard-page] sidebar bake skipped:', e.message);
+  }
 
   const allIssues = scorecardData.issues || [];
   const targets   = slugArg
@@ -738,4 +772,4 @@ function main() {
   }
 }
 
-main();
+main().catch(err => { console.error('[scorecard-page] Fatal:', err.message); process.exit(1); });

@@ -561,10 +561,18 @@ async function fetchTourComparison(sb, rankedPlayerIds) {
   const result = {};
 
   for (const [cat, types] of Object.entries(catGroups)) {
-    const { data: items } = await sb
-      .from('witb_bag_items')
-      .select('raw_brand, witb_brands!brand_id(name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id)')
-      .in('club_type', types);
+    // Paginate past the 1000-row cap: iron/wedge item counts exceed it table-wide,
+    // which silently truncated results and undercounted brands (e.g. Titleist irons).
+    let items = [];
+    for (let from = 0; ; from += 1000) {
+      const { data: page } = await sb
+        .from('witb_bag_items')
+        .select('raw_brand, witb_brands!brand_id(name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id)')
+        .in('club_type', types)
+        .range(from, from + 999);
+      items = items.concat(page || []);
+      if (!page || page.length < 1000) break;
+    }
 
     // Only count items from current bags belonging to ranked players
     const currentItems = (items || []).filter(i =>

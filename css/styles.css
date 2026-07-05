@@ -1787,9 +1787,10 @@ details[open] .faq-question::after { content: '−'; }
 }
 
 .bp-description {
-  font-size: 0.875rem;
+  /* Opener parity with the WITB player page lede (.witb-player-lede) */
+  font-size: 1rem;
   color: var(--text-dim);
-  line-height: 1.65;
+  line-height: 1.7;
   margin-top: 16px;
 }
 
@@ -1895,6 +1896,74 @@ details[open] .faq-question::after { content: '−'; }
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* Baked sidebar modules (Brands on the Move / Recently Updated Bags).
+   Text-only, baked at build time, fixed reserved heights (no CLS).
+   Desktop only in this pass. */
+.sidebar-mods { display: none; }
+@media (min-width: 1200px) {
+  .sidebar-mods { display: block; }
+  .sidebar-mod { margin-top: 24px; }
+  .sidebar-mod-rows { height: 160px; overflow: hidden; }
+  .sidebar-mod-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 28px;
+    margin: 0 0 4px;
+    box-sizing: border-box;
+  }
+  .sidebar-mod-row--bag {
+    font-size: .8rem;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-mod-row--bag:hover { color: var(--green); text-decoration: none; }
+  .sidebar-mod-note {
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+}
+
+/* On Tour comparative line (matches WITB player page numbers) */
+.bp-tour-compare {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  color: var(--text-dim);
+  margin: 2px 0 8px;
+}
+
+/* Brand page FAQ (static text, no accordion) */
+.bp-faq-item { margin: 0 0 18px; }
+.bp-faq-item:last-child { margin-bottom: 0; }
+.bp-faq-q {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+.bp-faq-a {
+  font-family: var(--font-body);
+  font-size: .9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  margin: 0;
+}
+.bp-faq-a a { color: var(--green); }
+
+/* Visible freshness line under the DI stat row (matches JSON-LD dateModified) */
+.bp-updated-line {
+  font-family: var(--font-mono);
+  font-size: .66rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin: 8px 0 0;
 }
 
 .bp-metric-card {

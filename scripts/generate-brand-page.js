@@ -354,10 +354,98 @@ function buildCountryTableRows(marketStats) {
 
 // ── HTML template ─────────────────────────────────────────────────────────────
 
-function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', dormiedLatestHtml }) {
+// ── FAQ section (Supabase-driven facts + live Index data) ─────────────────────
+// Renders only questions whose facts exist; a NULL fact skips its question so no
+// page ships a guessed or empty answer. Answers regenerate on every bake.
+function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
+  const items = [];
+  const f = facts || {};
+
+  // Q1: ownership (owner / parent_company; notes appended when present)
+  if (f.owner || f.parent_company) {
+    let a = f.owner === 'Independent'
+      ? `${brand.name} is independently owned.`
+      : `${brand.name} is owned by ${f.parent_company || f.owner}.`;
+    if (f.owner === 'Independent' && f.parent_company) a = `${brand.name} is owned by ${f.parent_company}.`;
+    if (f.notes) a += ` ${f.notes}.`;
+    items.push({ q: `Who owns ${brand.name}?`, aHtml: escHtml(a), aText: a });
+  }
+
+  // Q2: where based (hq_city / hq_country, founded woven in when known)
+  if (f.hq_city || f.hq_country) {
+    const place = [f.hq_city, f.hq_country].filter(Boolean).join(', ');
+    let a = `${brand.name} is based in ${place}.`;
+    if (f.founded_year && f.founder) a += ` It was founded in ${f.founded_year} by ${f.founder}.`;
+    else if (f.founded_year)         a += ` It was founded in ${f.founded_year}.`;
+    else if (f.founder)              a += ` It was founded by ${f.founder}.`;
+    items.push({ q: `Where is ${brand.name} based?`, aHtml: escHtml(a), aText: a });
+  }
+
+  // Q3: is it a good brand — ALWAYS renders, generated from live Index data
+  {
+    const totalBrands = dormiedData.brands.length;
+    const trend = stats.t3m === null ? null
+      : Math.abs(stats.t3m) < 0.05 ? 'flat'
+      : `${stats.t3m > 0 ? 'up' : 'down'} ${Math.abs(stats.t3m).toFixed(1)}% over the last three months`;
+
+    // Strongest market: best rank across non-global markets for the current month
+    let best = null;
+    for (const mkt of (dormiedData.meta.markets || [])) {
+      if (mkt.key === 'global') continue;
+      const vals = dormiedData.brands
+        .map(b => ({ id: b.id, s: b.searchesByMarket?.[mkt.key]?.[stats.currentMonth] || 0 }))
+        .sort((a, b) => b.s - a.s);
+      const r = vals.findIndex(v => v.id === brand.id) + 1;
+      const s = vals[r - 1] ? vals[r - 1].s : 0;
+      if (r > 0 && s > 0 && (!best || r < best.rank)) best = { rank: r, label: mkt.label };
+    }
+
+    let a = `As of ${stats.currentMonth}, ${brand.name} ranks #${stats.rank} of ${totalBrands} golf brands on the DORMIED Index with a DI score of ${stats.di.toFixed(1)}.`;
+    if (trend) a += ` Its search interest is ${trend}.`;
+    if (best)  a += ` Its strongest market is ${best.label}, where it ranks #${best.rank}.`;
+    items.push({ q: `Is ${brand.name} a good golf brand?`, aHtml: escHtml(a), aText: a });
+  }
+
+  // Q4: do any pros play it — equipment brands with tour presence only
+  if (onTourData && onTourData.length > 0) {
+    const seen = new Map();
+    for (const cat of onTourData) {
+      for (const g of (cat.modelGroups || [])) {
+        for (const p of (g.players || [])) if (p && p.slug && !seen.has(p.slug)) seen.set(p.slug, p);
+      }
+    }
+    const all = [...seen.values()].sort((a, b) => (a.owgr_rank || 9999) - (b.owgr_rank || 9999));
+    if (all.length > 0) {
+      const top = all.slice(0, 3);
+      const namesText = top.map(p => p.name).join(', ');
+      const namesHtml = top.map(p => `<a href="/witb/players/${escHtml(p.slug)}/">${escHtml(p.name)}</a>`).join(', ');
+      const total = onTourData[0].totalRanked;
+      const aText = `Yes. ${all.length} of the ${total} ranked players in the DORMIED WITB database currently carry ${brand.name} equipment, including ${namesText}.`;
+      const aHtml = `Yes. ${all.length} of the ${total} ranked players in the <a href="/witb/players/">DORMIED WITB database</a> currently carry ${escHtml(brand.name)} equipment, including ${namesHtml}.`;
+      items.push({ q: `Do any pros play ${brand.name}?`, aHtml, aText });
+    }
+  }
+
+  return items;
+}
+
+function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
-  const pageTitle    = `${escHtml(brand.name)} | DORMIED Brand Profile`;
+  // WITB-style title: exact query phrase first, plain-language promise, year from the
+  // latest snapshot so it rolls over automatically. Equipment brands (those with an
+  // ON TOUR section) promise "Who Plays It"; apparel/no-tour brands promise Rank + Trend.
+  // Long names drop ", Trend" to stay near 60 chars. No em dashes.
+  const titleYear = (stats.currentMonth || '').split(' ')[1] || String(new Date().getFullYear());
+  const hasTour   = !!onTourHtml;
+  let pageTitle;
+  if (hasTour) {
+    pageTitle = `${brand.name}: Golf Brand Rank, Trend + Who Plays It (${titleYear}) | DORMIED`;
+    if (pageTitle.length > 65) pageTitle = `${brand.name}: Golf Brand Rank + Who Plays It (${titleYear}) | DORMIED`;
+  } else {
+    pageTitle = `${brand.name}: Golf Brand Rank + Trend (${titleYear}) | DORMIED`;
+  }
+  pageTitle = escHtml(pageTitle);
   const metaDesc     = escHtml(buildMetaDesc(brand));
   const canonicalUrl = `https://dormied.com/brands/${escHtml(slug)}/`;
   const ogImage      = escHtml(brand.logo || 'https://dormied.com/images/og-image.jpg');
@@ -443,6 +531,27 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
       },
     ],
   });
+
+  // FAQ (facts + live Index data). Static rendered text, no accordion, no JS.
+  const faqItems = buildFaqItems({ brand, stats, dormiedData, onTourData, facts });
+  const faqHtml = faqItems.length === 0 ? '' : `
+            <!-- ── Frequently Asked ── -->
+            <section class="bp-section" aria-labelledby="bp-faq-heading">
+              <h2 class="bp-section-title bp-section-title--green" id="bp-faq-heading">Frequently Asked</h2>
+${faqItems.map(it => `              <div class="bp-faq-item">
+                <p class="bp-faq-q">${escHtml(it.q)}</p>
+                <p class="bp-faq-a">${it.aHtml}</p>
+              </div>`).join('\n')}
+            </section>`;
+  const faqJsonLdTag = faqItems.length === 0 ? '' : `\n  <script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map(it => ({
+      '@type': 'Question',
+      name: it.q,
+      acceptedAnswer: { '@type': 'Answer', text: it.aText },
+    })),
+  })}</script>`;
 
   // Article list HTML
   const articlesHtml = articles.length > 0
@@ -610,7 +719,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   <link rel="stylesheet" href="/css/styles.css?v=20260530">
 
   <!-- ── JSON-LD ── -->
-  <script type="application/ld+json" id="brand-jsonld">${jsonld}</script>
+  <script type="application/ld+json" id="brand-jsonld">${jsonld}</script>${faqJsonLdTag}
   <!-- Grow.me -->
   <script data-grow-initializer="">!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTowNjk5NTY3Ny0xMzU0LTQ5M2YtOWEyYi03Y2NkOTlkNWE3YWQ=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();</script>
   <!-- Mediavine Journey ads -->
@@ -771,6 +880,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
               <span class="bp-metric-val${t12m !== null ? (t12m > 0 ? ' change-up' : t12m < 0 ? ' change-down' : ' change-flat') : ''}">${escHtml(t12mStr)}</span>
             </div>
           </div>
+          <p class="bp-updated-line">Updated ${escHtml(stats.currentMonth || '')}</p>
         </div>
       </section>
       <div class="container">
@@ -840,6 +950,7 @@ ${countryRows}
             </section>
 
 ${onTourHtml}
+${faqHtml}
 
             <!-- ── Similar Brands ── -->
             <section class="bp-section" aria-labelledby="bp-similar-heading">
@@ -928,7 +1039,7 @@ ${onTourHtml}
   <script defer src="/js/take-preview.min.js?v=20260330"></script>
   <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  <script defer src="/js/brand.min.js?v=20260530"></script>
+  <script defer src="/js/brand.min.js?v=20260704"></script>
   <script defer src="/js/feed.min.js?v=20260701"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
@@ -983,32 +1094,35 @@ async function fetchWitbTourData(supabase) {
     return { players: [], items: [], shaftItems: [] };
   }
 
-  const bagIds = (players || []).map(p => p.current_bag_id).filter(Boolean);
-  if (!bagIds.length) return { players: players || [], items: [], shaftItems: [] };
+  const rankedIds = new Set((players || []).map(p => p.id));
 
-  // Paginate to bypass Supabase 1000-row default limit
-  const items = await witbPaginate((from, to) =>
+  // Items from CURRENT bags of ranked players, resolved via the witb_bags
+  // is_current join — the SAME universe the WITB player pages use
+  // (fetchTourComparison), so both page types share identical numbers.
+  // (players.current_bag_id can disagree with witb_bags.is_current for a few
+  // players; is_current is canonical.) Paginated to bypass the 1000-row cap.
+  const itemsAll = await witbPaginate((from, to) =>
     supabase
       .from('witb_bag_items')
-      .select('bag_id, club_type, raw_model, witb_brands!brand_id(dormied_brand_slug)')
-      .in('bag_id', bagIds)
+      .select('bag_id, club_type, raw_model, raw_brand, witb_brands!brand_id(name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id)')
       .range(from, to)
   ).catch(e => { console.warn('[brand-page] fetchWitbTourData items error:', e.message); return []; });
+  const items = itemsAll.filter(i => i.witb_bags?.is_current && rankedIds.has(i.witb_bags.player_id));
 
-  const shaftItemsRaw = await witbPaginate((from, to) =>
+  const shaftAll = await witbPaginate((from, to) =>
     supabase
       .from('witb_bag_items')
-      .select('bag_id, witb_shafts!shaft_id(dormied_brand_slug, model)')
-      .in('bag_id', bagIds)
+      .select('bag_id, witb_shafts!shaft_id(dormied_brand_slug, model), witb_bags!bag_id(is_current, player_id)')
       .not('shaft_id', 'is', null)
       .range(from, to)
   ).catch(e => { console.warn('[brand-page] fetchWitbTourData shafts error:', e.message); return []; });
+  const shaftItemsRaw = shaftAll.filter(i => i.witb_bags?.is_current && rankedIds.has(i.witb_bags.player_id));
 
   console.log(`[brand-page] On Tour: ${(players || []).length} ranked players, ${items.length} bag items, ${shaftItemsRaw.length} shaft items`);
   return { players: players || [], items, shaftItems: shaftItemsRaw };
 }
 
-function computeOnTourData({ players, items, shaftItems }, brandSlug) {
+function computeOnTourData({ players, items, shaftItems }, brandSlug, nameBySlug) {
   if (!brandSlug || !players.length) return [];
 
   const DISPLAY_CATS = [
@@ -1023,19 +1137,21 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
     { name: 'Grips',         types: ['grip'],                                                modelLabel: 'grip',        shaft: false },
   ];
 
-  const bagToPlayer = new Map(players.filter(p => p.current_bag_id).map(p => [p.current_bag_id, p]));
+  // Items are pre-filtered to is_current bags of ranked players; resolve the player
+  // through the witb_bags join (canonical), not the current_bag_id pointer.
   const playerById  = new Map(players.map(p => [p.id, p]));
+  const playerOf = (item) => playerById.get(item.witb_bags?.player_id);
 
   const results = [];
 
   for (const cat of DISPLAY_CATS) {
     if (cat.shaft) {
-      const allShaftItems = shaftItems.filter(i => bagToPlayer.has(i.bag_id));
+      const allShaftItems = shaftItems.filter(i => playerOf(i));
       const brandShaftItems = allShaftItems.filter(i => i.witb_shafts?.dormied_brand_slug === brandSlug);
 
       const brandPlayerSet = new Set();
       for (const item of brandShaftItems) {
-        const p = bagToPlayer.get(item.bag_id);
+        const p = playerOf(item);
         if (p) brandPlayerSet.add(p.id);
       }
       if (brandPlayerSet.size === 0) continue;
@@ -1044,7 +1160,7 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
       for (const item of allShaftItems) {
         const ds = item.witb_shafts?.dormied_brand_slug;
         if (!ds) continue;
-        const p = bagToPlayer.get(item.bag_id);
+        const p = playerOf(item);
         if (!p) continue;
         if (!shaftBrandCounts.has(ds)) shaftBrandCounts.set(ds, new Set());
         shaftBrandCounts.get(ds).add(p.id);
@@ -1065,7 +1181,7 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
         const m = (brandPrefix && rawModel.toLowerCase().startsWith(brandPrefix.toLowerCase()))
           ? rawModel.slice(brandPrefix.length).trimStart()
           : rawModel;
-        const p = bagToPlayer.get(item.bag_id); if (!p) continue;
+        const p = playerOf(item); if (!p) continue;
         if (!shaftModelToPlayers.has(m)) shaftModelToPlayers.set(m, new Set());
         shaftModelToPlayers.get(m).add(p.id);
       }
@@ -1079,7 +1195,13 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
             .sort((a, b) => (a.owgr_rank || 9999) - (b.owgr_rank || 9999)),
         }));
 
-      results.push({ cat: cat.name, rank, modelGroups: shaftModelGroups, topModel: null });
+      results.push({
+        cat: cat.name, rank, modelGroups: shaftModelGroups, topModel: null,
+        playerCount: brandPlayerSet.size,
+        totalRanked: players.length,
+        leaderName:  (nameBySlug && nameBySlug.get(sortedShaft[0][0])) || sortedShaft[0][0],
+        leaderCount: sortedShaft[0][1].size,
+      });
       continue;
     }
 
@@ -1088,7 +1210,7 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
 
     const brandPlayerSet = new Set();
     for (const item of brandItems) {
-      const p = bagToPlayer.get(item.bag_id);
+      const p = playerOf(item);
       if (p) brandPlayerSet.add(p.id);
     }
     if (brandPlayerSet.size === 0) continue;
@@ -1097,7 +1219,7 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
     for (const item of catItems) {
       const ds = item.witb_brands?.dormied_brand_slug;
       if (!ds) continue;
-      const p = bagToPlayer.get(item.bag_id);
+      const p = playerOf(item);
       if (!p) continue;
       if (!brandCounts.has(ds)) brandCounts.set(ds, new Set());
       brandCounts.get(ds).add(p.id);
@@ -1105,6 +1227,24 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
     const sorted = [...brandCounts.entries()].sort((a, b) => b[1].size - a[1].size);
     const rank = sorted.findIndex(([ds]) => ds === brandSlug) + 1;
     if (rank === 0) continue;
+
+    // Comparative-line counts use the SAME method as the WITB player pages
+    // (fetchTourComparison in generate-witb-player-page.js): unique ranked
+    // players counted by brand NAME with raw_brand fallback, so unmapped
+    // items are included and both page types share identical numbers.
+    const nameCounts = new Map();
+    for (const item of catItems) {
+      const bName = item.witb_brands?.name || item.raw_brand || 'Unknown';
+      const p = playerOf(item);
+      if (!p) continue;
+      if (!nameCounts.has(bName)) nameCounts.set(bName, new Set());
+      nameCounts.get(bName).add(p.id);
+    }
+    const brandDisplayName = brandItems[0]?.witb_brands?.name || null;
+    const nameSorted   = [...nameCounts.entries()].sort((a, b) => b[1].size - a[1].size);
+    const wCount       = brandDisplayName && nameCounts.has(brandDisplayName) ? nameCounts.get(brandDisplayName).size : brandPlayerSet.size;
+    const wLeaderName  = nameSorted.length ? nameSorted[0][0] : null;
+    const wLeaderCount = nameSorted.length ? nameSorted[0][1].size : 0;
 
     const globalModelCounts = new Map();
     for (const item of catItems) {
@@ -1118,7 +1258,7 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
     const modelToPlayers = new Map(); // model -> Set of player ids
     for (const item of brandItems) {
       const m = item.raw_model; if (!m) continue;
-      const p = bagToPlayer.get(item.bag_id); if (!p) continue;
+      const p = playerOf(item); if (!p) continue;
       if (!modelToPlayers.has(m)) modelToPlayers.set(m, new Set());
       modelToPlayers.get(m).add(p.id);
     }
@@ -1141,7 +1281,13 @@ function computeOnTourData({ players, items, shaftItems }, brandSlug) {
           .sort((a, b) => (a.owgr_rank || 9999) - (b.owgr_rank || 9999)),
       }));
 
-    results.push({ cat: cat.name, rank, modelGroups, topModel });
+    results.push({
+      cat: cat.name, rank, modelGroups, topModel,
+      playerCount: wCount,
+      totalRanked: players.length,
+      leaderName:  wLeaderName,
+      leaderCount: wLeaderCount,
+    });
   }
 
   return results;
@@ -1173,12 +1319,19 @@ function buildOnTourHtml(brandName, onTourData) {
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
   }
 
-  const catBlocks = onTourData.map(({ cat, rank, modelGroups, topModel }) => {
+  const catBlocks = onTourData.map(({ cat, rank, modelGroups, topModel, playerCount, totalRanked, leaderName, leaderCount }) => {
     const icon = getCatIcon(cat);
     let headerInner = `${icon}${escHtml(cat)} <span class="bp-tour-rank">· ${ordinal(rank)} on tour</span>`;
     if (topModel) {
       headerInner += `<span class="bp-tour-model"> · ${escHtml(topModel.name)} is the no. ${topModel.globalRank} ${escHtml(topModel.modelLabel)} model</span>`;
     }
+
+    // Comparative line matching the WITB player page language and computation
+    // ("{N} of {total} current bags. {Leader} leads ({M}).") so both page types
+    // share identical numbers.
+    const compareLine = (playerCount && totalRanked && leaderName)
+      ? `<p class="bp-tour-compare">${playerCount} of ${totalRanked} current bags. ${escHtml(leaderName)} leads (${leaderCount}).</p>`
+      : '';
 
     const modelRows = (modelGroups || []).map(({ model, count, players }) => {
       const playerLinks = '<div class="bp-tour-players">'
@@ -1195,6 +1348,7 @@ function buildOnTourHtml(brandName, onTourData) {
 
     return `            <div class="bp-tour-cat">
               <p class="bp-tour-cat-header">${headerInner}</p>
+              ${compareLine}
               <table class="bp-tour-model-table">
                 <tbody>
 ${modelRows}
@@ -1214,7 +1368,7 @@ ${catBlocks}
 
 // ── Process one brand ─────────────────────────────────────────────────────────
 
-async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTourData) {
+async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTourData, factsBySlug) {
   const outPath = path.join(SITE_ROOT, 'brands', brandSlug, 'index.html');
 
   // Smart skip: file exists and not forced
@@ -1243,10 +1397,13 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTour
 
   const relatedBrands = getRelatedBrands(dormiedData, brandSlug, curSearches);
 
-  const onTourData = witbTourData ? computeOnTourData(witbTourData, brandSlug) : [];
+  const nameBySlug = new Map(dormiedData.brands.map(b => [b.id, b.name]));
+  const onTourData = witbTourData ? computeOnTourData(witbTourData, brandSlug, nameBySlug) : [];
   const onTourHtml = buildOnTourHtml(brand.name, onTourData);
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml, dormiedLatestHtml });
+  const facts = (factsBySlug && factsBySlug.get(brandSlug)) || null;
+
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
@@ -1291,9 +1448,19 @@ async function main() {
     console.warn('[brand-page] WITB tour data fetch failed (On Tour sections will be empty):', e.message);
   }
 
+  // Brand facts for the FAQ section (fetched once for all brands; NULL fact = question skipped)
+  let factsBySlug = new Map();
+  try {
+    const { data: factRows, error: factsErr } = await supabase.from('dormied_brand_facts').select('*');
+    if (factsErr) console.warn('[brand-page] brand facts fetch failed (FAQ facts questions skipped):', factsErr.message);
+    factsBySlug = new Map((factRows || []).map(r => [r.brand_slug, r]));
+    console.log(`[brand-page] Brand facts loaded: ${factsBySlug.size}`);
+  } catch (e) {
+    console.warn('[brand-page] brand facts fetch failed:', e.message);
+  }
   for (const slug of targets) {
     try {
-      const result = await processOneBrand(dormiedData, supabase, slug, force, witbTourData);
+      const result = await processOneBrand(dormiedData, supabase, slug, force, witbTourData, factsBySlug);
       if (result.status === 'written') {
         console.log(`[brand-page] ✓ brands/${slug}/index.html`);
         written++;

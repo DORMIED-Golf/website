@@ -30,6 +30,10 @@ const feedBake = require('./feed-bake');
 
 const MAX_ARTICLES_PER_RUN = 5;
 
+// Baked sidebar modules HTML (Brands on the Move / Recently Updated Bags).
+// Set once in main() via feedBake.fetchSidebarModulesHtml; '' when unavailable.
+let SIDEBAR_MODULES_HTML = '';
+
 // ── Article generation model config ───────────────────────────────────────────
 // Opus 4.7 solo — highest voice quality, no advisor.
 // NOTE: Opus 4.7 tokenizes ~35% more tokens than prior Opus at the same
@@ -951,6 +955,7 @@ function generateArticleHtml(opts) {
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
             </section>
+            ${SIDEBAR_MODULES_HTML}
           </aside>
 
         </div><!-- /table-layout -->
@@ -1089,6 +1094,10 @@ async function main() {
   } catch (e) {
     console.warn('[generate] Feed bake pre-fetch failed:', e.message);
   }
+
+  // Baked sidebar modules (Brands on the Move / Recently Updated Bags) — fetched
+  // once per run, interpolated into every article sidebar. Text-only, no client fetch.
+  SIDEBAR_MODULES_HTML = await feedBake.fetchSidebarModulesHtml(supabase, dormiedData);
 
   // --force-id=<golf_wire_matched uuid>  bypass all cooldown/dedup checks for one article
   const forceArg = process.argv.find(a => a.startsWith('--force-id='));

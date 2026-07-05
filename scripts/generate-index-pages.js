@@ -864,6 +864,27 @@ async function generateScorecard() {
     '$1Previous Issues'
   );
 
+  /* Baked sidebar modules (Brands on the Move / Recently Updated Bags) — appended
+     to the existing sidebar beneath Top Stories + Latest. Idempotent via markers. */
+  try {
+    require('dotenv').config({ path: path.join(__dirname, '../.env') });
+    const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
+    if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+      const { createClient } = require('@supabase/supabase-js');
+      const feedBake = require('./feed-bake');
+      const dataSrcMods = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
+      const modCtx = { window: {}, console };
+      vm.createContext(modCtx);
+      vm.runInContext(dataSrcMods, modCtx);
+      const modsHtml = await feedBake.fetchSidebarModulesHtml(
+        createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY), modCtx.window.DORMIED_DATA);
+      html = html.replace(/\s*<!-- sidebar-mods:start -->[\s\S]*?<!-- sidebar-mods:end -->/g, '');
+      if (modsHtml) html = html.replace('</aside>', `  ${modsHtml}\n          </aside>`);
+    }
+  } catch (e) {
+    console.warn('  ⚠  sidebar modules skipped:', e.message);
+  }
+
   fs.writeFileSync(filePath, html, 'utf8');
   console.log(`  ✔  scorecard/index.html — hero + ${archive.length} archive card(s), title/meta/intro updated`);
 }

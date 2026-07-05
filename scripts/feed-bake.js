@@ -295,4 +295,78 @@ function renderLatestFeedHtml(articles, dormiedData) {
   return articles.map(function (a) { return renderArticleCard(a, dormiedData); }).join('');
 }
 
-module.exports = { fetchLatestArticles, fetchTopStoriesArticles, renderLatestFeedHtml, renderFeedPageCard, renderHomeLatestHtml };
+/* ── Sidebar modules: Brands on the Move + Recently Updated Bags ──────────────
+   Baked into prerendered HTML at build time (no client-side fetch), text-only,
+   fixed reserved height (no CLS), desktop-only via CSS. Optional manual pin per
+   module via dormied_sidebar_config.pinned_slug; otherwise pure auto.
+   Returns '' on any failure so a data hiccup never breaks a bake.             */
+async function fetchSidebarModulesHtml(supabase, dormiedData) {
+  try {
+    // Manual pins (optional)
+    const { data: cfgRows } = await supabase.from('dormied_sidebar_config').select('module_key, pinned_slug');
+    const pins = {};
+    (cfgRows || []).forEach(function (r) { pins[r.module_key] = r.pinned_slug || null; });
+
+    // Brands on the Move: top 5 by |mom_change_pct| from the latest snapshot
+    const { data: latestRow } = await supabase
+      .from('dormied_monthly_brand_summary')
+      .select('snapshot_month').order('snapshot_month', { ascending: false }).limit(1).maybeSingle();
+    let moverRows = [];
+    if (latestRow) {
+      const { data: summary } = await supabase
+        .from('dormied_monthly_brand_summary')
+        .select('brand_slug, mom_change_pct')
+        .eq('snapshot_month', latestRow.snapshot_month)
+        .not('mom_change_pct', 'is', null);
+      const sorted = (summary || []).sort(function (a, b) { return Math.abs(b.mom_change_pct) - Math.abs(a.mom_change_pct); });
+      const pin = pins.brands_on_move ? sorted.find(function (r) { return r.brand_slug === pins.brands_on_move; }) : null;
+      moverRows = (pin ? [pin] : []).concat(sorted.filter(function (r) { return !pin || r.brand_slug !== pin.brand_slug; })).slice(0, 5);
+    }
+
+    // Recently Updated Bags: 5 most recent distinct players from witb_changes
+    const { data: changes } = await supabase
+      .from('witb_changes')
+      .select('player_id, club_type, change_type, detected_at, witb_players!player_id(name, slug)')
+      .order('detected_at', { ascending: false })
+      .limit(60);
+    const seen = new Set();
+    let bagRows = [];
+    for (const c of (changes || [])) {
+      const p = c.witb_players;
+      if (!p || !p.slug || seen.has(p.slug)) continue;
+      seen.add(p.slug);
+      const verb = c.change_type === 'added' ? 'added' : c.change_type === 'removed' ? 'dropped' : 'new';
+      bagRows.push({ slug: p.slug, name: p.name, note: verb + ' ' + (c.club_type || 'club') });
+    }
+    if (pins.recent_bags) {
+      const idx = bagRows.findIndex(function (r) { return r.slug === pins.recent_bags; });
+      if (idx > 0) bagRows.unshift(bagRows.splice(idx, 1)[0]);
+    }
+    bagRows = bagRows.slice(0, 5);
+
+    if (!moverRows.length && !bagRows.length) return '';
+
+    const nameOf = function (slug) { return brandNameFromData(dormiedData, slug) || slug; };
+    const moversHtml = moverRows.map(function (r) {
+      const up  = r.mom_change_pct >= 0;
+      const pct = (up ? '+' : '') + r.mom_change_pct.toFixed(1) + '%';
+      return '<a href="/brands/' + escHtml(r.brand_slug) + '/" class="sidebar-mod-row feed-brand-tag ' + (up ? 'feed-brand-tag--up' : 'feed-brand-tag--down') + '">'
+        + escHtml(nameOf(r.brand_slug)) + ' <span class="feed-tag-pct">' + escHtml(pct) + '</span></a>';
+    }).join('');
+    const bagsHtml = bagRows.map(function (r) {
+      return '<a href="/witb/players/' + escHtml(r.slug) + '/" class="sidebar-mod-row sidebar-mod-row--bag">'
+        + escHtml(r.name) + ' <span class="sidebar-mod-note">' + escHtml(r.note) + '</span></a>';
+    }).join('');
+
+    let html = '<!-- sidebar-mods:start --><div class="sidebar-mods">';
+    if (moverRows.length) html += '<section class="sidebar-mod" aria-label="Brands on the move"><h2 class="latest-feed-heading">Brands on the Move</h2><div class="sidebar-mod-rows">' + moversHtml + '</div></section>';
+    if (bagRows.length)   html += '<section class="sidebar-mod" aria-label="Recently updated bags"><h2 class="latest-feed-heading">Recently Updated Bags</h2><div class="sidebar-mod-rows">' + bagsHtml + '</div></section>';
+    html += '</div><!-- sidebar-mods:end -->';
+    return html;
+  } catch (e) {
+    console.warn('[feed-bake] sidebar modules failed:', e.message);
+    return '';
+  }
+}
+
+module.exports = { fetchLatestArticles, fetchTopStoriesArticles, renderLatestFeedHtml, renderFeedPageCard, renderHomeLatestHtml, fetchSidebarModulesHtml };

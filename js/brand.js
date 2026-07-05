@@ -426,25 +426,17 @@
     const peakBrand  = Math.max(...actualVals, 1);
     const brandData  = brandRaw.map(v => parseFloat((Math.min(100, v / peakBrand * 100)).toFixed(1)));
 
-    // Global index average: for each month, average each brand's individually
-    // normalised score (raw / brand's own period-peak * 100) — the same unit
-    // as the brand line — then average across brands with data that month.
-    // This keeps both lines on the same "% of own peak" scale so the
-    // comparison is meaningful (no more avg showing 80 while a top-4 brand is 30).
-    const brandPeaks = data.brands.map(b => {
-      const s = b.searchesByMarket?.[chartMarket] || {};
-      const bActual = months.filter(m => m !== projM).map(m => s[m] || 0);
-      return Math.max(...bActual, 1);
-    });
+    // Global index average: the true index-wide mean DI for each month.
+    // DI(brand, month) = raw searches / the top brand's raw searches that month * 100,
+    // averaged across all brands with data. Identical on every brand page for a
+    // given market and month — it does not depend on which brand's chart it is on.
     const globalAvgData = months.map(m => {
-      const normVals = data.brands
-        .map((b, i) => {
-          const raw = b.searchesByMarket?.[chartMarket]?.[m] || 0;
-          return raw > 0 ? raw / brandPeaks[i] * 100 : null;
-        })
-        .filter(v => v !== null);
-      if (!normVals.length) return 0;
-      return parseFloat((normVals.reduce((a, v) => a + v, 0) / normVals.length).toFixed(1));
+      const raws = data.brands.map(b => b.searchesByMarket?.[chartMarket]?.[m] || 0);
+      const maxRaw = Math.max(...raws);
+      if (maxRaw <= 0) return 0;
+      const dis = raws.filter(v => v > 0).map(v => v / maxRaw * 100);
+      if (!dis.length) return 0;
+      return parseFloat((dis.reduce((a, v) => a + v, 0) / dis.length).toFixed(1));
     });
 
     // Split brand index into actual vs projected segments
@@ -571,6 +563,12 @@
 
     const isProjected = labels.includes(projM);
 
+    // Scale the y axis to the data range with ~18% headroom instead of a fixed
+    // 0-100, so low-DI brands are not flattened into a floor line.
+    const yVals = [...projDataActual, ...projDataProj, ...globalAvgData]
+      .filter(v => v !== null && isFinite(v));
+    const yMax = Math.ceil(Math.max(...yVals, 1) * 1.18);
+
     chartInst = new Chart(canvas, {
       type: 'line',
       plugins: [tournamentPlugin],
@@ -668,12 +666,11 @@
           y: {
             grid:  { color: 'rgba(26,46,26,0.5)', drawTicks: false },
             min: 0,
-            max: 100,
+            max: yMax,
             ticks: {
               color:    '#4d6b4d',
               font:     { family: 'JetBrains Mono', size: 10 },
-              stepSize: 25,
-              callback(v) { return v === 100 ? '100' : v; },
+              maxTicksLimit: 6,
             },
           },
         },
@@ -1128,8 +1125,20 @@
   // ─── SEO ──────────────────────────────────────────────────────────────────
 
   function updateSEO(globalRank, di) {
-    const title = `${brand.name} | DORMIED Index — Golf Brand Profile`;
-    const desc  = `${brand.name} ranks #${globalRank} on the DORMIED Index with a DI score of ${di}. Track their 36-month search trend across 10 global golf markets.`;
+    // WITB-style title, identical to the baked template in generate-brand-page.js:
+    // brand name first, plain-language promise, year from the latest snapshot.
+    // Equipment brands (page has an ON TOUR section) promise "Who Plays It".
+    const seoData   = window.DORMIED_DATA || {};
+    const titleYear = ((seoData.meta && seoData.meta.currentMonth) || '').split(' ')[1] || String(new Date().getFullYear());
+    const hasTour   = !!document.querySelector('.bp-on-tour-section');
+    var title;
+    if (hasTour) {
+      title = `${brand.name}: Golf Brand Rank, Trend + Who Plays It (${titleYear}) | DORMIED`;
+      if (title.length > 65) title = `${brand.name}: Golf Brand Rank + Who Plays It (${titleYear}) | DORMIED`;
+    } else {
+      title = `${brand.name}: Golf Brand Rank + Trend (${titleYear}) | DORMIED`;
+    }
+    const desc  = `${brand.name} ranks #${globalRank} of 175+ golf brands on the DORMIED Index with a DI score of ${di}. Track their 36-month search trend across 10 global golf markets.`;
     const url   = `https://dormied.com/brands/${brand.id}/`;
 
     document.title = title;
@@ -1143,17 +1152,10 @@
     document.getElementById('tw-title').content = title;
     document.getElementById('tw-desc').content  = desc;
 
-    // JSON-LD
-    const jsonld = {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: brand.name,
-      url:  brand.website || url,
-      description: brand.description || `${brand.name} is tracked on the DORMIED Index.`,
-      foundingDate: brand.founded ? String(brand.founded) : undefined,
-      ...(brand.logo ? { logo: brand.logo } : {}),
-    };
-    document.getElementById('brand-jsonld').textContent = JSON.stringify(jsonld, null, 2);
+    // JSON-LD: leave the baked @graph (BreadcrumbList + Organization + Article with
+    // datePublished/dateModified from the latest snapshot) untouched. The previous
+    // client overwrite replaced it with a bare Organization node, destroying the
+    // Article schema and its dateModified freshness signal in the rendered DOM.
   }
 
   // ─── Prev / Next navigation ────────────────────────────────────────────────

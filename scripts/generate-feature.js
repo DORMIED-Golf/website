@@ -27,6 +27,10 @@ const feedBake = require('./feed-bake');
 
 const ROOT = path.resolve(__dirname, '..');
 
+// Baked sidebar modules HTML (Brands on the Move / Recently Updated Bags).
+// Set in main() via feedBake.fetchSidebarModulesHtml; '' when unavailable.
+let SIDEBAR_MODULES_HTML = '';
+
 // ── Feature definitions ─────────────────────────────────────────────────────────
 const FEATURES = {
   'confidential-sources': {
@@ -479,6 +483,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
             </section>
+            ${SIDEBAR_MODULES_HTML}
           </aside>
 
         </div><!-- /table-layout -->
@@ -585,6 +590,7 @@ async function main() {
       const { data: existing } = await supabase
         .from('dormied_articles').select('published_at').eq('slug', F.slug).maybeSingle();
       if (existing && existing.published_at) existingPublishedAt = existing.published_at;
+      SIDEBAR_MODULES_HTML = await feedBake.fetchSidebarModulesHtml(supabase, dormiedData);
     } catch (e) { console.warn('[feature] LATEST sidebar bake failed:', e.message); }
   }
 
