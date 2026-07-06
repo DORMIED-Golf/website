@@ -571,10 +571,12 @@
     const isProjected = labels.includes(projM);
 
     // Scale the y axis to the data range with ~18% headroom instead of a fixed
-    // 0-100, so low-DI brands are not flattened into a floor line.
+    // 0-100, so low-DI brands are not flattened into a floor line. DI is a
+    // 0-100 index, so the axis never exceeds 100 (a top brand at DI 100 tops
+    // the axis at 100, not 118).
     const yVals = [...projDataActual, ...projDataProj, ...globalAvgData]
       .filter(v => v !== null && isFinite(v));
-    const yMax = Math.ceil(Math.max(...yVals, 1) * 1.18);
+    const yMax = Math.min(100, Math.ceil(Math.max(...yVals, 1) * 1.18));
 
     chartInst = new Chart(canvas, {
       type: 'line',

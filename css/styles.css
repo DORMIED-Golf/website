@@ -1904,7 +1904,14 @@ details[open] .faq-question::after { content: '−'; }
 .sidebar-mods { display: none; }
 @media (min-width: 1200px) {
   .sidebar-mods { display: block; }
-  .sidebar-mod { margin-top: 24px; }
+  /* Consistent 32px vertical rhythm between every sidebar section (Top Stories,
+     Latest, Featured, Brands on the Move, Recently Updated Bags). Scoped to the
+     sidebar column so the home main feed spacing is unchanged. */
+  .sidebar-ad-col .latest-feed-section,
+  .sidebar-ad-col .home-stories-section,
+  .sidebar-ad-col .sidebar-mod { margin: 0 0 32px 0; padding-bottom: 0; }
+  .sidebar-ad-col .sidebar-mods { margin: 0; }
+  .sidebar-mod { margin: 0 0 32px 0; }
   .sidebar-mod-rows { height: 160px; overflow: hidden; }
   .sidebar-mod-row {
     display: flex;

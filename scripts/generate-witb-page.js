@@ -717,7 +717,7 @@ function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
 
 // ── Full page HTML ─────────────────────────────────────────────────────────
 
-function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap, latestFeedHtml, topStoriesHtml }) {
+function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap, latestFeedHtml, topStoriesHtml, modsHtml }) {
   // Canonical set: players with a non-null OWGR rank (158 today; sentinel 4990 included)
   const rankedPlayers      = players.filter(p => p.owgr_rank !== null);
   const rankedBagIds       = new Set(rankedPlayers.map(p => p.current_bag_id).filter(Boolean));
@@ -941,8 +941,8 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
     .witb-fp-date{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);flex-shrink:0}
   </style>
 
-  <link rel="preload" href="/css/styles.min.css?v=20260530" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260530"></noscript>
+  <link rel="preload" href="/css/styles.min.css?v=20260707" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260707"></noscript>
 
   <!-- JSON-LD: Dataset -->
   <script type="application/ld+json">
@@ -1240,6 +1240,7 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
             ${topStoriesHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
           </div>
         </section>
+        ${modsHtml || ''}
         <section class="home-stories-section latest-feed-section" aria-labelledby="witb-latest-heading">
           <h2 class="latest-feed-heading" id="witb-latest-heading">Latest</h2>
           <div id="dormied-latest-list" class="latest-feed-list">
@@ -1574,19 +1575,22 @@ async function main() {
 
   let latestFeedHtml = null;
   let topStoriesHtml = null;
+  let modsHtml = '';
   try {
-    const [latestArticles, topStoriesArticles] = await Promise.all([
+    const [latestArticles, topStoriesArticles, modsRes] = await Promise.all([
       feedBake.fetchLatestArticles(sb, 10, null),
       feedBake.fetchTopStoriesArticles(sb, dormiedData, 10),
+      feedBake.fetchSidebarModulesHtml(sb, dormiedData),
     ]);
     latestFeedHtml = latestArticles.length  ? feedBake.renderLatestFeedHtml(latestArticles,    dormiedData) : null;
     topStoriesHtml = topStoriesArticles.length ? feedBake.renderLatestFeedHtml(topStoriesArticles, dormiedData) : null;
+    modsHtml = modsRes || '';
   } catch (e) {
     console.warn('[witb-page] Feed bake failed:', e.message);
   }
 
   console.log('\nBuilding page HTML...');
-  const html = buildPage({ ...data, latestFeedHtml, topStoriesHtml });
+  const html = buildPage({ ...data, latestFeedHtml, topStoriesHtml, modsHtml });
   writeWitbLeadersData(data);
 
   // Ensure /witb directory exists

@@ -42,6 +42,45 @@ const { regenerateSitemap } = require('./generate-sitemap');
   });
 })();
 
+/* ── Sidebar modules (Brands on the Move + Recently Updated Bags) ─────────────
+   Fetched once per run (brand-independent) and injected at a positioned slot
+   marker: <!-- SIDEBAR_MODS_SLOT -->. Falls back to appending before </aside>
+   for any page whose shell predates the marker. Idempotent. */
+let _modsHtmlCache = null;
+async function getSidebarModsHtml() {
+  if (_modsHtmlCache !== null) return _modsHtmlCache;
+  _modsHtmlCache = '';
+  try {
+    const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
+    if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+      const { createClient } = require('@supabase/supabase-js');
+      const feedBake = require('./feed-bake');
+      const dataSrc = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
+      const ctx = { window: {}, console };
+      vm.createContext(ctx);
+      vm.runInContext(dataSrc, ctx);
+      _modsHtmlCache = await feedBake.fetchSidebarModulesHtml(
+        createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY), ctx.window.DORMIED_DATA) || '';
+    }
+  } catch (e) {
+    console.warn('  ⚠  sidebar modules fetch skipped:', e.message);
+  }
+  return _modsHtmlCache;
+}
+async function injectSidebarMods(html) {
+  const modsHtml = await getSidebarModsHtml();
+  // Strip any previously-inserted mods block so re-runs stay idempotent.
+  html = html.replace(/\s*<!-- sidebar-mods:start -->[\s\S]*?<!-- sidebar-mods:end -->/g, '');
+  if (!modsHtml) return html;
+  if (html.includes('<!-- SIDEBAR_MODS_SLOT -->')) {
+    // Insert AFTER the marker and KEEP the marker so subsequent bakes reposition
+    // the mods block correctly (idempotent).
+    return html.replace('<!-- SIDEBAR_MODS_SLOT -->', `<!-- SIDEBAR_MODS_SLOT -->\n            ${modsHtml}`);
+  }
+  // No slot marker: append before </aside> (legacy fallback).
+  return html.replace('</aside>', `  ${modsHtml}\n          </aside>`);
+}
+
 /* ── CLI flags ────────────────────────────────────────────────────────────── */
 const args = process.argv.slice(2);
 const targetArg = args.find(a => a.startsWith('--target='));
@@ -284,7 +323,7 @@ function escapeRegex(str) {
 /* ══════════════════════════════════════════════════════════════════════════
    BRANDS  (/brands/index.html)
    ══════════════════════════════════════════════════════════════════════════ */
-function generateBrands() {
+async function generateBrands() {
   console.log('\n── Brands ──────────────────────────────────────────────');
 
   /* mtime check: skip if brands/index.html is newer than js/data.js */
@@ -458,6 +497,9 @@ function generateBrands() {
 
   /* Inject brand grid */
   html = injectIntoId(html, 'brands-grid', gridHtml);
+
+  /* Sidebar modules at the <!-- SIDEBAR_MODS_SLOT --> marker (between Top Stories and Latest) */
+  html = await injectSidebarMods(html);
 
   fs.writeFileSync(filePath, html, 'utf8');
   console.log(`  ✔  brands/index.html — ${n} brand cards, title/meta/intro updated`);
@@ -661,6 +703,9 @@ async function generateNews() {
 
   /* Inject article list */
   newsHtml = injectIntoId(newsHtml, 'feed-list', feedHtml);
+
+  /* Sidebar modules at the <!-- SIDEBAR_MODS_SLOT --> marker (between Top Stories and Featured) */
+  newsHtml = await injectSidebarMods(newsHtml);
 
   fs.writeFileSync(newsFilePath, newsHtml, 'utf8');
   console.log(`  ✔  news/index.html — ${page1Articles.length} articles, title/meta/intro updated`);
@@ -871,29 +916,24 @@ async function generateScorecard() {
     '$1Previous Issues'
   );
 
-  /* Baked sidebar modules (Brands on the Move / Recently Updated Bags) — appended
-     to the existing sidebar beneath Top Stories + Latest. Idempotent via markers. */
-  try {
-    require('dotenv').config({ path: path.join(__dirname, '../.env') });
-    const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
-    if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
-      const { createClient } = require('@supabase/supabase-js');
-      const feedBake = require('./feed-bake');
-      const dataSrcMods = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
-      const modCtx = { window: {}, console };
-      vm.createContext(modCtx);
-      vm.runInContext(dataSrcMods, modCtx);
-      const modsHtml = await feedBake.fetchSidebarModulesHtml(
-        createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY), modCtx.window.DORMIED_DATA);
-      html = html.replace(/\s*<!-- sidebar-mods:start -->[\s\S]*?<!-- sidebar-mods:end -->/g, '');
-      if (modsHtml) html = html.replace('</aside>', `  ${modsHtml}\n          </aside>`);
-    }
-  } catch (e) {
-    console.warn('  ⚠  sidebar modules skipped:', e.message);
-  }
+  /* Sidebar modules (Brands on the Move / Recently Updated Bags) — positioned at
+     the <!-- SIDEBAR_MODS_SLOT --> marker (between Top Stories and Latest). */
+  html = await injectSidebarMods(html);
 
   fs.writeFileSync(filePath, html, 'utf8');
   console.log(`  ✔  scorecard/index.html — hero + ${archive.length} archive card(s), title/meta/intro updated`);
+}
+
+/* /rankings is a static page (sidebar hydrated client-side). It has no content
+   generator, so we only inject the baked sidebar modules at its slot marker. */
+async function generateRankings() {
+  const filePath = path.join(ROOT, 'rankings/index.html');
+  if (!fs.existsSync(filePath)) return;
+  console.log('\n── Rankings ─────────────────────────────────────────────');
+  let html = fs.readFileSync(filePath, 'utf8');
+  html = await injectSidebarMods(html);
+  fs.writeFileSync(filePath, html, 'utf8');
+  console.log('  ✔  rankings/index.html — sidebar modules updated');
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -997,9 +1037,10 @@ function updateSitemap(newsPageCount) {
   let newsResult = { totalPages: 0 };
 
   try {
-    if (doBrands)    generateBrands();
+    if (doBrands)    await generateBrands();
     if (doNews)      newsResult = await generateNews();
     if (doScorecard) await generateScorecard();
+    if (doAll || doBrands) await generateRankings();
 
     if (doAll || doNews) {
       ensureVercelNewsPageRoutes();

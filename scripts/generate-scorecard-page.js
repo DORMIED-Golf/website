@@ -698,20 +698,21 @@ async function main() {
       feedBake.fetchLatestArticles(sb, 10, null),
       feedBake.fetchSidebarModulesHtml(sb, dormiedData),
     ]);
+    // Issue-page sidebar order: Latest, then modules, then Top Stories.
     let aside = '';
-    if (topStories.length) {
-      aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-stories-heading">
-              <h2 class="latest-feed-heading" id="sc-issue-stories-heading">Top Stories</h2>
-              <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(topStories, dormiedData)}</div>
-            </section>\n`;
-    }
     if (latest.length) {
       aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-latest-heading">
               <h2 class="latest-feed-heading" id="sc-issue-latest-heading">Latest</h2>
               <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(latest, dormiedData)}</div>
             </section>\n`;
     }
-    if (modsHtml) aside += `            ${modsHtml}`;
+    if (modsHtml) aside += `            ${modsHtml}\n`;
+    if (topStories.length) {
+      aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-stories-heading">
+              <h2 class="latest-feed-heading" id="sc-issue-stories-heading">Top Stories</h2>
+              <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(topStories, dormiedData)}</div>
+            </section>\n`;
+    }
     SC_SIDEBAR_HTML = aside;
   } catch (e) {
     console.warn('[scorecard-page] sidebar bake skipped:', e.message);

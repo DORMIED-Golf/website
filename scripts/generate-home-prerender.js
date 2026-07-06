@@ -277,6 +277,7 @@ async function run() {
   // env is present; otherwise the existing baked section is left unchanged.
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_KEY;
+  let modsHtml = '';
   if (url && key) {
     try {
       const { createClient } = require('@supabase/supabase-js');
@@ -289,6 +290,8 @@ async function run() {
       } else {
         console.warn('[prerender] No published articles — hero/preload sections unchanged');
       }
+      // Sidebar modules (Brands on the Move / Recently Updated Bags), baked below Top Stories.
+      modsHtml = await feedBake.fetchSidebarModulesHtml(supabase, data) || '';
     } catch (e) {
       console.warn('[prerender] LATEST bake failed:', e.message, '— hero/preload sections unchanged');
     }
@@ -300,6 +303,10 @@ async function run() {
   for (const [key, content] of Object.entries(sections)) {
     html = injectBetweenMarkers(html, key, content);
   }
+  // Position sidebar modules at the slot marker, keeping the marker so re-bakes
+  // stay idempotent (strip any stale block first).
+  html = html.replace(/\s*<!-- sidebar-mods:start -->[\s\S]*?<!-- sidebar-mods:end -->/g, '');
+  if (modsHtml) html = html.replace('<!-- SIDEBAR_MODS_SLOT -->', `<!-- SIDEBAR_MODS_SLOT -->\n        ${modsHtml}`);
   fs.writeFileSync(INDEX_HTML, html, 'utf8');
 
   const playerCount = (leaders.topPlayers || []).slice(0, 5).length;

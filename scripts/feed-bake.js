@@ -344,7 +344,7 @@ async function fetchSidebarModulesHtml(supabase, dormiedData) {
       if (!p || !p.slug || seen.has(p.slug)) continue;
       seen.add(p.slug);
       const verb = c.change_type === 'added' ? 'added' : c.change_type === 'removed' ? 'dropped' : 'new';
-      bagRows.push({ slug: p.slug, name: p.name, note: verb + ' ' + (c.club_type || 'club') });
+      bagRows.push({ slug: p.slug, name: p.name, note: (verb + ' ' + (c.club_type || 'club')).toUpperCase() });
     }
     if (pins.recent_bags) {
       const idx = bagRows.findIndex(function (r) { return r.slug === pins.recent_bags; });

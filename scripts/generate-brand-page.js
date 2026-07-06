@@ -440,7 +440,7 @@ function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
   return items;
 }
 
-function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml }) {
+function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, modsHtml = '' }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
   // WITB-style title: exact query phrase first, plain-language promise, year from the
@@ -981,7 +981,7 @@ ${faqHtml}
 
           </article><!-- /bp-page-main -->
 
-          <!-- Sidebar: LATEST widget -->
+          <!-- Sidebar: LATEST widget, then Brands on the Move + Recently Updated Bags -->
           <aside class="sidebar-ad-col">
             <section class="home-stories-section latest-feed-section" aria-labelledby="bp-dormied-latest-heading">
               <h2 class="latest-feed-heading" id="bp-dormied-latest-heading">Latest</h2>
@@ -989,6 +989,7 @@ ${faqHtml}
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
             </section>
+            ${modsHtml || ''}
           </aside>
 
         </div><!-- /bp-page-grid -->
@@ -1050,7 +1051,7 @@ ${faqHtml}
   <script defer src="/js/take-preview.min.js?v=20260330"></script>
   <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  <script defer src="/js/brand.min.js?v=20260705"></script>
+  <script defer src="/js/brand.min.js?v=20260707"></script>
   <script defer src="/js/feed.min.js?v=20260706"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
@@ -1379,7 +1380,7 @@ ${catBlocks}
 
 // ── Process one brand ─────────────────────────────────────────────────────────
 
-async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTourData, factsBySlug) {
+async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTourData, factsBySlug, modsHtml = '') {
   const outPath = path.join(SITE_ROOT, 'brands', brandSlug, 'index.html');
 
   // Smart skip: file exists and not forced
@@ -1414,7 +1415,7 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTour
 
   const facts = (factsBySlug && factsBySlug.get(brandSlug)) || null;
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml });
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml, modsHtml });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
@@ -1469,9 +1470,19 @@ async function main() {
   } catch (e) {
     console.warn('[brand-page] brand facts fetch failed:', e.message);
   }
+
+  // Baked sidebar modules (Brands on the Move / Recently Updated Bags) — fetched
+  // once for the whole run (brand-independent) and reused on every brand page.
+  let modsHtml = '';
+  try {
+    modsHtml = await require('./feed-bake').fetchSidebarModulesHtml(supabase, dormiedData) || '';
+  } catch (e) {
+    console.warn('[brand-page] sidebar modules fetch failed:', e.message);
+  }
+
   for (const slug of targets) {
     try {
-      const result = await processOneBrand(dormiedData, supabase, slug, force, witbTourData, factsBySlug);
+      const result = await processOneBrand(dormiedData, supabase, slug, force, witbTourData, factsBySlug, modsHtml);
       if (result.status === 'written') {
         console.log(`[brand-page] ✓ brands/${slug}/index.html`);
         written++;

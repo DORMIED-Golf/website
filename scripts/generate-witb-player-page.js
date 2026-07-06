@@ -634,7 +634,7 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
-function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml }) {
+function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, modsHtml }) {
   const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
@@ -943,8 +943,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     .owgr-logo{display:block;height:22px;width:auto}
   </style>
 
-  <link rel="preload" href="/css/styles.min.css?v=20260523" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260523"></noscript>
+  <link rel="preload" href="/css/styles.min.css?v=20260707" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260707"></noscript>
 
   <!-- JSON-LD -->
   <script type="application/ld+json">
@@ -1103,7 +1103,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
 
         </article><!-- /bp-sections-col -->
 
-        <!-- SIDEBAR: Latest only -->
+        <!-- SIDEBAR: Latest, then Brands on the Move + Recently Updated Bags -->
         <aside class="sidebar-ad-col">
           <section class="home-stories-section latest-feed-section" aria-labelledby="player-latest-heading">
             <h2 class="latest-feed-heading" id="player-latest-heading">Latest</h2>
@@ -1111,6 +1111,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
               ${latestFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
             </div>
           </section>
+          ${modsHtml || ''}
         </aside>
 
       </div><!-- /table-layout -->
@@ -1409,14 +1410,19 @@ async function main() {
 
   const dormiedData = loadDormiedData();
   let latestFeedHtml = null;
+  let modsHtml = '';
   try {
-    const latestArticles = await feedBake.fetchLatestArticles(sb, 10, null);
+    const [latestArticles, modsRes] = await Promise.all([
+      feedBake.fetchLatestArticles(sb, 10, null),
+      feedBake.fetchSidebarModulesHtml(sb, dormiedData),
+    ]);
     if (latestArticles.length) latestFeedHtml = feedBake.renderLatestFeedHtml(latestArticles, dormiedData);
+    modsHtml = modsRes || '';
   } catch (e) {
     console.warn('[witb-player-page] Feed bake failed:', e.message);
   }
 
-  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml });
+  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, modsHtml });
 
   const noindex = html.includes('noindex');
 
