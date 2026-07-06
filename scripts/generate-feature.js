@@ -554,7 +554,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   <script src="/js/analytics.min.js?v=20260320a"></script>
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
-  <script src="/js/feed.min.js?v=20260701"></script>
+  <script src="/js/feed.min.js?v=20260706"></script>
 
 </body>
 </html>`;

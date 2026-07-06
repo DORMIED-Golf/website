@@ -40,6 +40,12 @@
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
+  /* On image error, swap to a fixed-dimension neutral placeholder (keeps the
+     element and its reserved box) instead of removing it. Mirrors
+     THUMB_FALLBACK in scripts/feed-bake.js so client and baked markup match. */
+  var THUMB_FALLBACK = "this.onerror=null;this.removeAttribute('srcset');"
+    + "this.src='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2730%27%3E%3Crect%20width%3D%2740%27%20height%3D%2730%27%20fill%3D%27%23e8eaed%27%2F%3E%3C%2Fsvg%3E'";
+
   /* ── Refresh baked timestamps on prerendered cards ─────────────────────────
      Prerendered feed cards (e.g. home-dormied-list) keep their build-time
      "Xm ago" text to avoid a hydration layout shift. Recompute just the
@@ -123,7 +129,7 @@
                           + escHtml(vitUrl(article.imageUrl, 160)) + ' 160w,'
                           + escHtml(vitUrl(article.imageUrl, 400)) + ' 400w"'
             + ' sizes="(min-width: 1200px) 180px, 80px"'
-            + ' width="80" height="60" loading="lazy" alt="" onerror="this.remove()">';
+            + ' width="80" height="60" loading="lazy" alt="" onerror="' + THUMB_FALLBACK + '">';
     }
 
     var tags = '';
@@ -185,7 +191,7 @@
                           + escHtml(vitUrl(article.imageUrl,  800)) + ' 800w,'
                           + escHtml(vitUrl(article.imageUrl, 1200)) + ' 1200w"'
             + ' sizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw"'
-            + ' width="600" height="375" ' + imgAttrs + ' alt="" onerror="this.remove()">';
+            + ' width="600" height="375" ' + imgAttrs + ' alt="" onerror="' + THUMB_FALLBACK + '">';
     }
 
     var excerpt = '';

@@ -371,14 +371,25 @@ function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
     items.push({ q: `Who owns ${brand.name}?`, aHtml: escHtml(a), aText: a });
   }
 
+  // A founder stored as "Anonymous" signals a brand that intentionally does not
+  // disclose who is behind it — never render "founded by Anonymous".
+  const founderAnon  = f.founder && /^anonymous/i.test(f.founder);
+  const founderKnown = f.founder && !founderAnon;
+
   // Q2: where based (hq_city / hq_country, founded woven in when known)
   if (f.hq_city || f.hq_country) {
     const place = [f.hq_city, f.hq_country].filter(Boolean).join(', ');
     let a = `${brand.name} is based in ${place}.`;
-    if (f.founded_year && f.founder) a += ` It was founded in ${f.founded_year} by ${f.founder}.`;
-    else if (f.founded_year)         a += ` It was founded in ${f.founded_year}.`;
-    else if (f.founder)              a += ` It was founded by ${f.founder}.`;
+    if (f.founded_year && founderKnown) a += ` It was founded in ${f.founded_year} by ${f.founder}.`;
+    else if (f.founded_year)            a += ` It was founded in ${f.founded_year}.`;
+    else if (founderKnown)              a += ` It was founded by ${f.founder}.`;
     items.push({ q: `Where is ${brand.name} based?`, aHtml: escHtml(a), aText: a });
+  }
+
+  // Q2b: founder intentionally anonymous (by design)
+  if (founderAnon) {
+    const a = `${brand.name}'s founder is intentionally anonymous. The brand does not publicly disclose who is behind it.`;
+    items.push({ q: `Who founded ${brand.name}?`, aHtml: escHtml(a), aText: a });
   }
 
   // Q3: is it a good brand — ALWAYS renders, generated from live Index data
@@ -1039,8 +1050,8 @@ ${faqHtml}
   <script defer src="/js/take-preview.min.js?v=20260330"></script>
   <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  <script defer src="/js/brand.min.js?v=20260704"></script>
-  <script defer src="/js/feed.min.js?v=20260701"></script>
+  <script defer src="/js/brand.min.js?v=20260705"></script>
+  <script defer src="/js/feed.min.js?v=20260706"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/search.min.js?v=20260529"></script>

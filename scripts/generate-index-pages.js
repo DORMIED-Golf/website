@@ -23,6 +23,13 @@ const vm   = require('vm');
 /* ── Resolve root ─────────────────────────────────────────────────────────── */
 const ROOT = path.resolve(__dirname, '..');
 
+// On image error, swap to a fixed-dimension neutral placeholder (keeps the
+// element and its reserved box) instead of removing it, so a 404'd thumbnail
+// does not collapse its box and shift layout (CLS). Mirrors THUMB_FALLBACK in
+// scripts/feed-bake.js and js/feed.js.
+const THUMB_FALLBACK = "this.onerror=null;this.removeAttribute('srcset');"
+  + "this.src='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2730%27%3E%3Crect%20width%3D%2740%27%20height%3D%2730%27%20fill%3D%27%23e8eaed%27%2F%3E%3C%2Fsvg%3E'";
+
 const { regenerateSitemap } = require('./generate-sitemap');
 
 /* ── Load .env ────────────────────────────────────────────────────────────── */
@@ -552,7 +559,7 @@ async function generateNews() {
   function articleCardHtml(article) {
     const thumbHtml = article.imageUrl
       ? `<img class="feed-card-thumb feed-card-thumb--lg" src="${escHtml(article.imageUrl)}"` +
-          ` width="600" height="375" loading="lazy" alt="" onerror="this.remove()">`
+          ` width="600" height="375" loading="lazy" alt="" onerror="${THUMB_FALLBACK}">`
       : '';
 
     const descPlain = stripHtml(article.description || '');

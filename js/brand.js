@@ -417,26 +417,33 @@
     }
 
     const labels    = months;
-    const brandRaw  = months.map(m => mktS[m] || 0);
 
-    // ── Normalise to 0–100 index (brand's own all-time peak = 100) ──────────
-    // Peak is derived from actual months only (not the projection) so the
-    // scale stays stable regardless of which period tab is selected.
-    const actualVals = months.filter(m => m !== projM).map(m => mktS[m] || 0);
-    const peakBrand  = Math.max(...actualVals, 1);
-    const brandData  = brandRaw.map(v => parseFloat((Math.min(100, v / peakBrand * 100)).toFixed(1)));
+    // ── Actual DI per month (same units as the DI stat row and the rest of the
+    //    site): DI(brand, month) = raw searches / the top brand's raw that month
+    //    * 100. The per-month reference (maxRawByMonth) is shared by the brand
+    //    series and the index-average line below, so both plot in identical
+    //    actual-DI units and a brand above the average line is genuinely above
+    //    the field. PXG (DI ~20) peaks near 20, Titleist (DI ~100) near 100. ──
+    const maxRawByMonth = {};
+    months.forEach(m => {
+      maxRawByMonth[m] = Math.max(...data.brands.map(b => b.searchesByMarket?.[chartMarket]?.[m] || 0), 0);
+    });
+    const brandData = months.map(m => {
+      const mr = maxRawByMonth[m];
+      return mr > 0 ? parseFloat(Math.min(100, (mktS[m] || 0) / mr * 100).toFixed(1)) : 0;
+    });
 
-    // Global index average: the true index-wide mean DI for each month.
-    // DI(brand, month) = raw searches / the top brand's raw searches that month * 100,
-    // averaged across all brands with data. Identical on every brand page for a
-    // given market and month — it does not depend on which brand's chart it is on.
+    // Global index average: the true index-wide mean DI for each month, in the
+    // same actual-DI units as the brand series. Identical on every brand page
+    // for a given market/month (it does not depend on whose chart it is).
     const globalAvgData = months.map(m => {
-      const raws = data.brands.map(b => b.searchesByMarket?.[chartMarket]?.[m] || 0);
-      const maxRaw = Math.max(...raws);
-      if (maxRaw <= 0) return 0;
-      const dis = raws.filter(v => v > 0).map(v => v / maxRaw * 100);
-      if (!dis.length) return 0;
-      return parseFloat((dis.reduce((a, v) => a + v, 0) / dis.length).toFixed(1));
+      const mr = maxRawByMonth[m];
+      if (mr <= 0) return 0;
+      const dis = data.brands
+        .map(b => b.searchesByMarket?.[chartMarket]?.[m] || 0)
+        .filter(v => v > 0)
+        .map(v => v / mr * 100);
+      return dis.length ? parseFloat((dis.reduce((a, v) => a + v, 0) / dis.length).toFixed(1)) : 0;
     });
 
     // Split brand index into actual vs projected segments
@@ -576,7 +583,7 @@
         labels,
         datasets: [
           {
-            label: 'Brand searches',
+            label: 'DI Score',
             data: projDataActual,
             borderColor:     '#22c55e',
             backgroundColor: 'rgba(34,197,94,0.06)',

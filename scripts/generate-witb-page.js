@@ -1501,7 +1501,7 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/data.min.js?v=20260615"></script>
-  <script defer src="/js/feed.min.js?v=20260701"></script>
+  <script defer src="/js/feed.min.js?v=20260706"></script>
   <script defer src="/js/search.min.js?v=20260529"></script>
 </body>
 </html>`;
