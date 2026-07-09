@@ -1047,7 +1047,7 @@ ${faqHtml}
   <script>window.__BRAND_SLUG__='${escHtml(slug)}';</script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script defer src="/js/utils.min.js?v=20260318"></script>
-  <script defer src="/js/data.min.js?v=20260518"></script>
+  <script defer src="/js/data.min.js?v=20260709"></script>
   <script defer src="/js/take-preview.min.js?v=20260330"></script>
   <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
