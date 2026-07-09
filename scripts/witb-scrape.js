@@ -44,6 +44,18 @@ const PLAYER_LIMIT = (() => {
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
+// Canonical player-slug overrides: when the source site's URL slug differs from
+// our canonical slug, map it here so re-scrapes update the existing player
+// instead of creating a duplicate. pgaclubtracker spells Ludvig Aberg's URL
+// "ludwig-aberg"; our canonical slug is "ludvig-aberg" (301 redirect in place).
+const PLAYER_SLUG_ALIASES = {
+  'ludwig-aberg': 'ludvig-aberg',
+};
+
+function canonicalPlayerSlug(slug) {
+  return PLAYER_SLUG_ALIASES[slug] || slug;
+}
+
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function slugify(text) {
@@ -344,7 +356,8 @@ async function scrapeBagPage(url) {
  * Returns { player_id, bags_added, errors } or throws.
  */
 async function scrapePlayer(supabase, playerInfo, opts = {}) {
-  const { slug, name, source_url } = playerInfo;
+  const { name, source_url } = playerInfo;
+  const slug = canonicalPlayerSlug(playerInfo.slug);
   const { fetchHistory = true } = opts;
   const errors    = [];
   let   bags_added = 0;

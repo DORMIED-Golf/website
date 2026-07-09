@@ -73,14 +73,19 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: node scripts/witb-owgr-refresh.js
 
-      - name: Patch OWGR ranks on player pages
-        # Lightweight: reads each player's HTML file and updates only the
-        # rank span + updated date. No Anthropic API calls. Runs in <5s.
-        # Must run after witb-owgr-refresh.js so the DB has fresh ranks.
+      - name: Rebuild all WITB player pages
+        # Regenerates every /witb/players/{slug}/index.html from the DB so a new
+        # bag added by the scrape is reflected as the CURRENT BAG and the prior
+        # bag moves into BAG HISTORY. Also refreshes OWGR ranks (read from DB,
+        # so this supersedes the old rank-only patch step). The lede cache
+        # (slug:bag_date) means only players whose current bag changed trigger an
+        # Opus call; unchanged players are cache hits and rebuild in ~2s each.
+        # Must run after witb-owgr-refresh.js so pages carry fresh ranks.
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-        run: node scripts/patch-witb-owgr-ranks.js
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/generate-all-witb-pages.js
 
       - name: Rebuild WITB players directory
         # Regenerates /witb/players/index.html (the player grid/listing).
@@ -100,7 +105,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add witb/index.html js/witb-leaders.js witb/players/
+          git add witb/index.html js/witb-leaders.js witb/players/ scripts/cache/witb-player-ledes.json
           if git diff --cached --quiet; then
             echo "No changes — skipping commit"
           else
