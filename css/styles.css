@@ -2558,6 +2558,12 @@ details[open] .faq-question::after { content: '−'; }
 .feed-brand-tag--down:hover { background: rgba(248, 113, 113, .18); }
 .feed-brand-tag--flat  { color: #4d6b4d; border-color: rgba(77, 107, 77, .35); background: rgba(77, 107, 77, .08); }
 .feed-brand-tag--flat:hover { background: rgba(77, 107, 77, .18); }
+/* When feed cards render inside an article/brand body (e.g. "Latest on Brand"),
+   the generic `.da-article-body a` link color (specificity 0,2,0) would override
+   the tag's up/down/flat color. Re-assert the tag colors at higher specificity. */
+.da-article-body a.feed-brand-tag--up   { color: var(--green); }
+.da-article-body a.feed-brand-tag--down { color: #f87171; }
+.da-article-body a.feed-brand-tag--flat { color: #4d6b4d; }
 .feed-tag-pct          { opacity: .85; margin-left: 1px; }
 .feed-brand-tag-overflow {
   display: inline-flex;

@@ -199,7 +199,7 @@ function buildPage(players, brandNames, latestFeedHtml, topStoriesHtml) {
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.min.css?v=20260707">
+  <link rel="stylesheet" href="/css/styles.min.css?v=20260710">
 
   <script type="application/ld+json">
   {

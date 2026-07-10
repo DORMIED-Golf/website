@@ -941,8 +941,8 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
     .witb-fp-date{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);flex-shrink:0}
   </style>
 
-  <link rel="preload" href="/css/styles.min.css?v=20260707" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260707"></noscript>
+  <link rel="preload" href="/css/styles.min.css?v=20260710" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260710"></noscript>
 
   <!-- JSON-LD: Dataset -->
   <script type="application/ld+json">
