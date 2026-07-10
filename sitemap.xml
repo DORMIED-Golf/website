@@ -1048,6 +1048,12 @@
 
   <!-- ── Brand pages (176) ── -->
   <url>
+    <loc>https://dormied.com/brands/arnie-mcnair/</loc>
+    <lastmod>2026-07-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/brands/swag-golf/</loc>
     <lastmod>2026-07-09</lastmod>
     <changefreq>monthly</changefreq>
@@ -1385,12 +1391,6 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/mitsubishi-golf/</loc>
-    <lastmod>2026-07-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/arnie-mcnair/</loc>
     <lastmod>2026-07-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -2104,7 +2104,17 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (395) ── -->
+  <!-- ── News articles (396) ── -->
+  <url>
+    <loc>https://dormied.com/news/who-is-arnie-mcnair/</loc>
+    <lastmod>2026-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/features/arnie-mcnair/hero.webp</image:loc>
+      <image:title>Who Is Arnie McNair? How an Anonymous Golfer Built a Cult Brand</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/the-quiet-business-under-every-mygolfspy-hybrid-test-foresights-gcquad-2026-07-09/</loc>
     <lastmod>2026-07-09</lastmod>
@@ -6054,25 +6064,13 @@
 
   <!-- ── News pagination ── -->
   <url>
-    <loc>https://dormied.com/news/page/3/</loc>
+    <loc>https://dormied.com/news/page/8/</loc>
     <lastmod>2026-07-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://dormied.com/news/page/5/</loc>
-    <lastmod>2026-07-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-07-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/page/4/</loc>
+    <loc>https://dormied.com/news/page/7/</loc>
     <lastmod>2026-07-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -6084,13 +6082,25 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://dormied.com/news/page/8/</loc>
+    <loc>https://dormied.com/news/page/5/</loc>
     <lastmod>2026-07-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://dormied.com/news/page/7/</loc>
+    <loc>https://dormied.com/news/page/4/</loc>
+    <lastmod>2026-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/page/3/</loc>
+    <lastmod>2026-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/page/2/</loc>
     <lastmod>2026-07-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>

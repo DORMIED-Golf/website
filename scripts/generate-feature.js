@@ -105,6 +105,36 @@ const FEATURES = {
       ]},
     },
   },
+
+  'who-is-arnie-mcnair': {
+    slug: 'who-is-arnie-mcnair',
+    title: 'Who Is Arnie McNair? How an Anonymous Golfer Built a Cult Brand',
+    titleTag: 'Who Is Arnie McNair? The Anonymous Golfer Behind the Cult Brand | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam'],
+    category: 'Feature',
+    brandSlug: 'arnie-mcnair',
+    leadRole: 'bio',
+    lastUpdated: 'July 9, 2026',
+    dateModified: '2026-07-09T00:00:00.000Z',
+    metaDescription: 'Who is Arnie McNair? The anonymous Minnesota golfer behind the cult American-made apparel brand, what the $95 McNair Polo is, and what the DORMIED data shows.',
+    seoKeywords: ['arnie mcnair', 'arnie mcnair clothing', 'arnie mcnair golf', 'arnie mcnair polo', 'who is arnie mcnair'],
+    mdPath: path.join(ROOT, 'article-arnie-mcnair.md'),
+    imgBase: '/images/features/arnie-mcnair',
+    hero: { file: 'hero.webp', w: 1200, h: 779, alt: 'Arnie McNair golf polos in navy, pink, and white' },
+    // Images injected after the matching section heading.
+    sectionImages: {
+      'The Burnerverse origin story': { layout: 'single', images: [
+        { file: 'x-profile.webp', w: 884, h: 512, alt: 'Arnie McNair verified profile on X, @therealmcnair', caption: 'The account that started it. Arnie McNair built a following posting as an anonymous country club traditionalist on golf X before the brand existed.' },
+      ]},
+      'What the clothes actually are': { layout: 'single', images: [
+        { file: 'polo-navy.webp', w: 1000, h: 1326, alt: 'Navy Arnie McNair McNair Polo on a hanger, with a Made in the USA flag label', caption: 'The McNair Polo. Made in the USA from Supima cotton, with no visible logo and the flag on the label rather than the chest.' },
+      ]},
+      'Why the anonymity works': { layout: 'single', images: [
+        { file: 'am-visor.webp', w: 1000, h: 1334, alt: 'White Arnie McNair AM visor with an American flag, beside classic leather golf shoes', caption: 'The look is deliberately traditional: natural fibers, an American flag, and no oversized branding.' },
+      ]},
+    },
+  },
 };
 
 // ── Helpers ─────────────────────────────────────────────────────────────────────
