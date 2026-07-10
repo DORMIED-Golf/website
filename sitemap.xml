@@ -72,6 +72,18 @@
 
   <!-- ── WITB player pages (158) ── -->
   <url>
+    <loc>https://dormied.com/witb/players/will-zalatoris/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/wyndham-clark/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/witb/players/xander-schauffele/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
@@ -79,6 +91,18 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/zach-johnson/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/tommy-fleetwood/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/tony-finau/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -108,13 +132,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/will-zalatoris/</loc>
+    <loc>https://dormied.com/witb/players/talor-gooch/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/wyndham-clark/</loc>
+    <loc>https://dormied.com/witb/players/taylor-moore/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/taylor-pendrith/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -144,13 +174,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/tommy-fleetwood/</loc>
+    <loc>https://dormied.com/witb/players/shane-lowry/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/tony-finau/</loc>
+    <loc>https://dormied.com/witb/players/siwoo-kim/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -174,19 +204,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/talor-gooch/</loc>
+    <loc>https://dormied.com/witb/players/sam-burns/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/taylor-moore/</loc>
+    <loc>https://dormied.com/witb/players/scottie-scheffler/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/taylor-pendrith/</loc>
+    <loc>https://dormied.com/witb/players/seamus-power/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -210,13 +240,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/shane-lowry/</loc>
+    <loc>https://dormied.com/witb/players/rory-mcilroy/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/siwoo-kim/</loc>
+    <loc>https://dormied.com/witb/players/russell-henley/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/ryan-fox/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -234,19 +270,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/sam-burns/</loc>
+    <loc>https://dormied.com/witb/players/paul-casey/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/scottie-scheffler/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/seamus-power/</loc>
+    <loc>https://dormied.com/witb/players/peter-malnati/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -270,19 +300,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/rory-mcilroy/</loc>
+    <loc>https://dormied.com/witb/players/nick-dunlap/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/russell-henley/</loc>
+    <loc>https://dormied.com/witb/players/nick-hardy/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/ryan-fox/</loc>
+    <loc>https://dormied.com/witb/players/nick-taylor/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -306,13 +336,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/paul-casey/</loc>
+    <loc>https://dormied.com/witb/players/matthieu-pavon/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/peter-malnati/</loc>
+    <loc>https://dormied.com/witb/players/maverick-mcnealy/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -342,19 +372,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/nick-dunlap/</loc>
+    <loc>https://dormied.com/witb/players/martin-kaymer/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/nick-hardy/</loc>
+    <loc>https://dormied.com/witb/players/martin-laird/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/nick-taylor/</loc>
+    <loc>https://dormied.com/witb/players/matt-jones/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -384,13 +414,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/matthieu-pavon/</loc>
+    <loc>https://dormied.com/witb/players/luke-clanton/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/maverick-mcnealy/</loc>
+    <loc>https://dormied.com/witb/players/luke-donald/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/luke-list/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -414,19 +450,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/martin-kaymer/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/martin-laird/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/matt-jones/</loc>
+    <loc>https://dormied.com/witb/players/lee-westwood/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -456,19 +480,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/luke-clanton/</loc>
+    <loc>https://dormied.com/witb/players/kevin-streelman/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/luke-donald/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/luke-list/</loc>
+    <loc>https://dormied.com/witb/players/kevin-yu/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -504,7 +522,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/lee-westwood/</loc>
+    <loc>https://dormied.com/witb/players/justin-thomas/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/keegan-bradley/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -528,13 +552,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/kevin-streelman/</loc>
+    <loc>https://dormied.com/witb/players/joe-highsmith/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/kevin-yu/</loc>
+    <loc>https://dormied.com/witb/players/joel-dahmen/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -564,13 +588,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/justin-thomas/</loc>
+    <loc>https://dormied.com/witb/players/jake-knapp/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/keegan-bradley/</loc>
+    <loc>https://dormied.com/witb/players/james-hahn/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/jason-day/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -594,18 +624,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/joe-highsmith/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/joel-dahmen/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://dormied.com/witb/players/j-j-spaun/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
@@ -618,19 +636,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/jake-knapp/</loc>
+    <loc>https://dormied.com/witb/players/harold-varner-iii/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/james-hahn/</loc>
+    <loc>https://dormied.com/witb/players/harris-english/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/jason-day/</loc>
+    <loc>https://dormied.com/witb/players/harry-higgs/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -654,6 +672,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://dormied.com/witb/players/garrick-higgo/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/gary-woodland/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/witb/players/graeme-mcdowell/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
@@ -672,19 +702,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/harold-varner-iii/</loc>
+    <loc>https://dormied.com/witb/players/dustin-johnson/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/harris-english/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/harry-higgs/</loc>
+    <loc>https://dormied.com/witb/players/dylan-frittelli/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -714,13 +738,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/garrick-higgo/</loc>
+    <loc>https://dormied.com/witb/players/collin-morikawa/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/gary-woodland/</loc>
+    <loc>https://dormied.com/witb/players/corey-conners/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -750,60 +774,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/dustin-johnson/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/dylan-frittelli/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/chris-gotterup/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/chris-kirk/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/christiaan-bezuidenhout/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/collin-morikawa/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/corey-conners/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/carlos-ortiz/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/charl-schwartzel/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://dormied.com/witb/players/charles-howell-iii/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
@@ -823,6 +793,24 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/chez-reavie/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/chris-gotterup/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/chris-kirk/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/christiaan-bezuidenhout/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -852,7 +840,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/bryson-dechambeau/</loc>
+    <loc>https://dormied.com/witb/players/carlos-ortiz/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/charl-schwartzel/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -882,12 +876,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/brian-campbell/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://dormied.com/witb/players/brian-harman/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
@@ -900,7 +888,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/ben-griffin/</loc>
+    <loc>https://dormied.com/witb/players/bryson-dechambeau/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -942,13 +930,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dormied.com/witb/players/alex-fitzpatrick/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/witb/players/alex-noren/</loc>
+    <loc>https://dormied.com/witb/players/brian-campbell/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -967,6 +949,12 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/austin-eckroat/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/ben-griffin/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -1019,8 +1007,26 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://dormied.com/witb/players/alex-fitzpatrick/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/alex-noren/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <!-- ── Scorecard issues ── -->
+  <url>
+    <loc>https://dormied.com/scorecard/may-2026/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://dormied.com/scorecard/april-2026/</loc>
     <lastmod>2026-07-10</lastmod>
@@ -1039,20 +1045,8 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://dormied.com/scorecard/may-2026/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
 
   <!-- ── Brand pages (176) ── -->
-  <url>
-    <loc>https://dormied.com/brands/vuori/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
   <url>
     <loc>https://dormied.com/brands/william-murray-golf/</loc>
     <lastmod>2026-07-10</lastmod>
@@ -1079,18 +1073,6 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/zire-golf/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/under-armour-golf/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/unrl/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1132,6 +1114,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dormied.com/brands/vuori/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/brands/travismathew/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1151,6 +1139,18 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/true-temper/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/brands/under-armour-golf/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/brands/unrl/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1378,6 +1378,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dormied.com/brands/project-x/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/brands/prosendr/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1409,6 +1415,12 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/quiet-golf/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/brands/perfect-practice/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1450,7 +1462,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/project-x/</loc>
+    <loc>https://dormied.com/brands/ogio-golf/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1480,7 +1492,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/perfect-practice/</loc>
+    <loc>https://dormied.com/brands/new-balance-golf/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1522,7 +1534,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/ogio-golf/</loc>
+    <loc>https://dormied.com/brands/mitsubishi-golf/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1541,12 +1553,6 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/municipal/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/new-balance-golf/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1583,12 +1589,6 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/metalwood-studio/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/mitsubishi-golf/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1732,6 +1732,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dormied.com/brands/golftini/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/brands/good-good-golf/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/brands/graphite-design/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1757,6 +1769,12 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/haywood-golf/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/brands/fujikura/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1792,13 +1810,19 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/golftini/</loc>
+    <loc>https://dormied.com/brands/fairway-and-greene/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/good-good-golf/</loc>
+    <loc>https://dormied.com/brands/flightscope/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/brands/footjoy/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1822,7 +1846,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/fujikura/</loc>
+    <loc>https://dormied.com/brands/donald-ross/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1864,24 +1888,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/fairway-and-greene/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/flightscope/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/footjoy/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://dormied.com/brands/daily-sports/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1889,12 +1895,6 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/devereux-golf/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/donald-ross/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1936,6 +1936,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dormied.com/brands/breezy-golf/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/brands/bridgestone-golf/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1949,6 +1955,12 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/byrdie-golf/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/brands/birdie-and-ace/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1972,7 +1984,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/breezy-golf/</loc>
+    <loc>https://dormied.com/brands/avoda-golf/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -2014,19 +2026,13 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/birdie-and-ace/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://dormied.com/brands/autoflex/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dormied.com/brands/avoda-golf/</loc>
+    <loc>https://dormied.com/brands/aerotech/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -2062,6 +2068,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dormied.com/brands/accra/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/brands/adams-golf/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -2069,18 +2081,6 @@
   </url>
   <url>
     <loc>https://dormied.com/brands/adidas-golf/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/aerotech/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/brands/accra/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -2105,6 +2105,76 @@
   </url>
 
   <!-- ── News articles (397) ── -->
+  <url>
+    <loc>https://dormied.com/news/why-tour-pros-are-mixing-metal-and-plastic-spikes-and-what-it-means-for-2026-05-05/</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/why-tour-pros-are-mixing-metal-and-plastic-spikes-and-what-it-means-for-2026-05-05-hero.png</image:loc>
+      <image:title>Why Tour Pros Are Mixing Metal and Plastic Spikes — And What It Means for Your Next Shoe Purchase</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09/</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09-hero.jpg</image:loc>
+      <image:title>Wilson Goes Big in Times Square, But Can Billboards Fix a Brand Problem?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/wilsons-fit-ai-is-a-quiet-shot-at-club-champions-business-model-2026-06-11/</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/wilsons-fit-ai-is-a-quiet-shot-at-club-champions-business-model-2026-06-11-hero.jpg</image:loc>
+      <image:title>Wilson&apos;s Fit AI Is a Quiet Shot at Club Champion&apos;s Business Model</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/who-owns-mclaren-golf/</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-mclaren-golf-hero.jpg</image:loc>
+      <image:title>Who Owns McLaren Golf?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/who-owns-odyssey-golf/</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-odyssey-golf-hero.jpg</image:loc>
+      <image:title>Who Owns Odyssey Golf?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/who-owns-scotty-cameron/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-scotty-cameron-hero.jpg</image:loc>
+      <image:title>Who Owns Scotty Cameron?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/who-owns-takomo-golf/</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-takomo-golf-hero.jpg</image:loc>
+      <image:title>Who Owns Takomo Golf?</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/why-callaways-quantum-max-is-the-best-driver-in-golf-if-you-swing-fast-2026-04-30/</loc>
     <lastmod>2026-04-30</lastmod>
@@ -2156,33 +2226,43 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/why-tour-pros-are-mixing-metal-and-plastic-spikes-and-what-it-means-for-2026-05-05/</loc>
-    <lastmod>2026-05-05</lastmod>
+    <loc>https://dormied.com/news/where-is-takomo-golf-from/</loc>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/why-tour-pros-are-mixing-metal-and-plastic-spikes-and-what-it-means-for-2026-05-05-hero.png</image:loc>
-      <image:title>Why Tour Pros Are Mixing Metal and Plastic Spikes — And What It Means for Your Next Shoe Purchase</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-is-takomo-golf-from-hero.jpg</image:loc>
+      <image:title>Where Is Takomo Golf From?</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <loc>https://dormied.com/news/where-is-taylormade-headquartered/</loc>
+    <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09-hero.jpg</image:loc>
-      <image:title>Wilson Goes Big in Times Square, But Can Billboards Fix a Brand Problem?</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-is-taylormade-headquartered-hero.webp</image:loc>
+      <image:title>Where Is TaylorMade Headquartered?</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/wilsons-fit-ai-is-a-quiet-shot-at-club-champions-business-model-2026-06-11/</loc>
-    <lastmod>2026-06-11</lastmod>
+    <loc>https://dormied.com/news/where-is-titleist-headquartered/</loc>
+    <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/wilsons-fit-ai-is-a-quiet-shot-at-club-champions-business-model-2026-06-11-hero.jpg</image:loc>
-      <image:title>Wilson&apos;s Fit AI Is a Quiet Shot at Club Champion&apos;s Business Model</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-is-titleist-headquartered-hero.jpg</image:loc>
+      <image:title>Where Is Titleist Headquartered?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/where-to-buy-william-murray-golf/</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-to-buy-william-murray-golf-hero.jpg</image:loc>
+      <image:title>Where to Buy William Murray Golf</image:title>
     </image:image>
   </url>
   <url>
@@ -2226,43 +2306,33 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/who-owns-mclaren-golf/</loc>
-    <lastmod>2026-05-21</lastmod>
+    <loc>https://dormied.com/news/when-quince-becomes-the-yardstick-hb-just-got-used-as-the-punchline-in-a-2026-06-09/</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-mclaren-golf-hero.jpg</image:loc>
-      <image:title>Who Owns McLaren Golf?</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/when-quince-becomes-the-yardstick-hb-just-got-used-as-the-punchline-in-a-2026-06-09-hero.jpg</image:loc>
+      <image:title>When Quince Becomes the Yardstick: H&amp;amp;B Just Got Used as the Punchline in a Father&apos;s Day Gift Guide</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/who-owns-odyssey-golf/</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-odyssey-golf-hero.jpg</image:loc>
-      <image:title>Who Owns Odyssey Golf?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/who-owns-scotty-cameron/</loc>
+    <loc>https://dormied.com/news/where-are-callaway-clubs-made/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-scotty-cameron-hero.jpg</image:loc>
-      <image:title>Who Owns Scotty Cameron?</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-are-callaway-clubs-made-hero.webp</image:loc>
+      <image:title>Where Are Callaway Clubs Made?</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/who-owns-takomo-golf/</loc>
-    <lastmod>2026-05-21</lastmod>
+    <loc>https://dormied.com/news/where-are-taylormade-clubs-manufactured/</loc>
+    <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-takomo-golf-hero.jpg</image:loc>
-      <image:title>Who Owns Takomo Golf?</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-are-taylormade-clubs-manufactured-hero.jpg</image:loc>
+      <image:title>Where Are TaylorMade Clubs Manufactured?</image:title>
     </image:image>
   </url>
   <url>
@@ -2306,43 +2376,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/where-is-takomo-golf-from/</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-is-takomo-golf-from-hero.jpg</image:loc>
-      <image:title>Where Is Takomo Golf From?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/where-is-taylormade-headquartered/</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-is-taylormade-headquartered-hero.webp</image:loc>
-      <image:title>Where Is TaylorMade Headquartered?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/where-is-titleist-headquartered/</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-is-titleist-headquartered-hero.jpg</image:loc>
-      <image:title>Where Is Titleist Headquartered?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/where-to-buy-william-murray-golf/</loc>
+    <loc>https://dormied.com/news/what-is-dormie-in-golf/</loc>
     <lastmod>2026-05-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-to-buy-william-murray-golf-hero.jpg</image:loc>
-      <image:title>Where to Buy William Murray Golf</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/what-is-dormie-in-golf-hero.jpg</image:loc>
+      <image:title>What Is Dormie in Golf?</image:title>
     </image:image>
   </url>
   <url>
@@ -2396,33 +2436,33 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/when-quince-becomes-the-yardstick-hb-just-got-used-as-the-punchline-in-a-2026-06-09/</loc>
-    <lastmod>2026-06-11</lastmod>
+    <loc>https://dormied.com/news/vice-golfs-180-driving-iron-is-a-tell-on-where-the-dtc-equipment-market-is-2026-06-22/</loc>
+    <lastmod>2026-06-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/when-quince-becomes-the-yardstick-hb-just-got-used-as-the-punchline-in-a-2026-06-09-hero.jpg</image:loc>
-      <image:title>When Quince Becomes the Yardstick: H&amp;amp;B Just Got Used as the Punchline in a Father&apos;s Day Gift Guide</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golfs-180-driving-iron-is-a-tell-on-where-the-dtc-equipment-market-is-2026-06-22-hero.jpg</image:loc>
+      <image:title>Vice Golf&apos;s $180 Driving Iron Is a Tell on Where the DTC Equipment Market Is Headed</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/where-are-callaway-clubs-made/</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://dormied.com/news/vice-golfs-first-driver-lands-at-the-bottom-of-mygolfspy-tes-2026-04-22/</loc>
+    <lastmod>2026-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-are-callaway-clubs-made-hero.webp</image:loc>
-      <image:title>Where Are Callaway Clubs Made?</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golfs-first-driver-lands-at-the-bottom-of-mygolfspy-tes-2026-04-22-hero.jpg</image:loc>
+      <image:title>Vice Golf&apos;s First Driver Lands at the Bottom of MyGolfSpy Testing</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/where-are-taylormade-clubs-manufactured/</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://dormied.com/news/vice-golfs-limited-edition-drivers-are-a-masterclass-in-scarcity-marketing-2026-05-25/</loc>
+    <lastmod>2026-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-are-taylormade-clubs-manufactured-hero.jpg</image:loc>
-      <image:title>Where Are TaylorMade Clubs Manufactured?</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golfs-limited-edition-drivers-are-a-masterclass-in-scarcity-marketing-2026-05-25-hero.jpg</image:loc>
+      <image:title>Vice Golf&apos;s Limited Edition Drivers Are a Masterclass in Scarcity Marketing</image:title>
     </image:image>
   </url>
   <url>
@@ -2466,13 +2506,33 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/what-is-dormie-in-golf/</loc>
-    <lastmod>2026-05-22</lastmod>
+    <loc>https://dormied.com/news/vessel-wants-to-dress-you-now-not-just-carry-your-clubs-2026-05-19/</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/what-is-dormie-in-golf-hero.jpg</image:loc>
-      <image:title>What Is Dormie in Golf?</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vessel-wants-to-dress-you-now-not-just-carry-your-clubs-2026-05-19-hero.jpg</image:loc>
+      <image:title>Vessel Wants to Dress You Now, Not Just Carry Your Clubs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/vessels-carbon-fiber-gambit-could-redefine-what-a-stand-bag-should-weigh-2026-05-01/</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vessels-carbon-fiber-gambit-could-redefine-what-a-stand-bag-should-weigh-2026-05-01-hero.jpg</image:loc>
+      <image:title>Vessel&apos;s Carbon Fiber Gambit Could Redefine What a Stand Bag Should Weigh</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/vessels-player-carbon-air-is-the-brand-quietly-answering-its-biggest-2026-06-29/</loc>
+    <lastmod>2026-06-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vessels-player-carbon-air-is-the-brand-quietly-answering-its-biggest-2026-06-29-hero.jpg</image:loc>
+      <image:title>Vessel&apos;s Player Carbon Air Is the Brand Quietly Answering Its Biggest Criticism</image:title>
     </image:image>
   </url>
   <url>
@@ -2516,33 +2576,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/vice-golfs-180-driving-iron-is-a-tell-on-where-the-dtc-equipment-market-is-2026-06-22/</loc>
-    <lastmod>2026-06-22</lastmod>
+    <loc>https://dormied.com/news/turtleson-hires-the-nike-golf-lifer-who-just-left-galvin-green-that-tells-2026-06-29/</loc>
+    <lastmod>2026-06-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golfs-180-driving-iron-is-a-tell-on-where-the-dtc-equipment-market-is-2026-06-22-hero.jpg</image:loc>
-      <image:title>Vice Golf&apos;s $180 Driving Iron Is a Tell on Where the DTC Equipment Market Is Headed</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/turtleson-hires-the-nike-golf-lifer-who-just-left-galvin-green-that-tells-2026-06-29-hero.jpg</image:loc>
+      <image:title>Turtleson Hires the Nike Golf Lifer Who Just Left Galvin Green. That Tells You What&apos;s Next.</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/vice-golfs-first-driver-lands-at-the-bottom-of-mygolfspy-tes-2026-04-22/</loc>
-    <lastmod>2026-04-22</lastmod>
+    <loc>https://dormied.com/news/two-club-pros-just-won-a-championship-using-a-launch-monitor-ranked-94th-2026-05-07/</loc>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golfs-first-driver-lands-at-the-bottom-of-mygolfspy-tes-2026-04-22-hero.jpg</image:loc>
-      <image:title>Vice Golf&apos;s First Driver Lands at the Bottom of MyGolfSpy Testing</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/vice-golfs-limited-edition-drivers-are-a-masterclass-in-scarcity-marketing-2026-05-25/</loc>
-    <lastmod>2026-05-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vice-golfs-limited-edition-drivers-are-a-masterclass-in-scarcity-marketing-2026-05-25-hero.jpg</image:loc>
-      <image:title>Vice Golf&apos;s Limited Edition Drivers Are a Masterclass in Scarcity Marketing</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/two-club-pros-just-won-a-championship-using-a-launch-monitor-ranked-94th-2026-05-07-hero.jpg</image:loc>
+      <image:title>Two Club Pros Just Won a Championship Using a Launch Monitor Ranked 94th in Golf</image:title>
     </image:image>
   </url>
   <url>
@@ -2606,33 +2656,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/vessel-wants-to-dress-you-now-not-just-carry-your-clubs-2026-05-19/</loc>
-    <lastmod>2026-05-19</lastmod>
+    <loc>https://dormied.com/news/troon-deal-gives-swag-golf-something-it-has-never-had-retail-shelf-space-2026-05-12/</loc>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vessel-wants-to-dress-you-now-not-just-carry-your-clubs-2026-05-19-hero.jpg</image:loc>
-      <image:title>Vessel Wants to Dress You Now, Not Just Carry Your Clubs</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/vessels-carbon-fiber-gambit-could-redefine-what-a-stand-bag-should-weigh-2026-05-01/</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vessels-carbon-fiber-gambit-could-redefine-what-a-stand-bag-should-weigh-2026-05-01-hero.jpg</image:loc>
-      <image:title>Vessel&apos;s Carbon Fiber Gambit Could Redefine What a Stand Bag Should Weigh</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/vessels-player-carbon-air-is-the-brand-quietly-answering-its-biggest-2026-06-29/</loc>
-    <lastmod>2026-06-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vessels-player-carbon-air-is-the-brand-quietly-answering-its-biggest-2026-06-29-hero.jpg</image:loc>
-      <image:title>Vessel&apos;s Player Carbon Air Is the Brand Quietly Answering Its Biggest Criticism</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/troon-deal-gives-swag-golf-something-it-has-never-had-retail-shelf-space-2026-05-12-hero.jpg</image:loc>
+      <image:title>Troon Deal Gives Swag Golf Something It Has Never Had: Retail Shelf Space</image:title>
     </image:image>
   </url>
   <url>
@@ -2696,23 +2726,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/turtleson-hires-the-nike-golf-lifer-who-just-left-galvin-green-that-tells-2026-06-29/</loc>
-    <lastmod>2026-06-30</lastmod>
+    <loc>https://dormied.com/news/tour-edge-enters-the-mini-driver-race-with-a-280cc-statement-piece-2026-05-12/</loc>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/turtleson-hires-the-nike-golf-lifer-who-just-left-galvin-green-that-tells-2026-06-29-hero.jpg</image:loc>
-      <image:title>Turtleson Hires the Nike Golf Lifer Who Just Left Galvin Green. That Tells You What&apos;s Next.</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/tour-edge-enters-the-mini-driver-race-with-a-280cc-statement-piece-2026-05-12-hero.jpg</image:loc>
+      <image:title>Tour Edge Enters the Mini Driver Race With a 280cc Statement Piece</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/two-club-pros-just-won-a-championship-using-a-launch-monitor-ranked-94th-2026-05-07/</loc>
-    <lastmod>2026-05-07</lastmod>
+    <loc>https://dormied.com/news/tour-edge-enters-zero-torque-at-199-the-category-just-got-a-floor-2026-07-07/</loc>
+    <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/two-club-pros-just-won-a-championship-using-a-launch-monitor-ranked-94th-2026-05-07-hero.jpg</image:loc>
-      <image:title>Two Club Pros Just Won a Championship Using a Launch Monitor Ranked 94th in Golf</image:title>
+      <image:loc>https://dormied.com/images/articles/tour-edge-enters-zero-torque-at-199-the-category-just-got-a-floor-2026-07-07-hero.jpg</image:loc>
+      <image:title>Tour Edge Enters Zero-Torque at $199. The Category Just Got a Floor.</image:title>
     </image:image>
   </url>
   <url>
@@ -2776,13 +2806,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/troon-deal-gives-swag-golf-something-it-has-never-had-retail-shelf-space-2026-05-12/</loc>
-    <lastmod>2026-05-12</lastmod>
+    <loc>https://dormied.com/news/titleists-bunker-tip-is-really-an-argument-against-carrying-four-wedges-2026-06-16/</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/troon-deal-gives-swag-golf-something-it-has-never-had-retail-shelf-space-2026-05-12-hero.jpg</image:loc>
-      <image:title>Troon Deal Gives Swag Golf Something It Has Never Had: Retail Shelf Space</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/titleists-bunker-tip-is-really-an-argument-against-carrying-four-wedges-2026-06-16-hero.jpg</image:loc>
+      <image:title>Titleist&apos;s Bunker Tip Is Really an Argument Against Carrying Four Wedges You Never Use</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/titleists-cameron-young-video-is-a-masterclass-in-what-the-brand-does-best-2026-04-24/</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/titleists-cameron-young-video-is-a-masterclass-in-what-the-brand-does-best-2026-04-24-hero.jpg</image:loc>
+      <image:title>Titleist&apos;s Cameron Young Video Is a Masterclass in What the Brand Does Best</image:title>
     </image:image>
   </url>
   <url>
@@ -2846,23 +2886,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/tour-edge-enters-the-mini-driver-race-with-a-280cc-statement-piece-2026-05-12/</loc>
-    <lastmod>2026-05-12</lastmod>
+    <loc>https://dormied.com/news/three-wins-across-three-tours-in-one-weekend-and-still-nobod-2026-04-21/</loc>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/tour-edge-enters-the-mini-driver-race-with-a-280cc-statement-piece-2026-05-12-hero.jpg</image:loc>
-      <image:title>Tour Edge Enters the Mini Driver Race With a 280cc Statement Piece</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/three-wins-across-three-tours-in-one-weekend-and-still-nobod-2026-04-21-hero.png</image:loc>
+      <image:title>Three Wins Across Three Tours in One Weekend, and Still Nobody Talks About Graphite Design</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/tour-edge-enters-zero-torque-at-199-the-category-just-got-a-floor-2026-07-07/</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://dormied.com/news/three-wins-in-one-weekend-and-bridgestone-still-cant-crack-the-top-60-2026-05-11/</loc>
+    <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://dormied.com/images/articles/tour-edge-enters-zero-torque-at-199-the-category-just-got-a-floor-2026-07-07-hero.jpg</image:loc>
-      <image:title>Tour Edge Enters Zero-Torque at $199. The Category Just Got a Floor.</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/three-wins-in-one-weekend-and-bridgestone-still-cant-crack-the-top-60-2026-05-11-hero.png</image:loc>
+      <image:title>Three Wins in One Weekend and Bridgestone Still Can&apos;t Crack the Top 60</image:title>
     </image:image>
   </url>
   <url>
@@ -2936,23 +2976,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/titleists-bunker-tip-is-really-an-argument-against-carrying-four-wedges-2026-06-16/</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://dormied.com/news/the-quiet-case-against-the-rangefinder-has-been-building-for-a-decade-2026-06-29/</loc>
+    <lastmod>2026-06-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/titleists-bunker-tip-is-really-an-argument-against-carrying-four-wedges-2026-06-16-hero.jpg</image:loc>
-      <image:title>Titleist&apos;s Bunker Tip Is Really an Argument Against Carrying Four Wedges You Never Use</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-quiet-case-against-the-rangefinder-has-been-building-for-a-decade-2026-06-29-hero.jpg</image:loc>
+      <image:title>The Quiet Case Against the Rangefinder Has Been Building for a Decade</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/titleists-cameron-young-video-is-a-masterclass-in-what-the-brand-does-best-2026-04-24/</loc>
-    <lastmod>2026-04-24</lastmod>
+    <loc>https://dormied.com/news/the-quiet-distribution-win-how-2nd-swing-just-became-a-channel-taylormade-2026-05-27/</loc>
+    <lastmod>2026-05-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/titleists-cameron-young-video-is-a-masterclass-in-what-the-brand-does-best-2026-04-24-hero.jpg</image:loc>
-      <image:title>Titleist&apos;s Cameron Young Video Is a Masterclass in What the Brand Does Best</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-quiet-distribution-win-how-2nd-swing-just-became-a-channel-taylormade-2026-05-27-hero.jpg</image:loc>
+      <image:title>The Quiet Distribution Win: How 2nd Swing Just Became a Channel TaylorMade Can&apos;t Ignore</image:title>
     </image:image>
   </url>
   <url>
@@ -3026,23 +3066,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/three-wins-across-three-tours-in-one-weekend-and-still-nobod-2026-04-21/</loc>
-    <lastmod>2026-04-21</lastmod>
+    <loc>https://dormied.com/news/the-mini-driver-test-that-actually-matters-true-spec-puts-callaways-2026-04-27/</loc>
+    <lastmod>2026-04-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/three-wins-across-three-tours-in-one-weekend-and-still-nobod-2026-04-21-hero.png</image:loc>
-      <image:title>Three Wins Across Three Tours in One Weekend, and Still Nobody Talks About Graphite Design</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-mini-driver-test-that-actually-matters-true-spec-puts-callaways-2026-04-27-hero.png</image:loc>
+      <image:title>The Mini Driver Test That Actually Matters: True Spec Puts Callaway&apos;s Quantum Through Real Fitting</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/three-wins-in-one-weekend-and-bridgestone-still-cant-crack-the-top-60-2026-05-11/</loc>
-    <lastmod>2026-05-11</lastmod>
+    <loc>https://dormied.com/news/the-odyssey-2-ball-is-still-the-best-beginner-putter-recommendation-and-2026-05-04/</loc>
+    <lastmod>2026-05-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/three-wins-in-one-weekend-and-bridgestone-still-cant-crack-the-top-60-2026-05-11-hero.png</image:loc>
-      <image:title>Three Wins in One Weekend and Bridgestone Still Can&apos;t Crack the Top 60</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-odyssey-2-ball-is-still-the-best-beginner-putter-recommendation-and-2026-05-04-hero.jpg</image:loc>
+      <image:title>The Odyssey 2-Ball Is Still the Best Beginner Putter Recommendation, and That Says Everything</image:title>
     </image:image>
   </url>
   <url>
@@ -3106,23 +3146,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/the-quiet-case-against-the-rangefinder-has-been-building-for-a-decade-2026-06-29/</loc>
-    <lastmod>2026-06-29</lastmod>
+    <loc>https://dormied.com/news/the-dangler-is-a-40-cupholder-vessel-should-be-paying-attention-2026-07-07/</loc>
+    <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-quiet-case-against-the-rangefinder-has-been-building-for-a-decade-2026-06-29-hero.jpg</image:loc>
-      <image:title>The Quiet Case Against the Rangefinder Has Been Building for a Decade</image:title>
+      <image:loc>https://dormied.com/images/articles/the-dangler-is-a-40-cupholder-vessel-should-be-paying-attention-2026-07-07-hero.jpg</image:loc>
+      <image:title>The Dangler Is a $40 Cupholder. Vessel Should Be Paying Attention.</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/the-quiet-distribution-win-how-2nd-swing-just-became-a-channel-taylormade-2026-05-27/</loc>
-    <lastmod>2026-05-27</lastmod>
+    <loc>https://dormied.com/news/the-fitzpatrick-bag-split-shows-where-shaft-loyalty-still-lives-on-tour-2026-05-11/</loc>
+    <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-quiet-distribution-win-how-2nd-swing-just-became-a-channel-taylormade-2026-05-27-hero.jpg</image:loc>
-      <image:title>The Quiet Distribution Win: How 2nd Swing Just Became a Channel TaylorMade Can&apos;t Ignore</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-fitzpatrick-bag-split-shows-where-shaft-loyalty-still-lives-on-tour-2026-05-11-hero.jpg</image:loc>
+      <image:title>The Fitzpatrick Bag Split Shows Where Shaft Loyalty Still Lives on Tour</image:title>
     </image:image>
   </url>
   <url>
@@ -3196,23 +3236,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/the-mini-driver-test-that-actually-matters-true-spec-puts-callaways-2026-04-27/</loc>
-    <lastmod>2026-04-27</lastmod>
+    <loc>https://dormied.com/news/the-anser-that-almost-wasnt-ping-nearly-sold-to-dunlop-before-1966-2026-07-06/</loc>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-mini-driver-test-that-actually-matters-true-spec-puts-callaways-2026-04-27-hero.png</image:loc>
-      <image:title>The Mini Driver Test That Actually Matters: True Spec Puts Callaway&apos;s Quantum Through Real Fitting</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-anser-that-almost-wasnt-ping-nearly-sold-to-dunlop-before-1966-2026-07-06-hero.jpg</image:loc>
+      <image:title>The Anser That Almost Wasn&apos;t: PING Nearly Sold to Dunlop Before 1966</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/the-odyssey-2-ball-is-still-the-best-beginner-putter-recommendation-and-2026-05-04/</loc>
-    <lastmod>2026-05-04</lastmod>
+    <loc>https://dormied.com/news/the-basketball-to-golf-shoe-pipeline-is-real-and-adidas-is-late-to-it-2026-05-18/</loc>
+    <lastmod>2026-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-odyssey-2-ball-is-still-the-best-beginner-putter-recommendation-and-2026-05-04-hero.jpg</image:loc>
-      <image:title>The Odyssey 2-Ball Is Still the Best Beginner Putter Recommendation, and That Says Everything</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-basketball-to-golf-shoe-pipeline-is-real-and-adidas-is-late-to-it-2026-05-18-hero.jpg</image:loc>
+      <image:title>The Basketball-to-Golf Shoe Pipeline Is Real, and Adidas Is Late to It</image:title>
     </image:image>
   </url>
   <url>
@@ -3266,23 +3306,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/the-dangler-is-a-40-cupholder-vessel-should-be-paying-attention-2026-07-07/</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://dormied.com/news/taylormades-quietest-distribution-channel-is-a-marriott-golf-school-in-2026-06-03/</loc>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://dormied.com/images/articles/the-dangler-is-a-40-cupholder-vessel-should-be-paying-attention-2026-07-07-hero.jpg</image:loc>
-      <image:title>The Dangler Is a $40 Cupholder. Vessel Should Be Paying Attention.</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/the-fitzpatrick-bag-split-shows-where-shaft-loyalty-still-lives-on-tour-2026-05-11/</loc>
-    <lastmod>2026-05-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-fitzpatrick-bag-split-shows-where-shaft-loyalty-still-lives-on-tour-2026-05-11-hero.jpg</image:loc>
-      <image:title>The Fitzpatrick Bag Split Shows Where Shaft Loyalty Still Lives on Tour</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/taylormades-quietest-distribution-channel-is-a-marriott-golf-school-in-2026-06-03-hero.png</image:loc>
+      <image:title>TaylorMade&apos;s Quietest Distribution Channel Is a Marriott Golf School in Orlando</image:title>
     </image:image>
   </url>
   <url>
@@ -3356,23 +3386,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/the-anser-that-almost-wasnt-ping-nearly-sold-to-dunlop-before-1966-2026-07-06/</loc>
-    <lastmod>2026-07-06</lastmod>
+    <loc>https://dormied.com/news/taylormades-americana-250-drop-patriotic-paint-2018-wedge-lofts-and-a-750-2026-06-29/</loc>
+    <lastmod>2026-06-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-anser-that-almost-wasnt-ping-nearly-sold-to-dunlop-before-1966-2026-07-06-hero.jpg</image:loc>
-      <image:title>The Anser That Almost Wasn&apos;t: PING Nearly Sold to Dunlop Before 1966</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/the-basketball-to-golf-shoe-pipeline-is-real-and-adidas-is-late-to-it-2026-05-18/</loc>
-    <lastmod>2026-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-basketball-to-golf-shoe-pipeline-is-real-and-adidas-is-late-to-it-2026-05-18-hero.jpg</image:loc>
-      <image:title>The Basketball-to-Golf Shoe Pipeline Is Real, and Adidas Is Late to It</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/taylormades-americana-250-drop-patriotic-paint-2018-wedge-lofts-and-a-750-2026-06-29-hero.jpg</image:loc>
+      <image:title>TaylorMade&apos;s Americana 250 Drop: Patriotic Paint, 2018 Wedge Lofts, and a $750 Set</image:title>
     </image:image>
   </url>
   <url>
@@ -3436,13 +3456,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/taylormades-quietest-distribution-channel-is-a-marriott-golf-school-in-2026-06-03/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <loc>https://dormied.com/news/swag-golf-cashes-carolinas-stanley-cup-run-into-headcovers-and-the-2026-06-15/</loc>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/taylormades-quietest-distribution-channel-is-a-marriott-golf-school-in-2026-06-03-hero.png</image:loc>
-      <image:title>TaylorMade&apos;s Quietest Distribution Channel Is a Marriott Golf School in Orlando</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/swag-golf-cashes-carolinas-stanley-cup-run-into-headcovers-and-the-2026-06-15-hero.jpg</image:loc>
+      <image:title>Swag Golf Cashes Carolina&apos;s Stanley Cup Run Into Headcovers, and the Playbook Is Getting Familiar</image:title>
     </image:image>
   </url>
   <url>
@@ -3526,13 +3546,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/taylormades-americana-250-drop-patriotic-paint-2018-wedge-lofts-and-a-750-2026-06-29/</loc>
-    <lastmod>2026-06-29</lastmod>
+    <loc>https://dormied.com/news/sunday-golf-bets-on-the-world-cup-crowd-with-an-11-country-capsule-2026-06-01/</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/taylormades-americana-250-drop-patriotic-paint-2018-wedge-lofts-and-a-750-2026-06-29-hero.jpg</image:loc>
-      <image:title>TaylorMade&apos;s Americana 250 Drop: Patriotic Paint, 2018 Wedge Lofts, and a $750 Set</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sunday-golf-bets-on-the-world-cup-crowd-with-an-11-country-capsule-2026-06-01-hero.png</image:loc>
+      <image:title>Sunday Golf Bets On The World Cup Crowd With An 11-Country Capsule</image:title>
     </image:image>
   </url>
   <url>
@@ -3596,16 +3616,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/swag-golf-cashes-carolinas-stanley-cup-run-into-headcovers-and-the-2026-06-15/</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/swag-golf-cashes-carolinas-stanley-cup-run-into-headcovers-and-the-2026-06-15-hero.jpg</image:loc>
-      <image:title>Swag Golf Cashes Carolina&apos;s Stanley Cup Run Into Headcovers, and the Playbook Is Getting Familiar</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/sun-mountain-puts-a-435-ballistic-bag-into-a-market-that-keeps-chasing-2026-07-07/</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -3663,16 +3673,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sun-mountains-stand-vs-cart-bag-guide-is-the-kind-of-content-that-keeps-2026-05-06-hero.png</image:loc>
       <image:title>Sun Mountain&apos;s Stand vs. Cart Bag Guide Is the Kind of Content That Keeps Mid-Tier Brands Stuck</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/sunday-golf-bets-on-the-world-cup-crowd-with-an-11-country-capsule-2026-06-01/</loc>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sunday-golf-bets-on-the-world-cup-crowd-with-an-11-country-capsule-2026-06-01-hero.png</image:loc>
-      <image:title>Sunday Golf Bets On The World Cup Crowd With An 11-Country Capsule</image:title>
     </image:image>
   </url>
   <url>
@@ -3982,6 +3982,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/pumas-neon-showtime-drop-is-a-soccer-play-in-golf-spikes-2026-06-18/</loc>
+    <lastmod>2026-06-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/pumas-neon-showtime-drop-is-a-soccer-play-in-golf-spikes-2026-06-18-hero.jpg</image:loc>
+      <image:title>Puma&apos;s Neon SHOWTIME Drop Is a Soccer Play in Golf Spikes</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/pumas-showtime-pack-is-the-latest-golf-brand-pretending-the-world-cup-2026-06-18/</loc>
     <lastmod>2026-06-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -4062,6 +4072,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26/</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.jpg</image:loc>
+      <image:title>Peter Millar Is Showing Up on TJ Maxx&apos;s Website. That&apos;s Not an Accident.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/ping-signed-wyndham-clark-to-a-putter-deal-24-hours-before-shinnecock-the-2026-06-22/</loc>
     <lastmod>2026-06-22</lastmod>
     <changefreq>weekly</changefreq>
@@ -4119,16 +4139,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/puma-golfs-nature-club-collab-is-a-bet-that-vibes-sell-better-than-scores-2026-04-22-hero.jpg</image:loc>
       <image:title>Puma Golf&apos;s Nature Club Collab Is a Bet That Vibes Sell Better Than Scores</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/pumas-neon-showtime-drop-is-a-soccer-play-in-golf-spikes-2026-06-18/</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/pumas-neon-showtime-drop-is-a-soccer-play-in-golf-spikes-2026-06-18-hero.jpg</image:loc>
-      <image:title>Puma&apos;s Neon SHOWTIME Drop Is a Soccer Play in Golf Spikes</image:title>
     </image:image>
   </url>
   <url>
@@ -4192,13 +4202,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26/</loc>
-    <lastmod>2026-05-26</lastmod>
+    <loc>https://dormied.com/news/odysseys-699-damascus-milled-line-is-a-quiet-shot-at-bettinardi-territory-2026-06-02/</loc>
+    <lastmod>2026-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/peter-millar-is-showing-up-on-tj-maxxs-website-thats-not-an-accident-2026-05-26-hero.jpg</image:loc>
-      <image:title>Peter Millar Is Showing Up on TJ Maxx&apos;s Website. That&apos;s Not an Accident.</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/odysseys-699-damascus-milled-line-is-a-quiet-shot-at-bettinardi-territory-2026-06-02-hero.jpg</image:loc>
+      <image:title>Odyssey&apos;s $699 Damascus Milled Line Is a Quiet Shot at Bettinardi Territory</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/odysseys-damascus-strategy-quietly-becomes-its-most-interesting-premium-2026-06-30/</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/odysseys-damascus-strategy-quietly-becomes-its-most-interesting-premium-2026-06-30-hero.jpg</image:loc>
+      <image:title>Odyssey&apos;s Damascus Strategy Quietly Becomes Its Most Interesting Premium Play</image:title>
     </image:image>
   </url>
   <url>
@@ -4249,6 +4269,26 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/padraig-harringtons-28-year-wilson-deal-is-the-longest-active-player-2026-07-07-hero.jpg</image:loc>
       <image:title>Padraig Harrington&apos;s 28-Year Wilson Deal Is the Longest Active Player Contract in Golf. Sunday&apos;s Win Explains Why.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/nike-finally-made-a-golf-shoe-worth-wearing-off-the-course-2026-05-15/</loc>
+    <lastmod>2026-05-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nike-finally-made-a-golf-shoe-worth-wearing-off-the-course-2026-05-15-hero.jpg</image:loc>
+      <image:title>Nike Finally Made a Golf Shoe Worth Wearing Off the Course</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/nike-golf-quietly-wins-the-us-womens-open-while-everyone-talks-about-spikes-2026-06-09/</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nike-golf-quietly-wins-the-us-womens-open-while-everyone-talks-about-spikes-2026-06-09-hero.png</image:loc>
+      <image:title>Nike Golf Quietly Wins the U.S. Women&apos;s Open While Everyone Talks About Spikes</image:title>
     </image:image>
   </url>
   <url>
@@ -4312,23 +4352,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/odysseys-699-damascus-milled-line-is-a-quiet-shot-at-bettinardi-territory-2026-06-02/</loc>
-    <lastmod>2026-06-02</lastmod>
+    <loc>https://dormied.com/news/mitsubishis-tour-dominance-is-hiding-in-plain-sight-2026-05-01/</loc>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/odysseys-699-damascus-milled-line-is-a-quiet-shot-at-bettinardi-territory-2026-06-02-hero.jpg</image:loc>
-      <image:title>Odyssey&apos;s $699 Damascus Milled Line Is a Quiet Shot at Bettinardi Territory</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/mitsubishis-tour-dominance-is-hiding-in-plain-sight-2026-05-01-hero.png</image:loc>
+      <image:title>Mitsubishi&apos;s Tour Dominance Is Hiding in Plain Sight</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/odysseys-damascus-strategy-quietly-becomes-its-most-interesting-premium-2026-06-30/</loc>
-    <lastmod>2026-06-30</lastmod>
+    <loc>https://dormied.com/news/mygolfspy-just-called-the-adipower-26-the-best-value-in-golf-2026-04-17/</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/odysseys-damascus-strategy-quietly-becomes-its-most-interesting-premium-2026-06-30-hero.jpg</image:loc>
-      <image:title>Odyssey&apos;s Damascus Strategy Quietly Becomes Its Most Interesting Premium Play</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/mygolfspy-just-called-the-adipower-26-the-best-value-in-golf-2026-04-17-hero.jpg</image:loc>
+      <image:title>MyGolfSpy Just Called the adipower 26 the Best Value in Golf Footwear</image:title>
     </image:image>
   </url>
   <url>
@@ -4382,23 +4422,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/nike-finally-made-a-golf-shoe-worth-wearing-off-the-course-2026-05-15/</loc>
-    <lastmod>2026-05-15</lastmod>
+    <loc>https://dormied.com/news/maxfli-quietly-rebuilt-its-bag-line-by-reading-reddit-thats-the-story-2026-06-25/</loc>
+    <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nike-finally-made-a-golf-shoe-worth-wearing-off-the-course-2026-05-15-hero.jpg</image:loc>
-      <image:title>Nike Finally Made a Golf Shoe Worth Wearing Off the Course</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/maxfli-quietly-rebuilt-its-bag-line-by-reading-reddit-thats-the-story-2026-06-25-hero.jpg</image:loc>
+      <image:title>Maxfli Quietly Rebuilt Its Bag Line by Reading Reddit. That&apos;s the Story.</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/nike-golf-quietly-wins-the-us-womens-open-while-everyone-talks-about-spikes-2026-06-09/</loc>
-    <lastmod>2026-06-09</lastmod>
+    <loc>https://dormied.com/news/maxflis-streetwear-detour-what-a-siegelman-stable-collab-says-about-a-2026-06-19/</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nike-golf-quietly-wins-the-us-womens-open-while-everyone-talks-about-spikes-2026-06-09-hero.png</image:loc>
-      <image:title>Nike Golf Quietly Wins the U.S. Women&apos;s Open While Everyone Talks About Spikes</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/maxflis-streetwear-detour-what-a-siegelman-stable-collab-says-about-a-2026-06-19-hero.jpg</image:loc>
+      <image:title>Maxfli&apos;s Streetwear Detour: What a Siegelman Stable Collab Says About a Dormant Brand</image:title>
     </image:image>
   </url>
   <url>
@@ -4452,23 +4492,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/mitsubishis-tour-dominance-is-hiding-in-plain-sight-2026-05-01/</loc>
-    <lastmod>2026-05-01</lastmod>
+    <loc>https://dormied.com/news/livpur-buys-into-the-callaway-junior-pipeline-the-real-story-is-the-2026-06-23/</loc>
+    <lastmod>2026-06-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/mitsubishis-tour-dominance-is-hiding-in-plain-sight-2026-05-01-hero.png</image:loc>
-      <image:title>Mitsubishi&apos;s Tour Dominance Is Hiding in Plain Sight</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/mygolfspy-just-called-the-adipower-26-the-best-value-in-golf-2026-04-17/</loc>
-    <lastmod>2026-04-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/mygolfspy-just-called-the-adipower-26-the-best-value-in-golf-2026-04-17-hero.jpg</image:loc>
-      <image:title>MyGolfSpy Just Called the adipower 26 the Best Value in Golf Footwear</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/livpur-buys-into-the-callaway-junior-pipeline-the-real-story-is-the-2026-06-23-hero.jpg</image:loc>
+      <image:title>LIVPUR Buys Into the Callaway Junior Pipeline. The Real Story Is the Pipeline Itself.</image:title>
     </image:image>
   </url>
   <url>
@@ -4542,23 +4572,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/maxfli-quietly-rebuilt-its-bag-line-by-reading-reddit-thats-the-story-2026-06-25/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://dormied.com/news/lab-golf-has-the-data-now-it-needs-the-shelf-space-2026-04-20/</loc>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/maxfli-quietly-rebuilt-its-bag-line-by-reading-reddit-thats-the-story-2026-06-25-hero.jpg</image:loc>
-      <image:title>Maxfli Quietly Rebuilt Its Bag Line by Reading Reddit. That&apos;s the Story.</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/lab-golf-has-the-data-now-it-needs-the-shelf-space-2026-04-20-hero.jpg</image:loc>
+      <image:title>L.A.B. Golf Has the Data. Now It Needs the Shelf Space.</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/maxflis-streetwear-detour-what-a-siegelman-stable-collab-says-about-a-2026-06-19/</loc>
-    <lastmod>2026-06-19</lastmod>
+    <loc>https://dormied.com/news/lab-golf-just-put-cartoon-pbjs-on-a-2000-putter-its-already-sold-out-2026-07-08/</loc>
+    <lastmod>2026-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/maxflis-streetwear-detour-what-a-siegelman-stable-collab-says-about-a-2026-06-19-hero.jpg</image:loc>
-      <image:title>Maxfli&apos;s Streetwear Detour: What a Siegelman Stable Collab Says About a Dormant Brand</image:title>
+      <image:loc>https://dormied.com/images/articles/lab-golf-just-put-cartoon-pbjs-on-a-2000-putter-its-already-sold-out-2026-07-08-hero.jpg</image:loc>
+      <image:title>L.A.B. Golf Just Put Cartoon PB&amp;amp;Js on a $2,000 Putter. It&apos;s Already Sold Out.</image:title>
     </image:image>
   </url>
   <url>
@@ -4612,13 +4642,33 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/livpur-buys-into-the-callaway-junior-pipeline-the-real-story-is-the-2026-06-23/</loc>
-    <lastmod>2026-06-23</lastmod>
+    <loc>https://dormied.com/news/justin-roses-two-week-equipment-overhaul-signals-something-bigger-at-the-2026-05-15/</loc>
+    <lastmod>2026-05-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/livpur-buys-into-the-callaway-junior-pipeline-the-real-story-is-the-2026-06-23-hero.jpg</image:loc>
-      <image:title>LIVPUR Buys Into the Callaway Junior Pipeline. The Real Story Is the Pipeline Itself.</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/justin-roses-two-week-equipment-overhaul-signals-something-bigger-at-the-2026-05-15-hero.jpg</image:loc>
+      <image:title>Justin Rose&apos;s Two Week Equipment Overhaul Signals Something Bigger at the PGA Championship</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/kbs-banks-another-travelers-win-the-tour-v-120x-has-quietly-become-the-2026-06-29/</loc>
+    <lastmod>2026-06-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/kbs-banks-another-travelers-win-the-tour-v-120x-has-quietly-become-the-2026-06-29-hero.jpg</image:loc>
+      <image:title>KBS Banks Another Travelers Win. The Tour V 120X Has Quietly Become the Default Players Iron Shaft.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/kbs-drops-a-patriotic-putter-shaft-for-americas-250th-the-real-story-is-2026-06-17/</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/kbs-drops-a-patriotic-putter-shaft-for-americas-250th-the-real-story-is-2026-06-17-hero.jpg</image:loc>
+      <image:title>KBS Drops a Patriotic Putter Shaft for America&apos;s 250th. The Real Story Is the Graphite Push.</image:title>
     </image:image>
   </url>
   <url>
@@ -4672,23 +4722,33 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/lab-golf-has-the-data-now-it-needs-the-shelf-space-2026-04-20/</loc>
-    <lastmod>2026-04-20</lastmod>
+    <loc>https://dormied.com/news/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22/</loc>
+    <lastmod>2026-05-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/lab-golf-has-the-data-now-it-needs-the-shelf-space-2026-04-20-hero.jpg</image:loc>
-      <image:title>L.A.B. Golf Has the Data. Now It Needs the Shelf Space.</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22-hero.jpg</image:loc>
+      <image:title>Jason Day&apos;s Wardrobe Is Doing More for Malbon Than His Swing</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/lab-golf-just-put-cartoon-pbjs-on-a-2000-putter-its-already-sold-out-2026-07-08/</loc>
-    <lastmod>2026-07-08</lastmod>
+    <loc>https://dormied.com/news/jj-spauns-texas-open-win-gives-puma-something-it-desperately-2026-04-05/</loc>
+    <lastmod>2026-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://dormied.com/images/articles/lab-golf-just-put-cartoon-pbjs-on-a-2000-putter-its-already-sold-out-2026-07-08-hero.jpg</image:loc>
-      <image:title>L.A.B. Golf Just Put Cartoon PB&amp;amp;Js on a $2,000 Putter. It&apos;s Already Sold Out.</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/jj-spauns-texas-open-win-gives-puma-something-it-desperately-2026-04-05-hero.png</image:loc>
+      <image:title>J.J. Spaun&apos;s Texas Open Win Gives Puma Something It Desperately Needed: A Storyline</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/jlindeberg-bets-its-30th-anniversary-on-the-one-outfit-everyone-still-2026-06-02/</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/jlindeberg-bets-its-30th-anniversary-on-the-one-outfit-everyone-still-2026-06-02-hero.jpg</image:loc>
+      <image:title>J.Lindeberg Bets Its 30th Anniversary on the One Outfit Everyone Still Remembers</image:title>
     </image:image>
   </url>
   <url>
@@ -4742,33 +4802,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/justin-roses-two-week-equipment-overhaul-signals-something-bigger-at-the-2026-05-15/</loc>
-    <lastmod>2026-05-15</lastmod>
+    <loc>https://dormied.com/news/how-much-are-mclaren-golf-clubs/</loc>
+    <lastmod>2026-05-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/justin-roses-two-week-equipment-overhaul-signals-something-bigger-at-the-2026-05-15-hero.jpg</image:loc>
-      <image:title>Justin Rose&apos;s Two Week Equipment Overhaul Signals Something Bigger at the PGA Championship</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/kbs-banks-another-travelers-win-the-tour-v-120x-has-quietly-become-the-2026-06-29/</loc>
-    <lastmod>2026-06-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/kbs-banks-another-travelers-win-the-tour-v-120x-has-quietly-become-the-2026-06-29-hero.jpg</image:loc>
-      <image:title>KBS Banks Another Travelers Win. The Tour V 120X Has Quietly Become the Default Players Iron Shaft.</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/kbs-drops-a-patriotic-putter-shaft-for-americas-250th-the-real-story-is-2026-06-17/</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/kbs-drops-a-patriotic-putter-shaft-for-americas-250th-the-real-story-is-2026-06-17-hero.jpg</image:loc>
-      <image:title>KBS Drops a Patriotic Putter Shaft for America&apos;s 250th. The Real Story Is the Graphite Push.</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/how-much-are-mclaren-golf-clubs-hero.jpg</image:loc>
+      <image:title>How Much Are McLaren Golf Clubs?</image:title>
     </image:image>
   </url>
   <url>
@@ -4792,33 +4832,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22/</loc>
-    <lastmod>2026-05-22</lastmod>
+    <loc>https://dormied.com/news/gotterups-third-win-is-bridgestones-best-marketing-in-a-decade-2026-07-06/</loc>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22-hero.jpg</image:loc>
-      <image:title>Jason Day&apos;s Wardrobe Is Doing More for Malbon Than His Swing</image:title>
+      <image:loc>https://dormied.com/images/articles/gotterups-third-win-is-bridgestones-best-marketing-in-a-decade-2026-07-06-hero.jpg</image:loc>
+      <image:title>Gotterup&apos;s Third Win Is Bridgestone&apos;s Best Marketing in a Decade</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/jj-spauns-texas-open-win-gives-puma-something-it-desperately-2026-04-05/</loc>
-    <lastmod>2026-04-05</lastmod>
+    <loc>https://dormied.com/news/graphite-designs-quiet-hybrid-win-at-travelers-says-more-about-the-shaft-2026-06-29/</loc>
+    <lastmod>2026-06-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/jj-spauns-texas-open-win-gives-puma-something-it-desperately-2026-04-05-hero.png</image:loc>
-      <image:title>J.J. Spaun&apos;s Texas Open Win Gives Puma Something It Desperately Needed: A Storyline</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/jlindeberg-bets-its-30th-anniversary-on-the-one-outfit-everyone-still-2026-06-02/</loc>
-    <lastmod>2026-06-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/jlindeberg-bets-its-30th-anniversary-on-the-one-outfit-everyone-still-2026-06-02-hero.jpg</image:loc>
-      <image:title>J.Lindeberg Bets Its 30th Anniversary on the One Outfit Everyone Still Remembers</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/graphite-designs-quiet-hybrid-win-at-travelers-says-more-about-the-shaft-2026-06-29-hero.jpg</image:loc>
+      <image:title>Graphite Design&apos;s Quiet Hybrid Win at Travelers Says More About the Shaft Market Than the Player</image:title>
     </image:image>
   </url>
   <url>
@@ -4872,13 +4902,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/how-much-are-mclaren-golf-clubs/</loc>
-    <lastmod>2026-05-21</lastmod>
+    <loc>https://dormied.com/news/golf-prides-regional-play-why-the-grip-giant-is-going-hyperlocal-in-its-2026-04-27/</loc>
+    <lastmod>2026-04-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/how-much-are-mclaren-golf-clubs-hero.jpg</image:loc>
-      <image:title>How Much Are McLaren Golf Clubs?</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/golf-prides-regional-play-why-the-grip-giant-is-going-hyperlocal-in-its-2026-04-27-hero.jpg</image:loc>
+      <image:title>Golf Pride&apos;s Regional Play: Why the Grip Giant is Going Hyperlocal in Its Own Backyard</image:title>
     </image:image>
   </url>
   <url>
@@ -4942,23 +4972,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/gotterups-third-win-is-bridgestones-best-marketing-in-a-decade-2026-07-06/</loc>
-    <lastmod>2026-07-06</lastmod>
+    <loc>https://dormied.com/news/fujikuras-junior-fitting-play-65-kids-free-ventus-shafts-and-a-curry-sized-2026-06-02/</loc>
+    <lastmod>2026-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://dormied.com/images/articles/gotterups-third-win-is-bridgestones-best-marketing-in-a-decade-2026-07-06-hero.jpg</image:loc>
-      <image:title>Gotterup&apos;s Third Win Is Bridgestone&apos;s Best Marketing in a Decade</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/fujikuras-junior-fitting-play-65-kids-free-ventus-shafts-and-a-curry-sized-2026-06-02-hero.jpg</image:loc>
+      <image:title>Fujikura&apos;s Junior Fitting Play: 65 Kids, Free VENTUS Shafts, and a Curry-Sized Marketing Bet</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/graphite-designs-quiet-hybrid-win-at-travelers-says-more-about-the-shaft-2026-06-29/</loc>
-    <lastmod>2026-06-29</lastmod>
+    <loc>https://dormied.com/news/full-swing-signs-the-byu-freshman-every-launch-monitor-brand-wanted-2026-05-28/</loc>
+    <lastmod>2026-05-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/graphite-designs-quiet-hybrid-win-at-travelers-says-more-about-the-shaft-2026-06-29-hero.jpg</image:loc>
-      <image:title>Graphite Design&apos;s Quiet Hybrid Win at Travelers Says More About the Shaft Market Than the Player</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/full-swing-signs-the-byu-freshman-every-launch-monitor-brand-wanted-2026-05-28-hero.jpg</image:loc>
+      <image:title>Full Swing Signs the BYU Freshman Every Launch Monitor Brand Wanted</image:title>
     </image:image>
   </url>
   <url>
@@ -5022,13 +5052,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/golf-prides-regional-play-why-the-grip-giant-is-going-hyperlocal-in-its-2026-04-27/</loc>
-    <lastmod>2026-04-27</lastmod>
+    <loc>https://dormied.com/news/foresight-sports-locks-down-another-tour-deal-while-its-cons-2026-04-19/</loc>
+    <lastmod>2026-04-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/golf-prides-regional-play-why-the-grip-giant-is-going-hyperlocal-in-its-2026-04-27-hero.jpg</image:loc>
-      <image:title>Golf Pride&apos;s Regional Play: Why the Grip Giant is Going Hyperlocal in Its Own Backyard</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/foresight-sports-locks-down-another-tour-deal-while-its-cons-2026-04-19-hero.png</image:loc>
+      <image:title>Foresight Sports Locks Down Another Tour Deal While Its Consumer Brand Flatlines</image:title>
     </image:image>
   </url>
   <url>
@@ -5102,23 +5132,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/fujikuras-junior-fitting-play-65-kids-free-ventus-shafts-and-a-curry-sized-2026-06-02/</loc>
-    <lastmod>2026-06-02</lastmod>
+    <loc>https://dormied.com/news/flightscopes-quiet-play-for-the-coaching-layer-gcquad-and-trackman-cant-2026-06-04/</loc>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/fujikuras-junior-fitting-play-65-kids-free-ventus-shafts-and-a-curry-sized-2026-06-02-hero.jpg</image:loc>
-      <image:title>Fujikura&apos;s Junior Fitting Play: 65 Kids, Free VENTUS Shafts, and a Curry-Sized Marketing Bet</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/full-swing-signs-the-byu-freshman-every-launch-monitor-brand-wanted-2026-05-28/</loc>
-    <lastmod>2026-05-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/full-swing-signs-the-byu-freshman-every-launch-monitor-brand-wanted-2026-05-28-hero.jpg</image:loc>
-      <image:title>Full Swing Signs the BYU Freshman Every Launch Monitor Brand Wanted</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/flightscopes-quiet-play-for-the-coaching-layer-gcquad-and-trackman-cant-2026-06-04-hero.png</image:loc>
+      <image:title>FlightScope&apos;s Quiet Play for the Coaching Layer GCQuad and Trackman Can&apos;t Reach</image:title>
     </image:image>
   </url>
   <url>
@@ -5182,13 +5202,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/foresight-sports-locks-down-another-tour-deal-while-its-cons-2026-04-19/</loc>
-    <lastmod>2026-04-19</lastmod>
+    <loc>https://dormied.com/news/fitzpatricks-putter-is-now-available-to-the-public-and-its-a-design-2026-05-08/</loc>
+    <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/foresight-sports-locks-down-another-tour-deal-while-its-cons-2026-04-19-hero.png</image:loc>
-      <image:title>Foresight Sports Locks Down Another Tour Deal While Its Consumer Brand Flatlines</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/fitzpatricks-putter-is-now-available-to-the-public-and-its-a-design-2026-05-08-hero.jpg</image:loc>
+      <image:title>Fitzpatrick&apos;s Putter Is Now Available to the Public — and It&apos;s a Design History Lesson</image:title>
     </image:image>
   </url>
   <url>
@@ -5259,16 +5279,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/flightscopes-lpga-push-three-ambassadors-one-major-and-a-quiet-reminder-2026-06-03-hero.jpg</image:loc>
       <image:title>FlightScope&apos;s LPGA Push: Three Ambassadors, One Major, and a Quiet Reminder That Trackman Isn&apos;t the Only Radar in the Bag</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/flightscopes-quiet-play-for-the-coaching-layer-gcquad-and-trackman-cant-2026-06-04/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/flightscopes-quiet-play-for-the-coaching-layer-gcquad-and-trackman-cant-2026-06-04-hero.png</image:loc>
-      <image:title>FlightScope&apos;s Quiet Play for the Coaching Layer GCQuad and Trackman Can&apos;t Reach</image:title>
     </image:image>
   </url>
   <url>
@@ -5352,13 +5362,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/fitzpatricks-putter-is-now-available-to-the-public-and-its-a-design-2026-05-08/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <loc>https://dormied.com/news/clevelands-199-mallet-just-tied-for-third-against-putters-costing-three-2026-05-13/</loc>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/fitzpatricks-putter-is-now-available-to-the-public-and-its-a-design-2026-05-08-hero.jpg</image:loc>
-      <image:title>Fitzpatrick&apos;s Putter Is Now Available to the Public — and It&apos;s a Design History Lesson</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/clevelands-199-mallet-just-tied-for-third-against-putters-costing-three-2026-05-13-hero.jpg</image:loc>
+      <image:title>Cleveland&apos;s $199 Mallet Just Tied for Third Against Putters Costing Three Times More</image:title>
     </image:image>
   </url>
   <url>
@@ -5432,6 +5442,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/callaways-quiet-retail-footprint-just-got-30000-square-feet-bigger-in-2026-06-15/</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaways-quiet-retail-footprint-just-got-30000-square-feet-bigger-in-2026-06-15-hero.jpg</image:loc>
+      <image:title>Callaway&apos;s Quiet Retail Footprint Just Got 30,000 Square Feet Bigger in Coral Gables</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/callaways-rental-club-strategy-is-quietly-winning-the-resort-golf-arms-race-2026-04-29/</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -5489,16 +5509,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/cleveland-golf-is-now-paying-you-to-play-through-a-rewards-a-2026-04-15-hero.jpg</image:loc>
       <image:title>Cleveland Golf Is Now Paying You to Play Through a Rewards App Partnership</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/clevelands-199-mallet-just-tied-for-third-against-putters-costing-three-2026-05-13/</loc>
-    <lastmod>2026-05-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/clevelands-199-mallet-just-tied-for-third-against-putters-costing-three-2026-05-13-hero.jpg</image:loc>
-      <image:title>Cleveland&apos;s $199 Mallet Just Tied for Third Against Putters Costing Three Times More</image:title>
     </image:image>
   </url>
   <url>
@@ -5582,13 +5592,23 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/callaways-quiet-retail-footprint-just-got-30000-square-feet-bigger-in-2026-06-15/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>https://dormied.com/news/bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21/</loc>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaways-quiet-retail-footprint-just-got-30000-square-feet-bigger-in-2026-06-15-hero.jpg</image:loc>
-      <image:title>Callaway&apos;s Quiet Retail Footprint Just Got 30,000 Square Feet Bigger in Coral Gables</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21-hero.jpg</image:loc>
+      <image:title>Bridgestone Sends Its Guy to Talk About Golf Ball Rollback at an Industry Forum Nobody&apos;s Heard Of</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/bridgestone-shutters-georgia-plant-after-36-years-bets-future-on-japan-2026-05-01/</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bridgestone-shutters-georgia-plant-after-36-years-bets-future-on-japan-2026-05-01-hero.jpg</image:loc>
+      <image:title>Bridgestone Shutters Georgia Plant After 36 Years, Bets Future on Japan Manufacturing</image:title>
     </image:image>
   </url>
   <url>
@@ -5722,23 +5742,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21/</loc>
-    <lastmod>2026-04-21</lastmod>
+    <loc>https://dormied.com/news/ben-hogans-250-mallets-beat-every-scotty-cameron-phantom-in-mygolfspys-2026-06-04/</loc>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21-hero.jpg</image:loc>
-      <image:title>Bridgestone Sends Its Guy to Talk About Golf Ball Rollback at an Industry Forum Nobody&apos;s Heard Of</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/bridgestone-shutters-georgia-plant-after-36-years-bets-future-on-japan-2026-05-01/</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bridgestone-shutters-georgia-plant-after-36-years-bets-future-on-japan-2026-05-01-hero.jpg</image:loc>
-      <image:title>Bridgestone Shutters Georgia Plant After 36 Years, Bets Future on Japan Manufacturing</image:title>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/ben-hogans-250-mallets-beat-every-scotty-cameron-phantom-in-mygolfspys-2026-06-04-hero.png</image:loc>
+      <image:title>Ben Hogan&apos;s $250 Mallets Beat Every Scotty Cameron Phantom in MyGolfSpy&apos;s 2026 Test</image:title>
     </image:image>
   </url>
   <url>
@@ -5799,6 +5809,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/blades-brown-calls-his-odyssey-ai-one-the-wand-the-putter-detail-buried-in-2026-06-25-hero.jpg</image:loc>
       <image:title>Blades Brown Calls His Odyssey Ai-ONE &apos;The Wand.&apos; The Putter Detail Buried in His WITB Matters More Than the Driver.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/are-takomo-irons-good/</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/are-takomo-irons-good-hero.webp</image:loc>
+      <image:title>Are Takomo Irons Good?</image:title>
     </image:image>
   </url>
   <url>
@@ -5872,16 +5892,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/ben-hogans-250-mallets-beat-every-scotty-cameron-phantom-in-mygolfspys-2026-06-04/</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/ben-hogans-250-mallets-beat-every-scotty-cameron-phantom-in-mygolfspys-2026-06-04-hero.png</image:loc>
-      <image:title>Ben Hogan&apos;s $250 Mallets Beat Every Scotty Cameron Phantom in MyGolfSpy&apos;s 2026 Test</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/adidas-hands-messi-a-golf-shoe-the-crossover-isnt-about-golf-2026-06-16/</loc>
     <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -5949,16 +5959,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/arccos-turns-35-million-shots-into-a-case-against-every-other-rangefinder-2026-05-20-hero.png</image:loc>
       <image:title>Arccos Turns 3.5 Million Shots Into a Case Against Every Other Rangefinder on the Market</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/are-takomo-irons-good/</loc>
-    <lastmod>2026-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/are-takomo-irons-good-hero.webp</image:loc>
-      <image:title>Are Takomo Irons Good?</image:title>
     </image:image>
   </url>
   <url>
