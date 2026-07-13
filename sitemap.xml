@@ -35,7 +35,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -2110,7 +2110,47 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (396) ── -->
+  <!-- ── News articles (400) ── -->
+  <url>
+    <loc>https://dormied.com/news/taylormade-plants-its-kingdom-flag-in-hertfordshire-and-the-uk-fitting-2026-07-09/</loc>
+    <lastmod>2026-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/taylormade-plants-its-kingdom-flag-in-hertfordshire-and-the-uk-fitting-2026-07-09-hero.jpg</image:loc>
+      <image:title>TaylorMade Plants Its Kingdom Flag in Hertfordshire, and the UK Fitting Market Just Got Interesting</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/cobras-open-championship-headcover-skips-the-claret-jug-for-a-clock-tower-2026-07-13/</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/cobras-open-championship-headcover-skips-the-claret-jug-for-a-clock-tower-2026-07-13-hero.png</image:loc>
+      <image:title>Cobra&apos;s Open Championship Headcover Skips the Claret Jug for a Clock Tower Nobody Will Recognize</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/arccos-just-made-metas-smart-glasses-actually-smart-thats-the-real-story-2026-07-13/</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/arccos-just-made-metas-smart-glasses-actually-smart-thats-the-real-story-2026-07-13-hero.jpg</image:loc>
+      <image:title>Arccos Just Made Meta&apos;s Smart Glasses Actually Smart. That&apos;s the Real Story.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/chris-gotterup-keeps-winning-and-superstroke-keeps-cashing-the-marketing-2026-07-06/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/chris-gotterup-keeps-winning-and-superstroke-keeps-cashing-the-marketing-2026-07-06-hero.jpg</image:loc>
+      <image:title>Chris Gotterup Keeps Winning, and SuperStroke Keeps Cashing the Marketing Checks</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/who-is-arnie-mcnair/</loc>
     <lastmod>2026-07-09</lastmod>
@@ -6070,44 +6110,44 @@
 
   <!-- ── News pagination ── -->
   <url>
-    <loc>https://dormied.com/news/page/5/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://dormied.com/news/page/8/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/page/3/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/page/7/</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/6/</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/page/7/</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/page/3/</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/page/4/</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/page/5/</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/page/2/</loc>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
