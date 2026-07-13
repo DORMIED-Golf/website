@@ -30,8 +30,8 @@ window.DORMIED_SCORECARD_DATA = {
       images: {
         hero:  null,
         strip: [
-          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc6555b0d-bb45-47a5-b915-359f53866532_1937x1292.webp", label: "Wyndham Clark, 2026 U.S. Open" },
-          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Febe2e4db-1303-4ea0-81eb-93c55fcd9546_1200x823.jpeg", label: "ProSENDR, the U.S. Open training aid" },
+          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc6555b0d-bb45-47a5-b915-359f53866532_1937x1292.webp", label: "Fore All Double-Decker Bus" },
+          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Febe2e4db-1303-4ea0-81eb-93c55fcd9546_1200x823.jpeg", label: "Wyndham Clark, 2026 U.S. Open" },
           { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa28d65c0-14c3-4729-800c-0a24040a3b87_960x640.webp", label: "Bryson DeChambeau's driver switch" },
         ],
       },
