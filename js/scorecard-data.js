@@ -19,6 +19,83 @@ window.DORMIED_SCORECARD_DATA = {
 
   issues: [
 
+    /* ── JULY 2026 ─────────────────────────────────────────────────────── */
+    {
+      slug:       "july-2026",
+      title:      "Shinnecock Paid Out in Strange Currency | The Scorecard | July 2026",
+      subtitle:   "Wyndham Clark spent every day of U.S. Open week with a wrist trainer on the Shinnecock range. Plus, Fore All jumped 50% with a pink double-decker bus and 64.8 million earned media impressions.",
+      date:       "Jul 13, 2026",
+      dateISO:    "2026-07-13",
+      monthLabel: "July 2026",
+      images: {
+        hero:  null,
+        strip: [
+          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc6555b0d-bb45-47a5-b915-359f53866532_1937x1292.webp", label: "Wyndham Clark, 2026 U.S. Open" },
+          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Febe2e4db-1303-4ea0-81eb-93c55fcd9546_1200x823.jpeg", label: "ProSENDR, the U.S. Open training aid" },
+          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa28d65c0-14c3-4729-800c-0a24040a3b87_960x640.webp", label: "Bryson DeChambeau's driver switch" },
+        ],
+      },
+      toc: [
+        { id: "at-the-top",       label: "At The Top"       },
+        { id: "the-biggest-move", label: "The Biggest Move" },
+        { id: "the-field",        label: "The Field"        },
+        { id: "the-drop-zone",    label: "The Drop Zone"    },
+        { id: "the-long-game",    label: "The Long Game"    },
+        { id: "global-dispatch",  label: "Global Dispatch"  },
+        { id: "closing",          label: "Closing"          },
+      ],
+      sections: [
+        {
+          id:      "intro",
+          heading: null,
+          body:    "<p>Wyndham Clark won the U.S. Open wire-to-wire at Shinnecock Hills, his second national title, and the index spent the rest of June proving that attention does not follow trophies in a straight line. The training aid Clark used on the range all week jumped 81%. The shaft company inside his winning irons fell 33%. Bryson DeChambeau benched his driver at the year's biggest event and both brands involved in the breakup went up. A Barbie golf bag capped at 100 units out-earned most tour sponsorships in media impressions. June was a reminder that the index does not measure who won. It measures who got talked about, and in our game those are increasingly different lists. The winner's circle is one economy. The conversation is another. This month the two barely overlapped.</p>",
+        },
+        {
+          id:      "at-the-top",
+          heading: "At The Top: Ten Brands, Zero Movement, One Message",
+          body:    "<p>For the first time in the index's history, the entire top ten held its exact rank from the previous month. Titleist leads at 100.0 for the sixth consecutive month, though its raw search volume slipped 18.3% in lockstep with TaylorMade at 81.7, the post-major season breather arriving on schedule. TravisMathew held flat and climbed to 67.1 on the relative scale as a result, quietly posting its strongest DI of the year without doing anything differently. Callaway sits fourth at 54.9 and FootJoy rounds out the five at 44.7. The frozen leaderboard is the calm before the reshuffle: LA Golf jumped eight spots to 11th and Vice Golf is sitting at ninth at a 52-week peak. Somebody in the top ten is getting passed this summer.</p>",
+        },
+        {
+          id:      "the-biggest-move",
+          heading: "The Biggest Move: The Training Aid That Won the U.S. Open",
+          body:    "<p>ProSENDR rose 81.3%, climbing 19 spots, because Wyndham Clark spent every day of U.S. Open week with the wrist trainer on the Shinnecock range and then won the whole thing wire-to-wire. Golf Monthly and Yahoo Sports both ran pieces attributing his ball-striking turnaround directly to the ProSENDR system, and the Widener, the brand's early-April launch, caught a second wave of attention once cameras confirmed it at the top level of the sport. This is the second consecutive month Clark has functioned as a one-man brand catalyst. In May he won the CJ Cup with an ACCRA putter shaft and sent that brand up 131%. In June he did it for a training aid. No active player moves component and accessory brands the way Clark does right now, partly because his bag is full of unexpected names and partly because his wins keep coming with a visible practice-tool story attached. The contrast with last month is the lesson: Aaron Rai's PGA win crushed The Stack System because it undermined the speed narrative. Clark's win made ProSENDR because it confirmed the swing-mechanics narrative. Training aids do not sell products. They sell explanations, and Clark handed them a major-championship-sized one.</p>",
+        },
+        {
+          id:      "the-field",
+          heading: "The Field: Bryson's Breakup Was Good for Everyone's Business",
+          body:    "<p>Krank Golf rose 50% in the month Bryson DeChambeau dropped its driver. That sentence should not work, but the mechanics make sense. Bryson switching to a TaylorMade prototype at Shinnecock generated massive equipment coverage, and every story about the switch named the club he was leaving. Krank leaned in rather than sulking, launching the Formula FIRE 2 Wood and a Mini Driver mid-month while its homepage celebrated the fairway woods still in his bag. Last month we noted the one-ambassador risk cuts both ways after his missed cut dragged Krank down 33%. June showed the third way: even the breakup is content.</p>\n<p>LA Golf rose 49.5% on the same story from the other side, its BAD Prototype Rebar shafts still in Bryson's wedges and irons while the driver-switch conversation put the brand's post-Bryson identity up for debate during peak WITB season. Fore All jumped 50% after the Barbie collaboration launched during U.S. Women's Open week with a Melrose pop-up, a wrapped pink double-decker bus running down Sunset to Riviera, and 64.8 million earned media impressions including an Access Hollywood segment. A women's golf brand generating entertainment-industry coverage during a major is precisely the crossover play the category has needed.</p>\n<p>And Vuori climbed 22.7% for its third consecutive monthly gain since the Tom Holland deal. June brought a GOLF.com review of the men's collection, a Wall Street Journal interview announcing 20 China stores by 2027, and a Bloomberg Businessweek feature on founder Joe Kudla and the $5.5 billion brand. When we made Vuori our Long Game call in May, the question was whether the Holland strategy would sustain. Three months of data have answered it.</p>",
+        },
+        {
+          id:      "the-drop-zone",
+          heading: "The Drop Zone: McLaren's Silence Says Everything",
+          body:    "<p>McLaren Golf fell 80%, dropping 43 spots to a DI of 4.9. Two months ago it was tied for third on this index. The explanation database entry for June reads, in full, no identifiable catalyst. That is the point. There was no bad news, no viral criticism, no tour disaster. There was nothing at all, and nothing is fatal for a brand built entirely on launch spectacle. The arc is now complete enough to name: plus 307% in April, minus 63% in May, minus 80% in June. Justin Rose is still playing the irons. The clubs did not change. The conversation simply ended, and the index does not pay retainers. PXG survived this valley in 2015 by refusing to stop spending. McLaren's next move, whatever it is, now matters more than its first one did.</p>\n<p>True Temper fell 33.3% in the same month its Dynamic Gold X7 shafts won the U.S. Open in Clark's irons and its Project X Titan Yellow tour-launched into his winning driver setup. Read that against ProSENDR's 81% gain from the same player's bag and you have the purest natural experiment the index has produced: the incumbent gets nothing for winning because winning is what incumbents are supposed to do. Greg Norman Collection completed a round trip, giving back all of last month's 50% viral-post gain with no June catalyst. Primo Golf Apparel fell 33.3% in a difficult month: Golf Digest reported Phil Mickelson had been removed from his home club amid misconduct allegations, extending an absence that has left the brand's HyFlyers partnership invisible all season, and Primo's branding was notably absent from Grant Horvat's Your Golf Tour opener at Pursell Farms. And Public Drip dropped 32.3% after walking into the pro shop, a green-grass distribution push that landed badly with an audience that built around the brand specifically because it was not in the pro shop. Growth channels and brand identity are not always the same direction.</p>",
+        },
+        {
+          id:      "the-long-game",
+          heading: "The Long Game: LA Golf After Bryson",
+          body:    "<p>LA Golf. The shaft maker sits at 11th, one spot from the top ten, at a DI of 30.1, and its most famous ambassador just benched the most visible club in the partnership. That sounds like a warning. It might be an opening. The driver-switch coverage proved the brand can generate attention independent of an active endorsement win, the Rebar shafts remain in Bryson's irons and wedges, and the WITB audience now watches LA Golf's tour presence with a curiosity it never had when the story was settled. The question for the next three months is whether LA Golf converts the breakup energy into a top-ten seat or fades back into the component-brand pack once the conversation moves on. If it cracks the top ten by September, it will be the first shaft company ever to do it, and the index will have caught a structural shift in what golfers pay attention to inside the bag.</p>",
+        },
+        {
+          id:      "global-dispatch",
+          heading: "Global Dispatch: The China Land Grab Has a Timeline Now",
+          body:    "<p>Vuori's Wall Street Journal announcement of 20 China stores by 2027 put a number on something this index has been circling since March, when Malbon opened its Shanghai flagship and China led all markets at plus 52.7%. Golf apparel's growth thesis in China is no longer speculative. Two premium Western brands have now committed physical retail to it on the record, and they are approaching it from opposite ends: Malbon selling streetwear scarcity, Vuori selling wellness lifestyle at a $5.5 billion valuation. The Chinese golf consumer will decide which translation of American golf culture actually lands. The index will show the verdict before the earnings calls do.</p>",
+        },
+        {
+          id:      "closing",
+          heading: "The Closing Note: The Index Pays for Stories, Not Trophies",
+          body:    "<p>Five issues in, June gave us the cleanest statement yet of what this index actually measures. True Temper won the U.S. Open and lost a third of its attention. ProSENDR won nothing and gained 81%. Krank got dumped on the biggest stage in golf and went up 50%. The lesson is not that winning does not matter. It is that winning only matters when it changes the story, and most winning does not. The brands that moved this month all had something happen to them that a golfer would retell at dinner. That is the whole game. The Open Championship is next, and links golf always produces at least one story nobody saw coming. See you in August.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>\n<p class=\"scorecard-substack-link\"><a href=\"https://dormiedgolf.substack.com/p/shinnecock-paid-out-in-strange-currency\" target=\"_blank\" rel=\"noopener\">Read on Substack <span aria-hidden=\"true\">&#x2192;</span></a></p>",
+        },
+      ],
+      indexSnapshot: [
+        { rank: 1, id: "titleist",    name: "Titleist",    di: 100,  mom: -18.3 },
+        { rank: 2, id: "taylormade",  name: "TaylorMade",  di: 81.7, mom: -18.3 },
+        { rank: 3, id: "travismathew", name: "TravisMathew", di: 67.1, mom: 0    },
+        { rank: 4, id: "callaway",    name: "Callaway",    di: 54.9, mom: 0    },
+        { rank: 5, id: "footjoy",     name: "FootJoy",     di: 44.7, mom: -18.5 },
+      ],
+      brandMentions: ["titleist","taylormade","travismathew","callaway","footjoy","la-golf","vice-golf","prosendr","krank-golf","true-temper","greg-norman-collection","primo-golf-apparel","public-drip","mclaren-golf","fore-all","vuori","malbon","the-stack-system","accra","pxg"],
+    },
+
     /* ── JUNE 2026 ─────────────────────────────────────────────────────── */
     {
       slug:       "june-2026",
