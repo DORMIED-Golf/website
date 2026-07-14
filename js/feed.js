@@ -375,9 +375,17 @@
   }
 
   /* ── Render: homepage Top Stories (DORMIED, ranked by click count) ─────── */
+  /* A feed widget may set data-limit="N" on its list element to override the
+     default item count for that placement (e.g. 5 in a sidebar, 10 in the body). */
+  function widgetLimit(el, def) {
+    var n = el && parseInt(el.getAttribute('data-limit'), 10);
+    return n > 0 ? n : def;
+  }
+
   function renderHomeStories() {
     var el = document.getElementById('home-stories-list');
     if (!el) return;
+    var limit = widgetLimit(el, HOME_LIMIT);
 
     var cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
@@ -397,7 +405,7 @@
 
       if (dormied.length >= 3) {
         var allBrands = getAllBrands();
-        var articles  = dormied.slice(0, HOME_LIMIT).map(function (row) {
+        var articles  = dormied.slice(0, limit).map(function (row) {
           // Derive author from the primary brand's category
           var firstBrandId = row.brand_ids && row.brand_ids[0] || '';
           var firstBrand   = null;
@@ -430,7 +438,7 @@
   }
 
   function renderHomeStoriesFallback(el) {
-    fetchDormiedArticles(null, HOME_LIMIT, function (articles) {
+    fetchDormiedArticles(null, widgetLimit(el, HOME_LIMIT), function (articles) {
       var allBrands = getAllBrands();
       if (!articles.length) {
         if (!el.querySelector('a')) {

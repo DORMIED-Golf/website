@@ -1205,6 +1205,12 @@ button, select, input {
   .sidebar-ad-col {
     width: var(--sidebar-w);
     flex-shrink: 0; /* prevents flex parent from squishing it */
+    /* Sticky so the shortened sidebar (feed + modules) and any ad stay in view
+       as the longer main content scrolls. align-self:start keeps its height
+       content-based in both the flex (home) and grid (rankings) layouts. */
+    position: sticky;
+    top: 72px;
+    align-self: start;
   }
   .sidebar-sticky-zone {
     display: block;
