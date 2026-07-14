@@ -1205,11 +1205,10 @@ button, select, input {
   .sidebar-ad-col {
     width: var(--sidebar-w);
     flex-shrink: 0; /* prevents flex parent from squishing it */
-    /* Sticky so the shortened sidebar (feed + modules) and any ad stay in view
-       as the longer main content scrolls. align-self:start keeps its height
-       content-based in both the flex (home) and grid (rankings) layouts. */
-    position: sticky;
-    top: 72px;
+    /* Not sticky: the sidebar scrolls with the page. The shortened content
+       (feed + modules) leaves empty space below, where Mediavine injects its
+       sticky sidebar ad once the reader scrolls past Recently Updated Bags.
+       align-self:start keeps the column content-height rather than stretched. */
     align-self: start;
   }
   .sidebar-sticky-zone {

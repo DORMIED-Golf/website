@@ -278,6 +278,7 @@ async function run() {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_KEY;
   let modsHtml = '';
+  let topStoriesHtml = '';
   if (url && key) {
     try {
       const { createClient } = require('@supabase/supabase-js');
@@ -290,6 +291,13 @@ async function run() {
       } else {
         console.warn('[prerender] No published articles — hero/preload sections unchanged');
       }
+      // Top Stories (most-clicked, last 7 days): baked so crawlers see the links;
+      // feed.js refreshes the same 5 on load. Matches renderHomeStories output.
+      const topStories = await feedBake.fetchTopStoriesArticles(supabase, data, 5);
+      if (topStories && topStories.length) {
+        topStoriesHtml = feedBake.renderLatestFeedHtml(topStories, data);
+        console.log('[prerender] TOP STORIES baked: ' + topStories.length + ' cards');
+      }
       // Sidebar modules (Brands on the Move / Recently Updated Bags), baked below Top Stories.
       modsHtml = await feedBake.fetchSidebarModulesHtml(supabase, data) || '';
     } catch (e) {
@@ -298,6 +306,8 @@ async function run() {
   } else {
     console.warn('[prerender] SUPABASE_URL / SUPABASE_SERVICE_KEY not set — hero/preload sections unchanged');
   }
+
+  if (topStoriesHtml) sections['home-stories'] = topStoriesHtml;
 
   let html = fs.readFileSync(INDEX_HTML, 'utf8');
   for (const [key, content] of Object.entries(sections)) {
