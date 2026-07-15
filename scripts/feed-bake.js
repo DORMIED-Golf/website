@@ -254,6 +254,23 @@ async function fetchLatestArticles(supabase, limit, excludeSlug) {
   return articles.slice(0, limit);
 }
 
+// Curated Featured articles (featured column set, ascending). Mirrors the
+// client featured widget so the baked list matches what feed.js renders.
+async function fetchFeaturedArticles(supabase, limit) {
+  const { data, error } = await supabase
+    .from('dormied_articles')
+    .select('id,brand_slug,secondary_brand_slugs,title,meta_description,image_url,slug,category,published_at,author,featured')
+    .eq('status', 'published')
+    .not('featured', 'is', null)
+    .order('featured', { ascending: true })
+    .limit(limit || 10);
+  if (error) {
+    console.warn('[feed-bake] featured fetch error:', error.message);
+    return [];
+  }
+  return (data || []).map(normalizeDormiedRow);
+}
+
 async function fetchTopStoriesArticles(supabase, dormiedData, limit) {
   var cutoff    = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
   var allBrands = (dormiedData && dormiedData.brands) || [];
@@ -377,4 +394,4 @@ async function fetchSidebarModulesHtml(supabase, dormiedData) {
   }
 }
 
-module.exports = { fetchLatestArticles, fetchTopStoriesArticles, renderLatestFeedHtml, renderFeedPageCard, renderHomeLatestHtml, fetchSidebarModulesHtml };
+module.exports = { fetchLatestArticles, fetchTopStoriesArticles, fetchFeaturedArticles, renderLatestFeedHtml, renderFeedPageCard, renderHomeLatestHtml, fetchSidebarModulesHtml };

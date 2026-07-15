@@ -1201,6 +1201,16 @@ button, select, input {
   display: none;   /* hide 160×600 on mobile/tablet (index page) */
 }
 
+/* A feed section that lives in the desktop sidebar is duplicated into the main
+   column's "tail feeds" list for mobile (so mobile order matches). Show exactly
+   one copy per breakpoint: sf-desktop in the sidebar ≥1200, sf-mobile in the
+   tail list below. Baked content in both, so crawlers read the links either way. */
+.sf-desktop { display: none; }
+.sf-mobile  { display: block; }
+/* Tail feeds: moved Latest/Featured (and mobile Top Stories) below the page body. */
+.tail-feeds { margin-top: 40px; }
+.tail-feeds .home-stories-section { margin-bottom: 32px; }
+
 @media (min-width: 1200px) {
   .sidebar-ad-col {
     width: var(--sidebar-w);
@@ -1214,6 +1224,8 @@ button, select, input {
   .sidebar-sticky-zone {
     display: block;
   }
+  .sf-desktop { display: block; }
+  .sf-mobile  { display: none; }
 }
 
 

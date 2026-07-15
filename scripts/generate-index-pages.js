@@ -81,6 +81,55 @@ async function injectSidebarMods(html) {
   return html.replace('</aside>', `  ${modsHtml}\n          </aside>`);
 }
 
+/* ── Bake feed sections (Top Stories / Latest / Featured) into a page so the
+   links are crawler-readable; feed.js still refreshes them by id at runtime,
+   and the publish->re-bake pipeline keeps the baked copy current. Content is
+   injected between <!-- PRERENDER-START:key -->…<!-- PRERENDER-END:key -->
+   markers (key one of: home-stories, home-stories-mobile, dormied-latest,
+   featured). Fetched once per run and cached. */
+let _pageFeedsCache = null;
+async function getPageFeeds() {
+  if (_pageFeedsCache !== null) return _pageFeedsCache;
+  _pageFeedsCache = { stories: '', latest: '', featured: '' };
+  try {
+    const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
+    if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+      const { createClient } = require('@supabase/supabase-js');
+      const feedBake = require('./feed-bake');
+      const src = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
+      const ctx = { window: {}, console }; vm.createContext(ctx); vm.runInContext(src, ctx);
+      const data = ctx.window.DORMIED_DATA;
+      const sb = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+      const [stories, latest, featured] = await Promise.all([
+        feedBake.fetchTopStoriesArticles(sb, data, 5),
+        feedBake.fetchLatestArticles(sb, 10, null),
+        feedBake.fetchFeaturedArticles(sb, 10),
+      ]);
+      _pageFeedsCache = {
+        stories:  (stories  && stories.length)  ? feedBake.renderLatestFeedHtml(stories,  data) : '',
+        latest:   (latest   && latest.length)   ? feedBake.renderLatestFeedHtml(latest,   data) : '',
+        featured: (featured && featured.length) ? feedBake.renderLatestFeedHtml(featured, data) : '',
+      };
+    }
+  } catch (e) {
+    console.warn('  ⚠  page feeds bake skipped:', e.message);
+  }
+  return _pageFeedsCache;
+}
+async function injectPageFeeds(html) {
+  const f = await getPageFeeds();
+  const slot = (key, content) => {
+    if (!content) return;
+    const re = new RegExp('(<!-- PRERENDER-START:' + key + ' -->)[\\s\\S]*?(<!-- PRERENDER-END:' + key + ' -->)');
+    html = html.replace(re, `$1${content}$2`);
+  };
+  slot('home-stories',        f.stories);
+  slot('home-stories-mobile', f.stories);
+  slot('dormied-latest',      f.latest);
+  slot('featured',            f.featured);
+  return html;
+}
+
 /* ── CLI flags ────────────────────────────────────────────────────────────── */
 const args = process.argv.slice(2);
 const targetArg = args.find(a => a.startsWith('--target='));
@@ -932,8 +981,9 @@ async function generateRankings() {
   console.log('\n── Rankings ─────────────────────────────────────────────');
   let html = fs.readFileSync(filePath, 'utf8');
   html = await injectSidebarMods(html);
+  html = await injectPageFeeds(html);
   fs.writeFileSync(filePath, html, 'utf8');
-  console.log('  ✔  rankings/index.html — sidebar modules updated');
+  console.log('  ✔  rankings/index.html — sidebar modules + baked feeds updated');
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
