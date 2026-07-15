@@ -757,6 +757,7 @@ async function generateNews() {
 
   /* Sidebar modules at the <!-- SIDEBAR_MODS_SLOT --> marker (between Top Stories and Featured) */
   newsHtml = await injectSidebarMods(newsHtml);
+  newsHtml = await injectPageFeeds(newsHtml);
 
   fs.writeFileSync(newsFilePath, newsHtml, 'utf8');
   console.log(`  ✔  news/index.html — ${page1Articles.length} articles, title/meta/intro updated`);
