@@ -121,7 +121,9 @@ async function injectPageFeeds(html) {
   const slot = (key, content) => {
     if (!content) return;
     const re = new RegExp('(<!-- PRERENDER-START:' + key + ' -->)[\\s\\S]*?(<!-- PRERENDER-END:' + key + ' -->)');
-    html = html.replace(re, `$1${content}$2`);
+    // Function replacement so any '$' in the baked content (e.g. "$2,000" in a
+    // title) is inserted literally rather than treated as a backreference.
+    html = html.replace(re, (m, p1, p2) => p1 + content + p2);
   };
   slot('home-stories',        f.stories);
   slot('home-stories-mobile', f.stories);

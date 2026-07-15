@@ -256,7 +256,9 @@ function injectBetweenMarkers(html, key, content) {
   if (!re.test(html)) {
     throw new Error(`Markers missing for key "${key}" in index.html.\nAdd: ${start}${end} inside the target element.`);
   }
-  return html.replace(re, start + content + end);
+  // Function replacement so any '$' in content (e.g. "$2,000") is inserted
+  // literally rather than treated as a regex backreference.
+  return html.replace(re, () => start + content + end);
 }
 
 // ── Main ───────────────────────────────────────────────────────────────────────
