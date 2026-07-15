@@ -30,6 +30,8 @@ const ROOT = path.resolve(__dirname, '..');
 // Baked sidebar modules HTML (Brands on the Move / Recently Updated Bags).
 // Set in main() via feedBake.fetchSidebarModulesHtml; '' when unavailable.
 let SIDEBAR_MODULES_HTML = '';
+let TOP_STORIES_HTML = '';
+let FEATURED_HTML = '';
 
 // ── Feature definitions ─────────────────────────────────────────────────────────
 const FEATURES = {
@@ -504,12 +506,36 @@ function buildPage(F, parsed, dormiedLatestHtml) {
               ${bodyHtml}
             </div>
 
+            <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
+            <div class="tail-feeds">
+              <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="article-latest-m-heading">
+                <h2 class="latest-feed-heading" id="article-latest-m-heading">Latest</h2>
+                <div class="latest-feed-list">
+                  ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
+                </div>
+              </section>
+              <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
+              <section class="home-stories-section latest-feed-section" aria-labelledby="article-stories-heading">
+                <h2 class="latest-feed-heading" id="article-stories-heading">Top Stories</h2>
+                <div id="home-stories-list" class="latest-feed-list" data-limit="10">
+                  ${TOP_STORIES_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
+                </div>
+              </section>
+              <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="article-featured-heading">
+                <h2 class="latest-feed-heading" id="article-featured-heading">Featured</h2>
+                <div id="featured-list" class="latest-feed-list">
+                  ${FEATURED_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
+                </div>
+              </section>
+              <div class="bp-latest-see-all"><a href="/news/">See All News</a></div>
+            </div>
+
           </div><!-- /sc-article-main -->
 
           <aside class="sidebar-ad-col">
-            <section class="home-stories-section latest-feed-section" aria-labelledby="article-latest-heading">
+            <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="article-latest-heading">
               <h2 class="latest-feed-heading" id="article-latest-heading">Latest</h2>
-              <div id="dormied-latest-list" class="latest-feed-list">
+              <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
             </section>
@@ -584,7 +610,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   <script src="/js/analytics.min.js?v=20260320a"></script>
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
-  <script src="/js/feed.min.js?v=20260706"></script>
+  <script src="/js/feed.min.js?v=20260717"></script>
 
 </body>
 </html>`;
@@ -615,12 +641,18 @@ async function main() {
   if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
     try {
       const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-      const latest = await feedBake.fetchLatestArticles(supabase, 10, F.slug);
+      const latest = await feedBake.fetchLatestArticles(supabase, 5, F.slug);
       if (latest.length) dormiedLatestHtml = feedBake.renderLatestFeedHtml(latest, dormiedData);
       const { data: existing } = await supabase
         .from('dormied_articles').select('published_at').eq('slug', F.slug).maybeSingle();
       if (existing && existing.published_at) existingPublishedAt = existing.published_at;
       SIDEBAR_MODULES_HTML = await feedBake.fetchSidebarModulesHtml(supabase, dormiedData);
+      const [topArts, featArts] = await Promise.all([
+        feedBake.fetchTopStoriesArticles(supabase, dormiedData, 10),
+        feedBake.fetchFeaturedArticles(supabase, 10),
+      ]);
+      TOP_STORIES_HTML = topArts.length ? feedBake.renderLatestFeedHtml(topArts, dormiedData) : '';
+      FEATURED_HTML    = featArts.length ? feedBake.renderLatestFeedHtml(featArts, dormiedData) : '';
     } catch (e) { console.warn('[feature] LATEST sidebar bake failed:', e.message); }
   }
 
@@ -628,7 +660,10 @@ async function main() {
   F.publishedAt = configPublishedAt || existingPublishedAt || new Date().toISOString();
 
   const html = buildPage(F, parsed, dormiedLatestHtml);
-  if (html.includes('—')) throw new Error('[feature] Em dash found in output — aborting');
+  // Exclude baked feed lists from the em-dash check: article titles sourced from
+  // the DB may legitimately contain em dashes inside the feed cards.
+  const htmlNoFeed = html.replace(/(<div[^>]*class="latest-feed-list"[^>]*>)[\s\S]*?(<\/div>\s*<\/section>)/g, '$1$2');
+  if (htmlNoFeed.includes('—')) throw new Error('[feature] Em dash found in output — aborting');
 
   fs.mkdirSync(F.outDir, { recursive: true });
   fs.writeFileSync(path.join(F.outDir, 'index.html'), html, 'utf8');

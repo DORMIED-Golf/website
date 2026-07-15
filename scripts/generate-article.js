@@ -34,6 +34,11 @@ const MAX_ARTICLES_PER_RUN = 5;
 // Set once in main() via feedBake.fetchSidebarModulesHtml; '' when unavailable.
 let SIDEBAR_MODULES_HTML = '';
 
+// Baked Top Stories / Featured feeds for the tail block (moved off the sidebar to
+// make room for a sticky ad). Set once in main(); site-wide, article-independent.
+let TOP_STORIES_HTML = '';
+let FEATURED_HTML = '';
+
 // ── Article generation model config ───────────────────────────────────────────
 // Opus 4.7 solo — highest voice quality, no advisor.
 // NOTE: Opus 4.7 tokenizes ~35% more tokens than prior Opus at the same
@@ -945,13 +950,37 @@ function generateArticleHtml(opts) {
               <div id="da-more-brand-list" class="da-bottom-cards"></div>
             </section>
 
+            <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
+            <div class="tail-feeds">
+              <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="article-latest-m-heading">
+                <h2 class="latest-feed-heading" id="article-latest-m-heading">Latest</h2>
+                <div class="latest-feed-list">
+                  ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
+                </div>
+              </section>
+              <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
+              <section class="home-stories-section latest-feed-section" aria-labelledby="article-stories-heading">
+                <h2 class="latest-feed-heading" id="article-stories-heading">Top Stories</h2>
+                <div id="home-stories-list" class="latest-feed-list" data-limit="10">
+                  ${TOP_STORIES_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
+                </div>
+              </section>
+              <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="article-featured-heading">
+                <h2 class="latest-feed-heading" id="article-featured-heading">Featured</h2>
+                <div id="featured-list" class="latest-feed-list">
+                  ${FEATURED_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
+                </div>
+              </section>
+              <div class="bp-latest-see-all"><a href="/news/">See All News</a></div>
+            </div>
+
           </div><!-- /sc-article-main -->
 
-          <!-- Sidebar: LATEST widget (populated by feed.js, excludes current article via __DA_ARTICLE_SLUG__) -->
+          <!-- Sidebar: LATEST widget (5) (populated by feed.js, excludes current article via __DA_ARTICLE_SLUG__) -->
           <aside class="sidebar-ad-col">
-            <section class="home-stories-section latest-feed-section" aria-labelledby="article-latest-heading">
+            <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="article-latest-heading">
               <h2 class="latest-feed-heading" id="article-latest-heading">Latest</h2>
-              <div id="dormied-latest-list" class="latest-feed-list">
+              <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
             </section>
@@ -1029,7 +1058,7 @@ function generateArticleHtml(opts) {
   <script src="/js/signup.min.js?v=20260324d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>
-  <script src="/js/feed.min.js?v=20260706"></script>
+  <script src="/js/feed.min.js?v=20260717"></script>
   <script src="/js/da-article.min.js?v=20260522"></script>
 
 </body>
@@ -1099,6 +1128,18 @@ async function main() {
   // once per run, interpolated into every article sidebar. Text-only, no client fetch.
   SIDEBAR_MODULES_HTML = await feedBake.fetchSidebarModulesHtml(supabase, dormiedData);
 
+  // Baked Top Stories (10) + Featured (10) for the tail block — fetched once per run.
+  try {
+    const [topArts, featArts] = await Promise.all([
+      feedBake.fetchTopStoriesArticles(supabase, dormiedData, 10),
+      feedBake.fetchFeaturedArticles(supabase, 10),
+    ]);
+    TOP_STORIES_HTML = topArts.length ? feedBake.renderLatestFeedHtml(topArts, dormiedData) : '';
+    FEATURED_HTML    = featArts.length ? feedBake.renderLatestFeedHtml(featArts, dormiedData) : '';
+  } catch (e) {
+    console.warn('[generate] Top Stories / Featured pre-fetch failed:', e.message);
+  }
+
   // --force-id=<golf_wire_matched uuid>  bypass all cooldown/dedup checks for one article
   const forceArg = process.argv.find(a => a.startsWith('--force-id='));
   const FORCE_IDS = forceArg ? new Set(forceArg.replace('--force-id=','').split(',')) : new Set();
@@ -1161,7 +1202,7 @@ async function main() {
           .map(s => { const b = regenBrandsMap.get(s); return b ? { slug: s, name: b.name, logo: b.logo || '' } : null; })
           .filter(Boolean);
         const bHtml = bodyToHtml(row.body, bSlug, bName, secondaryBrands);
-        const filteredLatest = allLatestArticles.filter(a => a.slug !== row.slug).slice(0, 10);
+        const filteredLatest = allLatestArticles.filter(a => a.slug !== row.slug).slice(0, 5);
         const dormiedLatestHtml = allLatestArticles.length
           ? feedBake.renderLatestFeedHtml(filteredLatest, dormiedData)
           : null;
@@ -1284,7 +1325,7 @@ async function main() {
         })
         .filter(Boolean);
       const bHtml = bodyToHtml(row.body, bSlug, bName, secondaryBrands);
-      const filteredLatestB = allLatestArticles.filter(a => a.slug !== row.slug).slice(0, 10);
+      const filteredLatestB = allLatestArticles.filter(a => a.slug !== row.slug).slice(0, 5);
       const dormiedLatestHtmlB = allLatestArticles.length
         ? feedBake.renderLatestFeedHtml(filteredLatestB, dormiedData)
         : null;
@@ -1541,7 +1582,7 @@ async function main() {
     fs.mkdirSync(articleDir, { recursive: true });
 
     // Step 1: write candidate HTML
-    const filteredLatestNew = allLatestArticles.filter(a => a.slug !== slug).slice(0, 10);
+    const filteredLatestNew = allLatestArticles.filter(a => a.slug !== slug).slice(0, 5);
     const dormiedLatestHtmlNew = allLatestArticles.length
       ? feedBake.renderLatestFeedHtml(filteredLatestNew, dormiedData)
       : null;

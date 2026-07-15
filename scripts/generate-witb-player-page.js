@@ -634,7 +634,7 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
-function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, modsHtml }) {
+function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml }) {
   const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
@@ -943,8 +943,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     .owgr-logo{display:block;height:22px;width:auto}
   </style>
 
-  <link rel="preload" href="/css/styles.min.css?v=20260710" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260710"></noscript>
+  <link rel="preload" href="/css/styles.min.css?v=20260717" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260717"></noscript>
 
   <!-- JSON-LD -->
   <script type="application/ld+json">
@@ -1101,13 +1101,37 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
             <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
           </section>
 
+          <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
+          <div class="tail-feeds">
+            <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="player-latest-m-heading">
+              <h2 class="latest-feed-heading" id="player-latest-m-heading">Latest</h2>
+              <div class="latest-feed-list">
+                ${latestFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
+              </div>
+            </section>
+            <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
+            <section class="home-stories-section latest-feed-section" aria-labelledby="player-stories-heading">
+              <h2 class="latest-feed-heading" id="player-stories-heading">Top Stories</h2>
+              <div id="home-stories-list" class="latest-feed-list" data-limit="10">
+                ${topStoriesHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
+              </div>
+            </section>
+            <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="player-featured-heading">
+              <h2 class="latest-feed-heading" id="player-featured-heading">Featured</h2>
+              <div id="featured-list" class="latest-feed-list">
+                ${featuredFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
+              </div>
+            </section>
+            <div class="bp-latest-see-all"><a href="/news/">See All News</a></div>
+          </div>
+
         </article><!-- /bp-sections-col -->
 
-        <!-- SIDEBAR: Latest, then Brands on the Move + Recently Updated Bags -->
+        <!-- SIDEBAR: Latest (5), then Brands on the Move + Recently Updated Bags -->
         <aside class="sidebar-ad-col">
-          <section class="home-stories-section latest-feed-section" aria-labelledby="player-latest-heading">
+          <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="player-latest-heading">
             <h2 class="latest-feed-heading" id="player-latest-heading">Latest</h2>
-            <div id="dormied-latest-list" class="latest-feed-list">
+            <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
               ${latestFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
             </div>
           </section>
@@ -1280,7 +1304,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   </style>
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
-  <script defer src="/js/feed.min.js?v=20260706"></script>
+  <script defer src="/js/feed.min.js?v=20260717"></script>
   <script defer src="/js/search.min.js?v=20260529"></script>
   <script>
   // Player page view tracking — fire-and-forget, mirrors brand_page_views
@@ -1410,19 +1434,25 @@ async function main() {
 
   const dormiedData = loadDormiedData();
   let latestFeedHtml = null;
+  let topStoriesHtml = null;
+  let featuredFeedHtml = null;
   let modsHtml = '';
   try {
-    const [latestArticles, modsRes] = await Promise.all([
-      feedBake.fetchLatestArticles(sb, 10, null),
+    const [latestArticles, topStoriesArticles, featuredArticles, modsRes] = await Promise.all([
+      feedBake.fetchLatestArticles(sb, 5, null),
+      feedBake.fetchTopStoriesArticles(sb, dormiedData, 10),
+      feedBake.fetchFeaturedArticles(sb, 10),
       feedBake.fetchSidebarModulesHtml(sb, dormiedData),
     ]);
-    if (latestArticles.length) latestFeedHtml = feedBake.renderLatestFeedHtml(latestArticles, dormiedData);
+    if (latestArticles.length)     latestFeedHtml   = feedBake.renderLatestFeedHtml(latestArticles, dormiedData);
+    if (topStoriesArticles.length) topStoriesHtml   = feedBake.renderLatestFeedHtml(topStoriesArticles, dormiedData);
+    if (featuredArticles.length)   featuredFeedHtml = feedBake.renderLatestFeedHtml(featuredArticles, dormiedData);
     modsHtml = modsRes || '';
   } catch (e) {
     console.warn('[witb-player-page] Feed bake failed:', e.message);
   }
 
-  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, modsHtml });
+  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml });
 
   const noindex = html.includes('noindex');
 

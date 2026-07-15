@@ -1450,6 +1450,14 @@ button, select, input {
   background: var(--bg-surface);
 }
 
+/* Prose variant: matches the scorecard "What Is The Scorecard" look — no surface
+   box, no top border, no big italic heading; understated mono headings + dim prose. */
+.methodology-section--prose {
+  padding: 0;
+  border-top: none;
+  background: none;
+}
+
 .methodology-inner {
   display: grid;
   grid-template-columns: 1fr;

@@ -551,6 +551,7 @@ async function generateBrands() {
 
   /* Sidebar modules at the <!-- SIDEBAR_MODS_SLOT --> marker (between Top Stories and Latest) */
   html = await injectSidebarMods(html);
+  html = await injectPageFeeds(html);
 
   fs.writeFileSync(filePath, html, 'utf8');
   console.log(`  ✔  brands/index.html — ${n} brand cards, title/meta/intro updated`);
@@ -971,6 +972,7 @@ async function generateScorecard() {
   /* Sidebar modules (Brands on the Move / Recently Updated Bags) — positioned at
      the <!-- SIDEBAR_MODS_SLOT --> marker (between Top Stories and Latest). */
   html = await injectSidebarMods(html);
+  html = await injectPageFeeds(html);
 
   fs.writeFileSync(filePath, html, 'utf8');
   console.log(`  ✔  scorecard/index.html — hero + ${archive.length} archive card(s), title/meta/intro updated`);

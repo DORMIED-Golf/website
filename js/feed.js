@@ -490,8 +490,11 @@
       return;
     }
 
+    // A sidebar may set data-limit="N" to show fewer than the default.
+    var limit = widgetLimit(el, LATEST_LIMIT);
+
     // Fetch a few extra so we can filter out the excluded article
-    var fetchLimit = excludeSlug ? LATEST_LIMIT + 3 : LATEST_LIMIT;
+    var fetchLimit = excludeSlug ? limit + 3 : limit;
 
     fetchDormiedArticles(null, fetchLimit, function (articles) {
       var allBrands = getAllBrands();
@@ -499,7 +502,7 @@
       if (excludeSlug) {
         filtered = filtered.filter(function (a) { return a.slug !== excludeSlug; });
       }
-      filtered = filtered.slice(0, LATEST_LIMIT);
+      filtered = filtered.slice(0, limit);
 
       if (!filtered.length) {
         if (!el.querySelector('a')) {

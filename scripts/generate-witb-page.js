@@ -717,7 +717,7 @@ function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
 
 // ── Full page HTML ─────────────────────────────────────────────────────────
 
-function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap, latestFeedHtml, topStoriesHtml, modsHtml }) {
+function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml }) {
   // Canonical set: players with a non-null OWGR rank (158 today; sentinel 4990 included)
   const rankedPlayers      = players.filter(p => p.owgr_rank !== null);
   const rankedBagIds       = new Set(rankedPlayers.map(p => p.current_bag_id).filter(Boolean));
@@ -941,8 +941,8 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
     .witb-fp-date{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);flex-shrink:0}
   </style>
 
-  <link rel="preload" href="/css/styles.min.css?v=20260710" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260710"></noscript>
+  <link rel="preload" href="/css/styles.min.css?v=20260717" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260717"></noscript>
 
   <!-- JSON-LD: Dataset -->
   <script type="application/ld+json">
@@ -1208,45 +1208,62 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
         })()}
 
         <!-- WIDGET 9: METHODOLOGY -->
-        <section class="witb-section" aria-labelledby="method-heading">
-          <h2 class="witb-section-title" id="method-heading">Methodology</h2>
-          <div class="witb-methodology">
-            <h2>What This Data Is</h2>
-            <p>The DORMIED WITB dataset tracks the current equipment setup of ${totalPlayers} professional golfers, pulling current bag data on a weekly basis. Each player's bag is recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball, and grips. Brand, model, shaft, and loft are captured where available. The dataset covers ${totalBrands} distinct equipment brands and is refreshed every Tuesday at 9am ET.</p>
+        <section class="witb-section witb-section--method" aria-labelledby="method-heading">
+          <div class="scorecard-intro-body">
+            <h2 class="scorecard-intro-h2" id="method-heading">What This Data Is</h2>
+            <p class="scorecard-intro-p">The DORMIED WITB dataset tracks the current equipment setup of ${totalPlayers} professional golfers, pulling current bag data on a weekly basis. Each player's bag is recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball, and grips. Brand, model, shaft, and loft are captured where available. The dataset covers ${totalBrands} distinct equipment brands and is refreshed every Tuesday at 9am ET.</p>
 
-            <p>This is equipment-in-play data, not equipment-sold data. A brand appearing here means a tour-level professional has chosen it in competition - which is a meaningfully different signal than market share, retail velocity, or endorsement deals. Some of the most tour-popular brands barely register in amateur golfers' awareness. That gap is the most interesting thing this page exists to show.</p>
+            <p class="scorecard-intro-p">This is equipment-in-play data, not equipment-sold data. A brand appearing here means a tour-level professional has chosen it in competition - which is a meaningfully different signal than market share, retail velocity, or endorsement deals. Some of the most tour-popular brands barely register in amateur golfers' awareness. That gap is the most interesting thing this page exists to show.</p>
 
-            <h2>Reading the Tour Usage vs. Amateur Attention Chart</h2>
-            <p>The signature chart plots two independent signals against each other. The X axis is tour usage share: what percentage of the ${totalPlayers} tracked players carry at least one product from that brand in their bag. The Y axis is the DORMIED Index (DI) score for that brand in April 2026, which measures global search interest relative to the highest-scoring brand in the Index that month. Both axes use the same time period.</p>
+            <h2 class="scorecard-intro-h2">Reading the Tour Usage vs. Amateur Attention Chart</h2>
+            <p class="scorecard-intro-p">The signature chart plots two independent signals against each other. The X axis is tour usage share: what percentage of the ${totalPlayers} tracked players carry at least one product from that brand in their bag. The Y axis is the DORMIED Index (DI) score for that brand in April 2026, which measures global search interest relative to the highest-scoring brand in the Index that month. Both axes use the same time period.</p>
 
-            <p>The dashed diagonal is a reference line, not a regression. Brands sitting above the line are pro favorites the amateur game has not yet matched with search attention - either because the brand does not market aggressively, serves a niche the mainstream has not discovered, or benefits from tour contracts that do not translate to retail awareness. Brands sitting below the line command more amateur attention than their tour presence suggests - often large heritage brands with strong retail and marketing footprints even when pros have shifted toward competitors.</p>
+            <p class="scorecard-intro-p">The dashed diagonal is a reference line, not a regression. Brands sitting above the line are pro favorites the amateur game has not yet matched with search attention - either because the brand does not market aggressively, serves a niche the mainstream has not discovered, or benefits from tour contracts that do not translate to retail awareness. Brands sitting below the line command more amateur attention than their tour presence suggests - often large heritage brands with strong retail and marketing footprints even when pros have shifted toward competitors.</p>
 
-            <h2>How the Tour-Usage-to-DI Join Works</h2>
-            <p>The WITB brand database maps each equipment brand to its corresponding entry in the <a href="/rankings/">DORMIED Index</a>. Not every tour brand has a DORMIED Index entry - particularly grip companies and shaft manufacturers that do not compete in the retail consumer markets tracked by the Index. Brands without a mapping appear in the leaderboards and share views but are excluded from the scatter chart, which requires both a tour usage figure and a DI score to plot. As of this writing, ${brandsNoDI} of ${totalBrands} tracked equipment brands represented in ranked bags lack a DI mapping; those brands render as plain text throughout this page rather than as hyperlinks to brand pages.</p>
+            <h2 class="scorecard-intro-h2">How the Tour-Usage-to-DI Join Works</h2>
+            <p class="scorecard-intro-p">The WITB brand database maps each equipment brand to its corresponding entry in the <a href="/rankings/">DORMIED Index</a>. Not every tour brand has a DORMIED Index entry - particularly grip companies and shaft manufacturers that do not compete in the retail consumer markets tracked by the Index. Brands without a mapping appear in the leaderboards and share views but are excluded from the scatter chart, which requires both a tour usage figure and a DI score to plot. As of this writing, ${brandsNoDI} of ${totalBrands} tracked equipment brands represented in ranked bags lack a DI mapping; those brands render as plain text throughout this page rather than as hyperlinks to brand pages.</p>
 
-            <p>The DORMIED Index measures consumer search interest, not brand sentiment or purchase intent. A high DI score means many people are searching for a brand globally. A low score means the brand is either niche, regional, or simply not a household name outside the sport. For equipment brands especially, the gap between tour presence and public awareness can be dramatic - and that gap tells you something about where the market might be heading, or where it is already moving without the mainstream noticing yet.</p>
+            <p class="scorecard-intro-p">The DORMIED Index measures consumer search interest, not brand sentiment or purchase intent. A high DI score means many people are searching for a brand globally. A low score means the brand is either niche, regional, or simply not a household name outside the sport. For equipment brands especially, the gap between tour presence and public awareness can be dramatic - and that gap tells you something about where the market might be heading, or where it is already moving without the mainstream noticing yet.</p>
 
-            <p>Data source: equipment data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker.com</a>. Consumer search data: <a href="/rankings/">DORMIED Index</a>, April 2026 snapshot. All analysis is DORMIED's independent editorial work.</p>
+            <p class="scorecard-intro-p">Data source: equipment data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker.com</a>. Consumer search data: <a href="/rankings/">DORMIED Index</a>, April 2026 snapshot. All analysis is DORMIED's independent editorial work.</p>
           </div>
         </section>
+
+        <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
+        <div class="tail-feeds">
+          <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="witb-stories-heading-m">
+            <h2 class="latest-feed-heading" id="witb-stories-heading-m">Top Stories</h2>
+            <div class="latest-feed-list">
+              ${topStoriesHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
+            </div>
+          </section>
+          <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
+          <section class="home-stories-section latest-feed-section" aria-labelledby="witb-latest-heading">
+            <h2 class="latest-feed-heading" id="witb-latest-heading">Latest</h2>
+            <div id="dormied-latest-list" class="latest-feed-list">
+              ${latestFeedHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
+            </div>
+          </section>
+          <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="witb-featured-heading">
+            <h2 class="latest-feed-heading" id="witb-featured-heading">Featured</h2>
+            <div id="featured-list" class="latest-feed-list">
+              ${featuredFeedHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
+            </div>
+          </section>
+          <div class="bp-latest-see-all"><a href="/news/">See All News</a></div>
+        </div>
 
       </div><!-- /witb-main -->
 
       <!-- ── RIGHT SIDEBAR ──────────────────────────────────────────────── -->
       <aside class="witb-sidebar sidebar-ad-col">
-        <section class="home-stories-section latest-feed-section" aria-labelledby="witb-stories-heading">
+        <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="witb-stories-heading">
           <h2 class="latest-feed-heading" id="witb-stories-heading">Top Stories</h2>
-          <div id="home-stories-list" class="latest-feed-list">
+          <div id="home-stories-list" class="latest-feed-list" data-limit="5">
             ${topStoriesHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
           </div>
         </section>
         ${modsHtml || ''}
-        <section class="home-stories-section latest-feed-section" aria-labelledby="witb-latest-heading">
-          <h2 class="latest-feed-heading" id="witb-latest-heading">Latest</h2>
-          <div id="dormied-latest-list" class="latest-feed-list">
-            ${latestFeedHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
-          </div>
-        </section>
       </aside>
 
     </div><!-- /witb-layout -->
@@ -1502,7 +1519,7 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/data.min.js?v=20260709"></script>
-  <script defer src="/js/feed.min.js?v=20260706"></script>
+  <script defer src="/js/feed.min.js?v=20260717"></script>
   <script defer src="/js/search.min.js?v=20260529"></script>
 </body>
 </html>`;
@@ -1575,22 +1592,25 @@ async function main() {
 
   let latestFeedHtml = null;
   let topStoriesHtml = null;
+  let featuredFeedHtml = null;
   let modsHtml = '';
   try {
-    const [latestArticles, topStoriesArticles, modsRes] = await Promise.all([
+    const [latestArticles, topStoriesArticles, featuredArticles, modsRes] = await Promise.all([
       feedBake.fetchLatestArticles(sb, 10, null),
-      feedBake.fetchTopStoriesArticles(sb, dormiedData, 10),
+      feedBake.fetchTopStoriesArticles(sb, dormiedData, 5),
+      feedBake.fetchFeaturedArticles(sb, 10),
       feedBake.fetchSidebarModulesHtml(sb, dormiedData),
     ]);
     latestFeedHtml = latestArticles.length  ? feedBake.renderLatestFeedHtml(latestArticles,    dormiedData) : null;
     topStoriesHtml = topStoriesArticles.length ? feedBake.renderLatestFeedHtml(topStoriesArticles, dormiedData) : null;
+    featuredFeedHtml = featuredArticles.length ? feedBake.renderLatestFeedHtml(featuredArticles, dormiedData) : null;
     modsHtml = modsRes || '';
   } catch (e) {
     console.warn('[witb-page] Feed bake failed:', e.message);
   }
 
   console.log('\nBuilding page HTML...');
-  const html = buildPage({ ...data, latestFeedHtml, topStoriesHtml, modsHtml });
+  const html = buildPage({ ...data, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml });
   writeWitbLeadersData(data);
 
   // Ensure /witb directory exists
@@ -1604,8 +1624,7 @@ async function main() {
   // Quick validation — exclude baked feed sections from em-dash check since article
   // titles sourced from the DB may legitimately contain em dashes.
   const htmlNoFeed = html
-    .replace(/(<div id="home-stories-list"[^>]*>)[\s\S]*?(<\/div>\s*<\/section>)/, '$1$2')
-    .replace(/(<div id="dormied-latest-list"[^>]*>)[\s\S]*?(<\/div>\s*<\/section>)/, '$1$2');
+    .replace(/(<div[^>]*class="latest-feed-list"[^>]*>)[\s\S]*?(<\/div>\s*<\/section>)/g, '$1$2');
   const checks = [
     ['Titleist in HTML',    html.includes('Titleist')],
     ['TaylorMade in HTML',  html.includes('TaylorMade')],
