@@ -35,6 +35,24 @@ let FEATURED_HTML = '';
 
 // ── Feature definitions ─────────────────────────────────────────────────────────
 const FEATURES = {
+  'take-this-job-and-shove-it': {
+    slug: 'take-this-job-and-shove-it',
+    title: 'Take This Job and Shove It',
+    titleTag: 'Take This Job and Shove It: A Country Club Confidential Story | DORMIED',
+    byline: 'Adam R. and Travis R.',
+    authors: ['Adam R.', 'Travis R.'],
+    category: 'Feature',
+    brandSlug: '',
+    leadRole: 'subtitle',
+    publishedAt: '2026-07-16T15:00:00.000Z',
+    metaDescription: 'A Country Club Confidential story, running in full on DORMIED: an assistant pro, a tyrant boss, and the most elaborate resignation in golf. Plus the behind-the-scenes from the anonymous founders.',
+    seoKeywords: ['Country Club Confidential', 'golf pro shop story', 'take this job and shove it', 'assistant pro resignation', 'golf newsletter', 'DORMIED'],
+    mdPath: path.join(ROOT, 'article-ccc-take-this-job.md'),
+    imgBase: '/images/features/take-this-job-and-shove-it',
+    // Single hero image; no in-body figures.
+    hero: { file: 'hero.webp', w: 1200, h: 630, alt: 'Take This Job and Shove It, a Country Club Confidential story on DORMIED: a golf cart merchandised inside a pro shop' },
+  },
+
   'confidential-sources': {
     slug: 'confidential-sources',
     title: 'Confidential Sources',
