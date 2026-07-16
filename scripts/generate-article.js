@@ -39,6 +39,14 @@ let SIDEBAR_MODULES_HTML = '';
 let TOP_STORIES_HTML = '';
 let FEATURED_HTML = '';
 
+// Hand-authored rich articles whose full HTML (custom figures, tables, sections)
+// lives in the committed page, NOT in dormied_articles.body (which holds only a
+// short intro). The brand-article template cannot reproduce them from the DB, so
+// --regenerate-all must never overwrite them or the body collapses to one line.
+const PROTECTED_SLUGS = new Set([
+  'what-is-random-golf-club',
+]);
+
 // ── Article generation model config ───────────────────────────────────────────
 // Opus 4.7 solo — highest voice quality, no advisor.
 // NOTE: Opus 4.7 tokenizes ~35% more tokens than prior Opus at the same
@@ -1167,6 +1175,9 @@ async function main() {
     let regen = 0; let skipped = 0;
     for (const row of allRows || []) {
       if (!row.slug || !row.body) { skipped++; continue; }
+      // Hand-authored rich articles: full HTML is in the committed page, not the DB
+      // body. Never regenerate or we collapse them to the one-line intro.
+      if (PROTECTED_SLUGS.has(row.slug)) { skipped++; continue; }
       // Feature articles (category 'Feature') are owned by generate-feature.js,
       // not the brand-article template, whether or not they tag a brand. Skip so
       // we never clobber their HTML.
