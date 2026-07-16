@@ -45,6 +45,8 @@ let FEATURED_HTML = '';
 // --regenerate-all must never overwrite them or the body collapses to one line.
 const PROTECTED_SLUGS = new Set([
   'what-is-random-golf-club',
+  'top-irons-on-tour-2026',
+  'what-makes-a-golf-headcover-worth-reselling',
 ]);
 
 // ── Article generation model config ───────────────────────────────────────────
