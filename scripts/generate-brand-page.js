@@ -727,7 +727,7 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260718">
+  <link rel="stylesheet" href="/css/styles.css?v=20260719">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json" id="brand-jsonld">${jsonld}</script>${faqJsonLdTag}

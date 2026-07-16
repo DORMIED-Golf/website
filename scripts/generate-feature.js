@@ -416,7 +416,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
 
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.css?v=20260718">
+  <link rel="stylesheet" href="/css/styles.css?v=20260719">
 
   <script type="application/ld+json">
   {
