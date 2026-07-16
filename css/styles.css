@@ -4189,6 +4189,24 @@ details[open] .faq-question::after { content: '−'; }
   margin: 0;
 }
 
+/* ── /scorecard hero call-to-action ───────────────────────────────────────── */
+.sc-cta {
+  margin-top: 22px;
+  max-width: 560px;
+  padding: 18px 20px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.sc-cta-label {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin: 0 0 12px;
+}
+.sc-cta-form .footer-signup-row { margin-top: 0; }
+
 /* ── Popup overlay ────────────────────────────────────────────────────────── */
 .signup-overlay {
   position: fixed;

@@ -47,14 +47,19 @@
     });
   }
 
-  /* ── Footer form ──────────────────────────────────────────────────────── */
+  /* ── Inline signup forms (.footer-signup-form) ────────────────────────────
+     Wires every instance on the page (footer + any in-page CTA, e.g. the
+     /scorecard hero). Each form may set data-source for tracking. */
   function initFooterForm() {
-    var form  = document.querySelector('.footer-signup-form');
-    if (!form) return;
+    var forms = document.querySelectorAll('.footer-signup-form');
+    for (var i = 0; i < forms.length; i++) wireSignupForm(forms[i]);
+  }
 
-    var input = form.querySelector('.footer-signup-input');
-    var btn   = form.querySelector('.footer-signup-btn');
-    var msg   = form.querySelector('.footer-signup-msg');
+  function wireSignupForm(form) {
+    var input  = form.querySelector('.footer-signup-input');
+    var btn    = form.querySelector('.footer-signup-btn');
+    var msg    = form.querySelector('.footer-signup-msg');
+    var source = form.getAttribute('data-source') || 'footer';
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -68,7 +73,7 @@
         email, btn,
         function () { // success
           form.innerHTML = '<p class="footer-signup-success">' + SUCCESS_MSG + '</p>';
-          if (window.DORMIED_TRACK) window.DORMIED_TRACK('scorecard_signup', { source: 'footer' });
+          if (window.DORMIED_TRACK) window.DORMIED_TRACK('scorecard_signup', { source: source });
         },
         function (err) { // error
           showMsg(msg, err || ERROR_MSG, false);

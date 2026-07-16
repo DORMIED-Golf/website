@@ -812,7 +812,7 @@ function generateArticleHtml(opts) {
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260717">
+  <link rel="stylesheet" href="/css/styles.css?v=20260718">
 
   <!-- ── Structured Data ── -->
   <script type="application/ld+json">
@@ -1065,7 +1065,7 @@ function generateArticleHtml(opts) {
   </script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script src="/js/analytics.min.js?v=20260320a"></script>
-  <script src="/js/signup.min.js?v=20260324d"></script>
+  <script src="/js/signup.min.js?v=20260718d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>
   <script src="/js/feed.min.js?v=20260717"></script>

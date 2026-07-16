@@ -549,7 +549,7 @@ function generateArticleHtml(opts) {
   <meta name="twitter:image" content="${escHtml(ogImage)}">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.css?v=20260717">
+  <link rel="stylesheet" href="/css/styles.css?v=20260718">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -675,7 +675,7 @@ function generateArticleHtml(opts) {
   <script>window.__DA_BRAND_SLUG__='${escHtml(brandSlug || '')}';window.__DA_ARTICLE_SLUG__='${escHtml(slug)}';</script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script src="/js/analytics.min.js?v=20260320a"></script>
-  <script src="/js/signup.min.js?v=20260324d"></script>
+  <script src="/js/signup.min.js?v=20260718d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
   <script src="/js/brand-data/${escHtml(dataScriptSlug)}.js?v=${escHtml(dataVersion)}"></script>
   <script src="/js/feed.min.js?v=20260717"></script>

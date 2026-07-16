@@ -427,7 +427,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260717">
+  <link rel="stylesheet" href="/css/styles.css?v=20260718">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json">${newsLd}</script>
@@ -602,7 +602,7 @@ ${SC_SIDEBAR_HTML}
   <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
-  <script defer src="/js/signup.min.js?v=20260324d"></script>
+  <script defer src="/js/signup.min.js?v=20260718d"></script>
   <script defer src="/js/search.min.js?v=20260508"></script>
 
 

@@ -727,7 +727,7 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260717">
+  <link rel="stylesheet" href="/css/styles.css?v=20260718">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json" id="brand-jsonld">${jsonld}</script>${faqJsonLdTag}
@@ -1078,7 +1078,7 @@ ${faqHtml}
   <script defer src="/js/brand.min.js?v=20260707"></script>
   <script defer src="/js/feed.min.js?v=20260717"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
-  <script defer src="/js/signup.min.js?v=20260324d"></script>
+  <script defer src="/js/signup.min.js?v=20260718d"></script>
   <script src="/js/search.min.js?v=20260529"></script>
 
   <!-- Mobile nav hamburger -->

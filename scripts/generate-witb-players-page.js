@@ -199,7 +199,7 @@ function buildPage(players, brandNames, latestFeedHtml, topStoriesHtml) {
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.min.css?v=20260717">
+  <link rel="stylesheet" href="/css/styles.min.css?v=20260718">
 
   <script type="application/ld+json">
   {
@@ -448,7 +448,7 @@ ${gridHtml}
   <script defer src="/js/data.min.js?v=20260709"></script>
   <script defer src="/js/feed.min.js?v=20260717"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
-  <script defer src="/js/signup.min.js?v=20260324d"></script>
+  <script defer src="/js/signup.min.js?v=20260718d"></script>
   <script defer src="/js/search.min.js?v=20260529"></script>
 </body>
 </html>`;
