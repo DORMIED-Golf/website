@@ -43,6 +43,13 @@ const CACHE_FILE = path.join(__dirname, 'cache', 'witb-player-ledes.json');
 
 const PLAYER_SLUG = process.argv[2] || 'jon-rahm';
 
+// Players the world searches under a name other than their legal name. The lede
+// must state the connection exactly once so legal-name queries still resolve to
+// the page (e.g. "tom kim witb" and "joohyung kim witb" are the same intent).
+const LEGAL_NAME_NOTES = {
+  'tom-kim': 'Tom Kim was born Joohyung Kim and is still listed under that legal name in some records. Part A MUST include the exact string "Joohyung Kim" exactly once, naturally, on the opening line (for example: "Tom Kim, born Joohyung Kim, ..."). Do not mention it more than once and do not mention it in Task 2.',
+};
+
 // ── Shaft brand slug map ──────────────────────────────────────────────────────
 
 // Keys are full brand names as they appear in witb_shafts.model strings.
@@ -413,7 +420,7 @@ DORMIED voice rules (non-negotiable):
 - Do NOT include the player's current OWGR rank number in the lede. The rank appears in the live page header and changes weekly -- naming it in the lede text will go stale. The bio should establish the player's career without citing a live ranking.
 
 PLAYER: ${player.name}
-
+${LEGAL_NAME_NOTES[PLAYER_SLUG] ? `\nLEGAL NAME NOTE (mandatory): ${LEGAL_NAME_NOTES[PLAYER_SLUG]}\n` : ''}
 CURRENT BAG (${currentBag.bag_date}):
 ${keyItems}
 

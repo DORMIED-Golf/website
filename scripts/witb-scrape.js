@@ -41,6 +41,12 @@ const PLAYER_LIMIT = (() => {
   const f = args.find(a => a.startsWith('--limit='));
   return f ? parseInt(f.replace('--limit=', ''), 10) : Infinity;
 })();
+// --players=slug-a,slug-b  restrict a weekly crawl to specific canonical slugs
+// (targeted re-verification). Empty = every player, i.e. the normal weekly run.
+const ONLY_PLAYERS = (() => {
+  const f = args.find(a => a.startsWith('--players='));
+  return f ? f.replace('--players=', '').split(',').map(s => s.trim()).filter(Boolean) : [];
+})();
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
@@ -48,8 +54,11 @@ const PLAYER_LIMIT = (() => {
 // our canonical slug, map it here so re-scrapes update the existing player
 // instead of creating a duplicate. pgaclubtracker spells Ludvig Aberg's URL
 // "ludwig-aberg"; our canonical slug is "ludvig-aberg" (301 redirect in place).
+// pgaclubtracker uses Tom Kim's legal name "joohyung-kim"; our canonical slug is
+// "tom-kim", which is how the world searches him (301 redirect in place).
 const PLAYER_SLUG_ALIASES = {
   'ludwig-aberg': 'ludvig-aberg',
+  'joohyung-kim': 'tom-kim',
 };
 
 function canonicalPlayerSlug(slug) {
@@ -791,8 +800,12 @@ async function runWeeklyCrawl(supabase) {
   const changedSlugs   = []; // slugs of players whose bag actually changed this run
 
   log('Weekly crawl starting...');
-  const allPlayers = await fetchAllPlayers();
+  let allPlayers = await fetchAllPlayers();
   log(`Found ${allPlayers.length} players`);
+  if (ONLY_PLAYERS.length) {
+    allPlayers = allPlayers.filter(p => ONLY_PLAYERS.includes(canonicalPlayerSlug(p.slug)));
+    log(`Scoped to ${allPlayers.length} player(s): ${ONLY_PLAYERS.join(', ')}`);
+  }
 
   for (const playerInfo of allPlayers.slice(0, PLAYER_LIMIT)) {
     try {
@@ -804,11 +817,15 @@ async function runWeeklyCrawl(supabase) {
       const bag_date  = parseBagDate($);
       const owgr_rank = parseOwgr($);
 
-      // Look up existing player
+      // Look up existing player. Use the canonical slug: the source site's URL
+      // slug differs for aliased players (ludwig-aberg, joohyung-kim), and
+      // matching on the raw slug would miss the existing row, send them down the
+      // "new player" path every week, and publish the wrong (redirected) URL.
+      const canonSlug = canonicalPlayerSlug(playerInfo.slug);
       const { data: existing } = await supabase
         .from('witb_players')
         .select('id, current_bag_id')
-        .eq('slug', playerInfo.slug)
+        .eq('slug', canonSlug)
         .single();
 
       if (!existing) {
@@ -817,7 +834,7 @@ async function runWeeklyCrawl(supabase) {
         const res = await scrapePlayer(supabase, playerInfo, { fetchHistory: false });
         if (res.player_id) {
           players_scraped++;
-          changedSlugs.push(playerInfo.slug);
+          changedSlugs.push(canonSlug);
         }
         bags_added += res.bags_added;
         errors.push(...res.errors);
@@ -869,7 +886,7 @@ async function runWeeklyCrawl(supabase) {
               currentBag.bag_date, bag_date);
             changes_detected += n;
           }
-          changedSlugs.push(playerInfo.slug);
+          changedSlugs.push(canonSlug);
         }
         players_scraped++;
       }
