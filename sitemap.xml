@@ -2110,7 +2110,17 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (416) ── -->
+  <!-- ── News articles (417) ── -->
+  <url>
+    <loc>https://dormied.com/news/swag-golf-bets-on-baseball-fandom-with-mlb-headcover-line-and-the-timing-2026-07-14/</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/swag-golf-bets-on-baseball-fandom-with-mlb-headcover-line-and-the-timing-2026-07-14-hero.jpg</image:loc>
+      <image:title>Swag Golf Bets on Baseball Fandom With MLB Headcover Line, and the Timing Isn&apos;t Accidental</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/where-is-takomo-golf-from/</loc>
     <lastmod>2026-05-14</lastmod>
