@@ -35,6 +35,37 @@ let FEATURED_HTML = '';
 
 // ── Feature definitions ─────────────────────────────────────────────────────────
 const FEATURES = {
+  'students-golf': {
+    slug: 'students-golf',
+    title: "What Is Students Golf? The Man Who Invented the Jogger Is Now Golf's Coolest Designer",
+    titleTag: "What Is Students Golf? The Jogger Inventor's Golf Brand | DORMIED",
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'students-golf',
+    leadRole: 'bio',
+    lastUpdated: 'July 17, 2026',
+    dateModified: '2026-07-17T00:00:00.000Z',
+    publishedAt: '2026-07-17T15:00:00.000Z',
+    metaDescription: 'What is Students Golf? The LA golf brand from jogger inventor Michael Huynh, the health scare that started it, and what the DORMIED Index says about its rise.',
+    seoKeywords: ['students golf', 'what is students golf', 'michael huynh', 'students golf brand', 'jogger inventor', 'students sugarloaf social club'],
+    mdPath: path.join(ROOT, 'article-students-golf.md'),
+    imgBase: '/images/features/students-golf',
+    // Every caption carries the supplied photo credit ("Photo by ...").
+    hero: { file: 'hero.webp', w: 1200, h: 960, alt: 'Students Golf Summer 2026 apparel lookbook grid', caption: 'The Students Golf Summer 2026 lookbook. Photo by Students Golf.' },
+    sectionImages: {
+      'The health scare that started it': { layout: 'single', images: [
+        { file: 'huynh-portrait.webp', w: 540, h: 304, alt: 'Michael Huynh, founder of Students Golf and the streetwear label Publish', caption: 'Michael Huynh, the Publish founder and jogger inventor who started Students after a health scare pushed him toward golf. Photo by The Hundreds.' },
+      ]},
+      'What Students actually makes': { layout: 'single', images: [
+        { file: 'students-hoodies.webp', w: 1000, h: 1300, alt: 'Students Golf hoodies and graphic apparel', caption: 'Students built its early identity off the course with graphic tees, hoodies, and pullovers. Photo by HBX.' },
+      ]},
+      'The Sugarloaf collab and the company Students keeps': { layout: 'single', images: [
+        { file: 'sugarloaf-collab.webp', w: 1000, h: 667, alt: 'Students of Sugarloaf Social Club collaboration apparel', caption: 'Students of Sugarloaf Social Club, the March 2026 collaboration Boardroom called one of the coolest golf collabs of the year. Photo by Students Golf.' },
+      ]},
+    },
+  },
+
   'take-this-job-and-shove-it': {
     slug: 'take-this-job-and-shove-it',
     title: 'Take This Job and Shove It',
@@ -362,9 +393,12 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   const lastUpdHtml  = F.lastUpdated ? `<p class="da-last-updated">Last updated: ${escHtml(F.lastUpdated)}</p>` : '';
   const bioHtml      = (F.leadRole === 'bio' && lead) ? `<p class="da-bio">${inlineMd(lead)}</p>` : '';
 
-  const heroHtml = `<div class="sc-article-image">
-          <img class="sc-article-hero-img" src="${F.imgBase}/${F.hero.file}" alt="${escHtml(F.hero.alt)}" width="${F.hero.w}" height="${F.hero.h}" loading="eager">
-        </div>`;
+  const heroCap  = F.hero.caption
+    ? `\n          <figcaption class="da-figcaption sc-article-hero-caption">${inlineMd(F.hero.caption)}</figcaption>`
+    : '';
+  const heroHtml = `<figure class="sc-article-image">
+          <img class="sc-article-hero-img" src="${F.imgBase}/${F.hero.file}" alt="${escHtml(F.hero.alt)}" width="${F.hero.w}" height="${F.hero.h}" loading="eager">${heroCap}
+        </figure>`;
 
   // FAQPage JSON-LD (answers use the same plain text shown on-page)
   const faqLd = faqs.length ? `

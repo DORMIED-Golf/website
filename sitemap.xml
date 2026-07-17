@@ -2110,7 +2110,17 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (417) ── -->
+  <!-- ── News articles (418) ── -->
+  <url>
+    <loc>https://dormied.com/news/students-golf/</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/features/students-golf/hero.webp</image:loc>
+      <image:title>What Is Students Golf? The Man Who Invented the Jogger Is Now Golf&amp;#39;s Coolest Designer</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/swag-golf-bets-on-baseball-fandom-with-mlb-headcover-line-and-the-timing-2026-07-14/</loc>
     <lastmod>2026-07-14</lastmod>
