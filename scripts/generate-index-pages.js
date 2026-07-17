@@ -604,24 +604,33 @@ async function generateNews() {
     }
   });
 
-  /* Fetch all published articles from Supabase */
-  const apiUrl = `${SUPABASE_URL}/rest/v1/dormied_articles` +
-    `?select=id,brand_slug,secondary_brand_slugs,title,body,meta_description,image_url,slug,category,published_at,author` +
-    `&status=eq.published` +
-    `&order=published_at.desc` +
-    `&limit=200`;
-
-  const resp = await fetch(apiUrl, {
-    headers: {
-      'apikey':        SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
+  /* Fetch ALL published articles from Supabase. Range-paginated so every article
+     is covered no matter how many exist: a hard limit here silently orphans older
+     articles once the count exceeds it (they fall off /news pagination and get 0
+     internal links). Supabase caps a single response at ~1000 rows, so page it. */
+  const PAGE = 1000;
+  const rows = [];
+  for (let offset = 0; ; offset += PAGE) {
+    const apiUrl = `${SUPABASE_URL}/rest/v1/dormied_articles` +
+      `?select=id,brand_slug,secondary_brand_slugs,title,body,meta_description,image_url,slug,category,published_at,author` +
+      `&status=eq.published` +
+      `&order=published_at.desc`;
+    const resp = await fetch(apiUrl, {
+      headers: {
+        'apikey':        SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Range-Unit':    'items',
+        'Range':         `${offset}-${offset + PAGE - 1}`,
+      }
+    });
+    if (!resp.ok && resp.status !== 206) {
+      console.error(`  ✖  Supabase error ${resp.status}: ${await resp.text()}`);
+      process.exit(1);
     }
-  });
-  if (!resp.ok) {
-    console.error(`  ✖  Supabase error ${resp.status}: ${await resp.text()}`);
-    process.exit(1);
+    const batch = await resp.json();
+    rows.push(...batch);
+    if (batch.length < PAGE) break;
   }
-  const rows = await resp.json();
 
   /* Derive author from category (mirrors api/dormied-articles.js) */
   function authorFromCat(cat) {

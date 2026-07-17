@@ -1,0 +1,13 @@
+{
+  "name": "DORMIED",
+  "short_name": "DORMIED",
+  "description": "Golf's brand desk. Monthly rankings, analysis, and the stories behind the moves.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0a0f0a",
+  "theme_color": "#0a0f0a",
+  "icons": [
+    { "src": "/images/favicon.png", "sizes": "any", "type": "image/png" },
+    { "src": "/images/dormied-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
