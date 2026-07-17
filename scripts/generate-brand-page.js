@@ -152,7 +152,22 @@ function getBrandStats(dormiedData, brandSlug) {
 
 // ── Meta description ──────────────────────────────────────────────────────────
 
-function buildMetaDesc(brand) {
+// Brands whose winnable SERP click is evaluative, not navigational. For a
+// challenger/DTC brand, the searcher who just heard the name wants an independent
+// read (is it legit? who is behind it?) that the official site cannot give about
+// itself. Lead the meta with the live DORMIED rank so it re-bakes current every
+// month; keyed by slug because the "is X legit?" hook only fits challenger brands,
+// not household names. Each fn returns a ~150-160 char string.
+const EVALUATIVE_META = {
+  'takomo-golf': (brand, rank, totalBrands) =>
+    `Is Takomo legit? The Finnish direct-to-consumer brand ranks #${rank} of ${totalBrands} golf brands on the DORMIED Index. Independent rank, momentum, founder, and who plays it.`,
+};
+
+function buildMetaDesc(brand, stats, totalBrands) {
+  const evalFn = EVALUATIVE_META[brand.id];
+  if (evalFn && stats && stats.rank) {
+    return evalFn(brand, stats.rank, totalBrands);
+  }
   const desc = (brand.description || '').trim();
   if (!desc) {
     return `${brand.name} brand profile on DORMIED. Global search interest trends, market rankings, and monthly momentum.`;
@@ -457,7 +472,7 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
     pageTitle = `${brand.name}: Golf Brand Rank + Trend (${titleYear}) | DORMIED`;
   }
   pageTitle = escHtml(pageTitle);
-  const metaDesc     = escHtml(buildMetaDesc(brand));
+  const metaDesc     = escHtml(buildMetaDesc(brand, stats, (dormiedData.brands || []).length));
   const canonicalUrl = `https://dormied.com/brands/${escHtml(slug)}/`;
   const ogImage      = escHtml(brand.logo || 'https://dormied.com/images/og-image.jpg');
 
