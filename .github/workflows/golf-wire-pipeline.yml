@@ -107,7 +107,7 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           INDEXNOW_KEY:         ${{ secrets.INDEXNOW_KEY }}
 
-      - name: Regenerate news index + homepage prerender after publish
+      - name: Regenerate news index + homepage prerender + refresh LATEST modules after publish
         # Articles are now published in Supabase — regenerate the static pages that
         # read the published set:
         #   - generate-index-pages --news : rebuilds /news/ so it includes new articles
@@ -115,24 +115,28 @@ jobs:
         #   - generate-home-prerender.js  : bakes the newest published article into
         #     index.html (hero card + <link rel="preload">) so the homepage matches
         #     the live top card with no stale-article flash.
-        # Both are committed in a SINGLE push so Vercel produces ONE deployment for the
-        # complete post-publish state. Previously these were two separate pushes; with
-        # the article commit that made three rapid pushes per run, and Vercel could
-        # promote an earlier build (leaving a stale homepage hero). One push here keeps
-        # the news index and prerender atomic and shrinks that deploy race.
+        #   - refresh-modules.js          : re-bakes ONLY the LATEST / Top Stories /
+        #     Featured / sidebar-modules regions on EVERY built page (brands, WITB,
+        #     features, older articles, scorecard, etc.) so no page's baked sidebar
+        #     goes stale after a publish. Baked/crawlable/zero-CLS is preserved; this
+        #     touches module regions only, never article body prose or dateModified.
+        # All committed in a SINGLE push so Vercel produces ONE deployment for the
+        # complete post-publish state, keeping the deploy atomic and shrinking the
+        # deploy race.
         run: |
           node scripts/generate-index-pages.js --news
           node scripts/generate-home-prerender.js
+          node scripts/refresh-modules.js
 
-          git add news/ index.html
+          git add -A
 
           if git diff --cached --quiet; then
-            echo "News index + prerender already up to date — nothing to commit."
+            echo "News index + prerender + modules already up to date — nothing to commit."
           else
-            git commit -m "chore: regenerate news index + homepage prerender after publish [skip ci]"
+            git commit -m "chore: regenerate news index + homepage prerender + refresh LATEST modules after publish [skip ci]"
             git pull --rebase -X theirs origin main
             git push
-            echo "News index + homepage prerender updated and pushed."
+            echo "News index + homepage prerender + LATEST modules updated and pushed."
           fi
         env:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}

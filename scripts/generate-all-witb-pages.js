@@ -22,6 +22,7 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../.env'), 
 
 const { execFileSync } = require('child_process');
 const path             = require('path');
+const fs               = require('fs');
 const { createClient } = require('@supabase/supabase-js');
 
 const GENERATOR = path.join(__dirname, 'generate-witb-player-page.js');
@@ -50,6 +51,25 @@ async function main() {
     .not('owgr_rank', 'is', null)
     .order('owgr_rank', { ascending: true });
   if (error) throw new Error(`Could not load witb_players: ${error.message}`);
+
+  // Visible skips: unranked players (owgr_rank IS NULL) are intentionally not
+  // generated, but a page that exists on disk then FREEZES silently (this froze
+  // ben-griffin and phil-mickelson before their ranks were restored). Announce
+  // each skipped player, its reason, and whether a stale HTML page is live.
+  const { data: unranked } = await sb
+    .from('witb_players')
+    .select('slug, name')
+    .is('owgr_rank', null)
+    .order('slug', { ascending: true });
+  if (unranked && unranked.length) {
+    warn(`Skipping ${unranked.length} unranked player(s) (owgr_rank IS NULL). Run witb-owgr-refresh.js if a rank is missing:`);
+    for (const p of unranked) {
+      const hasPage = fs.existsSync(path.join(__dirname, '..', 'witb', 'players', p.slug, 'index.html'));
+      warn(`  SKIP ${p.slug.padEnd(24)} (${p.name}) — owgr_rank null${hasPage ? '  [STALE PAGE LIVE: witb/players/' + p.slug + '/ is frozen]' : '  (no page on disk)'}`);
+    }
+  } else {
+    log('No unranked players to skip.');
+  }
 
   let slugs = players.map(p => p.slug);
 
