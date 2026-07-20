@@ -670,7 +670,22 @@ function generateArticleHtml(opts) {
     brandSlug, brandName, brandLogo, dataVersion,
     readTime, author, dormiedData, dormiedLatestHtml,
     secondaryBrands = [], // Array<{slug, name, logo}>
+    faq = null,           // Array<{q, a}> from dormied_articles.faq (question articles)
   } = opts;
+
+  // On-page FAQ block + FAQPage JSON-LD, only when the article carries a real,
+  // body-derived faq array. Answers are shown verbatim and mirrored in schema.
+  const faqList = Array.isArray(faq) ? faq.filter(x => x && x.q && x.a) : [];
+  const faqHtml = faqList.length ? `
+            <!-- FAQ -->
+            <section class="da-bottom-section da-faq-section" aria-labelledby="da-faq-heading">
+              <h2 class="da-bottom-heading" id="da-faq-heading">Frequently Asked Questions</h2>
+              ${faqList.map(x => `<div class="da-faq-item"><h3 class="da-faq-q">${escHtml(stripEmDashes(x.q))}</h3><p class="da-faq-a">${escHtml(stripEmDashes(x.a))}</p></div>`).join('\n              ')}
+            </section>` : '';
+  const faqLd = faqList.length ? `
+  <script type="application/ld+json">
+  ${JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqList.map(x => ({ '@type': 'Question', name: stripEmDashes(x.q), acceptedAnswer: { '@type': 'Answer', text: stripEmDashes(x.a) } })) })}
+  </script>` : '';
 
   // Compute live brand metrics for the primary brand widget
   const bInfo  = dormiedData ? getBrandInfo(dormiedData, brandSlug) : null;
@@ -835,7 +850,7 @@ function generateArticleHtml(opts) {
       ]
     }
   }
-  </script>
+  </script>${faqLd}
   <!-- Grow.me -->
   <script data-grow-initializer="">!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTowNjk5NTY3Ny0xMzU0LTQ5M2YtOWEyYi03Y2NkOTlkNWE3YWQ=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();</script>
   <!-- Mediavine Journey ads -->
@@ -953,7 +968,7 @@ function generateArticleHtml(opts) {
             </div>
 
             ${secondaryBrandWidgets}
-
+${faqHtml}
             <!-- More on [Brand] -->
             <section class="da-bottom-section" id="da-more-brand-section" aria-labelledby="da-more-brand-heading" hidden>
               <h3 class="da-bottom-heading" id="da-more-brand-heading">More on ${escHtml(brandName)}</h3>
@@ -1165,7 +1180,7 @@ async function main() {
 
     const { data: allRows, error: allErr } = await supabase
       .from('dormied_articles')
-      .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author')
+      .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq')
       .neq('status', 'suppressed')
       .order('published_at', { ascending: false });
 
@@ -1242,6 +1257,7 @@ async function main() {
           dormiedData,
           dormiedLatestHtml,
           secondaryBrands,
+          faq:              row.faq || null,
         });
 
         fs.mkdirSync(path.dirname(articlePath), { recursive: true });
@@ -1297,7 +1313,7 @@ async function main() {
   // and the pipeline never re-generates a manually-removed article.
   const { data: existing, error: existErr } = await supabase
     .from('dormied_articles')
-    .select('status, matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author');
+    .select('status, matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq');
 
   if (existErr) {
     console.error('[generate] Failed to fetch existing articles:', existErr.message);
@@ -1365,6 +1381,7 @@ async function main() {
         dormiedData,
         dormiedLatestHtml: dormiedLatestHtmlB,
         secondaryBrands,
+        faq:            row.faq || null,
       });
 
       fs.mkdirSync(path.join(SITE_ROOT, 'news', row.slug), { recursive: true });
