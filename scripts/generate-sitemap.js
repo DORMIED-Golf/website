@@ -69,6 +69,14 @@ function extractPublishedDate(html) {
   return m ? m[1].slice(0, 10) : null;
 }
 
+// lastmod should reflect the last MODIFIED date when the article carries one
+// (e.g. a FAQ block was added post-publish); otherwise the published date.
+function extractModifiedDate(html) {
+  const m = html.match(/<meta\s+property="article:modified_time"\s+content="([^"]+)"/i)
+           || html.match(/<meta\s+content="([^"]+)"\s+property="article:modified_time"/i);
+  return m ? m[1].slice(0, 10) : null;
+}
+
 /** Return true if an HTML file is NOT noindex (i.e. safe to include in sitemap). */
 function isIndexable(filePath) {
   try {
@@ -252,8 +260,10 @@ function regenerateSitemap() {
           try { html = fs.readFileSync(p.filePath, 'utf8'); } catch { /* skip */ }
           const imageUrl   = extractOgImage(html);
           const imageTitle = extractOgTitle(html);
-          const pubDate    = extractPublishedDate(html) || p.mtime.toISOString().slice(0, 10);
-          return newsEntry(p.slug, pubDate, imageUrl, imageTitle);
+          const lastmod    = extractModifiedDate(html)
+                          || extractPublishedDate(html)
+                          || p.mtime.toISOString().slice(0, 10);
+          return newsEntry(p.slug, lastmod, imageUrl, imageTitle);
         }),
       ]
     : [];

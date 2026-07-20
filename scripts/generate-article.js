@@ -671,6 +671,7 @@ function generateArticleHtml(opts) {
     readTime, author, dormiedData, dormiedLatestHtml,
     secondaryBrands = [], // Array<{slug, name, logo}>
     faq = null,           // Array<{q, a}> from dormied_articles.faq (question articles)
+    date_modified = null, // ISO string when the body was materially changed (e.g. FAQ added)
   } = opts;
 
   // On-page FAQ block + FAQPage JSON-LD, only when the article carries a real,
@@ -739,6 +740,10 @@ function generateArticleHtml(opts) {
 
   const dateFormatted  = formatDate(published_at);
   const dateISO        = new Date(published_at).toISOString();
+  // dateModified reflects the last material body change. Falls back to the
+  // publish date when the article has never been modified (schema-valid: an
+  // unmodified article's modified date equals its published date).
+  const dateModISO     = date_modified ? new Date(date_modified).toISOString() : dateISO;
   const canonicalUrl   = `https://dormied.com/news/${slug}/`;
   const ogImage        = ogImageUrl || imageUrl || 'https://dormied.com/images/og-image.jpg';
   const titleTag       = `${title} | DORMIED`;
@@ -809,6 +814,7 @@ function generateArticleHtml(opts) {
   <meta property="og:site_name" content="DORMIED">
   <meta property="og:locale" content="en_US">
   <meta property="article:published_time" content="${dateISO}">
+  <meta property="article:modified_time" content="${dateModISO}">
   <meta property="article:author" content="${escHtml(author)}">
 
   <!-- ── Twitter Card ── -->
@@ -838,6 +844,7 @@ function generateArticleHtml(opts) {
     "description": "${escHtml(meta_description)}",
     "image": "${escHtml(ogImage)}",
     "datePublished": "${dateISO}",
+    "dateModified": "${dateModISO}",
     "author": { "@type": "Person", "name": "${escHtml(author)}", "url": "https://dormied.com/about/" },
     "publisher": { "@type": "Organization", "name": "DORMIED", "url": "https://dormied.com" },
     "url": "${canonicalUrl}"${aboutJson},
@@ -1173,14 +1180,20 @@ async function main() {
   // Metadata-only: no Opus calls. Body, title, x_post stay identical.
   // Updates dormied_articles.category from brand subCategories, rewrites HTML byline.
   if (process.argv.includes('--regenerate-all')) {
-    console.log('[generate] --regenerate-all mode: updating categories + regenerating HTML');
+    // --only=slug1,slug2 restricts the re-bake to specific articles and skips the
+    // site-wide sitemap/search-index/news-listing rebuild, so a targeted content
+    // fix (e.g. adding a FAQ block to a handful of pages) does not mass-churn the
+    // rest of the site's baked timestamps.
+    const onlyArg = (process.argv.find(a => a.startsWith('--only=')) || '').replace('--only=', '');
+    const onlySlugs = onlyArg ? new Set(onlyArg.split(',').map(s => s.trim()).filter(Boolean)) : null;
+    console.log(`[generate] --regenerate-all mode: updating categories + regenerating HTML${onlySlugs ? ` (--only: ${onlySlugs.size} slug(s))` : ''}`);
 
     // Build brand map from dormiedData (available at this point in main())
     const regenBrandsMap = new Map((dormiedData.brands || []).map(b => [b.id, b]));
 
     const { data: allRows, error: allErr } = await supabase
       .from('dormied_articles')
-      .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq')
+      .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, date_modified, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq')
       .neq('status', 'suppressed')
       .order('published_at', { ascending: false });
 
@@ -1192,6 +1205,7 @@ async function main() {
     let regen = 0; let skipped = 0;
     for (const row of allRows || []) {
       if (!row.slug || !row.body) { skipped++; continue; }
+      if (onlySlugs && !onlySlugs.has(row.slug)) { skipped++; continue; }
       // Hand-authored rich articles: full HTML is in the committed page, not the DB
       // body. Never regenerate or we collapse them to the one-line intro.
       if (PROTECTED_SLUGS.has(row.slug)) { skipped++; continue; }
@@ -1258,6 +1272,7 @@ async function main() {
           dormiedLatestHtml,
           secondaryBrands,
           faq:              row.faq || null,
+          date_modified:    row.date_modified || null,
         });
 
         fs.mkdirSync(path.dirname(articlePath), { recursive: true });
@@ -1270,19 +1285,23 @@ async function main() {
       }
     }
 
-    // Rebuild sitemap + search index once at the end
-    try { regenerateSitemap(); } catch (e) { console.warn('[generate] Sitemap error:', e.message); }
-    try { generateSearchIndex(); } catch (e) { console.warn('[generate] Search index error:', e.message); }
+    // Rebuild sitemap + search index + news listing once at the end. Skipped
+    // under --only: a targeted re-bake must not mass-churn site-wide build dates.
+    // The caller updates the affected sitemap lastmods surgically instead.
+    if (!onlySlugs) {
+      try { regenerateSitemap(); } catch (e) { console.warn('[generate] Sitemap error:', e.message); }
+      try { generateSearchIndex(); } catch (e) { console.warn('[generate] Search index error:', e.message); }
 
-    // Regenerate /news/ listing to pick up corrected categories in chips
-    const { execSync } = require('child_process');
-    try {
-      execSync('node scripts/generate-index-pages.js --news', {
-        cwd: path.join(__dirname, '..'),
-        stdio: 'inherit',
-      });
-    } catch (e) {
-      console.warn('[generate] Warning: generate-index-pages.js --news failed:', e.message);
+      // Regenerate /news/ listing to pick up corrected categories in chips
+      const { execSync } = require('child_process');
+      try {
+        execSync('node scripts/generate-index-pages.js --news', {
+          cwd: path.join(__dirname, '..'),
+          stdio: 'inherit',
+        });
+      } catch (e) {
+        console.warn('[generate] Warning: generate-index-pages.js --news failed:', e.message);
+      }
     }
 
     console.log(`[generate] --regenerate-all complete. Regenerated: ${regen}, Skipped: ${skipped}`);
