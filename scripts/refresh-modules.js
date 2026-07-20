@@ -31,6 +31,10 @@ const path = require('path');
 const vm   = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const feedBake = require('./feed-bake');
+// Homepage LATEST is a hero-first variant (renderHomeLatestHtml), NOT the generic
+// uniform list. Reuse the same render + preload-link the home prerender bakes so
+// the refresh pass produces byte-identical hero-first homepage output.
+const { generatePreloadLink } = require('./generate-home-prerender');
 
 const ROOT    = path.resolve(__dirname, '..');
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -71,6 +75,19 @@ function replaceBetween(html, start, end, content) {
   const to = html.indexOf(end, from);
   if (to === -1) return html;
   return html.slice(0, from) + content + html.slice(to);
+}
+
+// Replace the WHOLE region from the first start marker to the last end marker
+// (inclusive) with `content`. Used when `content` already carries its own
+// start/end markers (fetchSidebarModulesHtml does), so we must not nest them.
+// Anchoring on first-start..last-end also self-heals any previously accumulated
+// duplicate markers, collapsing them back to one clean block.
+function replaceRegionInclusive(html, start, end, content) {
+  const from = html.indexOf(start);
+  if (from === -1) return html;
+  const lastEnd = html.lastIndexOf(end);
+  if (lastEnd === -1 || lastEnd < from) return html;
+  return html.slice(0, from) + content + html.slice(lastEnd + end.length);
 }
 
 // Replace the inner of the first no-id `<div class="latest-feed-list">` that
@@ -141,8 +158,13 @@ async function main() {
 
   // Marker content (shell pages) mirrors generate-index-pages injectPageFeeds.
   const markerStories   = render(topPool.slice(0, 5));
-  const markerLatest    = render(latestPool.slice(0, 10));
+  const markerLatest    = render(latestPool.slice(0, 10));   // scorecard-issue Latest (uniform)
   const markerFeatured  = render(featuredPool.slice(0, 10));
+
+  // Homepage LATEST is hero-first (hero + up to 5 supporting cards), matching
+  // generate-home-prerender exactly, plus the paired LCP <link rel=preload>.
+  const homeLatest   = (latestPool.length) ? feedBake.renderHomeLatestHtml(latestPool.slice(0, 6), data) : '';
+  const heroPreload  = (latestPool.length) ? generatePreloadLink(latestPool[0]) : '';
 
   // Inline id-list content (baked pages).
   const topStories10 = render(topPool.slice(0, 10));
@@ -162,12 +184,15 @@ async function main() {
     // (A) PRERENDER markers — shell pages
     if (markerStories)  { html = replaceBetween(html, '<!-- PRERENDER-START:home-stories -->',        '<!-- PRERENDER-END:home-stories -->',        markerStories); }
     if (markerStories)  { html = replaceBetween(html, '<!-- PRERENDER-START:home-stories-mobile -->', '<!-- PRERENDER-END:home-stories-mobile -->', markerStories); }
-    if (markerLatest)   { html = replaceBetween(html, '<!-- PRERENDER-START:dormied-latest -->',      '<!-- PRERENDER-END:dormied-latest -->',      markerLatest); }
+    // dormied-latest is the homepage's hero-first LATEST (+ its LCP preload).
+    if (homeLatest)     { html = replaceBetween(html, '<!-- PRERENDER-START:dormied-latest -->',      '<!-- PRERENDER-END:dormied-latest -->',      homeLatest); }
+    if (heroPreload)    { html = replaceBetween(html, '<!-- PRERENDER-START:hero-preload -->',        '<!-- PRERENDER-END:hero-preload -->',        heroPreload); }
     if (markerFeatured) { html = replaceBetween(html, '<!-- PRERENDER-START:featured -->',            '<!-- PRERENDER-END:featured -->',            markerFeatured); }
 
-    // (B) sidebar modules
+    // (B) sidebar modules — modsHtml already includes its start/end markers, so
+    // replace the whole region (also self-heals any duplicated markers).
     if (modsHtml && html.includes('<!-- sidebar-mods:start -->')) {
-      html = replaceBetween(html, '<!-- sidebar-mods:start -->', '<!-- sidebar-mods:end -->', modsHtml);
+      html = replaceRegionInclusive(html, '<!-- sidebar-mods:start -->', '<!-- sidebar-mods:end -->', modsHtml);
     }
 
     // (C) inline id lists — baked pages

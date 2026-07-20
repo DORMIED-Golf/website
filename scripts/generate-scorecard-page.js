@@ -748,6 +748,15 @@ async function main() {
 
   console.log(`\n[scorecard-page] Done — ${written} written, ${skipped} skipped, ${errors} errors`);
 
+  // Refresh the baked LATEST / sidebar modules across every module-bearing page
+  // so a new/updated issue propagates immediately. Only when something was
+  // written; idempotent and module-region-only. --skip-refresh to opt out.
+  if (written > 0 && !process.argv.includes('--skip-refresh')) {
+    try {
+      require('child_process').execFileSync('node', [require('path').join(__dirname, 'refresh-modules.js')], { stdio: 'inherit' });
+    } catch (e) { console.warn('[scorecard-page] module refresh failed (non-fatal):', e.message); }
+  }
+
   if (written > 0) {
     // Regenerate sitemap and search index once after all issues are written
     try {

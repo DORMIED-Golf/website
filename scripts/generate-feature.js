@@ -783,6 +783,16 @@ async function main() {
 
   const figs = (html.match(/<figure class="da-figure"/g) || []).length;
   console.log(`[feature] Wrote ${path.join('news', F.slug, 'index.html')} | figures=${figs} | faqs=${parsed.faqs.length} | words=${parsed.wordCount} | readTime="${readTime(parsed.wordCount)}"`);
+
+  // Propagate this feature into the baked LATEST / sidebar modules on every
+  // module-bearing page so nothing goes stale. Idempotent (a no-op when the feed
+  // is unchanged) and module-region-only (never touches body prose or dates).
+  // Skip with --skip-refresh when batch-regenerating existing features.
+  if (!process.argv.includes('--skip-refresh')) {
+    try {
+      require('child_process').execFileSync('node', [path.join(__dirname, 'refresh-modules.js')], { stdio: 'inherit' });
+    } catch (e) { console.warn('[feature] module refresh failed (non-fatal):', e.message); }
+  }
 }
 
 main().catch(e => { console.error('[feature] Fatal:', e.message); process.exit(1); });
