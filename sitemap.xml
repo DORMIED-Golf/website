@@ -5,7 +5,7 @@
   <!-- ── Static pages ── -->
   <url>
     <loc>https://dormied.com/</loc>
-    <lastmod>2026-07-17</lastmod>
+    <lastmod>2026-07-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -2110,7 +2110,37 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (419) ── -->
+  <!-- ── News articles (422) ── -->
+  <url>
+    <loc>https://dormied.com/news/srixons-corporate-leak-playbook-is-working-and-the-fox-win-just-validated-2026-07-20/</loc>
+    <lastmod>2026-07-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/srixons-corporate-leak-playbook-is-working-and-the-fox-win-just-validated-2026-07-20-hero.jpg</image:loc>
+      <image:title>Srixon&apos;s Corporate Leak Playbook Is Working, and the Fox Win Just Validated It</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-329000-round-arccos-study-that-should-end-the-drive-for-show-putt-for-2026-07-20/</loc>
+    <lastmod>2026-07-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-329000-round-arccos-study-that-should-end-the-drive-for-show-putt-for-2026-07-20-hero.jpg</image:loc>
+      <image:title>The 329,000-Round Arccos Study That Should End the &apos;Drive for Show, Putt for Dough&apos; Debate</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-tour-ad-iz-just-won-another-major-it-was-released-in-2018-2026-07-13/</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-tour-ad-iz-just-won-another-major-it-was-released-in-2018-2026-07-13-hero.jpg</image:loc>
+      <image:title>The Tour AD IZ Just Won Another Major. It Was Released in 2018.</image:title>
+    </image:image>
+  </url>
   <url>
     <loc>https://dormied.com/news/primo-golf/</loc>
     <lastmod>2026-07-20</lastmod>
