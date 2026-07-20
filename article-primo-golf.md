@@ -6,7 +6,7 @@
 
 Who owns Primo Golf? Not, as much of YouTube assumes, Grant Horvat, at least not originally and not primarily. Primo Golf Apparel was founded by four golf-obsessed cousins from California, Matty Gay and Jason, Jordan, and Kirk Williamson, who launched the brand around a single product, the golf jogger, during the pandemic in June 2020. Horvat is an owner, the first from outside the family, after buying into the company in March 2024, three years after Primo first slid into his DMs with the message "Gotta get you wearing our joggers!" The full story runs from a free-golf country club job to a few hundred orders a day to Phil Mickelson losing a match, honoring the bet, and putting his entire LIV team in Primo. Here is how it happened and what the data says about where the brand sits now.
 
-In one sentence: Primo Golf Apparel is a California golf clothing brand founded in June 2020 by cousins Matty Gay, Jason Williamson, Jordan Williamson, and Kirk Williamson, best known for golf joggers, with YouTube star Grant Horvat joining as the first outside owner in March 2024 and the brand serving as official apparel sponsor of Phil Mickelson's HyFlyers GC.
+In one sentence: Primo Golf Apparel is a Utah-based golf clothing brand founded in June 2020 by cousins Matty Gay, Jason Williamson, Jordan Williamson, and Kirk Williamson, best known for golf joggers, with YouTube star Grant Horvat joining as the first outside owner in March 2024 and the brand serving as official apparel sponsor of Phil Mickelson's HyFlyers GC.
 
 ## What the data shows
 
@@ -59,13 +59,16 @@ Not originally, and not primarily. Horvat became an ambassador after Primo DM'd 
 Primo launched in June 2020, founded by the four cousins around their first product, the golf jogger, during the pandemic golf boom.
 
 **Where is Primo Golf based?**
-Primo is a California-based company. The founding cousins grew up playing golf together in California and built the brand there.
+Primo is headquartered in Lehi, Utah, where it was founded in 2020 and now runs a 30,000-square-foot operation. The four founding cousins are Californians, which is why the brand is often associated with California, but the company itself is a Utah business.
 
 **What is Primo Golf known for?**
 Golf joggers above all, the product the company launched with, plus polos, hoodies, and apparel aimed at younger golfers who want athletic fits on the course. The brand grew primarily through creator partnerships rather than traditional marketing.
 
 **Does Phil Mickelson wear Primo?**
 Yes. After losing a match to Grant Horvat, Mickelson was challenged to wear Primo joggers at the Open Championship, liked them, and in January 2025 Primo became the official golf apparel sponsor of his HyFlyers GC team on LIV Golf.
+
+**Which pro golfers wear Primo?**
+The headline pro relationship is Phil Mickelson's HyFlyers GC, which Primo has outfitted on LIV Golf since early 2025. Beyond the team deal, the brand turns up on individual tour players. PGA Tour winner Si Woo Kim has been seen in Primo, part of the label's steady move from creator-driven visibility to real on-course presence.
 
 **Is Primo Golf growing?**
 By DORMIED's tracking, Primo sits at rank 51 of 175+ brands with 14,800 monthly global searches, roughly flat over the past quarter. Its interest is spiky and content-driven, rising sharply around Horvat videos and LIV moments.

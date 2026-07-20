@@ -59,10 +59,14 @@ const FEATURES = {
       ]},
       'The DM that changed the company': { layout: 'single', images: [
         { file: 'horvat-signing.webp', w: 399, h: 501, alt: 'Grant Horvat signing his ownership deal with Primo Golf', caption: 'Grant Horvat became Primo\'s first owner from outside the founding family in March 2024, three years after the brand DMed him. Photo by Primo Golf Apparel.' },
+        { file: 'horvat-website.webp', w: 1100, h: 817, alt: 'Grant Horvat modeling Primo Golf apparel on the brand\'s website', caption: 'Now an owner and the brand\'s most visible face, Horvat models Primo across its own storefront. Photo by Primo Golf Apparel.' },
       ]},
       'Phil Mickelson, a lost bet, and LIV': { layout: 'two-up', images: [
         { file: 'mickelson-joggers.webp', w: 966, h: 544, alt: 'Phil Mickelson wearing Primo golf joggers', caption: 'Phil Mickelson wore Primo joggers at the Open Championship after losing a bet to Grant Horvat. Photo by Rob Casey / SNS Group.' },
         { file: 'liv-hyflyers.webp', w: 1000, h: 667, alt: 'Phil Mickelson\'s HyFlyers GC team in Primo apparel at LIV Golf', caption: 'Primo became the official apparel sponsor of Mickelson\'s HyFlyers GC, debuting at LIV Golf in February 2025. Photo by Utah Golf Association.' },
+      ]},
+      'Where Primo fits': { layout: 'single', images: [
+        { file: 'si-woo-kim.webp', w: 1000, h: 667, alt: 'PGA Tour winner Si Woo Kim wearing Primo Golf apparel', caption: 'Primo has begun appearing on individual tour pros beyond the HyFlyers deal, including PGA Tour winner Si Woo Kim. Photo by Irish Star.' },
       ]},
     },
   },
