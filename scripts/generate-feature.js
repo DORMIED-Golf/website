@@ -35,6 +35,38 @@ let FEATURED_HTML = '';
 
 // ── Feature definitions ─────────────────────────────────────────────────────────
 const FEATURES = {
+  'primo-golf': {
+    slug: 'primo-golf',
+    title: 'Who Owns Primo Golf? Four Cousins, One DM, and Phil Mickelson in Joggers',
+    titleTag: 'Who Owns Primo Golf? Cousins, Grant Horvat + Mickelson | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'primo-golf-apparel',
+    leadRole: 'bio',
+    lastUpdated: 'July 20, 2026',
+    dateModified: '2026-07-20T00:00:00.000Z',
+    publishedAt: '2026-07-20T15:00:00.000Z',
+    metaDescription: 'Who owns Primo Golf? The four cousins who founded it, how Grant Horvat bought in, why Phil Mickelson put his LIV team in Primo joggers, and what the data shows.',
+    seoKeywords: ['who owns primo golf', 'primo golf', 'primo golf apparel', 'grant horvat primo', 'primo golf joggers', 'phil mickelson primo'],
+    mdPath: path.join(ROOT, 'article-primo-golf.md'),
+    imgBase: '/images/features/primo-golf',
+    // Every caption carries the supplied photo credit ("Photo by ...").
+    hero: { file: 'hero.webp', w: 1200, h: 800, alt: 'Primo Golf Apparel lookbook, golf joggers and apparel', caption: 'The Primo Golf Apparel lookbook. The brand launched around a single product, the golf jogger. Photo by Primo Golf Apparel.' },
+    sectionImages: {
+      'Four cousins and a jogger': { layout: 'single', images: [
+        { file: 'founders.webp', w: 1000, h: 1000, alt: 'The four founding cousins of Primo Golf Apparel', caption: 'The four cousins behind Primo: Matty Gay and Jason, Jordan, and Kirk Williamson. Photo by Primo Golf Apparel.' },
+      ]},
+      'The DM that changed the company': { layout: 'single', images: [
+        { file: 'horvat-signing.webp', w: 399, h: 501, alt: 'Grant Horvat signing his ownership deal with Primo Golf', caption: 'Grant Horvat became Primo\'s first owner from outside the founding family in March 2024, three years after the brand DMed him. Photo by Primo Golf Apparel.' },
+      ]},
+      'Phil Mickelson, a lost bet, and LIV': { layout: 'two-up', images: [
+        { file: 'mickelson-joggers.webp', w: 966, h: 544, alt: 'Phil Mickelson wearing Primo golf joggers', caption: 'Phil Mickelson wore Primo joggers at the Open Championship after losing a bet to Grant Horvat. Photo by Rob Casey / SNS Group.' },
+        { file: 'liv-hyflyers.webp', w: 1000, h: 667, alt: 'Phil Mickelson\'s HyFlyers GC team in Primo apparel at LIV Golf', caption: 'Primo became the official apparel sponsor of Mickelson\'s HyFlyers GC, debuting at LIV Golf in February 2025. Photo by Utah Golf Association.' },
+      ]},
+    },
+  },
+
   'students-golf': {
     slug: 'students-golf',
     title: "What Is Students Golf? The Man Who Invented the Jogger Is Now Golf's Coolest Designer",
