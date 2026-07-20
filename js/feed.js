@@ -328,20 +328,27 @@
       return;
     }
 
-    fetchDormiedArticles(null, 6, function (articles) {
+    fetchDormiedArticles(null, 12, function (articles) {
       if (!articles.length) {
         if (section) section.hidden = true;
         return;
       }
       if (section) section.hidden = false;
 
-      var allBrands  = getAllBrands();
-      var hero       = articles[0];
-      var supporting = articles.slice(1, 6);
+      var allBrands = getAllBrands();
+      var hero      = articles[0];
+      var trio      = articles.slice(1, 4);   // items 2-4: desktop 3-across, mobile listed
+      var list      = articles.slice(4, 12);  // items 5-12: standard list
+      var trioHtml  = trio.length
+        ? '<div class="home-latest-trio">' +
+            trio.map(function (a) { return renderArticleCard(a, true, allBrands); }).join('') +
+          '</div>'
+        : '';
 
       listEl.innerHTML =
         renderFeedPageCard(hero, allBrands, true) +  // isLCP=true: eager + fetchpriority=high
-        supporting.map(function (a) { return renderArticleCard(a, true, allBrands); }).join('');
+        trioHtml +
+        list.map(function (a) { return renderArticleCard(a, true, allBrands); }).join('');
     });
   }
 

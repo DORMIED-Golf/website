@@ -254,7 +254,13 @@ function injectBetweenMarkers(html, key, content) {
   const end   = `<!-- PRERENDER-END:${key} -->`;
   const re    = new RegExp(escapeRegExp(start) + '[\\s\\S]*?' + escapeRegExp(end));
   if (!re.test(html)) {
-    throw new Error(`Markers missing for key "${key}" in index.html.\nAdd: ${start}${end} inside the target element.`);
+    // A section whose markers were removed when the homepage was restructured
+    // (e.g. home-stories / featured now live in baked sidebars) is simply not
+    // present to inject. Skip it with a warning rather than aborting the whole
+    // prerender, so the sections that DO have markers still bake and the CI
+    // step proceeds to refresh-modules.
+    console.warn(`[prerender] Markers missing for key "${key}" — skipping (not on this page).`);
+    return html;
   }
   // Function replacement so any '$' in content (e.g. "$2,000") is inserted
   // literally rather than treated as a regex backreference.
@@ -285,7 +291,7 @@ async function run() {
     try {
       const { createClient } = require('@supabase/supabase-js');
       const supabase = createClient(url, key);
-      const articles = await feedBake.fetchLatestArticles(supabase, 6, null);
+      const articles = await feedBake.fetchLatestArticles(supabase, 12, null);
       if (articles.length) {
         sections['dormied-latest'] = feedBake.renderHomeLatestHtml(articles, data);
         sections['hero-preload']   = generatePreloadLink(articles[0]);

@@ -5724,7 +5724,7 @@ details[open] .faq-question::after { content: '−'; }
 .home-dormied-section .bp-latest-see-all { padding-bottom: 0; }
 
 /* Featured hero card — first DORMIED article */
-.home-dormied-section .feed-card:first-child {
+.home-dormied-section .feed-card--full {
   flex-direction: column;
   padding: 0;
   gap: 0;
@@ -5732,24 +5732,35 @@ details[open] .faq-question::after { content: '−'; }
   border-left: none;
   border-color: var(--green-dim);
 }
-.home-dormied-section .feed-card:first-child .feed-card-thumb--lg {
+.home-dormied-section .feed-card--full .feed-card-thumb--lg {
   width: 100%;
   height: 200px;
   border-radius: 0;
 }
-.home-dormied-section .feed-card:first-child .feed-card-body {
+.home-dormied-section .feed-card--full .feed-card-body {
   padding: 14px 16px;
 }
-.home-dormied-section .feed-card:first-child .feed-card-title--lg {
+.home-dormied-section .feed-card--full .feed-card-title--lg {
   font-size: 1rem;
   line-height: 1.4;
 }
 @media (min-width: 600px) {
-  .home-dormied-section .feed-card:first-child .feed-card-thumb--lg {
+  .home-dormied-section .feed-card--full .feed-card-thumb--lg {
     height: 260px;
   }
-  .home-dormied-section .feed-card:first-child .feed-card-title--lg {
+  .home-dormied-section .feed-card--full .feed-card-title--lg {
     font-size: 1.15rem;
+  }
+}
+
+/* Latest trio — items 2-4. Desktop: 3 side-by-side. Mobile: stacked (listed). */
+.home-latest-trio { display: flex; flex-direction: column; gap: 10px; }
+@media (min-width: 600px) {
+  .home-latest-trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    align-items: start;
   }
 }
 
@@ -5766,17 +5777,17 @@ details[open] .faq-question::after { content: '−'; }
   visibility: hidden;
   pointer-events: none;
   overflow: hidden;
-  min-height: 720px;    /* ~1 hero card (280px) + 5 small cards (~80px each) + header/padding */
+  min-height: 1300px;   /* hero (~340px) + trio 3 stacked (~240px) + 8 small (~640px) + header */
 }
 @media (min-width: 600px) {
-  #home-dormied-section[hidden] { min-height: 860px; }
+  #home-dormied-section[hidden] { min-height: 1240px; }   /* hero + trio 1 row + 8 small */
 }
 @media (min-width: 1100px) {
-  #home-dormied-section[hidden] { min-height: 600px; }
+  #home-dormied-section[hidden] { min-height: 1100px; }
 }
 
 /* ── FEATURED section: large cards (slots 1-2) — full-width hero treatment ── */
-/* Mirrors .home-dormied-section .feed-card:first-child but for every card    */
+/* Mirrors .home-dormied-section .feed-card--full but for every card    */
 .home-featured-large { display: flex; flex-direction: column; align-items: stretch; gap: 16px; margin-bottom: 16px; width: 100%; }
 .home-featured-large .feed-card {
   flex-direction: column;

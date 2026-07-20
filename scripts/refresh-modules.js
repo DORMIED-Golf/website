@@ -163,7 +163,7 @@ async function main() {
 
   // Homepage LATEST is hero-first (hero + up to 5 supporting cards), matching
   // generate-home-prerender exactly, plus the paired LCP <link rel=preload>.
-  const homeLatest   = (latestPool.length) ? feedBake.renderHomeLatestHtml(latestPool.slice(0, 6), data) : '';
+  const homeLatest   = (latestPool.length) ? feedBake.renderHomeLatestHtml(latestPool.slice(0, 12), data) : '';
   const heroPreload  = (latestPool.length) ? generatePreloadLink(latestPool[0]) : '';
 
   // Inline id-list content (baked pages).

@@ -210,15 +210,23 @@ function renderFeedPageCard(article, dormiedData, isLCP) {
        + '</article>';
 }
 
-/* Homepage "Latest from DORMIED" — hero (LCP) + up to 5 supporting cards.
-   Mirrors feed.js renderLatestFromDormied so the baked markup equals the
+/* Homepage "Latest from DORMIED" — 12 stories: a hero (LCP), a trio of the
+   next 3 (side-by-side on desktop, stacked on mobile), then the next 8 as a
+   list. Mirrors feed.js renderLatestFromDormied so the baked markup equals the
    runtime render (no layout shift when feed.js refreshes). */
 function renderHomeLatestHtml(articles, dormiedData) {
   if (!articles || !articles.length) return '';
-  var hero       = articles[0];
-  var supporting = articles.slice(1, 6);
+  var hero = articles[0];
+  var trio = articles.slice(1, 4);    // items 2-4: desktop 3-across, mobile listed
+  var list = articles.slice(4, 12);   // items 5-12: standard list
+  var trioHtml = trio.length
+    ? '<div class="home-latest-trio">'
+      + trio.map(function (a) { return renderArticleCard(a, dormiedData); }).join('')
+      + '</div>'
+    : '';
   return renderFeedPageCard(hero, dormiedData, true)
-       + supporting.map(function (a) { return renderArticleCard(a, dormiedData); }).join('');
+       + trioHtml
+       + list.map(function (a) { return renderArticleCard(a, dormiedData); }).join('');
 }
 
 function normalizeDormiedRow(a) {
