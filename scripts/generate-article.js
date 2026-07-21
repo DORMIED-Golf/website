@@ -106,6 +106,21 @@ function stripEmDashes(text) {
   return text.replace(/ — /g, ', ').replace(/—/g, ', ');
 }
 
+// The external poster appends the article link to x_post_text (~24 chars against
+// Twitter's 280 limit), so copy longer than ~256 chars gets cut off mid-sentence
+// on the live post. The prompt targets under 220; this is a hard backstop for
+// when the model overshoots: trim to the last COMPLETE sentence that fits the
+// budget so the post is never cut mid-word. Only trims when genuinely over.
+function fitXPost(text, budget) {
+  const t = (text || '').trim();
+  if (!t || t.length <= budget) return t;
+  const cut = t.slice(0, budget);
+  const lastEnd = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('? '), cut.lastIndexOf('! '));
+  if (lastEnd > 0) return cut.slice(0, lastEnd + 1).trim();      // keep through the period
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trim(); // fallback: last whole word
+}
+
 function loadDormiedData() {
   const raw = fs.readFileSync(path.join(SITE_ROOT, 'js/data.js'), 'utf8');
   const ctx = { window: {} };
@@ -434,7 +449,7 @@ An article succeeds when it leaves the reader with one concrete insight they did
 Also generate:
 - A meta description (120-155 characters) for SEO
 - 3-5 SEO keywords relevant to the article
-- An X/Twitter post (under 250 characters — leave room for the URL which takes ~23 characters). Write it as a standalone observation or take that makes someone want to click. It should feel like something a sharp golf industry insider would post, not a brand account promoting its own content. CRITICAL: Do NOT start with the brand name — the first word must not be the brand name or any word from the brand name. Start with a different angle: a number, an action verb, a descriptor, or an industry observation. Do not use hashtags. Do not use "check out", "read more", "new article", "we wrote about", or "link in bio" language. No em dashes. No exclamation points. The post should work on its own as a hot take even if someone never clicks.
+- An X/Twitter post (STRICTLY under 220 characters). The article link is appended when this is posted and eats about 24 characters against Twitter's 280 limit, so anything over 220 gets cut off mid-sentence on the live post. It MUST be a complete thought that ends with a period — never let it trail off. Count your characters and stay under 220. Write it as a standalone observation or take that makes someone want to click. It should feel like something a sharp golf industry insider would post, not a brand account promoting its own content. CRITICAL: Do NOT start with the brand name — the first word must not be the brand name or any word from the brand name. Start with a different angle: a number, an action verb, a descriptor, or an industry observation. Do not use hashtags. Do not use "check out", "read more", "new article", "we wrote about", or "link in bio" language. No em dashes. No exclamation points. The post should work on its own as a hot take even if someone never clicks.
 
 Examples of good X posts (notice none start with the brand name):
 "Buying the biggest screen in Times Square for a month is not something a mid-tier brand does. Wilson is playing a different game."
@@ -449,7 +464,7 @@ Return valid JSON only — no markdown fences, no preamble, exactly this structu
   "body": "paragraph one\\n\\nparagraph two\\n\\nparagraph three\\n\\nparagraph four\\n\\nparagraph five",
   "meta_description": "120-155 character SEO description including brand name",
   "seo_keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
-  "x_post": "under 250 chars, no hashtags, hot take voice"
+  "x_post": "STRICTLY under 220 chars, a complete sentence ending in a period, no hashtags, hot take voice"
 }`;
 
 // Adam's voice profile — apparel, footwear, bags, lifestyle desk.
@@ -1584,7 +1599,7 @@ async function main() {
     // still slip them in. Post-processing guarantees they never reach the page.
     const body             = stripEmDashes(parsed.body);
     const meta_description = stripEmDashes(parsed.meta_description);
-    const x_post           = stripEmDashes(parsed.x_post);
+    const x_post           = fitXPost(stripEmDashes(parsed.x_post), 250);
     const publishedAt = raw.published_at || new Date().toISOString();
     const slug        = makeSlug(title, publishedAt);
     const readTime    = estimateReadTime(body);
