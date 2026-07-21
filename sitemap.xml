@@ -6380,6 +6380,12 @@
 
   <!-- ── News pagination ── -->
   <url>
+    <loc>https://dormied.com/news/page/18/</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/news/page/17/</loc>
     <lastmod>2026-07-21</lastmod>
     <changefreq>weekly</changefreq>
