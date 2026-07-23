@@ -854,12 +854,17 @@ async function runWeeklyCrawl(supabase) {
           .eq('id', existing.current_bag_id)
           .single();
 
-        if (currentBag && currentBag.bag_date === bag_date) {
-          // No change
+        // Newer-date-wins: only advance the current bag when the source is
+        // STRICTLY newer than what we hold. Same date = no change (idempotent,
+        // no duplicate). An OLDER source date is ignored, so the crawl never
+        // regresses to stale data and never reverts a manual update (see
+        // witb-manual-update.js) whose date is ahead of the source. Automation
+        // resumes automatically once the source publishes a genuinely newer bag.
+        if (currentBag && currentBag.bag_date && !(bag_date > currentBag.bag_date)) {
           continue;
         }
 
-        // New bag detected
+        // Newer bag detected
         log(`  Bag change: ${playerInfo.name} ${currentBag?.bag_date} -> ${bag_date}`);
         const items         = parseBagTable($);
         const source_credit = parseSourceCredit($);
