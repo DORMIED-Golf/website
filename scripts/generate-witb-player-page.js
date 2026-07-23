@@ -1358,7 +1358,11 @@ function updateSitemap(slug, today, noindex) {
 
 // ── Search index update ───────────────────────────────────────────────────────
 
-function updateSearchIndex(player, currentItems, noindex) {
+// Update this player's search entry. MUST match generate-search-index.js
+// buildWitbPlayerEntries exactly, so a single-page re-bake and a full index
+// rebuild produce identical entries (previously this wrote a different
+// "WITB YYYY - brands" subtitle, so freshly baked players looked inconsistent).
+function updateSearchIndex(player, bags, html, noindex) {
   if (noindex) return;
 
   const siPath = path.join(ROOT, 'search-index.json');
@@ -1367,17 +1371,27 @@ function updateSearchIndex(player, currentItems, noindex) {
 
   si.entries = si.entries.filter(e => !(e.type === 'witb-player' && e.url === url));
 
-  const brands = [...new Set(currentItems.map(i => i.witb_brands?.name || i.raw_brand).filter(Boolean))];
-  const models  = currentItems.map(i => i.raw_model).filter(Boolean).join(' ');
+  // Subtitle: "#N · M snapshots tracked, YYYY[-YYYY]"  (or "Unranked · ...").
+  const rank     = player.owgr_rank === null ? 'Unranked' : `#${player.owgr_rank}`;
+  const bagYears = bags.map(b => parseInt(b.bag_date.slice(0, 4), 10)).filter(y => !isNaN(y));
+  const minY     = bagYears.length ? Math.min(...bagYears) : new Date().getFullYear();
+  const maxY     = bagYears.length ? Math.max(...bagYears) : new Date().getFullYear();
+  const yearRange = minY === maxY ? String(minY) : `${minY}-${maxY}`;
+  const subtitle  = [rank, `${bags.length} snapshots tracked, ${yearRange}`].filter(Boolean).join(' · ');
+
+  // search_text mirrors the bulk generator: name + meta description (extracted
+  // from the page we just wrote, so both code paths use the identical corpus).
+  const metaM    = html.match(/<meta\s+name="description"\s+content="([^"]*)"/i);
+  const searchText = [player.name, metaM ? metaM[1] : ''].join(' ').toLowerCase();
 
   si.entries.push({
     type:        'witb-player',
     slug:        player.slug,
     title:       player.name,
-    subtitle:    `WITB ${new Date().getFullYear()} - ${brands.join(', ')}`,
+    subtitle,
     url,
     thumbnail:   null,
-    search_text: `${player.name} witb what's in the bag ${brands.join(' ')} ${models}`.toLowerCase(),
+    search_text: searchText,
   });
 
   si.generated_at = new Date().toISOString();
@@ -1471,7 +1485,7 @@ async function main() {
   log(`Wrote: ${outPath} (${(html.length / 1024).toFixed(1)} KB)`);
 
   updateSitemap(PLAYER_SLUG, today, noindex);
-  updateSearchIndex(player, currentItems, noindex);
+  updateSearchIndex(player, bags, html, noindex);
 
   log(`Done. Page: /witb/players/${PLAYER_SLUG}/`);
   if (!noindex) log('Page is indexable.');

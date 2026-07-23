@@ -225,12 +225,12 @@ function buildWitbPlayerEntries() {
     // Meta description for search text
     const metaDesc = extractMeta(html, 'name', 'description') || '';
 
-    // OWGR rank from the rank element
+    // OWGR rank from the rank element ("#N" for ranked, "Unranked" otherwise).
+    // Unranked players that have a page (recent bag or allowlist — see
+    // witb-page-eligibility.js) are included so they are searchable; the page
+    // only exists at all if the player was deemed eligible.
     const rankM = html.match(/<span class="witb-rank-num">(#[\d]+|Unranked)<\/span>/i);
     const rank  = rankM ? rankM[1] : '';
-
-    // Skip players with no numeric OWGR rank (shown as "Unranked" in the page HTML)
-    if (!rank || rank === 'Unranked') continue;
 
     // Current bag date from the snapshots sub-heading "N snapshots tracked, YYYY[-YYYY]"
     const subM  = html.match(/class="witb-section-sub">([^<]*snapshots[^<]*)<\/p>/i);
