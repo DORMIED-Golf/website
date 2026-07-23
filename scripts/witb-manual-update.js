@@ -209,7 +209,11 @@ async function main() {
   }
 
   console.log(`[manual] done: bag ${bag_id} is now current for ${player.name}; ${changeCount} change(s) recorded.`);
-  console.log(`[manual] next: re-bake the page ->  node scripts/generate-witb-player-page.js ${player_slug}`);
+  console.log('[manual] next, re-bake so the change propagates everywhere:');
+  console.log(`  node scripts/generate-witb-player-page.js ${player_slug}   # the player page`);
+  console.log('  node scripts/generate-witb-page.js                        # /witb: This Week\'s Bag Moves + stats');
+  console.log('  node scripts/generate-witb-players-page.js                # /witb/players: Find a Player grid');
+  console.log('  node scripts/refresh-modules.js                           # Recently Updated Bags sidebar, site-wide');
 }
 
 main().catch(e => { console.error('[manual] Fatal:', e.message); process.exit(1); });
