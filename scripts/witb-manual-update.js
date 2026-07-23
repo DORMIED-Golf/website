@@ -117,62 +117,45 @@ async function detectChanges(supabase, player_id, oldBagId, newBagId, oldBagDate
   return changes;
 }
 
-async function main() {
-  const jsonPath = process.argv.slice(2).find(a => !a.startsWith('--'));
-  if (!jsonPath) { console.error('Usage: node scripts/witb-manual-update.js path/to/bag.json [--dry-run]'); process.exit(1); }
+// Apply one bag. Returns { status: 'updated'|'skipped'|'error', slug, detail }.
+// Never throws for per-bag problems (missing player, regression) so a batch run
+// continues; only genuine infra errors bubble up.
+async function applyBag(supabase, bag) {
+  const { player_slug, bag_date, source_credit = null, source_url = null, items = [] } = bag || {};
+  if (!player_slug || !bag_date || !items.length) return { status: 'error', slug: player_slug || '(no slug)', detail: 'needs player_slug, bag_date, non-empty items' };
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(bag_date)) return { status: 'error', slug: player_slug, detail: `bag_date must be YYYY-MM-DD, got "${bag_date}"` };
 
-  const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) throw new Error('Missing SUPABASE_URL / SUPABASE_SERVICE_KEY');
-  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-
-  const bag = JSON.parse(fs.readFileSync(path.resolve(jsonPath), 'utf8'));
-  const { player_slug, bag_date, source_credit = null, source_url = null, items = [] } = bag;
-  if (!player_slug || !bag_date || !items.length) throw new Error('JSON needs player_slug, bag_date, and non-empty items');
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(bag_date)) throw new Error(`bag_date must be YYYY-MM-DD, got "${bag_date}"`);
-
-  // Resolve player
-  const { data: player, error: pErr } = await supabase.from('witb_players')
+  const { data: player } = await supabase.from('witb_players')
     .select('id, name, current_bag_id, source_url').eq('slug', player_slug).single();
-  if (pErr || !player) throw new Error(`Player not found for slug "${player_slug}"${pErr ? ': ' + pErr.message : ''}`);
+  if (!player) return { status: 'skipped', slug: player_slug, detail: 'player not in witb_players (new player — not created)' };
 
-  // witb_bags.source_url is NOT NULL; fall back to the player's source page.
   const bagSourceUrl = source_url || player.source_url || 'manual';
 
-  // Guard against regressing to an older bag than what is stored.
   let oldBag = null;
   if (player.current_bag_id) {
     const { data } = await supabase.from('witb_bags').select('id, bag_date').eq('id', player.current_bag_id).single();
     oldBag = data || null;
     if (oldBag && oldBag.bag_date && bag_date < oldBag.bag_date) {
-      throw new Error(`Refusing to regress: new bag_date ${bag_date} is older than current ${oldBag.bag_date}. Use a newer date or delete the newer bag first.`);
+      return { status: 'skipped', slug: player_slug, detail: `would regress: ${bag_date} older than current ${oldBag.bag_date}` };
     }
   }
 
-  console.log(`[manual] ${player.name} (${player_slug}) -> bag_date ${bag_date}, ${items.length} items${DRY ? '  (DRY RUN)' : ''}`);
-  if (oldBag) console.log(`[manual] current bag: ${oldBag.bag_date} (${oldBag.id})`);
-
+  console.log(`[manual] ${player.name} (${player_slug}) -> ${bag_date}, ${items.length} items${DRY ? '  (DRY RUN)' : ''}`);
   if (DRY) {
     items.forEach((it, i) => console.log(`  ${i + 1}. ${it.club_type}: ${it.raw_brand} ${it.raw_model}${it.loft_or_number ? ' (' + it.loft_or_number + ')' : ''}${it.raw_shaft ? ' / ' + it.raw_shaft : ''}`));
-    if (oldBag) console.log('[manual] (dry-run) would diff against current bag for witb_changes');
-    return;
+    return { status: 'updated', slug: player_slug, detail: `${items.length} items (dry-run, current ${oldBag ? oldBag.bag_date : 'none'})` };
   }
 
-  // Demote prior current bag(s)
-  await supabase.from('witb_bags').update({ is_current: false })
-    .eq('player_id', player.id).eq('is_current', true);
-
-  // Upsert the bag on (player_id, bag_date) — idempotent, never duplicates
+  // Demote prior current bag(s), upsert on (player_id, bag_date) — never duplicates
+  await supabase.from('witb_bags').update({ is_current: false }).eq('player_id', player.id).eq('is_current', true);
   const { data: bagRow, error: bagErr } = await supabase.from('witb_bags')
-    .upsert({ player_id: player.id, bag_date, source_url: bagSourceUrl, source_credit, is_current: true,
-              scraped_at: new Date().toISOString() },
+    .upsert({ player_id: player.id, bag_date, source_url: bagSourceUrl, source_credit, is_current: true, scraped_at: new Date().toISOString() },
             { onConflict: 'player_id,bag_date', ignoreDuplicates: false })
     .select('id').single();
-  if (bagErr) throw new Error(`bag upsert: ${bagErr.message}`);
+  if (bagErr) return { status: 'error', slug: player_slug, detail: `bag upsert: ${bagErr.message}` };
   const bag_id = bagRow.id;
 
-  // Full replace of items
   await supabase.from('witb_bag_items').delete().eq('bag_id', bag_id);
-
   let position = 0;
   for (const it of items) {
     position++;
@@ -183,37 +166,54 @@ async function main() {
       : null;
     const shaftSlug = inferShaftSlug(it.raw_shaft);
     const shaft_id  = shaftSlug ? await upsertShaft(supabase, { slug: shaftSlug, model: it.raw_shaft }) : null;
-
     const { error: iErr } = await supabase.from('witb_bag_items').insert({
       bag_id, club_type, brand_id, clubhead_id, shaft_id,
-      loft_or_number: it.loft_or_number || null,
-      raw_brand: it.raw_brand || null,
-      raw_model: it.raw_model || null,
-      raw_shaft: it.raw_shaft || null,
-      position,
+      loft_or_number: it.loft_or_number || null, raw_brand: it.raw_brand || null,
+      raw_model: it.raw_model || null, raw_shaft: it.raw_shaft || null, position,
     });
     if (iErr) console.warn(`  item ${position} (${club_type}): ${iErr.message}`);
   }
 
-  // Repoint current bag + freshness timestamp
   await supabase.from('witb_players')
-    .update({ current_bag_id: bag_id, last_updated: new Date().toISOString() })
-    .eq('id', player.id);
+    .update({ current_bag_id: bag_id, last_updated: new Date().toISOString() }).eq('id', player.id);
 
-  // Record the diff for the "Recently Updated Bags" module (skip if same bag row)
   let changeCount = 0;
   if (oldBag && oldBag.id !== bag_id) {
     const changes = await detectChanges(supabase, player.id, oldBag.id, bag_id, oldBag.bag_date, bag_date);
     changeCount = changes.length;
     changes.forEach(c => console.log(`  ${c.change_type}: ${c.club_type}  ${c.old_value || '-'} -> ${c.new_value || '-'}`));
   }
+  return { status: 'updated', slug: player_slug, detail: `${items.length} items, ${changeCount} change(s)` };
+}
 
-  console.log(`[manual] done: bag ${bag_id} is now current for ${player.name}; ${changeCount} change(s) recorded.`);
-  console.log('[manual] next, re-bake so the change propagates everywhere:');
-  console.log(`  node scripts/generate-witb-player-page.js ${player_slug}   # the player page`);
-  console.log('  node scripts/generate-witb-page.js                        # /witb: This Week\'s Bag Moves + stats');
-  console.log('  node scripts/generate-witb-players-page.js                # /witb/players: Find a Player grid');
-  console.log('  node scripts/refresh-modules.js                           # Recently Updated Bags sidebar, site-wide');
+async function main() {
+  const jsonPath = process.argv.slice(2).find(a => !a.startsWith('--'));
+  if (!jsonPath) { console.error('Usage: node scripts/witb-manual-update.js path/to/bags.json [--dry-run]'); process.exit(1); }
+
+  const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) throw new Error('Missing SUPABASE_URL / SUPABASE_SERVICE_KEY');
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+  // Accept a single bag object, a top-level array, or { bags: [...] }.
+  const parsed = JSON.parse(fs.readFileSync(path.resolve(jsonPath), 'utf8'));
+  const bags = Array.isArray(parsed) ? parsed : Array.isArray(parsed.bags) ? parsed.bags : [parsed];
+  console.log(`[manual] ${bags.length} bag(s) to process${DRY ? '  (DRY RUN)' : ''}\n`);
+
+  const results = [];
+  for (const bag of bags) results.push(await applyBag(supabase, bag));
+
+  const by = s => results.filter(r => r.status === s);
+  console.log(`\n[manual] summary: ${by('updated').length} updated, ${by('skipped').length} skipped, ${by('error').length} error`);
+  for (const r of results) console.log(`  ${r.status.toUpperCase().padEnd(7)} ${r.slug}${r.detail ? ' — ' + r.detail : ''}`);
+
+  if (!DRY && by('updated').length) {
+    const slugs = by('updated').map(r => r.slug);
+    console.log('\n[manual] next, re-bake so the changes propagate everywhere:');
+    slugs.forEach(s => console.log(`  node scripts/generate-witb-player-page.js ${s}`));
+    console.log('  node scripts/generate-witb-page.js          # /witb: This Week\'s Bag Moves + stats');
+    console.log('  node scripts/generate-witb-players-page.js  # /witb/players: Find a Player grid');
+    console.log('  node scripts/refresh-modules.js             # Recently Updated Bags sidebar, site-wide');
+  }
 }
 
 main().catch(e => { console.error('[manual] Fatal:', e.message); process.exit(1); });
