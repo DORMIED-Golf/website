@@ -579,7 +579,7 @@ function buildChangesHtml(changes, brands, playerMap) {
     const player = (p?.slug && playerPages.has(p.slug))
       ? `<a href="/witb/players/${esc(p.slug)}/">${esc(name)}</a>`
       : esc(name);
-    const date = c.detected_at ? new Date(c.detected_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+    const date = c.detected_at ? new Date(c.detected_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
     let moveHtml;
     if (c.change_type === 'added') {
       moveHtml = `<span class="witb-move-tag witb-move-tag--added">Added</span>${linkValue(c.new_value)}`;

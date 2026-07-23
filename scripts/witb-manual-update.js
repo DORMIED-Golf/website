@@ -57,6 +57,21 @@ function inferShaftSlug(rawShaft) {
   return 'shaft-' + slugify(rawShaft).slice(0, 80);
 }
 
+// Normalized key for tolerant name/slug matching ("Si Woo Kim" == "Siwoo Kim").
+const normKey = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+// Sub-brands the site stores under a parent brand so the parent's logo + /brands
+// link render (e.g. a Scotty Cameron putter is a Titleist item with the model
+// carrying "Scotty Cameron ..."). Keeps manual entries consistent with scraped.
+const BRAND_PARENT = { 'scotty cameron': 'Titleist' };
+function normalizeBrandModel(rawBrand, rawModel) {
+  const parent = BRAND_PARENT[(rawBrand || '').toLowerCase().trim()];
+  if (!parent) return { raw_brand: rawBrand, raw_model: rawModel };
+  const model = (rawModel && normKey(rawModel).includes(normKey(rawBrand)))
+    ? rawModel : `${rawBrand} ${rawModel || ''}`.trim();
+  return { raw_brand: parent, raw_model: model };
+}
+
 // Upsert a brand on slug, never clobbering its existing dormied_brand_slug
 // mapping (that column is not in the payload, so ON CONFLICT leaves it intact).
 async function upsertBrand(supabase, { slug, name }) {
@@ -120,14 +135,29 @@ async function detectChanges(supabase, player_id, oldBagId, newBagId, oldBagDate
 // Apply one bag. Returns { status: 'updated'|'skipped'|'error', slug, detail }.
 // Never throws for per-bag problems (missing player, regression) so a batch run
 // continues; only genuine infra errors bubble up.
-async function applyBag(supabase, bag) {
-  const { player_slug, bag_date, source_credit = null, source_url = null, items = [] } = bag || {};
+async function applyBag(supabase, bag, players) {
+  const { player_slug, player_name = null, bag_date, source_credit = null, source_url = null, items = [] } = bag || {};
   if (!player_slug || !bag_date || !items.length) return { status: 'error', slug: player_slug || '(no slug)', detail: 'needs player_slug, bag_date, non-empty items' };
   if (!/^\d{4}-\d{2}-\d{2}$/.test(bag_date)) return { status: 'error', slug: player_slug, detail: `bag_date must be YYYY-MM-DD, got "${bag_date}"` };
 
-  const { data: player } = await supabase.from('witb_players')
-    .select('id, name, current_bag_id, source_url').eq('slug', player_slug).single();
-  if (!player) return { status: 'skipped', slug: player_slug, detail: 'player not in witb_players (new player — not created)' };
+  // Resolve the player tolerantly: exact slug, then normalized slug/name (so
+  // "si-woo-kim"/"Si Woo Kim" finds the existing "siwoo-kim"/"Siwoo Kim" instead
+  // of creating a duplicate). Only create when there is genuinely no match.
+  let player = players.find(p => p.slug === player_slug)
+            || players.find(p => normKey(p.slug) === normKey(player_slug))
+            || (player_name && players.find(p => normKey(p.name) === normKey(player_name)))
+            || null;
+  let created = false;
+  if (!player) {
+    if (!player_name) return { status: 'error', slug: player_slug, detail: 'new player needs player_name to create' };
+    if (DRY) return { status: 'created', slug: player_slug, detail: `would CREATE ${player_name}, ${items.length} items` };
+    const { data: np, error: npErr } = await supabase.from('witb_players')
+      .insert({ slug: player_slug, name: player_name, source_url: source_url || 'manual' })
+      .select('id, name, slug, current_bag_id, source_url').single();
+    if (npErr) return { status: 'error', slug: player_slug, detail: `create player: ${npErr.message}` };
+    player = np; created = true;
+    players.push(player);
+  }
 
   const bagSourceUrl = source_url || player.source_url || 'manual';
 
@@ -160,16 +190,17 @@ async function applyBag(supabase, bag) {
   for (const it of items) {
     position++;
     const club_type = slugify(it.club_type);
-    const brand_id  = it.raw_brand ? await upsertBrand(supabase, { slug: slugify(it.raw_brand), name: it.raw_brand }) : null;
-    const clubhead_id = (it.raw_brand && it.raw_model)
-      ? await upsertClubhead(supabase, { slug: slugify(`${it.raw_brand}-${it.raw_model}`), brand_id, model: it.raw_model, club_type })
+    const { raw_brand, raw_model } = normalizeBrandModel(it.raw_brand, it.raw_model);
+    const brand_id  = raw_brand ? await upsertBrand(supabase, { slug: slugify(raw_brand), name: raw_brand }) : null;
+    const clubhead_id = (raw_brand && raw_model)
+      ? await upsertClubhead(supabase, { slug: slugify(`${raw_brand}-${raw_model}`), brand_id, model: raw_model, club_type })
       : null;
     const shaftSlug = inferShaftSlug(it.raw_shaft);
     const shaft_id  = shaftSlug ? await upsertShaft(supabase, { slug: shaftSlug, model: it.raw_shaft }) : null;
     const { error: iErr } = await supabase.from('witb_bag_items').insert({
       bag_id, club_type, brand_id, clubhead_id, shaft_id,
-      loft_or_number: it.loft_or_number || null, raw_brand: it.raw_brand || null,
-      raw_model: it.raw_model || null, raw_shaft: it.raw_shaft || null, position,
+      loft_or_number: it.loft_or_number || null, raw_brand: raw_brand || null,
+      raw_model: raw_model || null, raw_shaft: it.raw_shaft || null, position,
     });
     if (iErr) console.warn(`  item ${position} (${club_type}): ${iErr.message}`);
   }
@@ -183,7 +214,7 @@ async function applyBag(supabase, bag) {
     changeCount = changes.length;
     changes.forEach(c => console.log(`  ${c.change_type}: ${c.club_type}  ${c.old_value || '-'} -> ${c.new_value || '-'}`));
   }
-  return { status: 'updated', slug: player_slug, detail: `${items.length} items, ${changeCount} change(s)` };
+  return { status: created ? 'created' : 'updated', slug: player.slug, detail: `${items.length} items${created ? ' (new player)' : `, ${changeCount} change(s)`}` };
 }
 
 async function main() {
@@ -199,17 +230,23 @@ async function main() {
   const bags = Array.isArray(parsed) ? parsed : Array.isArray(parsed.bags) ? parsed.bags : [parsed];
   console.log(`[manual] ${bags.length} bag(s) to process${DRY ? '  (DRY RUN)' : ''}\n`);
 
+  // One fetch of every player for tolerant slug/name resolution + de-dup.
+  const { data: players, error: plErr } = await supabase.from('witb_players')
+    .select('id, name, slug, current_bag_id, source_url');
+  if (plErr) throw new Error(`load players: ${plErr.message}`);
+
   const results = [];
-  for (const bag of bags) results.push(await applyBag(supabase, bag));
+  for (const bag of bags) results.push(await applyBag(supabase, bag, players));
 
   const by = s => results.filter(r => r.status === s);
-  console.log(`\n[manual] summary: ${by('updated').length} updated, ${by('skipped').length} skipped, ${by('error').length} error`);
+  console.log(`\n[manual] summary: ${by('updated').length} updated, ${by('created').length} created, ${by('skipped').length} skipped, ${by('error').length} error`);
   for (const r of results) console.log(`  ${r.status.toUpperCase().padEnd(7)} ${r.slug}${r.detail ? ' — ' + r.detail : ''}`);
 
-  if (!DRY && by('updated').length) {
-    const slugs = by('updated').map(r => r.slug);
+  const touched = [...by('updated'), ...by('created')].map(r => r.slug);
+  if (!DRY && touched.length) {
     console.log('\n[manual] next, re-bake so the changes propagate everywhere:');
-    slugs.forEach(s => console.log(`  node scripts/generate-witb-player-page.js ${s}`));
+    if (by('created').length) console.log('  node scripts/witb-owgr-refresh.js           # ranks/country for new players (page-gen skips unranked)');
+    touched.forEach(s => console.log(`  node scripts/generate-witb-player-page.js ${s}`));
     console.log('  node scripts/generate-witb-page.js          # /witb: This Week\'s Bag Moves + stats');
     console.log('  node scripts/generate-witb-players-page.js  # /witb/players: Find a Player grid');
     console.log('  node scripts/refresh-modules.js             # Recently Updated Bags sidebar, site-wide');
