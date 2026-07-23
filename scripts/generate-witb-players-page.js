@@ -20,6 +20,7 @@ const path            = require('path');
 const vm              = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const feedBake        = require('./feed-bake');
+const { pageEligible } = require('./witb-page-eligibility');
 
 function loadDormiedData() {
   const raw = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
@@ -34,7 +35,6 @@ const OUT_DIR = path.join(ROOT, 'witb', 'players');
 const OUT     = path.join(OUT_DIR, 'index.html');
 
 // Sentinel OWGR value used for inactive/unranked players (e.g. Tiger Woods, Ian Poulter)
-const OWGR_SENTINEL = 4990;
 
 // ── Club-type -> filter category mapping ──────────────────────────────────────
 
@@ -472,23 +472,30 @@ async function main() {
     .order('owgr_rank', { ascending: true, nullsFirst: false });
   if (pErr) throw new Error(`Players query failed: ${pErr.message}`);
 
-  // Only exclude players with a null OWGR rank (e.g. Grayson Murray, Scott Stallings).
-  // Players with a numeric rank — including sentinel 4990 (Tiger Woods, Ian Poulter) — stay
-  // and sort last since Supabase orders nulls last and 4990 is a high numeric value.
+  // 2. Load current bag dates for ALL players first — needed to decide eligibility.
+  const allBagIds = [...new Set(allPlayers.map(p => p.current_bag_id).filter(Boolean))];
+  const bagDateMap = new Map();
+  for (let i = 0; i < allBagIds.length; i += 500) {
+    const { data: bd, error: bErr } = await sb.from('witb_bags').select('id, bag_date').in('id', allBagIds.slice(i, i + 500));
+    if (bErr) throw new Error(`Bags query failed: ${bErr.message}`);
+    (bd || []).forEach(b => bagDateMap.set(b.id, b.bag_date));
+  }
+
+  // Keep ranked players plus unranked-but-eligible (recent bag or evergreen
+  // allowlist); see witb-page-eligibility.js. Ranked sort by rank ascending;
+  // eligible unranked sort last, alphabetically, and render "Unranked".
   const players = allPlayers
-    .filter(p => p.owgr_rank !== null)
-    .sort((a, b) => a.owgr_rank - b.owgr_rank);
-
-  console.log(`[witb-players-page] ${players.length} players with numeric OWGR (excluded ${allPlayers.length - players.length} null-rank).`);
-
-  // 2. Load current bag dates
+    .filter(p => pageEligible(p.owgr_rank, p.slug, bagDateMap.get(p.current_bag_id)))
+    .sort((a, b) => {
+      if (a.owgr_rank === null && b.owgr_rank === null) return a.name.localeCompare(b.name);
+      if (a.owgr_rank === null) return 1;
+      if (b.owgr_rank === null) return -1;
+      return a.owgr_rank - b.owgr_rank;
+    });
   const bagIds = [...new Set(players.map(p => p.current_bag_id).filter(Boolean))];
-  const { data: bags, error: bErr } = await sb
-    .from('witb_bags')
-    .select('id, bag_date')
-    .in('id', bagIds);
-  if (bErr) throw new Error(`Bags query failed: ${bErr.message}`);
-  const bagDateMap = new Map(bags.map(b => [b.id, b.bag_date]));
+  const unrankedShown = players.filter(p => p.owgr_rank === null).length;
+
+  console.log(`[witb-players-page] ${players.length} players (${players.length - unrankedShown} ranked + ${unrankedShown} unranked-eligible; excluded ${allPlayers.length - players.length}).`);
 
   // 3. Load ALL non-shaft bag items (paginated) then filter to current bags in JS.
   //    Using .in(bagIds) with many UUIDs silently truncates the URL and misses rows.

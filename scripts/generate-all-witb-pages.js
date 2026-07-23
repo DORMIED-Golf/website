@@ -24,6 +24,7 @@ const { execFileSync } = require('child_process');
 const path             = require('path');
 const fs               = require('fs');
 const { createClient } = require('@supabase/supabase-js');
+const { pageEligible } = require('./witb-page-eligibility');
 
 const GENERATOR = path.join(__dirname, 'generate-witb-player-page.js');
 const ROOT      = path.resolve(__dirname, '..');
@@ -42,33 +43,35 @@ async function main() {
 
   const sb = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  // Load ranked players only (owgr_rank IS NOT NULL).
-  // Unranked players (Grayson Murray, Scott Stallings) have owgr_rank = null and must be skipped.
-  // Tiger Woods and Ian Poulter carry sentinel rank 4990 — they are NOT null and are included.
-  const { data: players, error } = await sb
+  // Load ALL players + their current bag date, then keep the ones that get a
+  // page: ranked players plus unranked-but-eligible (recent bag or evergreen
+  // allowlist). Single source of truth: witb-page-eligibility.js. Excluded
+  // players (stale/fallen-off unranked, e.g. Grayson Murray, Scott Stallings)
+  // are reported, including whether a stale HTML page is still live on disk.
+  const { data: allPlayers, error } = await sb
     .from('witb_players')
-    .select('slug, name, owgr_rank')
-    .not('owgr_rank', 'is', null)
-    .order('owgr_rank', { ascending: true });
+    .select('slug, name, owgr_rank, current_bag_id')
+    .order('owgr_rank', { ascending: true, nullsFirst: false });
   if (error) throw new Error(`Could not load witb_players: ${error.message}`);
 
-  // Visible skips: unranked players (owgr_rank IS NULL) are intentionally not
-  // generated, but a page that exists on disk then FREEZES silently (this froze
-  // ben-griffin and phil-mickelson before their ranks were restored). Announce
-  // each skipped player, its reason, and whether a stale HTML page is live.
-  const { data: unranked } = await sb
-    .from('witb_players')
-    .select('slug, name')
-    .is('owgr_rank', null)
-    .order('slug', { ascending: true });
-  if (unranked && unranked.length) {
-    warn(`Skipping ${unranked.length} unranked player(s) (owgr_rank IS NULL). Run witb-owgr-refresh.js if a rank is missing:`);
-    for (const p of unranked) {
+  const bagIds = [...new Set(allPlayers.map(p => p.current_bag_id).filter(Boolean))];
+  const bagDateMap = new Map();
+  for (let i = 0; i < bagIds.length; i += 500) {
+    const { data: bd } = await sb.from('witb_bags').select('id, bag_date').in('id', bagIds.slice(i, i + 500));
+    (bd || []).forEach(b => bagDateMap.set(b.id, b.bag_date));
+  }
+  const eligible = p => pageEligible(p.owgr_rank, p.slug, bagDateMap.get(p.current_bag_id));
+  const players  = allPlayers.filter(eligible);
+  const excluded = allPlayers.filter(p => !eligible(p));
+
+  if (excluded.length) {
+    warn(`Skipping ${excluded.length} ineligible player(s) (unranked, not recent, not allowlisted):`);
+    for (const p of excluded) {
       const hasPage = fs.existsSync(path.join(__dirname, '..', 'witb', 'players', p.slug, 'index.html'));
-      warn(`  SKIP ${p.slug.padEnd(24)} (${p.name}) — owgr_rank null${hasPage ? '  [STALE PAGE LIVE: witb/players/' + p.slug + '/ is frozen]' : '  (no page on disk)'}`);
+      warn(`  SKIP ${p.slug.padEnd(24)} (${p.name})${hasPage ? '  [STALE PAGE LIVE: witb/players/' + p.slug + '/ — delete it]' : '  (no page on disk)'}`);
     }
   } else {
-    log('No unranked players to skip.');
+    log('No ineligible players to skip.');
   }
 
   let slugs = players.map(p => p.slug);

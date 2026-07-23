@@ -25,6 +25,7 @@ const path            = require('path');
 const vm              = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const Anthropic        = require('@anthropic-ai/sdk');
+const { pageEligible } = require('./witb-page-eligibility');
 const feedBake         = require('./feed-bake');
 
 function loadDormiedData() {
@@ -1398,20 +1399,20 @@ async function main() {
   log(`Building player page for: ${PLAYER_SLUG}`);
 
   const player = await fetchPlayerData(sb, PLAYER_SLUG);
-  log(`Player: ${player.name}, OWGR #${player.owgr_rank}`);
-
-  // Guard: skip unranked players (owgr_rank IS NULL).
-  // These players have no active world ranking and must not have pages on the site.
-  // Tiger Woods and Ian Poulter use sentinel value 4990 — they are NOT null and are kept.
-  if (player.owgr_rank === null) {
-    warn(`Skipping ${player.name} (${PLAYER_SLUG}) — owgr_rank is null. If an HTML file exists, delete it manually.`);
-    process.exit(0);
-  }
+  log(`Player: ${player.name}, OWGR ${player.owgr_rank === null ? 'Unranked' : '#' + player.owgr_rank}`);
 
   const bags = await fetchBagsWithItems(sb, player.id);
   const currentBag = bags.find(b => b.is_current);
   if (!currentBag) throw new Error(`No current bag found for ${PLAYER_SLUG}`);
   log(`Bags: ${bags.length} total, current: ${currentBag.bag_date}`);
+
+  // Ranked players always get a page; unranked players only when recently updated
+  // or on the evergreen allowlist (renders "Unranked"). Stale/fallen-off players
+  // stay off the site. Single source of truth: witb-page-eligibility.js.
+  if (!pageEligible(player.owgr_rank, PLAYER_SLUG, currentBag.bag_date)) {
+    warn(`Skipping ${player.name} (${PLAYER_SLUG}) — unranked, not recent, not allowlisted. Delete witb/players/${PLAYER_SLUG}/ if a stale page exists.`);
+    process.exit(0);
+  }
 
   const currentItems = currentBag._items;
   log(`Current bag items: ${currentItems.length}`);
