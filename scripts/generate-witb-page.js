@@ -1225,7 +1225,7 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
 
             <p class="scorecard-intro-p">The DORMIED Index measures consumer search interest, not brand sentiment or purchase intent. A high DI score means many people are searching for a brand globally. A low score means the brand is either niche, regional, or simply not a household name outside the sport. For equipment brands especially, the gap between tour presence and public awareness can be dramatic - and that gap tells you something about where the market might be heading, or where it is already moving without the mainstream noticing yet.</p>
 
-            <p class="scorecard-intro-p">Data source: equipment data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker.com</a>. Consumer search data: <a href="/rankings/">DORMIED Index</a>, April 2026 snapshot. All analysis is DORMIED's independent editorial work.</p>
+            <p class="scorecard-intro-p">Data source: equipment data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker.com</a> and <a href="https://golfwrx.com/" rel="noopener noreferrer" target="_blank">GolfWRX</a>. Consumer search data: <a href="/rankings/">DORMIED Index</a>, April 2026 snapshot. All analysis is DORMIED's independent editorial work.</p>
           </div>
         </section>
 

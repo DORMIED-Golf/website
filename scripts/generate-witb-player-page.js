@@ -452,7 +452,7 @@ Return valid JSON only, no markdown fences:
 
   const res = await anthropic.messages.create({
     model:      'claude-opus-4-7',
-    max_tokens: 3000,
+    max_tokens: 6000,
     thinking:   { type: 'adaptive' },
     messages:   [{ role: 'user', content: prompt }],
   });
@@ -468,8 +468,14 @@ Return valid JSON only, no markdown fences:
   try {
     return JSON.parse(cleaned);
   } catch {
-    warn('Failed to parse Opus JSON response. Raw:\n' + raw.slice(0, 500));
-    return { lede: raw.slice(0, 500), history_narrative: '' };
+    // Truncated or malformed JSON (e.g. hit max_tokens mid-string). Salvage the
+    // string field values by regex so we never store raw JSON as the lede.
+    warn('Failed to parse Opus JSON response; salvaging fields. Raw head:\n' + raw.slice(0, 200));
+    const grab = key => {
+      const m = cleaned.match(new RegExp('"' + key + '"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"'));
+      return m ? m[1].replace(/\\"/g, '"').replace(/\\n/g, ' ').replace(/\\\\/g, '\\').trim() : '';
+    };
+    return { lede: grab('lede'), history_narrative: grab('history_narrative') };
   }
 }
 
@@ -1106,7 +1112,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
               ${historySnapshotsHtml}
             </div>
 
-            <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
+            <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a> and <a href="https://golfwrx.com/" rel="noopener noreferrer" target="_blank">GolfWRX</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
           </section>
 
           <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
