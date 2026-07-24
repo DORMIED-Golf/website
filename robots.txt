@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
 
+# Affiliate click redirects — no crawl value, and crawling them would pollute
+# click analytics.
+Disallow: /api/go/
+
 # Block admin / private paths if added later
 # Disallow: /admin/
 
