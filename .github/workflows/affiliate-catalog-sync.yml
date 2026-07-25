@@ -14,6 +14,14 @@ on:
         required: false
         default: false
         type: boolean
+      # TEMPORARY — verification item 7 only. Forces the sync to treat the given
+      # 1-indexed page as a failed fetch, proving a partial fetch makes the JOB
+      # go red rather than passing quietly. REMOVE this input once verified.
+      fail_on_page:
+        description: 'TEMP verification: force a failed fetch on this page number (blank = normal run)'
+        required: false
+        default: ''
+        type: string
 
 # No `permissions: contents: write` — this job only writes to Supabase, never to
 # the repo. It produces no commit.
@@ -49,6 +57,8 @@ jobs:
           IMPACT_TOKEN:         ${{ secrets.IMPACT_TOKEN }}
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          # TEMPORARY (item 7). Empty on scheduled runs, so the hook is inert.
+          AFFILIATE_SYNC_FAIL_ON_PAGE: ${{ inputs.fail_on_page }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             node scripts/sync-affiliate-catalog.js --dry-run
