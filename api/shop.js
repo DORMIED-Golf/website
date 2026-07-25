@@ -93,6 +93,17 @@ module.exports = async (req, res) => {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   try {
+    // Per-program price floor. Excludes add-on service SKUs (e.g. "Item
+    // Personalization" at $0.01) without any name/keyword/category matching.
+    // Unmapped brand -> no program row -> fall back to the column default.
+    const { data: programRow } = await supabase
+      .from('affiliate_programs')
+      .select('min_display_price')
+      .eq('dormied_brand_slug', brand)
+      .maybeSingle();
+    const minPrice = programRow && programRow.min_display_price !== null
+      ? Number(programRow.min_display_price) : 1.00;
+
     // Pull every in-stock, active row for the brand, then collapse in code.
     // Paginating in SQL before collapsing would give wrong page sizes, since a
     // page of rows can contain many variants of the same product.
@@ -104,6 +115,7 @@ module.exports = async (req, res) => {
         .eq('dormied_brand_slug', brand)
         .eq('is_active', true)
         .eq('stock_availability', 'InStock')
+        .gte('current_price', minPrice)
         .range(from, from + 999);
       if (error) throw new Error(error.message);
       if (!data || !data.length) break;
@@ -139,10 +151,13 @@ module.exports = async (req, res) => {
       if (idx !== -1) { pinned = ordered[idx]; rest = ordered.slice(0, idx).concat(ordered.slice(idx + 1)); }
     }
 
-    const page = pinned
-      ? (offset === 0 ? [pinned, ...rest.slice(0, Math.max(0, limit - 1))]
-                      : rest.slice(offset - 1, offset - 1 + limit))
-      : rest.slice(offset, offset + limit);
+    // Translate the requested offset into a remainder offset. The pinned card
+    // consumes one slot on page 0, so every later page starts one earlier in
+    // the remainder — otherwise remainder[limit-1] would never be returned.
+    const remainderOffset = (pinned && offset > 0) ? offset - 1 : offset;
+    const remainderLimit  = (pinned && offset === 0) ? Math.max(0, limit - 1) : limit;
+    const slice = rest.slice(remainderOffset, remainderOffset + remainderLimit);
+    const page  = (pinned && offset === 0) ? [pinned, ...slice] : slice;
 
     return res.status(200).json({
       brand,

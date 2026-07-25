@@ -6980,3 +6980,135 @@ details[open] .faq-question::after { content: '−'; }
 
 /* Sidebar on WITB page matches brand pages */
 .witb-sidebar { min-width: 0; }
+
+/* ── Shop [Brand] affiliate carousel (brand pages only) ──────────────────────
+   Tokens reused, not invented:
+     heading      -> .bp-chart-heading (identical treatment to INTEREST OVER TIME)
+     card surface -> .bp-metric-card   (--bg-surface / --border / --radius)
+     BUY NOW      -> .footer-signup-btn (solid --green bg, #052e0e dark text)
+     muted text   -> --text-muted (as .bp-chart-heading-sub)
+     body text    -> --text ; sale accent -> --green
+   Height is reserved before the fetch resolves so the section cannot shift the
+   page; the skeleton occupies exactly the loaded height. */
+.bp-shop-section { margin: 0 0 32px; }
+.bp-shop-viewport { position: relative; }
+.bp-shop-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 2px 0 6px;
+  min-height: 340px;              /* reserved: image 1:1 + name + price + CTA */
+}
+.bp-shop-track::-webkit-scrollbar { display: none; }
+.bp-shop-card {
+  scroll-snap-align: start;
+  flex: 0 0 calc((100% - 36px) / 4);   /* desktop: 4 across */
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-width: 0;
+}
+.bp-shop-card:hover { border-color: var(--green-dim); }
+.bp-shop-thumb-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;             /* image never dictates card height */
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+}
+.bp-shop-thumb { width: 100%; height: 100%; object-fit: contain; display: block; }
+.bp-shop-body { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px 12px; flex: 1; }
+.bp-shop-name {
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--text);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;           /* longest observed name is 73 chars */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.2em;               /* holds height whether 1 or 2 lines */
+}
+.bp-shop-price-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; min-height: 1.4em; }
+.bp-shop-price { font-family: var(--font-mono); font-size: 0.9rem; color: var(--text); font-weight: 700; }
+.bp-shop-price-was { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); text-decoration: line-through; }
+.bp-shop-badge {
+  font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700;
+  color: var(--green); border: 1px solid var(--green-dim);
+  border-radius: var(--radius-sm); padding: 1px 5px;
+}
+/* Derived from the "Visit [Brand]" CTA rendered by js/brand.js at the end of the
+   stat-card row: .bp-metric-card.bp-metric-link (background --green-dark,
+   border --green-dim, --radius) + .bp-visit-link (color --green, weight 600,
+   0.875rem, no letter-spacing, opacity hover). It sits ~20px above the carousel,
+   so the two must read as the same control. */
+.bp-shop-buy {
+  margin-top: auto;
+  display: block;
+  text-align: center;
+  background: var(--green-dark);
+  border: 1px solid var(--green-dim);
+  border-radius: var(--radius);
+  color: var(--green);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 9px 10px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+/* Raised specificity: a lower-specificity `.bp-shop-buy { color }` was losing the
+   cascade to an anchor rule elsewhere in the sheet, leaving the label --text
+   instead of --green. Two classes wins cleanly without !important. */
+.bp-shop-card .bp-shop-buy { color: var(--green); }
+.bp-shop-buy:hover { opacity: 0.85; text-decoration: none; }
+.bp-shop-arrow {
+  position: absolute;
+  top: calc(50% - 40px);           /* centred against the image area */
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-lite);
+  color: var(--text);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.bp-shop-arrow:hover { border-color: var(--green); color: var(--green); }
+.bp-shop-arrow--prev { left: -6px; }
+.bp-shop-arrow--next { right: -6px; }
+.bp-shop-dots { display: flex; gap: 6px; justify-content: center; align-items: center; margin: 10px 0 0; min-height: 10px; }
+.bp-shop-dot {
+  width: 7px; height: 7px; padding: 0;
+  border-radius: 999px;
+  background: var(--border-lite);
+  border: none; cursor: pointer;
+  transition: width .15s, background .15s;
+}
+.bp-shop-dot[aria-selected="true"] { width: 20px; background: var(--green); }
+.bp-shop-disclosure {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 12px 0 0;
+}
+@media (max-width: 1024px) {
+  .bp-shop-card { flex: 0 0 calc((100% - 24px) / 3); }   /* tablet: 3 */
+}
+@media (max-width: 760px) {
+  .bp-shop-card { flex: 0 0 calc((100% - 12px) / 2); }   /* small tablet: 2 */
+}
+@media (max-width: 560px) {
+  .bp-shop-card { flex: 0 0 66%; }                        /* mobile: ~1.5 visible */
+  .bp-shop-arrow { display: none; }
+}

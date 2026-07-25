@@ -455,7 +455,7 @@ function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
   return items;
 }
 
-function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '' }) {
+function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '', hasShop = false }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
   // WITB-style title: exact query phrase first, plain-language promise, year from the
@@ -611,6 +611,25 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
   }).join('\n');
 
   // Take section HTML
+  // "Shop [Brand]" carousel MOUNT POINT ONLY — emitted just for brands with an
+  // active affiliate program (hasShop). No product data is baked: js/shop-carousel.js
+  // fetches it client-side from /api/shop. The container reserves its full height
+  // up front so the section cannot shift the page (Mediavine inventory below).
+  // If the fetch is empty or fails, the script removes the whole section.
+  const shopSectionHtml = hasShop ? `
+            <!-- ── Shop ${escHtml(brand.name)} (affiliate) ── -->
+            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(slug)}" data-brand-name="${escHtml(brand.name)}">
+              <p class="bp-chart-heading">Shop ${escHtml(brand.name)}</p>
+              <div class="bp-shop-viewport">
+                <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>
+                <div class="bp-shop-track" id="bp-shop-track" role="region" aria-label="Shop ${escHtml(brand.name)} products" tabindex="0"></div>
+                <button type="button" class="bp-shop-arrow bp-shop-arrow--next" id="bp-shop-next" aria-label="Scroll to next products" hidden>&#8250;</button>
+              </div>
+              <div class="bp-shop-dots" id="bp-shop-dots" role="tablist" aria-label="Product pages"></div>
+              <p class="bp-shop-disclosure">Some links on this page are affiliate links. DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
+            </section>
+` : '';
+
   const takeSectionHtml = hasTake
     ? `
       <section class="bp-take-section" id="bp-take-section">
@@ -746,6 +765,8 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json" id="brand-jsonld">${jsonld}</script>${faqJsonLdTag}
+  ${hasShop ? `<!-- Affiliate product images: single CDN host, confirmed from the feed data -->
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>` : ''}
   <!-- Grow.me -->
   <script data-grow-initializer="">!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTowNjk5NTY3Ny0xMzU0LTQ5M2YtOWEyYi03Y2NkOTlkNWE3YWQ=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();</script>
   <!-- Mediavine Journey ads -->
@@ -914,7 +935,7 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
           <article class="bp-page-main da-article-body">
 
 ${takeSectionHtml}
-
+${shopSectionHtml}
             <!-- ── ${escHtml(brand.name)} Interest Over Time ── -->
             <section class="bp-chart-section">
               <p class="bp-chart-heading">${escHtml(brand.name)} Interest Over Time</p>
@@ -1095,6 +1116,7 @@ ${faqHtml}
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260718d"></script>
   <script src="/js/search.min.js?v=20260529"></script>
+  ${hasShop ? '<script defer src="/js/shop-carousel.min.js?v=20260724"></script>' : ''}
 
   <!-- Mobile nav hamburger -->
   <script>
@@ -1419,7 +1441,7 @@ ${catBlocks}
 
 // ── Process one brand ─────────────────────────────────────────────────────────
 
-async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTourData, factsBySlug, modsHtml = '', sharedFeeds = {}) {
+async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTourData, factsBySlug, modsHtml = '', sharedFeeds = {}, affiliateSlugs = new Set()) {
   const outPath = path.join(SITE_ROOT, 'brands', brandSlug, 'index.html');
 
   // Smart skip: file exists and not forced
@@ -1455,7 +1477,7 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTour
 
   const facts = (factsBySlug && factsBySlug.get(brandSlug)) || null;
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml });
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml, hasShop: affiliateSlugs.has(brandSlug) });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
@@ -1511,6 +1533,23 @@ async function main() {
     console.warn('[brand-page] brand facts fetch failed:', e.message);
   }
 
+  // Brands with a live affiliate program. Fetched ONCE for the whole run (never
+  // per page). Only these slugs get a "Shop [Brand]" carousel mount point; every
+  // other brand page emits nothing at all for it.
+  let affiliateSlugs = new Set();
+  try {
+    const { data: progRows, error: progErr } = await supabase
+      .from('affiliate_programs')
+      .select('dormied_brand_slug')
+      .eq('status', 'active')
+      .not('dormied_brand_slug', 'is', null);
+    if (progErr) console.warn('[brand-page] affiliate programs fetch failed (no shop carousels):', progErr.message);
+    affiliateSlugs = new Set((progRows || []).map(r => r.dormied_brand_slug));
+    console.log(`[brand-page] Affiliate programs loaded: ${affiliateSlugs.size} brand(s) get a shop carousel`);
+  } catch (e) {
+    console.warn('[brand-page] affiliate programs fetch failed:', e.message);
+  }
+
   // Baked sidebar modules (Brands on the Move / Recently Updated Bags) + shared
   // feeds (site-wide Latest / Top Stories / Featured) — all brand-independent, so
   // fetched once for the whole run and reused on every brand page.
@@ -1533,7 +1572,7 @@ async function main() {
 
   for (const slug of targets) {
     try {
-      const result = await processOneBrand(dormiedData, supabase, slug, force, witbTourData, factsBySlug, modsHtml, sharedFeeds);
+      const result = await processOneBrand(dormiedData, supabase, slug, force, witbTourData, factsBySlug, modsHtml, sharedFeeds, affiliateSlugs);
       if (result.status === 'written') {
         console.log(`[brand-page] ✓ brands/${slug}/index.html`);
         written++;
