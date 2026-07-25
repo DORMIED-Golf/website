@@ -1,0 +1,76 @@
+name: Affiliate Catalog Sync
+
+# Daily at 08:00 UTC. The advertiser's feed updates ~06:19 UTC (observed from
+# DateLastUpdated), so this leaves ~1h40m of margin. 08:00 is unused by the other
+# scheduled jobs (golf-wire-pipeline 0 */3, post-to-x */30, post-to-threads 15,45,
+# witb-weekly-crawl Tue 13:00).
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Fetch + map + report, write nothing'
+        required: false
+        default: false
+        type: boolean
+
+# No `permissions: contents: write` — this job only writes to Supabase, never to
+# the repo. It produces no commit.
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Impact catalog -> Supabase
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The script exits non-zero on an incomplete fetch or a tripped deactivation
+      # ceiling. That exit code MUST fail the job: no `|| true`, no
+      # continue-on-error, and no pipe (a pipe would report the exit status of the
+      # last command in the pipeline, not the script). Run it bare.
+      - name: Run affiliate catalog sync
+        env:
+          IMPACT_SID:           ${{ secrets.IMPACT_SID }}
+          IMPACT_TOKEN:         ${{ secrets.IMPACT_TOKEN }}
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            node scripts/sync-affiliate-catalog.js --dry-run
+          else
+            node scripts/sync-affiliate-catalog.js
+          fi
+
+      - name: Report sync state
+        if: always()
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          node -e "
+          const { createClient } = require('@supabase/supabase-js');
+          const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+          (async () => {
+            const { data: progs } = await sb.from('affiliate_programs')
+              .select('dormied_brand_slug, last_synced_at').not('dormied_brand_slug','is',null);
+            for (const p of progs || []) console.log('last_synced_at', p.dormied_brand_slug, p.last_synced_at);
+            const { count } = await sb.from('affiliate_products')
+              .select('*', { count: 'exact', head: true }).eq('is_active', true);
+            console.log('active products:', count);
+          })();
+          "

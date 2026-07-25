@@ -229,7 +229,7 @@ async function syncProgram(program, catalog) {
   const summary = {
     program: label, pagesFetched, numpages, itemsCollected: items.length, total, numberOfItems,
     fetchComplete, stopReason, inserted: 0, updated: 0, deactivated: 0, inherited: 0, skipped: [],
-    activeBefore: 0, wouldDeactivate: 0, sweepPct: 0, sweepBlocked: false,
+    activeBefore: 0, wouldDeactivate: 0, sweepPct: 0, sweepBlocked: false, nullPrice: 0,
   };
 
   if (!fetchComplete) {
@@ -249,7 +249,12 @@ async function syncProgram(program, catalog) {
     if (missing.length) { summary.skipped.push({ id: it.Id || '(no id)', name: it.Name || '(no name)', missing }); continue; }
     if (seenIds.has(it.Id)) continue;             // guard against a duplicate Id inside one feed
     seenIds.add(it.Id);
-    rows.push(mapItem(it, program, feedUpdatedAt));
+    const mapped = mapItem(it, program, feedUpdatedAt);
+    // Visibility guard: api/shop filters with .gte('current_price', ...), which in
+    // Postgres also excludes NULLs. Zero today; if a feed ever introduces NULL
+    // prices the catalog would silently shrink, so count them here.
+    if (mapped.current_price === null) summary.nullPrice++;
+    rows.push(mapped);
   }
 
   if (DRY) { console.log(`[sync] (dry-run) would write ${rows.length} rows for ${label}`); return summary; }
@@ -371,6 +376,7 @@ async function main() {
     console.log(`  fetch: pages ${s.pagesFetched}/${s.numpages} (trailing empty page expected), items ${s.itemsCollected}/${s.total}, NumberOfItems=${s.numberOfItems}, fetchComplete=${s.fetchComplete}${s.stopReason ? ` (stop: ${s.stopReason})` : ''}`);
     console.log(`  writes: inserted=${s.inserted}, updated=${s.updated}, deactivated=${s.deactivated}, first_seen_at inherited=${s.inherited}`);
     console.log(`  sweep: activeBefore=${s.activeBefore}, wouldDeactivate=${s.wouldDeactivate} (${s.sweepPct.toFixed(1)}%), ceiling=20%, blocked=${s.sweepBlocked}`);
+    console.log(`  NULL current_price: ${s.nullPrice}${s.nullPrice ? '  <- these are EXCLUDED from /api/shop by the price floor' : ''}`);
     if (s.skipped.length) {
       console.log(`  skipped ${s.skipped.length} item(s) for missing required fields:`);
       for (const sk of s.skipped.slice(0, 20)) console.log(`    - ${sk.id} "${sk.name}" missing: ${sk.missing.join(', ')}`);
