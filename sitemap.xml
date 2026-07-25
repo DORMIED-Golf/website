@@ -2206,7 +2206,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (441) ── -->
+  <!-- ── News articles (442) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6591,6 +6591,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/why-tour-pros-are-mixing-metal-and-plastic-spikes-and-what-it-means-for-2026-05-05-hero.png</image:loc>
       <image:title>Why Tour Pros Are Mixing Metal and Plastic Spikes — And What It Means for Your Next Shoe Purchase</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/williams-athletic-club-lands-at-nordstrom-and-the-womens-golf-apparel-2026-07-23/</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/williams-athletic-club-lands-at-nordstrom-and-the-womens-golf-apparel-2026-07-23-hero.jpg</image:loc>
+      <image:title>Williams Athletic Club Lands at Nordstrom, and the Women&apos;s Golf Apparel Shelf Just Got Crowded</image:title>
     </image:image>
   </url>
   <url>
