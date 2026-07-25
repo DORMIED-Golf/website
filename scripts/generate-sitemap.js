@@ -114,8 +114,13 @@ function walkSubdirs(section, excludePaths = []) {
       // no index.html — skip
     }
   }
-  // Sort by mtime descending (newest first) so sitemap is predictably ordered
-  results.sort((a, b) => b.mtime - a.mtime);
+  // Stable sort by slug. Entries are grouped by type at assembly time, so this
+  // makes the file order type-then-URL and fully deterministic.
+  //
+  // This was previously mtime-descending, which meant any rebuild reshuffled the
+  // whole file: a one-line date change surfaced as ~1,800 lines of reordering
+  // churn that hid the real edits. Ordering must never depend on the filesystem.
+  results.sort((a, b) => a.slug.localeCompare(b.slug));
   return results;
 }
 
