@@ -1,0 +1,29 @@
+{
+  "_comment": [
+    "Content-change dates for the 8 hand-authored static pages, used as <lastmod> in sitemap.xml.",
+    "",
+    "REQUIREMENT: when you edit one of these pages, bump its date here in the same commit.",
+    "If you forget, that URL's lastmod goes stale (fake staleness) until someone notices.",
+    "",
+    "Why a manifest rather than git commit dates: GitHub Actions checkout defaults to",
+    "fetch-depth: 1, a shallow clone, under which `git log -1 -- <file>` returns the single",
+    "fetched commit for EVERY file. That would stamp all 8 pages with the CI build date - the",
+    "exact mtime defect this change exists to remove - and it would be invisible locally where",
+    "full history is present. A stale entry on one low-churn legal page is a smaller and more",
+    "visible failure than all 8 silently collapsing on every CI run.",
+    "",
+    "Dates are YYYY-MM-DD and must reflect genuine content change, never a build or deploy."
+  ],
+  "pages": {
+    "/":           "2026-07-16",
+    "/rankings/":  "2026-07-16",
+    "/witb/":      "2026-07-16",
+    "/brands/":    "2026-07-16",
+    "/news/":      "2026-07-16",
+    "/scorecard/": "2026-07-16",
+    "/about/":     "2026-07-16",
+    "/contact/":   "2026-07-16",
+    "/privacy/":   "2026-07-16",
+    "/terms/":     "2026-07-16"
+  }
+}

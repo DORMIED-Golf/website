@@ -1112,7 +1112,7 @@ function updateSitemap(newsPageCount) {
 
     // Regenerate sitemap from filesystem state (replaces the old patch-based
     // updateSitemap() which caused duplicate entries when run multiple times).
-    regenerateSitemap();
+    await regenerateSitemap();
   } catch (err) {
     console.error('\n✖  Fatal error:', err.message);
     console.error(err.stack);

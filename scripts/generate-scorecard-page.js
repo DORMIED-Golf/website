@@ -759,10 +759,14 @@ async function main() {
 
   if (written > 0) {
     // Regenerate sitemap and search index once after all issues are written
+    // Sitemap failure is FATAL: content dates come from Supabase and there is no
+    // mtime fallback, so a failure means the sitemap is stale, not merely unwritten.
+    // Exiting non-zero makes that visible instead of reporting a successful build.
     try {
-      regenerateSitemap();
+      await regenerateSitemap();
     } catch (e) {
-      console.warn('[scorecard-page] Sitemap regeneration failed:', e.message);
+      console.error('[scorecard-page] Sitemap regeneration FAILED (not written):', e.message);
+      process.exit(1);
     }
     try {
       generateSearchIndex();

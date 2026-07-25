@@ -1592,10 +1592,14 @@ async function main() {
   // Regenerate sitemap once after all brand pages are written (never per-brand,
   // which would trigger 175 filesystem scans).
   if (written > 0) {
+    // Sitemap failure is FATAL: content dates come from Supabase and there is no
+    // mtime fallback, so a failure means the sitemap is stale, not merely unwritten.
+    // Exiting non-zero makes that visible instead of reporting a successful build.
     try {
-      regenerateSitemap();
+      await regenerateSitemap();
     } catch (e) {
-      console.warn('[brand-page] Sitemap regeneration failed:', e.message);
+      console.error('[brand-page] Sitemap regeneration FAILED (not written):', e.message);
+      process.exit(1);
     }
     try {
       generateSearchIndex();

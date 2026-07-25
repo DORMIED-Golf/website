@@ -13,6 +13,17 @@
  *   node scripts/refresh-brand-summary.js
  *   node scripts/refresh-brand-summary.js --dry-run   # print stats, no writes
  *   node scripts/refresh-brand-summary.js --month=2026-04-01  # single month only
+ *
+ * SITEMAP SIDE EFFECT — read before running unscoped.
+ * This script stamps refreshed_at on every row it writes, and sitemap.xml uses
+ * the refreshed_at of each brand's MOST RECENT snapshot_month as that brand
+ * page's <lastmod>. So an unscoped run bumps lastmod for all ~176 brand pages,
+ * which is correct after a genuine monthly Index drop (every brand's stats and
+ * chart really did change) and is fake freshness otherwise.
+ *
+ * For a correction to an older month, scope it with --month=YYYY-MM-01. That
+ * rewrites only that month, and because the sitemap keys on the LATEST
+ * snapshot_month row, brand lastmod values correctly stay put.
  */
 
 'use strict';

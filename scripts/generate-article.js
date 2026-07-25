@@ -1304,7 +1304,7 @@ async function main() {
     // under --only: a targeted re-bake must not mass-churn site-wide build dates.
     // The caller updates the affected sitemap lastmods surgically instead.
     if (!onlySlugs) {
-      try { regenerateSitemap(); } catch (e) { console.warn('[generate] Sitemap error:', e.message); }
+      try { await regenerateSitemap(); } catch (e) { console.error('[generate] Sitemap regeneration FAILED (not written):', e.message); process.exit(1); }
       try { generateSearchIndex(); } catch (e) { console.warn('[generate] Search index error:', e.message); }
 
       // Regenerate /news/ listing to pick up corrected categories in chips
@@ -1429,7 +1429,7 @@ async function main() {
         backfilled--;
         continue;
       }
-      regenerateSitemap();
+      await regenerateSitemap();
       try { generateSearchIndex(); } catch (siErr) { console.warn(`[generate] Search index failed: ${siErr.message}`); }
       console.log(`[generate] ✓ Backfilled: news/${row.slug}/index.html`);
       backfilled++;
@@ -1714,10 +1714,14 @@ async function main() {
     }
 
     // Step 4: regenerate sitemap and search index from filesystem
+    // Sitemap failure is FATAL: content dates come from Supabase and there is no
+    // mtime fallback, so a failure means the sitemap is stale, not merely unwritten.
+    // Exiting non-zero makes that visible instead of reporting a successful build.
     try {
-      regenerateSitemap();
+      await regenerateSitemap();
     } catch (sitemapErr) {
-      console.warn(`[generate] Sitemap regeneration failed: ${sitemapErr.message}`);
+      console.error(`[generate] Sitemap regeneration FAILED (not written): ${sitemapErr.message}`);
+      process.exit(1);
     }
     try {
       generateSearchIndex();
