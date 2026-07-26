@@ -392,6 +392,14 @@
   function renderHomeStories() {
     var el = document.getElementById('home-stories-list');
     if (!el) return;
+    // Baked markup wins unless this page can render it correctly. The server
+    // bakes chips with real brand NAMES and percent change; re-rendering here
+    // without DORMIED_DATA downgrades them (names collapse to slugs, the
+    // percent is dropped), which is why the same module looked different on
+    // brand pages vs article / WITB / feature pages. Pages that DO load
+    // DORMIED_DATA fall through and refresh. Mirrors renderLatestWidget.
+    if (el.querySelector('article') && !(window.DORMIED_DATA && window.DORMIED_DATA.brands)) return;
+
     var limit = widgetLimit(el, HOME_LIMIT);
 
     var cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
@@ -600,6 +608,14 @@
     var contentEl = document.getElementById('home-featured-section');
     var wrapEl    = document.getElementById('home-featured');
     if (!contentEl) return;
+    // Baked markup wins unless this page can render it correctly. The server
+    // bakes chips with real brand NAMES and percent change; re-rendering here
+    // without DORMIED_DATA downgrades them (names collapse to slugs, the
+    // percent is dropped), which is why the same module looked different on
+    // brand pages vs article / WITB / feature pages. Pages that DO load
+    // DORMIED_DATA fall through and refresh. Mirrors renderLatestWidget.
+    if (contentEl.querySelector('article') && !(window.DORMIED_DATA && window.DORMIED_DATA.brands)) return;
+
 
     fetchFeaturedArticles(function (articles) {
       if (!articles.length) {
@@ -635,6 +651,14 @@
     var el      = document.getElementById('featured-list');
     var wrapEl  = document.getElementById('featured-widget');
     if (!el) return;
+    // Baked markup wins unless this page can render it correctly. The server
+    // bakes chips with real brand NAMES and percent change; re-rendering here
+    // without DORMIED_DATA downgrades them (names collapse to slugs, the
+    // percent is dropped), which is why the same module looked different on
+    // brand pages vs article / WITB / feature pages. Pages that DO load
+    // DORMIED_DATA fall through and refresh. Mirrors renderLatestWidget.
+    if (el.querySelector('article') && !(window.DORMIED_DATA && window.DORMIED_DATA.brands)) return;
+
 
     fetchFeaturedArticles(function (articles) {
       if (!articles.length) {
