@@ -49,6 +49,7 @@ const FEATURES = {
     authors: ['Adam R.'],
     category: 'Feature',
     brandSlug: 'pins-and-aces',
+    inlineCommerce: true,   // DORMIED Index card + Shop carousel after the body
     leadRole: 'bio',
     lastUpdated: 'July 25, 2026',
     dateModified: '2026-07-25T00:00:00.000Z',
@@ -531,7 +532,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
 
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.css?v=20260719">
+  <link rel="stylesheet" href="/css/styles.css?v=20260726">
 
   <script type="application/ld+json">
   {
@@ -797,7 +798,10 @@ async function main() {
   // The carousel mount is emitted ONLY for a brand with an active affiliate
   // program, is EMPTY (no product data baked), and is fed client-side by
   // /api/shop via js/shop-carousel.js. tracking_url never reaches the page.
-  if (SUPABASE_URL && SUPABASE_SERVICE_KEY && F.brandSlug) {
+  // inlineCommerce is opt-in per feature: without it a feature keeps the plain
+  // body-only tail, so adding the block here never retroactively changes
+  // already-published features when they are regenerated.
+  if (SUPABASE_URL && SUPABASE_SERVICE_KEY && F.brandSlug && F.inlineCommerce) {
     try {
       const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
       const { data: sum } = await supabase
