@@ -45,18 +45,35 @@ function xmlEsc(str) {
     .replace(/'/g, '&apos;');
 }
 
+/**
+ * Decode HTML entities. Meta attribute values are already HTML-escaped, so a
+ * raw regex capture must be decoded before xmlEsc() re-escapes it — otherwise
+ * "Pins &amp; Aces" ships as "Pins &amp;amp; Aces". &amp; is decoded last so
+ * an encoded "&amp;lt;" survives as the literal text "&lt;".
+ */
+function htmlDecode(str) {
+  return String(str || '')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&(?:apos|#39);/g, "'")
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&amp;/g, '&');
+}
+
 /** Extract <meta property="og:image" content="..."> from HTML */
 function extractOgImage(html) {
   const m = html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i)
            || html.match(/<meta\s+content="([^"]+)"\s+property="og:image"/i);
-  return m ? m[1] : null;
+  return m ? htmlDecode(m[1]) : null;
 }
 
 /** Extract <meta property="og:title" content="..."> from HTML */
 function extractOgTitle(html) {
   const m = html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i)
            || html.match(/<meta\s+content="([^"]+)"\s+property="og:title"/i);
-  return m ? m[1] : null;
+  return m ? htmlDecode(m[1]) : null;
 }
 
 /** Extract <meta property="article:published_time" content="..."> */
