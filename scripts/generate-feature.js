@@ -30,11 +30,56 @@ const ROOT = path.resolve(__dirname, '..');
 // Baked sidebar modules HTML (Brands on the Move / Recently Updated Bags).
 // Set in main() via feedBake.fetchSidebarModulesHtml; '' when unavailable.
 let SIDEBAR_MODULES_HTML = '';
+// Set in main() before buildPage, same pattern as SIDEBAR_MODULES_HTML.
+// BRAND_CARD_HTML  = the DORMIED INDEX card for the feature's brand.
+// SHOP_SECTION_HTML = the affiliate carousel mount point, emitted ONLY when the
+// brand has an active affiliate_programs row (empty string for every other brand).
+let BRAND_CARD_HTML = '';
+let SHOP_SECTION_HTML = '';
 let TOP_STORIES_HTML = '';
 let FEATURED_HTML = '';
 
 // ── Feature definitions ─────────────────────────────────────────────────────────
 const FEATURES = {
+  'pins-and-aces': {
+    slug: 'who-owns-pins-and-aces',
+    title: 'Who Owns Pins & Aces? One Ugly Headcover, Two Brothers-in-Law, and a $20 Million Golf Brand',
+    titleTag: 'Who Owns Pins & Aces? Founders, Edel Deal + Revenue | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'pins-and-aces',
+    leadRole: 'bio',
+    lastUpdated: 'July 25, 2026',
+    dateModified: '2026-07-25T00:00:00.000Z',
+    publishedAt: '2026-07-25T15:00:00.000Z',
+    metaDescription: 'Who owns Pins & Aces? The two brothers-in-law who founded it in 2018, how a headcover complaint became a $20 million brand, the Edel Golf acquisition, and what the data shows.',
+    seoKeywords: ['who owns pins and aces', 'pins and aces', 'pins and aces golf', 'pins and aces founders', 'pins and aces edel golf', 'nick mertz jon major'],
+    mdPath: path.join(ROOT, 'article-pins-and-aces.md'),
+    imgBase: '/images/features/pins-and-aces',
+    // Every caption carries the supplied photo credit ("Photo by ...").
+    hero: { file: 'hero.webp', w: 1400, h: 1549, alt: 'The Pins & Aces team outside the company storefront at 5280 Ward Drive in Arvada, Colorado', caption: 'The Pins & Aces team outside the Arvada, Colorado headquarters at 5280 Ward Drive, an address the founders treat as a good omen in the Mile High City. Photo by Christian Marcy-Vega.' },
+    sectionImages: {
+      'It started with a headcover nobody wanted to make': { layout: 'two-up', images: [
+        { file: 'headcover-ace.webp', w: 637, h: 637, alt: 'Pins & Aces Ace of Spades blade putter headcover', caption: 'The ace of spades, the mark the whole company is named for. Headcovers top out around $65. Photo by Pins & Aces.' },
+        { file: 'headcover-towelie.webp', w: 600, h: 750, alt: 'Pins & Aces South Park Towelie blade putter cover', caption: 'The irreverent catalog that built the audience, from South Park covers to voodoo dolls and the LiquorStick. Photo by Pins & Aces.' },
+      ]},
+      'The people\'s brand, and the price ceiling that defines it': { layout: 'two-up', images: [
+        { file: 'apparel-rack.webp', w: 1400, h: 933, alt: 'Pins & Aces polos and headcovers on a rack at the Arvada facility', caption: 'No polo on the site costs more than $70. Packing, shipping, photography, and embroidery are all handled in house. Photo by Brendan O\'Keeffe.' },
+        { file: 'podcast-room.webp', w: 1400, h: 991, alt: 'The podcast room inside the Pins & Aces facility in Arvada, Colorado', caption: 'Inside the 14,000-square-foot Arvada facility the company bought in 2022, where 34 employees run a business that is roughly 80 percent direct to consumer. Photo by Christian Marcy-Vega.' },
+      ]},
+      'Growing up: bags, polos, and the bunker-to-boardroom pivot': { layout: 'single', images: [
+        { file: 'player-preferred-bags.webp', w: 1200, h: 1500, alt: 'Two Pins & Aces Player Preferred stand bags on a golf course', caption: 'The Player Preferred stand bag sells at $330 against competitors clustered around $450, and became one of the company\'s best sellers. R&D ran through caddies at Turnberry. Photo by Pins & Aces.' },
+      ]},
+      'The Edel acquisition, and what the data says about it': { layout: 'single', images: [
+        { file: 'edel-irons.webp', w: 900, h: 600, alt: 'Edel Golf SMS irons, the custom-fit clubs Pins & Aces acquired', caption: 'Edel Golf SMS irons. Pins & Aces announced the acquisition in December 2024 and cut Edel\'s prices after taking over. Photo by Lucas Botz, courtesy Edel Golf.' },
+      ]},
+      'Rafael Campos and the accidental endorsement': { layout: 'single', images: [
+        { file: 'campos-win.webp', w: 1400, h: 933, alt: 'Rafael Campos winning the 2024 Butterfield Bermuda Championship', caption: 'Rafael Campos won the 2024 Butterfield Bermuda Championship in his 80th start, six days after his daughter was born, wearing a $70 polo he was not paid to wear. Photo by PGA Tour.' },
+      ]},
+    },
+  },
+
   'primo-golf': {
     slug: 'primo-golf',
     title: 'Who Owns Primo Golf? Four Cousins, One DM, and Phil Mickelson in Joggers',
@@ -432,7 +477,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   const heroCap  = F.hero.caption
     ? `\n          <figcaption class="da-figcaption sc-article-hero-caption">${inlineMd(F.hero.caption)}</figcaption>`
     : '';
-  const heroHtml = `<figure class="sc-article-image">
+  const heroHtml = `<figure class="sc-article-image${heroCap ? ' sc-article-image--cap' : ''}">
           <img class="sc-article-hero-img" src="${F.imgBase}/${F.hero.file}" alt="${escHtml(F.hero.alt)}" width="${F.hero.w}" height="${F.hero.h}" loading="eager">${heroCap}
         </figure>`;
 
@@ -593,7 +638,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
               ${bioHtml}
               ${bodyHtml}
             </div>
-
+${BRAND_CARD_HTML}${SHOP_SECTION_HTML}
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">
               <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="article-latest-m-heading">
@@ -699,6 +744,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   <script src="/js/signup.min.js?v=20260718d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
   <script src="/js/feed.min.js?v=20260717"></script>
+  ${SHOP_SECTION_HTML ? '<script defer src="/js/shop-carousel.min.js?v=20260724"></script>' : ''}
 
 </body>
 </html>`;
@@ -742,6 +788,84 @@ async function main() {
       TOP_STORIES_HTML = topArts.length ? feedBake.renderLatestFeedHtml(topArts, dormiedData) : '';
       FEATURED_HTML    = featArts.length ? feedBake.renderLatestFeedHtml(featArts, dormiedData) : '';
     } catch (e) { console.warn('[feature] LATEST sidebar bake failed:', e.message); }
+  }
+
+  // ── DORMIED Index card + affiliate carousel (end of article) ────────────────
+  // The card mirrors the news-article template's .da-brand-card so the two page
+  // types read identically. Metrics come from dormied_monthly_brand_summary
+  // (already computed there) rather than being recalculated from data.js.
+  // The carousel mount is emitted ONLY for a brand with an active affiliate
+  // program, is EMPTY (no product data baked), and is fed client-side by
+  // /api/shop via js/shop-carousel.js. tracking_url never reaches the page.
+  if (SUPABASE_URL && SUPABASE_SERVICE_KEY && F.brandSlug) {
+    try {
+      const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+      const { data: sum } = await supabase
+        .from('dormied_monthly_brand_summary')
+        .select('global_rank, di_score, mom_change_pct, three_month_change_pct, yoy_change_pct')
+        .eq('brand_slug', F.brandSlug)
+        .order('snapshot_month', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      const brandMeta = (dormiedData.brands || []).find(b => b.id === F.brandSlug) || {};
+      const bName = brandMeta.name || F.brandSlug;
+      const pct = v => (v === null || v === undefined || v === '') ? '—'
+        : (Number(v) > 0 ? '+' : Number(v) < 0 ? '\u2212' : '') + Math.abs(Number(v)).toFixed(1) + '%';
+      const cls = v => (v === null || v === undefined || v === '') ? ''
+        : Number(v) > 0 ? ' bp-metric-val--up' : Number(v) < 0 ? ' bp-metric-val--down' : '';
+      const logo = brandMeta.logo
+        ? `<img src="${escHtml(brandMeta.logo)}" alt="${escHtml(bName)}" class="bp-logo-img" width="48" height="48" style="width:48px;height:48px">`
+        : `<span class="bp-logo-initials" style="background:#1a2a1a;width:48px;height:48px;font-size:1rem">${escHtml(bName.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase())}</span>`;
+
+      if (sum) {
+        BRAND_CARD_HTML = `
+            <!-- Brand card -->
+            <div class="da-brand-card">
+              <div class="da-brand-card-header">
+                <span class="da-brand-card-label">DORMIED INDEX</span>
+                <a href="/brands/${escHtml(F.brandSlug)}/" class="da-brand-card-cta">View Brand &rarr;</a>
+              </div>
+              <div class="da-brand-card-main">
+                <div class="da-brand-card-identity">
+                  <div class="da-brand-card-logo">${logo}</div>
+                  <a href="/brands/${escHtml(F.brandSlug)}/" class="da-brand-card-name">${escHtml(bName)}</a>
+                </div>
+                <div class="da-brand-card-stats">
+                  <div class="bp-metric-card"><span class="bp-metric-label">Global Rank</span><span class="bp-metric-val">#${sum.global_rank}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">DI Score</span><span class="bp-metric-val">${Number(sum.di_score).toFixed(1)}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">M/M Change</span><span class="bp-metric-val${cls(sum.mom_change_pct)}">${pct(sum.mom_change_pct)}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">3M Trend</span><span class="bp-metric-val${cls(sum.three_month_change_pct)}">${pct(sum.three_month_change_pct)}</span></div>
+                  <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val${cls(sum.yoy_change_pct)}">${pct(sum.yoy_change_pct)}</span></div>
+                </div>
+              </div>
+            </div>
+`;
+      }
+
+      const { data: prog } = await supabase
+        .from('affiliate_programs')
+        .select('dormied_brand_slug')
+        .eq('dormied_brand_slug', F.brandSlug)
+        .eq('status', 'active')
+        .maybeSingle();
+      if (prog) {
+        SHOP_SECTION_HTML = `
+            <!-- Shop ${escHtml(bName)} (affiliate) -->
+            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(F.brandSlug)}" data-brand-name="${escHtml(bName)}">
+              <p class="bp-chart-heading">Shop ${escHtml(bName)}</p>
+              <div class="bp-shop-viewport">
+                <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>
+                <div class="bp-shop-track" id="bp-shop-track" role="region" aria-label="Shop ${escHtml(bName)} products" tabindex="0"></div>
+                <button type="button" class="bp-shop-arrow bp-shop-arrow--next" id="bp-shop-next" aria-label="Scroll to next products" hidden>&#8250;</button>
+              </div>
+              <div class="bp-shop-dots" id="bp-shop-dots" role="tablist" aria-label="Product pages"></div>
+              <p class="bp-shop-disclosure">Some links on this page are affiliate links. DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
+            </section>
+`;
+        console.log(`[feature] affiliate carousel mount emitted for ${F.brandSlug}`);
+      }
+    } catch (e) { console.warn('[feature] brand card / shop mount failed:', e.message); }
   }
 
   // Resolve the effective publish date now that we know whether the feature already exists.

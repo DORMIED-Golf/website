@@ -2200,7 +2200,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (442) ── -->
+  <!-- ── News articles (443) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6508,6 +6508,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/who-owns-pins-and-aces/</loc>
+    <lastmod>2026-07-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/features/pins-and-aces/hero.webp</image:loc>
+      <image:title>Who Owns Pins &amp;amp; Aces? One Ugly Headcover, Two Brothers-in-Law, and a $20 Million Golf Brand</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/who-owns-scotty-cameron/</loc>
     <lastmod>2026-07-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -6645,7 +6655,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/14/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -6687,7 +6697,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>

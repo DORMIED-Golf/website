@@ -5091,6 +5091,24 @@ details[open] .faq-question::after { content: '−'; }
   background: var(--bg-raised);
 }
 
+/* Hero with a visible credit/caption: the 40:21 crop moves onto the image so
+   the figcaption sits below the frame instead of being clipped by the figure. */
+.sc-article-image--cap,
+.sc-article-image:has(> .sc-article-hero-caption) {
+  aspect-ratio: auto;
+  overflow: visible;
+  border-radius: 0;
+}
+.sc-article-image--cap .sc-article-hero-img,
+.sc-article-image:has(> .sc-article-hero-caption) .sc-article-hero-img {
+  aspect-ratio: 40 / 21;
+  height: auto;
+  border-radius: var(--radius);
+}
+.sc-article-hero-caption {
+  margin-top: 8px;
+}
+
 /* Table of contents */
 .sc-toc {
   background: var(--bg-surface);
