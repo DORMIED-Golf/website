@@ -2206,7 +2206,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (448) ── -->
+  <!-- ── News articles (449) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3675,6 +3675,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/is-gfore-owned-by-peter-millar-hero.jpg</image:loc>
       <image:title>Is G/Fore Owned by Peter Millar?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/jackson-koivun-wins-the-3m-open-and-the-trackman-native-generation-arrives-2026-07-27/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/jackson-koivun-wins-the-3m-open-and-the-trackman-native-generation-arrives-2026-07-27-hero.webp</image:loc>
+      <image:title>Jackson Koivun Wins the 3M Open, and the Trackman-Native Generation Arrives on Tour</image:title>
     </image:image>
   </url>
   <url>
