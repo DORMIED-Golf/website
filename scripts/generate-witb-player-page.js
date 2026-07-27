@@ -72,6 +72,12 @@ const SHAFT_BRAND_LINKS = {
   'TPT Golf':       'tpt-golf',
   'Odyssey':        'odyssey-golf',
   'Aretera':        'aretera',
+  // Keys are matched against the start of the shaft model string, so they must
+  // be the full brand as it appears there ("Breakthrough Golf Technology
+  // Stability Tour Black"), not the brand's short DORMIED name (BGT).
+  'Project X':      'project-x',
+  'Oban':           'oban',
+  'Breakthrough Golf Technology': 'bgt',
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

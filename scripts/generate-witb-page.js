@@ -76,12 +76,18 @@ const GREEN_SHADES = [
 ];
 
 /** Normalize truncated shaft brand names (ingestion artifact; fix at render time only) */
+// Shaft brand_name arrives truncated at the first word, so map the fragment to
+// the brand's canonical DORMIED name (must match data.js exactly, since
+// SHAFT_SLUG_MAP is keyed on the normalized value).
 const SHAFT_BRAND_NORMALIZE = {
-  'True':     'True Temper',
-  'Graphite': 'Graphite Design',
-  'UST':      'UST Mamiya',
-  'LA':       'L.A. Golf',
-  'Project':  'Project X',
+  'True':         'True Temper',
+  'Graphite':     'Graphite Design',
+  'UST':          'UST Mamiya',
+  'LA':           'LA Golf',
+  'Project':      'Project X',
+  'Accra':        'ACCRA',
+  'TPT':          'TPT Golf',
+  'Breakthrough': 'BGT',
 };
 
 /** Dormied brand slugs for named shaft brands — used for logos + links */
@@ -95,6 +101,14 @@ const SHAFT_SLUG_MAP = {
   'UST Mamiya':      'ust-mamiya',
   'KBS':             'kbs-golf',
   'Project X':       'project-x',
+  'ACCRA':           'accra',
+  'LA Golf':         'la-golf',
+  'TPT Golf':        'tpt-golf',
+  'PING':            'ping',
+  'Aerotech':        'aerotech',
+  'Oban':            'oban',
+  'Aretera':         'aretera',
+  'BGT':             'bgt',
 };
 
 /** Category icon paths — used in leaderboard titles and top-model rows */
