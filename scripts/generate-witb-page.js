@@ -81,6 +81,7 @@ const SHAFT_BRAND_NORMALIZE = {
   'Graphite': 'Graphite Design',
   'UST':      'UST Mamiya',
   'LA':       'L.A. Golf',
+  'Project':  'Project X',
 };
 
 /** Dormied brand slugs for named shaft brands — used for logos + links */
@@ -93,6 +94,7 @@ const SHAFT_SLUG_MAP = {
   'Graphite Design': 'graphite-design',
   'UST Mamiya':      'ust-mamiya',
   'KBS':             'kbs-golf',
+  'Project X':       'project-x',
 };
 
 /** Category icon paths — used in leaderboard titles and top-model rows */

@@ -1230,9 +1230,12 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     /* table-layout:fixed + overflow:hidden on every td is what keeps columns
        from bleeding into each other. Long shaft strings wrap within the cell. */
     .witb-bag-table-wrap{overflow-x:auto}
-    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:960px;max-width:1120px}
+    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:1000px;max-width:1120px}
     .witb-col-club {width:110px}
-    .witb-col-brand{width:145px}
+    /* Sized to the longest brand name in the dataset ("Bryson DeChambeau",
+       191px incl. logo + gap + cell padding). At 145px "Scotty Cameron" was
+       clipped mid-word. The model column is auto, so it absorbs the change. */
+    .witb-col-brand{width:190px}
     .witb-col-model{width:auto}
     .witb-col-loft {width:175px}
     .witb-col-shaft{width:240px}
