@@ -2206,7 +2206,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (445) ── -->
+  <!-- ── News articles (448) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3025,6 +3025,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/copper-plated-wedges-at-250-is-exactly-the-kind-of-move-a-bo-2026-04-17-hero.jpg</image:loc>
       <image:title>Copper-Plated Wedges at $250 Is Exactly the Kind of Move a Boutique Brand Should Make</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/eastside-golf-now-sells-hoodies-between-gates-thats-not-a-small-detail-2026-07-27/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/eastside-golf-now-sells-hoodies-between-gates-thats-not-a-small-detail-2026-07-27-hero.png</image:loc>
+      <image:title>Eastside Golf Now Sells Hoodies Between Gates. That&apos;s Not a Small Detail.</image:title>
     </image:image>
   </url>
   <url>
@@ -4135,6 +4145,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/new-balance-quietly-built-the-best-college-football-tailgate-shoe-it-2026-05-26-hero.jpg</image:loc>
       <image:title>New Balance Quietly Built the Best College Football Tailgate Shoe. It Happens to Be a Golf Shoe.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/nike-and-hyperice-turn-the-recovery-slide-into-a-249-lifestyle-play-2026-07-27/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/nike-and-hyperice-turn-the-recovery-slide-into-a-249-lifestyle-play-2026-07-27-hero.jpg</image:loc>
+      <image:title>Nike and Hyperice Turn the Recovery Slide Into a $249 Lifestyle Play</image:title>
     </image:image>
   </url>
   <url>
@@ -5381,6 +5401,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-break-in-window-is-quietly-becoming-golfs-most-important-footwear-2026-06-02-hero.jpg</image:loc>
       <image:title>The Break-In Window Is Quietly Becoming Golf&apos;s Most Important Footwear Metric</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-bridgestone-tour-b-x-just-won-a-mygolfspy-fitting-thats-a-bigger-deal-2026-07-27/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-bridgestone-tour-b-x-just-won-a-mygolfspy-fitting-thats-a-bigger-deal-2026-07-27-hero.png</image:loc>
+      <image:title>The Bridgestone Tour B X Just Won a MyGolfSpy Fitting. That&apos;s a Bigger Deal Than It Sounds.</image:title>
     </image:image>
   </url>
   <url>
