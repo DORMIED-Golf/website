@@ -60,17 +60,9 @@ function inferShaftSlug(rawShaft) {
 // Normalized key for tolerant name/slug matching ("Si Woo Kim" == "Siwoo Kim").
 const normKey = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
-// Sub-brands the site stores under a parent brand so the parent's logo + /brands
-// link render (e.g. a Scotty Cameron putter is a Titleist item with the model
-// carrying "Scotty Cameron ..."). Keeps manual entries consistent with scraped.
-const BRAND_PARENT = { 'scotty cameron': 'Titleist' };
-function normalizeBrandModel(rawBrand, rawModel) {
-  const parent = BRAND_PARENT[(rawBrand || '').toLowerCase().trim()];
-  if (!parent) return { raw_brand: rawBrand, raw_model: rawModel };
-  const model = (rawModel && normKey(rawModel).includes(normKey(rawBrand)))
-    ? rawModel : `${rawBrand} ${rawModel || ''}`.trim();
-  return { raw_brand: parent, raw_model: model };
-}
+// Sub-brand handling is shared with the crawler so both write paths store a
+// club identically. See scripts/lib/witb-brand-normalize.js.
+const { normalizeBrandModel } = require('./lib/witb-brand-normalize');
 
 // Upsert a brand on slug, never clobbering its existing dormied_brand_slug
 // mapping (that column is not in the payload, so ON CONFLICT leaves it intact).

@@ -22,6 +22,7 @@ const vm               = require('vm');
 const cheerio          = require('cheerio');
 const { createClient } = require('@supabase/supabase-js');
 const { submitUrls }   = require('../lib/indexnow');
+const { normalizeBrandModel } = require('./lib/witb-brand-normalize');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -190,12 +191,21 @@ function parseBagTable($) {
     const loftRaw = loftCell.text().trim();
     const loftOrNumber = (loftRaw && loftRaw !== '-' && loftRaw !== '--') ? loftRaw : null;
 
+    // Promote sub-brands that are their own DORMIED brand (Scotty Cameron).
+    // The source labels those inconsistently — sometimes under the parent's
+    // brand link, sometimes their own — so normalize before storing.
+    const norm = normalizeBrandModel(
+      rawBrand !== '-' ? rawBrand : null,
+      rawModel !== '-' ? rawModel : null,
+      brandSlug,
+    );
+
     items.push({
       club_type:     clubType,
-      raw_brand:     rawBrand !== '-' ? rawBrand : null,
-      brand_slug:    brandSlug,
-      brand_url:     brandHref ? `${BASE_URL}${brandHref}` : null,
-      raw_model:     rawModel !== '-' ? rawModel : null,
+      raw_brand:     norm.raw_brand,
+      brand_slug:    norm.brand_slug,
+      brand_url:     norm.promoted ? null : (brandHref ? `${BASE_URL}${brandHref}` : null),
+      raw_model:     norm.raw_model,
       clubhead_slug: clubheadSlug,
       clubhead_url:  modelHref ? `${BASE_URL}${modelHref}` : null,
       raw_shaft:     (rawShaft && rawShaft !== '-' && rawShaft !== '--') ? rawShaft : null,

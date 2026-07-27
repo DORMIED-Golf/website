@@ -116,7 +116,9 @@ async function fetchAllData() {
   // 1. All current bag items with brand info
   const items = await paginate((from, to) =>
     sb.from('witb_bag_items')
-      .select('club_type, raw_brand, raw_model, loft_or_number, brand_id, bag_id, witb_brands!brand_id(slug, name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id)')
+      // bag_date is carried for the Brand Momentum windows, which reconstruct
+      // each player's bag as of a past date from the historical (non-current) rows.
+      .select('club_type, raw_brand, raw_model, loft_or_number, brand_id, bag_id, witb_brands!brand_id(slug, name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id, bag_date)')
       .range(from, to)
   );
   const currentItems = items.filter(i => i.witb_bags?.is_current === true);
@@ -174,7 +176,7 @@ async function fetchAllData() {
   const bagDateMap = new Map(currentBagsRaw.map(b => [b.id, b.bag_date]));
   console.log(`  Current bags with dates: ${bagDateMap.size}`);
 
-  return { currentItems, players, playerMap, brands, diBySlug, changes: changes || [], lastCrawl, shaftItems, bagDateMap };
+  return { allItems: items, currentItems, players, playerMap, brands, diBySlug, changes: changes || [], lastCrawl, shaftItems, bagDateMap };
 }
 
 // ── Widget computations ────────────────────────────────────────────────────
@@ -717,7 +719,7 @@ function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
 
 // ── Full page HTML ─────────────────────────────────────────────────────────
 
-function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml }) {
+function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml }) {
   // Canonical set: players with a non-null OWGR rank (158 today; sentinel 4990 included)
   const rankedPlayers      = players.filter(p => p.owgr_rank !== null);
   const rankedBagIds       = new Set(rankedPlayers.map(p => p.current_bag_id).filter(Boolean));
@@ -1148,23 +1150,81 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
         <!-- WIDGET 8: BRAND MOMENTUM -->
         ${(() => {
           // Momentum change computation.
-          // Each column = (brand player count this period) - (count N weeks ago).
-          // Historical player counts: Map<dormied_slug, count> | null.
-          // null = no snapshot for that window yet -> show "-" placeholder.
-          // W/W  available after 2nd weekly crawl
-          // M/M  available after ~4 weekly crawls
-          // 3M   available after ~13 weekly crawls
-          const momentumHistory = {
-            ww:     null, // Map<dormied_slug, playerCount> | null
-            mm:     null,
-            threeM: null,
-          };
+          // Each column = (brand player count now) - (count as of N days ago).
+          //
+          // There is no snapshot table; the windows are reconstructed from bag
+          // history instead. A player's bag "as of D" is their most recent bag
+          // dated on or before D, which is exactly how the site already decides
+          // what is current. Only players present in BOTH windows are counted,
+          // so adding a player to the dataset reads as 0 rather than a bogus
+          // gain for every brand in their bag.
+          //
+          // Caveat worth remembering: this measures when a bag CHANGE WAS
+          // RECORDED, not when the player actually switched. A bag that has not
+          // been re-crawled since March still counts as unchanged.
+          const momentumHistory = (() => {
+            const MOM_CLUB_TYPES = ['driver','3-wood','4-wood','5-wood','7-wood','9-wood','mini-driver','hybrid','utility','utility-iron','driving-iron','iron','wedge','putter'];
+            const rankedIds = new Set(rankedPlayers.map(p => p.id));
+            const asOf = (days) => new Date(Date.now() - days * 86400000).toISOString().slice(0, 10);
+
+            // player -> bags newest-first, and bag -> its items
+            const bagsByPlayer = new Map();
+            const itemsByBag   = new Map();
+            const seenBag      = new Set();
+            for (const it of (allItems || [])) {
+              const b = it.witb_bags;
+              if (!b?.player_id || !b.bag_date) continue;
+              if (!itemsByBag.has(it.bag_id)) itemsByBag.set(it.bag_id, []);
+              itemsByBag.get(it.bag_id).push(it);
+              if (seenBag.has(it.bag_id)) continue;
+              seenBag.add(it.bag_id);
+              if (!bagsByPlayer.has(b.player_id)) bagsByPlayer.set(b.player_id, []);
+              bagsByPlayer.get(b.player_id).push({ id: it.bag_id, date: b.bag_date });
+            }
+            for (const arr of bagsByPlayer.values()) arr.sort((a, b) => (a.date < b.date ? 1 : -1));
+
+            // { sets: Map<dormied_slug, Set<player>>, present: Set<player> }
+            const snapshot = (date) => {
+              const sets = new Map(), present = new Set();
+              for (const [pid, arr] of bagsByPlayer) {
+                if (!rankedIds.has(pid)) continue;
+                const bag = date ? arr.find(b => b.date <= date) : arr[0];
+                if (!bag) continue;
+                present.add(pid);
+                for (const it of (itemsByBag.get(bag.id) || [])) {
+                  const d = it.witb_brands?.dormied_brand_slug;
+                  if (!d || !MOM_CLUB_TYPES.includes(it.club_type)) continue;
+                  if (!sets.has(d)) sets.set(d, new Set());
+                  sets.get(d).add(pid);
+                }
+              }
+              return { sets, present };
+            };
+
+            const now = snapshot(null);
+            // Map<dormied_slug, delta>. Both sides are counted over the players
+            // the two windows share, so the delta is a like-for-like comparison.
+            const windowDeltas = (days) => {
+              const prior  = snapshot(asOf(days));
+              const shared = new Set([...now.present].filter(p => prior.present.has(p)));
+              if (!shared.size) return null;
+              const countIn = (sets, slug) => {
+                const s = sets.get(slug);
+                return s ? [...s].filter(p => shared.has(p)).length : 0;
+              };
+              const slugs = new Set([...now.sets.keys(), ...prior.sets.keys()]);
+              const out = new Map();
+              for (const slug of slugs) out.set(slug, countIn(now.sets, slug) - countIn(prior.sets, slug));
+              return out;
+            };
+
+            return { ww: windowDeltas(7), mm: windowDeltas(30), threeM: windowDeltas(90) };
+          })();
 
           // Returns inner HTML for a .witb-lb-count cell
-          function fmtMom(current, priorMap) {
-            if (!priorMap) return '-';
-            const prior = priorMap.get(current.dormied_slug) ?? 0;
-            const delta = current.count - prior;
+          function fmtMom(current, deltaMap) {
+            if (!deltaMap) return '-';
+            const delta = deltaMap.get(current.dormied_slug) ?? 0;
             const sign  = delta > 0 ? '+' : '';
             const color = delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--red)' : '';
             return color
@@ -1202,7 +1262,7 @@ function buildPage({ currentItems, players, playerMap, brands, diBySlug, changes
               ${colHdr('W/W')}${colHdr('M/M')}${colHdr('3M')}
             </div>
             ${brandRows}
-            <p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:10px;text-transform:uppercase;letter-spacing:.05em">Change in players carrying brand across all categories. Builds as weekly snapshots accumulate.</p>
+            <p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:10px;text-transform:uppercase;letter-spacing:.05em">Change in ranked players carrying the brand, vs. their bags 7, 30 and 90 days ago. Counts only players tracked in both windows, so new additions do not read as gains.</p>
           </div>
         </section>`;
         })()}
