@@ -266,7 +266,11 @@ async function syncProgram(program, catalog) {
   const firstSeenByCatalogItem = new Map();       // catalog_item_id -> earliest first_seen_at (for migration inheritance)
   for (let from = 0; ; from += 1000) {
     const { data, error } = await supabase.from('affiliate_products')
-      .select('id, impact_item_id, catalog_item_id, first_seen_at, is_active').eq('program_id', program.id).range(from, from + 999);
+      // source='impact' only: a program may ALSO carry rows from a merchant-feed
+      // sync (source='shopify'). Those are invisible to Impact's /Items response,
+      // so including them here would make the sweep deactivate every one of them.
+      .select('id, impact_item_id, catalog_item_id, first_seen_at, is_active')
+      .eq('program_id', program.id).eq('source', 'impact').range(from, from + 999);
     if (error) throw new Error(`load existing: ${error.message}`);
     if (!data || !data.length) break;
     for (const r of data) {
@@ -325,7 +329,8 @@ async function syncProgram(program, catalog) {
   } else if (wouldDeactivate.length) {
     summary.deactivated = await chunked(wouldDeactivate, 200, async batch => {
       const { error } = await supabase.from('affiliate_products')
-        .update({ is_active: false }).eq('program_id', program.id).in('impact_item_id', batch).eq('is_active', true);
+        .update({ is_active: false }).eq('program_id', program.id).eq('source', 'impact')
+        .in('impact_item_id', batch).eq('is_active', true);
       if (error) throw new Error(`deactivate batch: ${error.message}`);
     });
   }

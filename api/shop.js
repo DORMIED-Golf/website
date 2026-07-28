@@ -40,6 +40,7 @@ const SELECT_COLS = [
   'id', 'name', 'image_url', 'current_price', 'original_price',
   'discount_percentage', 'currency', 'promo_code', 'promo_title',
   'feed_updated_at', 'item_group_id', 'is_parent', 'first_seen_at',
+  'source_published_at',
 ].join(',');
 
 function shape(row) {
@@ -133,10 +134,17 @@ module.exports = async (req, res) => {
       winners.set(key, betterOf(winners.get(key), row));
     }
 
-    // Total order: first_seen_at DESC, id DESC (id makes the sort unique, so
+    // Total order: newest first, id DESC (id makes the sort unique, so
     // LIMIT/OFFSET is stable across pages).
+    //
+    // Prefer the MERCHANT's publish date where we have it. A feed-sourced
+    // catalog is ingested in one pass, so every row shares a first_seen_at and
+    // sorting on it alone would collapse to insertion order. Impact rows have
+    // no source_published_at and fall back to first_seen_at exactly as before.
+    const recencyOf = r => r.source_published_at || r.first_seen_at;
     const ordered = [...winners.values()].sort((a, b) => {
-      if (a.first_seen_at !== b.first_seen_at) return a.first_seen_at < b.first_seen_at ? 1 : -1;
+      const ra = recencyOf(a), rb = recencyOf(b);
+      if (ra !== rb) return ra < rb ? 1 : -1;
       return b.id - a.id;
     });
 

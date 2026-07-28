@@ -66,6 +66,21 @@ jobs:
             node scripts/sync-affiliate-catalog.js
           fi
 
+      # Merchant-feed programs (Impact deep-link partners with no /Items catalog).
+      # Runs after the Impact sync and is independent of it: its rows are
+      # source='shopify' and the Impact deactivation sweep cannot see them.
+      # Failure here fails the job — a silently stale catalog is worse than a red run.
+      - name: Run Shopify catalog sync
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            node scripts/sync-shopify-catalog.js --dry-run
+          else
+            node scripts/sync-shopify-catalog.js
+          fi
+
       - name: Report sync state
         if: always()
         env:
