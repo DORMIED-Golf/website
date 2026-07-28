@@ -80,6 +80,27 @@ const SHAFT_BRAND_LINKS = {
   'Breakthrough Golf Technology': 'bgt',
 };
 
+/**
+ * Players who get a Shop [Brand] carousel under their bag history.
+ *
+ * Deliberately an explicit list rather than something derived from the bag: a
+ * commerce unit on a player's page asserts that the player actually wears or
+ * plays the brand, which is an editorial claim about a real person. Apparel
+ * relationships also do not appear in bag data at all, so there is nothing to
+ * infer it from. Add a player only when the relationship is real.
+ *
+ * The brand still has to have an active affiliate program, so an entry here is
+ * necessary but not sufficient — and the carousel removes itself client-side if
+ * that brand has no sellable products.
+ */
+const PLAYER_SHOP_BRAND = {
+  'jason-day':      'malbon',
+  'michael-block':  'malbon',
+  'jackson-koivun': 'malbon',
+  'garrick-higgo':  'malbon',
+  'sungjae-im':     'malbon',
+};
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function esc(s) {
@@ -654,7 +675,7 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
-function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml }) {
+function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand }) {
   const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
@@ -1121,6 +1142,19 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
             <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a> and <a href="https://golfwrx.com/" rel="noopener noreferrer" target="_blank">GolfWRX</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
           </section>
 
+${shopBrand ? `
+          <!-- ── Shop ${esc(shopBrand.name)} (affiliate) ── -->
+          <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBrand.slug)}" data-brand-name="${esc(shopBrand.name)}">
+            <p class="bp-chart-heading">Shop ${esc(shopBrand.name)}</p>
+            <div class="bp-shop-viewport">
+              <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>
+              <div class="bp-shop-track" id="bp-shop-track" role="region" aria-label="Shop ${esc(shopBrand.name)} products" tabindex="0"></div>
+              <button type="button" class="bp-shop-arrow bp-shop-arrow--next" id="bp-shop-next" aria-label="Scroll to next products" hidden>&#8250;</button>
+            </div>
+            <div class="bp-shop-dots" id="bp-shop-dots" role="tablist" aria-label="Product pages"></div>
+            <p class="bp-shop-disclosure">Some links on this page are affiliate links. DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
+          </section>` : ''}
+
           <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
           <div class="tail-feeds">
             <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="player-latest-m-heading">
@@ -1329,6 +1363,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/feed.min.js?v=20260717"></script>
   <script defer src="/js/search.min.js?v=20260529"></script>
+  ${shopBrand ? '<script defer src="/js/shop-carousel.min.js?v=20260728"></script>' : ''}
   <script>
   // Player page view tracking — fire-and-forget, mirrors brand_page_views
   (function(pid){
@@ -1489,7 +1524,27 @@ async function main() {
     console.warn('[witb-player-page] Feed bake failed:', e.message);
   }
 
-  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml });
+  // Shop [Brand] under bag history. Requires BOTH an editorial entry in
+  // PLAYER_SHOP_BRAND and an active affiliate program for that brand, so a
+  // player never gets a commerce block pointing at a brand we cannot sell.
+  let shopBrand = null;
+  const shopSlug = PLAYER_SHOP_BRAND[PLAYER_SLUG];
+  if (shopSlug) {
+    const { data: prog, error: progErr } = await sb.from('affiliate_programs')
+      .select('dormied_brand_slug, advertiser_name')
+      .eq('dormied_brand_slug', shopSlug).eq('status', 'active').maybeSingle();
+    if (progErr) {
+      log(`WARN: affiliate program lookup failed for ${shopSlug}: ${progErr.message} — no shop section`);
+    } else if (!prog) {
+      log(`WARN: ${PLAYER_SLUG} is mapped to "${shopSlug}" but that brand has no active affiliate program — no shop section`);
+    } else {
+      const brandMeta = (dormiedData.brands || []).find(b => b.id === shopSlug);
+      shopBrand = { slug: shopSlug, name: (brandMeta && brandMeta.name) || prog.advertiser_name || shopSlug };
+      log(`Shop section: ${shopBrand.name} (${shopBrand.slug})`);
+    }
+  }
+
+  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand });
 
   const noindex = html.includes('noindex');
 
