@@ -2218,7 +2218,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (452) ── -->
+  <!-- ── News articles (454) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2850,6 +2850,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/callaways-quiet-grip-on-the-junior-to-lpga-pipeline-tightens-again-2026-07-28/</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/callaways-quiet-grip-on-the-junior-to-lpga-pipeline-tightens-again-2026-07-28-hero.png</image:loc>
+      <image:title>Callaway&apos;s Quiet Grip on the Junior-to-LPGA Pipeline Tightens Again</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/callaways-quiet-retail-footprint-just-got-30000-square-feet-bigger-in-2026-06-15/</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>weekly</changefreq>
@@ -2947,6 +2957,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/cline-boutier-wins-her-seventh-on-a-bag-pxg-hasnt-refreshed-in-three-2026-06-01-hero.png</image:loc>
       <image:title>Céline Boutier Wins Her Seventh on a Bag PXG Hasn&apos;t Refreshed in Three Generations</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/club-champion-plants-a-flag-in-san-diego-and-trackman-rides-shotgun-again-2026-07-28/</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/club-champion-plants-a-flag-in-san-diego-and-trackman-rides-shotgun-again-2026-07-28-hero.jpg</image:loc>
+      <image:title>Club Champion Plants a Flag in San Diego, and TrackMan Rides Shotgun Again</image:title>
     </image:image>
   </url>
   <url>
