@@ -22,6 +22,10 @@
  * Safety contract:
  *   - Tracking is VERIFIED per program before any write: one constructed link is
  *     resolved and must land on the merchant's host carrying an Impact click id.
+ *   - Currency is VERIFIED per program before any write: the feed is requested
+ *     with an explicit currency and cross-checked against the storefront's
+ *     og:price tags, because Shopify prices products.json in the caller's geo
+ *     currency and will otherwise hand back CAD that looks exactly like USD.
  *   - A partial feed fetch writes NOTHING for that program and exits non-zero.
  *   - The deactivation sweep runs only on a verified-complete fetch and refuses
  *     to deactivate >20% of a program's active rows without --allow-large-deactivation.
@@ -95,13 +99,54 @@ async function assertTrackingWorks(program, sampleProductUrl) {
   console.log(`[shopify-sync]   tracking verified: deep link lands on ${finalUrl.host}${finalUrl.pathname} with irclickid`);
 }
 
+/**
+ * Prove the feed is priced in the currency we are about to LABEL it with.
+ *
+ * Shopify returns products.json in the ACTIVE PRESENTMENT currency, which it
+ * picks from the requester's geo — not the shop's base currency. Requests from
+ * a Canadian egress returned CAD while /meta.json still reported the shop as
+ * USD, so the first load stored CAD numbers labelled USD. Nothing in the link
+ * or feed checks could see it.
+ *
+ * Note the CAD price was 200.00 where USD is 118.00 — Shopify Markets applies
+ * per-market pricing, so this is NOT recoverable by dividing by an FX rate.
+ * The currency must be requested, and then verified.
+ */
+async function assertFeedCurrency(program, sampleProduct, origin, currency) {
+  const url = `${origin}/products/${sampleProduct.handle}?currency=${encodeURIComponent(currency)}`;
+  const res = await fetch(url, { headers: { 'User-Agent': UA } });
+  if (!res.ok) throw new Error(`currency check: storefront HTTP ${res.status} for ${sampleProduct.handle}`);
+  const html   = await res.text();
+  const curTag = (html.match(/property="og:price:currency"\s+content="([^"]+)"/) || [])[1];
+  const amtTag = (html.match(/property="og:price:amount"\s+content="([^"]+)"/) || [])[1];
+
+  if (!curTag || !amtTag) throw new Error(`currency check: storefront exposed no og:price tags for ${sampleProduct.handle}`);
+  if (curTag.toUpperCase() !== currency.toUpperCase()) {
+    throw new Error(
+      `currency check FAILED for ${program.dormied_brand_slug}: storefront reports ${curTag}, expected ${currency}. ` +
+      `Refusing to write prices under the wrong currency label.`);
+  }
+  // The storefront price must be one this product actually sells at in the feed
+  // we just pulled. A currency mismatch shows up here as a gross mismatch.
+  const feedPrices = (sampleProduct.variants || []).map(v => Number(v.price));
+  const shown      = Number(amtTag);
+  if (!feedPrices.some(p => Math.abs(p - shown) < 0.01)) {
+    throw new Error(
+      `currency check FAILED for ${program.dormied_brand_slug}: storefront shows ${shown} ${curTag} for ` +
+      `"${sampleProduct.title}" but the feed priced it at [${feedPrices.join(', ')}]. Feed and storefront disagree.`);
+  }
+  console.log(`[shopify-sync]   currency verified: feed and storefront both ${curTag} (${shown}) for "${sampleProduct.title}"`);
+}
+
 // ── Feed ─────────────────────────────────────────────────────────────────────
 /** Returns { products, complete }. complete=false means DO NOT sweep. */
-async function fetchAllProducts(feedUrl) {
+async function fetchAllProducts(feedUrl, currency) {
   const products = [];
   for (let page = 1; page <= MAX_PAGES; page++) {
     const sep = feedUrl.includes('?') ? '&' : '?';
-    const url = `${feedUrl}${sep}limit=${PAGE_SIZE}&page=${page}`;
+    // currency= pins the presentment currency; without it Shopify picks one
+    // from the caller's geo and the feed silently changes meaning.
+    const url = `${feedUrl}${sep}limit=${PAGE_SIZE}&page=${page}&currency=${encodeURIComponent(currency)}`;
     let res;
     try {
       res = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'application/json' } });
@@ -131,7 +176,7 @@ async function fetchAllProducts(feedUrl) {
  * product, and variants share a page. Price comes from the first available
  * variant so the shown price is one a buyer can actually transact at.
  */
-function mapProduct(p, program, origin) {
+function mapProduct(p, program, origin, currency) {
   const variants  = Array.isArray(p.variants) ? p.variants : [];
   const available = variants.filter(v => v.available);
   const v         = available[0] || variants[0];
@@ -158,7 +203,7 @@ function mapProduct(p, program, origin) {
     current_price:      price,
     original_price:     onSale ? compareAt : null,
     discount_percentage: onSale ? Math.round(((compareAt - price) / compareAt) * 100) : null,
-    currency:           program.currency || 'USD',
+    currency,   // verified against the storefront before any write
     stock_availability: available.length ? 'InStock' : 'OutOfStock',
     category:           strOrNull(p.product_type),
     sub_category:       null,
@@ -194,7 +239,8 @@ async function syncProgram(program) {
     return { ok: false };
   }
 
-  const { products, complete } = await fetchAllProducts(program.feed_url);
+  const currency = (program.currency || 'USD').toUpperCase();
+  const { products, complete } = await fetchAllProducts(program.feed_url, currency);
   console.log(`[shopify-sync]   feed: ${products.length} product(s), complete=${complete}`);
   if (!complete) {
     console.error(`[shopify-sync]   !! INCOMPLETE FEED for ${label} — writing nothing, no sweep.`);
@@ -207,10 +253,11 @@ async function syncProgram(program) {
 
   const origin = new URL(program.feed_url).origin;
 
-  // Verify attribution on a real product BEFORE any write.
+  // Verify attribution AND currency on a real product BEFORE any write.
   await assertTrackingWorks(program, `${origin}/products/${products[0].handle}`);
+  await assertFeedCurrency(program, products[0], origin, currency);
 
-  const rows = products.map(p => mapProduct(p, program, origin)).filter(Boolean);
+  const rows = products.map(p => mapProduct(p, program, origin, currency)).filter(Boolean);
   console.log(`[shopify-sync]   mapped ${rows.length} row(s)`);
 
   // Existing rows for this program from THIS source only.
