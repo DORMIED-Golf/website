@@ -1,0 +1,38 @@
+name: Verify Build
+
+# Structural checks on what is about to be served. These run on push because the
+# repo IS the deploy artifact — Vercel serves the committed HTML, so a bad commit
+# is a bad site. They are all offline: no Supabase, no Impact, no secrets.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Structural checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # css/styles.css and css/styles.min.css are both hand-maintained and
+      # different page types load different files, so a rule added to one is
+      # silently absent wherever the other is loaded. This has shipped twice.
+      - name: CSS parity
+        run: node scripts/verify-css-parity.js
+
+      # Every sitemap URL must resolve to a file that exists.
+      - name: Sitemap resolves
+        run: npm run verify:sitemap --silent

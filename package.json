@@ -20,7 +20,8 @@
     "regenerate:sitemap": "node scripts/generate-sitemap.js",
     "verify:sitemap": "node scripts/verify-sitemap.js",
     "regenerate:search-index": "node scripts/generate-search-index.js",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "verify:css": "node scripts/verify-css-parity.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",
