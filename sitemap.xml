@@ -2206,7 +2206,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (451) ── -->
+  <!-- ── News articles (452) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6101,6 +6101,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/true-linkswear-quietly-pushes-the-lux-2-player-deeper-into-premium-2026-07-20-hero.jpg</image:loc>
       <image:title>TRUE linkswear Quietly Pushes the Lux 2 Player Deeper Into Premium Territory</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/true-linkswears-199-hybrid-problem-when-a-good-shoe-gets-priced-into-a-2026-07-28/</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/true-linkswears-199-hybrid-problem-when-a-good-shoe-gets-priced-into-a-2026-07-28-hero.jpg</image:loc>
+      <image:title>TRUE Linkswear&apos;s $199 Hybrid Problem: When a Good Shoe Gets Priced Into a Fight It Can&apos;t Win</image:title>
     </image:image>
   </url>
   <url>
