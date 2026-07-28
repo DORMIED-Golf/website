@@ -687,7 +687,32 @@ function generateArticleHtml(opts) {
     secondaryBrands = [], // Array<{slug, name, logo}>
     faq = null,           // Array<{q, a}> from dormied_articles.faq (question articles)
     date_modified = null, // ISO string when the body was materially changed (e.g. FAQ added)
+    affiliateBrandSlugs = null, // Set<dormied_brand_slug> with an ACTIVE affiliate program
   } = opts;
+
+  // ── Shop [Brand] carousel, under the primary brand card ──────────────────
+  // Emitted only for the article's PRIMARY brand and only when that brand has
+  // an active affiliate program. Secondary ("Also mentioned") brands never get
+  // one — a commerce unit should follow the subject of the piece.
+  //
+  // The mount is EMPTY: no product data, price or tracking_url is baked into
+  // the page. js/shop-carousel.js fills it from /api/shop at runtime and
+  // removes the whole section if that brand returns no products, so a partner
+  // whose catalog is not flowing yet leaves no empty shell behind.
+  const hasShop = !!(affiliateBrandSlugs && brandSlug && affiliateBrandSlugs.has(brandSlug));
+  const shopSectionHtml = hasShop ? `
+            <!-- ── Shop ${escHtml(brandName)} (affiliate) ── -->
+            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(brandSlug)}" data-brand-name="${escHtml(brandName)}">
+              <p class="bp-chart-heading">Shop ${escHtml(brandName)}</p>
+              <div class="bp-shop-viewport">
+                <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>
+                <div class="bp-shop-track" id="bp-shop-track" role="region" aria-label="Shop ${escHtml(brandName)} products" tabindex="0"></div>
+                <button type="button" class="bp-shop-arrow bp-shop-arrow--next" id="bp-shop-next" aria-label="Scroll to next products" hidden>&#8250;</button>
+              </div>
+              <div class="bp-shop-dots" id="bp-shop-dots" role="tablist" aria-label="Product pages"></div>
+              <p class="bp-shop-disclosure">Some links on this page are affiliate links. DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
+            </section>
+` : '';
 
   // On-page FAQ block + FAQPage JSON-LD, only when the article carries a real,
   // body-derived faq array. Answers are shown verbatim and mirrored in schema.
@@ -988,7 +1013,7 @@ function generateArticleHtml(opts) {
                 </div>
               </div>
             </div>
-
+${shopSectionHtml}
             ${secondaryBrandWidgets}
 ${faqHtml}
             <!-- More on [Brand] -->
@@ -1107,6 +1132,7 @@ ${faqHtml}
   <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>
   <script src="/js/feed.min.js?v=20260717"></script>
   <script src="/js/da-article.min.js?v=20260522"></script>
+  ${hasShop ? '<script defer src="/js/shop-carousel.min.js?v=20260728"></script>' : ''}
 
 </body>
 </html>`;
@@ -1162,6 +1188,23 @@ async function main() {
   const anthropic   = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const dormiedData = loadDormiedData();
   loadBrands(); // validate file exists
+
+  // Brands with an ACTIVE affiliate program get a Shop [Brand] carousel under
+  // their brand card. Fetched once for the whole run. A failure here must not
+  // break article generation — it just means no carousels this run.
+  let affiliateBrandSlugs = new Set();
+  try {
+    const { data: progRows, error: progErr } = await supabase
+      .from('affiliate_programs')
+      .select('dormied_brand_slug')
+      .eq('status', 'active')
+      .not('dormied_brand_slug', 'is', null);
+    if (progErr) console.warn('[generate] affiliate programs fetch failed (no shop carousels):', progErr.message);
+    affiliateBrandSlugs = new Set((progRows || []).map(r => r.dormied_brand_slug));
+    console.log(`[generate] Affiliate programs loaded: ${affiliateBrandSlugs.size} brand(s) eligible for an article carousel`);
+  } catch (e) {
+    console.warn('[generate] affiliate programs fetch failed:', e.message);
+  }
 
   // Pre-fetch latest articles once for all sidebar bakes; filter per article below
   let allLatestArticles = [];
@@ -1265,6 +1308,7 @@ async function main() {
           : null;
 
         const html = generateArticleHtml({
+          affiliateBrandSlugs,
           title:            row.title,
           bodyHtml:         bHtml,
           imageUrl:         row.image_url || '',
@@ -1394,6 +1438,7 @@ async function main() {
         : null;
 
       const html = generateArticleHtml({
+        affiliateBrandSlugs,
         title:           row.title,
         bodyHtml:        bHtml,
         imageUrl:        row.image_url || '',
@@ -1651,6 +1696,7 @@ async function main() {
       ? feedBake.renderLatestFeedHtml(filteredLatestNew, dormiedData)
       : null;
     const html = generateArticleHtml({
+      affiliateBrandSlugs,
       title, bodyHtml, imageUrl, ogImageUrl, localUrl,
       imageAlt:        `${brandInfo.brand.name}: ${articleCategory}`,
       slug, category:  articleCategory,

@@ -130,7 +130,14 @@
         clearTimeout(timer);
         var items = (d && d.products) || [];
         total = (d && typeof d.count === 'number') ? d.count : total;
-        if (!items.length) { exhausted = true; return; }
+        // An empty FIRST page means the brand has a program but nothing sellable
+        // yet (newly signed partner, catalog not flowing). Drop the section
+        // rather than leave an empty shell with a heading and a disclosure.
+        if (!items.length) {
+          exhausted = true;
+          if (!loaded.length) removeSection();
+          return;
+        }
         loaded = loaded.concat(items).slice(0, MAX_CARDS);
         offset += items.length;
         if (loaded.length >= MAX_CARDS || (total != null && offset >= total)) exhausted = true;

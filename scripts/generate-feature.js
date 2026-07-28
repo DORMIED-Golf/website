@@ -745,7 +745,7 @@ ${BRAND_CARD_HTML}${SHOP_SECTION_HTML}
   <script src="/js/signup.min.js?v=20260718d"></script>
   <script src="/js/search.min.js?v=20260508"></script>
   <script src="/js/feed.min.js?v=20260717"></script>
-  ${SHOP_SECTION_HTML ? '<script defer src="/js/shop-carousel.min.js?v=20260724"></script>' : ''}
+  ${SHOP_SECTION_HTML ? '<script defer src="/js/shop-carousel.min.js?v=20260728"></script>' : ''}
 
 </body>
 </html>`;
