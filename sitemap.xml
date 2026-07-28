@@ -2206,7 +2206,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (449) ── -->
+  <!-- ── News articles (451) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3158,6 +3158,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/five-iron-plants-eight-trackman-bays-in-the-city-of-london-the-simulator-2026-07-27/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/five-iron-plants-eight-trackman-bays-in-the-city-of-london-the-simulator-2026-07-27-hero.jpg</image:loc>
+      <image:title>Five Iron Plants Eight Trackman Bays in the City of London. The Simulator Wars Have a New Front.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/five-irons-valencia-opening-shows-how-trackman-wins-without-selling-direct-2026-05-05/</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -3585,6 +3595,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/graphite-designs-quiet-hybrid-win-at-travelers-says-more-about-the-shaft-2026-06-29-hero.jpg</image:loc>
       <image:title>Graphite Design&apos;s Quiet Hybrid Win at Travelers Says More About the Shaft Market Than the Player</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/graphite-designs-quiet-tour-dominance-two-more-wins-zero-marketing-noise-2026-07-27/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/graphite-designs-quiet-tour-dominance-two-more-wins-zero-marketing-noise-2026-07-27-hero.png</image:loc>
+      <image:title>Graphite Design&apos;s Quiet Tour Dominance: Two More Wins, Zero Marketing Noise</image:title>
     </image:image>
   </url>
   <url>
