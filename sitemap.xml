@@ -17,13 +17,13 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://dormied.com/witb/players/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -70,7 +70,7 @@
     <priority>0.5</priority>
   </url>
 
-  <!-- ── WITB player pages (175) ── -->
+  <!-- ── WITB player pages (176) ── -->
   <url>
     <loc>https://dormied.com/witb/players/aaron-rai/</loc>
     <lastmod>2026-05-17</lastmod>
@@ -871,7 +871,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/peter-malnati/</loc>
-    <lastmod>2024-03-24</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -980,6 +980,12 @@
   <url>
     <loc>https://dormied.com/witb/players/shane-lowry/</loc>
     <lastmod>2026-03-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/sihan-sandhu/</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
