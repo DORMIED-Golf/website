@@ -2218,7 +2218,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (455) ── -->
+  <!-- ── News articles (457) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2487,6 +2487,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bad-birdies-americana-play-signals-a-brand-ready-to-graduate-from-2026-05-20-hero.webp</image:loc>
       <image:title>Bad Birdie&apos;s Americana Play Signals a Brand Ready to Graduate From Disruptor to Institution</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/bad-birdies-fall-drop-is-less-about-golf-and-more-about-owning-the-post-2026-07-29/</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/bad-birdies-fall-drop-is-less-about-golf-and-more-about-owning-the-post-2026-07-29-hero.webp</image:loc>
+      <image:title>Bad Birdie&apos;s Fall Drop Is Less About Golf and More About Owning the Post-Round Wardrobe</image:title>
     </image:image>
   </url>
   <url>
@@ -4597,6 +4607,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/pxg-wraps-itself-in-the-flag-for-america-250-and-the-timing-is-not-an-2026-06-11-hero.jpg</image:loc>
       <image:title>PXG Wraps Itself in the Flag for America 250, and the Timing Is Not an Accident</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/pxgs-budget-tour-ball-has-a-diameter-problem-that-vietnam-cant-explain-away-2026-07-29/</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/pxgs-budget-tour-ball-has-a-diameter-problem-that-vietnam-cant-explain-away-2026-07-29-hero.png</image:loc>
+      <image:title>PXG&apos;s Budget Tour Ball Has a Diameter Problem That Vietnam Can&apos;t Explain Away</image:title>
     </image:image>
   </url>
   <url>
