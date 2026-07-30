@@ -54,9 +54,27 @@ const MODEL_STOPWORDS = new Set(['the', 'and', 'golf']);
 
 // Words in a PRODUCT TITLE that should not count as unexplained noise. These
 // are merchandising boilerplate, not model identity.
-const TITLE_NOISE_EXEMPT = new Set([
-  'the', 'and', 'golf', 'new', 'mens', 'men', 'womens', 'women',
-  'rh', 'lh', 'right', 'left', 'hand', 'handed',
+//
+// Gender is deliberately NOT in here. It was, and against the real catalog it
+// matched Gary Woodland's "OPTM MAX-K" driver to the WOMEN'S OPTM MAX-K —
+// right model, wrong club. Gendered and handedness terms are identity for a
+// golf club, so leaving them to score as noise makes the plain variant win.
+const TITLE_NOISE_EXEMPT = new Set(['the', 'and', 'golf', 'new']);
+
+// Titles carrying one of these are a DIFFERENT CLUB from the one a tour
+// professional plays, so they are excluded outright rather than penalised.
+//
+// Penalising was not enough. Real catalogs are variant-level, and the men's SKU
+// carries a long shaft spec ("OPTM MAX-K Driver | Right 9.0 / graphite regular
+// / project x denali blue 60") while the women's is short. Because noise counts
+// unexplained tokens, the SHORTER women's title scored better and won — title
+// length is not match quality.
+//
+// Scoped to the current dataset: every tracked player is a men's tour
+// professional. Adding LPGA players means gating this on player gender rather
+// than excluding unconditionally.
+const EXCLUDE_TERMS = new Set([
+  'womens', 'women', 'ladies', 'junior', 'juniors', 'youth', 'boys', 'girls', 'kids',
 ]);
 
 // A model whose significant tokens total fewer characters than this is not
@@ -89,6 +107,9 @@ function titleNamesType(title, clubType) {
  */
 function scoreCandidate(item, product) {
   if (!titleNamesType(product.name, item.club_type)) return null;
+
+  const titleTokens = tokens(product.name);
+  for (const t of titleTokens) if (EXCLUDE_TERMS.has(t)) return null;   // wrong club, not a worse one
 
   const want = modelTokens(item.raw_model);
   if (!want.length) return null;
@@ -158,5 +179,5 @@ function matchBagToProducts(bagItems, products, overrides = {}) {
 module.exports = {
   matchBagToProducts,
   // exported for tests
-  _internals: { norm, tokens, modelTokens, titleNamesType, scoreCandidate, MIN_SIGNIFICANT_CHARS, MODEL_STOPWORDS, TITLE_NOISE_EXEMPT },
+  _internals: { norm, tokens, modelTokens, titleNamesType, scoreCandidate, MIN_SIGNIFICANT_CHARS, MODEL_STOPWORDS, TITLE_NOISE_EXEMPT, EXCLUDE_TERMS },
 };

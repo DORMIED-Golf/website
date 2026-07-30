@@ -192,24 +192,25 @@ async function runDiscover() {
 // advertiser's own product URL and earns nothing — an easy and completely
 // silent way to ship a catalog of working links that never pays.
 //
-// currency/targetCountry/availability are server-side ARGUMENTS, so USD, the
-// US storefront and in-stock filtering are enforced by CJ rather than by us
-// discarding rows after the fact.
+// currency and availability are server-side ARGUMENTS, so USD and in-stock are
+// enforced by CJ. The targetCountry ARGUMENT is NOT authorized for this account
+// ("You are not authorized to use googleProductCategoryIds or targetCountry
+// filter"), so US is enforced per-product in mapProduct against the
+// targetCountry FIELD, which the API does return.
 const PRODUCT_QUERY = `
-query Products($cid: ID!, $pid: ID!, $advertiserIds: [ID!], $limit: Int!, $offset: Int!) {
+query Products($cid: ID!, $pid: ID!, $advertiserIds: [ID!], $limit: Int!, $page: String) {
   products(
     companyId: $cid
     partnerIds: $advertiserIds
     partnerStatus: JOINED
     currency: "USD"
-    targetCountry: ["US"]
-    advertiserCountries: ["US"]
     availability: IN_STOCK
     limit: $limit
-    offset: $offset
+    page: $page
   ) {
     totalCount
     count
+    nextPage
     resultList {
       id
       title
@@ -259,27 +260,46 @@ function assertShape(payload, program) {
 async function fetchAll(program) {
   const ids = program.advertiser_id ? [program.advertiser_id] : null;
   const products = [];
-  let offset = 0, total = null;
+  const seen = new Set();
+  let page = null, total = null, dupes = 0, pages = 0;
 
+  // Cursor pagination, not offset. An offset walk over a live feed returned a
+  // different count on consecutive runs (851 then 907) because the catalog
+  // shifts underneath the window, and it also re-served rows already seen.
+  // nextPage is passed back VERBATIM, the same contract as Impact's
+  // @nextpageuri.
   for (;;) {
     let data;
     try {
-      data = await gql(PRODUCT_QUERY, { cid: CID, pid: PID, advertiserIds: ids, limit: PAGE, offset });
+      data = await gql(PRODUCT_QUERY, { cid: CID, pid: PID, advertiserIds: ids, limit: PAGE, page });
     } catch (e) {
-      console.error(`[cj-sync]   fetch failed at offset ${offset}: ${e.message}`);
+      console.error(`[cj-sync]   fetch failed on page ${pages + 1}: ${e.message}`);
       return { products, complete: false };
     }
     const node = assertShape(data, program);
     if (total === null) total = node.totalCount ?? null;
-    products.push(...node.resultList);
-    if (node.resultList.length < PAGE) break;
-    offset += PAGE;
-    if (offset > 50000) { console.error('[cj-sync]   runaway pagination guard hit'); return { products, complete: false }; }
+
+    // CJ can repeat a product id across pages; the upsert would then fail with
+    // "ON CONFLICT DO UPDATE command cannot affect row a second time".
+    for (const p of node.resultList) {
+      const id = String(p.id);
+      if (seen.has(id)) { dupes++; continue; }
+      seen.add(id);
+      products.push(p);
+    }
+
+    pages++;
+    page = node.nextPage || null;
+    if (!page || !node.resultList.length) break;
+    if (pages > 400) { console.error('[cj-sync]   runaway pagination guard hit'); return { products, complete: false }; }
   }
 
-  // Complete only if the count CJ reported matches what we hold.
-  const complete = total === null ? true : products.length >= total;
-  if (!complete) console.error(`[cj-sync]   incomplete: CJ reported ${total}, collected ${products.length}`);
+  if (dupes) console.log(`[cj-sync]   de-duplicated ${dupes} repeated product id(s) across ${pages} page(s)`);
+
+  // Complete when we hold at least as many DISTINCT ids as CJ reported, or when
+  // duplicates account for the shortfall.
+  const complete = total === null ? true : (products.length + dupes) >= total;
+  if (!complete) console.error(`[cj-sync]   incomplete: CJ reported ${total}, collected ${products.length} distinct (+${dupes} dupes)`);
   return { products, complete, total };
 }
 
