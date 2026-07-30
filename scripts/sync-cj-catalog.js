@@ -60,6 +60,9 @@ const ONLY_BRAND  = (process.argv.find(a => a.startsWith('--brand=')) || '').rep
 
 const PAT = process.env.CJ_PAT;
 const CID = process.env.CJ_COMPANY_ID;
+// Property ID. linkCode(pid:) is what mints the tracking URL, so without this
+// there is no sellable link and the sync refuses to run.
+const PID = process.env.CJ_PID;
 const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
 
 const ENDPOINT = 'https://ads.api.cj.com/query';
@@ -103,11 +106,16 @@ query {
   }
 }`;
 
+// NON_NULL(LIST(NON_NULL(T))) needs four levels of unwrapping; two was not
+// enough and left resultList showing as '?'.
 const TYPE_QUERY = `
 query TypeFields($name: String!) {
   __type(name: $name) {
     name
-    fields { name type { name kind ofType { name kind ofType { name kind } } } }
+    fields {
+      name
+      type { name kind ofType { name kind ofType { name kind ofType { name kind ofType { name kind } } } } }
+    }
   }
 }`;
 
@@ -146,55 +154,95 @@ async function runIntrospect() {
 // ── Joined-advertiser discovery ──────────────────────────────────────────────
 // Advertiser -> dormied brand slug is ALWAYS a manual affiliate_programs row.
 // This only reports what the account can see.
-const ADVERTISER_QUERY = `
-query Advertisers($cid: ID!) {
-  advertiserLookup(companyId: $cid, relationshipStatus: joined) {
-    resultList { advertiserId advertiserName networkRank }
+const FEEDS_QUERY = `
+query Feeds($cid: ID!) {
+  productFeeds(companyId: $cid, feedType: ALL, advertiserCountry: "US", limit: 200) {
+    totalCount
+    resultList {
+      adId
+      advertiserId
+      advertiserName
+      advertiserCountry
+      currency
+      feedName
+      productCount
+      lastUpdated
+    }
   }
 }`;
 
 async function runDiscover() {
-  console.log('[cj-sync] Listing joined advertisers…\n');
-  try {
-    const data = await gql(ADVERTISER_QUERY, { cid: CID });
-    const list = data?.advertiserLookup?.resultList || [];
-    if (!list.length) { console.log('  (none returned)'); return; }
-    for (const a of list) console.log(`  ${String(a.advertiserId).padEnd(10)} ${a.advertiserName}`);
-    console.log('\n[cj-sync] Map the ones you want by hand into affiliate_programs (source=\'cj\').');
-  } catch (e) {
-    console.error(`[cj-sync] advertiser lookup failed: ${e.message}`);
-    console.error('[cj-sync] The field name likely differs — run --introspect and correct ADVERTISER_QUERY.');
-    process.exit(1);
+  console.log('[cj-sync] Listing US product feeds this account can see…\n');
+  const data = await gql(FEEDS_QUERY, { cid: CID });
+  const list = data?.productFeeds?.resultList || [];
+  if (!list.length) { console.log('  (none returned)'); return; }
+  const w = Math.max(...list.map(f => (f.advertiserName || '').length), 10);
+  console.log(`  ${'ADVERTISER'.padEnd(w)}  ${'ADV ID'.padEnd(9)} ${'ADID'.padEnd(9)} ${'CUR'.padEnd(4)} PRODUCTS  FEED`);
+  for (const f of list) {
+    console.log(`  ${String(f.advertiserName || '').padEnd(w)}  ${String(f.advertiserId).padEnd(9)} ${String(f.adId).padEnd(9)} ${String(f.currency || '').padEnd(4)} ${String(f.productCount ?? '').padStart(8)}  ${f.feedName || ''}`);
   }
+  console.log('\n[cj-sync] Map the ones you want by hand into affiliate_programs (source=\'cj\').');
 }
 
 // ── Product query ────────────────────────────────────────────────────────────
 // UNVERIFIED until --introspect confirms it. See the header note.
+// Verified against the live schema via --introspect on 2026-07-30.
+//
+// linkCode.clickUrl is the TRACKING link. The plain `link` field is the
+// advertiser's own product URL and earns nothing — an easy and completely
+// silent way to ship a catalog of working links that never pays.
+//
+// currency/targetCountry/availability are server-side ARGUMENTS, so USD, the
+// US storefront and in-stock filtering are enforced by CJ rather than by us
+// discarding rows after the fact.
 const PRODUCT_QUERY = `
-query Products($cid: ID!, $advertiserIds: [ID!], $limit: Int!, $offset: Int!) {
-  products(companyId: $cid, partnerIds: $advertiserIds, limit: $limit, offset: $offset) {
+query Products($cid: ID!, $pid: ID!, $advertiserIds: [ID!], $limit: Int!, $offset: Int!) {
+  products(
+    companyId: $cid
+    partnerIds: $advertiserIds
+    partnerStatus: JOINED
+    currency: "USD"
+    targetCountry: ["US"]
+    advertiserCountries: ["US"]
+    availability: IN_STOCK
+    limit: $limit
+    offset: $offset
+  ) {
     totalCount
     count
     resultList {
       id
       title
       description
-      price { amount currency }
-      salePrice { amount currency }
-      link
-      imageLink
-      availability
       brand
-      gtin
-      mpn
       advertiserId
       advertiserName
-      productType
+      targetCountry
+      imageLink
+      link
+      linkCode(pid: $pid) { clickUrl }
+      price { amount currency }
+      salePrice { amount currency }
+      effectiveDerivedPrice { amount currency }
+      discountPercentage
+      lastUpdated
     }
   }
 }`;
 
 const PAGE = 100;
+
+// CJ exposes Cobra and Puma as ONE advertiser ("Puma Golf and Cobra Golf",
+// 6530791), so the split onto /brands/cobra/ and /brands/puma-golf/ has to
+// happen here. The feed's own `brand` field does it cleanly — a 2,000-product
+// sample was 100% either "PUMA Golf" or "COBRA Golf", with links to
+// cobragolf.com and pumagolf.com respectively. Config lives in code rather than
+// a schema column, matching PLAYER_SHOP_BRAND and SHAFT_BRAND_LINKS.
+const BRAND_FIELD_TO_SLUG = {
+  'cobra golf': 'cobra',
+  'puma golf':  'puma-golf',
+};
+const brandSlugOf = raw => BRAND_FIELD_TO_SLUG[String(raw || '').trim().toLowerCase()] || null;
 
 /** Fails loudly rather than treating an unexpected shape as an empty catalog. */
 function assertShape(payload, program) {
@@ -216,7 +264,7 @@ async function fetchAll(program) {
   for (;;) {
     let data;
     try {
-      data = await gql(PRODUCT_QUERY, { cid: CID, advertiserIds: ids, limit: PAGE, offset });
+      data = await gql(PRODUCT_QUERY, { cid: CID, pid: PID, advertiserIds: ids, limit: PAGE, offset });
     } catch (e) {
       console.error(`[cj-sync]   fetch failed at offset ${offset}: ${e.message}`);
       return { products, complete: false };
@@ -236,13 +284,24 @@ async function fetchAll(program) {
 }
 
 function mapProduct(p, program) {
-  const price = Number(p.salePrice?.amount ?? p.price?.amount ?? NaN);
-  const orig  = Number(p.price?.amount ?? NaN);
-  const cur   = (p.salePrice?.currency || p.price?.currency || '').toUpperCase();
-  if (!Number.isFinite(price) || !p.id || !p.link) return null;
-  if (cur !== REQUIRED_CURRENCY) return null;         // US/USD only — never converted
+  // clickUrl is the tracking link; `link` is the advertiser's plain product URL
+  // and earns nothing. A row without a clickUrl is dropped rather than shipped
+  // untracked — a working link that pays no commission is the worst outcome,
+  // because nothing downstream can detect it.
+  const tracking = p.linkCode && p.linkCode.clickUrl;
+  if (!tracking || !p.id || !p.title) return null;
 
-  const onSale = Number.isFinite(orig) && orig > price;
+  const sale = p.salePrice?.amount != null ? Number(p.salePrice.amount) : null;
+  const list = p.price?.amount != null ? Number(p.price.amount) : null;
+  const eff  = p.effectiveDerivedPrice?.amount != null ? Number(p.effectiveDerivedPrice.amount) : null;
+  const price = [eff, sale, list].find(v => Number.isFinite(v) && v > 0);
+  if (!Number.isFinite(price)) return null;
+
+  const cur = (p.effectiveDerivedPrice?.currency || p.salePrice?.currency || p.price?.currency || '').toUpperCase();
+  if (cur !== REQUIRED_CURRENCY) return null;      // never converted, only skipped
+  if (p.targetCountry && String(p.targetCountry).toUpperCase() !== 'US') return null;
+
+  const onSale = Number.isFinite(list) && list > price;
   return {
     program_id:          program.id,
     dormied_brand_slug:  program.dormied_brand_slug,
@@ -254,21 +313,27 @@ function mapProduct(p, program) {
     name:                p.title,
     description:         null,
     image_url:           p.imageLink || null,
-    tracking_url:        p.link,                       // CJ returns the tracking link
+    tracking_url:        tracking,
     current_price:       price,
-    original_price:      onSale ? orig : null,
-    discount_percentage: onSale ? Math.round(((orig - price) / orig) * 100) : null,
+    original_price:      onSale ? list : null,
+    discount_percentage: onSale
+      ? (Number.isFinite(Number(p.discountPercentage)) && Number(p.discountPercentage) > 0
+          ? Math.round(Number(p.discountPercentage))
+          : Math.round(((list - price) / list) * 100))
+      : null,
     currency:            cur,
-    stock_availability:  /in.?stock|available/i.test(p.availability || '') ? 'InStock' : 'OutOfStock',
-    category:            p.productType || null,
+    // The query already filters availability: IN_STOCK server-side, so anything
+    // returned is in stock — Product carries no availability field to read.
+    stock_availability:  'InStock',
+    category:            null,
     sub_category:        null,
-    gtin:                p.gtin || null,
-    mpn:                 p.mpn || null,
-    labels:              null,
+    gtin:                null,
+    mpn:                 null,
+    labels:              p.brand ? [p.brand] : null,
     promo_code:          null,
     promo_title:         null,
     promo_expires_at:    null,
-    feed_updated_at:     null,
+    feed_updated_at:     p.lastUpdated || null,
     source_published_at: null,
     is_active:           true,
   };
@@ -288,8 +353,16 @@ async function syncProgram(supabase, program) {
   if (!complete) { console.error(`[cj-sync]   !! INCOMPLETE — writing nothing, no sweep.`); return { ok: false }; }
   if (!products.length) { console.error(`[cj-sync]   !! zero products — writing nothing, no sweep.`); return { ok: false }; }
 
-  const rows = products.map(p => mapProduct(p, program)).filter(Boolean);
-  const dropped = products.length - rows.length;
+  // Keep only the products whose feed brand maps to THIS program's brand.
+  const mine = products.filter(p => brandSlugOf(p.brand) === program.dormied_brand_slug);
+  const unmapped = products.filter(p => !brandSlugOf(p.brand));
+  if (unmapped.length) {
+    const names = [...new Set(unmapped.map(p => p.brand))].slice(0, 5);
+    console.warn(`[cj-sync]   !! ${unmapped.length} product(s) carry an unmapped brand — add to BRAND_FIELD_TO_SLUG: ${JSON.stringify(names)}`);
+  }
+  console.log(`[cj-sync]   ${mine.length} of ${products.length} match brand "${program.dormied_brand_slug}"`);
+  const rows = mine.map(p => mapProduct(p, program)).filter(Boolean);
+  const dropped = mine.length - rows.length;
   console.log(`[cj-sync]   mapped ${rows.length} row(s)${dropped ? ` (${dropped} skipped: non-USD or missing id/link/price)` : ''}`);
   if (!rows.length) { console.error(`[cj-sync]   !! nothing mappable in ${REQUIRED_CURRENCY} — writing nothing.`); return { ok: false }; }
 
@@ -348,6 +421,10 @@ async function syncProgram(supabase, program) {
 async function main() {
   need(PAT, 'Missing CJ_PAT (personal access token from members.cj.com > Account > Personal Access Tokens).');
   need(CID, 'Missing CJ_COMPANY_ID (members.cj.com > Account > Account Information).');
+  if (!INTROSPECT && !DISCOVER) {
+    need(PID, 'Missing CJ_PID (members.cj.com > Account > Websites — the Property/Website ID). ' +
+              'linkCode(pid:) needs it; without it every product would be untracked.');
+  }
 
   if (INTROSPECT) return runIntrospect();
   if (DISCOVER)   return runDiscover();
