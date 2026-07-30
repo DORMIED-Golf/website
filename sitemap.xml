@@ -2224,7 +2224,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (459) ── -->
+  <!-- ── News articles (460) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4583,6 +4583,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/pumas-showtime-pack-is-the-latest-golf-brand-pretending-the-world-cup-2026-06-18-hero.jpg</image:loc>
       <image:title>Puma&apos;s SHOWTIME Pack Is the Latest Golf Brand Pretending the World Cup Matters to Golfers</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/pxg-drops-another-zero-torque-putter-in-june-thats-the-strategy-2026-07-30/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/pxg-drops-another-zero-torque-putter-in-june-thats-the-strategy-2026-07-30-hero.jpg</image:loc>
+      <image:title>PXG Drops Another Zero-Torque Putter in June. That&apos;s the Strategy.</image:title>
     </image:image>
   </url>
   <url>
