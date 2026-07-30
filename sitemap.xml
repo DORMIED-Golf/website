@@ -2224,7 +2224,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (458) ── -->
+  <!-- ── News articles (459) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4663,6 +4663,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/pxgs-womens-golf-month-pitch-there-is-no-such-thing-as-a-womens-club-2026-06-02-hero.png</image:loc>
       <image:title>PXG&apos;s Women&apos;s Golf Month Pitch: There Is No Such Thing as a Women&apos;s Club</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/pxgs-zero-torque-push-continues-and-the-category-is-getting-crowded-fast-2026-07-30/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/pxgs-zero-torque-push-continues-and-the-category-is-getting-crowded-fast-2026-07-30-hero.jpg</image:loc>
+      <image:title>PXG&apos;s Zero Torque Push Continues, and the Category is Getting Crowded Fast</image:title>
     </image:image>
   </url>
   <url>
