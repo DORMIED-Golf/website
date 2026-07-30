@@ -89,6 +89,31 @@ const norm = s => String(s || '')
 
 const tokens = s => norm(s).split(' ').filter(Boolean);
 
+/**
+ * The identity part of a product title, i.e. everything before the variant
+ * spec. Retail titles are "MODEL Driver | Right 9.0 / graphite stiff / shaft",
+ * where only the head names the club and the tail is loft/flex/shaft.
+ *
+ * Scoring the whole title made longer, more-specified SKUs look like worse
+ * matches, which is how "OPTM MAX-K" picked the Women's driver and how plain
+ * "DS-ADAPT X" lost to "DS-ADAPT X Volition Driver - Limited Edition". It also
+ * let "AEROJET Weights Blue / aerojet fairway hybrid / 8g" — a weight kit —
+ * satisfy the 3-wood type gate on the word "fairway" in its spec tail.
+ *
+ * Split only on SPACED separators: "KING CB/MB Irons" must not lose "/MB".
+ */
+function titleHead(name) {
+  return String(name || '').split(/\s\|\s|\s\/\s/)[0].trim();
+}
+
+// Accessories routinely carry a club word ("KING Tour Iron Headcover") and are
+// never the club itself.
+const ACCESSORY_TERMS = new Set([
+  'weights', 'weight', 'headcover', 'headcovers', 'cover', 'covers',
+  'grip', 'grips', 'shaft', 'shafts', 'wrench', 'tool', 'towel', 'bag',
+  'glove', 'gloves', 'hat', 'cap', 'tee', 'tees', 'marker', 'sticker',
+]);
+
 /** Significant tokens of a bag model: stopwords dropped, order irrelevant. */
 function modelTokens(model) {
   return tokens(model).filter(t => !MODEL_STOPWORDS.has(t));
@@ -97,7 +122,7 @@ function modelTokens(model) {
 function titleNamesType(title, clubType) {
   const kws = TYPE_KEYWORDS[clubType];
   if (!kws) return false;               // unknown type -> never match
-  const n = ' ' + norm(title) + ' ';
+  const n = ' ' + norm(titleHead(title)) + ' ';
   return kws.some(k => n.includes(' ' + norm(k) + ' ') || n.includes(norm(k)));
 }
 
@@ -108,14 +133,16 @@ function titleNamesType(title, clubType) {
 function scoreCandidate(item, product) {
   if (!titleNamesType(product.name, item.club_type)) return null;
 
-  const titleTokens = tokens(product.name);
-  for (const t of titleTokens) if (EXCLUDE_TERMS.has(t)) return null;   // wrong club, not a worse one
+  const head = titleHead(product.name);
+  const titleTokens = tokens(head);
+  for (const t of titleTokens) if (EXCLUDE_TERMS.has(t)) return null;    // wrong club, not a worse one
+  for (const t of titleTokens) if (ACCESSORY_TERMS.has(t)) return null;  // an accessory, not the club
 
   const want = modelTokens(item.raw_model);
   if (!want.length) return null;
   if (want.join('').length < MIN_SIGNIFICANT_CHARS) return null;
 
-  const have = new Set(tokens(product.name));
+  const have = new Set(titleTokens);
   for (const t of want) if (!have.has(t)) return null;      // full coverage
 
   // Noise = title tokens not accounted for by the model, its club type, or the
@@ -129,6 +156,13 @@ function scoreCandidate(item, product) {
     if (/^\d{4}$/.test(t)) continue;                        // model year is expected
     noise++;
   }
+  // Handedness lives in the variant tail, so left- and right-handed SKUs share a
+  // head and tie. We do not store player handedness, so break the tie toward
+  // right-handed — the overwhelming default on tour, and a far better guess
+  // than whichever row the catalog happened to return first. A left-handed
+  // player therefore needs an explicit override.
+  if (/\bleft\b/i.test(String(product.name || ''))) noise += 0.5;
+
   return noise;
 }
 
@@ -169,7 +203,13 @@ function matchBagToProducts(bagItems, products, overrides = {}) {
       if (s === null) continue;
       if (s < bestScore) { best = p; bestScore = s; }
     }
-    if (best) matches.push({ item, product: best, via: 'auto', noise: bestScore });
+    if (best) {
+      // A combo set ("KING CB/MB Irons") legitimately answers two bag items.
+      // Record the match but never show the same product twice in one carousel.
+      const already = matches.find(m => m.product.id === best.id);
+      if (already) { unmatched.push({ item, reason: `same product as "${already.item.raw_model}"` }); continue; }
+      matches.push({ item, product: best, via: 'auto', noise: bestScore });
+    }
     else unmatched.push({ item, reason: 'no confident match' });
   }
 
@@ -179,5 +219,5 @@ function matchBagToProducts(bagItems, products, overrides = {}) {
 module.exports = {
   matchBagToProducts,
   // exported for tests
-  _internals: { norm, tokens, modelTokens, titleNamesType, scoreCandidate, MIN_SIGNIFICANT_CHARS, MODEL_STOPWORDS, TITLE_NOISE_EXEMPT, EXCLUDE_TERMS },
+  _internals: { norm, tokens, modelTokens, titleNamesType, scoreCandidate, MIN_SIGNIFICANT_CHARS, MODEL_STOPWORDS, TITLE_NOISE_EXEMPT, EXCLUDE_TERMS, ACCESSORY_TERMS, titleHead },
 };
