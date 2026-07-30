@@ -323,7 +323,7 @@ function repairMojibake(str) {
   } catch { return str; }
 }
 
-function mapProduct(p, program) {
+function mapProduct(p, program, syncedAt) {
   // clickUrl is the tracking link; `link` is the advertiser's plain product URL
   // and earns nothing. A row without a clickUrl is dropped rather than shipped
   // untracked — a working link that pays no commission is the worst outcome,
@@ -373,7 +373,13 @@ function mapProduct(p, program) {
     promo_code:          null,
     promo_title:         null,
     promo_expires_at:    null,
-    feed_updated_at:     p.lastUpdated || null,
+    // When WE last verified this price, which is what the carousel's staleness
+    // guard actually means — it hides prices if the sync stops running.
+    // CJ's own lastUpdated is the merchant's last product EDIT (often years
+    // ago: the Cobra irons above read 2025-10), so using it made 100% of CJ
+    // rows look stale and suppressed every price. Impact and Shopify are
+    // unaffected because their feed timestamps move daily.
+    feed_updated_at:     syncedAt,
     source_published_at: null,
     is_active:           true,
   };
@@ -401,7 +407,8 @@ async function syncProgram(supabase, program) {
     console.warn(`[cj-sync]   !! ${unmapped.length} product(s) carry an unmapped brand — add to BRAND_FIELD_TO_SLUG: ${JSON.stringify(names)}`);
   }
   console.log(`[cj-sync]   ${mine.length} of ${products.length} match brand "${program.dormied_brand_slug}"`);
-  const rows = mine.map(p => mapProduct(p, program)).filter(Boolean);
+  const syncedAt = new Date().toISOString();
+  const rows = mine.map(p => mapProduct(p, program, syncedAt)).filter(Boolean);
   const dropped = mine.length - rows.length;
   console.log(`[cj-sync]   mapped ${rows.length} row(s)${dropped ? ` (${dropped} skipped: non-USD or missing id/link/price)` : ''}`);
   if (!rows.length) { console.error(`[cj-sync]   !! nothing mappable in ${REQUIRED_CURRENCY} — writing nothing.`); return { ok: false }; }
