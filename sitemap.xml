@@ -2224,7 +2224,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (461) ── -->
+  <!-- ── News articles (462) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2583,6 +2583,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bettinardis-250-copper-wedge-is-a-bet-that-golfers-will-pay-2026-04-17-hero.jpg</image:loc>
       <image:title>Bettinardi&apos;s $250 Copper Wedge Is a Bet That Golfers Will Pay for Patina</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/bettinardis-400-junior-putters-are-the-loyalty-play-nobody-else-is-making-2026-07-30/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/bettinardis-400-junior-putters-are-the-loyalty-play-nobody-else-is-making-2026-07-30-hero.jpg</image:loc>
+      <image:title>Bettinardi&apos;s $400 Junior Putters Are the Loyalty Play Nobody Else Is Making</image:title>
     </image:image>
   </url>
   <url>
