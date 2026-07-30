@@ -25,6 +25,10 @@
   var next  = document.getElementById('bp-shop-next');
   var dots  = document.getElementById('bp-shop-dots');
   var slug  = section.getAttribute('data-brand-slug') || '';
+  // "Shop This Bag" supplies an explicit, ordered product list instead of a
+  // brand to page through: the page already decided which products (the ones in
+  // the player's bag), so there is nothing to paginate.
+  var fixedIds = (section.getAttribute('data-product-ids') || '').trim();
 
   var loaded = [], offset = 0, total = null, fetching = false, exhausted = false;
 
@@ -121,8 +125,10 @@
     fetching = true;
     var ctrl = ('AbortController' in window) ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, FETCH_TIMEOUT);
-    var url = '/api/shop?brand=' + encodeURIComponent(slug) +
-              '&limit=' + PAGE_SIZE + '&offset=' + offset;
+    var url = fixedIds
+      ? '/api/shop?ids=' + encodeURIComponent(fixedIds)
+      : '/api/shop?brand=' + encodeURIComponent(slug) +
+        '&limit=' + PAGE_SIZE + '&offset=' + offset;
 
     return fetch(url, ctrl ? { signal: ctrl.signal } : undefined)
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
@@ -140,7 +146,8 @@
         }
         loaded = loaded.concat(items).slice(0, MAX_CARDS);
         offset += items.length;
-        if (loaded.length >= MAX_CARDS || (total != null && offset >= total)) exhausted = true;
+        // A fixed id list arrives complete in one response; never ask for more.
+        if (fixedIds || loaded.length >= MAX_CARDS || (total != null && offset >= total)) exhausted = true;
         render();
       })
       .catch(function (e) {

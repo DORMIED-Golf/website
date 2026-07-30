@@ -27,6 +27,12 @@ const { createClient } = require('@supabase/supabase-js');
 const Anthropic        = require('@anthropic-ai/sdk');
 const { pageEligible } = require('./witb-page-eligibility');
 const feedBake         = require('./feed-bake');
+const { matchBagToProducts } = require('./lib/witb-shop-match');
+
+// Explicit bag-item -> product overrides, keyed 'brand|club_type|normalised model'.
+// The only way a model too short to be distinctive (e.g. Cobra's "SB") can reach
+// the carousel; the matcher refuses those on its own.
+const SHOP_BAG_OVERRIDES = {};
 
 function loadDormiedData() {
   const raw = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
@@ -675,7 +681,7 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
-function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand }) {
+function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag }) {
   const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
@@ -1115,6 +1121,18 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
               ${mobileCards}
             </div>
           </section>
+${shopBag ? `
+          <!-- ── Shop This Bag (affiliate) ── -->
+          <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBag.slug)}" data-brand-name="${esc(shopBag.name)}" data-product-ids="${esc(shopBag.ids.join(','))}">
+            <p class="bp-chart-heading">Shop This Bag</p>
+            <div class="bp-shop-viewport">
+              <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>
+              <div class="bp-shop-track" id="bp-shop-track" role="region" aria-label="Shop the clubs in this bag" tabindex="0"></div>
+              <button type="button" class="bp-shop-arrow bp-shop-arrow--next" id="bp-shop-next" aria-label="Scroll to next products" hidden>&#8250;</button>
+            </div>
+            <div class="bp-shop-dots" id="bp-shop-dots" role="tablist" aria-label="Product pages"></div>
+            <p class="bp-shop-disclosure">Only the clubs we could match to a current retail listing are shown, so this may be part of the bag rather than all of it. Some links are affiliate links; DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
+          </section>` : ''}
 
           <!-- 3. HOW THIS BAG COMPARES -->
           <section class="witb-section" aria-labelledby="compare-heading">
@@ -1142,7 +1160,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
             <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a> and <a href="https://golfwrx.com/" rel="noopener noreferrer" target="_blank">GolfWRX</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
           </section>
 
-${shopBrand ? `
+${(shopBrand && !shopBag) ? `
           <!-- ── Shop ${esc(shopBrand.name)} (affiliate) ── -->
           <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBrand.slug)}" data-brand-name="${esc(shopBrand.name)}">
             <p class="bp-chart-heading">Shop ${esc(shopBrand.name)}</p>
@@ -1363,7 +1381,7 @@ ${shopBrand ? `
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/feed.min.js?v=20260717"></script>
   <script defer src="/js/search.min.js?v=20260529"></script>
-  ${shopBrand ? '<script defer src="/js/shop-carousel.min.js?v=20260728"></script>' : ''}
+  ${(shopBrand || shopBag) ? '<script defer src="/js/shop-carousel.min.js?v=20260730"></script>' : ''}
   <script>
   // Player page view tracking — fire-and-forget, mirrors brand_page_views
   (function(pid){
@@ -1544,7 +1562,58 @@ async function main() {
     }
   }
 
-  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand });
+  // ── Shop This Bag ────────────────────────────────────────────────────────
+  // Matches the clubs actually in this bag to sellable products. Only brands
+  // with an active affiliate program are considered, and the matcher refuses
+  // anything it is not confident about, so a partial bag is expected and fine —
+  // the disclosure says so rather than implying it is the whole bag.
+  let shopBag = null;
+  try {
+    const { data: progs } = await sb.from('affiliate_programs')
+      .select('dormied_brand_slug').eq('status', 'active').not('dormied_brand_slug', 'is', null);
+    const sellable = new Set((progs || []).map(r => r.dormied_brand_slug));
+
+    const bagItems = currentItems
+      .map(i => ({
+        club_type: i.club_type,
+        raw_brand: i.raw_brand,
+        raw_model: i.raw_model,
+        dormied_brand_slug: i.witb_brands?.dormied_brand_slug || null,
+      }))
+      .filter(i => i.dormied_brand_slug && sellable.has(i.dormied_brand_slug));
+
+    if (bagItems.length) {
+      const slugs = [...new Set(bagItems.map(i => i.dormied_brand_slug))];
+      const products = [];
+      for (let from = 0; ; from += 1000) {
+        const { data, error } = await sb.from('affiliate_products')
+          .select('id, name, dormied_brand_slug')
+          .eq('is_active', true).eq('stock_availability', 'InStock')
+          .in('dormied_brand_slug', slugs).range(from, from + 999);
+        if (error) throw new Error(error.message);
+        if (!data || !data.length) break;
+        products.push(...data);
+        if (data.length < 1000) break;
+      }
+      const { matches, unmatched } = matchBagToProducts(bagItems, products, SHOP_BAG_OVERRIDES);
+      if (matches.length) {
+        // Bag order is meaningful (driver first), and the API preserves the
+        // order these ids are sent in.
+        const ids = matches.map(m => m.product.id);
+        const first = matches[0].item.dormied_brand_slug;
+        shopBag = { ids, slug: first, name: matches[0].item.raw_brand || first };
+        log(`Shop This Bag: ${matches.length} of ${bagItems.length} sellable club(s) matched`);
+        for (const m of matches) log(`  ${m.item.club_type}: "${m.item.raw_model}" -> ${m.product.name}`);
+        for (const u of unmatched) log(`  (skipped) ${u.item.club_type} "${u.item.raw_model}": ${u.reason}`);
+      } else {
+        log(`Shop This Bag: no confident matches among ${bagItems.length} sellable club(s) — no section`);
+      }
+    }
+  } catch (e) {
+    log(`WARN: Shop This Bag matching failed: ${e.message} — no section`);
+  }
+
+  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag });
 
   const noindex = html.includes('noindex');
 

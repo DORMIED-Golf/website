@@ -85,7 +85,37 @@ module.exports = async (req, res) => {
   const limit  = Math.min(MAX_LIMIT, Math.max(1, parseInt(q.limit, 10) || DEFAULT_LIMIT));
   const offset = Math.max(0, parseInt(q.offset, 10) || 0);
 
-  if (!brand) return res.status(400).json({ error: 'brand required' });
+  // ids= serves an explicit, ordered set of products — used by "Shop This Bag",
+  // where the page has already decided WHICH products (the ones actually in the
+  // player's bag) and only needs them rendered. Ids are already public: every
+  // card links through /api/go/{id}. Capped and integer-only so this cannot be
+  // used to enumerate the table.
+  const idsRaw = typeof q.ids === 'string' ? q.ids.trim() : '';
+  const ids = idsRaw
+    ? [...new Set(idsRaw.split(',').map(x => parseInt(x, 10)).filter(Number.isInteger))].slice(0, MAX_LIMIT)
+    : [];
+
+  if (!brand && !ids.length) return res.status(400).json({ error: 'brand or ids required' });
+
+  if (ids.length) {
+    const { SUPABASE_URL: U, SUPABASE_SERVICE_KEY: K } = process.env;
+    if (!U || !K) return res.status(500).json({ error: 'DB not configured' });
+    const sb = createClient(U, K);
+    try {
+      const { data, error } = await sb.from('affiliate_products')
+        .select(SELECT_COLS).in('id', ids).eq('is_active', true);
+      if (error) throw new Error(error.message);
+      // Preserve the caller's order — bag order is meaningful (driver first).
+      const byId = new Map((data || []).map(r => [r.id, r]));
+      const ordered = ids.map(i => byId.get(i)).filter(Boolean);
+      return res.status(200).json({
+        ids: ids.length, count: ordered.length, limit: ordered.length, offset: 0,
+        products: ordered.map(shape),
+      });
+    } catch (e) {
+      return res.status(500).json({ error: 'lookup failed' });
+    }
+  }
 
   const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
