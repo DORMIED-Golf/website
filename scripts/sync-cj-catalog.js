@@ -303,6 +303,26 @@ async function fetchAll(program) {
   return { products, complete, total };
 }
 
+/**
+ * CJ's feed contains UTF-8 that was decoded as Latin-1 somewhere upstream, so
+ * "48°" arrives as "48Â°" and apostrophes as "â€™". 65 of 8,158 rows on the
+ * first sync. Verified byte-identical coming out of their API, so this is their
+ * data, not our transport — but it renders as visible garbage on the page.
+ *
+ * The double-encoding is losslessly reversible. Only attempted when the
+ * signature is present AND the round-trip is clean, so text that is genuinely
+ * Latin-1 is left alone.
+ */
+function repairMojibake(str) {
+  if (typeof str !== 'string' || !/[ÂÃ]|â€/.test(str)) return str;
+  try {
+    const fixed = Buffer.from(str, 'latin1').toString('utf8');
+    if (fixed.includes('\uFFFD')) return str;                 // lossy — leave it
+    if (Buffer.from(fixed, 'utf8').toString('latin1') !== str) return str;
+    return fixed;
+  } catch { return str; }
+}
+
 function mapProduct(p, program) {
   // clickUrl is the tracking link; `link` is the advertiser's plain product URL
   // and earns nothing. A row without a clickUrl is dropped rather than shipped
@@ -330,7 +350,7 @@ function mapProduct(p, program) {
     impact_item_id:      null,
     item_group_id:       String(p.id),
     is_parent:           true,
-    name:                p.title,
+    name:                repairMojibake(p.title),
     description:         null,
     image_url:           p.imageLink || null,
     tracking_url:        tracking,
