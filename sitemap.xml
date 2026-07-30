@@ -2224,7 +2224,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (460) ── -->
+  <!-- ── News articles (461) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5769,6 +5769,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-quiet-luxury-pitch-hits-frisco-williams-athletic-club-bets-on-the-2026-06-24-hero.jpg</image:loc>
       <image:title>The Quiet Luxury Pitch Hits Frisco: Williams Athletic Club Bets on the Underserved Half of the Pro Shop</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-spider-isnt-a-hot-putter-its-the-most-important-mallet-design-since-2026-07-30/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-spider-isnt-a-hot-putter-its-the-most-important-mallet-design-since-2026-07-30-hero.jpg</image:loc>
+      <image:title>The Spider Isn&apos;t a Hot Putter. It&apos;s the Most Important Mallet Design Since the Anser.</image:title>
     </image:image>
   </url>
   <url>
