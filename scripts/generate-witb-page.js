@@ -153,12 +153,25 @@ async function fetchAllData() {
   );
   console.log(`  Brands: ${brands.length}`);
 
-  // 4. DI scores for April 2026
+  // 4. DI scores for the LATEST snapshot.
+  //
+  // This was pinned to '2026-04-01', so the scatter chart's Y axis silently
+  // froze on April while tour usage on the X axis kept moving — the two axes
+  // stopped describing the same period, which is the one thing that chart
+  // claims. Follow the data instead, and carry the month through to the copy so
+  // the page can never again state a month it is not plotting.
+  const { data: latestSnap } = await sb.from('dormied_monthly_brand_summary')
+    .select('snapshot_month').order('snapshot_month', { ascending: false }).limit(1);
+  const snapshotMonth = latestSnap?.[0]?.snapshot_month;
+  if (!snapshotMonth) throw new Error('no dormied_monthly_brand_summary rows — cannot date the DI axis');
+
   const { data: diRows } = await sb.from('dormied_monthly_brand_summary')
     .select('brand_slug, global_rank, di_score, global_searches')
-    .eq('snapshot_month', '2026-04-01');
+    .eq('snapshot_month', snapshotMonth);
   const diBySlug = new Map((diRows || []).map(d => [d.brand_slug, d]));
-  console.log(`  DI rows (Apr 2026): ${diRows?.length}`);
+  const snapshotLabel = new Date(snapshotMonth + 'T00:00:00Z')
+    .toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  console.log(`  DI rows (${snapshotLabel}): ${diRows?.length}`);
 
   // 5. Recent bag changes (for Widget 3)
   const { data: changes, error: changesErr } = await sb.from('witb_changes')
@@ -192,7 +205,7 @@ async function fetchAllData() {
   const bagDateMap = new Map(currentBagsRaw.map(b => [b.id, b.bag_date]));
   console.log(`  Current bags with dates: ${bagDateMap.size}`);
 
-  return { allItems: items, currentItems, players, playerMap, brands, diBySlug, changes: changes || [], lastCrawl, shaftItems, bagDateMap };
+  return { allItems: items, currentItems, players, playerMap, brands, diBySlug, snapshotLabel, changes: changes || [], lastCrawl, shaftItems, bagDateMap };
 }
 
 // ── Widget computations ────────────────────────────────────────────────────
@@ -735,7 +748,7 @@ function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
 
 // ── Full page HTML ─────────────────────────────────────────────────────────
 
-function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlug, changes, lastCrawl, shaftItems, bagDateMap, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml }) {
+function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlug, snapshotLabel, changes, lastCrawl, shaftItems, bagDateMap, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml }) {
   // Canonical set: players with a non-null OWGR rank (158 today; sentinel 4990 included)
   const rankedPlayers      = players.filter(p => p.owgr_rank !== null);
   const rankedBagIds       = new Set(rankedPlayers.map(p => p.current_bag_id).filter(Boolean));
@@ -1087,7 +1100,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
         <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
         <section class="witb-section" aria-labelledby="scatter-heading">
           <h2 class="witb-section-title" id="scatter-heading">Tour Usage vs. Amateur Attention</h2>
-          <p class="witb-section-sub">April 2026 tour usage vs. April 2026 DORMIED Index score. Same month, same brands, measured two ways.</p>
+          <p class="witb-section-sub">Current tour usage vs. the ${esc(snapshotLabel)} DORMIED Index score. Same brands, measured two ways.</p>
           <div class="witb-scatter-layout">
             <div class="witb-scatter-filter" id="scatter-filter" aria-label="Filter brands on chart">
               <div class="witb-scatter-filter-bar">
@@ -1287,12 +1300,12 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
         <section class="witb-section witb-section--method" aria-labelledby="method-heading">
           <div class="scorecard-intro-body">
             <h2 class="scorecard-intro-h2" id="method-heading">What This Data Is</h2>
-            <p class="scorecard-intro-p">The DORMIED WITB dataset tracks the current equipment setup of ${totalPlayers} professional golfers, pulling current bag data on a weekly basis. Each player's bag is recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball, and grips. Brand, model, shaft, and loft are captured where available. The dataset covers ${totalBrands} distinct equipment brands and is refreshed every Tuesday at 9am ET.</p>
+            <p class="scorecard-intro-p">The DORMIED WITB dataset tracks the current equipment setup of ${totalPlayers} professional golfers, pulling current bag data on a weekly basis. Each player's bag is recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball, and grips. Brand, model, shaft, and loft are captured where available.</p>
 
             <p class="scorecard-intro-p">This is equipment-in-play data, not equipment-sold data. A brand appearing here means a tour-level professional has chosen it in competition - which is a meaningfully different signal than market share, retail velocity, or endorsement deals. Some of the most tour-popular brands barely register in amateur golfers' awareness. That gap is the most interesting thing this page exists to show.</p>
 
             <h2 class="scorecard-intro-h2">Reading the Tour Usage vs. Amateur Attention Chart</h2>
-            <p class="scorecard-intro-p">The signature chart plots two independent signals against each other. The X axis is tour usage share: what percentage of the ${totalPlayers} tracked players carry at least one product from that brand in their bag. The Y axis is the DORMIED Index (DI) score for that brand in April 2026, which measures global search interest relative to the highest-scoring brand in the Index that month. Both axes use the same time period.</p>
+            <p class="scorecard-intro-p">The signature chart plots two independent signals against each other. The X axis is tour usage share: what percentage of the ${totalPlayers} tracked players carry at least one product from that brand in their bag. The Y axis is the DORMIED Index (DI) score for that brand in ${esc(snapshotLabel)} — the most recent monthly snapshot — which measures global search interest relative to the highest-scoring brand in the Index that month.</p>
 
             <p class="scorecard-intro-p">The dashed diagonal is a reference line, not a regression. Brands sitting above the line are pro favorites the amateur game has not yet matched with search attention - either because the brand does not market aggressively, serves a niche the mainstream has not discovered, or benefits from tour contracts that do not translate to retail awareness. Brands sitting below the line command more amateur attention than their tour presence suggests - often large heritage brands with strong retail and marketing footprints even when pros have shifted toward competitors.</p>
 
@@ -1301,7 +1314,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
 
             <p class="scorecard-intro-p">The DORMIED Index measures consumer search interest, not brand sentiment or purchase intent. A high DI score means many people are searching for a brand globally. A low score means the brand is either niche, regional, or simply not a household name outside the sport. For equipment brands especially, the gap between tour presence and public awareness can be dramatic - and that gap tells you something about where the market might be heading, or where it is already moving without the mainstream noticing yet.</p>
 
-            <p class="scorecard-intro-p">Data source: equipment data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker.com</a> and <a href="https://golfwrx.com/" rel="noopener noreferrer" target="_blank">GolfWRX</a>. Consumer search data: <a href="/rankings/">DORMIED Index</a>, April 2026 snapshot. All analysis is DORMIED's independent editorial work.</p>
+            <p class="scorecard-intro-p">Data source: equipment data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker.com</a> and <a href="https://golfwrx.com/" rel="noopener noreferrer" target="_blank">GolfWRX</a>. Consumer search data: <a href="/rankings/">DORMIED Index</a>, ${esc(snapshotLabel)} snapshot. All analysis is DORMIED's independent editorial work.</p>
           </div>
         </section>
 
