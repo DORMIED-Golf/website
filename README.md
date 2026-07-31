@@ -1,98 +1,333 @@
 # DORMIED
 
-Golf's brand desk. 169 brands. 10 markets. Ranked monthly by real search data.
+Golf's brand desk. 175 brands. 10 markets. Ranked monthly by real search data.
 
 **Live site:** [dormied.com](https://dormied.com)
-**Stack:** Vanilla HTML/CSS/JS · Vercel · Supabase · Beehiiv · Anthropic
+**Stack:** Vanilla HTML/CSS/JS · Vercel · Supabase · Beehiiv · Anthropic · Impact / CJ
+
+---
+
+## Read this first
+
+**The repository IS the deployed artifact.** Vercel serves the committed HTML
+directly. No build step, no framework. A bad commit is a bad site, which is why
+generators write files into the repo and checks run on push.
+
+**Pages are generated, not hand-written.** Almost every `index.html` under
+`brands/`, `news/`, `witb/` and `scorecard/` comes from a script in `scripts/`.
+Editing built HTML works until the next regeneration silently overwrites it.
+Change the generator instead.
+
+Four hand-authored articles are the exception — their full HTML lives in the
+committed page rather than the database. They are listed in `PROTECTED_SLUGS` in
+`scripts/generate-article.js`, and `--regenerate-all` skips them on purpose:
+regenerating one collapses its body to a single line.
+
+**Two hand-maintained stylesheets.** `css/styles.css` and `css/styles.min.css`
+are both edited by hand — nothing derives one from the other — and different page
+families load different files. A rule added to only one is invisible wherever
+the other is loaded, and the page still renders, just unstyled. That shipped
+twice before `npm run verify:css` existed. **Add rules to both.**
+
+**`sitemap.xml` is generated.** Do not hand-edit it; run
+`npm run regenerate:sitemap`. It derives `lastmod` from content sources only and
+never falls back to `now()` or file mtime.
+
+---
+
+## What runs on its own
+
+| Workflow | Schedule | What it does |
+|---|---|---|
+| `golf-wire-pipeline` | every 3h | Scrapes wires + pressrooms, matches brands, writes articles with Opus, publishes, re-bakes news index, homepage and sidebar modules |
+| `affiliate-catalog-sync` | daily 08:00 | Impact catalog sync, then the Shopify merchant-feed sync |
+| `witb-weekly-crawl` | Tue 13:00 | Crawls tour bags, refreshes OWGR, rebuilds every WITB page |
+| `post-to-x` | every 30m | Posts published articles to X |
+| `verify-build` | push + PR | CSS parity + sitemap resolution — the only workflow gating a commit |
+| `monthly-explanations` | manual | Regenerates AI brand-movement explanations |
+
+The CJ sync (`scripts/sync-cj-catalog.js`) is **not** scheduled yet — it runs by
+hand until its deactivation sweep has been watched over a few cycles, since it
+touches ~8,000 rows.
+
+`main` moves on its own every 3 hours. If a push is rejected, **rebase rather
+than merge**: the pipeline only touches generated output, so re-running the
+generators on top of `origin/main` beats resolving conflicts in built HTML.
+
+---
+
+## Affiliate system
+
+Three ingestion paths write into one `affiliate_products` table, distinguished by
+a `source` column. **Each source's deactivation sweep is scoped to its own rows**,
+so they can never deactivate each other's.
+
+| Source | Script | Programs | Where the link comes from |
+|---|---|---|---|
+| `impact` | `sync-affiliate-catalog.js` | Pins & Aces | Impact's `Url` is already the tracking link |
+| `shopify` | `sync-shopify-catalog.js` | Malbon | Merchant `products.json` + **constructed** Impact deep link |
+| `cj` | `sync-cj-catalog.js` | Cobra, Puma Golf | CJ GraphQL, `linkCode(pid:){ clickUrl }` |
+
+### The rule, and its one deliberate exception
+
+`sync-affiliate-catalog.js` holds the line: **never build affiliate links** —
+Impact hands us the URL. Correct wherever a catalog exists.
+
+`sync-shopify-catalog.js` breaks it on purpose, because Malbon deep-links through
+Impact but exposes no Impact catalog. The hazard is specific: **a wrong tracking
+prefix still redirects perfectly and pays nothing.** Pages render, clicks land,
+revenue is zero, and nothing downstream can see it. So that script refuses to
+write a single row until it has resolved a real link and asserted the destination
+host, path, and an Impact click id.
+
+Same reason the CJ sync demands `CJ_PID`: `linkCode` needs it, and CJ's plain
+`link` field is the advertiser's own URL, which earns nothing.
+
+### Safety contract (all three)
+
+- A partial or failed fetch writes **nothing** for that program and exits non-zero.
+- The sweep runs only on a verified-complete fetch, and refuses to deactivate
+  more than 20% of a program's active rows without `--allow-large-deactivation`.
+- `first_seen_at` preserved. Nothing is ever deleted.
+- **USD/US only — non-USD rows are skipped, never converted.**
+
+That last one is not theoretical. Shopify prices `products.json` in the *caller's
+geo* currency, so a sync from a Canadian egress returned CAD that looked exactly
+like USD — a whole catalog loaded ~70% over the true price while every existing check
+passed. The Shopify sync now pins `currency=` and cross-checks the storefront's
+`og:price` tags before writing. Note the CAD figure was not recoverable by
+dividing by an FX rate; Shopify Markets applies per-market pricing.
+
+### Serving
+
+Products reach the browser only via `/api/shop`. **`tracking_url` is never sent
+to the client** — every card links to `/api/go/{id}`, which redirects
+server-side. Carousels are empty mounts filled at runtime; no product data is
+baked into any page.
+
+`/api/shop?ids=` serves an explicit ordered set, used by Shop This Bag.
+
+| Surface | Which products |
+|---|---|
+| `/brands/{slug}/` | that brand's catalog |
+| News article / feature | the article's **primary** brand only |
+| `/witb/players/{slug}/` | Shop This Bag — the clubs actually in that bag |
+| `/witb/players/{slug}/` | or a brand carousel, via `PLAYER_SHOP_BRAND` |
+
+Only one carousel per page (the JS binds by element id); Shop This Bag wins as
+the more specific unit. Features need `inlineCommerce: true` to get one.
+
+### Shop This Bag matching
+
+`scripts/lib/witb-shop-match.js`. Deliberately conservative: **a missed match
+costs a click; a wrong match sends a reader to the wrong club** on a page whose
+whole value is equipment accuracy.
+
+Gates — the title must name the club type, every significant model token must
+appear, and models too short to be distinctive (Cobra's "SB") are refused unless
+an override names the product.
+
+Scoring uses only the **title head**, everything before ` | ` or ` / `. Retail
+titles look like `MODEL Driver | Right 9.0 / graphite stiff / shaft`, and scoring
+the whole string punished well-specified SKUs — it matched a *weight kit* to a
+3-wood, and let a "Limited Edition" beat the real driver because its title was
+shorter. Splitting only on **spaced** separators keeps `KING CB/MB Irons` intact.
+
+Gendered and junior variants are excluded outright. That is scoped to the fact
+that every tracked player is a men's professional — **adding LPGA players means
+gating that on player gender, not excluding unconditionally.**
+
+---
+
+## WITB
+
+180 players, ~7,100 bag items. Pages are generated per player and gated by
+`scripts/witb-page-eligibility.js`: ranked players always qualify; unranked ones
+do too unless blocklisted.
+
+The weekly crawl is the default path. Manual updates exist for bags published
+before the crawl sees them:
+
+```bash
+node scripts/witb-manual-update.js path/to/bag.json --dry-run
+node scripts/witb-manual-update.js path/to/bag.json
+```
+
+Accepts one object or an array. Upserts on `(player_id, bag_date)` so re-runs
+never duplicate, and the crawler is newer-date-wins, so a manual bag dated ahead
+of a stale source is not reverted.
+
+After a bag change, re-bake in this order (the script prints it too):
+
+```bash
+node scripts/witb-owgr-refresh.js            # ranks for new players
+node scripts/generate-witb-player-page.js <slug>
+node scripts/generate-witb-page.js           # /witb stats + bag moves
+node scripts/generate-witb-players-page.js   # find-a-player grid
+node scripts/refresh-modules.js              # sidebar, site-wide
+```
+
+### Brand normalisation
+
+`scripts/lib/witb-brand-normalize.js` is shared by the crawler and the manual
+updater so both store a club identically. The rule: **a sub-brand gets its own
+brand row only if it has its own DORMIED page.** Odyssey does, so it is separate;
+Toulon, Vokey and Spider do not, so they stay model prefixes. Scotty Cameron was
+the case that forced this — the upstream source labels those putters
+inconsistently, so the stored brand depended on which crawl ran.
+
+---
+
+## Content pipeline
+
+Articles come from `golf-wire-pipeline` and live in `dormied_articles`; the
+committed HTML is generated from those rows.
+
+```bash
+# rebuild every article's HTML from the DB — metadata only, no Opus calls
+node scripts/generate-article.js --regenerate-all
+
+# restrict to slugs (skips the site-wide index/sitemap rebuild)
+node scripts/generate-article.js --regenerate-all --only=slug-a,slug-b
+```
+
+**Features** are separate: an entry in the `FEATURES` object in
+`scripts/generate-feature.js` plus a markdown file.
+
+```bash
+node scripts/generate-feature.js <feature-key>
+```
+
+---
+
+## Verification
+
+```bash
+npm run verify:css            # stylesheet parity — see "Read this first"
+npm run verify:sitemap        # every sitemap URL resolves to a real file
+npm run verify:index-pages
+npm run verify:brands
+npm run verify:scorecard
+```
+
+`verify:css` and `verify:sitemap` run in CI on push and PR. Both are offline —
+no Supabase, no network, no secrets — so the workflow needs no configuration.
+
+---
+
+## Scripts
+
+`scripts/` is the live set. `scripts/archive/` holds one-off migrations,
+historical backfills and throwaway probes — kept because they document how the
+data reached its current shape, not because they should run again. See
+`scripts/archive/README.md`.
+
+**Every script is guarded with `if (require.main === module)`. Keep it that way.**
+Without it, `require()`-ing a file to inspect or test it executes it against
+production — which is how a syntax check once started a live crawl and left two
+players with a corrupted current-bag pointer, silently skewing every site-wide
+statistic.
+
+To syntax-check a script use `node --check`, never `require()`.
 
 ---
 
 ## How to Update Each Month
 
-**Do this on the 1st of every month after new search data is ready.**
+**On the 1st, after new search data is ready.**
 
-### Step 1 — Update the data file
-
-Open `js/data.js` in any text editor. At the very top, update the four lines inside the `meta` block:
-
-```js
-lastUpdated:    "2026-04-01",   // today's date
-currentMonth:   "Mar 2026",     // the new month you're adding
-previousMonth:  "Feb 2026",     // one month back
-threeMonthsAgo: "Dec 2025",     // three months back
-```
-
-Then add the new month's search numbers for every brand. Each brand entry looks like this:
-
-```js
-global: { "Mar 2023": 12000, "Apr 2023": 14000, ... "Feb 2026": 18000 }
-```
-
-Add `"Mar 2026": [number]` at the end of each market object for every brand. This is the most time-consuming step — use the Python generator script to automate it from the XLSX file:
-
-```
-python3 scripts/generate_data.py
-```
-
-### Step 2 — Update the version number in all HTML files
-
-In these 5 files, find the line that loads `data.js` and change the `?v=` number to today's date (YYYYMMDD format):
-
-- `index.html`
-- `rankings/index.html`
-- `brands/index.html`
-- `brands/brand.html`
-- `feed/index.html`
-
-Change: `<script src="js/data.js?v=20260317">`
-To: `<script src="js/data.js?v=20260401">`
-
-### Step 3 — Update the sitemap date
-
-Open `sitemap.xml`. Change all `<lastmod>` dates to today:
-```xml
-<lastmod>2026-04-01</lastmod>
-```
-
-### Step 4 — Set the Scorecard URL (once your post is live)
-
-In `js/data.js`, find `scorecardUrl` in the meta block and fill it in:
-```js
-scorecardUrl: "/scorecard/2026-03/",
-```
-Leave it blank (`""`) if the post isn't live yet.
-
-### Step 5 — Deploy
-
-```
-git add .
-git commit -m "Data update: Mar 2026"
-git push
-```
-
-Vercel deploys automatically when you push to GitHub. Done.
+1. **Update `js/data.js`** — new search volumes per brand per market, and
+   `meta.lastUpdated`.
+2. **Bump the `?v=` query** on `data.js` in the HTML files so browsers fetch it.
+3. **Regenerate:**
+   ```bash
+   npm run generate-brands
+   npm run generate-scorecard
+   npm run regenerate:sitemap
+   ```
+4. **Verify:** `npm run verify:brands && npm run verify:sitemap`
+5. **Commit and push.** Vercel deploys from `main`.
 
 ---
 
-## How to Update the UI, Add Features, or Fix Bugs
+## How to Add a Brand
 
-### Which file does what
+**1. Add the brand data** to the `brands` array in `js/data.js`:
+
+```js
+{
+  id:            "brand-name",         // lowercase, hyphens — used in the URL
+  name:          "Brand Name",
+  logo:          "/images/logos/brand-name.jpg",
+  website:       "https://brandname.com",
+  headquarters:  "City, Country",
+  founded:       "2005",
+  parentCompany: "",                   // blank if independent
+  category:      "Clubs & Balls",
+  allCategories: ["Clubs & Balls"],
+  subCategories: ["Irons", "Drivers"],
+  description:   "One sentence about the brand.",
+  searchesByMarket: {
+    global: { "Mar 2023": 0, /* … */ },
+    us:     { "Mar 2023": 0, /* … */ },
+    // all 10 markets: global, us, jp, kr, uk, ca, cn, au, de, se, fr
+  }
+}
+```
+
+Use `0` for months with no data.
+
+**2. Update the brand count** — `totalBrands` in the `js/data.js` meta block, and
+the copy in the HTML files (search for `175 brands`).
+
+**3. Add the logo** at `images/logos/brand-name.jpg`, matching the `id`.
+
+**4. Add it to the feed tagger** in `api/_brands.json` so articles get tagged:
+
+```json
+{ "id": "brand-name", "name": "Brand Name", "keywords": ["Brand Name", "BrandName"] }
+```
+
+**5. Regenerate and verify:**
+
+```bash
+npm run generate-brands
+npm run regenerate:sitemap
+npm run verify:brands && npm run verify:sitemap
+```
+
+Do **not** hand-add a `<url>` entry to `sitemap.xml` — the generator picks up the
+new page and a manual edit will be overwritten.
+
+If the brand is a sub-brand of one already tracked, decide deliberately whether
+it gets its own page: that decision drives WITB brand normalisation (above).
+
+---
+
+## How to Add a Market / Country
+
+1. Add the market to the `markets` array in the `js/data.js` meta block.
+2. Add search data for that market to **every** brand.
+3. The UI picks it up automatically — no template changes needed.
+
+---
+
+## UI
 
 | File | What it controls |
 |---|---|
-| `css/styles.css` | All visual styling — colours, fonts, layout, spacing |
+| `css/styles.css` / `css/styles.min.css` | All styling — **edit both** |
 | `js/home.js` | Homepage: top brands, movers, drops, match-up |
 | `js/app.js` | Rankings table: filters, sorting, DI calculation |
-| `js/brand.js` | Individual brand pages: chart, stats, explanations |
+| `js/brand.js` | Brand pages: chart, stats, explanations |
 | `js/brands-dir.js` | Brand directory grid |
 | `js/feed.js` / `js/feed-page.js` | News feed |
+| `js/shop-carousel.js` | Affiliate carousels (brand, article, player) |
 | `js/signup.js` | Newsletter popup and footer form |
-| `js/explanations.js` | AI-generated movement explanations (reads from Supabase) |
-| `js/utils.js` | Shared helpers used across all JS files |
+| `js/explanations.js` | AI movement explanations (reads Supabase) |
+| `js/utils.js` | Shared helpers |
 
-### Colours and fonts
-
-All colours and fonts are defined as CSS variables at the top of `css/styles.css`:
+Colours and fonts are CSS variables at the top of `css/styles.css`:
 
 ```css
 :root {
@@ -103,282 +338,64 @@ All colours and fonts are defined as CSS variables at the top of `css/styles.css
   --text-dim: #a3c9a3;       /* secondary text */
   --text-muted: #5a7a5a;     /* muted / label text */
   --border: #1a2e1a;         /* border colour */
-  --font-display: 'Barlow Condensed';   /* headlines */
-  --font-mono: 'JetBrains Mono';        /* numbers, data */
-  --font-body: 'Inter';                 /* body copy */
+  --font-display: 'Barlow Condensed';
+  --font-mono: 'JetBrains Mono';
+  --font-body: 'Inter';
 }
 ```
 
-Change any value here and it updates everywhere on the site instantly.
-
-### Making a UI change safely
-
-1. Make your change in the file
-2. Open `http://localhost:8080` in your browser (`npm run dev` to start the server)
-3. Check it looks right
-4. Bump the CSS/JS version number in the HTML files (same process as the data version)
-5. Push to GitHub
-
----
-
-## How to Add a Brand
-
-### Step 1 — Add the brand data
-
-Open `js/data.js`. Copy an existing brand entry (one full `{ id: ..., name: ..., ... }` block) and paste it into the `brands` array. Fill in all fields:
-
-```js
-{
-  id:            "brand-name",         // lowercase, hyphens, no spaces — used in the URL
-  name:          "Brand Name",
-  logo:          "/images/logos/brand-name.jpg",
-  website:       "https://brandname.com",
-  headquarters:  "City, Country",
-  founded:       "2005",
-  parentCompany: "",                   // leave blank if independent
-  category:      "Clubs & Balls",      // one of the four main categories
-  allCategories: ["Clubs & Balls"],
-  subCategories: ["Irons", "Drivers"],
-  description:   "One sentence about the brand.",
-  searchesByMarket: {
-    global: { "Mar 2023": 0, "Apr 2023": 0, ... "Feb 2026": 0 },
-    us:     { "Mar 2023": 0, ... },
-    // repeat for all 10 markets: jp, kr, uk, ca, cn, au, de, se, fr
-  }
-}
-```
-
-For months with no data, use `0`. Start with real data from the first month the brand had meaningful search volume.
-
-### Step 2 — Update the brand count
-
-In `js/data.js` meta block, change:
-```js
-totalBrands: 122,
-```
-to:
-```js
-totalBrands: 123,
-```
-
-Also update it in all 5 HTML files — search for `"122 brands"` and update the copy.
-
-### Step 3 — Add the logo
-
-Save the logo as a `.jpg` file named `brand-name.jpg` (matching the `id` you used) and place it in:
-```
-images/logos/brand-name.jpg
-```
-
-### Step 4 — Add the brand to the feed tagger
-
-Open `api/_brands.json`. Add an entry:
-```json
-{ "id": "brand-name", "name": "Brand Name", "keywords": ["Brand Name", "BrandName"] }
-```
-
-This makes the news feed correctly tag articles that mention your brand.
-
-### Step 5 — Update the sitemap
-
-Open `sitemap.xml` and add a new `<url>` entry at the bottom of the brand section:
-```xml
-<url>
-  <loc>https://dormied.com/brands/brand-name/</loc>
-  <lastmod>2026-04-01</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.7</priority>
-</url>
-```
-
----
-
-## How to Add a Market / Country
-
-Adding a new market is a two-part job: data and UI.
-
-### Step 1 — Add the market to the meta block
-
-In `js/data.js`, find the `markets` array and add your new market:
-```js
-{ key: "mx", label: "Mexico", flag: "🇲🇽" }
-```
-
-### Step 2 — Add search data for every brand
-
-For every brand in `js/data.js`, add a new market key inside `searchesByMarket`:
-```js
-mx: { "Mar 2023": 0, "Apr 2023": 0, ... "Feb 2026": 0 }
-```
-
-Use `0` for months with no data.
-
-### Step 3 — The UI picks it up automatically
-
-The country filter tabs on the Index page and brand pages are generated dynamically from the `markets` array in the meta block. Once you add the market there, it appears in the UI. The flag emoji is also pulled from that array.
+`js/*.min.js` are built with `terser` and committed. Rebuild the minified file
+whenever you edit the source **and bump the `?v=` query** — `Cache-Control` is
+`max-age=604800`, so a stale buster means users keep the old file for a week.
 
 ---
 
 ## Ads
 
-Ads are served by **Mediavine Journey**, which requires ad-network exclusivity —
-no other programmatic ad code (Google AdSense, etc.) may run on the site.
+The site runs **Mediavine** (Journey), plus Grow.me for audience features. There
+is no AdSense. `api/feed.js` (RSS aggregation) stays disabled so the site shows
+only original content — an ad-network requirement that applies under Mediavine as
+it did under AdSense.
 
-The Journey tag is loaded in the `<head>` of every page (and in every page
-generator) alongside the Grow.me pixel:
-
-```html
-<script type="text/javascript" async="async" data-noptimize="1" data-cfasync="false"
-        src="//scripts.scriptwrapper.com/tags/06995677-1354-493f-9a2b-7ccd99d5a7ad.js"></script>
-```
-
-Journey places ads automatically, so there are no manual ad-slot divs to maintain.
-Do not add Google AdSense or any other programmatic ad-network code — doing so
-violates the Journey exclusivity requirement.
-
----
-
-## How to Update SEO
-
-### Page titles and meta descriptions
-
-Each HTML file has its own title and meta description near the top of the `<head>`:
-
-```html
-<title>Golf Brand Rankings — The DORMIED Index</title>
-<meta name="description" content="Your description here.">
-```
-
-Keep titles under 60 characters. Keep descriptions under 155 characters and make them compelling — this is what appears in Google search results.
-
-The same title and description should be updated in the Open Graph and Twitter Card tags just below:
-```html
-<meta property="og:title" content="...">
-<meta property="og:description" content="...">
-<meta name="twitter:title" content="...">
-<meta name="twitter:description" content="...">
-```
-
-### Structured data (JSON-LD)
-
-Each page has structured data blocks in the `<head>` that help Google understand the content. They look like:
-```html
-<script type="application/ld+json">
-{ "@context": "https://schema.org", ... }
-</script>
-```
-
-To update them, edit the values inside — keep the structure exactly as-is and only change the text content.
-
-### Sitemap
-
-`sitemap.xml` in the root folder. Update `<lastmod>` dates monthly. Google uses this to know when to re-crawl.
-
-### LLM discoverability
-
-`llms.txt` in the root folder. This tells AI tools (ChatGPT, Claude, Perplexity) what DORMIED is and what pages exist. Update it if you add major new sections.
+`privacy/index.html` is hand-maintained and must describe what actually runs,
+including affiliate links and the networks behind them.
 
 ---
 
 ## Environment Variables
 
-These are secrets stored outside the codebase. You need them set in two places: locally in a `.env` file (for running scripts on your computer) and in the Vercel dashboard (for the live site).
+Set locally in `.env`, and in the Vercel dashboard / GitHub Actions secrets.
 
 | Variable | What it's for |
 |---|---|
-| `ANTHROPIC_API_KEY` | AI-generated brand explanations |
-| `SUPABASE_URL` | Database connection (also hardcoded in `js/explanations.js` — it's safe to do so) |
-| `SUPABASE_ANON_KEY` | Database read access (also in `js/explanations.js` — safe to expose) |
-| `SUPABASE_SERVICE_KEY` | Database write access — **never put this in frontend code** |
-| `BEEHIIV_PUBLICATION_ID` | Newsletter signup |
-| `BEEHIIV_API_KEY` | Newsletter signup |
+| `ANTHROPIC_API_KEY` | Article generation, brand explanations, WITB ledes |
+| `SUPABASE_URL` | Database connection |
+| `SUPABASE_ANON_KEY` | Read access — safe to expose in frontend |
+| `SUPABASE_SERVICE_KEY` | Write access — **never in frontend code** |
+| `BEEHIIV_PUBLICATION_ID` / `BEEHIIV_API_KEY` | Newsletter |
+| `IMPACT_SID` / `IMPACT_TOKEN` | Impact affiliate catalog |
+| `CJ_PAT` | CJ personal access token (bearer) |
+| `CJ_COMPANY_ID` | CJ publisher company id |
+| `CJ_PID` | CJ property id — required to mint tracking links |
+| `INDEXNOW_KEY` | Search-engine ping on publish |
 
-Copy `.env.example` to `.env` and fill in each value for local use.
-
-To set them on Vercel: go to your project → **Settings** → **Environment Variables**.
-
----
-
-## Static Index Page Generation
-
-`/brands/`, `/news/`, and `/scorecard/` are pre-rendered at build time so crawlers see fully populated HTML without running JavaScript.
-
-### How it works
-
-`scripts/generate-index-pages.js` reads local data files and Supabase, then injects content directly into the three HTML files:
-
-| Page | Source data | Output |
-|---|---|---|
-| `/brands/` | `js/data.js` | 169 ranked brand cards with DI, trend arrows, sub-categories |
-| `/news/` | Supabase `dormied_articles` | 25 most recent articles; pages 2–5 at `/news/page/N/` |
-| `/scorecard/` | `js/scorecard-data.js` | Latest hero card + full archive |
-
-Client-side JS (`brands-dir.js`, `feed-page.js`, `scorecard-archive.js`) is modified to **preserve the static HTML** on page load. It only re-renders when the user actively uses search, filter, or sort. When filters are cleared, the original static HTML is restored from cache.
-
-### Running it
-
-```bash
-# All three pages
-npm run generate-index-pages
-
-# Individual pages
-npm run generate-index-pages:brands
-npm run generate-index-pages:news
-npm run generate-index-pages:scorecard
-
-# Force-regenerate even if source data hasn't changed
-node scripts/generate-index-pages.js --force
-
-# Verify output
-npm run verify:index-pages
-```
-
-### Pipeline integration
-
-The generation script is wired into the publish pipeline:
-
-- `generate-article.js` automatically runs `generate-index-pages.js --news` after each article batch.
-- `generate-brand-page.js` automatically runs `generate-index-pages.js --brands` after brand pages are written.
-- Scorecard is regenerated manually after updating `js/scorecard-data.js`.
-
-The script has mtime-based skipping: if the output file is newer than its source data, it skips that page. Explicit flags (`--brands`, `--news`, `--scorecard`, `--force`) always regenerate regardless.
-
-### Monthly update flow
-
-After updating `js/data.js` with new search numbers, run:
-
-```bash
-npm run generate-index-pages:brands
-```
-
-After publishing new articles via `generate-article.js`, the `/news/` index regenerates automatically.
-
-After publishing a new Scorecard issue (updating `js/scorecard-data.js`), run:
-
-```bash
-npm run generate-index-pages:scorecard
-```
+`.env` is gitignored and has never been committed.
 
 ---
 
 ## Local Development
 
 ```bash
-npm run dev
-# Opens a local server at http://localhost:8080
+npm run dev     # http://localhost:8080
 ```
+
+Static server only. `/api/*` are Vercel functions and do **not** run locally —
+carousels will remove themselves because `/api/shop` 404s. Test those against the
+deployed site.
 
 ---
 
 ## Deploying
 
-Vercel auto-deploys every time you push to the `main` branch on GitHub.
-
-To push:
-```bash
-git add .
-git commit -m "Description of what changed"
-git push
-```
-
-That's it. Vercel handles the rest in about 30 seconds.
+Push to `main`; Vercel deploys automatically. `npm run deploy` runs
+`vercel --prod` to force one.
