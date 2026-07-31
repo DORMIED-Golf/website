@@ -2224,7 +2224,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (462) ── -->
+  <!-- ── News articles (465) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3766,6 +3766,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/jackson-koivuns-winning-bag-just-made-the-case-for-graphite-in-long-irons-2026-07-31/</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/jackson-koivuns-winning-bag-just-made-the-case-for-graphite-in-long-irons-2026-07-31-hero.jpg</image:loc>
+      <image:title>Jackson Koivun&apos;s Winning Bag Just Made the Case for Graphite in Long Irons</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22/</loc>
     <lastmod>2026-05-22</lastmod>
     <changefreq>weekly</changefreq>
@@ -4313,6 +4323,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nippon-shaft-has-quietly-won-54-of-the-last-89-womens-majors-nobody-talks-2026-07-13-hero.png</image:loc>
       <image:title>Nippon Shaft Has Quietly Won 54 of the Last 89 Women&apos;s Majors. Nobody Talks About It.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/odyssey-just-cut-100-off-a-current-model-zero-torque-putter-thats-not-2026-07-31/</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/odyssey-just-cut-100-off-a-current-model-zero-torque-putter-thats-not-2026-07-31-hero.jpg</image:loc>
+      <image:title>Odyssey Just Cut $100 Off a Current-Model Zero-Torque Putter. That&apos;s Not Normal.</image:title>
     </image:image>
   </url>
   <url>
@@ -5479,6 +5499,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-anser-that-almost-wasnt-ping-nearly-sold-to-dunlop-before-1966-2026-07-06-hero.jpg</image:loc>
       <image:title>The Anser That Almost Wasn&apos;t: PING Nearly Sold to Dunlop Before 1966</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-arccos-data-point-hiding-in-every-midlife-improvement-story-2026-07-31/</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-arccos-data-point-hiding-in-every-midlife-improvement-story-2026-07-31-hero.jpg</image:loc>
+      <image:title>The Arccos Data Point Hiding in Every Midlife Improvement Story</image:title>
     </image:image>
   </url>
   <url>
