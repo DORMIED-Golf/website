@@ -609,7 +609,11 @@ async function main() {
   console.log(`[witb-players-page] Wrote ${OUT} (${playersWithCards.length} players, ${Math.round(html.length/1024)}KB)`);
 }
 
-main().catch(err => {
-  console.error('[witb-players-page] Fatal:', err.message);
-  process.exit(1);
-});
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[witb-players-page] Fatal:', err.message);
+    process.exit(1);
+  });
+}

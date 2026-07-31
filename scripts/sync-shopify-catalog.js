@@ -339,4 +339,8 @@ async function main() {
   console.log('\n[shopify-sync] Done.');
 }
 
-main().catch(e => { console.error('[shopify-sync] Fatal:', e); process.exit(1); });
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(e => { console.error('[shopify-sync] Fatal:', e); process.exit(1); });
+}

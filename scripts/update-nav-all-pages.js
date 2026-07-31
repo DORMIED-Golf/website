@@ -246,4 +246,8 @@ function main() {
   if (DRY_RUN) console.log(`\n(No files written -- dry run)`);
 }
 
-main();
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main();
+}

@@ -223,4 +223,8 @@ async function main() {
   console.log(`[refresh-modules] feed: latest=${latestPool.length} topStories=${topPool.length} featured=${featuredPool.length} mods=${modsHtml ? 'yes' : 'no'}`);
 }
 
-main().catch(e => { console.error('[refresh-modules] Fatal:', e.message); process.exit(1); });
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(e => { console.error('[refresh-modules] Fatal:', e.message); process.exit(1); });
+}

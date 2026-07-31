@@ -188,7 +188,11 @@ async function main() {
   console.log(`[match] Done. Matched: ${matched}, No brand match: ${noMatch}`);
 }
 
-main().catch(err => {
-  console.error('[match] Fatal error:', err.message);
-  process.exit(1);
-});
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[match] Fatal error:', err.message);
+    process.exit(1);
+  });
+}

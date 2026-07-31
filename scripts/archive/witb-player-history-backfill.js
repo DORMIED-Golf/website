@@ -659,7 +659,11 @@ async function main() {
   }
 }
 
-main().catch(err => {
-  console.error('[witb-player-history-backfill] Fatal:', err.message);
-  process.exit(1);
-});
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[witb-player-history-backfill] Fatal:', err.message);
+    process.exit(1);
+  });
+}

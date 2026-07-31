@@ -189,7 +189,11 @@ async function main() {
   console.log('\n[B] Operation B complete.');
 }
 
-main().catch(err => {
-  console.error('[B] Fatal:', err.message);
-  process.exit(1);
-});
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[B] Fatal:', err.message);
+    process.exit(1);
+  });
+}

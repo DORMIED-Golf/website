@@ -249,7 +249,11 @@ async function main() {
   console.log(`[scrape] Done. Ingested: ${ingested}, Skipped/duplicate: ${skipped}`);
 }
 
-main().catch(err => {
-  console.error('[scrape] Fatal error:', err.message);
-  process.exit(1);
-});
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[scrape] Fatal error:', err.message);
+    process.exit(1);
+  });
+}

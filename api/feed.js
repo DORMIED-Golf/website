@@ -1,5 +1,7 @@
 // ── RSS AGGREGATION DISABLED ─────────────────────────────────────────────────
-// Disabled for AdSense compliance: dormied.com now shows only original content.
+// Disabled so dormied.com shows only original content — an ad-network content
+// requirement. Originally done for AdSense; the site now runs Mediavine, whose
+// original-content policy applies the same way, so the reason still stands.
 // Re-enable by restoring the module.exports handler below and removing the
 // early-return stub. The FEEDS + brand-tagging logic is preserved for future use.
 

@@ -377,7 +377,11 @@ async function main() {
   console.log('\n[batch3] Done. HTML files generated.');
 }
 
-main().catch(err => {
-  console.error('[batch3] Fatal:', err.message);
-  process.exit(1);
-});
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[batch3] Fatal:', err.message);
+    process.exit(1);
+  });
+}

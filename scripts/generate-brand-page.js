@@ -1609,20 +1609,24 @@ async function main() {
   }
 }
 
-main()
-  .then(() => {
-    /* ── Pipeline trigger: regenerate /brands/ index page after brand pages update ── */
-    const { execSync } = require('child_process');
-    try {
-      execSync('node scripts/generate-index-pages.js --brands', {
-        cwd: path.join(__dirname, '..'),
-        stdio: 'inherit',
-      });
-    } catch (e) {
-      console.warn('[brand-page] Warning: generate-index-pages.js --brands failed:', e.message);
-    }
-  })
-  .catch(err => {
-    console.error('[brand-page] Fatal:', err.message);
-    process.exit(1);
-  });
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main()
+    .then(() => {
+      /* ── Pipeline trigger: regenerate /brands/ index page after brand pages update ── */
+      const { execSync } = require('child_process');
+      try {
+        execSync('node scripts/generate-index-pages.js --brands', {
+          cwd: path.join(__dirname, '..'),
+          stdio: 'inherit',
+        });
+      } catch (e) {
+        console.warn('[brand-page] Warning: generate-index-pages.js --brands failed:', e.message);
+      }
+    })
+    .catch(err => {
+      console.error('[brand-page] Fatal:', err.message);
+      process.exit(1);
+    });
+}

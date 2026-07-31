@@ -212,7 +212,11 @@ async function main() {
   if (errors.length > 0) process.exitCode = 1;
 }
 
-main().catch(err => {
-  console.error('[generate-all] Fatal:', err.message);
-  process.exit(1);
-});
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[generate-all] Fatal:', err.message);
+    process.exit(1);
+  });
+}

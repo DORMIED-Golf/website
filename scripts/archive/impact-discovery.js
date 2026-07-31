@@ -154,4 +154,8 @@ async function main() {
   if (withPromo) console.log('  Example Promotions payload:', JSON.stringify(withPromo.Promotions, null, 2));
 }
 
-main().catch(e => { console.error('[discovery] Fatal:', e.message); process.exit(1); });
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main().catch(e => { console.error('[discovery] Fatal:', e.message); process.exit(1); });
+}

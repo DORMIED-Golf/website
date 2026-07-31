@@ -1787,20 +1787,24 @@ async function main() {
   console.log(`[generate] Done. Generated: ${generated}`);
 }
 
-main()
-  .then(() => {
-    /* ── Pipeline trigger: regenerate /news/ index pages after new articles ── */
-    const { execSync } = require('child_process');
-    try {
-      execSync('node scripts/generate-index-pages.js --news', {
-        cwd: path.join(__dirname, '..'),
-        stdio: 'inherit',
-      });
-    } catch (e) {
-      console.warn('[generate] Warning: generate-index-pages.js --news failed:', e.message);
-    }
-  })
-  .catch(err => {
-    console.error('[generate] Fatal error:', err.message);
-    process.exit(1);
-  });
+// Only run when invoked directly. Without this, `require()`-ing this file for
+// inspection or testing executes it against production.
+if (require.main === module) {
+  main()
+    .then(() => {
+      /* ── Pipeline trigger: regenerate /news/ index pages after new articles ── */
+      const { execSync } = require('child_process');
+      try {
+        execSync('node scripts/generate-index-pages.js --news', {
+          cwd: path.join(__dirname, '..'),
+          stdio: 'inherit',
+        });
+      } catch (e) {
+        console.warn('[generate] Warning: generate-index-pages.js --news failed:', e.message);
+      }
+    })
+    .catch(err => {
+      console.error('[generate] Fatal error:', err.message);
+      process.exit(1);
+    });
+}
