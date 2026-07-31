@@ -839,7 +839,6 @@ function generateArticleHtml(opts) {
   <link rel="canonical" href="${canonicalUrl}">
 
   <!-- ── Favicon ── -->
-  <link rel="icon" href="/favicon.ico">
   <link rel="icon" type="image/png" href="/images/favicon.png">
   <link rel="apple-touch-icon" href="/images/dormied-icon.png">
 

@@ -507,7 +507,6 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="${canonicalUrl}">
 
-  <link rel="icon" href="/favicon.ico">
   <link rel="icon" type="image/png" href="/images/favicon.png">
   <link rel="apple-touch-icon" href="/images/dormied-icon.png">
 
