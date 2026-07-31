@@ -71,6 +71,25 @@ jobs:
             node scripts/sync-shopify-catalog.js
           fi
 
+      # CJ (Cobra + Puma Golf). One CJ advertiser carries both brands, so the
+      # split onto /brands/cobra/ and /brands/puma-golf/ happens in the script,
+      # off the feed's own brand field. Rows are source='cj' and invisible to the
+      # other two sweeps. Failure fails the job — a silently stale catalog is
+      # worse than a red run.
+      - name: Run CJ catalog sync
+        env:
+          CJ_PAT:               ${{ secrets.CJ_PAT }}
+          CJ_COMPANY_ID:        ${{ secrets.CJ_COMPANY_ID }}
+          CJ_PID:               ${{ secrets.CJ_PID }}
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            node scripts/sync-cj-catalog.js --dry-run
+          else
+            node scripts/sync-cj-catalog.js
+          fi
+
       - name: Report sync state
         if: always()
         env:
@@ -87,5 +106,12 @@ jobs:
             const { count } = await sb.from('affiliate_products')
               .select('*', { count: 'exact', head: true }).eq('is_active', true);
             console.log('active products:', count);
+            // Per source, so one path collapsing is visible rather than hidden
+            // inside the total.
+            for (const src of ['impact', 'shopify', 'cj']) {
+              const { count: n } = await sb.from('affiliate_products')
+                .select('*', { count: 'exact', head: true }).eq('is_active', true).eq('source', src);
+              console.log('  active', src + ':', n);
+            }
           })();
           "

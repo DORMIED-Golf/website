@@ -40,15 +40,11 @@ never falls back to `now()` or file mtime.
 | Workflow | Schedule | What it does |
 |---|---|---|
 | `golf-wire-pipeline` | every 3h | Scrapes wires + pressrooms, matches brands, writes articles with Opus, publishes, re-bakes news index, homepage and sidebar modules |
-| `affiliate-catalog-sync` | daily 08:00 | Impact catalog sync, then the Shopify merchant-feed sync |
+| `affiliate-catalog-sync` | daily 08:00 | Impact, then Shopify merchant-feed, then CJ — each fails the job loudly rather than going stale quietly |
 | `witb-weekly-crawl` | Tue 13:00 | Crawls tour bags, refreshes OWGR, rebuilds every WITB page |
 | `post-to-x` | every 30m | Posts published articles to X |
 | `verify-build` | push + PR | CSS parity + sitemap resolution — the only workflow gating a commit |
 | `monthly-explanations` | manual | Regenerates AI brand-movement explanations |
-
-The CJ sync (`scripts/sync-cj-catalog.js`) is **not** scheduled yet — it runs by
-hand until its deactivation sweep has been watched over a few cycles, since it
-touches ~8,000 rows.
 
 `main` moves on its own every 3 hours. If a push is rejected, **rebase rather
 than merge**: the pipeline only touches generated output, so re-running the
