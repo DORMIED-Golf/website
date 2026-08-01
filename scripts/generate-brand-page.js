@@ -193,22 +193,6 @@ function buildMetaDesc(brand, stats, totalBrands) {
 
 // ── Supabase fetches ──────────────────────────────────────────────────────────
 
-async function fetchTake(supabase, brandSlug) {
-  const { data, error } = await supabase
-    .from('brand_takes')
-    .select('take, month, brand_name')
-    .eq('brand_id', brandSlug)
-    .order('month', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (error) {
-    console.warn(`[brand-page] take fetch error for ${brandSlug}:`, error.message);
-    return null;
-  }
-  return data; // { take, month, brand_name } or null
-}
-
 async function fetchExplanations(supabase, brandSlug) {
   const { data, error } = await supabase
     .from('brand_explanations')
@@ -468,7 +452,7 @@ function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
   return items;
 }
 
-function generateBrandPageHtml({ brand, slug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '', hasShop = false }) {
+function generateBrandPageHtml({ brand, slug, stats, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '', hasShop = false }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
   // WITB-style title: exact query phrase first, plain-language promise, year from the
@@ -503,14 +487,12 @@ function generateBrandPageHtml({ brand, slug, stats, take, explanations, article
   if (brand.headquarters) metaParts.push(brand.headquarters);
   const metaLine = metaParts.join(' · ');
 
-  // Take — only show if the take.month matches the current snapshot month
+  // Current snapshot month as YYYY-MM. Feeds dateModified below.
   const currentMonthYYYYMM = (() => {
     const [mon, year] = (stats.currentMonth || '').split(' ');
     const idx = MONTH_NAMES.indexOf(mon);
     return idx >= 0 && year ? `${year}-${String(idx + 1).padStart(2, '0')}` : null;
   })();
-  const hasTake       = !!(take && take.take && currentMonthYYYYMM && take.month === currentMonthYYYYMM);
-  const takeMonthLabel = hasTake ? fmtMonth(take.month) : '';
 
   // Stable first-publish date = earliest month on record for this brand (MIN
   // snapshot month). Independent of the current snapshot, so it does not move
@@ -623,7 +605,6 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
         </a>`;
   }).join('\n');
 
-  // Take section HTML
   // "Shop [Brand]" carousel MOUNT POINT ONLY — emitted just for brands with an
   // active affiliate program (hasShop). No product data is baked: js/shop-carousel.js
   // fetches it client-side from /api/shop. The container reserves its full height
@@ -642,34 +623,6 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
               <p class="bp-shop-disclosure">Some links on this page are affiliate links. DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
             </section>
 ` : '';
-
-  const takeSectionHtml = hasTake
-    ? `
-      <section class="bp-take-section" id="bp-take-section">
-          <div class="bp-take-inner">
-            <div class="bp-take-label-wrap">
-              <span class="bp-take-label">THE READ</span>
-              <span class="bp-take-month" id="bp-take-month">${escHtml(takeMonthLabel)}</span>
-            </div>
-            <div class="bp-take-body">
-              <p class="bp-take-text" id="bp-take-text">${escHtml(stripEmDashes(take.take))}</p>
-              <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
-            </div>
-          </div>
-      </section>`
-    : `
-      <section class="bp-take-section" id="bp-take-section" hidden>
-          <div class="bp-take-inner">
-            <div class="bp-take-label-wrap">
-              <span class="bp-take-label">THE READ</span>
-              <span class="bp-take-month" id="bp-take-month"></span>
-            </div>
-            <div class="bp-take-body">
-              <p class="bp-take-text" id="bp-take-text"></p>
-              <p class="bp-take-attribution" id="bp-take-attribution" style="margin-top:.6rem;font-size:.8rem;color:var(--clr-muted,#6b7a6b);font-style:italic;font-family:'Inter',sans-serif"></p>
-            </div>
-          </div>
-      </section>`;
 
   // Key Moments — pre-render timeline from Supabase explanation rows
 
@@ -947,7 +900,6 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
         <div class="bp-page-grid">
           <article class="bp-page-main da-article-body">
 
-${takeSectionHtml}
 ${shopSectionHtml}
             <!-- ── ${escHtml(brand.name)} Interest Over Time ── -->
             <section class="bp-chart-section">
@@ -1084,9 +1036,6 @@ ${faqHtml}
           <a href="https://www.instagram.com/dormiedgolf" class="footer-social-link" target="_blank" rel="noopener" aria-label="DORMIED on Instagram">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </a>
-          <a href="https://dormiedgolf.substack.com/" class="footer-social-link" target="_blank" rel="noopener" aria-label="DORMIED on Substack">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
-          </a>
         </div>
       </div>
       <nav class="footer-nav" aria-label="Footer navigation">
@@ -1121,7 +1070,6 @@ ${faqHtml}
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
-  <script defer src="/js/take-preview.min.js?v=20260330"></script>
   <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <script defer src="/js/brand.min.js?v=20260707"></script>
@@ -1470,11 +1418,10 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTour
 
   const { brand, curSearches } = stats;
 
-  // Fetch take, explanations, and recent articles in parallel. The site-wide
+  // Fetch explanations and recent articles in parallel. The site-wide
   // Latest / Top Stories / Featured feeds are brand-independent and baked once
   // per run (see sharedFeeds), so they are not re-queried here.
-  const [take, explanations, articles] = await Promise.all([
-    fetchTake(supabase, brandSlug),
+  const [explanations, articles] = await Promise.all([
     fetchExplanations(supabase, brandSlug),
     fetchRecentArticles(supabase, brandSlug),
   ]);
@@ -1490,7 +1437,7 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTour
 
   const facts = (factsBySlug && factsBySlug.get(brandSlug)) || null;
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, take, explanations, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml, hasShop: affiliateSlugs.has(brandSlug) });
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, explanations, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml, hasShop: affiliateSlugs.has(brandSlug) });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });

@@ -1005,89 +1005,6 @@
     // Section visibility was set at build time — never hide it here
   }
 
-  // ─── The Take ─────────────────────────────────────────────────────────────
-
-  async function loadTake(globalRank, metrics, allTimeStats) {
-    const section = document.getElementById('bp-take-section');
-    const textEl  = document.getElementById('bp-take-text');
-    if (!section || !textEl) return;
-
-    const data = window.DORMIED_DATA;
-    const r    = rankings.find(b => b.id === brand.id);
-    const di   = r ? r.diScore.toFixed(1) : '—';
-
-    // Determine strongest market by current DI
-    const markets = data.meta.markets || [];
-    const cm      = data.meta.currentMonth;
-    let topMarket = 'Global';
-    let topVal    = 0;
-    markets.forEach(mkt => {
-      if (mkt.key === 'global') return;
-      const v = brand.searchesByMarket?.[mkt.key]?.[cm] || 0;
-      if (v > topVal) { topVal = v; topMarket = mkt.label || mkt.key; }
-    });
-
-    // Cache key: brand + current month + version so it refreshes each new data cycle
-    // v2: bumped to invalidate takes generated with incorrect rank data
-    const cacheKey = `dormied_take_v2_${brand.id}_${cm}`;
-    const takeAuthor = (brand.category === 'Apparel & Footwear' || brand.category === 'Bags & Accessories') ? 'Adam' : 'Travis';
-    const attrEl     = document.getElementById('bp-take-attribution');
-
-    const cached   = sessionStorage.getItem(cacheKey);
-    if (cached) {
-      textEl.textContent = cached;
-      if (attrEl) attrEl.textContent = `— ${takeAuthor}, DORMIED`;
-      section.hidden = false;
-      return;
-    }
-
-    // Set month label
-    const monthEl = document.getElementById('bp-take-month');
-    if (monthEl) monthEl.textContent = data.meta.currentMonth;
-
-    // Show shimmer while loading
-    textEl.className = 'bp-take-text is-loading';
-    textEl.textContent = 'Generating editorial take…';
-    section.hidden = false;
-
-    const fmtChange = v => v != null ? (v >= 0 ? '+' : '') + v.toFixed(1) + '%' : '—';
-
-    try {
-      const resp = await fetch('/api/take', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name:         brand.name,
-          rank:         globalRank,
-          di:           di,
-          vsMonth:      fmtChange(metrics.vsMonth),
-          mom:          fmtChange(metrics.mom),
-          yoy:          fmtChange(metrics.yoy),
-          bestRank:     allTimeStats.bestRank || '—',
-          bestMonth:    allTimeStats.bestMonth || '—',
-          category:     brand.category || '—',
-          topMarket:    topMarket,
-          currentMonth: data.meta.currentMonth,
-        }),
-      });
-
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const { take } = await resp.json();
-
-      if (take) {
-        textEl.className   = 'bp-take-text';
-        textEl.textContent = take;
-        if (attrEl) attrEl.textContent = `— ${takeAuthor}, DORMIED`;
-        sessionStorage.setItem(cacheKey, take);
-      } else {
-        section.hidden = true;
-      }
-    } catch (e) {
-      console.warn('[take] Failed to load editorial take:', e.message);
-      section.hidden = true;
-    }
-  }
-
   // ─── Methodology note (below chart) ──────────────────────────────────────
 
   function renderMethodologyNote(globalRank, di) {
@@ -1272,7 +1189,6 @@
     renderSimilarBrands(similar);
     renderPrevNext(globalRank);
     renderExplanationForPeriod(); // filter pre-rendered Key Moments for default period
-    loadTake(globalRank, metrics, allTimeStats); // async — generates AI editorial take
 
     // Analytics: brand page view
     if (window.DORMIED_TRACK) window.DORMIED_TRACK('brand_view', {

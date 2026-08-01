@@ -30,9 +30,9 @@ window.DORMIED_SCORECARD_DATA = {
       images: {
         hero:  null,
         strip: [
-          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc6555b0d-bb45-47a5-b915-359f53866532_1937x1292.webp", label: "Fore All Double-Decker Bus" },
-          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Febe2e4db-1303-4ea0-81eb-93c55fcd9546_1200x823.jpeg", label: "Wyndham Clark, 2026 U.S. Open" },
-          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa28d65c0-14c3-4729-800c-0a24040a3b87_960x640.webp", label: "Bryson DeChambeau's driver switch" },
+          { src: "/images/scorecard/july-2026/fore-all-bus.jpg", label: "Fore All Double-Decker Bus" },
+          { src: "/images/scorecard/july-2026/wyndham-clark-us-open.jpg", label: "Wyndham Clark, 2026 U.S. Open" },
+          { src: "/images/scorecard/july-2026/bryson-driver-switch.jpg", label: "Bryson DeChambeau's driver switch" },
         ],
       },
       toc: [
@@ -83,7 +83,7 @@ window.DORMIED_SCORECARD_DATA = {
         {
           id:      "closing",
           heading: "The Closing Note: The Index Pays for Stories, Not Trophies",
-          body:    "<p>Five issues in, June gave us the cleanest statement yet of what this index actually measures. True Temper won the U.S. Open and lost a third of its attention. ProSENDR won nothing and gained 81%. Krank got dumped on the biggest stage in golf and went up 50%. The lesson is not that winning does not matter. It is that winning only matters when it changes the story, and most winning does not. The brands that moved this month all had something happen to them that a golfer would retell at dinner. That is the whole game. The Open Championship is next, and links golf always produces at least one story nobody saw coming. See you in August.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>\n<p class=\"scorecard-substack-link\"><a href=\"https://dormiedgolf.substack.com/p/shinnecock-paid-out-in-strange-currency\" target=\"_blank\" rel=\"noopener\">Read on Substack <span aria-hidden=\"true\">&#x2192;</span></a></p>",
+          body:    "<p>Five issues in, June gave us the cleanest statement yet of what this index actually measures. True Temper won the U.S. Open and lost a third of its attention. ProSENDR won nothing and gained 81%. Krank got dumped on the biggest stage in golf and went up 50%. The lesson is not that winning does not matter. It is that winning only matters when it changes the story, and most winning does not. The brands that moved this month all had something happen to them that a golfer would retell at dinner. That is the whole game. The Open Championship is next, and links golf always produces at least one story nobody saw coming. See you in August.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>",
         },
       ],
       indexSnapshot: [
@@ -107,9 +107,9 @@ window.DORMIED_SCORECARD_DATA = {
       images: {
         hero:  null,
         strip: [
-          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fea7efba2-07ab-4bc7-be2e-d4e398c68727_960x640.jpeg", label: "Aaron Rai, 2026 PGA Championship" },
-          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe6c3250f-8d67-4c69-bed2-93f9f678be79_1036x583.jpeg", label: "The Field" },
-          { src: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc2349fd3-d4fe-4a77-a493-82347df9e169_1200x799.jpeg", label: "The Drop Zone" },
+          { src: "/images/scorecard/june-2026/aaron-rai-pga.jpg", label: "Aaron Rai, 2026 PGA Championship" },
+          { src: "/images/scorecard/june-2026/the-field.jpg", label: "The Field" },
+          { src: "/images/scorecard/june-2026/closing.jpg", label: "The Drop Zone" },
         ],
       },
       toc: [
@@ -160,7 +160,7 @@ window.DORMIED_SCORECARD_DATA = {
         {
           id:      "closing",
           heading: "Closing",
-          body:    "<p>Four issues in, May taught the clearest lesson yet. McLaren spent a fortune announcing itself and lost two-thirds of its attention in thirty days. Aaron Rai spent nothing, won a major with a driver older than some TGL franchises, and moved four brands in the process, including two shaft companies most golfers could not name. Attention that arrives through performance compounds. Attention that arrives through spectacle decays. Every brand on this index is somewhere on that spectrum, and every month the data tells us who is which. The U.S. Open at Shinnecock is three days away. Somebody's July number is about to be made.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>\n<p class=\"scorecard-substack-link\"><a href=\"https://dormiedgolf.substack.com/p/the-quiet-man-won-the-loud-major\" target=\"_blank\" rel=\"noopener\">Read on Substack <span aria-hidden=\"true\">→</span></a></p>",
+          body:    "<p>Four issues in, May taught the clearest lesson yet. McLaren spent a fortune announcing itself and lost two-thirds of its attention in thirty days. Aaron Rai spent nothing, won a major with a driver older than some TGL franchises, and moved four brands in the process, including two shaft companies most golfers could not name. Attention that arrives through performance compounds. Attention that arrives through spectacle decays. Every brand on this index is somewhere on that spectrum, and every month the data tells us who is which. The U.S. Open at Shinnecock is three days away. Somebody's July number is about to be made.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>",
         },
       ],
       indexSnapshot: [
@@ -250,8 +250,7 @@ window.DORMIED_SCORECARD_DATA = {
           id:      "closing",
           heading: "Closing",
           body: `<p>Justin Rose drove a papaya McLaren GTS to the McLaren Technology Centre, walked past the set of a Brad Pitt movie, and sat down with engineers to finalize the irons he would play that week in Miami. Two years of development, one launch day timed to a Formula 1 race, and a 307% move on the index. Whether that translates to a real equipment business or an expensive vanity project is a story we will be telling for the rest of the year. But this much is already clear: the barrier to entry in golf equipment has never been lower and the cost of attention has never been higher. McLaren just paid both prices at once.</p>
-<p class="scorecard-signature">Adam and Travis, DORMIED</p>
-<p class="scorecard-substack-link"><a href="https://dormiedgolf.substack.com/p/the-scorecard-may-2026" target="_blank" rel="noopener">Read on Substack <span aria-hidden="true">→</span></a></p>`,
+<p class="scorecard-signature">Adam and Travis, DORMIED</p>`,
         },
       ],
 

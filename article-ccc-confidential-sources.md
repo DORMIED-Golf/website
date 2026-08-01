@@ -4,7 +4,7 @@
 
 *Country Club Confidential turned the stories that circulate inside private golf, and die at the gates, into a real media business. Two years in, the anonymous founders explain how it happened.*
 
-![Country Club Confidential](https://substackcdn.com/image/fetch/$s_!HQZb!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F35341872-3315-4150-8e16-fb1fc4ee6f23_1200x630.png)
+![Country Club Confidential](/images/features/confidential-sources/hero.webp)
 
 Every private club is sitting on a library it will never publish.
 
@@ -28,7 +28,7 @@ The raw material, the founders understood, was effectively infinite. "When you p
 
 ## Behind the Blur
 
-![Even on camera, the mask stays on. A CCC founder joins Subpar hosts Colt Knost and Drew Stoltz, face blurred, which is exactly the idea.](https://substackcdn.com/image/fetch/$s_!JnVO!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fec2ac0fc-26d0-4367-b3fc-37f92a3e9075_1920x1080.png)
+![Even on camera, the mask stays on. A CCC founder joins Subpar hosts Colt Knost and Drew Stoltz, face blurred, which is exactly the idea.](/images/features/confidential-sources/subpar.webp)
 
 *Even on camera, the mask stays on. A CCC founder joins Subpar hosts Colt Knost and Drew Stoltz, face blurred, which is exactly the idea.*
 
@@ -44,7 +44,7 @@ Here is where CCC's choices look, on paper, the most eccentric, and where they m
 
 The founders built the company on email, not social, and they did it on purpose. Their reasoning starts with a single statistic. Country Club Confidential has run open rates of 65 to 70 percent since the beginning. In an industry where a 20 percent open rate is considered healthy, that is not an incremental edge. It is a different category of business.
 
-![Country Club Confidential newsletter open-rate visual](https://substackcdn.com/image/fetch/$s_!OWEA!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F93f28c6c-f41b-4ddd-94c0-4d67cf5cda46_2048x1194.png)
+![Country Club Confidential newsletter open-rate visual](/images/features/confidential-sources/openrate.webp)
 
 Most newsletters optimize, whether they admit it or not, for the size of the list, because the size of the list is the number you can put in a pitch deck. CCC optimized for the only number that actually compounds, which is whether anyone opens the thing at all. "We could go drop fifty thousand dollars on subscriber acquisition and have twenty-five thousand new names on the list," CCC said. "But those aren't our readers." Every name on the CCC list opted in. Nobody was bought, swept up, or bundled in. That produces a particular kind of reader, and it shows.
 
@@ -60,7 +60,7 @@ The pattern announced itself with the magazine. Early on, CCC printed a single p
 
 The founder happened to be at an event where Colt Knost, of the Subpar podcast and PGA Tour Radio, was in attendance. There were copies of the magazine in the car. The founder ran out, grabbed a few, and handed one over. Knost started reading it on the spot, and liked it enough to talk about it on his radio show the next morning. A friend called from Colorado to report that he had just heard Country Club Confidential being discussed on the radio. The [Subpar appearance](https://youtu.be/gE6GX-xhPSE?si=d0zHXAlTqiClGD1i&utm_source=dormied&utm_medium=article) followed from there, and that one nearly doubled the subscriber base.
 
-![Active subscribers from mid-2024 to early 2026. The near-vertical climb on the right, what CCC calls the Subpar effect, traces back to a single magazine handed over in a parking lot.](https://substackcdn.com/image/fetch/$s_!mznm!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F29863088-1831-4160-b940-b2c86b8c05f5_1179x1008.png)
+![Active subscribers from mid-2024 to early 2026. The near-vertical climb on the right, what CCC calls the Subpar effect, traces back to a single magazine handed over in a parking lot.](/images/features/confidential-sources/subscribers.webp)
 
 *Active subscribers from mid-2024 to early 2026. The near-vertical climb on the right, what CCC calls the Subpar effect, traces back to a single magazine handed over in a parking lot.*
 
@@ -68,7 +68,7 @@ None of it happens without the object in the trunk. "Handing someone a tabloid-s
 
 ## The Expensive Lesson
 
-![Country Club Confidential video series still](https://substackcdn.com/image/fetch/$s_!IzUH!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff66216b8-d98a-410c-bdfc-97a346f0260d_2048x1152.png)
+![Country Club Confidential video series still](/images/features/confidential-sources/video.webp)
 
 *The video series that became CCC's most expensive lesson: comedian hosts, a celebrity narrator, a real budget, and about two thousand views. The format, it turned out, was the product.*
 
@@ -82,7 +82,7 @@ A sponsor meant they recouped some of the cost, but it was expensive and the ret
 
 ## A Story, Not an Anecdote
 
-![Country Club Confidential The Wrong Cut story title card](https://substackcdn.com/image/fetch/$s_!wDeb!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc2d8e283-a100-4dcb-b71a-3ace6fe855fa_1730x908.png)
+![Country Club Confidential The Wrong Cut story title card](/images/features/confidential-sources/wrongcut.webp)
 
 *"The Wrong Cut" story. Names changed, club unidentified, ending sharpened when the truth ran out. That is the house method in one title card.*
 
