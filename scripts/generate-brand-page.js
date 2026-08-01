@@ -8,7 +8,7 @@
  *
  * Usage:
  *   node scripts/generate-brand-page.js              # smart: skip existing files
- *   node scripts/generate-brand-page.js --force      # regenerate all 175
+ *   node scripts/generate-brand-page.js --force      # regenerate all 215
  *   node scripts/generate-brand-page.js --slug=titleist  # one brand only
  *
  * Required env vars:
@@ -25,6 +25,7 @@ const vm               = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const feedBake         = require('./feed-bake');
 
+const { dataVersion } = require('./lib/data-version');
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const SITE_ROOT = path.resolve(__dirname, '..');
@@ -121,10 +122,22 @@ function getBrandStats(dormiedData, brandSlug) {
   );
   const di = maxSearches > 0 ? Math.min(100, (curSearches / maxSearches) * 100) : 0;
 
-  // Global rank
+  // Global rank. Ranked on current-month searches, then the canonical tiebreak
+  // chain — previous month, then three months ago, then slug. Sorting on the
+  // current month alone leaves tied brands in whatever order the array happened
+  // to be in, which is not the order brand.js and refresh-brand-summary.js
+  // produce, so the baked rank and the hydrated rank disagreed on every tie.
+  // Google Trends reports in buckets (9900, 5400, 1300 …), so ties are common.
+  const month3ago = shiftMonth(currentMonth, -3);
   const sorted = dormiedData.brands
-    .map(b => ({ id: b.id, s: b.searchesByMarket?.global?.[currentMonth] || 0 }))
-    .sort((a, b) => b.s - a.s);
+    .map(b => ({
+      id:   b.id,
+      cur:  b.searchesByMarket?.global?.[currentMonth]  || 0,
+      prev: b.searchesByMarket?.global?.[previousMonth] || 0,
+      ago3: b.searchesByMarket?.global?.[month3ago]     || 0,
+    }))
+    .sort((a, b) => (b.cur - a.cur) || (b.prev - a.prev) || (b.ago3 - a.ago3)
+                 || (a.id < b.id ? -1 : 1));
   const rank = sorted.findIndex(b => b.id === brandSlug) + 1;
 
   // MoM %
@@ -1107,7 +1120,7 @@ ${faqHtml}
   <script>window.__BRAND_SLUG__='${escHtml(slug)}';</script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script defer src="/js/utils.min.js?v=20260318"></script>
-  <script defer src="/js/data.min.js?v=20260709"></script>
+  <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
   <script defer src="/js/take-preview.min.js?v=20260330"></script>
   <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
@@ -1590,7 +1603,7 @@ async function main() {
   console.log(`\n[brand-page] Done — ${written} written, ${skipped} skipped, ${errors} errors`);
 
   // Regenerate sitemap once after all brand pages are written (never per-brand,
-  // which would trigger 175 filesystem scans).
+  // which would trigger 215 filesystem scans).
   if (written > 0) {
     // Sitemap failure is FATAL: content dates come from Supabase and there is no
     // mtime fallback, so a failure means the sitemap is stale, not merely unwritten.

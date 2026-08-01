@@ -14,7 +14,7 @@ DORMIED tracks brand search interest across 10 global markets every month. Arnie
 
 | Metric | Value |
 |---|---|
-| Global DORMIED Index rank | 115 of 175+ |
+| Global DORMIED Index rank | 115 of 215+ |
 | Three-month change | +50.6% |
 | Monthly global searches | 2,900 |
 | Month-over-month change | -19.4% |
@@ -22,7 +22,7 @@ DORMIED tracks brand search interest across 10 global markets every month. Arnie
 
 *Source: DORMIED Index, June 2026 snapshot.*
 
-Read those numbers honestly and two things are true at once. Arnie McNair is small: rank 115, a fraction of the search volume of a Malbon or a Random Golf Club. And Arnie McNair got big fast, then cooled. It reached rank 104 back in April, one of the quickest standing starts in the Index, and it is still up 50.6 percent over three months, a top-quartile climb among the 175-plus brands we track. But it has slipped in the two months since, down 19.4 percent month over month and off that April peak. The pattern is not a warning sign; it is the shape of the business. A made-to-order brand that sells in limited seasonal windows spikes when a drop opens and cools while the Army, as the brand calls its buyers, waits for the next one. The line that matters is the three-month line, and it still points up, even as the month-to-month reading shows the order-window rhythm.
+Read those numbers honestly and two things are true at once. Arnie McNair is small: rank 115, a fraction of the search volume of a Malbon or a Random Golf Club. And Arnie McNair got big fast, then cooled. It reached rank 104 back in April, one of the quickest standing starts in the Index, and it is still up 50.6 percent over three months, a top-quartile climb among the 215-plus brands we track. But it has slipped in the two months since, down 19.4 percent month over month and off that April peak. The pattern is not a warning sign; it is the shape of the business. A made-to-order brand that sells in limited seasonal windows spikes when a drop opens and cools while the Army, as the brand calls its buyers, waits for the next one. The line that matters is the three-month line, and it still points up, even as the month-to-month reading shows the order-window rhythm.
 
 ## The Burnerverse origin story
 
@@ -86,7 +86,7 @@ The founder has said the brand matters more than the person behind it, and the a
 Pieces marked AM are dedicated to the founder's brother, a United States Marine who passed away in 2004. Proceeds from AM-marked items go to Stop Soldier Suicide.
 
 **Is Arnie McNair growing?**
-By DORMIED's tracking, it grew fast and has since cooled. Search interest in Arnie McNair is up 50.6 percent over the past three months, a top-quartile climb among the 175-plus brands DORMIED tracks, but the brand has slipped to rank 115 as of June 2026 after peaking at rank 104 in April. It remains small in absolute terms.
+By DORMIED's tracking, it grew fast and has since cooled. Search interest in Arnie McNair is up 50.6 percent over the past three months, a top-quartile climb among the 215-plus brands DORMIED tracks, but the brand has slipped to rank 115 as of June 2026 after peaking at rank 104 in April. It remains small in absolute terms.
 
 ---
 

@@ -1,6 +1,6 @@
 # DORMIED
 
-Golf's brand desk. 175 brands. 10 markets. Ranked monthly by real search data.
+Golf's brand desk. 215 brands. 10 markets. Ranked monthly by real search data.
 
 **Live site:** [dormied.com](https://dormied.com)
 **Stack:** Vanilla HTML/CSS/JS · Vercel · Supabase · Beehiiv · Anthropic · Impact / CJ
@@ -32,6 +32,16 @@ twice before `npm run verify:css` existed. **Add rules to both.**
 **`sitemap.xml` is generated.** Do not hand-edit it; run
 `npm run regenerate:sitemap`. It derives `lastmod` from content sources only and
 never falls back to `now()` or file mtime.
+
+**The data bundles are built, and their cache buster is derived.** `js/data.js`
+is the source of truth; `js/data.min.js`, `js/data-home.js` and every
+`js/brand-data/*.js` are built from it and committed. Editing `data.js` without
+rebuilding them changes nothing a reader sees — 241 pages load `data.min.js`,
+not `data.js`. The `?v=` on those files comes from `meta.lastUpdated` via
+`scripts/lib/data-version.js`, so bumping that field is what invalidates the
+cache. It was hardcoded in three generators once, and a 215-brand bundle shipped
+behind a `?v=` from the 175-brand era; at `max-age=604800` that is a week of
+readers on the old brand set.
 
 ---
 
@@ -233,16 +243,32 @@ To syntax-check a script use `node --check`, never `require()`.
 **On the 1st, after new search data is ready.**
 
 1. **Update `js/data.js`** — new search volumes per brand per market, and
-   `meta.lastUpdated`.
-2. **Bump the `?v=` query** on `data.js` in the HTML files so browsers fetch it.
-3. **Regenerate:**
+   `meta.lastUpdated` to the date of the update. That field is the `?v=` cache
+   buster for every data bundle, so it is not optional.
+2. **Rebuild the bundles** that pages actually load:
    ```bash
-   npm run generate-brands
+   node scripts/generate-brand-data.js
+   node scripts/generate-home-data.js
+   npx terser js/data.js --compress --mangle -o js/data.min.js
+   ```
+3. **Bump the `?v=` query** on those files in the committed HTML to match the
+   new `meta.lastUpdated` (`sed` across `*.html`). Generators emit the right
+   value on their own; already-built pages do not rewrite themselves.
+4. **Refresh the DB layer** so the summary, ranks and momentum follow the data:
+   ```bash
+   node scripts/backfill-brand-scores.js
+   node scripts/refresh-brand-summary.js
+   ```
+5. **Regenerate:**
+   ```bash
+   npm run generate-brands:force
    npm run generate-scorecard
    npm run regenerate:sitemap
    ```
-4. **Verify:** `npm run verify:brands && npm run verify:sitemap`
-5. **Commit and push.** Vercel deploys from `main`.
+   `--force`. New volumes reshuffle ranks, so every brand page is stale, not
+   just the ones whose own numbers moved.
+6. **Verify:** `npm run verify:brands && npm run verify:sitemap && npm run verify:css`
+7. **Commit and push.** Vercel deploys from `main`.
 
 ---
 
@@ -257,8 +283,8 @@ To syntax-check a script use `node --check`, never `require()`.
   logo:          "/images/logos/brand-name.jpg",
   website:       "https://brandname.com",
   headquarters:  "City, Country",
-  founded:       "2005",
-  parentCompany: "",                   // blank if independent
+  founded:       2005,                 // number, not a string
+  parentCompany: "Independent",        // never blank — say what it is
   category:      "Clubs & Balls",
   allCategories: ["Clubs & Balls"],
   subCategories: ["Irons", "Drivers"],
@@ -273,24 +299,52 @@ To syntax-check a script use `node --check`, never `require()`.
 
 Use `0` for months with no data.
 
-**2. Update the brand count** — `totalBrands` in the `js/data.js` meta block, and
-the copy in the HTML files (search for `175 brands`).
+**2. Update the meta block** — `totalBrands` in `js/data.js`, and `lastUpdated`
+to today. `lastUpdated` is the `?v=` cache buster for `js/data.min.js` and every
+`js/brand-data/*.js`; leaving it alone ships new data behind the old URL and
+`Cache-Control: max-age=604800` keeps returning readers on the stale copy for a
+week. Then update the brand-count copy in the HTML (search for `215 brands`).
 
 **3. Add the logo** at `images/logos/brand-name.jpg`, matching the `id`.
+**Square, at most 350x350, JPEG.** The logo box is square with
+`object-fit: contain`, so a wide logo paints as a squat bar inside it — pad it
+to square on its own background rather than letting the box do it. Brand sites
+publish these at whatever size suits them; a batch imported straight from source
+once averaged 29KB against the existing 6KB, on an image the page loads eagerly
+above the fold.
 
 **4. Add it to the feed tagger** in `api/_brands.json` so articles get tagged:
 
 ```json
-{ "id": "brand-name", "name": "Brand Name", "keywords": ["Brand Name", "BrandName"] }
+{ "id": "brand-name", "name": "Brand Name", "matchTerms": ["BrandName"] }
 ```
 
-**5. Regenerate and verify:**
+`name` is always matched. `aliases` and `matchTerms` add more terms. If the name
+is also ordinary golf or English phrasing — Municipal, Local Rule, Honors — set
+`"autoMatch": false` so it is never tagged automatically; it still gets a page, a
+directory row and a search entry. For a name that is only ambiguous in body copy,
+add the lowercased term to `EXCLUSION_LIST` in `scripts/match-brands.js` instead,
+which matches it in headlines only.
+
+**5. Map it into WITB** if pros carry it — set `witb_brands.dormied_brand_slug`
+to the new `id`, or the equipment rows will not link to the brand page and the
+brand page will not get its ON TOUR module.
+
+**6. Regenerate and verify:**
 
 ```bash
-npm run generate-brands
-npm run regenerate:sitemap
-npm run verify:brands && npm run verify:sitemap
+node scripts/generate-brand-data.js
+node scripts/generate-home-data.js
+npx terser js/data.js --compress --mangle -o js/data.min.js
+node scripts/backfill-brand-scores.js && node scripts/refresh-brand-summary.js
+npm run generate-brands:force
+npm run generate-index-pages
+npm run regenerate:search-index
+npm run verify:brands && npm run verify:sitemap && npm run verify:css
 ```
+
+`generate-brands:force`, not `generate-brands` — adding a brand reshuffles ranks
+for everything below it, so every page needs rewriting, not just the new one.
 
 Do **not** hand-add a `<url>` entry to `sitemap.xml` — the generator picks up the
 new page and a manual edit will be overwritten.

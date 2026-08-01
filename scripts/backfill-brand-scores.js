@@ -194,8 +194,11 @@ async function main() {
 
   console.log(`\n  All rows upserted.`);
 
-  // Compute ranks
-  await computeRanksFallback(sb);
+  // Compute ranks. This called computeRanksFallback(), which was never written —
+  // so every full backfill inserted its rows and then died before ranking them,
+  // leaving dormied_brand_scores with stale ranks and no error until the crash.
+  // The --ranks-only path always called the right function, which is why it hid.
+  await computeRanks(sb);
 
   // Final counts
   const { count } = await sb

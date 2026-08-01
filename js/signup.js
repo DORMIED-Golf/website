@@ -106,7 +106,7 @@
   +         '<p class="signup-popup-body">Your group chat will be talking about these brands next month. You\'ll already know why.</p>'
   +         '<ul class="signup-popup-bullets">'
   +           '<li>The biggest brand moves in golf, explained</li>'
-  +           '<li>Data from 175 brands across 10 global markets</li>'
+  +           '<li>Data from 215 brands across 10 global markets</li>'
   +           '<li>Once a month. Free. No filler.</li>'
   +         '</ul>'
   +         '<form class="signup-popup-form" id="popup-form" novalidate>'

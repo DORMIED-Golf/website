@@ -14,7 +14,7 @@ DORMIED tracks brand search interest across 10 global markets every month. Here 
 
 | Metric | Value |
 |---|---|
-| Global DORMIED Index rank | 97 of 175+ |
+| Global DORMIED Index rank | 97 of 215+ |
 | Rank movement | Up 4 spots (from 101) |
 | Month-over-month change | +22.7% |
 | Monthly global searches | 5,400 |
@@ -49,7 +49,7 @@ The collaboration matters beyond the product because of what it confirms about S
 
 ## Why Students matters
 
-DORMIED tracks 175+ golf brands, and the pattern Students fits is one we have written about before: the culture-first brand that enters golf through identity rather than equipment. Random Golf Club did it through community. Malbon did it through wardrobe. Students does it through voice, the specific, self-deprecating voice of the amateur who loves a game that does not love them back. Its stated mission, making golf more diverse, more inclusive, and less gatekept, is the same current running through the entire new wave.
+DORMIED tracks 215+ golf brands, and the pattern Students fits is one we have written about before: the culture-first brand that enters golf through identity rather than equipment. Random Golf Club did it through community. Malbon did it through wardrobe. Students does it through voice, the specific, self-deprecating voice of the amateur who loves a game that does not love them back. Its stated mission, making golf more diverse, more inclusive, and less gatekept, is the same current running through the entire new wave.
 
 The difference is pedigree. Huynh is not a golfer who decided to make clothes; he is one of the most influential streetwear designers of his generation who decided to make golf clothes. The jogger is on the short list of garments that actually changed how people dress. Betting that its inventor can do something similar to the golf wardrobe is not a wild bet, and the Index data says the market is starting to price it in.
 
@@ -71,7 +71,7 @@ Through the brand's own site and fashion retailers including Hypebeast's HBX and
 Students of Sugarloaf Social Club is a March 2026 collaboration between Students and Ian Gilley's Sugarloaf Social Club, blending Sugarloaf's prep nostalgia with Students' streetwear edge. It grew out of a connection first made at a golf tournament Students hosted in Paris during Paris Fashion Week.
 
 **Is Students Golf growing?**
-By DORMIED's tracking, yes. Students climbed four spots to rank 97 of the 175+ brands in the DORMIED Index in the latest snapshot, with search interest up 22.7 percent month over month on 5,400 monthly global searches.
+By DORMIED's tracking, yes. Students climbed four spots to rank 97 of the 215+ brands in the DORMIED Index in the latest snapshot, with search interest up 22.7 percent month over month on 5,400 monthly global searches.
 
 ---
 

@@ -259,7 +259,7 @@ Return valid JSON only — no markdown fences, no preamble, exactly this structu
 async function callOpus(client, sourceBody, brandInfo, retry = false) {
   const { brand, rank, di, momStr, currentMonth } = brandInfo;
   const userMsg = `Brand: ${brand.name}
-Current DORMIED global rank: #${rank} of 175
+Current DORMIED global rank: #${rank} of 215
 DI score: ${di}/100
 Month-over-month: ${momStr}
 Month: ${currentMonth}

@@ -1147,7 +1147,8 @@
     } else {
       title = `${brand.name}: Golf Brand Rank + Trend (${titleYear}) | DORMIED`;
     }
-    const desc  = `${brand.name} ranks #${globalRank} of 175+ golf brands on the DORMIED Index with a DI score of ${di}. Track their 36-month search trend across 10 global golf markets.`;
+    const total = (window.DORMIED_DATA && window.DORMIED_DATA.brands.length) || 0;
+    const desc  = `${brand.name} ranks #${globalRank} of ${total} golf brands on the DORMIED Index with a DI score of ${di}. Track their 36-month search trend across 10 global golf markets.`;
     const url   = `https://dormied.com/brands/${brand.id}/`;
 
     document.title = title;

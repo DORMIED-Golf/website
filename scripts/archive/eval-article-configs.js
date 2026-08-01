@@ -169,7 +169,7 @@ async function generate(anthropic, testCase, config) {
 
   const userMsg =
 `Brand: ${brand.name}
-Current DORMIED global rank: #${rank} of 175
+Current DORMIED global rank: #${rank} of 215
 DI score: ${di}/100
 Month-over-month: ${momStr}
 Month: ${currentMonth}

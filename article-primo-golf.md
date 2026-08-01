@@ -14,7 +14,7 @@ DORMIED tracks brand search interest across 10 global markets every month. Here 
 
 | Metric | Value |
 |---|---|
-| Global DORMIED Index rank | 51 of 175+ |
+| Global DORMIED Index rank | 51 of 215+ |
 | Monthly global searches | 14,800 |
 | Three-month change | +1.4% |
 | Month-over-month change | -33.3% |
@@ -71,7 +71,7 @@ Yes. After losing a match to Grant Horvat, Mickelson was challenged to wear Prim
 The headline pro relationship is Phil Mickelson's HyFlyers GC, which Primo has outfitted on LIV Golf since early 2025. Beyond the team deal, the brand turns up on individual tour players. PGA Tour winner Si Woo Kim has been seen in Primo, part of the label's steady move from creator-driven visibility to real on-course presence.
 
 **Is Primo Golf growing?**
-By DORMIED's tracking, Primo sits at rank 51 of 175+ brands with 14,800 monthly global searches, roughly flat over the past quarter. Its interest is spiky and content-driven, rising sharply around Horvat videos and LIV moments.
+By DORMIED's tracking, Primo sits at rank 51 of 215+ brands with 14,800 monthly global searches, roughly flat over the past quarter. Its interest is spiky and content-driven, rising sharply around Horvat videos and LIV moments.
 
 ---
 

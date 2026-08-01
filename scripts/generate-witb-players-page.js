@@ -20,6 +20,7 @@ const path            = require('path');
 const vm              = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const feedBake        = require('./feed-bake');
+const { dataVersion } = require('./lib/data-version');
 const { pageEligible } = require('./witb-page-eligibility');
 
 function loadDormiedData() {
@@ -445,7 +446,7 @@ ${gridHtml}
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/witb-dir.min.js?v=20260529"></script>
-  <script defer src="/js/data.min.js?v=20260709"></script>
+  <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
   <script defer src="/js/feed.min.js?v=20260717"></script>
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260718d"></script>

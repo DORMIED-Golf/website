@@ -27,11 +27,28 @@
     "name": "Aldila"
   },
   {
+    "id": "alyn-golf",
+    "name": "Alyn Golf"
+  },
+  {
+    "id": "anew",
+    "name": "ANEW",
+    "autoMatch": false,
+    "matchTerms": [
+      "ANEW Golf",
+      "ANEW apparel"
+    ]
+  },
+  {
     "id": "arccos-golf",
     "name": "Arccos Golf",
     "aliases": [
       "Arccos"
     ]
+  },
+  {
+    "id": "arnie-mcnair",
+    "name": "Arnie McNair"
   },
   {
     "id": "asher-golf",
@@ -40,6 +57,14 @@
   {
     "id": "avoda-golf",
     "name": "Avoda Golf"
+  },
+  {
+    "id": "b-draddy",
+    "name": "B. Draddy",
+    "matchTerms": [
+      "B.Draddy",
+      "B Draddy"
+    ]
   },
   {
     "id": "bad-birdie",
@@ -77,6 +102,10 @@
     "name": "Bogey Boys"
   },
   {
+    "id": "bogner",
+    "name": "Bogner"
+  },
+  {
     "id": "bonobos-golf",
     "name": "Bonobos Golf",
     "matchTerms": [
@@ -106,12 +135,20 @@
     "name": "Byrdie Golf Social Wear"
   },
   {
+    "id": "calia",
+    "name": "CALIA"
+  },
+  {
     "id": "callaway",
     "name": "Callaway"
   },
   {
     "id": "calliope-golf",
     "name": "Calliope Golf"
+  },
+  {
+    "id": "carnival-golf",
+    "name": "Carnival Golf"
   },
   {
     "id": "cleveland-golf",
@@ -150,10 +187,25 @@
     ]
   },
   {
+    "id": "descente",
+    "name": "Descente",
+    "matchTerms": [
+      "Descente Golf"
+    ]
+  },
+  {
     "id": "devereux-golf",
     "name": "Devereux Golf",
     "matchTerms": [
       "Devereux"
+    ]
+  },
+  {
+    "id": "draw-and-fade-modern",
+    "name": "Draw & Fade Modern",
+    "matchTerms": [
+      "Draw and Fade Modern",
+      "Draw & Fade"
     ]
   },
   {
@@ -188,6 +240,32 @@
     "name": "Evnroll"
   },
   {
+    "id": "extracurricular",
+    "name": "Extracurricular",
+    "autoMatch": false,
+    "matchTerms": [
+      "Extracurricular Golf"
+    ]
+  },
+  {
+    "id": "fairmonde",
+    "name": "Fairmonde"
+  },
+  {
+    "id": "fantl-sport",
+    "name": "Fantl Sport",
+    "matchTerms": [
+      "Fantl"
+    ]
+  },
+  {
+    "id": "fiori",
+    "name": "Fiori",
+    "matchTerms": [
+      "Fiori Golf"
+    ]
+  },
+  {
     "id": "flightscope",
     "name": "FlightScope",
     "aliases": [
@@ -200,6 +278,13 @@
     "aliases": [
       "FootJoy",
       "Foot Joy"
+    ]
+  },
+  {
+    "id": "forden-golf",
+    "name": "Forden Golf",
+    "matchTerms": [
+      "Forden"
     ]
   },
   {
@@ -262,6 +347,13 @@
     "name": "Greyson"
   },
   {
+    "id": "gumtree-golf-and-nature-club",
+    "name": "Gumtree Golf & Nature Club",
+    "matchTerms": [
+      "Gumtree Golf"
+    ]
+  },
+  {
     "id": "hackmotion",
     "name": "HackMotion",
     "aliases": [
@@ -276,6 +368,19 @@
     ]
   },
   {
+    "id": "head-golf",
+    "name": "Head Golf"
+  },
+  {
+    "id": "hedge",
+    "name": "Hedge",
+    "autoMatch": false,
+    "matchTerms": [
+      "Hedge Golf",
+      "Hedge apparel"
+    ]
+  },
+  {
     "id": "holderness-bourne",
     "name": "Holderness & Bourne",
     "aliases": [
@@ -287,8 +392,28 @@
     "name": "Honma"
   },
   {
+    "id": "honors",
+    "name": "Honors",
+    "autoMatch": false,
+    "matchTerms": [
+      "Honors Golf",
+      "Honors apparel"
+    ]
+  },
+  {
+    "id": "hypegolf",
+    "name": "Hypegolf"
+  },
+  {
     "id": "ibkul",
     "name": "IBKUL"
+  },
+  {
+    "id": "iomic",
+    "name": "Iomic",
+    "matchTerms": [
+      "Iomic Grips"
+    ]
   },
   {
     "id": "irange-sports",
@@ -304,12 +429,30 @@
     ]
   },
   {
+    "id": "jain-golf",
+    "name": "Jain Golf"
+  },
+  {
     "id": "jofit",
     "name": "Jofit"
   },
   {
+    "id": "johnnie-o",
+    "name": "Johnnie-O",
+    "matchTerms": [
+      "Johnnie O"
+    ]
+  },
+  {
     "id": "jones-sports-co",
     "name": "Jones Sports Co"
+  },
+  {
+    "id": "jumbomax",
+    "name": "JumboMax",
+    "matchTerms": [
+      "JumboMax Grips"
+    ]
   },
   {
     "id": "kadet-golf",
@@ -341,6 +484,14 @@
     ]
   },
   {
+    "id": "kraken",
+    "name": "Kraken",
+    "autoMatch": false,
+    "matchTerms": [
+      "Kraken Golf"
+    ]
+  },
+  {
     "id": "krank-golf",
     "name": "Krank Golf",
     "matchTerms": [
@@ -368,12 +519,36 @@
     "name": "Lamkin"
   },
   {
+    "id": "lazrus-golf",
+    "name": "LAZRUS Golf",
+    "matchTerms": [
+      "LAZRUS"
+    ]
+  },
+  {
+    "id": "left-of-field",
+    "name": "Left of Field",
+    "autoMatch": false,
+    "matchTerms": [
+      "Left of Field Golf"
+    ]
+  },
+  {
     "id": "lija",
     "name": "LIJA"
   },
   {
     "id": "linksoul",
     "name": "Linksoul"
+  },
+  {
+    "id": "local-rule",
+    "name": "Local Rule",
+    "autoMatch": false,
+    "matchTerms": [
+      "Local Rule Golf",
+      "Local Rule apparel"
+    ]
   },
   {
     "id": "lululemon-golf",
@@ -391,6 +566,13 @@
     "name": "MacGregor"
   },
   {
+    "id": "maejer-golf",
+    "name": "Maejer Golf",
+    "matchTerms": [
+      "Maejer"
+    ]
+  },
+  {
     "id": "malbon",
     "name": "Malbon",
     "aliases": [
@@ -404,6 +586,10 @@
   {
     "id": "maxfli",
     "name": "Maxfli"
+  },
+  {
+    "id": "mclaren-golf",
+    "name": "McLaren Golf"
   },
   {
     "id": "metalwood-studio",
@@ -431,6 +617,10 @@
     "name": "Mizuno"
   },
   {
+    "id": "monzee",
+    "name": "Monzee"
+  },
+  {
     "id": "municipal",
     "name": "Municipal",
     "autoMatch": false,
@@ -441,6 +631,10 @@
       "Municipal x ",
       "Municipal drop"
     ]
+  },
+  {
+    "id": "never-compromise",
+    "name": "Never Compromise"
   },
   {
     "id": "new-balance-golf",
@@ -461,6 +655,13 @@
       "Nike Roshe golf",
       "Nike golf shoe",
       "Nike golf ball"
+    ]
+  },
+  {
+    "id": "oakley-golf",
+    "name": "Oakley Golf",
+    "matchTerms": [
+      "Oakley"
     ]
   },
   {
@@ -515,6 +716,13 @@
     ]
   },
   {
+    "id": "powerbilt-golf",
+    "name": "PowerBilt Golf",
+    "matchTerms": [
+      "PowerBilt"
+    ]
+  },
+  {
     "id": "precision-pro-golf",
     "name": "Precision Pro Golf",
     "aliases": [
@@ -564,6 +772,17 @@
     "name": "Quiet Golf"
   },
   {
+    "id": "radry-golf",
+    "name": "Radry Golf",
+    "matchTerms": [
+      "Radry"
+    ]
+  },
+  {
+    "id": "ram-golf",
+    "name": "Ram Golf"
+  },
+  {
     "id": "random-golf-club",
     "name": "Random Golf Club"
   },
@@ -572,8 +791,19 @@
     "name": "Rapsodo"
   },
   {
+    "id": "recreational-habits",
+    "name": "Recreational Habits"
+  },
+  {
     "id": "reigning-champ",
     "name": "Reigning Champ"
+  },
+  {
+    "id": "renwick",
+    "name": "Renwick",
+    "matchTerms": [
+      "Renwick Golf"
+    ]
   },
   {
     "id": "rhoback",
@@ -605,10 +835,25 @@
     ]
   },
   {
+    "id": "sentinel-golf",
+    "name": "Sentinel Golf"
+  },
+  {
     "id": "shot-scope",
     "name": "Shot Scope",
     "aliases": [
       "ShotScope"
+    ]
+  },
+  {
+    "id": "sid-mashburn",
+    "name": "Sid Mashburn"
+  },
+  {
+    "id": "sierra-madre",
+    "name": "Sierra Madre",
+    "matchTerms": [
+      "Sierra Madre Golf"
     ]
   },
   {
@@ -622,6 +867,10 @@
       "Snell",
       "Snell MTB"
     ]
+  },
+  {
+    "id": "square-golf",
+    "name": "Square Golf"
   },
   {
     "id": "srixon",
@@ -688,6 +937,10 @@
     "name": "SwingDish"
   },
   {
+    "id": "switchgrips",
+    "name": "SwitchGrips"
+  },
+  {
     "id": "tail-activewear",
     "name": "Tail Activewear"
   },
@@ -734,6 +987,13 @@
     "name": "Tory Burch Sport"
   },
   {
+    "id": "toulon-golf",
+    "name": "Toulon Golf",
+    "matchTerms": [
+      "Toulon Design"
+    ]
+  },
+  {
     "id": "tour-edge",
     "name": "Tour Edge"
   },
@@ -762,6 +1022,10 @@
     "name": "True Temper"
   },
   {
+    "id": "tuckernuck",
+    "name": "Tuckernuck"
+  },
+  {
     "id": "under-armour-golf",
     "name": "Under Armour Golf",
     "aliases": [
@@ -770,6 +1034,10 @@
     "matchTerms": [
       "Under Armour"
     ]
+  },
+  {
+    "id": "uneekor",
+    "name": "Uneekor"
   },
   {
     "id": "vessel",
@@ -794,6 +1062,10 @@
   {
     "id": "vuori",
     "name": "Vuori"
+  },
+  {
+    "id": "waac",
+    "name": "WAAC"
   },
   {
     "id": "william-murray-golf",

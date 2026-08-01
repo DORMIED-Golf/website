@@ -18,6 +18,7 @@ const vm   = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const feedBake = require('./feed-bake');
 
+const { dataVersion } = require('./lib/data-version');
 const ROOT   = path.resolve(__dirname, '..');
 const OUT    = path.join(ROOT, 'witb', 'index.html');
 const SB_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -1607,7 +1608,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
   </script>
 
   <script defer src="/js/utils.min.js?v=20260318"></script>
-  <script defer src="/js/data.min.js?v=20260709"></script>
+  <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
   <script defer src="/js/feed.min.js?v=20260717"></script>
   <script defer src="/js/search.min.js?v=20260529"></script>
 </body>

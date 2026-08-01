@@ -4,7 +4,7 @@
 
 *Adam R. covers apparel, accessories, and golf culture for DORMIED. He has been tracking brand drops and collaborations since 2018.*
 
-Who owns Pins & Aces? Two brothers-in-law from Colorado who are married to Scottish sisters. Nick Mertz and Jon Major started the company in 2018 after Mertz bought a Callaway Epic driver, hated the off-lime-green headcover it came with, and discovered the only alternatives were $150 boutique covers or $30 junk. He wanted one at sixty bucks. Nobody made it. Eight years later that gap has become a $20 million-a-year business in Arvada, Colorado, that sells everything from voodoo doll headcovers to country-club-ready golf bags, and which in December 2024 bought a boutique club manufacturer from a member of the Coors family. Pins & Aces now ranks 29th of the 175-plus brands DORMIED tracks. Here is how a headcover complaint turned into one of the most-searched independent brands in golf.
+Who owns Pins & Aces? Two brothers-in-law from Colorado who are married to Scottish sisters. Nick Mertz and Jon Major started the company in 2018 after Mertz bought a Callaway Epic driver, hated the off-lime-green headcover it came with, and discovered the only alternatives were $150 boutique covers or $30 junk. He wanted one at sixty bucks. Nobody made it. Eight years later that gap has become a $20 million-a-year business in Arvada, Colorado, that sells everything from voodoo doll headcovers to country-club-ready golf bags, and which in December 2024 bought a boutique club manufacturer from a member of the Coors family. Pins & Aces now ranks 29th of the 215-plus brands DORMIED tracks. Here is how a headcover complaint turned into one of the most-searched independent brands in golf.
 
 In one sentence: Pins & Aces is a golfer-owned Colorado apparel and accessories company founded in 2018 by brothers-in-law Nick Mertz and Jon Major, known as "the people's brand" for its irreverent designs and hard price ceilings, which has since expanded into serious golf bags and, through its acquisition of Edel Golf, actual clubs.
 
@@ -22,7 +22,7 @@ DORMIED tracks brand search interest across 10 global markets every month. Here 
 
 | Metric | Value |
 |---|---|
-| Global DORMIED Index rank | 29 of 175+ |
+| Global DORMIED Index rank | 29 of 215+ |
 | DI score | 11.0 |
 | Three-month change | +59.1% |
 | Monthly global searches | 27,100 |
@@ -98,7 +98,7 @@ Pins & Aces is owned by its founders, brothers-in-law Nick Mertz and Jon Major, 
 Arvada, Colorado, on the northwest side of Denver, where the company owns a 14,000-square-foot distribution center and a small storefront at 5280 Ward Drive. It employs about 34 people.
 
 **Is Pins & Aces a good brand?**
-By DORMIED's tracking it is the 29th most-searched brand of the 175-plus we follow, with interest up 59.1 percent over the last three months, which places it well ahead of most independent golf brands. The company has been profitable every year since 2018 and did $20 million in revenue in 2024.
+By DORMIED's tracking it is the 29th most-searched brand of the 215-plus we follow, with interest up 59.1 percent over the last three months, which places it well ahead of most independent golf brands. The company has been profitable every year since 2018 and did $20 million in revenue in 2024.
 
 **Did Pins & Aces buy Edel Golf?**
 Yes. The acquisition was announced in December 2024 and rolled out publicly in January 2025 at the PGA Show. Edel's former owner Doug Coors remains chairman and Rocky Hansler is president. The brands operate separately, and Pins & Aces cut Edel's prices after taking over.

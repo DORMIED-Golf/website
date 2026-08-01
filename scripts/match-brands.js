@@ -35,6 +35,15 @@ const EXCLUSION_LIST = [
   'ping',        // same
   'wilson',      // same
   'full swing',  // common generic phrase in golf instruction; only match if in title
+
+  // Brands whose names double as ordinary golf or English phrasing. A headline
+  // naming them is about them; the same words in body copy usually are not.
+  'head golf',        // reads out of "...the club head. Golf's..." and similar
+  'never compromise', // the putter brand, but also a stock line in marketing copy
+  'kraken',           // a hockey team and a crypto exchange share the name
+  'renwick',          // a surname before it is a brand
+  'sierra madre',     // a mountain range
+  'fiori',            // Italian noun; turns up inside names and course descriptions
 ];
 
 // Brands with autoMatch:false in _brands.json are excluded from pipeline matching

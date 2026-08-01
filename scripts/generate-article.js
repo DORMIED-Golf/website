@@ -200,7 +200,8 @@ function getBrandInfo(dormiedData, brandSlug) {
   // 12M: point-to-point (current vs same month last year — matches da-article.js)
   const t12m = s12ago > 0 ? (curSearches - s12ago) / s12ago * 100 : null;
 
-  return { brand, rank, di, momPct, momStr, t3m, t12m, currentMonth };
+  return { brand, rank, di, momPct, momStr, t3m, t12m, currentMonth,
+           totalBrands: dormiedData.brands.length };
 }
 
 function makeSlug(title, dateStr) {
@@ -574,10 +575,10 @@ function getSystemPrompt(author) {
 }
 
 async function callOpus(client, pressRelease, brandInfo, author, retry = false) {
-  const { brand, rank, di, momStr, currentMonth } = brandInfo;
+  const { brand, rank, di, momStr, currentMonth, totalBrands } = brandInfo;
 
   const userMsg = `Brand: ${brand.name}
-Current DORMIED global rank: #${rank} of 175
+Current DORMIED global rank: #${rank} of ${totalBrands}
 DI score: ${di}/100
 Month-over-month: ${momStr}
 Month: ${currentMonth}
