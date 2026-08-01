@@ -352,39 +352,103 @@ function buildCountryTableRows(marketStats) {
 
 // ── HTML template ─────────────────────────────────────────────────────────────
 
-// ── FAQ section (Supabase-driven facts + live Index data) ─────────────────────
-// Renders only questions whose facts exist; a NULL fact skips its question so no
-// page ships a guessed or empty answer. Answers regenerate on every bake.
+// ── FAQ section (curated facts + js/data.js + live Index data) ────────────────
+//
+// Ownership, location and founding year are the questions readers actually
+// search: "who owns malbon golf", "who owns manors golf", "where are takomo
+// irons made", "takomo origin". In a month of Search Console data that cluster
+// was 50 distinct queries and 1,182 impressions — the largest informational
+// group on the site outside player WITB.
+//
+// These three used to render only when dormied_brand_facts held a row, which is
+// 40 of 215 brands, so 175 pages said nothing on the most-asked question. The
+// facts table stays the preferred source because it is hand-verified and richer
+// (founder, notes), but js/data.js carries parentCompany, headquarters and
+// founded for all 215, so it backfills the rest.
+//
+// Still no guessing: a question renders only where a real value exists.
+const MAX_FAQ_ITEMS = 6;
+
+// True when parentCompany is the brand's own legal entity rather than an outside
+// owner — "Bettinardi" / "Bettinardi Golf", "Fujikura" / "Fujikura Ltd.". The
+// test is directional: the parent being the brand plus filler means self-owned,
+// while the brand being the parent plus a category word is a real division and
+// keeps "owned by" ("Nike Golf" / "Nike Inc.", "Bridgestone Golf" /
+// "Bridgestone Corporation"). 28 brands take the first path, 7 the second.
+const CORP_SUFFIX = /\b(ab|inc|llc|ltd|limited|gmbh|co|corp|corporation|company|holdings?|sa|nv|bv|plc|kk|pty|srl|spa|oy|a\/s|as|aps|sko)\b\.?/gi;
+
+// Appends a full stop unless the string already ends in sentence punctuation.
+// Company names routinely end in "Inc." or "Ltd.", which produced "Nike, Inc..".
+const endSentence = str => /[.!?]$/.test(str.trim()) ? str.trim() : `${str.trim()}.`;
+
+function isOwnLegalEntity(brandName, parent) {
+  const norm = str => str.replace(/\([^)]*\)/g, ' ')      // drop "(TYO: 8114)"
+                         .replace(CORP_SUFFIX, ' ')
+                         .toLowerCase()
+                         .replace(/[^a-z0-9]/g, '');
+  const b = norm(brandName), p = norm(parent);
+  if (!b || !p) return false;
+  return p === b || p.startsWith(b);
+}
+
 function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
   const items = [];
   const f = facts || {};
-
-  // Q1: ownership (owner / parent_company; notes appended when present)
-  if (f.owner || f.parent_company) {
-    let a = f.owner === 'Independent'
-      ? `${brand.name} is independently owned.`
-      : `${brand.name} is owned by ${f.parent_company || f.owner}.`;
-    if (f.owner === 'Independent' && f.parent_company) a = `${brand.name} is owned by ${f.parent_company}.`;
-    if (f.notes) a += ` ${f.notes}.`;
-    items.push({ q: `Who owns ${brand.name}?`, aHtml: escHtml(a), aText: a });
-  }
 
   // A founder stored as "Anonymous" signals a brand that intentionally does not
   // disclose who is behind it — never render "founded by Anonymous".
   const founderAnon  = f.founder && /^anonymous/i.test(f.founder);
   const founderKnown = f.founder && !founderAnon;
 
-  // Q2: where based (hq_city / hq_country, founded woven in when known)
-  if (f.hq_city || f.hq_country) {
-    const place = [f.hq_city, f.hq_country].filter(Boolean).join(', ');
-    let a = `${brand.name} is based in ${place}.`;
-    if (f.founded_year && founderKnown) a += ` It was founded in ${f.founded_year} by ${f.founder}.`;
-    else if (f.founded_year)            a += ` It was founded in ${f.founded_year}.`;
-    else if (founderKnown)              a += ` It was founded by ${f.founder}.`;
-    items.push({ q: `Where is ${brand.name} based?`, aHtml: escHtml(a), aText: a });
+  // Q1: who owns it.
+  // 105 of 215 read "Independent"; 2 read "Not publicly disclosed". Both are
+  // real answers to the question and say so plainly rather than being skipped.
+  {
+    const curated = f.owner || f.parent_company;
+    const raw     = (curated || brand.parentCompany || '').trim();
+    if (raw) {
+      let a;
+      if (/^independent/i.test(raw))                     a = `${brand.name} is independently owned.`;
+      else if (/^(not publicly|undisclosed|unknown)/i.test(raw))
+                                                         a = `${brand.name} does not publicly disclose its ownership.`;
+      else if (isOwnLegalEntity(brand.name, raw)) {
+        // "Bettinardi is owned by Bettinardi Golf" answers nothing. Where the
+        // parent is just the brand's own legal wrapper, say what the reader
+        // actually wants to know — that no outside company owns it.
+        a = raw.replace(/\s+/g, ' ').trim() === brand.name
+          ? `${brand.name} is independently owned.`
+          : endSentence(`${brand.name} is independently owned, operating as ${raw}`);
+      }
+      else                                               a = endSentence(`${brand.name} is owned by ${raw}`);
+      if (f.notes) a += ` ${endSentence(f.notes)}`;
+      items.push({ q: `Who owns ${brand.name}?`, aHtml: escHtml(a), aText: a });
+    }
   }
 
-  // Q2b: founder intentionally anonymous (by design)
+  // Q2: where it is based. Curated hq_city/hq_country when present, otherwise
+  // the headquarters string from js/data.js, which is populated for all 215.
+  {
+    const curated = [f.hq_city, f.hq_country].filter(Boolean).join(', ');
+    const place   = curated || (brand.headquarters || '').trim();
+    if (place) {
+      const a = `${brand.name} is based in ${place}.`;
+      items.push({ q: `Where is ${brand.name} based?`, aHtml: escHtml(a), aText: a });
+    }
+  }
+
+  // Q3: when it was founded. Its own question rather than a clause on Q2 —
+  // "takomo origin", "malbon brand history" and "when was takomo golf founded"
+  // are their own searches.
+  {
+    const year = f.founded_year || brand.founded;
+    if (year) {
+      let a = `${brand.name} was founded in ${year}`;
+      a += founderKnown ? ` by ${f.founder}.` : '.';
+      items.push({ q: `When was ${brand.name} founded?`, aHtml: escHtml(a), aText: a });
+    }
+  }
+
+  // Q4: founder intentionally anonymous (by design)
   if (founderAnon) {
     const a = `${brand.name}'s founder is intentionally anonymous. The brand does not publicly disclose who is behind it.`;
     items.push({ q: `Who founded ${brand.name}?`, aHtml: escHtml(a), aText: a });
@@ -435,7 +499,11 @@ function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
     }
   }
 
-  return items;
+  // Push order is already the priority order — ownership, location, founding,
+  // then the two Index-derived answers. The cap only bites on brands that have
+  // every question available, and it drops the least distinctive one rather
+  // than letting a page run long enough to read as padding.
+  return items.slice(0, MAX_FAQ_ITEMS);
 }
 
 function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '', hasShop = false }) {
