@@ -76,19 +76,46 @@ module.exports = async (req, res) => {
   const supabase = getSupabase();
 
   // ── 1. Check archive — fully isolated, never crashes the flow ─────────────
+  //
+  // The cache is keyed on the date AND the pair. home.js picks the pairing at
+  // runtime from the ranked brand list, so the pair for a given date is only
+  // stable while that list is: adding brands, or a monthly data update that
+  // reshuffles ranks, makes the seeded pick land somewhere else. Keying on the
+  // date alone meant the page then rendered the new pair underneath a write-up
+  // describing the old one — which is how 1 Aug 2026 showed RLX Golf vs Bogey
+  // Boys, tied and EVEN, above a paragraph about a 4-0 sweep and a 50 percent
+  // surge that belonged to Fore All vs Metalwood Studio.
+  //
+  // On a pair mismatch we regenerate and overwrite. UNIQUE(date) keeps it to
+  // one row per day, and only the current day is ever recomputed, so a past
+  // day's archived match-up is frozen once the date rolls over.
+  let stale = false;
   if (supabase) {
     try {
       const { data: existing, error: selectErr } = await supabase
         .from('matchup_archive')
-        .select('result_writeup')
+        .select('result_writeup, brand_a_id, brand_b_id, brand_a_name, brand_b_name')
         .eq('date', today)
         .maybeSingle();
 
       if (selectErr) {
         console.warn('[matchup-result] Archive select error:', selectErr.message, selectErr.code);
       } else if (existing && existing.result_writeup) {
-        console.log('[matchup-result] Cache hit for', today);
-        return res.json({ writeup: existing.result_writeup, cached: true });
+        const samePair =
+          (existing.brand_a_id || existing.brand_a_name) === (brand_a_id || brand_a_name) &&
+          (existing.brand_b_id || existing.brand_b_name) === (brand_b_id || brand_b_name);
+
+        if (samePair) {
+          console.log('[matchup-result] Cache hit for', today);
+          return res.json({ writeup: existing.result_writeup, cached: true });
+        }
+
+        stale = true;
+        console.log(
+          `[matchup-result] Pair changed for ${today}: archived ` +
+          `${existing.brand_a_name} vs ${existing.brand_b_name}, now ` +
+          `${brand_a_name} vs ${brand_b_name} — regenerating.`
+        );
       }
     } catch (sbErr) {
       // Table may not exist yet — log and continue to generate with Claude
@@ -158,7 +185,9 @@ module.exports = async (req, res) => {
   if (supabase && writeup) {
     (async () => {
       try {
-        const { error } = await supabase.from('matchup_archive').insert({
+        // upsert on date: insert on a fresh day, overwrite when the pair moved
+        // out from under an existing row (see the staleness check above).
+        const { error } = await supabase.from('matchup_archive').upsert({
           date:           today,
           brand_a_id:     brand_a_id   || null,
           brand_a_name:   brand_a_name,
@@ -178,16 +207,12 @@ module.exports = async (req, res) => {
           result_winner:  result_winner || null,
           result_writeup: writeup,
           category:       category      || null,
-        });
+        }, { onConflict: 'date' });
 
         if (error) {
-          if (error.code === '23505') {
-            console.log('[matchup-result] Race: record already inserted for', today);
-          } else {
-            console.warn('[matchup-result] Archive insert failed:', error.message, error.code);
-          }
+          console.warn('[matchup-result] Archive write failed:', error.message, error.code);
         } else {
-          console.log('[matchup-result] Archived match-up for', today);
+          console.log(`[matchup-result] ${stale ? 'Replaced' : 'Archived'} match-up for`, today);
         }
       } catch (insertErr) {
         console.warn('[matchup-result] Archive insert threw:', insertErr.message);

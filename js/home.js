@@ -515,7 +515,11 @@
   /* ── FETCH MATCH-UP RESULT WRITE-UP ──────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────────────── */
   function fetchMatchupResult(payload) {
-    var cacheKey  = 'dormied_matchup_result_' + payload.date;
+    // Keyed on the pair as well as the date. The pairing is picked at runtime
+    // from the ranked list, so it can move within a day when that list changes;
+    // a date-only key pinned the previous pair's write-up under the new brands.
+    var cacheKey  = 'dormied_matchup_result_' + payload.date +
+                    '_' + payload.brand_a_id + '_' + payload.brand_b_id;
     var writeupEl = document.getElementById('h2h-result-writeup');
     if (!writeupEl) return;
 
