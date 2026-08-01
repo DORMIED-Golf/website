@@ -2464,7 +2464,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (468) ── -->
+  <!-- ── News articles (469) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4063,6 +4063,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/jlindebergs-summer-holiday-collection-bets-big-on-the-golf-to-everywhere-2026-05-19-hero.jpg</image:loc>
       <image:title>J.Lindeberg&apos;s Summer Holiday Collection Bets Big on the Golf-to-Everywhere Wardrobe</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/johnnie-o-opens-its-first-midwest-store-next-to-herms-thats-the-whole-story-2026-08-01/</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/johnnie-o-opens-its-first-midwest-store-next-to-herms-thats-the-whole-story-2026-08-01-hero.png</image:loc>
+      <image:title>Johnnie-O Opens Its First Midwest Store Next to Hermès. That&apos;s the Whole Story.</image:title>
     </image:image>
   </url>
   <url>
