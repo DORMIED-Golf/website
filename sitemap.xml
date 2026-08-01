@@ -2464,7 +2464,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (469) ── -->
+  <!-- ── News articles (470) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2503,6 +2503,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/a-40-year-old-austrian-just-made-the-case-for-steel-shafts-at-the-volvo-2026-04-27-hero.jpg</image:loc>
       <image:title>A 40-Year-Old Austrian Just Made the Case for Steel Shafts at the Volvo China Open</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/a-dollar-a-ball-costcos-first-kirkland-signature-markdown-in-seven-years-2026-08-01/</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/a-dollar-a-ball-costcos-first-kirkland-signature-markdown-in-seven-years-2026-08-01-hero.jpg</image:loc>
+      <image:title>A Dollar a Ball: Costco&apos;s First Kirkland Signature Markdown in Seven Years Isn&apos;t a Promotion</image:title>
     </image:image>
   </url>
   <url>
