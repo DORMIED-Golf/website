@@ -23,7 +23,7 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../.env'), 
 const { createClient } = require('@supabase/supabase-js');
 const Anthropic = require('@anthropic-ai/sdk');
 
-const MODEL   = 'claude-opus-4-7';
+const MODEL   = 'claude-opus-5';
 const DRY     = process.argv.includes('--dry-run');
 const slugArg = (process.argv.find(a => a.startsWith('--slug=')) || '').replace('--slug=', '') || null;
 

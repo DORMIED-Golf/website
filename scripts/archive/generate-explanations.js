@@ -6,6 +6,16 @@
  * generates a bullet-list explanation via Anthropic + web search,
  * and stores the result in Supabase.
  *
+ *
+ * RETIRED — Aug 2026. Key Moments, the brand-page section this fed, was removed
+ * because regenerating it monthly cost more than it returned. The workflow that
+ * ran this (.github/workflows/monthly-explanations.yml) is gone too.
+ *
+ * The brand_explanations rows it already wrote are still read by two surfaces:
+ * the homepage WHY IT MOVED module and the /rankings scorecard banner. Both are
+ * scoped to the current data month, so they show what exists and hide themselves
+ * once the data moves past the last generated month.
+ *
  * Usage:
  *   node scripts/generate-explanations.js           # defaults to last month
  *   node scripts/generate-explanations.js 2026-01   # specific month

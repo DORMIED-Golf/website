@@ -9,7 +9,7 @@
  *   node scripts/generate-witb-player-page.js              # defaults to jon-rahm
  *   node scripts/generate-witb-player-page.js jon-rahm
  *
- * Lede + history narrative: generated once via Opus 4.7, cached in
+ * Lede + history narrative: generated once via Opus, cached in
  * scripts/cache/witb-player-ledes.json keyed by slug:bag_date.
  * Regenerates only when the player's current bag date changes.
  *
@@ -403,10 +403,10 @@ function saveLedeCache(cache) {
   fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2), 'utf8');
 }
 
-// ── Opus 4.7 call ─────────────────────────────────────────────────────────────
+// ── Opus call ─────────────────────────────────────────────────────────────
 
 async function generateLede(anthropic, player, bags, currentBag, currentItems) {
-  log('Generating lede + history narrative via Opus 4.7...');
+  log('Generating lede + history narrative via Opus...');
 
   const keyItems = currentItems
     .filter(i => ['driver', 'iron', 'putter', 'ball'].includes(i.club_type))
@@ -484,7 +484,7 @@ Return valid JSON only, no markdown fences:
 }`;
 
   const res = await anthropic.messages.create({
-    model:      'claude-opus-4-7',
+    model:      'claude-opus-5',
     max_tokens: 6000,
     thinking:   { type: 'adaptive' },
     messages:   [{ role: 'user', content: prompt }],
@@ -1510,7 +1510,7 @@ async function main() {
   if (ledes) {
     log(`Lede loaded from cache (key: ${cacheKey})`);
   } else {
-    log(`Lede not in cache -- calling Opus 4.7 (key: ${cacheKey})`);
+    log(`Lede not in cache -- calling Opus (key: ${cacheKey})`);
     ledes = await generateLede(anthropic, player, bags, currentBag, currentItems);
     cache[cacheKey] = ledes;
     saveLedeCache(cache);

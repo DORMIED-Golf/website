@@ -31,12 +31,23 @@ function startsWithDisallowed(text, nameA, nameB) {
 
 async function callClaude(client, systemPrompt, userPrompt) {
   const resp = await client.messages.create({
-    model:      'claude-opus-4-5',
-    max_tokens: 150,
+    model:      'claude-opus-5',
+    max_tokens: 300,
+    // One or two sentences of formulaic result copy — there is nothing here to
+    // reason about, and this runs inside a user-facing request. Opus 5 thinks by
+    // default, which at the old 150-token ceiling spent the whole budget before
+    // the copy and truncated it mid-sentence.
+    thinking:   { type: 'disabled' },
     system:     systemPrompt,
     messages:   [{ role: 'user', content: userPrompt }],
   });
-  return (resp.content[0]?.text || '').trim();
+  // Select by block type, never by index: a leading thinking block has no .text,
+  // so content[0].text silently yielded an empty write-up.
+  return (resp.content || [])
+    .filter(b => b.type === 'text' && b.text)
+    .map(b => b.text)
+    .join('')
+    .trim();
 }
 
 const SYSTEM_PROMPT =

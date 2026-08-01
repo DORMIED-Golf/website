@@ -4,7 +4,7 @@
  *
  * Produces one static HTML file per brand at brands/[slug]/index.html
  * with fully server-rendered SEO content. brand.js re-populates the DOM
- * with interactive data (chart, market table, explanations) after load.
+ * with interactive data (chart, market table) after load.
  *
  * Usage:
  *   node scripts/generate-brand-page.js              # smart: skip existing files
@@ -192,20 +192,6 @@ function buildMetaDesc(brand, stats, totalBrands) {
 }
 
 // ── Supabase fetches ──────────────────────────────────────────────────────────
-
-async function fetchExplanations(supabase, brandSlug) {
-  const { data, error } = await supabase
-    .from('brand_explanations')
-    .select('month, explanation')
-    .eq('brand_id', brandSlug)
-    .order('month', { ascending: true });
-
-  if (error) {
-    console.warn(`[brand-page] explanations fetch error for ${brandSlug}:`, error.message);
-    return [];
-  }
-  return data || []; // [{ month: '2026-01', explanation: '...' }, ...]
-}
 
 async function fetchRecentArticles(supabase, brandSlug, limit = 8) {
   const { data, error } = await supabase
@@ -452,7 +438,7 @@ function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
   return items;
 }
 
-function generateBrandPageHtml({ brand, slug, stats, explanations, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '', hasShop = false }) {
+function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '', hasShop = false }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
   // WITB-style title: exact query phrase first, plain-language promise, year from the
@@ -623,62 +609,6 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
               <p class="bp-shop-disclosure">Some links on this page are affiliate links. DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
             </section>
 ` : '';
-
-  // Key Moments — pre-render timeline from Supabase explanation rows
-
-  /** Convert markdown links [label](url) → <a href="url">label</a>, escaping everything else. */
-  function mdLinksToHtml(text) {
-    const parts = [];
-    let last = 0;
-    const re = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
-    let m;
-    while ((m = re.exec(text)) !== null) {
-      parts.push(escHtml(text.slice(last, m.index)));
-      parts.push(`<a href="${escHtml(m[2])}">${escHtml(m[1])}</a>`);
-      last = m.index + m[0].length;
-    }
-    parts.push(escHtml(text.slice(last)));
-    return parts.join('');
-  }
-
-  function expToBullets(text) {
-    const cleaned = stripEmDashes(text) || '';
-    if (!cleaned) return '';
-    let items;
-    if (cleaned.indexOf('•') !== -1) {
-      items = cleaned.split('•').map(s => s.trim()).filter(Boolean);
-    } else {
-      const sentences = cleaned.match(/[^.!?]+[.!?]*/g) || [cleaned];
-      items = sentences.map(s => s.trim()).filter(s => s.length > 15);
-    }
-    if (!items.length) return `<p>${mdLinksToHtml(cleaned)}</p>`;
-    return '<ul class="exp-bullets">' + items.map(s => `<li>${mdLinksToHtml(s)}</li>`).join('') + '</ul>';
-  }
-
-  const sortedExplanations = (explanations || []).slice().sort((a, b) => a.month < b.month ? 1 : -1); // DESC — newest first
-  const explanationsSectionHtml = sortedExplanations.length > 0
-    ? `
-      <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading">
-          <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
-          <p class="bp-section-sub">The product, marketing, culture, and on-course moments that moved search interest in ${escHtml(brand.name)} in a given month.</p>
-          <div id="bp-explanation-body" class="bp-explanation-body">
-            <div class="bp-exp-timeline">
-              ${sortedExplanations.map(row => {
-                const label = fmtMonth(row.month);
-                return `<div class="bp-exp-timeline-item" data-month="${escHtml(row.month)}">
-                  <span class="bp-exp-timeline-month">${escHtml(label)}</span>
-                  <div class="bp-exp-timeline-text">${expToBullets(row.explanation)}</div>
-                </div>`;
-              }).join('\n              ')}
-            </div>
-          </div>
-      </section>`
-    : `
-      <section class="bp-explanation-section" id="bp-explanation-section" aria-labelledby="bp-explanation-heading" hidden>
-          <h2 class="bp-section-title" id="bp-explanation-heading">Key Moments</h2>
-          <p class="bp-section-sub">The product, marketing, culture, and on-course moments that moved search interest in ${escHtml(brand.name)} in a given month.</p>
-          <div id="bp-explanation-body" class="bp-explanation-body"></div>
-      </section>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -928,8 +858,6 @@ ${shopSectionHtml}
               </div>
             </section>
 
-            <!-- ── Key Moments ── -->
-${explanationsSectionHtml}
 
             <!-- ── Rankings by Market ── -->
             <section class="bp-section" aria-labelledby="bp-countries-heading">
@@ -1070,7 +998,6 @@ ${faqHtml}
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
-  <script defer src="/js/explanations.min.js?v=20260318"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <script defer src="/js/brand.min.js?v=20260707"></script>
   <script defer src="/js/feed.min.js?v=20260717"></script>
@@ -1418,13 +1345,10 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTour
 
   const { brand, curSearches } = stats;
 
-  // Fetch explanations and recent articles in parallel. The site-wide
+  // Fetch recent articles. The site-wide
   // Latest / Top Stories / Featured feeds are brand-independent and baked once
   // per run (see sharedFeeds), so they are not re-queried here.
-  const [explanations, articles] = await Promise.all([
-    fetchExplanations(supabase, brandSlug),
-    fetchRecentArticles(supabase, brandSlug),
-  ]);
+  const articles = await fetchRecentArticles(supabase, brandSlug);
   const dormiedLatestHtml = sharedFeeds.latestHtml || null;
   const topStoriesHtml    = sharedFeeds.topStoriesHtml || null;
   const featuredFeedHtml  = sharedFeeds.featuredHtml || null;
@@ -1437,7 +1361,7 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTour
 
   const facts = (factsBySlug && factsBySlug.get(brandSlug)) || null;
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, explanations, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml, hasShop: affiliateSlugs.has(brandSlug) });
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml, hasShop: affiliateSlugs.has(brandSlug) });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });

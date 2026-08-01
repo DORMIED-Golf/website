@@ -961,48 +961,9 @@
           b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
         });
         renderChart();
-        renderExplanationForPeriod();
         if (window.DORMIED_TRACK) window.DORMIED_TRACK('brand_date_range', { brand: brand.name, period: btn.textContent.trim() });
       });
     });
-  }
-
-  // ─── Explanation section ───────────────────────────────────────────────────
-  //
-  // Key Moments are pre-rendered as static HTML by the page generator.
-  // Each <div class="bp-exp-timeline-item"> has a data-month="YYYY-MM" attribute.
-  // This function shows/hides those pre-rendered items based on the active
-  // chart period (chartMonths), without ever touching innerHTML.
-
-  function renderExplanationForPeriod() {
-    const section = document.getElementById('bp-explanation-section');
-    if (!section) return;
-
-    const items = section.querySelectorAll('.bp-exp-timeline-item[data-month]');
-    if (!items.length) return; // no pre-rendered items — nothing to filter
-
-    // Compute the oldest YYYY-MM that should be visible for the current period.
-    // Mirrors the chart's allM.slice(-chartMonths) logic.
-    let cutoffYYYYMM = null;
-    if (chartMonths > 0) {
-      const projM  = window.DORMIED_DATA.meta.projectedMonth;
-      const allM   = getAllMonths().filter(m => m !== projM);
-      const window = allM.slice(-chartMonths);
-      if (window.length) {
-        const oldest   = window[0]; // e.g. "Oct 2025"
-        const [mon, yr] = oldest.split(' ');
-        const mNum     = String(MONTH_NAMES.indexOf(mon) + 1).padStart(2, '0');
-        cutoffYYYYMM   = `${yr}-${mNum}`; // e.g. "2025-10"
-      }
-    }
-
-    items.forEach(item => {
-      const month = item.dataset.month; // YYYY-MM
-      // Lexicographic comparison works correctly for YYYY-MM strings
-      item.style.display = (!cutoffYYYYMM || month >= cutoffYYYYMM) ? '' : 'none';
-    });
-
-    // Section visibility was set at build time — never hide it here
   }
 
   // ─── Methodology note (below chart) ──────────────────────────────────────
@@ -1188,7 +1149,6 @@
     renderCategoryStanding(catData);
     renderSimilarBrands(similar);
     renderPrevNext(globalRank);
-    renderExplanationForPeriod(); // filter pre-rendered Key Moments for default period
 
     // Analytics: brand page view
     if (window.DORMIED_TRACK) window.DORMIED_TRACK('brand_view', {

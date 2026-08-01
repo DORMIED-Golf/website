@@ -50,12 +50,14 @@ const PROTECTED_SLUGS = new Set([
 ]);
 
 // ── Article generation model config ───────────────────────────────────────────
-// Opus 4.7 solo — highest voice quality, no advisor.
-// NOTE: Opus 4.7 tokenizes ~35% more tokens than prior Opus at the same
-// per-token rate. The system prompt (~2,800 tokens) is below the Opus 4.7
-// cache floor of 4,096 tokens, so prompt caching is a no-op here; cache
-// fields in logs will show 0 — expected, not a bug.
-const MODEL      = 'claude-opus-4-7';
+// Opus solo — highest voice quality, no advisor.
+// NOTE: the system prompt (~2,800 tokens) is below the Opus cache floor of
+// 4,096 tokens, so prompt caching is a no-op here; cache fields in logs will
+// show 0 — expected, not a bug.
+// Opus 5 emits a thinking block ahead of the prose even with no thinking
+// parameter set, so response parsing must select text blocks by type. It does
+// (see callOpus); never index content[0].
+const MODEL      = 'claude-opus-5';
 const SITE_ROOT  = path.resolve(__dirname, '..');
 
 // Brands permanently excluded from article generation
@@ -588,7 +590,7 @@ Press release:
 ${pressRelease}${retry ? '\n\nYour previous response contained a disallowed phrase or invalid JSON. Rewrite starting directly with the editorial observation. Include all fields (title, body, meta_description, seo_keywords, x_post). Return valid JSON only.' : ''}`;
 
   // System prompt has cache_control marker so future prompt growth auto-activates
-  // caching without a code change. With Opus 4.7, the system prompt (~2,800 tokens)
+  // caching without a code change. The system prompt (~2,800 tokens)
   // is BELOW the Opus 4,096-token cache floor, so cache_creation and cache_read
   // will always log 0 — expected no-op, not a bug.
   const cachedSystem = [{ type: 'text', text: getSystemPrompt(author), cache_control: { type: 'ephemeral' } }];
@@ -602,8 +604,8 @@ ${pressRelease}${retry ? '\n\nYour previous response contained a disallowed phra
 
   // Token log — cache fields will be 0 (no-op: system prompt below Opus 4,096-token floor).
   const u = res.usage || {};
-  const inputCost  = (u.input_tokens  ?? 0) / 1_000_000 * 5;   // Opus 4.7: $5/MTok input
-  const outputCost = (u.output_tokens ?? 0) / 1_000_000 * 25;  // Opus 4.7: $25/MTok output
+  const inputCost  = (u.input_tokens  ?? 0) / 1_000_000 * 5;   // Opus: $5/MTok input
+  const outputCost = (u.output_tokens ?? 0) / 1_000_000 * 25;  // Opus: $25/MTok output
   console.log(`[generate] tokens — input: ${u.input_tokens ?? 0}, cache_read: ${u.cache_read_input_tokens ?? 0} (no-op), cache_creation: ${u.cache_creation_input_tokens ?? 0} (no-op), output: ${u.output_tokens ?? 0} | cost: $${(inputCost + outputCost).toFixed(4)}`);
 
   // Keep last-text-block parsing: harmless without advisor, correct with it.

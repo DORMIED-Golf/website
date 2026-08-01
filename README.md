@@ -54,7 +54,6 @@ readers on the old brand set.
 | `witb-weekly-crawl` | Tue 13:00 | Crawls tour bags, refreshes OWGR, rebuilds every WITB page |
 | `post-to-x` | every 30m | Posts published articles to X |
 | `verify-build` | push + PR | CSS parity + sitemap resolution — the only workflow gating a commit |
-| `monthly-explanations` | manual | Regenerates AI brand-movement explanations |
 
 `main` moves on its own every 3 hours. If a push is rejected, **rebase rather
 than merge**: the pipeline only touches generated output, so re-running the
@@ -369,12 +368,12 @@ it gets its own page: that decision drives WITB brand normalisation (above).
 | `css/styles.css` / `css/styles.min.css` | All styling — **edit both** |
 | `js/home.js` | Homepage: top brands, movers, drops, match-up |
 | `js/app.js` | Rankings table: filters, sorting, DI calculation |
-| `js/brand.js` | Brand pages: chart, stats, explanations |
+| `js/brand.js` | Brand pages: chart, stats |
 | `js/brands-dir.js` | Brand directory grid |
 | `js/feed.js` / `js/feed-page.js` | News feed |
 | `js/shop-carousel.js` | Affiliate carousels (brand, article, player) |
 | `js/signup.js` | Newsletter popup and footer form |
-| `js/explanations.js` | AI movement explanations (reads Supabase) |
+| `js/explanations.js` | Reads existing brand_explanations rows for the homepage WHY IT MOVED module and the /rankings scorecard banner. Nothing writes new ones — see `scripts/archive/generate-explanations.js` |
 | `js/utils.js` | Shared helpers |
 
 Colours and fonts are CSS variables at the top of `css/styles.css`:
@@ -418,7 +417,7 @@ Set locally in `.env`, and in the Vercel dashboard / GitHub Actions secrets.
 
 | Variable | What it's for |
 |---|---|
-| `ANTHROPIC_API_KEY` | Article generation, brand explanations, WITB ledes |
+| `ANTHROPIC_API_KEY` | Article generation, WITB ledes, match-up write-ups |
 | `SUPABASE_URL` | Database connection |
 | `SUPABASE_ANON_KEY` | Read access — safe to expose in frontend |
 | `SUPABASE_SERVICE_KEY` | Write access — **never in frontend code** |
