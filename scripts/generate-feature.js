@@ -117,6 +117,38 @@ const FEATURES = {
     },
   },
 
+  'maejer-golf': {
+    slug: 'what-is-maejer-golf',
+    title: "What Is Maejer Golf? Mason Mount's New Brand Enters Our Index at 215th of 215",
+    titleTag: "What Is Maejer Golf? Mason Mount's Golf Brand | DORMIED",
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'maejer-golf',
+    leadRole: 'bio',
+    lastUpdated: 'August 1, 2026',
+    dateModified: '2026-08-01T00:00:00.000Z',
+    publishedAt: '2026-08-01T15:00:00.000Z',
+    metaDescription: "What is Maejer Golf? Mason Mount's British luxury golf brand launched in July 2026 and enters the DORMIED Index at 215 of 215 with zero recorded searches. Who owns it, what it costs, and what happens next.",
+    seoKeywords: ['maejer golf', 'what is maejer golf', 'who owns maejer golf', 'mason mount golf brand', 'maejer', 'mason mount handicap', 'owen farrell golf brand'],
+    mdPath: path.join(ROOT, 'article-maejer-golf.md'),
+    imgBase: '/images/features/maejer-golf',
+    // Every image is the brand's own campaign photography, credited as supplied.
+    hero: { file: 'hero.webp', w: 1200, h: 1500, alt: 'Maejer Golf Chapter 1 campaign, shot in Scotland', caption: 'Maejer Golf shot its launch campaign for Chapter 1 in Scotland. Photo by Maejer Golf.' },
+    sectionImages: {
+      'Who is actually behind Maejer': { layout: 'two-up', images: [
+        { file: 'mason-mount.webp', w: 1000, h: 1333, alt: 'Mason Mount wearing Maejer Golf apparel', caption: 'Mason Mount, the most visible of the founders, says he was creatively involved from day one. Photo by Maejer Golf.' },
+        { file: 'owen-farrell.webp', w: 1000, h: 1332, alt: 'Owen Farrell wearing Maejer Golf apparel', caption: 'Owen Farrell, the former England rugby captain, describes himself as a partner of the brand. Photo by Maejer Golf.' },
+      ]},
+      'What Maejer is actually selling': { layout: 'single', images: [
+        { file: 'chapter-1.webp', w: 1000, h: 1250, alt: 'Maejer Golf Chapter 1 collection lookbook', caption: 'Chapter 1 runs to two polos at $95 and outerwear from $140 to $200. Photo by Maejer Golf.' },
+      ]},
+      'The gap they say they saw': { layout: 'single', images: [
+        { file: 'scotland.webp', w: 1000, h: 1335, alt: 'Maejer Golf campaign imagery shot on a Scottish links course', caption: 'The founders describe the launch shoot as the same round that started the brand, a few years on. Photo by Maejer Golf.' },
+      ]},
+    },
+  },
+
   'students-golf': {
     slug: 'students-golf',
     title: "What Is Students Golf? The Man Who Invented the Jogger Is Now Golf's Coolest Designer",

@@ -2464,7 +2464,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (470) ── -->
+  <!-- ── News articles (471) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6822,6 +6822,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/what-is-maejer-golf/</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/features/maejer-golf/hero.webp</image:loc>
+      <image:title>What Is Maejer Golf? Mason Mount&apos;s New Brand Enters Our Index at 215th of 215</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/what-is-public-drip-golf/</loc>
     <lastmod>2026-07-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -7255,13 +7265,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/7/</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-06-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/8/</loc>
-    <lastmod>2026-06-16</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
