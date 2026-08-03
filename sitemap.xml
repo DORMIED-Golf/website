@@ -2470,7 +2470,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (474) ── -->
+  <!-- ── News articles (477) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4382,6 +4382,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/macgregors-toney-penna-cb-was-one-of-the-longest-irons-in-the-test-thats-2026-08-03/</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/macgregors-toney-penna-cb-was-one-of-the-longest-irons-in-the-test-thats-2026-08-03-hero.jpg</image:loc>
+      <image:title>MacGregor&apos;s Toney Penna CB Was One of the Longest Irons in the Test. That&apos;s the Problem.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/makefields-july-4th-play-a-blue-putter-a-51100-kbs-shaft-and-the-last-real-2026-07-01/</loc>
     <lastmod>2026-07-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -4922,6 +4932,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/puma-put-the-suede-on-a-golf-outsole-thats-the-real-news-in-the-palm-tree-2026-08-03/</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/puma-put-the-suede-on-a-golf-outsole-thats-the-real-news-in-the-palm-tree-2026-08-03-hero.jpg</image:loc>
+      <image:title>Puma Put the Suede on a Golf Outsole. That&apos;s the Real News in the Palm Tree Crew Drop.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/pumas-neon-showtime-drop-is-a-soccer-play-in-golf-spikes-2026-06-18/</loc>
     <lastmod>2026-06-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -4959,6 +4979,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/pxg-finally-admits-it-needs-big-box-retail-to-survive-2026-04-14-hero.jpg</image:loc>
       <image:title>PXG Finally Admits It Needs Big-Box Retail to Survive</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/pxg-stopped-buying-tour-stars-now-it-drafts-them-2026-08-03/</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/pxg-stopped-buying-tour-stars-now-it-drafts-them-2026-08-03-hero.jpg</image:loc>
+      <image:title>PXG Stopped Buying Tour Stars. Now It Drafts Them.</image:title>
     </image:image>
   </url>
   <url>
