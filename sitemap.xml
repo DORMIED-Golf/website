@@ -2470,7 +2470,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (471) ── -->
+  <!-- ── News articles (473) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3129,6 +3129,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaways-mothers-day-golf-ball-is-a-gift-shop-move-from-a-t-2026-04-20-hero.jpg</image:loc>
       <image:title>Callaway&apos;s Mother&apos;s Day Golf Ball Is a Gift Shop Move From a Top-5 Brand</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/callaways-name-is-now-on-a-u12-qualifier-in-istanbul-thats-not-charity-its-2026-08-01/</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/callaways-name-is-now-on-a-u12-qualifier-in-istanbul-thats-not-charity-its-2026-08-01-hero.png</image:loc>
+      <image:title>Callaway&apos;s Name Is Now on a U12 Qualifier in Istanbul. That&apos;s Not Charity, It&apos;s a 15-Year Buy</image:title>
     </image:image>
   </url>
   <url>
@@ -4149,6 +4159,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/kbs-banks-another-travelers-win-the-tour-v-120x-has-quietly-become-the-2026-06-29-hero.jpg</image:loc>
       <image:title>KBS Banks Another Travelers Win. The Tour V 120X Has Quietly Become the Default Players Iron Shaft.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/kbs-built-a-210-gram-broomstick-shaft-the-anchoring-ban-was-supposed-to-2026-08-02/</loc>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/kbs-built-a-210-gram-broomstick-shaft-the-anchoring-ban-was-supposed-to-2026-08-02-hero.jpg</image:loc>
+      <image:title>KBS Built a 210-Gram Broomstick Shaft. The Anchoring Ban Was Supposed to Make That Unnecessary.</image:title>
     </image:image>
   </url>
   <url>
