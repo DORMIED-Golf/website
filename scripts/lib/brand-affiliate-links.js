@@ -29,11 +29,11 @@ const BRAND_AFFILIATE_LINKS = {
   'pins-and-aces': 'https://pinsaces.sjv.io/Gb2Rjn',
 
   // Cobra and Puma Golf are CJ advertisers (affiliate_programs ids 4 and 5,
-  // advertiser 6530791), not Impact, so they have no .sjv.io link. Their
-  // brand-level CJ links have not been supplied yet; until they are, both
-  // fall through to the plain website URL rather than shipping a guess.
-  // 'cobra':     '',
-  // 'puma-golf': '',
+  // advertiser 6530791), not Impact, so these are CJ click links rather than
+  // .sjv.io ones. Publisher 101838506, the same id the CJ product links use.
+  // Both land on the advertiser's storefront with a cjevent parameter.
+  'cobra':         'https://www.kqzyfj.com/click-101838506-15626646',
+  'puma-golf':     'https://www.tkqlhce.com/click-101838506-15626647',
 };
 
 /** Returns the affiliate URL for a brand slug, or null when there isn't one. */
