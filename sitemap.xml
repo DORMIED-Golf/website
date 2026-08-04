@@ -2470,7 +2470,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (479) ── -->
+  <!-- ── News articles (483) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2479,6 +2479,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17-hero.jpg</image:loc>
       <image:title>14 KBS Shafts in One Bag at the Dow: What That Number Actually Tells You</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/43-of-the-top-49-wore-replaceable-spikes-adidas-sells-you-sneakers-2026-08-04/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/43-of-the-top-49-wore-replaceable-spikes-adidas-sells-you-sneakers-2026-08-04-hero.png</image:loc>
+      <image:title>43 of the Top 49 Wore Replaceable Spikes. Adidas Sells You Sneakers.</image:title>
     </image:image>
   </url>
   <url>
@@ -4522,6 +4532,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/mizuno-just-won-the-most-wanted-hybrid-test-nobody-has-owned-hybrids-since-2026-07-30/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/mizuno-just-won-the-most-wanted-hybrid-test-nobody-has-owned-hybrids-since-2026-07-30-hero.jpg</image:loc>
+      <image:title>Mizuno Just Won The Most Wanted Hybrid Test. Nobody Has Owned Hybrids Since Adams Died.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/mygolfspy-just-called-the-adipower-26-the-best-value-in-golf-2026-04-17/</loc>
     <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -4649,6 +4669,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nikes-golf-shoe-comeback-is-real-and-the-pegasus-1-is-the-evidence-2026-07-07-hero.jpg</image:loc>
       <image:title>Nike&apos;s Golf Shoe Comeback Is Real, and the Pegasus 1 Is the Evidence</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/nine-new-colorways-zero-new-shoes-sun-day-red-learns-the-sneaker-business-2026-08-04/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/nine-new-colorways-zero-new-shoes-sun-day-red-learns-the-sneaker-business-2026-08-04-hero.jpg</image:loc>
+      <image:title>Nine New Colorways, Zero New Shoes: Sun Day Red Learns the Sneaker Business</image:title>
     </image:image>
   </url>
   <url>
@@ -6345,6 +6375,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/titleist-gts-driver-launch-signals-a-fitting-first-strategy-that-rivals-2026-05-18-hero.png</image:loc>
       <image:title>Titleist GTS Driver Launch Signals a Fitting-First Strategy That Rivals Have Ignored</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/titleist-missed-every-value-iron-award-of-2026-it-was-still-in-every-shot-2026-07-30/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/titleist-missed-every-value-iron-award-of-2026-it-was-still-in-every-shot-2026-07-30-hero.jpg</image:loc>
+      <image:title>Titleist Missed Every Value Iron Award of 2026. It Was Still in Every Shot Hit.</image:title>
     </image:image>
   </url>
   <url>
