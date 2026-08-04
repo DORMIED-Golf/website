@@ -813,12 +813,26 @@
       },
     ];
 
-    // Website link as last item
+    // Website link as last item.
+    //
+    // Where the brand has an affiliate program, the button points at the
+    // network's vanity link so the click is attributed and earns commission.
+    // The affiliate URL is baked in by generate-brand-page.js from
+    // scripts/lib/brand-affiliate-links.js; brands without one keep the plain
+    // website URL. UTM parameters are appended ONLY to plain links — the click
+    // id already lives in the affiliate path and extra query strings can break
+    // attribution. Affiliate links carry rel="sponsored nofollow", the same
+    // rule shop-carousel.js applies to product links.
+    const affiliateUrl = window.__BRAND_AFFILIATE_URL__ || '';
+    const visitHref = affiliateUrl
+      || `${brand.website}?utm_source=dormied&utm_medium=referral&utm_campaign=brand-index`;
+    const visitRel = affiliateUrl ? 'sponsored nofollow noopener' : 'noopener noreferrer';
+
     const websiteHtml = brand.website
       ? `<div class="bp-metric-card bp-metric-link">
-           <a href="${brand.website}?utm_source=dormied&utm_medium=referral&utm_campaign=brand-index"
-              target="_blank" rel="noopener noreferrer" class="bp-visit-link"
-              data-track-brand="${brand.name}" data-track-url="${brand.website}">
+           <a href="${visitHref}"
+              target="_blank" rel="${visitRel}" class="bp-visit-link"
+              data-track-brand="${brand.name}" data-track-url="${brand.website}"${affiliateUrl ? ' data-affiliate="1"' : ''}>
              Visit ${brand.name}
              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
            </a>

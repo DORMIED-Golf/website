@@ -26,6 +26,7 @@ const { createClient } = require('@supabase/supabase-js');
 const feedBake         = require('./feed-bake');
 
 const { dataVersion } = require('./lib/data-version');
+const { brandAffiliateLink } = require('./lib/brand-affiliate-links');
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const SITE_ROOT = path.resolve(__dirname, '..');
@@ -1062,7 +1063,7 @@ ${faqHtml}
 
   <!-- ══ SCRIPTS ══════════════════════════════════════════════════════════════ -->
   <!-- Brand slug in its own block — isolated so no upstream error can block it -->
-  <script>window.__BRAND_SLUG__='${escHtml(slug)}';</script>
+  <script>window.__BRAND_SLUG__='${escHtml(slug)}';${brandAffiliateLink(slug) ? `window.__BRAND_AFFILIATE_URL__='${escHtml(brandAffiliateLink(slug))}';` : ''}</script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
   <script defer src="/js/utils.min.js?v=20260318"></script>
   <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
