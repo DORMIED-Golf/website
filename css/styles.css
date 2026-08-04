@@ -5469,6 +5469,26 @@ details[open] .faq-question::after { content: '−'; }
   color: var(--green);
   border-bottom-color: var(--green);
 }
+
+/* The feed modules (Top Stories, LATEST, sidebar mods) are baked INSIDE
+   .da-article-body, so every link in them inherited the prose underline above.
+   They are cards, not body copy. Two visible symptoms: a rule under every feed
+   card title, and tag pills rendering three coloured borders and a grey bottom
+   one, because the shorthand border on .feed-brand-tag lost to this rule.
+   Scoped to the feed containers so both are repaired at once. */
+.da-article-body .latest-feed-list a:not(.feed-brand-tag),
+.da-article-body .feed-card a:not(.feed-brand-tag),
+.da-article-body .sidebar-mods a:not(.feed-brand-tag),
+.da-article-body .sidebar-mod a:not(.feed-brand-tag),
+.da-article-body .tail-feeds a:not(.feed-brand-tag) {
+  border-bottom: none;
+}
+/* Pills need their own border restated at .da-article-body specificity,
+   otherwise the exclusion above leaves them with three sides and no fourth. */
+.da-article-body .feed-brand-tag       { border: 1px solid rgba(34, 197, 94, .2); }
+.da-article-body .feed-brand-tag--up   { border-color: rgba(34, 197, 94, .35); }
+.da-article-body .feed-brand-tag--down { border-color: rgba(248, 113, 113, .35); }
+.da-article-body .feed-brand-tag--flat { border-color: rgba(77, 107, 77, .35); }
 /* Feature article: section subheadings, inline figures, captions, divider */
 .da-article-body .sc-main-heading {
   font-family: var(--font-display);

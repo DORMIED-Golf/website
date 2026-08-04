@@ -990,8 +990,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     .owgr-logo{display:block;height:22px;width:auto}
   </style>
 
-  <link rel="preload" href="/css/styles.min.css?v=20260728" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260728"></noscript>
+  <link rel="preload" href="/css/styles.min.css?v=20260804" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260804"></noscript>
 
   <!-- JSON-LD -->
   <script type="application/ld+json">
