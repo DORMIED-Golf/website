@@ -6,7 +6,7 @@
 
 What is Students Golf? It is the Los Angeles golf apparel brand founded in 2021 by Michael Huynh, and if that name means nothing to you, one of his creations definitely does: Huynh is the designer who invented the jogger, the tapered sweatpant his streetwear label Publish pioneered in the late 2000s that went on to colonize every gym, airport, and coffee shop on earth. Students is his second act, a fashion-and-lifestyle golf brand built on graphic tees, snarky humor, and the emotional wreckage of amateur golf, and it has quietly become one of the most credible names in the streetwear-golf movement alongside Malbon and Metalwood. This is who is behind it, why it exists, and what the data says about where it is headed.
 
-In one sentence: Students Golf is a Los Angeles fashion and lifestyle golf brand founded by jogger inventor and Publish founder Michael Huynh in 2021, built around the amateur golfer's experience, streetwear design language, and a mission to make golf less gatekept.
+In one sentence: Students Golf is a Los Angeles fashion and lifestyle golf brand founded by jogger inventor and Publish founder Michael Huynh in 2021, built around the amateur golfer's experience, streetwear design language, and a mission to make golf less gatekept. The name is the whole premise: you are a student of golf, a student of life, perpetually learning a game that humbles everyone who plays it.
 
 ## What the data shows
 

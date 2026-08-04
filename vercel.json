@@ -249,6 +249,36 @@
       "source": "/news/graphite-designs-quiet-hybrid-win-at-travelers-says-more-about-the-shaft-market-than-the-player-2026-06-29/",
       "destination": "/news/graphite-designs-quiet-hybrid-win-at-travelers-says-more-about-the-shaft-2026-06-29/",
       "permanent": true
+    },
+    {
+      "source": "/news/nike-and-hyperice-turn-the-recovery-slide-into-a-249-lifestyle-play-2026-07-27",
+      "destination": "/news/nike-hyperice-slides",
+      "permanent": true
+    },
+    {
+      "source": "/news/nike-and-hyperice-turn-the-recovery-slide-into-a-249-lifestyle-play-2026-07-27/",
+      "destination": "/news/nike-hyperice-slides/",
+      "permanent": true
+    },
+    {
+      "source": "/news/footjoys-new-130-vanguard-is-a-premiere-series-lookalike-and-thats-the-2026-07-21",
+      "destination": "/news/footjoy-vanguard",
+      "permanent": true
+    },
+    {
+      "source": "/news/footjoys-new-130-vanguard-is-a-premiere-series-lookalike-and-thats-the-2026-07-21/",
+      "destination": "/news/footjoy-vanguard/",
+      "permanent": true
+    },
+    {
+      "source": "/news/what-is-students-golf",
+      "destination": "/news/students-golf",
+      "permanent": true
+    },
+    {
+      "source": "/news/what-is-students-golf/",
+      "destination": "/news/students-golf/",
+      "permanent": true
     }
   ],
   "rewrites": [

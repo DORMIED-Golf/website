@@ -108,4 +108,4 @@ Mount has said he plays off around 11, citing a figure of roughly 10.8, and desc
 
 ---
 
-*Track Maejer's monthly movement on the [Maejer Golf brand page](/brands/maejer-golf/) and the full market on the [DORMIED Index](/rankings/). Related coverage of golf's culture brands: [Who Is Arnie McNair?](/news/who-is-arnie-mcnair/) and [What Is Students Golf?](/news/what-is-students-golf/)*
+*Track Maejer's monthly movement on the [Maejer Golf brand page](/brands/maejer-golf/) and the full market on the [DORMIED Index](/rankings/). Related coverage of golf's culture brands: [Who Is Arnie McNair?](/news/who-is-arnie-mcnair/) and [What Is Students Golf?](/news/students-golf/)*

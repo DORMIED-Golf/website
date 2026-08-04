@@ -877,7 +877,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/nicolai-hojgaard/</loc>
-    <lastmod>2025-04-23</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2500,7 +2500,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (483) ── -->
+  <!-- ── News articles (482) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3622,6 +3622,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/footjoy-vanguard/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/footjoys-new-130-vanguard-is-a-premiere-series-lookalike-and-thats-the-2026-07-21-hero.jpg</image:loc>
+      <image:title>FootJoy Vanguard: $130 Shoe That Copies the Premiere Series</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/footjoys-harris-tweed-habit-is-the-quiet-luxury-play-nobody-else-in-golf-2026-07-16/</loc>
     <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -3629,16 +3639,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/footjoys-harris-tweed-habit-is-the-quiet-luxury-play-nobody-else-in-golf-2026-07-16-hero.jpg</image:loc>
       <image:title>FootJoy&apos;s Harris Tweed Habit Is the Quiet Luxury Play Nobody Else in Golf Can Pull Off</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/footjoys-new-130-vanguard-is-a-premiere-series-lookalike-and-thats-the-2026-07-21/</loc>
-    <lastmod>2026-07-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/footjoys-new-130-vanguard-is-a-premiere-series-lookalike-and-thats-the-2026-07-21-hero.jpg</image:loc>
-      <image:title>FootJoy&apos;s New $130 Vanguard Is a Premiere Series Lookalike, and That&apos;s the Whole Point</image:title>
     </image:image>
   </url>
   <url>
@@ -4632,16 +4632,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/nike-and-hyperice-turn-the-recovery-slide-into-a-249-lifestyle-play-2026-07-27/</loc>
-    <lastmod>2026-07-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nike-and-hyperice-turn-the-recovery-slide-into-a-249-lifestyle-play-2026-07-27-hero.jpg</image:loc>
-      <image:title>Nike and Hyperice Turn the Recovery Slide Into a $249 Lifestyle Play</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/nike-finally-made-a-golf-shoe-worth-the-pegasus-name-2026-05-01/</loc>
     <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
@@ -4689,6 +4679,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nike-golfs-shinnecock-problem-when-the-swoosh-becomes-the-punchline-2026-06-20-hero.jpg</image:loc>
       <image:title>Nike Golf&apos;s Shinnecock Problem: When the Swoosh Becomes the Punchline</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/nike-hyperice-slides/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nike-and-hyperice-turn-the-recovery-slide-into-a-249-lifestyle-play-2026-07-27-hero.jpg</image:loc>
+      <image:title>Nike Hyperice Slides: Price, Release Date, and What $249 Buys</image:title>
     </image:image>
   </url>
   <url>
@@ -5369,12 +5369,12 @@
   </url>
   <url>
     <loc>https://dormied.com/news/students-golf/</loc>
-    <lastmod>2026-07-17</lastmod>
+    <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://dormied.com/images/features/students-golf/hero.webp</image:loc>
-      <image:title>What Is Students Golf? The Man Who Invented the Jogger Is Now Golf&apos;s Coolest Designer</image:title>
+      <image:title>What Is Students Golf? Michael Huynh Invented the Jogger, Now He Makes Golf&apos;s Coolest Clothes</image:title>
     </image:image>
   </url>
   <url>
@@ -6989,12 +6989,12 @@
   </url>
   <url>
     <loc>https://dormied.com/news/what-is-public-drip-golf/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/what-is-public-drip-golf-hero.jpg</image:loc>
-      <image:title>What Is Public Drip Golf?</image:title>
+      <image:title>Public Drip: The Brooklyn Brand Built for Municipal Golf</image:title>
     </image:image>
   </url>
   <url>
@@ -7008,23 +7008,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://dormied.com/news/what-is-students-golf/</loc>
-    <lastmod>2026-07-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/what-is-students-golf-hero.jpg</image:loc>
-      <image:title>What Is Students Golf?</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://dormied.com/news/what-is-william-murray-golf/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/what-is-william-murray-golf-hero.png</image:loc>
-      <image:title>What Is William Murray Golf?</image:title>
+      <image:title>William Murray Golf: Bill Murray&apos;s Brand, Explained</image:title>
     </image:image>
   </url>
   <url>
@@ -7199,7 +7189,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/who-owns-odyssey-golf/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -7349,7 +7339,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/13/</loc>
-    <lastmod>2026-05-21</lastmod>
+    <lastmod>2026-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -7379,7 +7369,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/18/</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
