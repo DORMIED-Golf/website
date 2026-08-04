@@ -2500,7 +2500,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (486) ── -->
+  <!-- ── News articles (489) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2629,6 +2629,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/adams-new-idea-resurfaces-on-prime-day-and-thats-the-whole-brand-strategy-2026-06-23-hero.jpg</image:loc>
       <image:title>Adams New Idea Resurfaces on Prime Day, and That&apos;s the Whole Brand Strategy Now</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/adidas-golf-priced-spikeless-shoe-like/</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/adidas-golf-priced-spikeless-shoe-like-hero.webp</image:loc>
+      <image:title>Adidas Just Priced Its Spikeless Shoe Like a Tour Shoe. That&apos;s the Actual News.</image:title>
     </image:image>
   </url>
   <url>
@@ -3299,6 +3309,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/cleveland-bet-the-whole-company-on-wedges-rtz-2-is-the-first-real-test-2026-08-04-hero.jpg</image:loc>
       <image:title>Cleveland Bet the Whole Company on Wedges. RTZ 2 Is the First Real Test.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/cleveland-golf-588-grind-back-19999/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/cleveland-golf-588-grind-back-19999-hero.jpg</image:loc>
+      <image:title>The 588 Grind Is Back at $199.99, and Cleveland Golf Just Moved Into Vokey&apos;s Price Neighborhood</image:title>
     </image:image>
   </url>
   <url>
@@ -5275,6 +5295,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sergio-garcias-2016-byron-nelson-bag-reveals-how-much-tour-fitting-has-2026-05-23-hero.jpg</image:loc>
       <image:title>Sergio Garcia&apos;s 2016 Byron Nelson Bag Reveals How Much Tour Fitting Has Changed in a Decade</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/shot-scope-sold-software-device-killing/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/shot-scope-sold-software-device-killing-hero.jpg</image:loc>
+      <image:title>Shot Scope Just Sold Software Into the Device Killing Its Own Watch Business</image:title>
     </image:image>
   </url>
   <url>
