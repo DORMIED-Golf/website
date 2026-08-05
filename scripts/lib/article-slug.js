@@ -60,12 +60,15 @@ const DROP_VERBS_ADJECTIVES = new Set([
   'star','starring','starred','answers','proves','proved','means','meant',
   'looks','looking','admits','admitted','returns','returning','returned',
   'enters','entering','sits','sitting','beat','beats','beating','earn','earns',
+  'get','buy','sell','win','hit','wear','bring','hold','come','keep','pick',
+  'kill','move','hire','learn','prove','mean','admit','enter','answer','tell',
+  'need','want','look','show','lead','give','take','make','build','turn','open',
   'slow','fast','quick','important','real','actual','own','whole','new','old',
   'best','worst','biggest','smallest','quiet','loud','big','small','cheap',
   'expensive','premium','free','next','last','first','second','third','only',
   'same','different','better','worse','higher','lower','longer','shorter',
   'entire','single','double','full','half','worth','right','wrong','hard','easy',
-  'back','ahead','away','again','instead','anyway','already','spikeless',
+  'back','ahead','away','again','instead','anyway','already',
 ]);
 
 // May appear inside a slug but must never END one. Verbs, adjectives and the
@@ -100,7 +103,7 @@ const NON_TERMINAL = new Set([
 const TOPIC_NOUNS = new Set([
   'grind','drive','driver','drivers','test','tests','testing','price','pricing',
   'sale','sales','launch','deal','deals','watch','business','software','hardware',
-  'documentary','shoe','shoes','club','clubs','cup','event','events','tour',
+  'documentary','shoe','shoes','club','clubs','cup','event','events',
   'bag','bags','wedge','wedges','putter','putters','iron','irons','ball','balls',
   'glove','gloves','headcover','cover','brand','store','line','series','review',
   'reviews','data','share','spikes','shaft','shafts','grip','grips',
@@ -110,6 +113,38 @@ const TOPIC_NOUNS = new Set([
   'hybrid','hybrids','fairway','wood','woods','loft','bounce','sole','face',
   'markdown','discount','revenue','margin','retail','wholesale','tech','design',
 ]);
+
+
+// Product descriptors. ALWAYS retained: they bypass the adjective drop, the
+// -ing/-ed/-ly morphology rejection, and they count as valid terminal tokens.
+//
+// The distinction is editorial adjective versus product descriptor. "Important",
+// "quiet" and "new" express the writer's opinion and go. "Spikeless", "forged"
+// and "milled" are what a shopper types, and dropping them cost the two slugs
+// their primary search term: "adidas spikeless golf shoe" is the query, and
+// PXG sells Sugar Daddy and Sugar Daddy Milled as different products.
+//
+// Rule for future additions: if a shopper would type it when searching for the
+// product, keep it. If it only expresses an opinion, leave it out.
+const KEEP_DESCRIPTORS = new Set([
+  'spikeless','waterproof','adjustable','forged','milled','cast','rusting',
+  'insulated','hollow','hybrid','blade','blades','cavity','mallet',
+  'counterbalanced','oversized','midsize','jumbo','lightweight','graphite',
+  'steel','urethane','surlyn','cashmere','merino','seamless','tapered',
+  'cropped','quilted','limited','anodised','anodized','brushed','weighted',
+  'stamped','knit','woven','vented','perforated','recycled','stretch',
+  'armlock','broomstick','centre-shafted','face-balanced','toe-hang',
+]);
+
+// Multi-word descriptors. tokenize() splits on hyphens, so these are detected
+// in the raw headline first and their parts whitelisted for that call only.
+// That keeps "slow" when it is part of "Slow-Swing" without resurrecting bare
+// "slow" as an adjective anywhere else.
+const KEEP_HYPHENATED = [
+  'slow-swing','low-spin','high-launch','high-spin','low-launch','zero-torque',
+  'tour-issue','tour-only','players-distance','game-improvement','max-forgiveness',
+  'soft-feel','deep-face','low-profile','high-moi','center-shafted',
+];
 
 const CURRENCY = /[$£€¥]\s?\d[\d.,]*(?:\s?(?:million|billion|m|bn|k))?/gi;
 
@@ -123,7 +158,8 @@ const tokenize = str => String(str || '')
 const singular = w => (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w);
 
 /** True when a token is acceptable as the final word of a slug. */
-function isTerminal(token) {
+function isTerminal(token, extraKeep) {
+  if (KEEP_DESCRIPTORS.has(token) || (extraKeep && extraKeep.has(token))) return true;
   if (TOPIC_NOUNS.has(token) || TOPIC_NOUNS.has(singular(token))) return true;
   if (NON_TERMINAL.has(token) || DROP_ANYWHERE.has(token)) return false;
   // Morphology: participles and adverbs are never the subject.
@@ -171,16 +207,25 @@ function makeSlug(title, dateStr, brandName = '', isTaken = () => false) {
   const headline = String(title || '').replace(CURRENCY, ' ');
   const proper   = new Set(properNounTokens(title));
 
+  // Hyphenated descriptors present in this headline, whitelisted for this call.
+  const extraKeep = new Set();
+  const lowerTitle = headline.toLowerCase();
+  for (const phrase of KEEP_HYPHENATED) {
+    if (lowerTitle.includes(phrase)) for (const part of phrase.split('-')) extraKeep.add(part);
+  }
+  const isKeeper = w => KEEP_DESCRIPTORS.has(w) || extraKeep.has(w);
+
   // Only the first sentence is considered. DORMIED headlines put the story in
   // sentence one and an aside in sentence two ("About Bags.", "That's the
   // Actual News."), and the aside is never what the slug should be about.
   const firstSentence = headline.split(/(?<=[.!?])\s+/)[0] || headline;
 
   // Content words: everything that is not scaffolding, a verb or an adjective.
+  // A product descriptor overrides the adjective drop.
   const content = [];
   for (const w of tokenize(firstSentence)) {
     if (seen.has(w) || seen.has(singular(w))) continue;
-    if (DROP_ANYWHERE.has(w) || DROP_VERBS_ADJECTIVES.has(w)) continue;
+    if (!isKeeper(w) && (DROP_ANYWHERE.has(w) || DROP_VERBS_ADJECTIVES.has(w))) continue;
     seen.add(w); seen.add(singular(w));
     content.push(w);
   }
@@ -193,29 +238,38 @@ function makeSlug(title, dateStr, brandName = '', isTaken = () => false) {
     if (TOPIC_NOUNS.has(w) || TOPIC_NOUNS.has(singular(w))) topicIdx = i;
   });
 
-  // Body is the two words immediately before the topic, which is where the
-  // model number or person's name sits. Standalone digits are model numbers
-  // ("588", "1600") and are always kept; prices were stripped earlier.
+  // Body is drawn from the words before the topic. Model numbers and product
+  // descriptors are always kept; everything else contributes at most the two
+  // words nearest the topic. Headline order is preserved throughout, so the
+  // slug still reads like the story.
   let rest;
   if (topicIdx >= 0) {
     const before = content.slice(0, topicIdx);
-    const digits = before.filter(w => /^\d+$/.test(w));
-    const words  = before.filter(w => !/^\d+$/.test(w));
     const room   = Math.max(0, MAX_WORDS - brand.length - 1);
-    rest = [...digits, ...words.slice(-2)].slice(0, room).concat(content[topicIdx]);
+
+    // Model numbers and product descriptors claim the available room first;
+    // whatever is left goes to the ordinary words nearest the topic. Trimming
+    // by position alone dropped "rusting" from "$1,600 Rusting Blade".
+    const priority = before.map((w, i) => i).filter(i => /^\d+$/.test(before[i]) || isKeeper(before[i]));
+    const kept     = priority.slice(0, room);
+    const normal   = before.map((w, i) => i).filter(i => !priority.includes(i));
+    const filler   = normal.slice(-Math.max(0, room - kept.length));
+
+    const chosen = [...kept, ...filler].sort((a, b) => a - b).map(i => before[i]);
+    rest = chosen.concat(content[topicIdx]);
   } else {
     rest = content.slice(0, Math.max(0, MAX_WORDS - brand.length));
   }
 
   // Never end on a verb, preposition, article or adjective.
-  while (rest.length && !isTerminal(rest[rest.length - 1])) rest.pop();
+  while (rest.length && !isTerminal(rest[rest.length - 1], extraKeep)) rest.pop();
 
   let words = [...brand, ...rest];
   // Brand-only would collide with the brand page's own naming, so fall back to
   // the first terminal-safe content word rather than emitting it.
   if (words.length < Math.min(MIN_WORDS, brand.length + 1) || rest.length === 0) {
     const extra = tokenize(headline).find(w =>
-      !seen.has(w) && !DROP_ANYWHERE.has(w) && isTerminal(w));
+      !seen.has(w) && !DROP_ANYWHERE.has(w) && isTerminal(w, extraKeep));
     if (extra) words = [...brand, extra];
   }
 
@@ -229,4 +283,4 @@ function makeSlug(title, dateStr, brandName = '', isTaken = () => false) {
   return `${base}-${String(dateStr).slice(0, 10)}`;
 }
 
-module.exports = { makeSlug, isTerminal, DROP_VERBS_ADJECTIVES, TOPIC_NOUNS, NON_TERMINAL, DROP_ANYWHERE };
+module.exports = { makeSlug, isTerminal, KEEP_DESCRIPTORS, KEEP_HYPHENATED, DROP_VERBS_ADJECTIVES, TOPIC_NOUNS, NON_TERMINAL, DROP_ANYWHERE };
