@@ -2500,7 +2500,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (492) ── -->
+  <!-- ── News articles (495) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3149,6 +3149,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaway-chrome-tour-posts-a-zero-defect-ball-lab-score-thats-harder-than-2026-06-03-hero.png</image:loc>
       <image:title>Callaway Chrome Tour Posts a Zero-Defect Ball Lab Score. That&apos;s Harder Than It Sounds.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/callaway-logo-fall-polo-royalty-check/</loc>
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/callaway-logo-fall-polo-royalty-check-hero.jpg</image:loc>
+      <image:title>The Callaway Logo on That Fall Polo Is a Royalty Check, Not a Product Decision</image:title>
     </image:image>
   </url>
   <url>
@@ -4519,6 +4529,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/makefields-july-4th-play-a-blue-putter-a-51100-kbs-shaft-and-the-last-real-2026-07-01-hero.jpg</image:loc>
       <image:title>Makefield&apos;s July 4th Play: A Blue Putter, a #51/100 KBS Shaft, and the Last Real American-Made Argument in Golf</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/malbon-film-crew-junior-golf-event/</loc>
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/malbon-film-crew-junior-golf-event-hero.jpg</image:loc>
+      <image:title>Malbon Hired a Film Crew for a Junior Golf Event. That&apos;s the Whole Story.</image:title>
     </image:image>
   </url>
   <url>
@@ -6375,6 +6395,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/the-spikeless-revolution-skipped-right-past-the-pga-tour-2026-07-14-hero.png</image:loc>
       <image:title>The Spikeless Revolution Skipped Right Past the PGA Tour</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/the-stack-system-50-million-swings/</loc>
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/the-stack-system-50-million-swings-hero.jpg</image:loc>
+      <image:title>50 Million Swings Later, The Stack Finally Ships to Android</image:title>
     </image:image>
   </url>
   <url>
