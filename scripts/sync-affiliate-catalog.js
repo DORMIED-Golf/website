@@ -151,7 +151,10 @@ async function syncCatalogsToPrograms() {
       // Unmapped catalog — insert with NULL brand slug and shout, so it gets mapped by hand.
       console.warn(`[sync] !! UNMAPPED CATALOG: Id=${c.Id} "${c.Name}" advertiser="${c.AdvertiserName}" — inserted with dormied_brand_slug=NULL. Map it manually.`);
       if (!DRY) await supabase.from('affiliate_programs').insert({
-        network: 'impact', advertiser_id: strOrNull(c.AdvertiserId), advertiser_name: c.AdvertiserName || '(unknown)',
+        // source='impact' is required, not cosmetic: main() selects on it, so a
+        // discovered catalog left without it would never be synced.
+        network: 'impact', source: 'impact',
+        advertiser_id: strOrNull(c.AdvertiserId), advertiser_name: c.AdvertiserName || '(unknown)',
         campaign_id: strOrNull(c.CampaignId), catalog_id: String(c.Id), dormied_brand_slug: null,
         status: 'active', currency: strOrNull(c.Currency), fetch_strategy: 'items_api',
         notes: `Auto-discovered ${new Date().toISOString().slice(0,10)}; unmapped.`,
@@ -360,10 +363,23 @@ async function main() {
 
   const catalogsById = await syncCatalogsToPrograms();
 
+  // Impact programs ONLY. affiliate_programs also holds the Shopify and CJ
+  // programs, which have no Impact /Items catalog: fetching them here 404s on
+  // page 1, marks the run incomplete, and exits non-zero — which used to fail
+  // the job before the Shopify and CJ steps ever ran, freezing their catalogs.
+  //
+  // Filter on source, not network: Malbon is network='impact' (it IS an Impact
+  // advertiser) but source='shopify', because its catalog comes from the
+  // merchant feed. source is the same column that scopes each sweep in
+  // affiliate_products, so the two stay consistent by construction.
   const { data: programs, error } = await supabase.from('affiliate_programs')
-    .select('*').eq('status', 'active').not('dormied_brand_slug', 'is', null);
+    .select('*').eq('status', 'active').eq('source', 'impact')
+    .not('dormied_brand_slug', 'is', null).not('catalog_id', 'is', null);
   if (error) throw new Error(`load programs: ${error.message}`);
-  console.log(`[sync] ${programs.length} mapped active program(s) to sync.`);
+  // A filter that matches nothing would otherwise sync zero programs and exit 0
+  // — a silent no-op, the exact failure mode this script exists to make loud.
+  if (!programs.length) throw new Error('no active mapped Impact programs with a catalog_id — refusing to report success on an empty sync');
+  console.log(`[sync] ${programs.length} mapped active Impact program(s) to sync.`);
 
   const summaries = [];
   let anyIncomplete = false, anySweepBlocked = false;

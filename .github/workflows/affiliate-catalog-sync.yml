@@ -60,7 +60,15 @@ jobs:
       # Runs after the Impact sync and is independent of it: its rows are
       # source='shopify' and the Impact deactivation sweep cannot see them.
       # Failure here fails the job — a silently stale catalog is worse than a red run.
+      #
+      # if: '!cancelled()' is what makes "independent of it" true. Without it a
+      # non-zero exit from the Impact step skips this one, and Malbon's catalog
+      # silently freezes; shop-carousel.js then suppresses every price once
+      # feed_updated_at passes STALE_HOURS. That is exactly what happened between
+      # 28 Jul and 5 Aug 2026. Each sync still fails the job on its own exit code
+      # — nothing is swallowed, they just no longer block each other.
       - name: Run Shopify catalog sync
+        if: '!cancelled()'
         env:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
@@ -75,8 +83,9 @@ jobs:
       # split onto /brands/cobra/ and /brands/puma-golf/ happens in the script,
       # off the feed's own brand field. Rows are source='cj' and invisible to the
       # other two sweeps. Failure fails the job — a silently stale catalog is
-      # worse than a red run.
+      # worse than a red run. if: '!cancelled()' for the same reason as above.
       - name: Run CJ catalog sync
+        if: '!cancelled()'
         env:
           CJ_PAT:               ${{ secrets.CJ_PAT }}
           CJ_COMPANY_ID:        ${{ secrets.CJ_COMPANY_ID }}
