@@ -26,6 +26,7 @@ let   sharp;
 try { sharp = require('sharp'); } catch { sharp = null; }
 const feedBake = require('./feed-bake');
 
+const { makeSlug } = require('./lib/article-slug');
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const MAX_ARTICLES_PER_RUN = 5;
@@ -206,74 +207,7 @@ function getBrandInfo(dormiedData, brandSlug) {
            totalBrands: dormiedData.brands.length };
 }
 
-// Words that carry no search intent and only lengthen a slug. Kept separate
-// from TITLE_STOP_WORDS below, which exists for duplicate detection and is
-// deliberately more aggressive (it drops "golf" and "new", which a slug wants).
-const SLUG_STOP_WORDS = new Set([
-  'a','an','the','and','or','but','in','on','at','to','for','of','with','by',
-  'from','is','are','was','were','be','been','its','it','as','this','that',
-  'has','have','had','will','can','just','now','why','how','what','when',
-  'thats','whole','point','into','turn','turns','make','makes','made','get',
-  'gets','got','you','your','their','they','not','no','more','most','than',
-  'first','still','one','two','after','before','over','under','out','up',
-  'new','nobody','everyone','anyone','real','whole','own','owned','owns',
-]);
-
-const slugTokens = str => String(str || '')
-  .toLowerCase()
-  .replace(/[^a-z0-9\s-]/g, '')
-  .split(/[\s-]+/)
-  .filter(Boolean);
-
-/**
- * Build a short, entity-led slug: the brand, then the most distinctive words
- * from the headline. Target 3 to 6 words.
- *
- * The old version slugified the entire editorial headline and appended the
- * publish date, which produced things like
- *   footjoys-new-130-vanguard-is-a-premiere-series-lookalike-and-thats-the-2026-07-21
- * That truncates at a word boundary but lands mid-phrase, buries the searched
- * term, and reads as broken. Search Console had that page at 1,714 impressions
- * and 1.4% CTR against "footjoy vanguard"; the hand-written pieces with clean
- * slugs convert several times better.
- *
- * Uniqueness: the date suffix used to guarantee it. It no longer runs by
- * default, so the caller passes `isTaken` and we fall back to a numeric suffix,
- * then the date, only on a genuine collision. The editorial headline is
- * untouched and still becomes the H1 and title.
- */
-function makeSlug(title, dateStr, brandName = '', isTaken = () => false) {
-  const MAX_WORDS = 6;
-  const brand = slugTokens(brandName);
-  const seen  = new Set(brand);
-
-  // Compare on a singular form so a possessive in the headline ("FootJoy's")
-  // is recognised as the brand token already emitted ("footjoy").
-  const singular = w => (w.length > 3 && w.endsWith('s') ? w.slice(0, -1) : w);
-  for (const b of [...brand]) seen.add(singular(b));
-
-  const rest = [];
-  for (const w of slugTokens(title)) {
-    if (seen.has(w) || seen.has(singular(w)) || SLUG_STOP_WORDS.has(w)) continue;
-    seen.add(singular(w));
-    seen.add(w);
-    rest.push(w);
-    if (brand.length + rest.length >= MAX_WORDS) break;
-  }
-
-  let base = [...brand, ...rest].join('-').replace(/^-+|-+$/g, '');
-  // A headline of nothing but stop words is not realistic, but never emit an
-  // empty or brand-only slug that would collide with the brand page pattern.
-  if (!base || base === brand.join('-')) base = slugTokens(title).slice(0, MAX_WORDS).join('-');
-  if (!base) base = `article-${dateStr.slice(0, 10)}`;
-
-  if (!isTaken(base)) return base;
-  for (let n = 2; n <= 9; n++) {
-    const candidate = `${base}-${n}`;
-    if (!isTaken(candidate)) return candidate;
-  }
-  return `${base}-${dateStr.slice(0, 10)}`;
-}
+// Slug construction lives in scripts/lib/article-slug.js.
 
 function escHtml(str) {
   return String(str || '')
