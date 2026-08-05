@@ -2500,7 +2500,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (489) ── -->
+  <!-- ── News articles (490) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5585,6 +5585,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sun-day-reds-womens-osprey-makes-the-case-that-golf-shoes-should-work-2026-05-21-hero.jpg</image:loc>
       <image:title>Sun Day Red&apos;s Women&apos;s Osprey Makes the Case That Golf Shoes Should Work Everywhere</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/sun-mountain-hired-joel-dahmen-star/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/sun-mountain-hired-joel-dahmen-star-hero.jpg</image:loc>
+      <image:title>Sun Mountain Hired Joel Dahmen to Star in a Seven-Part Documentary. About Bags.</image:title>
     </image:image>
   </url>
   <url>
