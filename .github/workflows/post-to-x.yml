@@ -13,7 +13,12 @@ jobs:
     steps:
       - name: Trigger post-to-x endpoint
         run: |
+          # --max-time keeps a stalled request from burning the whole job
+          # timeout and dying as an opaque cancellation with no logs. 240s
+          # leaves headroom under timeout-minutes: 5 so curl reports the
+          # failure itself and the "Failed with status" branch below runs.
           response=$(curl -s -o /dev/null -w "%{http_code}" \
+            --max-time 240 \
             -X GET \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             https://dormied.com/api/post-to-x)

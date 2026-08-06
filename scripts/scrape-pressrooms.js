@@ -574,8 +574,17 @@ async function main() {
 
 // Only run when invoked directly. Without this, `require()`-ing this file for
 // inspection or testing executes it against production.
+// The explicit exit(0) is load-bearing, not tidiness. rss-parser 3.13 leaks a
+// ref'd TLSSocket whenever a feed fetch fails — a 404 (takomo) or a body that
+// isn't XML (adidas-golf) both do it. main() resolves and prints "All sources
+// complete", but the live handle keeps the event loop alive and node never
+// exits. In CI that hung this step until the job's timeout-minutes: 30 killed
+// it, so steps 2 and 3 (match-brands, generate-article) never ran: raw items
+// kept being ingested while nothing was matched or published for 22 hours.
+// Every await in main() has already settled here, so there is no pending write
+// to lose.
 if (require.main === module) {
-  main().catch(err => {
+  main().then(() => process.exit(0)).catch(err => {
     console.error('[pressrooms] Fatal error:', err.message);
     process.exit(1);
   });

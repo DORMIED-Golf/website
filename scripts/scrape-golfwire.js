@@ -251,8 +251,12 @@ async function main() {
 
 // Only run when invoked directly. Without this, `require()`-ing this file for
 // inspection or testing executes it against production.
+// Explicit exit(0) for the same reason as scrape-pressrooms.js: rss-parser 3.13
+// leaves a ref'd TLSSocket behind, so the process will not exit on its own. Even
+// on a fully successful run that cost ~60s per invocation waiting for the socket
+// to idle out; on a failed feed it hangs indefinitely.
 if (require.main === module) {
-  main().catch(err => {
+  main().then(() => process.exit(0)).catch(err => {
     console.error('[scrape] Fatal error:', err.message);
     process.exit(1);
   });
