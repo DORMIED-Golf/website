@@ -2512,7 +2512,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (495) ── -->
+  <!-- ── News articles (499) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2651,6 +2651,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/adidas-golf-priced-spikeless-shoe-like-hero.webp</image:loc>
       <image:title>Adidas Just Priced Its Spikeless Shoe Like a Tour Shoe. That&apos;s the Actual News.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/adidas-golf-put-boost-codechaos/</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/adidas-golf-put-boost-codechaos-hero.jpg</image:loc>
+      <image:title>Adidas Put BOOST Back in the CODECHAOS. That&apos;s an Admission, Not an Upgrade.</image:title>
     </image:image>
   </url>
   <url>
@@ -4364,6 +4374,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/kirkland-golf-costco-found-club/</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/kirkland-golf-costco-found-club-hero.jpg</image:loc>
+      <image:title>Costco Found The One Club Category Golf Can&apos;t Protect. It&apos;s Selling Three Forged Wedges For $200.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/kirklands-200-forged-wedge-set-just-landed-at-costco-the-wedge-category-2026-06-08/</loc>
     <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
@@ -4824,6 +4844,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/odyssey-golf-left-handed-damascus-putters/</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/odyssey-golf-left-handed-damascus-putters-hero.jpg</image:loc>
+      <image:title>Odyssey Cut New Tooling for Left-Handed Damascus Putters and Refused to Charge for It</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/odyssey-just-cut-100-off-a-current-model-zero-torque-putter-thats-not-2026-07-31/</loc>
     <lastmod>2026-07-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -4951,6 +4981,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/payntr-bets-on-australia-where-its-two-biggest-names-already-live-2026-06-16-hero.jpg</image:loc>
       <image:title>Payntr Bets on Australia, Where Its Two Biggest Names Already Live</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/payntr-golf-invented-shoe/</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/payntr-golf-invented-shoe-hero.jpg</image:loc>
+      <image:title>Payntr Just Invented a Golf Shoe Holiday. Nike Has Been Running That Play Since 2014.</image:title>
     </image:image>
   </url>
   <url>
