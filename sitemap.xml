@@ -70,7 +70,7 @@
     <priority>0.5</priority>
   </url>
 
-  <!-- ── WITB player pages (186) ── -->
+  <!-- ── WITB player pages (187) ── -->
   <url>
     <loc>https://dormied.com/witb/players/aaron-rai/</loc>
     <lastmod>2026-05-17</lastmod>
@@ -740,6 +740,12 @@
   <url>
     <loc>https://dormied.com/witb/players/marcus-armitage/</loc>
     <lastmod>2021-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/mark-hubbard/</loc>
+    <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
