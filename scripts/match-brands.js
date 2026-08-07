@@ -46,6 +46,24 @@ const EXCLUSION_LIST = [
   'fiori',            // Italian noun; turns up inside names and course descriptions
 ];
 
+// Escape hatch for the exclusion list: names that are ambiguous in lowercase but
+// unmistakable in their canonical all-caps form. "ping" is a verb and a sound,
+// but "PING" in a golf article is the club maker, every time. Same for COBRA.
+//
+// Needed because the title-only rule above is too strict for roundup sources. A
+// MyGolfSpy "Best Golf Deals of the Week" post names PING five times in the body
+// and in the title not at all, so PING went untagged and therefore unlinked on an
+// article whose opening fact was a PING discount.
+//
+// Tested against the ORIGINAL text, case-sensitively. matchBrands lowercases
+// everything up front, which throws away the one signal that separates these.
+// Only add a name here when its all-caps form has effectively no other meaning:
+// "Wilson" is deliberately absent, since capitalised Wilson is also a surname.
+const CASED_BRAND_FORMS = {
+  'ping':  'PING',
+  'cobra': 'COBRA',
+};
+
 // Brands with autoMatch:false in _brands.json are excluded from pipeline matching
 // entirely — "municipal" matches far too many generic golf articles
 
@@ -103,9 +121,15 @@ function matchBrands(searchText, brands, title) {
       const re = new RegExp(`(?<![a-z0-9])${escaped}(?![a-z0-9])`, 'i');
 
       if (re.test(textLower)) {
-        // Apply exclusion list: skip if term is in exclusion list AND not in the actual title
+        // Apply exclusion list: skip if term is in exclusion list AND not in the
+        // actual title, unless the name appears in its unambiguous all-caps form
+        // somewhere in the source. Case-sensitive on purpose, against the
+        // original searchText rather than textLower.
         if (EXCLUSION_LIST.includes(termLower) && !re.test(titleLower)) {
-          continue;
+          const cased = CASED_BRAND_FORMS[termLower];
+          const casedHit = cased &&
+            new RegExp(`(?<![A-Za-z0-9])${cased}(?![A-Za-z0-9])`).test(searchText);
+          if (!casedHit) continue;
         }
 
         matched.push(brand.slug);
