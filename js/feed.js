@@ -16,11 +16,19 @@
   var SB_URL  = 'https://cimmmmnapdthqvtifpzr.supabase.co';
   var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
 
-  /* ── Author derivation ─────────────────────────────────────────────────── */
+  /* ── Author derivation ───────────────────────────────────────────────────
+     KEEP IN SYNC with scripts/lib/article-authors.js. Browser code cannot
+     require() it, and this is the copy that renders when feed.js refreshes a
+     card client-side. If the two disagree, a card changes its byline the
+     moment JavaScript replaces the baked HTML.
+     Women's routing is intentionally absent here: it keys off the brand's
+     sub-categories, which this path does not carry. */
+  var AUTHOR_DEFAULT = 'Travis R.';
   function authorFromCategory(category) {
     var cat = (category || '').toLowerCase();
-    if (cat.indexOf('apparel') !== -1 || cat.indexOf('footwear') !== -1 || cat.indexOf('bag') !== -1) return 'Adam';
-    return 'Travis';
+    if (/bags? & accessories|\bbags?\b|accessor/.test(cat)) return 'James K.';
+    if (/apparel|footwear|shoe/.test(cat))                  return 'Adam R.';
+    return AUTHOR_DEFAULT;
   }
 
   /* ── Time formatting ───────────────────────────────────────────────────── */
@@ -155,7 +163,7 @@
     }
 
     // All articles are DORMIED originals — always internal links
-    var byline = 'By ' + escHtml(article.author || 'Travis');
+    var byline = 'By ' + escHtml(article.author || AUTHOR_DEFAULT);
 
     return '<article class="feed-card feed-card--dormied">' +
       thumb +
@@ -224,7 +232,7 @@
     }
 
     // All articles are DORMIED originals — always internal links
-    var byline2 = 'By ' + escHtml(article.author || 'Travis');
+    var byline2 = 'By ' + escHtml(article.author || AUTHOR_DEFAULT);
 
     return '<article class="feed-card feed-card--full feed-card--dormied">' +
       thumb +
@@ -427,7 +435,7 @@
           for (var j = 0; j < allBrands.length; j++) {
             if (allBrands[j].id === firstBrandId) { firstBrand = allBrands[j]; break; }
           }
-          var derivedAuthor = firstBrand ? authorFromCategory(firstBrand.category) : 'Travis';
+          var derivedAuthor = firstBrand ? authorFromCategory(firstBrand.category) : AUTHOR_DEFAULT;
           return {
             title:     row.title,
             url:       row.url,

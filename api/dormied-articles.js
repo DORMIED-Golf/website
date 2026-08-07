@@ -41,11 +41,16 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 
-  // Derive author from category when not explicitly set
+  // Derive author from category when not explicitly set.
+  // Kept in step with scripts/lib/article-authors.js. Not a require(): this is
+  // a Vercel serverless function and scripts/ is not part of its bundle, so the
+  // rule is duplicated here on purpose. Women's routing is absent because it
+  // keys off the brand's sub-categories, which this row does not carry.
   function authorFromCategory(category) {
     const cat = (category || '').toLowerCase();
-    if (cat.includes('apparel') || cat.includes('footwear') || cat.includes('bag')) return 'Adam';
-    return 'Travis';
+    if (/bags? & accessories|\bbags?\b|accessor/.test(cat)) return 'James K.';
+    if (/apparel|footwear|shoe/.test(cat))                  return 'Adam R.';
+    return 'Travis R.';
   }
 
   // Normalise to article shape used by the frontend

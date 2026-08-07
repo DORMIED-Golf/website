@@ -20,7 +20,10 @@ const { TwitterApi }   = require('twitter-api-v2');
 
 const POST_DELAY_MS     = 5000;  // 5 s between posts if multiple are queued
 const MIN_AGE_MINUTES   = 30;    // Wait this long after publish before posting
-const MAX_POSTS_PER_CALL = 5;    // Never post more than this per cron invocation
+// One per invocation. The cron runs every 30 minutes, so this is still 48
+// posts/day of headroom against an actual rate of 5-9, and it is what stops the
+// timeline showing five DORMIED posts back to back.
+const MAX_POSTS_PER_CALL = 1;    // Never post more than this per cron invocation
 const SITE_BASE_URL     = 'https://dormied.com';
 
 // ---------------------------------------------------------------------------

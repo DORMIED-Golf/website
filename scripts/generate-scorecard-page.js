@@ -330,7 +330,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
   const pageTitle    = `${issue.title} | DORMIED`;
   const ogImage      = (issue.images && issue.images.hero) || 'https://dormied.com/images/og-image.jpg';
   const displayDate  = formatDate(issue.dateISO);
-  const authorStr    = 'Adam & Travis';
+  const authorStr    = 'Adam R. & Travis R.';
 
   const imageHtml    = buildImageHtml(issue);
   const tocHtml      = buildTocHtml(issue);
@@ -347,8 +347,8 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
     datePublished: issue.dateISO,
     dateModified: issue.dateISO,
     author: [
-      { '@type': 'Person', name: 'Adam' },
-      { '@type': 'Person', name: 'Travis' },
+      { '@type': 'Person', name: 'Adam R.' },
+      { '@type': 'Person', name: 'Travis R.' },
     ],
     publisher: {
       '@type': 'Organization',

@@ -41,11 +41,13 @@ function escHtml(str) {
     .replace(/'/g,  '&#39;');
 }
 
-function authorFromCategory(category) {
-  var cat = (category || '').toLowerCase();
-  if (cat.indexOf('apparel') !== -1 || cat.indexOf('footwear') !== -1 || cat.indexOf('bag') !== -1) return 'Adam';
-  return 'Travis';
-}
+// Shared with the article generator so a card can never render a byline the
+// article page does not. Cards frequently need the derived form: the Top
+// Stories module reads article_clicks, which has no author column at all.
+var articleAuthors  = require('./lib/article-authors');
+var authorFromCategory = articleAuthors.authorFromCategory;
+var authorForBrandRec  = articleAuthors.authorForBrand;
+var AUTHOR_DEFAULT     = articleAuthors.AUTHOR_DEFAULT;
 
 function getBrandChange(dormiedData, id) {
   try {
@@ -115,7 +117,7 @@ function renderArticleCard(article, dormiedData) {
     if (chips) tags = '<div class="feed-card-tags">' + chips + overflowHtml + '</div>';
   }
 
-  var byline = 'By ' + escHtml(article.author || 'Travis');
+  var byline = 'By ' + escHtml(article.author || AUTHOR_DEFAULT);
 
   return '<article class="feed-card feed-card--dormied">'
        + thumb
@@ -186,7 +188,7 @@ function renderFeedPageCard(article, dormiedData, isLCP) {
     if (chips) tags = '<div class="feed-card-tags">' + chips + overflowHtml + '</div>';
   }
 
-  var byline = 'By ' + escHtml(article.author || 'Travis');
+  var byline = 'By ' + escHtml(article.author || AUTHOR_DEFAULT);
 
   return '<article class="feed-card feed-card--full feed-card--dormied">'
        + thumb
@@ -285,9 +287,9 @@ async function fetchTopStoriesArticles(supabase, dormiedData, limit) {
 
   function authorForBrandId(firstBrandId) {
     for (var j = 0; j < allBrands.length; j++) {
-      if (allBrands[j].id === firstBrandId) return authorFromCategory(allBrands[j].category);
+      if (allBrands[j].id === firstBrandId) return authorForBrandRec(allBrands[j], null);
     }
-    return 'Travis';
+    return AUTHOR_DEFAULT;
   }
 
   try {

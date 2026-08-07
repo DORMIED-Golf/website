@@ -2,14 +2,25 @@ name: Golf Wire Content Pipeline
 
 on:
   schedule:
-    # Runs every 3 hours (8 runs/day → more content, more X posts)
-    - cron: '0 */3 * * *'
+    # Hourly, paired with MAX_ARTICLES_PER_RUN = 2 in scripts/generate-article.js.
+    # The old '0 */3 * * *' at 5 articles/run published in visible clumps; two an
+    # hour still leaves 48/day of capacity against an actual rate of 5-9.
+    - cron: '0 * * * *'
   workflow_dispatch:
     inputs:
       max_articles:
-        description: 'Max articles to generate per run (default: 5)'
+        description: 'Max articles to generate per run (default: 2)'
         required: false
         type: string
+
+# An hourly schedule can catch up with a slow run: the job may take up to 30
+# minutes, and a scrape that stalls could still be holding the repo when the
+# next tick fires. Two runs committing generated articles at once would race on
+# the push. Queue instead of cancelling, so a run that is mid-publish is never
+# killed part-way through.
+concurrency:
+  group: golf-wire-pipeline
+  cancel-in-progress: false
 
 jobs:
   pipeline:

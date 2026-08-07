@@ -632,12 +632,9 @@ async function generateNews() {
     if (batch.length < PAGE) break;
   }
 
-  /* Derive author from category (mirrors api/dormied-articles.js) */
-  function authorFromCat(cat) {
-    const c = (cat || '').toLowerCase();
-    if (c.includes('apparel') || c.includes('footwear') || c.includes('bag')) return 'Adam';
-    return 'Travis';
-  }
+  /* Derive author from category — shared with the article generator and the
+     feed-card bake so a listing can never disagree with the article page. */
+  const { authorFromCategory: authorFromCat, AUTHOR_DEFAULT } = require('./lib/article-authors');
 
   const articles = rows.map(a => ({
     id:                  a.id,
@@ -699,7 +696,7 @@ async function generateNews() {
         `<div class="feed-card-body">` +
           `<div class="feed-card-meta"><span class="feed-time">${escHtml(formatDate(article.pubDate))}</span></div>` +
           `<a href="${escHtml(article.url)}" class="feed-card-title feed-card-title--lg">${escHtml(article.title)}</a>` +
-          `<p class="feed-card-byline">By ${escHtml(article.author || 'Travis')}</p>` +
+          `<p class="feed-card-byline">By ${escHtml(article.author || AUTHOR_DEFAULT)}</p>` +
           excerptHtml +
           tagsHtml +
         `</div>` +

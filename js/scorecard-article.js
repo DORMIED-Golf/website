@@ -264,7 +264,7 @@
     if (subEl) subEl.textContent = issue.subtitle;
 
     var bylineEl = document.getElementById('sc-article-byline');
-    if (bylineEl) bylineEl.textContent = 'Adam & Travis  ·  ' + issue.date;
+    if (bylineEl) bylineEl.textContent = 'Adam R. & Travis R.  ·  ' + issue.date;
 
     // Populate image
     var imgEl = document.getElementById('sc-article-image');
