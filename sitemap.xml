@@ -2512,7 +2512,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (499) ── -->
+  <!-- ── News articles (500) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5877,6 +5877,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/takomos-third-bag-launch-is-a-masterclass-in-dtc-hustle-2026-05-13-hero.jpg</image:loc>
       <image:title>Takomo&apos;s Third Bag Launch Is a Masterclass in DTC Hustle</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/taylormade-current-gen-driver-june-sale/</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/taylormade-current-gen-driver-june-sale-hero.jpg</image:loc>
+      <image:title>A $171 Cut on a Current-Gen Driver in June Is Not a Sale. It&apos;s a Warning TaylorMade Already Lived Through.</image:title>
     </image:image>
   </url>
   <url>
