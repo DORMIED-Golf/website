@@ -163,22 +163,101 @@
     }
   </style>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": "https://dormied.com/#organization",
-    "name": "DORMIED",
-    "alternateName": "Golf's Brand Desk",
-    "url": "https://dormied.com",
-    "logo": "https://dormied.com/images/dormied-logo-colour.png",
-    "description": "Golf's brand desk. Independent monthly rankings of 215 golf brands across 10 global markets, with editorial analysis of what is moving the game.",
-    "sameAs": ["https://x.com/DORMIED_GOLF"],
-    "founder": [
-      { "@type": "Person", "name": "Travis" },
-      { "@type": "Person", "name": "Adam" }
-    ],
-    "foundingDate": "2025-03"
-  }
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://dormied.com/#organization",
+      "name": "DORMIED",
+      "alternateName": "Golf's Brand Desk",
+      "url": "https://dormied.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://dormied.com/images/dormied-logo-colour.png"
+      },
+      "description": "Golf's brand desk. Independent monthly rankings of 215 golf brands across 10 global markets, with editorial analysis of what is moving the game.",
+      "foundingDate": "2024",
+      "email": "dormiedgolf@gmail.com",
+      "sameAs": [
+        "https://x.com/DORMIED_GOLF",
+        "https://www.instagram.com/dormiedgolf"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "editorial",
+        "email": "dormiedgolf@gmail.com",
+        "url": "https://dormied.com/contact/"
+      },
+      "founder": [
+        {
+          "@id": "https://dormied.com/about/#adam"
+        },
+        {
+          "@id": "https://dormied.com/about/#travis"
+        }
+      ],
+      "knowsAbout": [
+        "golf equipment",
+        "golf brands",
+        "golf apparel",
+        "brand market share",
+        "search demand analysis"
+      ]
+    },
+    {
+      "@type": "AboutPage",
+      "@id": "https://dormied.com/about/#aboutpage",
+      "url": "https://dormied.com/about/",
+      "name": "About DORMIED",
+      "description": "What DORMIED is, how the DORMIED Index is calculated, who it is for, and the independence policy behind it.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://dormied.com/#website",
+        "url": "https://dormied.com",
+        "name": "DORMIED"
+      },
+      "about": {
+        "@id": "https://dormied.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://dormied.com/#organization"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://dormied.com/about/#adam",
+      "name": "Adam R.",
+      "jobTitle": "Co-founder, apparel and lifestyle desk",
+      "url": "https://dormied.com/about/",
+      "worksFor": {
+        "@id": "https://dormied.com/#organization"
+      },
+      "knowsAbout": [
+        "golf apparel",
+        "golf footwear",
+        "brand collaborations",
+        "streetwear"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://dormied.com/about/#travis",
+      "name": "Travis R.",
+      "jobTitle": "Co-founder, equipment and data desk",
+      "url": "https://dormied.com/about/",
+      "worksFor": {
+        "@id": "https://dormied.com/#organization"
+      },
+      "knowsAbout": [
+        "golf equipment",
+        "club technology",
+        "golf shafts",
+        "market data"
+      ]
+    }
+  ]
+}
   </script>
   <script type="application/ld+json">
   [
@@ -290,7 +369,11 @@
       <div class="container">
         <div class="about-body">
 
-          <h2 class="about-section-title">Our Game Has Always Been About the Gear</h2>
+          <section class="da-answer-block" aria-labelledby="about-facts-heading">
+<h2 class="da-answer-label" id="about-facts-heading">DORMIED In Brief</h2>
+<p class="da-answer-text">DORMIED is an independent golf brand intelligence publisher. It produces the DORMIED Index, a monthly ranking of 215 golf brands by real search demand across 10 global markets, where a brand's DI Score is its search volume relative to the most-searched brand that month. Rankings update monthly. Founded in 2024 by Adam R. and Travis R. No brand pays for coverage or ranking position.</p>
+</section>
+<h2 class="about-section-title">Our Game Has Always Been About the Gear</h2>
 
           <p class="about-p">Golf is the only sport where amateurs and professionals play the same equipment. The same Titleist Pro V1 that Scottie Scheffler puts in play at Sawgrass is sitting in your bag on a Tuesday morning. The same irons. The same wedges. The same putter you agonized over for three weeks before pulling the trigger.</p>
 
@@ -324,11 +407,11 @@
 
           <p class="about-p">Because in our game the brands are not just equipment. They are identity. The logo on your bag, the putter in your hand, the hoodie you wear on the first tee. These are choices that say something about you. Possibly too much. DORMIED tracks what they are saying.</p>
 
-          <h2 class="about-section-title">What DORMIED Is</h2>
+          <h2 class="about-section-title">What Is DORMIED?</h2>
 
           <p class="about-p">DORMIED is golf's brand desk. Every sport has a publication that covers the business and culture of its companies. Fashion has Lyst and Business of Fashion. Basketball has Boardroom. Golf didn't. Now it does.</p>
 
-          <p class="about-p">Every month we track search interest across 100+ brands in 10 countries and publish the results as the DORMIED Index. We measure which brands are growing, which are fading, and where in the world each story is happening.</p>
+          <p class="about-p">Every month we track search interest across 215 brands in 10 countries and publish the results as the DORMIED Index. We measure which brands are growing, which are fading, and where in the world each story is happening.</p>
 
           <p class="about-p">Search data is our primary instrument. It is not perfect but it is honest. When golfers want to know about a brand they search for it. Before they buy. After they see something on tour. When a friend mentions something unfamiliar. At midnight after falling down a GolfWRX thread about shaft profiles. Aggregate those searches across millions of people and 10 countries and you get something close to a real time map of where the golf world's attention is pointing.</p>
 
@@ -342,7 +425,7 @@
 
           <p class="about-p">We are not a news site, a gear review site, or a tour coverage site. We are something more specific than any of those things.</p>
 
-          <h2 class="about-section-title">Who DORMIED Is For</h2>
+          <h2 class="about-section-title">Who Is DORMIED For?</h2>
 
           <p class="about-p">The gear obsessed. The ones who notice when a tour player switches to a different shaft two weeks before a major and immediately want to know why. The ones with opinions about sole grinds, neck styles, and the precise weight of a headcover.</p>
 
@@ -354,7 +437,7 @@
 
           <p class="about-p">And honestly, probably the brands themselves. If you are building something in golf and you want to know how the market is reading your momentum, the DORMIED Index is the only place that data lives.</p>
 
-          <h2 class="about-section-title">How People Use DORMIED</h2>
+          <h2 class="about-section-title">How Do People Use DORMIED?</h2>
 
           <p class="about-p">Some come for the Index. They check it monthly, follow their favorite brands the way other people follow sports teams, and want to see the standings.</p>
 

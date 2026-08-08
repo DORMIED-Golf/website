@@ -385,6 +385,10 @@ const {
   AUTHOR_ADAM, AUTHOR_TRAVIS, AUTHOR_VICTORIA, AUTHOR_JAMES, authorForBrand,
 } = require('./lib/article-authors');
 
+// Answer-block label rule and FAQ grounding, shared with the backfill script and
+// the WITB / brand / feature generators so the rules cannot diverge.
+const AB = require('./lib/answer-block');
+
 function formatDate(isoDate) {
   const d = new Date(isoDate);
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -520,13 +524,33 @@ Examples of good X posts (notice none start with the brand name):
 "Two straight travel bag wins from MyGolfSpy and still ranked 45th globally. Sometimes the best product has nothing to do with marketing spend."
 "Showing up in a rewards app alongside Miura and Bettinardi is a volume play disguised as a premium move."
 
+ALSO GENERATE, for answer engines:
+
+ANSWER BLOCK (field "answer_block")
+A single paragraph of 40 to 60 words that answers the story directly, placed above the article for a reader or a model that will only read one thing. Rules:
+- It must be answerable FROM YOUR OWN BODY COPY. Never state a fact the body does not contain. No number that does not appear in the body.
+- Lead with the direct answer, then the two or three supporting specifics: the price, the date, the name, the number. Front-load the entities.
+- No hedging, no throat-clearing, no "in this article" or "this piece explores". It is a summary, not a teaser. Do not tease; give the answer away.
+- DORMIED voice: direct, dry, plain prose. One paragraph, never bullets.
+- Count the words. Under 40 is thin, over 60 gets truncated by the things that read it.
+
+FAQ (field "faq")
+3 to 6 {"q","a"} pairs that this article genuinely answers. Rules:
+- Questions must be SPECIFIC TO THIS ARTICLE: the price, the mechanism, the person, the comparison, the consequence. Derive them from what the article actually establishes.
+- Reject generic filler. "What is [brand]?" is only allowed if the article really answers it.
+- Every answer must be fully supported by your body copy. No fact, number, date, name or claim that is not in the body. No invented sources.
+- 1 to 3 sentences each, plain prose, self-contained, same dry voice.
+- If the article does not support at least 3 distinct, genuinely groundable pairs, return an EMPTY array. An empty faq is correct and expected. Do not pad, do not restate the same fact twice, do not invent a question to reach three.
+
 Return valid JSON only — no markdown fences, no preamble, exactly this structure:
 {
   "title": "the headline",
   "body": "paragraph one\\n\\nparagraph two\\n\\nparagraph three\\n\\nparagraph four\\n\\nparagraph five",
   "meta_description": "120-155 character SEO description including brand name",
   "seo_keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
-  "x_post": "STRICTLY under 220 chars, a complete sentence ending in a period, no hashtags, hot take voice"
+  "x_post": "STRICTLY under 220 chars, a complete sentence ending in a period, no hashtags, hot take voice",
+  "answer_block": "40-60 words, direct answer first, entity-dense, no fact absent from the body",
+  "faq": [{"q": "...", "a": "..."}]
 }`;
 
 // Adam's voice profile — apparel, footwear, bags, lifestyle desk.
@@ -851,6 +875,7 @@ function generateArticleHtml(opts) {
     readTime, author, dormiedData, dormiedLatestHtml,
     secondaryBrands = [], // Array<{slug, name, logo}>
     faq = null,           // Array<{q, a}> from dormied_articles.faq (question articles)
+    answer_block = null,  // 40-60 word extractable summary from dormied_articles.answer_block
     date_modified = null, // ISO string when the body was materially changed (e.g. FAQ added)
     affiliateBrandSlugs = null, // Set<dormied_brand_slug> with an ACTIVE affiliate program
   } = opts;
@@ -878,6 +903,17 @@ function generateArticleHtml(opts) {
               <p class="bp-shop-disclosure">Some links on this page are affiliate links. DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
             </section>
 ` : '';
+
+  // Answer block. Label is derived, never stored, so the rule lives in exactly
+  // one place and a re-bake picks up any change to it. Rendered between the
+  // byline and the body: an extraction model should reach it before the prose.
+  const answerText  = typeof answer_block === 'string' ? answer_block.trim() : '';
+  const answerLabel = AB.answerLabel({ title, slug, category });
+  const answerHtml  = answerText ? `
+            <section class="da-answer-block" aria-labelledby="da-answer-heading">
+              <h2 class="da-answer-label" id="da-answer-heading">${escHtml(answerLabel)}</h2>
+              <p class="da-answer-text">${escHtml(stripEmDashes(answerText))}</p>
+            </section>` : '';
 
   // On-page FAQ block + FAQPage JSON-LD, only when the article carries a real,
   // body-derived faq array. Answers are shown verbatim and mirrored in schema.
@@ -1141,6 +1177,7 @@ function generateArticleHtml(opts) {
       <h1 class="sc-article-title">${escHtml(title)}</h1>
       <p class="sc-article-subtitle">${escHtml(meta_description)}</p>
       <p class="sc-article-byline">By ${escHtml(author)} &nbsp;·&nbsp; <time datetime="${dateISO}">${escHtml(dateFormatted)}</time> &nbsp;·&nbsp; ${escHtml(category)} &nbsp;·&nbsp; ${escHtml(readTime)}</p>
+${answerHtml}
     </header>
 
     <!-- ══ ARTICLE ════════════════════════════════════════════════════════════ -->
@@ -1412,7 +1449,7 @@ async function main() {
 
     const { data: allRows, error: allErr } = await supabase
       .from('dormied_articles')
-      .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, date_modified, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq')
+      .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, date_modified, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq, answer_block')
       .neq('status', 'suppressed')
       .order('published_at', { ascending: false });
 
@@ -1492,6 +1529,7 @@ async function main() {
           dormiedLatestHtml,
           secondaryBrands,
           faq:              row.faq || null,
+          answer_block:     row.answer_block || null,
           date_modified:    row.date_modified || null,
         });
 
@@ -1552,7 +1590,7 @@ async function main() {
   // and the pipeline never re-generates a manually-removed article.
   const { data: existing, error: existErr } = await supabase
     .from('dormied_articles')
-    .select('status, matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq');
+    .select('status, matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq, answer_block');
 
   if (existErr) {
     console.error('[generate] Failed to fetch existing articles:', existErr.message);
@@ -1627,6 +1665,7 @@ async function main() {
         dormiedLatestHtml: dormiedLatestHtmlB,
         secondaryBrands,
         faq:            row.faq || null,
+        answer_block:   row.answer_block || null,
       });
 
       fs.mkdirSync(path.join(SITE_ROOT, 'news', row.slug), { recursive: true });
@@ -1828,6 +1867,45 @@ async function main() {
       console.log(`[generate] Word count: ${wc} words`);
     }
 
+    // ── Answer block + FAQ grounding ──────────────────────────────────────────
+    // Both are validated against the FINAL body, after any expansion retry, so a
+    // rewritten body cannot leave a stale summary attached to it. Numbers are the
+    // check: an invented figure is by far the most common fabrication, and the
+    // same guard runs in backfill-article-faq.js via the shared lib.
+    const bodyForGrounding = parsed.body || '';
+
+    let answerBlock = typeof parsed.answer_block === 'string' ? parsed.answer_block.trim() : '';
+    if (answerBlock) {
+      const bad = AB.ungroundedNumbers(answerBlock, bodyForGrounding);
+      if (bad.length) {
+        console.warn(`[generate] ⚠ Answer block dropped for "${raw.title}": ungrounded number "${bad[0]}"`);
+        answerBlock = null;
+      } else if (!AB.lengthOk(answerBlock)) {
+        // Length is advisory. A 38-word answer still beats no answer, so this
+        // warns and ships rather than discarding a grounded summary.
+        console.warn(`[generate] ⚠ Answer block is ${AB.wordCount(answerBlock)} words for "${raw.title}" (target ${AB.MIN_WORDS}-${AB.MAX_WORDS})`);
+      }
+    }
+    answerBlock = answerBlock || null;
+
+    let groundedFaq = AB.cleanFaq(parsed.faq);
+    if (groundedFaq.length) {
+      const g = AB.answersGrounded(groundedFaq, bodyForGrounding);
+      if (!g.ok) {
+        console.warn(`[generate] ⚠ FAQ dropped for "${raw.title}": ungrounded number "${g.bad}"`);
+        groundedFaq = [];
+      }
+    }
+    if (groundedFaq.length && groundedFaq.length < AB.MIN_FAQ_PAIRS) {
+      console.warn(`[generate] ⚠ FAQ dropped for "${raw.title}": only ${groundedFaq.length} pair(s), floor is ${AB.MIN_FAQ_PAIRS}`);
+      groundedFaq = [];
+    }
+    // Strip em dashes on both fields, same as body and x_post below.
+    if (answerBlock) answerBlock = stripEmDashes(answerBlock);
+    groundedFaq = groundedFaq.map(x => ({ q: stripEmDashes(x.q), a: stripEmDashes(x.a) }));
+    const faqForPage = groundedFaq.length ? groundedFaq : null;
+    console.log(`[generate] answer block: ${answerBlock ? AB.wordCount(answerBlock) + ' words' : 'none'} | faq: ${groundedFaq.length} pair(s)`);
+
     const { title, seo_keywords } = parsed;
     // Strip em dashes from body and x_post — the prompt forbids them but LLMs
     // still slip them in. Post-processing guarantees they never reach the page.
@@ -1904,6 +1982,8 @@ async function main() {
       dormiedData,
       dormiedLatestHtml: dormiedLatestHtmlNew,
       secondaryBrands,
+      faq:             faqForPage,
+      answer_block:    answerBlock,
     });
 
     fs.writeFileSync(articlePath, html, 'utf8');
@@ -1942,6 +2022,8 @@ async function main() {
         category:             articleCategory,
         x_post_text:          x_post || null,
         author,
+        answer_block:         answerBlock,
+        faq:                  groundedFaq,
       });
 
     if (insertErr) {

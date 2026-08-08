@@ -5537,6 +5537,33 @@ details[open] .faq-question::after { content: '−'; }
 .da-figure-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 28px 0; }
 .da-figure-grid .da-figure { margin: 0; }
 @media (max-width: 560px) { .da-figure-row { flex-direction: column; } }
+/* ── Answer block ────────────────────────────────────────────────────────────
+   The extractable summary at the top of articles, features and WITB pages.
+   Deliberately reads as a callout rather than body copy: it is the thing an
+   answer engine should lift, and the border makes that visible to a human too.
+   Mirrored in styles.min.css (WITB pages and other baked templates load that
+   file) — see scripts/verify-css-parity.js. */
+.da-answer-block {
+  margin: 0 0 28px;
+  padding: 18px 20px;
+  background: var(--bg-raised);
+  border-left: 3px solid var(--green);
+  border-radius: 2px;
+}
+.da-answer-label {
+  font-family: var(--font-display);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 0 0 8px;
+}
+.da-answer-text { margin: 0; color: var(--text); }
+.da-answer-list { margin: 0; padding-left: 18px; color: var(--text); }
+.da-answer-list li { margin: 0 0 6px; }
+.da-answer-list li:last-child { margin-bottom: 0; }
+
 /* FAQ */
 .da-faq-item { margin: 0 0 22px; }
 .da-faq-q { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; font-style: italic; color: var(--text); margin: 0 0 6px; }

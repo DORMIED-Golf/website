@@ -8,6 +8,20 @@
  * rich HTML body (inline figures, section figures, two-up rows, galleries,
  * data tables, FAQ), flexible byline, optional brand tag, and no brand card.
  *
+ * WRITING A NEW FEATURE
+ *   keyTakeaways: 2 to 4 short bullets, required. They render as the "Key
+ *   Takeaways" callout above the body and are the part an answer engine is
+ *   most likely to lift, so state the conclusions rather than teasing them.
+ *   Every bullet must be supported by the feature body; do not introduce a
+ *   fact the piece does not make.
+ *
+ *   Section H2s: where a heading is a statement that would read naturally as a
+ *   question, write it as the question. "The Founding" becomes "Who Founded
+ *   It?", "The Numbers" becomes "How Big Is It?". This matches how people
+ *   actually search and gives an extraction model a question to attach the
+ *   following paragraph to. Do NOT force it where it damages the writing: a
+ *   heading carrying the essay's voice is worth more than a keyword match.
+ *
  * Config-driven: each feature is an entry in FEATURES, selected by argv.
  *   node scripts/generate-feature.js confidential-sources
  *   node scripts/generate-feature.js vice-golf-balls
@@ -54,6 +68,11 @@ const FEATURES = {
     lastUpdated: 'July 25, 2026',
     dateModified: '2026-07-25T00:00:00.000Z',
     publishedAt: '2026-07-25T15:00:00.000Z',
+    keyTakeaways: [
+      'Founded in 2018 by two brothers-in-law after a complaint about an ugly headcover.',
+      'Grew into a roughly $20 million golf brand on accessories rather than clubs.',
+      'Acquired Edel Golf, moving a novelty-first brand into serious equipment.',
+    ],
     metaDescription: 'Who owns Pins & Aces? The two brothers-in-law who founded it in 2018, how a headcover complaint became a $20 million brand, the Edel Golf acquisition, and what the data shows.',
     seoKeywords: ['who owns pins and aces', 'pins and aces', 'pins and aces golf', 'pins and aces founders', 'pins and aces edel golf', 'nick mertz jon major'],
     mdPath: path.join(ROOT, 'article-pins-and-aces.md'),
@@ -93,6 +112,11 @@ const FEATURES = {
     lastUpdated: 'July 20, 2026',
     dateModified: '2026-07-20T00:00:00.000Z',
     publishedAt: '2026-07-20T15:00:00.000Z',
+    keyTakeaways: [
+      'Founded by four cousins, with YouTube pro Grant Horvat later buying in.',
+      'Phil Mickelson put his LIV team in Primo joggers, which did more than any ad campaign.',
+      'The Index shows the attention arriving well before the retail footprint did.',
+    ],
     metaDescription: 'Who owns Primo Golf? The four cousins who founded it, how Grant Horvat bought in, why Phil Mickelson put his LIV team in Primo joggers, and what the data shows.',
     seoKeywords: ['who owns primo golf', 'primo golf', 'primo golf apparel', 'grant horvat primo', 'primo golf joggers', 'phil mickelson primo'],
     mdPath: path.join(ROOT, 'article-primo-golf.md'),
@@ -129,6 +153,11 @@ const FEATURES = {
     lastUpdated: 'August 1, 2026',
     dateModified: '2026-08-01T00:00:00.000Z',
     publishedAt: '2026-08-01T15:00:00.000Z',
+    keyTakeaways: [
+      'Built by Michael Huynh, credited with inventing the golf jogger.',
+      'A health scare is what started the brand, not a market gap.',
+      'The DORMIED Index tracks its rise out of Los Angeles.',
+    ],
     metaDescription: "What is Maejer Golf? Mason Mount's British luxury golf brand launched in July 2026 and enters the DORMIED Index at 215 of 215 with zero recorded searches. Who owns it, what it costs, and what happens next.",
     seoKeywords: ['maejer golf', 'what is maejer golf', 'who owns maejer golf', 'mason mount golf brand', 'maejer', 'mason mount handicap', 'owen farrell golf brand'],
     mdPath: path.join(ROOT, 'article-maejer-golf.md'),
@@ -161,6 +190,11 @@ const FEATURES = {
     lastUpdated: 'August 4, 2026',
     dateModified: '2026-08-04T00:00:00.000Z',
     publishedAt: '2026-07-17T15:00:00.000Z',
+    keyTakeaways: [
+      'Michael Huynh invented the golf jogger before founding Students Golf in Los Angeles.',
+      'A health scare, not a business plan, is what put the brand in motion.',
+      'The DORMIED Index reads it as one of the faster-rising apparel names.',
+    ],
     metaDescription: 'What is Students Golf? The LA golf brand from jogger inventor Michael Huynh, the health scare that started it, and what the DORMIED Index says about its rise.',
     seoKeywords: ['students golf', 'what is students golf', 'michael huynh', 'students golf brand', 'jogger inventor', 'students sugarloaf social club'],
     mdPath: path.join(ROOT, 'article-students-golf.md'),
@@ -190,6 +224,11 @@ const FEATURES = {
     brandSlug: '',
     leadRole: 'subtitle',
     publishedAt: '2026-07-16T15:00:00.000Z',
+    keyTakeaways: [
+      'A Country Club Confidential story running in full on DORMIED.',
+      'An assistant pro, a tyrant boss, and the most elaborate resignation in golf.',
+      'Includes the behind-the-scenes account from the anonymous founders.',
+    ],
     metaDescription: 'A Country Club Confidential story, running in full on DORMIED: an assistant pro, a tyrant boss, and the most elaborate resignation in golf. Plus the behind-the-scenes from the anonymous founders.',
     seoKeywords: ['Country Club Confidential', 'golf pro shop story', 'take this job and shove it', 'assistant pro resignation', 'golf newsletter', 'DORMIED'],
     mdPath: path.join(ROOT, 'article-ccc-take-this-job.md'),
@@ -206,6 +245,11 @@ const FEATURES = {
     category: 'Feature',
     brandSlug: '',
     leadRole: 'subtitle',
+    keyTakeaways: [
+      'Country Club Confidential turned private-club gossip into a real media business.',
+      'The founders stay anonymous, which is the product rather than a limitation.',
+      'They explain how the stories get sourced and verified.',
+    ],
     metaDescription: 'How Country Club Confidential turned the stories that circulate inside private golf into a real media business. The anonymous founders explain how.',
     seoKeywords: ['Country Club Confidential', 'golf newsletter', 'private golf', 'golf media', 'DORMIED'],
     mdPath: path.join(ROOT, 'article-ccc-confidential-sources.md'),
@@ -233,6 +277,11 @@ const FEATURES = {
     leadRole: 'bio',
     lastUpdated: 'May 28, 2026',
     dateModified: '2026-05-28T00:00:00.000Z',
+    keyTakeaways: [
+      'Covers the full lineup: Pro Plus, Pro, Pro Air, Tour and Drive.',
+      'Customization and colour options are central to how Vice sells, not an add-on.',
+      'Explains where each model actually sits against the major-brand equivalents.',
+    ],
     metaDescription: 'Every Vice golf ball explained: Pro Plus, Pro, Pro Air, Tour, and Drive, plus customization, colors, and why Vice is golf\'s fastest-rising ball brand.',
     seoKeywords: ['vice golf balls', 'vice pro plus', 'vice pro', 'vice golf ball customization', 'best vice golf ball'],
     mdPath: path.join(ROOT, 'article-vice-golf-balls.md'),
@@ -282,6 +331,11 @@ const FEATURES = {
     leadRole: 'bio',
     lastUpdated: 'July 9, 2026',
     dateModified: '2026-07-09T00:00:00.000Z',
+    keyTakeaways: [
+      'An anonymous Minnesota golfer is behind the cult American-made apparel brand.',
+      'The $95 McNair Polo is the product the brand is built around.',
+      'DORMIED Index data shows the demand is real, not just online noise.',
+    ],
     metaDescription: 'Who is Arnie McNair? The anonymous Minnesota golfer behind the cult American-made apparel brand, what the $95 McNair Polo is, and what the DORMIED data shows.',
     seoKeywords: ['arnie mcnair', 'arnie mcnair clothing', 'arnie mcnair golf', 'arnie mcnair polo', 'who is arnie mcnair'],
     mdPath: path.join(ROOT, 'article-arnie-mcnair.md'),
@@ -500,6 +554,19 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   const ogImage       = `https://dormied.com${F.imgBase}/${F.hero.file}`;
   const keywordsStr   = (F.seoKeywords || []).join(', ');
   const rt            = readTime(wordCount);
+
+  // Key Takeaways. Features are the one page type where the answer block is
+  // allowed to be bullets: a structured callout is exempt from the no-bullets
+  // rule that governs narrative copy, and a 2,000-word feature does not reduce
+  // to one honest paragraph the way a wire story does.
+  const takeaways = Array.isArray(F.keyTakeaways) ? F.keyTakeaways.filter(Boolean) : [];
+  const takeawaysHtml = takeaways.length ? `
+      <section class="da-answer-block" aria-labelledby="ft-takeaways-heading">
+        <h2 class="da-answer-label" id="ft-takeaways-heading">Key Takeaways</h2>
+        <ul class="da-answer-list">
+          ${takeaways.map(t => `<li>${escHtml(t)}</li>`).join('\n          ')}
+        </ul>
+      </section>` : '';
   const authorsLd     = F.authors.map(a => `{ "@type": "Person", "name": "${escHtml(a)}", "url": "https://dormied.com/about/" }`).join(', ');
   const authorLdField = F.authors.length > 1 ? `[${authorsLd}]` : authorsLd;
 
@@ -655,6 +722,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
       <h1 class="sc-article-title">${escHtml(F.title)}</h1>
       ${subtitleHtml}
       <p class="sc-article-byline">By ${escHtml(F.byline)} &nbsp;·&nbsp; <time datetime="${dateISO}">${escHtml(dateFormatted)}</time> &nbsp;·&nbsp; ${escHtml(F.category)} &nbsp;·&nbsp; ${escHtml(rt)}</p>
+${takeawaysHtml}
       ${lastUpdHtml}
     </header>
 

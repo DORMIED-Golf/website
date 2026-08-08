@@ -22,6 +22,7 @@ Founded: 2024. Contact: dormiedgolf@gmail.com. Publisher: DORMIED Golf.
 - [Contact](https://dormied.com/contact/): Get in touch with DORMIED
 - [Privacy Policy](https://dormied.com/privacy/): How DORMIED handles data
 - [Terms](https://dormied.com/terms/): Terms of use
+- [Full URL index](https://dormied.com/llms-full.txt): Every indexable page with its title
 - [Sitemap](https://dormied.com/sitemap.xml): Full list of indexed URLs
 
 ## Brand Pages
@@ -32,8 +33,139 @@ Each of the 215 brands has a dedicated page at https://dormied.com/brands/[slug]
 - Month-over-month change, 3-month trend, 12-month trend
 - Monthly trend chart (12 or more months of data)
 - Rankings across all 10 markets (US, UK, Japan, Korea, Canada, Australia, China, Germany, France, Sweden)
-- AI-generated editorial take on current momentum ("The Read")
+- A frequently-asked-questions block covering ownership, origin and category
 - Latest DORMIED news articles covering that brand
+
+### Top 30 brands by current rank (Jun 2026)
+
+- [Titleist](https://dormied.com/brands/titleist/): Rank #1, Clubs & Balls
+- [TaylorMade](https://dormied.com/brands/taylormade/): Rank #2, Clubs & Balls
+- [TravisMathew](https://dormied.com/brands/travismathew/): Rank #3, Apparel & Footwear
+- [Callaway](https://dormied.com/brands/callaway/): Rank #4, Clubs & Balls
+- [Footjoy](https://dormied.com/brands/footjoy/): Rank #5, Apparel & Footwear; Bags & Accessories
+- [Malbon](https://dormied.com/brands/malbon/): Rank #6, Apparel & Footwear; Bags & Accessories
+- [Scotty Cameron](https://dormied.com/brands/scotty-cameron/): Rank #7, Clubs & Balls
+- [Sun Day Red](https://dormied.com/brands/sun-day-red/): Rank #8, Apparel & Footwear
+- [Vice Golf](https://dormied.com/brands/vice-golf/): Rank #9, Clubs & Balls
+- [Holderness & Bourne](https://dormied.com/brands/holderness-bourne/): Rank #10, Apparel & Footwear
+- [LA Golf](https://dormied.com/brands/la-golf/): Rank #11, Tech & Training Aids; Clubs & Balls
+- [Good Good Golf](https://dormied.com/brands/good-good-golf/): Rank #12, Apparel & Footwear; Bags & Accessories
+- [PXG](https://dormied.com/brands/pxg/): Rank #13, Clubs & Balls
+- [Srixon](https://dormied.com/brands/srixon/): Rank #14, Clubs & Balls
+- [Takomo Golf](https://dormied.com/brands/takomo-golf/): Rank #15, Clubs & Balls
+- [Breezy Golf](https://dormied.com/brands/breezy-golf/): Rank #16, Apparel & Footwear
+- [Cobra](https://dormied.com/brands/cobra/): Rank #17, Clubs & Balls
+- [J.Lindeberg](https://dormied.com/brands/j-lindeberg/): Rank #18, Apparel & Footwear
+- [Nike Golf](https://dormied.com/brands/nike-golf/): Rank #19, Apparel & Footwear
+- [PING](https://dormied.com/brands/ping/): Rank #20, Clubs & Balls
+- [Bad Birdie](https://dormied.com/brands/bad-birdie/): Rank #21, Apparel & Footwear
+- [Ghost Golf](https://dormied.com/brands/ghost-golf/): Rank #22, Bags & Accessories
+- [Miura Golf](https://dormied.com/brands/miura-golf/): Rank #23, Clubs & Balls
+- [Payntr Golf](https://dormied.com/brands/payntr-golf/): Rank #24, Apparel & Footwear
+- [Adidas Golf](https://dormied.com/brands/adidas-golf/): Rank #25, Apparel & Footwear
+- [Mizuno](https://dormied.com/brands/mizuno/): Rank #26, Clubs & Balls
+- [Trackman](https://dormied.com/brands/trackman/): Rank #27, Tech & Training Aids
+- [Arccos Golf](https://dormied.com/brands/arccos-golf/): Rank #28, Tech & Training Aids
+- [Ben Hogan Golf](https://dormied.com/brands/ben-hogan-golf/): Rank #29, Clubs & Balls
+- [Cleveland Golf](https://dormied.com/brands/cleveland-golf/): Rank #30, Clubs & Balls
+
+## WITB: What Tour Pros Play
+
+Every tracked player has a page at https://dormied.com/witb/players/[slug]/ listing the exact
+driver, fairway woods, irons, wedges, putter, grips and ball in the current bag,
+with the snapshot date and the full bag history. 187 players are tracked.
+
+### Most-searched player bags
+
+- [Scottie Scheffler WITB](https://dormied.com/witb/players/scottie-scheffler/): Current bag, world #1
+- [Rory McIlroy WITB](https://dormied.com/witb/players/rory-mcilroy/): Current bag, world #2
+- [Cameron Young WITB](https://dormied.com/witb/players/cameron-young/): Current bag, world #3
+- [Matt Fitzpatrick WITB](https://dormied.com/witb/players/matthew-fitzpatrick/): Current bag, world #4
+- [Russell Henley WITB](https://dormied.com/witb/players/russell-henley/): Current bag, world #5
+- [Tommy Fleetwood WITB](https://dormied.com/witb/players/tommy-fleetwood/): Current bag, world #6
+- [Chris Gotterup WITB](https://dormied.com/witb/players/chris-gotterup/): Current bag, world #7
+- [Collin Morikawa WITB](https://dormied.com/witb/players/collin-morikawa/): Current bag, world #8
+- [Xander Schauffele WITB](https://dormied.com/witb/players/xander-schauffele/): Current bag, world #9
+- [Wyndham Clark WITB](https://dormied.com/witb/players/wyndham-clark/): Current bag, world #10
+- [Sam Burns WITB](https://dormied.com/witb/players/sam-burns/): Current bag, world #11
+- [Justin Rose WITB](https://dormied.com/witb/players/justin-rose/): Current bag, world #12
+- [Jon Rahm WITB](https://dormied.com/witb/players/jon-rahm/): Current bag, world #13
+- [Viktor Hovland WITB](https://dormied.com/witb/players/viktor-hovland/): Current bag, world #14
+- [J.J. Spaun WITB](https://dormied.com/witb/players/j-j-spaun/): Current bag, world #15
+- [Ludvig Aberg WITB](https://dormied.com/witb/players/ludvig-aberg/): Current bag, world #16
+- [Robert MacIntyre WITB](https://dormied.com/witb/players/robert-macintyre/): Current bag, world #17
+- [Siwoo Kim WITB](https://dormied.com/witb/players/siwoo-kim/): Current bag, world #18
+- [Aaron Rai WITB](https://dormied.com/witb/players/aaron-rai/): Current bag, world #19
+- [Ben Griffin WITB](https://dormied.com/witb/players/ben-griffin/): Current bag, world #20
+- [Tyrrell Hatton WITB](https://dormied.com/witb/players/tyrrell-hatton/): Current bag, world #21
+- [Justin Thomas WITB](https://dormied.com/witb/players/justin-thomas/): Current bag, world #22
+- [Ryan Fox WITB](https://dormied.com/witb/players/ryan-fox/): Current bag, world #23
+- [Hideki Matsuyama WITB](https://dormied.com/witb/players/hideki-matsuyama/): Current bag, world #24
+- [Sepp Straka WITB](https://dormied.com/witb/players/sepp-straka/): Current bag, world #26
+- [Alex Noren WITB](https://dormied.com/witb/players/alex-noren/): Current bag, world #27
+- [Min Woo Lee WITB](https://dormied.com/witb/players/min-woo-lee/): Current bag, world #28
+- [Kristoffer Reitan WITB](https://dormied.com/witb/players/kristoffer-reitan/): Current bag, world #29
+- [Patrick Reed WITB](https://dormied.com/witb/players/patrick-reed/): Current bag, world #31
+- [Akshay Bhatia WITB](https://dormied.com/witb/players/akshay-bhatia/): Current bag, world #32
+
+## Question Articles
+
+Articles that answer a specific question directly. Each carries a Quick Answer
+block at the top and a frequently-asked-questions section.
+
+- [Are Takomo Irons Good?](https://dormied.com/news/are-takomo-irons-good/)
+- [How Much Are McLaren Golf Clubs?](https://dormied.com/news/how-much-are-mclaren-golf-clubs/)
+- [Is G/Fore Owned by Peter Millar?](https://dormied.com/news/is-gfore-owned-by-peter-millar/)
+- [Penfold Returns to American Golf After 40 Years, But Can a Defunct Ball Brand Sell Premium Bags?](https://dormied.com/news/penfold-returns-to-american-golf-after-40-years-but-can-a-defunct-ball-2026-05-05/)
+- [Who Owns Primo Golf? Cousins, Grant Horvat + Mickelson](https://dormied.com/news/primo-golf/)
+- [What Is Students Golf? Michael Huynh's Golf Brand](https://dormied.com/news/students-golf/)
+- [The Best Golf Glove Money Can Buy Lasts 170 Holes. Is That Enough?](https://dormied.com/news/the-best-golf-glove-money-can-buy-lasts-170-holes-is-that-enough-2026-05-04/)
+- [What Is Dormie in Golf?](https://dormied.com/news/what-is-dormie-in-golf/)
+- [What Is Maejer Golf? Mason Mount's Golf Brand](https://dormied.com/news/what-is-maejer-golf/)
+- [Public Drip: The Brooklyn Brand Built for Municipal Golf](https://dormied.com/news/what-is-public-drip-golf/)
+- [What Is Random Golf Club?](https://dormied.com/news/what-is-random-golf-club/)
+- [What Is Students Golf?](https://dormied.com/news/what-is-students-golf/)
+- [William Murray Golf: Bill Murray's Brand, Explained](https://dormied.com/news/what-is-william-murray-golf/)
+- [What Makes a Golf Headcover Worth Reselling?](https://dormied.com/news/what-makes-a-golf-headcover-worth-reselling/)
+- [When Quince Becomes the Yardstick: H&B Just Got Used as the Punchline in a Father's Day Gift Guide](https://dormied.com/news/when-quince-becomes-the-yardstick-hb-just-got-used-as-the-punchline-in-a-2026-06-09/)
+- [Where Are Callaway Clubs Made?](https://dormied.com/news/where-are-callaway-clubs-made/)
+- [Where Are TaylorMade Clubs Manufactured?](https://dormied.com/news/where-are-taylormade-clubs-manufactured/)
+- [Where Are Titleist Clubs Made?](https://dormied.com/news/where-are-titleist-clubs-made/)
+- [Where Is Avoda Golf Based?](https://dormied.com/news/where-is-avoda-golf-based/)
+- [Where Is Callaway Headquartered?](https://dormied.com/news/where-is-callaway-headquartered/)
+- [Where Is Manors Golf From?](https://dormied.com/news/where-is-manors-golf-from/)
+- [Where Is Takomo Golf From?](https://dormied.com/news/where-is-takomo-golf-from/)
+- [Where Is TaylorMade Headquartered?](https://dormied.com/news/where-is-taylormade-headquartered/)
+- [Where Is Titleist Headquartered?](https://dormied.com/news/where-is-titleist-headquartered/)
+- [Where to Buy William Murray Golf](https://dormied.com/news/where-to-buy-william-murray-golf/)
+- [Who Is Arnie McNair? The Anonymous Golfer Behind the Cult Brand](https://dormied.com/news/who-is-arnie-mcnair/)
+- [Who Makes McLaren Golf Clubs?](https://dormied.com/news/who-makes-mclaren-golf-clubs/)
+- [Who Owns Malbon Golf?](https://dormied.com/news/who-owns-malbon-golf/)
+- [Who Owns Manors Golf?](https://dormied.com/news/who-owns-manors-golf/)
+- [Who Owns McLaren Golf?](https://dormied.com/news/who-owns-mclaren-golf/)
+- [Who Owns Odyssey Golf?](https://dormied.com/news/who-owns-odyssey-golf/)
+- [Who Owns Pins & Aces? Founders, Edel Deal + Revenue](https://dormied.com/news/who-owns-pins-and-aces/)
+- [Who Owns Scotty Cameron?](https://dormied.com/news/who-owns-scotty-cameron/)
+- [Who Owns Takomo Golf?](https://dormied.com/news/who-owns-takomo-golf/)
+- [Why Callaway's Quantum Max Is the Best Driver in Golf, If You Swing Fast Enough](https://dormied.com/news/why-callaways-quantum-max-is-the-best-driver-in-golf-if-you-swing-fast-2026-04-30/)
+- [Why Golf's Most Expensive Polo Might Actually Be Worth It](https://dormied.com/news/why-golfs-most-expensive-polo-might-actually-be-worth-it-2026-04-21/)
+- [Why Is Malbon So Popular?](https://dormied.com/news/why-is-malbon-so-popular/)
+- [Why PXG Is Quietly Building a Retail Network Through Regional Fitters Instead of Big Box Stores](https://dormied.com/news/why-pxg-is-quietly-building-a-retail-network-through-regiona-2026-04-22/)
+- [Why Sun Mountain Is Doubling Down on Women's Bags While Competitors Chase Viral Moments](https://dormied.com/news/why-sun-mountain-is-doubling-down-on-womens-bags-while-compe-2026-04-14/)
+- [Why Tour Pros Are Mixing Metal and Plastic Spikes, And What It Means for Your Next Shoe Purchase](https://dormied.com/news/why-tour-pros-are-mixing-metal-and-plastic-spikes-and-what-it-means-for-2026-05-05/)
+
+## Features
+
+Long-form reporting on golf brands, founders and the business behind them.
+
+- [Confidential Sources](https://dormied.com/news/confidential-sources/)
+- [Who Owns Primo Golf? Cousins, Grant Horvat + Mickelson](https://dormied.com/news/primo-golf/)
+- [What Is Students Golf? Michael Huynh's Golf Brand](https://dormied.com/news/students-golf/)
+- [Take This Job and Shove It: A Country Club Confidential Story](https://dormied.com/news/take-this-job-and-shove-it/)
+- [Vice Golf Balls: Full Lineup, Customization, and the Data](https://dormied.com/news/vice-golf-balls/)
+- [What Is Maejer Golf? Mason Mount's Golf Brand](https://dormied.com/news/what-is-maejer-golf/)
+- [Who Is Arnie McNair? The Anonymous Golfer Behind the Cult Brand](https://dormied.com/news/who-is-arnie-mcnair/)
+- [Who Owns Pins & Aces? Founders, Edel Deal + Revenue](https://dormied.com/news/who-owns-pins-and-aces/)
 
 ## Data Methodology
 

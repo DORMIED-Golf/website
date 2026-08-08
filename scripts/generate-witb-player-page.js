@@ -28,6 +28,7 @@ const Anthropic        = require('@anthropic-ai/sdk');
 const { pageEligible } = require('./witb-page-eligibility');
 const feedBake         = require('./feed-bake');
 const { matchBagToProducts } = require('./lib/witb-shop-match');
+const AB               = require('./lib/answer-block');
 
 // Explicit bag-item -> product overrides, keyed 'brand|club_type|normalised model'.
 // The only way a model too short to be distinctive (e.g. Cobra's "SB") can reach
@@ -297,6 +298,133 @@ function clubLabel(ct) {
     'grip':       'Grip',
   };
   return labels[ct] || ct.charAt(0).toUpperCase() + ct.slice(1);
+}
+
+// ── Answer block + FAQ (data-derived, no model call) ──────────────────────────
+//
+// Search Console shows these pages ranking in the top 10 for literal questions
+// they already hold the answer to, and taking almost no clicks for it:
+// "what putter does ryan fox use" sat at position 9.3 across 99 impressions with
+// zero clicks. The page has the putter. It just never says so in a form an
+// extraction model can lift.
+//
+// Everything below is built from the bag rows, so there is no fabrication risk
+// and no token cost, and it re-derives on every bake as bags change. A club that
+// is not in the bag is simply not mentioned: no placeholders, no "not known".
+
+/** First item of a club type, or null. Bags can hold two putters; take the first. */
+function firstOfType(items, type) {
+  return items.find(i => i.club_type === type) || null;
+}
+
+/** "PING G440 LST" from a row, or null when the row is missing. */
+function itemName(item) {
+  if (!item) return null;
+  const brand = (item.raw_brand || '').trim();
+  const model = (item.raw_model || '').trim();
+  const s = [brand, model].filter(Boolean).join(' ').trim();
+  return s || null;
+}
+
+/**
+ * 40 to 60 words of plain prose naming the four clubs a reader actually searches
+ * for. Slots that are missing are dropped from the sentence rather than filled,
+ * so the grammar has to survive any combination being absent.
+ */
+function buildWitbAnswerBlock(name, items, currentDate) {
+  const driver = itemName(firstOfType(items, 'driver'));
+  const irons  = itemName(items.find(i => i.club_type === 'iron'));
+  const putter = itemName(firstOfType(items, 'putter'));
+  const ball   = itemName(firstOfType(items, 'ball'));
+  const wedge  = itemName(items.find(i => i.club_type === 'wedge'));
+
+  // Oxford-comma join so the sentence reads correctly at one, two or five slots.
+  const join = parts =>
+    parts.length === 1 ? parts[0]
+    : parts.length === 2 ? `${parts[0]} and ${parts[1]}`
+    : `${parts.slice(0, -1).join(', ')}, and ${parts[parts.length - 1]}`;
+
+  const withWedge = [];
+  if (driver) withWedge.push(`a ${driver} driver`);
+  if (irons)  withWedge.push(`${irons} irons`);
+  if (wedge)  withWedge.push(`${wedge} wedges`);
+  if (putter) withWedge.push(`a ${putter} putter`);
+  if (ball)   withWedge.push(`the ${ball} ball`);
+  if (!withWedge.length) return '';
+
+  const driverRow = firstOfType(items, 'driver');
+  const shaftSentence = driverRow && driverRow.raw_shaft
+    ? ` The driver is built with a ${dedupeShaft(driverRow.raw_shaft)} shaft.`
+    : '';
+
+  const sentence = (parts, tail) => `${name} plays ${join(parts)}, as recorded in the ${currentDate} bag snapshot.${tail}`;
+
+  // Candidates from longest to shortest. Model names vary enormously in length,
+  // so a fixed template lands anywhere from 25 to 70 words; pick the first that
+  // fits the 40-60 window rather than padding or truncating.
+  const noWedge = withWedge.filter(p => !p.endsWith(' wedges'));
+  const candidates = [
+    sentence(withWedge, shaftSentence),
+    sentence(withWedge, ''),
+    sentence(noWedge,   shaftSentence),
+    sentence(noWedge,   ''),
+  ];
+  const fits = candidates.find(c => AB.lengthOk(c));
+  if (fits) return fits;
+
+  // Nothing landed in range. Prefer the longest option still at or under the
+  // ceiling; if even the shortest overruns, ship it rather than lose the block.
+  const under = candidates.filter(c => AB.wordCount(c) <= AB.MAX_WORDS);
+  return under.length ? under[0] : candidates[candidates.length - 1];
+}
+
+/**
+ * FAQ pairs in the exact question forms Search Console shows people typing.
+ * Only emitted for clubs the bag actually contains, per club type, so a player
+ * with no fairway wood never gets a fairway-wood question.
+ */
+function buildWitbFaq(name, items, currentDate) {
+  const faq = [];
+  const add = (q, a) => faq.push({ q, a });
+
+  const driver = firstOfType(items, 'driver');
+  const putter = firstOfType(items, 'putter');
+  const ball   = firstOfType(items, 'ball');
+  const irons  = items.filter(i => i.club_type === 'iron');
+  const wedges = items.filter(i => i.club_type === 'wedge');
+
+  if (driver) {
+    const loft = driver.loft_or_number ? ` at ${driver.loft_or_number}` : '';
+    add(`What driver does ${name} use?`,
+        `${name} plays a ${itemName(driver)} driver${loft}, as of the ${currentDate} snapshot.`);
+  }
+  if (irons.length) {
+    const setStr = irons.map(i => `${itemName(i)}${i.loft_or_number ? ` (${i.loft_or_number})` : ''}`).join(', ');
+    add(`What irons does ${name} use?`,
+        `${name} plays ${setStr}, as of the ${currentDate} snapshot.`);
+  }
+  if (wedges.length) {
+    const wStr = wedges.map(w => `${itemName(w)}${w.loft_or_number ? ` (${w.loft_or_number})` : ''}`).join(', ');
+    add(`What wedges does ${name} use?`,
+        `${name} carries ${wStr}, as of the ${currentDate} snapshot.`);
+  }
+  if (putter) {
+    // Two-putter bags are real; name both rather than picking one.
+    const putters = items.filter(i => i.club_type === 'putter').map(itemName).filter(Boolean);
+    add(`What putter does ${name} use?`,
+        putters.length > 1
+          ? `${name} has two putters recorded in the ${currentDate} snapshot: ${putters.join(' and ')}.`
+          : `${name} uses a ${putters[0]} putter, as of the ${currentDate} snapshot.`);
+  }
+  if (ball) {
+    add(`What ball does ${name} play?`,
+        `${name} plays the ${itemName(ball)} golf ball, as of the ${currentDate} snapshot.`);
+  }
+  if (driver && driver.raw_shaft) {
+    add(`What shaft does ${name} use in his driver?`,
+        `${name} uses a ${dedupeShaft(driver.raw_shaft)} shaft in the ${itemName(driver)} driver, as of the ${currentDate} snapshot.`);
+  }
+  return faq;
 }
 
 // ── Mobile bag card layout ────────────────────────────────────────────────────
@@ -692,6 +820,24 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   const maxYear  = bagYears.length ? Math.max(...bagYears) : new Date().getFullYear();
   const yearRange = minYear === maxYear ? String(minYear) : `${minYear}-${maxYear}`;
 
+  // ── Answer block + FAQ, both derived from the bag rows ────────────────────
+  const witbAnswer = buildWitbAnswerBlock(name, currentItems, currentDate);
+  const witbFaq    = buildWitbFaq(name, currentItems, currentDate);
+
+  const witbAnswerHtml = witbAnswer ? `
+          <!-- ANSWER BLOCK -->
+          <section class="da-answer-block" aria-labelledby="da-answer-heading">
+            <h2 class="da-answer-label" id="da-answer-heading">Quick Answer</h2>
+            <p class="da-answer-text">${esc(witbAnswer)}</p>
+          </section>` : '';
+
+  const witbFaqHtml = witbFaq.length ? `
+          <!-- FAQ -->
+          <section class="witb-section da-faq-section" aria-labelledby="witb-faq-heading">
+            <h2 class="witb-section-heading" id="witb-faq-heading">Frequently Asked Questions</h2>
+            ${witbFaq.map(x => `<div class="da-faq-item"><h3 class="da-faq-q">${esc(x.q)}</h3><p class="da-faq-a">${esc(x.a)}</p></div>`).join('\n            ')}
+          </section>` : '';
+
   // ── Nationality flag ───────────────────────────────────────────────────────
   const flagHtml = buildFlagHtml(country_code, nation);
 
@@ -896,6 +1042,16 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
         mainEntityOfPage:   canonicalUrl,
         url:                canonicalUrl,
       },
+      // FAQPage mirrors the on-page block verbatim. Omitted entirely when the
+      // bag is too sparse to answer anything, rather than shipping an empty node.
+      ...(witbFaq.length ? [{
+        '@type': 'FAQPage',
+        mainEntity: witbFaq.map(x => ({
+          '@type': 'Question',
+          name: x.q,
+          acceptedAnswer: { '@type': 'Answer', text: x.a },
+        })),
+      }] : []),
     ],
   }, null, 2);
 
@@ -1081,6 +1237,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
         <!-- MAIN CONTENT COLUMN -->
         <article class="bp-sections-col da-article-body">
 
+${witbAnswerHtml}
           <!-- 1. LEDE -- full content width, no max-width cap -->
           <section class="witb-section" style="padding-top:24px;border-bottom:none" aria-label="Equipment overview">
             <p class="witb-player-lede">${esc(ledes.lede)}</p>
@@ -1172,6 +1329,8 @@ ${(shopBrand && !shopBag) ? `
             <div class="bp-shop-dots" id="bp-shop-dots" role="tablist" aria-label="Product pages"></div>
             <p class="bp-shop-disclosure">Some links on this page are affiliate links. DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
           </section>` : ''}
+
+${witbFaqHtml}
 
           <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
           <div class="tail-feeds">

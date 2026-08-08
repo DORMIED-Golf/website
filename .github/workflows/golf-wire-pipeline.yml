@@ -138,6 +138,10 @@ jobs:
           node scripts/generate-index-pages.js --news
           node scripts/generate-home-prerender.js
           node scripts/refresh-modules.js
+          # llms.txt / llms-full.txt carry deep links to individual articles,
+          # brands and player bags, so they go stale the moment anything
+          # publishes. Regenerated here for the same reason the news index is.
+          node scripts/generate-llms-txt.js
 
           git add -A
 

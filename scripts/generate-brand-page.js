@@ -27,6 +27,7 @@ const feedBake         = require('./feed-bake');
 
 const { dataVersion } = require('./lib/data-version');
 const { brandAffiliateLink } = require('./lib/brand-affiliate-links');
+const AB = require('./lib/answer-block');
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const SITE_ROOT = path.resolve(__dirname, '..');
@@ -536,6 +537,55 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
   const marketStats    = computeMarketStats(dormiedData, brand);
   const countryRows    = buildCountryTableRows(marketStats);
 
+  // ── Answer block ──────────────────────────────────────────────────────────
+  // Built from live Index values rather than stored, so it re-derives on every
+  // bake and can never quote last month's rank. Brand pages already carry a FAQ
+  // from the earlier task; this adds only the extractable summary at the top.
+  const brandAnswerBlock = (() => {
+    const totalBrands = (dormiedData.brands || []).length;
+    const month = dormiedData.meta.currentMonth;
+
+    // Strongest market = best (lowest) rank the brand holds in any single market.
+    const ranked = marketStats.filter(m => m.rank && m.key !== 'global');
+    ranked.sort((a, b) => a.rank - b.rank);
+    const top = ranked[0] || null;
+
+    const momPhrase = momPct === null ? ''
+      : momPct > 0 ? `, up ${momStr} month over month`
+      : momPct < 0 ? `, down ${momStr.replace(/^[-−]/, '')} month over month`
+      : ', flat month over month';
+
+    const sentences = [
+      `${brand.name} ranks #${rank} of ${totalBrands} golf brands on the DORMIED Index for ${month}, with a Demand Index score of ${di.toFixed(1)}${momPhrase}.`,
+    ];
+    if (top) sentences.push(`Its strongest single market is ${top.label}, where it ranks #${top.rank}.`);
+
+    // Optional tail, added only when the block is short of the 40-word floor.
+    const tail = [];
+    if (brand.category) {
+      // Nine brands carry a semicolon-joined category ("Apparel & Footwear;
+      // Bags & Accessories"), which reads as punctuation debris in prose.
+      const cat = brand.category.replace(/\s*;\s*/g, ' and ');
+      tail.push(`${/^[aeiou]/i.test(cat) ? 'an' : 'a'} ${cat} brand`);
+    }
+    if (brand.founded)      tail.push(`founded in ${brand.founded}`);
+    if (brand.headquarters) tail.push(`based in ${brand.headquarters}`);
+    const tailSentence = tail.length ? ` ${brand.name} is ${tail.join(', ')}.` : '';
+
+    const short = sentences.join(' ');
+    const long  = short + tailSentence;
+    if (AB.lengthOk(long))  return long;
+    if (AB.lengthOk(short)) return short;
+    // Prefer the longer form when both miss, unless it breaches the ceiling.
+    return AB.wordCount(long) <= AB.MAX_WORDS ? long : short;
+  })();
+
+  const brandAnswerHtml = brandAnswerBlock ? `
+          <section class="da-answer-block" aria-labelledby="bp-answer-heading">
+            <h2 class="da-answer-label" id="bp-answer-heading">Quick Answer</h2>
+            <p class="da-answer-text">${escHtml(brandAnswerBlock)}</p>
+          </section>` : '';
+
   // Meta line: Founded YYYY · Headquarters (category already shown as badge)
   const metaParts = [];
   if (brand.founded)      metaParts.push(`Founded ${brand.founded}`);
@@ -868,6 +918,7 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
             </div>
           </div>
           <p class="bp-description" id="bp-description">${escHtml(stripEmDashes(brand.description || ''))}</p>
+${brandAnswerHtml}
         </div>
       </section>
 

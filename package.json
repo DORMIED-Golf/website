@@ -2,7 +2,7 @@
   "name": "dormied-website",
   "version": "1.0.0",
   "private": true,
-  "description": "DORMIED — Golf's brand desk. 215 brands. 10 markets. Ranked monthly.",
+  "description": "DORMIED \u2014 Golf's brand desk. 215 brands. 10 markets. Ranked monthly.",
   "scripts": {
     "dev": "python3 -m http.server 8080",
     "generate-brands": "node scripts/generate-brand-page.js",
@@ -20,7 +20,8 @@
     "verify:sitemap": "node scripts/verify-sitemap.js",
     "regenerate:search-index": "node scripts/generate-search-index.js",
     "deploy": "vercel --prod",
-    "verify:css": "node scripts/verify-css-parity.js"
+    "verify:css": "node scripts/verify-css-parity.js",
+    "generate-llms": "node scripts/generate-llms-txt.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",
