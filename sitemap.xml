@@ -2518,7 +2518,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (503) ── -->
+  <!-- ── News articles (504) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3187,6 +3187,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaway-logo-fall-polo-royalty-check-hero.jpg</image:loc>
       <image:title>The Callaway Logo on That Fall Polo Is a Royalty Check, Not a Product Decision</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/callaway-none-pattern-inside-2026-lineup/</loc>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaway-none-pattern-inside-2026-lineup-hero.jpg</image:loc>
+      <image:title>Longest In Four Iron Categories, First In None: The Pattern Inside Callaway&apos;s 2026 Lineup</image:title>
     </image:image>
   </url>
   <url>
