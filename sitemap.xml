@@ -2518,7 +2518,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (502) ── -->
+  <!-- ── News articles (503) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6823,6 +6823,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/tour-edges-zero-t-putter-line-is-a-direct-shot-at-the-199-price-point-2026-05-21-hero.jpg</image:loc>
       <image:title>Tour Edge&apos;s Zero T Putter Line Is a Direct Shot at the $199 Price Point Nobody Owns</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/trackman-womens-golf-shotlink/</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/trackman-womens-golf-shotlink-hero.png</image:loc>
+      <image:title>Women&apos;s Golf Never Got a ShotLink. Trackman&apos;s Solheim Cup Deal Is the Workaround.</image:title>
     </image:image>
   </url>
   <url>
