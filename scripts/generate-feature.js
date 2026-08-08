@@ -154,9 +154,9 @@ const FEATURES = {
     dateModified: '2026-08-01T00:00:00.000Z',
     publishedAt: '2026-08-01T15:00:00.000Z',
     keyTakeaways: [
-      'Built by Michael Huynh, credited with inventing the golf jogger.',
-      'A health scare is what started the brand, not a market gap.',
-      'The DORMIED Index tracks its rise out of Los Angeles.',
+      'A British luxury golf apparel brand launched in late July 2026 by a group that includes Manchester United midfielder Mason Mount.',
+      'Chapter 1, the first collection, prices polos at $95 and outerwear from $140 to $200.',
+      'It enters the DORMIED Index at 215 of 215 with a DI score of 0.0 and zero recorded searches, the only brand of the 215 in that position.',
     ],
     metaDescription: "What is Maejer Golf? Mason Mount's British luxury golf brand launched in July 2026 and enters the DORMIED Index at 215 of 215 with zero recorded searches. Who owns it, what it costs, and what happens next.",
     seoKeywords: ['maejer golf', 'what is maejer golf', 'who owns maejer golf', 'mason mount golf brand', 'maejer', 'mason mount handicap', 'owen farrell golf brand'],
