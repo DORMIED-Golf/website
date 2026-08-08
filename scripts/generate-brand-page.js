@@ -582,7 +582,7 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
 
   const brandAnswerHtml = brandAnswerBlock ? `
           <section class="da-answer-block" aria-labelledby="bp-answer-heading">
-            <h2 class="da-answer-label" id="bp-answer-heading">Quick Answer</h2>
+            <h2 class="da-answer-label" id="bp-answer-heading">Key Takeaways</h2>
             <p class="da-answer-text">${escHtml(brandAnswerBlock)}</p>
           </section>` : '';
 
@@ -662,11 +662,16 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
   const faqItems = buildFaqItems({ brand, stats, dormiedData, onTourData, facts });
   const faqHtml = faqItems.length === 0 ? '' : `
             <!-- ── Frequently Asked ── -->
-            <section class="bp-section" aria-labelledby="bp-faq-heading">
-              <h2 class="bp-section-title bp-section-title--green" id="bp-faq-heading">Frequently Asked</h2>
-${faqItems.map(it => `              <div class="bp-faq-item">
-                <p class="bp-faq-q">${escHtml(it.q)}</p>
-                <p class="bp-faq-a">${it.aHtml}</p>
+            <!-- Uses the article FAQ markup (da-bottom-section / da-bottom-heading /
+                 da-faq-q / da-faq-a) so the block is identical across articles,
+                 features, WITB and brand pages. The old bp-faq-* classes rendered
+                 the question as a plain bold paragraph and the heading in a
+                 different weight, which is what made the four page types diverge. -->
+            <section class="da-bottom-section da-faq-section" aria-labelledby="bp-faq-heading">
+              <h2 class="da-bottom-heading" id="bp-faq-heading">Frequently Asked Questions</h2>
+${faqItems.map(it => `              <div class="da-faq-item">
+                <h3 class="da-faq-q">${escHtml(it.q)}</h3>
+                <p class="da-faq-a">${it.aHtml}</p>
               </div>`).join('\n')}
             </section>`;
   const faqJsonLdTag = faqItems.length === 0 ? '' : `\n  <script type="application/ld+json">${JSON.stringify({
@@ -917,8 +922,8 @@ ${faqItems.map(it => `              <div class="bp-faq-item">
               <a href="/rankings/" class="bp-rank-index-link" style="display:block;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--clr-green,#4a7c4a);text-decoration:none;opacity:.85" aria-label="View on the DORMIED Index">View Index →</a>
             </div>
           </div>
-          <p class="bp-description" id="bp-description">${escHtml(stripEmDashes(brand.description || ''))}</p>
 ${brandAnswerHtml}
+          <p class="bp-description" id="bp-description">${escHtml(stripEmDashes(brand.description || ''))}</p>
         </div>
       </section>
 

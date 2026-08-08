@@ -722,7 +722,6 @@ function buildPage(F, parsed, dormiedLatestHtml) {
       <h1 class="sc-article-title">${escHtml(F.title)}</h1>
       ${subtitleHtml}
       <p class="sc-article-byline">By ${escHtml(F.byline)} &nbsp;·&nbsp; <time datetime="${dateISO}">${escHtml(dateFormatted)}</time> &nbsp;·&nbsp; ${escHtml(F.category)} &nbsp;·&nbsp; ${escHtml(rt)}</p>
-${takeawaysHtml}
       ${lastUpdHtml}
     </header>
 
@@ -733,7 +732,7 @@ ${takeawaysHtml}
           <div class="sc-article-main">
 
             ${heroHtml}
-
+${takeawaysHtml}
             <div class="da-article-body">
               ${bioHtml}
               ${bodyHtml}

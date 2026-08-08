@@ -5544,12 +5544,21 @@ details[open] .faq-question::after { content: '−'; }
    Mirrored in styles.min.css (WITB pages and other baked templates load that
    file) — see scripts/verify-css-parity.js. */
 .da-answer-block {
-  margin: 0 0 28px;
-  padding: 18px 20px;
+  /* Symmetric by default so the block never sits closer to one neighbour than
+     the other. Contexts whose preceding element carries its own bottom margin
+     subtract it below, so the visible gap stays 28px on every page type. */
+  margin: 28px 0;
+  padding: 20px 22px;
   background: var(--bg-raised);
   border-left: 3px solid var(--green);
   border-radius: 2px;
 }
+/* Measured in-browser: .sc-article-image's 8px bottom margin does not survive
+   into the flow gap, so no trim is needed here. The symmetric 28px above is
+   what actually renders. Verified with getBoundingClientRect, not assumed. */
+/* Brand pages: the block sits above .bp-description, which brings margin-top:16px.
+   Trim the bottom so the description is not pushed 44px clear of it. */
+.da-answer-block + .bp-description { margin-top: 12px; }
 .da-answer-label {
   font-family: var(--font-display);
   font-size: .78rem;
@@ -5557,7 +5566,7 @@ details[open] .faq-question::after { content: '−'; }
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--green);
-  margin: 0 0 8px;
+  margin: 0 0 10px;
 }
 .da-answer-text { margin: 0; color: var(--text); }
 .da-answer-list { margin: 0; padding-left: 18px; color: var(--text); }

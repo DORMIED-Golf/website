@@ -1177,7 +1177,6 @@ function generateArticleHtml(opts) {
       <h1 class="sc-article-title">${escHtml(title)}</h1>
       <p class="sc-article-subtitle">${escHtml(meta_description)}</p>
       <p class="sc-article-byline">By ${escHtml(author)} &nbsp;·&nbsp; <time datetime="${dateISO}">${escHtml(dateFormatted)}</time> &nbsp;·&nbsp; ${escHtml(category)} &nbsp;·&nbsp; ${escHtml(readTime)}</p>
-${answerHtml}
     </header>
 
     <!-- ══ ARTICLE ════════════════════════════════════════════════════════════ -->
@@ -1189,7 +1188,7 @@ ${answerHtml}
           <div class="sc-article-main">
 
             ${imageHtml}
-
+${answerHtml}
             <div class="da-article-body">
               ${bodyHtml}
             </div>

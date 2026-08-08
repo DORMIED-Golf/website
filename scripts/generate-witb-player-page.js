@@ -833,8 +833,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
 
   const witbFaqHtml = witbFaq.length ? `
           <!-- FAQ -->
-          <section class="witb-section da-faq-section" aria-labelledby="witb-faq-heading">
-            <h2 class="witb-section-heading" id="witb-faq-heading">Frequently Asked Questions</h2>
+          <section class="da-bottom-section da-faq-section" aria-labelledby="witb-faq-heading">
+            <h2 class="da-bottom-heading" id="witb-faq-heading">Frequently Asked Questions</h2>
             ${witbFaq.map(x => `<div class="da-faq-item"><h3 class="da-faq-q">${esc(x.q)}</h3><p class="da-faq-a">${esc(x.a)}</p></div>`).join('\n            ')}
           </section>` : '';
 
@@ -1237,9 +1237,14 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
         <!-- MAIN CONTENT COLUMN -->
         <article class="bp-sections-col da-article-body">
 
-${witbAnswerHtml}
           <!-- 1. LEDE -- full content width, no max-width cap -->
+          <!-- The answer block sits inside this section rather than as a bare
+               first child of .da-article-body: it belongs to the equipment
+               overview, and keeping it out of that container's top level also
+               keeps it out of Mediavine's content-slot scan, which was observed
+               stamping data-slot-rendered-content on it when it sat there. -->
           <section class="witb-section" style="padding-top:24px;border-bottom:none" aria-label="Equipment overview">
+${witbAnswerHtml}
             <p class="witb-player-lede">${esc(ledes.lede)}</p>
           </section>
 
