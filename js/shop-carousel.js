@@ -57,9 +57,14 @@
   }
 
   function cardHtml(p) {
+    // Amazon rows never carry a price: the Associates agreement only licenses
+    // prices pulled through their API, so the card sends the reader to Amazon
+    // to see it rather than showing a number we cannot legitimately display or
+    // keep fresh. That also means the staleness guard below does not apply.
+    var isAmazon = p.source === 'amazon';
     var stale = isStale(p.feed_updated_at);
     var priceHtml = '';
-    if (!stale && p.current_price != null) {
+    if (!isAmazon && !stale && p.current_price != null) {
       var onSale = p.original_price != null && Number(p.original_price) > Number(p.current_price);
       priceHtml =
         '<span class="bp-shop-price">' + esc(money(p.current_price, p.currency)) + '</span>' +
@@ -70,16 +75,23 @@
     var img = p.image_url
       ? '<img class="bp-shop-thumb" src="' + esc(p.image_url) + '" alt="" loading="lazy" width="300" height="300">'
       : '';
+    // Amazon links go straight to the tagged amzn.to URL the API hands back,
+    // not through /api/go/. Everything else keeps the redirect so the click is
+    // logged and the network's tracking_url stays server-side.
+    var href = isAmazon
+      ? esc(p.go_url)
+      : '/api/go/' + encodeURIComponent(p.id) + '?src=brand&amp;slug=' + encodeURIComponent(slug);
+    var cta = isAmazon ? 'Check price on Amazon' : 'BUY NOW';
+
     // rel="sponsored nofollow" is mandatory on every affiliate link.
     return '' +
-      '<article class="bp-shop-card">' +
+      '<article class="bp-shop-card' + (isAmazon ? ' bp-shop-card--amazon' : '') + '">' +
         '<div class="bp-shop-thumb-wrap">' + img + '</div>' +
         '<div class="bp-shop-body">' +
           '<p class="bp-shop-name">' + esc(p.name) + '</p>' +
           '<div class="bp-shop-price-row">' + priceHtml + '</div>' +
-          '<a class="bp-shop-buy" href="/api/go/' + encodeURIComponent(p.id) +
-             '?src=brand&amp;slug=' + encodeURIComponent(slug) + '"' +
-             ' rel="sponsored nofollow" target="_blank">BUY NOW</a>' +
+          '<a class="bp-shop-buy" href="' + href + '"' +
+             ' rel="sponsored nofollow" target="_blank">' + esc(cta) + '</a>' +
         '</div>' +
       '</article>';
   }

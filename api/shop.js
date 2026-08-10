@@ -41,21 +41,39 @@ const SELECT_COLS = [
   'discount_percentage', 'currency', 'promo_code', 'promo_title',
   'feed_updated_at', 'item_group_id', 'is_parent', 'first_seen_at',
   'source_published_at',
+  // source drives the card variant (Amazon rows render price-free).
+  // tracking_url is selected ONLY so the Amazon branch of shape() can emit it;
+  // it is never returned for any other source. See the note in shape().
+  'source', 'tracking_url',
 ].join(',');
 
 function shape(row) {
+  const isAmazon = row.source === 'amazon';
   return {
     id:                  row.id,
     name:                row.name,
     image_url:           row.image_url,
-    current_price:       row.current_price,
-    original_price:      row.original_price,
-    discount_percentage: row.discount_percentage,
+    // Amazon rows carry no price on purpose. The Associates agreement only
+    // licenses prices obtained through their API, which needs 10 qualifying
+    // sales in 30 days that DORMIED does not have yet. A "Check price on
+    // Amazon" card sidesteps the whole price-freshness regime rather than
+    // displaying a number we are not entitled to show or able to refresh.
+    current_price:       isAmazon ? null : row.current_price,
+    original_price:      isAmazon ? null : row.original_price,
+    discount_percentage: isAmazon ? null : row.discount_percentage,
     currency:            row.currency,
     promo_code:          row.promo_code,
     promo_title:         row.promo_title,
     feed_updated_at:     row.feed_updated_at,
-    go_url:              `/api/go/${row.id}`,
+    source:              row.source,
+    // Every other network's tracking_url stays server-side and is only ever
+    // reachable through /api/go/{id}. Amazon is the deliberate exception: the
+    // value is a public amzn.to share link carrying the tag, so there is
+    // nothing to conceal, and Amazon's policy on redirecting links is strict
+    // enough that sending the click straight to them is the safer read. The
+    // cost is that Amazon clicks are not logged; flip this back to go_url if
+    // Associates support confirms the redirect is acceptable.
+    go_url:              isAmazon ? row.tracking_url : `/api/go/${row.id}`,
   };
 }
 
@@ -135,19 +153,39 @@ module.exports = async (req, res) => {
     const minPrice = programRow && programRow.min_display_price !== null
       ? Number(programRow.min_display_price) : 1.00;
 
+    // ── Direct-deal precedence ────────────────────────────────────────────
+    // Where DORMIED has its own affiliate relationship (Cobra, Puma, Malbon,
+    // Pins & Aces today) the commission is materially better than Amazon's, so
+    // those brands must never surface an Amazon link. Decided on the products
+    // actually held rather than on affiliate_programs rows, so it stays correct
+    // if a program exists but its catalogue is empty, and it needs no upkeep
+    // when a new direct deal is signed.
+    const { count: directCount } = await supabase
+      .from('affiliate_products')
+      .select('*', { count: 'exact', head: true })
+      .eq('dormied_brand_slug', brand)
+      .eq('is_active', true)
+      .neq('source', 'amazon');
+    const amazonOnly = !directCount;
+
     // Pull every in-stock, active row for the brand, then collapse in code.
     // Paginating in SQL before collapsing would give wrong page sizes, since a
     // page of rows can contain many variants of the same product.
     const rows = [];
     for (let from = 0; ; from += 1000) {
-      const { data, error } = await supabase
+      let q = supabase
         .from('affiliate_products')
         .select(SELECT_COLS)
         .eq('dormied_brand_slug', brand)
         .eq('is_active', true)
-        .eq('stock_availability', 'InStock')
-        .gte('current_price', minPrice)
-        .range(from, from + 999);
+        .eq('stock_availability', 'InStock');
+      // The price floor exists to strip $0.01 add-on SKUs out of a real feed.
+      // Amazon rows are hand-curated and deliberately carry a NULL price, and
+      // `NULL >= 1.00` is NULL in Postgres, so applying the floor to them would
+      // silently drop every one.
+      q = amazonOnly ? q.eq('source', 'amazon')
+                     : q.neq('source', 'amazon').gte('current_price', minPrice);
+      const { data, error } = await q.range(from, from + 999);
       if (error) throw new Error(error.message);
       if (!data || !data.length) break;
       rows.push(...data);

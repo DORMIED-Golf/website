@@ -42,6 +42,14 @@ const TYPE_KEYWORDS = {
   'iron':          ['iron'],
   'wedge':         ['wedge'],
   'putter':        ['putter'],
+  // Balls and grips were absent while every sellable catalogue was clubs and
+  // apparel, which meant a bag's ball and grip rows could never match anything.
+  // The hand-curated Amazon rows are mostly exactly those two types, so without
+  // these a player carrying a Pro V1x got no match despite us selling it.
+  // "Ball cap" and similar are not a risk here: scoreCandidate demands full
+  // model-token coverage, so a cap can never satisfy "Pro V1x Left Dash".
+  'ball':          ['ball', 'balls'],
+  'grip':          ['grip', 'grips'],
 };
 
 // Tokens dropped from a BAG MODEL before matching. Kept deliberately tiny.

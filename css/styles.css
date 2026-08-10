@@ -7137,6 +7137,20 @@ details[open] .faq-question::after { content: '−'; }
   text-decoration: none;
   transition: opacity 0.15s;
 }
+/* Amazon shop cards. The CTA is "Check price on Amazon" rather than a price
+   plus BUY NOW, because Associates only licenses prices pulled through their
+   API. That label is roughly three times the width of "BUY NOW", so it needs
+   to shrink and wrap rather than overflow a 300px card. The empty
+   .bp-shop-price-row is collapsed so the button does not sit below a phantom
+   gap where the price would have been. */
+.bp-shop-card--amazon .bp-shop-price-row:empty { display: none; }
+.bp-shop-card--amazon .bp-shop-buy {
+  font-size: .72rem;
+  padding: 9px 8px;
+  line-height: 1.25;
+  letter-spacing: .01em;
+}
+
 /* Raised specificity: a lower-specificity `.bp-shop-buy { color }` was losing the
    cascade to an anchor rule elsewhere in the sheet, leaving the label --text
    instead of --green. Two classes wins cleanly without !important. */

@@ -28,6 +28,7 @@ const feedBake         = require('./feed-bake');
 const { dataVersion } = require('./lib/data-version');
 const { brandAffiliateLink } = require('./lib/brand-affiliate-links');
 const AB = require('./lib/answer-block');
+const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const SITE_ROOT = path.resolve(__dirname, '..');
@@ -1547,14 +1548,8 @@ async function main() {
   // other brand page emits nothing at all for it.
   let affiliateSlugs = new Set();
   try {
-    const { data: progRows, error: progErr } = await supabase
-      .from('affiliate_programs')
-      .select('dormied_brand_slug')
-      .eq('status', 'active')
-      .not('dormied_brand_slug', 'is', null);
-    if (progErr) console.warn('[brand-page] affiliate programs fetch failed (no shop carousels):', progErr.message);
-    affiliateSlugs = new Set((progRows || []).map(r => r.dormied_brand_slug));
-    console.log(`[brand-page] Affiliate programs loaded: ${affiliateSlugs.size} brand(s) get a shop carousel`);
+    affiliateSlugs = await fetchSellableBrandSlugs(supabase);
+    console.log(`[brand-page] Sellable brands: ${affiliateSlugs.size} brand(s) get a shop carousel`);
   } catch (e) {
     console.warn('[brand-page] affiliate programs fetch failed:', e.message);
   }

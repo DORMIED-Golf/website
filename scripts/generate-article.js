@@ -388,6 +388,7 @@ const {
 // Answer-block label rule and FAQ grounding, shared with the backfill script and
 // the WITB / brand / feature generators so the rules cannot diverge.
 const AB = require('./lib/answer-block');
+const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
 
 function formatDate(isoDate) {
   const d = new Date(isoDate);
@@ -1391,14 +1392,8 @@ async function main() {
   // break article generation — it just means no carousels this run.
   let affiliateBrandSlugs = new Set();
   try {
-    const { data: progRows, error: progErr } = await supabase
-      .from('affiliate_programs')
-      .select('dormied_brand_slug')
-      .eq('status', 'active')
-      .not('dormied_brand_slug', 'is', null);
-    if (progErr) console.warn('[generate] affiliate programs fetch failed (no shop carousels):', progErr.message);
-    affiliateBrandSlugs = new Set((progRows || []).map(r => r.dormied_brand_slug));
-    console.log(`[generate] Affiliate programs loaded: ${affiliateBrandSlugs.size} brand(s) eligible for an article carousel`);
+    affiliateBrandSlugs = await fetchSellableBrandSlugs(supabase);
+    console.log(`[generate] Sellable brands: ${affiliateBrandSlugs.size} brand(s) eligible for an article carousel`);
   } catch (e) {
     console.warn('[generate] affiliate programs fetch failed:', e.message);
   }

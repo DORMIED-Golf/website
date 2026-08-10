@@ -29,6 +29,7 @@ const { pageEligible } = require('./witb-page-eligibility');
 const feedBake         = require('./feed-bake');
 const { matchBagToProducts } = require('./lib/witb-shop-match');
 const AB               = require('./lib/answer-block');
+const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
 
 // Explicit bag-item -> product overrides, keyed 'brand|club_type|normalised model'.
 // The only way a model too short to be distinctive (e.g. Cobra's "SB") can reach
@@ -1730,9 +1731,7 @@ async function main() {
   // the disclosure says so rather than implying it is the whole bag.
   let shopBag = null;
   try {
-    const { data: progs } = await sb.from('affiliate_programs')
-      .select('dormied_brand_slug').eq('status', 'active').not('dormied_brand_slug', 'is', null);
-    const sellable = new Set((progs || []).map(r => r.dormied_brand_slug));
+    const sellable = await fetchSellableBrandSlugs(sb);
 
     const bagItems = currentItems
       .map(i => ({
