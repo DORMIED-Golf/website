@@ -346,16 +346,19 @@ function buildWitbAnswerBlock(name, items, currentDate) {
     : `${parts.slice(0, -1).join(', ')}, and ${parts[parts.length - 1]}`;
 
   const withWedge = [];
-  if (driver) withWedge.push(`a ${driver} driver`);
+  // Brand names that open on a vowel are common enough here (Odyssey, Aldila,
+  // Apex, Evnroll) that a hardcoded "a" reads as a typo on a live page.
+  const aOrAn = s => `${/^[aeiou]/i.test(s) ? 'an' : 'a'} ${s}`;
+  if (driver) withWedge.push(`${aOrAn(driver)} driver`);
   if (irons)  withWedge.push(`${irons} irons`);
   if (wedge)  withWedge.push(`${wedge} wedges`);
-  if (putter) withWedge.push(`a ${putter} putter`);
+  if (putter) withWedge.push(`${aOrAn(putter)} putter`);
   if (ball)   withWedge.push(`the ${ball} ball`);
   if (!withWedge.length) return '';
 
   const driverRow = firstOfType(items, 'driver');
   const shaftSentence = driverRow && driverRow.raw_shaft
-    ? ` The driver is built with a ${dedupeShaft(driverRow.raw_shaft)} shaft.`
+    ? ` The driver is built with ${aOrAn(dedupeShaft(driverRow.raw_shaft))} shaft.`
     : '';
 
   const sentence = (parts, tail) => `${name} plays ${join(parts)}, as recorded in the ${currentDate} bag snapshot.${tail}`;
