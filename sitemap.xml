@@ -2518,7 +2518,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (507) ── -->
+  <!-- ── News articles (508) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3737,6 +3737,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/flightscopes-quiet-play-for-the-coaching-layer-gcquad-and-trackman-cant-2026-06-04-hero.png</image:loc>
       <image:title>FlightScope&apos;s Quiet Play for the Coaching Layer GCQuad and Trackman Can&apos;t Reach</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/footjoy-playoff-players-spikes/</loc>
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/footjoy-playoff-players-spikes-hero.png</image:loc>
+      <image:title>Nine of Ten Playoff Players Wear Spikes. Retail Went the Other Way, and FootJoy Sells Both.</image:title>
     </image:image>
   </url>
   <url>
