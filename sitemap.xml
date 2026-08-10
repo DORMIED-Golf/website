@@ -2518,7 +2518,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (504) ── -->
+  <!-- ── News articles (506) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3157,6 +3157,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaway-1600-rusting-blade-tech-retail-hero.jpg</image:loc>
       <image:title>Callaway&apos;s $1,600 Rusting Blade Has No Tech, No Retail and About 200 Sets. The Distribution Is the Real Story.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/callaway-50-1-tariff-refunds-business/</loc>
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/callaway-50-1-tariff-refunds-business-hero.jpg</image:loc>
+      <image:title>50.1% Gross Margin, $11 Million in Tariff Refunds and the Business Callaway Deleted to Get There</image:title>
     </image:image>
   </url>
   <url>
@@ -5703,6 +5713,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sun-day-reds-womens-osprey-makes-the-case-that-golf-shoes-should-work-2026-05-21-hero.jpg</image:loc>
       <image:title>Sun Day Red&apos;s Women&apos;s Osprey Makes the Case That Golf Shoes Should Work Everywhere</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/sun-mountain-cart-strap-covers/</loc>
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/sun-mountain-cart-strap-covers-hero.webp</image:loc>
+      <image:title>The Cart Strap Always Covers Your Pockets. Sun Mountain Finally Engineered Around It.</image:title>
     </image:image>
   </url>
   <url>
