@@ -2518,7 +2518,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (509) ── -->
+  <!-- ── News articles (510) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6883,6 +6883,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/tour-edges-zero-t-putter-line-is-a-direct-shot-at-the-199-price-point-2026-05-21-hero.jpg</image:loc>
       <image:title>Tour Edge&apos;s Zero T Putter Line Is a Direct Shot at the $199 Price Point Nobody Owns</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/trackman-25-credited-teeing-system-launch/</loc>
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/trackman-25-credited-teeing-system-launch-hero.jpg</image:loc>
+      <image:title>A 25% Revenue Jump Got Credited to the Teeing System, Not the Launch Monitor. Trackman Has a Range Problem.</image:title>
     </image:image>
   </url>
   <url>
