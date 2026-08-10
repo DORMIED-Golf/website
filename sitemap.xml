@@ -2518,7 +2518,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (510) ── -->
+  <!-- ── News articles (511) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4117,6 +4117,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/gotterups-third-win-is-bridgestones-best-marketing-in-a-decade-2026-07-06-hero.jpg</image:loc>
       <image:title>Gotterup&apos;s Third Win Is Bridgestone&apos;s Best Marketing in a Decade</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/graphite-design-shafts-bag/</loc>
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/graphite-design-shafts-bag-hero.png</image:loc>
+      <image:title>Four Shafts in the Winning Bag, One Profile, and It Launched Before Adjustable Hosels: Graphite Design&apos;s DI Problem</image:title>
     </image:image>
   </url>
   <url>
