@@ -2518,7 +2518,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (506) ── -->
+  <!-- ── News articles (507) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3167,6 +3167,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaway-50-1-tariff-refunds-business-hero.jpg</image:loc>
       <image:title>50.1% Gross Margin, $11 Million in Tariff Refunds and the Business Callaway Deleted to Get There</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/callaway-777-juniors-42-countries-logo/</loc>
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/callaway-777-juniors-42-countries-logo-hero.jpg</image:loc>
+      <image:title>777 Juniors From 42 Countries and One Logo: Inside Callaway&apos;s Cheapest Marketing Buy</image:title>
     </image:image>
   </url>
   <url>
