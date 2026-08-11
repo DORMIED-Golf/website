@@ -2530,7 +2530,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (515) ── -->
+  <!-- ── News articles (516) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5805,6 +5805,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sun-mountain-hired-joel-dahmen-star-hero.jpg</image:loc>
       <image:title>Sun Mountain Hired Joel Dahmen to Star in a Seven-Part Documentary. About Bags.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/sun-mountain-posts-ordering-portal/</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/sun-mountain-posts-ordering-portal-hero.png</image:loc>
+      <image:title>Nobody Posts About an Ordering Portal. Sun Mountain&apos;s RepSpark Move Matters Anyway.</image:title>
     </image:image>
   </url>
   <url>
