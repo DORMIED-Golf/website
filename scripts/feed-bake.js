@@ -306,12 +306,41 @@ async function fetchTopStoriesArticles(supabase, dormiedData, limit) {
     });
 
     if (dormied.length >= 3) {
-      return dormied.slice(0, limit).map(function (row) {
+      var picked = dormied.slice(0, limit);
+
+      // article_clicks has no author column, so this module used to derive one
+      // from the article's first brand. That guess disagrees with the byline on
+      // the article itself whenever a piece was not written by the desk that
+      // owns its brand: "Who Owns Pins & Aces" and "Why Is Malbon So Popular"
+      // are both Adam's, but both brands are Bags & Accessories, so the derived
+      // value read James K. on the homepage and Adam R. on the article.
+      //
+      // The real byline is one lookup away, so take it. Derivation stays only
+      // as the fallback for a click row with no matching article.
+      var slugs = picked
+        .map(function (r) { return (r.url.match(/^\/news\/([^/]+)\/?$/) || [])[1]; })
+        .filter(Boolean);
+
+      var authorBySlug = {};
+      if (slugs.length) {
+        var res = await supabase
+          .from('dormied_articles')
+          .select('slug,author')
+          .in('slug', slugs);
+        if (res.error) {
+          console.warn('[feed-bake] top-stories author lookup failed:', res.error.message);
+        } else {
+          (res.data || []).forEach(function (a) { if (a.author) authorBySlug[a.slug] = a.author; });
+        }
+      }
+
+      return picked.map(function (row) {
+        var slug = (row.url.match(/^\/news\/([^/]+)\/?$/) || [])[1];
         var firstBrandId = (row.brand_ids && row.brand_ids[0]) || '';
         return {
           title:    row.title,
           url:      row.url,
-          author:   authorForBrandId(firstBrandId),
+          author:   authorBySlug[slug] || authorForBrandId(firstBrandId),
           pubDate:  row.pub_date || row.last_clicked || '',
           imageUrl: row.image_url || null,
           brandIds: row.brand_ids || [],
