@@ -2518,7 +2518,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (512) ── -->
+  <!-- ── News articles (514) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3577,6 +3577,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/eight-years-of-amateur-driving-data-confirms-what-you-already-suspected-2026-05-05-hero.png</image:loc>
       <image:title>Eight Years of Amateur Driving Data Confirms What You Already Suspected About Your Slice</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/fairway-greene-stretch-layers-merino-sweater/</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/fairway-greene-stretch-layers-merino-sweater-hero.jpg</image:loc>
+      <image:title>Five Stretch Layers and One Merino Sweater: Fairway &amp; Greene Is Playing a Different Game</image:title>
     </image:image>
   </url>
   <url>
@@ -5523,6 +5533,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/shot-scopes-survey-says-the-rangefinder-only-golfer-is-disappearing-thats-2026-07-15-hero.jpg</image:loc>
       <image:title>Shot Scope&apos;s Survey Says the Rangefinder-Only Golfer Is Disappearing. That&apos;s Also a Product Roadmap.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/snell-golf-20-36-balls/</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/snell-golf-20-36-balls-hero.jpg</image:loc>
+      <image:title>20 of 36 Balls Over the USGA Weight Limit. Snell&apos;s Cast Urethane Return Is a Factory Story.</image:title>
     </image:image>
   </url>
   <url>
