@@ -2530,7 +2530,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (516) ── -->
+  <!-- ── News articles (517) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6965,6 +6965,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/trackman-25-credited-teeing-system-launch-hero.jpg</image:loc>
       <image:title>A 25% Revenue Jump Got Credited to the Teeing System, Not the Launch Monitor. Trackman Has a Range Problem.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/trackman-weekday-rate/</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/trackman-weekday-rate-hero.jpg</image:loc>
+      <image:title>A $40 Weekday Rate Now Buys You a Trackman. Ask What That Does to the Brand.</image:title>
     </image:image>
   </url>
   <url>
