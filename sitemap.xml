@@ -2518,7 +2518,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (514) ── -->
+  <!-- ── News articles (515) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6053,6 +6053,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/taylormade-x-tag-heuer-a-2550-smart-watch-and-a-putter-that-doubles-as-a-2026-06-26-hero.jpg</image:loc>
       <image:title>TaylorMade x TAG Heuer: A $2,550 Smart Watch and a Putter That Doubles as a Marketing Asset</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/taylormade-years-testing-owns-driver/</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/taylormade-years-testing-owns-driver-hero.jpg</image:loc>
+      <image:title>Two Wins In Ten Years Of Most Wanted Testing, And TaylorMade Still Owns The Driver Rack</image:title>
     </image:image>
   </url>
   <url>
