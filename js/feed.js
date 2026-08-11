@@ -428,28 +428,54 @@
 
       if (dormied.length >= 3) {
         var allBrands = getAllBrands();
-        var articles  = dormied.slice(0, limit).map(function (row) {
-          // Derive author from the primary brand's category
-          var firstBrandId = row.brand_ids && row.brand_ids[0] || '';
-          var firstBrand   = null;
-          for (var j = 0; j < allBrands.length; j++) {
-            if (allBrands[j].id === firstBrandId) { firstBrand = allBrands[j]; break; }
-          }
-          var derivedAuthor = firstBrand ? authorFromCategory(firstBrand.category) : AUTHOR_DEFAULT;
-          return {
-            title:     row.title,
-            url:       row.url,
-            author:    derivedAuthor,
-            pubDate:   row.pub_date || row.last_clicked || '',
-            imageUrl:  row.image_url || null,
-            brandIds:  row.brand_ids || [],
-            isDormied: true,
-          };
+        var picked    = dormied.slice(0, limit);
+
+        // article_clicks carries no author, so this used to derive one from the
+        // article's first brand. That guess is wrong whenever a piece was not
+        // written by the desk that owns its brand, and because this widget
+        // replaces innerHTML it overwrote a correctly baked byline with the
+        // wrong one: "Who Owns Pins & Aces" is Adam's, but the brand is Bags &
+        // Accessories, so the card re-rendered as James K. a moment after load.
+        // Fetch the real bylines by slug and keep derivation as the fallback.
+        var slugs = picked
+          .map(function (r) { return (r.url.match(/^\/news\/([^/]+)\/?$/) || [])[1]; })
+          .filter(Boolean);
+
+        var authorReq = slugs.length
+          ? fetch(SB_URL + '/rest/v1/dormied_articles?select=slug,author&slug=in.(' +
+                  encodeURIComponent(slugs.join(',')) + ')',
+              { headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON } })
+              .then(function (r) { return r.ok ? r.json() : []; })
+              .catch(function () { return []; })
+          : Promise.resolve([]);
+
+        return authorReq.then(function (authorRows) {
+          var authorBySlug = {};
+          (authorRows || []).forEach(function (a) { if (a.author) authorBySlug[a.slug] = a.author; });
+
+          var articles = picked.map(function (row) {
+            var slug         = (row.url.match(/^\/news\/([^/]+)\/?$/) || [])[1];
+            var firstBrandId = row.brand_ids && row.brand_ids[0] || '';
+            var firstBrand   = null;
+            for (var j = 0; j < allBrands.length; j++) {
+              if (allBrands[j].id === firstBrandId) { firstBrand = allBrands[j]; break; }
+            }
+            var derivedAuthor = firstBrand ? authorFromCategory(firstBrand.category) : AUTHOR_DEFAULT;
+            return {
+              title:     row.title,
+              url:       row.url,
+              author:    authorBySlug[slug] || derivedAuthor,
+              pubDate:   row.pub_date || row.last_clicked || '',
+              imageUrl:  row.image_url || null,
+              brandIds:  row.brand_ids || [],
+              isDormied: true,
+            };
+          });
+          el.innerHTML = articles.map(function (a) {
+            return renderArticleCard(a, true, allBrands);
+          }).join('');
+          appendHomeStoriesSeeAll(el);
         });
-        el.innerHTML = articles.map(function (a) {
-          return renderArticleCard(a, true, allBrands);
-        }).join('');
-        appendHomeStoriesSeeAll(el);
       } else {
         // Not enough click data — fall back to latest DORMIED articles
         renderHomeStoriesFallback(el);

@@ -28,8 +28,9 @@
   /* ── Author derivation (mirrors api/dormied-articles.js) ───────────────── */
   function authorFromCategory(category) {
     var cat = (category || '').toLowerCase();
-    if (cat.indexOf('apparel') !== -1 || cat.indexOf('footwear') !== -1 || cat.indexOf('bag') !== -1) return 'Adam';
-    return 'Travis';
+    if (/bags? & accessories|\bbags?\b|accessor/.test(cat)) return 'James K.';
+    if (/apparel|footwear|shoe/.test(cat))                  return 'Adam R.';
+    return 'Travis R.';
   }
 
   /* ── Custom Select Component ─────────────────────────────────────────────── */
