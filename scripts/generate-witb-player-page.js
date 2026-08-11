@@ -649,7 +649,7 @@ Return valid JSON only, no markdown fences:
 async function fetchPlayerData(sb, slug) {
   const { data: player, error } = await sb
     .from('witb_players')
-    .select('id, name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation, first_seen, last_updated')
+    .select('id, name, slug, owgr_rank, rolex_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation, first_seen, last_updated')
     .eq('slug', slug)
     .single();
   if (error) throw new Error(`Player not found (slug="${slug}"): ${error.message}`);
@@ -814,7 +814,7 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
 function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag }) {
-  const { name, slug, owgr_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
+  const { name, slug, owgr_rank, rolex_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
 
@@ -850,9 +850,17 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   // Do not restyle or recolor it (trademark).
   const owgrLogoHtml = `<a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank" class="owgr-logo-link" aria-label="Official World Golf Ranking"><img src="/images/owgr-logo.png" alt="Official World Golf Ranking" class="owgr-logo" height="22"></a>`;
 
-  const owgrLine = owgr_rank
-    ? `${flagHtml}${owgrLogoHtml}<span class="witb-rank-num">#${owgr_rank}</span>${owgrDate ? `<span class="witb-rank-sep">&middot;</span><span class="witb-rank-updated">UPDATED ${owgrDate}</span>` : ''}${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`
-    : `${flagHtml}${owgrLogoHtml}<span class="witb-rank-num">Unranked</span>${data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : ''}`;
+  // Rolex Women's World Golf Ranking, for players OWGR does not cover. OWGR is
+  // the men's ranking, so a women's player would otherwise read "Unranked"
+  // forever no matter how highly ranked she actually is.
+  const rolexLogoHtml = `<a href="https://www.rolexrankings.com" rel="noopener noreferrer" target="_blank" class="owgr-logo-link" aria-label="Rolex Women's World Golf Rankings"><img src="/images/rolex-rankings-logo.svg" alt="Rolex Women's World Golf Rankings" class="owgr-logo" height="22"></a>`;
+
+  const dgTail = data_golf_rank ? `<span class="witb-rank-sep">&middot;</span>DG #${data_golf_rank}` : '';
+  const owgrLine = rolex_rank
+    ? `${flagHtml}${rolexLogoHtml}<span class="witb-rank-num">#${rolex_rank}</span><span class="witb-rank-sep">&middot;</span><span class="witb-rank-updated">ROLEX RANKING</span>${dgTail}`
+    : owgr_rank
+    ? `${flagHtml}${owgrLogoHtml}<span class="witb-rank-num">#${owgr_rank}</span>${owgrDate ? `<span class="witb-rank-sep">&middot;</span><span class="witb-rank-updated">UPDATED ${owgrDate}</span>` : ''}${dgTail}`
+    : `${flagHtml}${owgrLogoHtml}<span class="witb-rank-num">Unranked</span>${dgTail}`;
 
   // ── Player brands per category (for comparison) ───────────────────────────
   // Driver / putter / ball: first item wins (only one in a bag).

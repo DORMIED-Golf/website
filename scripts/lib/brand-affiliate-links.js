@@ -27,6 +27,10 @@ const BRAND_AFFILIATE_LINKS = {
   'malbon':        'https://malbon-golf.sjv.io/ZV4jnR',
   'descente':      'https://descentesea.sjv.io/AgGRoK',
   'pins-and-aces': 'https://pinsaces.sjv.io/Gb2Rjn',
+  // Impact, same network as the .sjv.io links above; pxf.io is the other
+  // domain Impact issues vanity links on. Storefront link only for now: there
+  // is no MacGregor catalogue, so no affiliate_programs row and no carousel.
+  'macgregor':     'https://macgregor.pxf.io/rEWEGG',
 
   // Cobra and Puma Golf are CJ advertisers (affiliate_programs ids 4 and 5,
   // advertiser 6530791), not Impact, so these are CJ click links rather than

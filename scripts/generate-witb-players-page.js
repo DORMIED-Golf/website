@@ -121,10 +121,12 @@ function buildLogoStrip(brands) {
 }
 
 function buildPlayerCard(player, bagDate, filterMap, logoList) {
-  const { slug, name, owgr_rank, country_code, nation } = player;
+  const { slug, name, owgr_rank, rolex_rank, country_code, nation } = player;
 
   // Show numeric rank for all players with a rank (including sentinel 4990 — they sort last)
-  const rankDisplay = owgr_rank ? `#${owgr_rank}` : 'Unranked';
+  // Rolex rank stands in where OWGR has no entry, so a women's player is not
+  // labelled Unranked on the grid while her own page shows #277.
+  const rankDisplay = owgr_rank ? `#${owgr_rank}` : rolex_rank ? `#${rolex_rank}` : 'Unranked';
   const dateDisplay = fmtBagDate(bagDate);
   const flagHtml    = buildFlagHtml(country_code, nation);
   const logoHtml    = buildLogoStrip(logoList);
@@ -466,7 +468,7 @@ async function main() {
   console.log('[witb-players-page] Loading players...');
   const { data: allPlayers, error: pErr } = await sb
     .from('witb_players')
-    .select('id, slug, name, owgr_rank, country_code, nation, current_bag_id')
+    .select('id, slug, name, owgr_rank, rolex_rank, country_code, nation, current_bag_id')
     .order('owgr_rank', { ascending: true, nullsFirst: false });
   if (pErr) throw new Error(`Players query failed: ${pErr.message}`);
 
