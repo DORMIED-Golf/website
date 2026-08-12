@@ -1608,6 +1608,9 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
   <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
   <script defer src="/js/feed.min.js?v=20260717"></script>
   <script defer src="/js/search.min.js?v=20260529"></script>
+  <!-- Required by the footer signup form below. Without it the form has no
+       submit handler and a signup silently reloads the page. -->
+  <script defer src="/js/signup.min.js?v=20260718d"></script>
 </body>
 </html>`;
 }
