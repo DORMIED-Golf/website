@@ -2530,7 +2530,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (522) ── -->
+  <!-- ── News articles (524) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4372,6 +4372,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/johnnie-o-years-winged-foot-vendor/</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/johnnie-o-years-winged-foot-vendor-hero.png</image:loc>
+      <image:title>Ten Years at Winged Foot, Now on the Vendor Side: Johnnie-O&apos;s Quietest Advantage</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/jonathan-stewart-found-his-second-career-on-the-golf-course-true-linkswear-2026-05-18/</loc>
     <lastmod>2026-05-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -5049,6 +5059,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/odysseys-zero-torque-putter-just-won-most-wanted-the-color-story-is-going-2026-05-29-hero.jpg</image:loc>
       <image:title>Odyssey&apos;s Zero-Torque Putter Just Won Most Wanted. The Color Story Is Going to Sell It.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/original-penguin-1960s-sweater-archive-fabric/</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/original-penguin-1960s-sweater-archive-fabric-hero.jpg</image:loc>
+      <image:title>One 1960s Sweater Archive Beats Three New Fabric Trademarks. Original Penguin Finally Opened the Vault.</image:title>
     </image:image>
   </url>
   <url>
