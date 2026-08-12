@@ -33,6 +33,13 @@ jobs:
       - name: CSS parity
         run: node scripts/verify-css-parity.js
 
+      # Interactive markup is inert without the script that binds to it, and the
+      # page still renders, so nothing else notices. The footer signup form
+      # shipped on 193 pages that never loaded signup.min.js, including all 189
+      # WITB player pages, and silently converted nobody.
+      - name: Interactive markup has its handler
+        run: npm run verify:page-scripts --silent
+
       # Every sitemap URL must resolve to a file that exists.
       - name: Sitemap resolves
         run: npm run verify:sitemap --silent

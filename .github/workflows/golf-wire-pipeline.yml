@@ -78,6 +78,12 @@ jobs:
       - name: Verify sitemap (no orphans before commit)
         run: npm run verify:sitemap
 
+      # A newly generated page that carries interactive markup but not the
+      # script that binds to it renders fine and does nothing. Catch it before
+      # the commit step rather than after it is live.
+      - name: Verify interactive markup has its handler
+        run: npm run verify:page-scripts
+
       - name: Commit generated articles
         run: |
           set -e  # Any failure in this step aborts it — publish step is skipped on failure

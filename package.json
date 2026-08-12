@@ -21,6 +21,7 @@
     "regenerate:search-index": "node scripts/generate-search-index.js",
     "deploy": "vercel --prod",
     "verify:css": "node scripts/verify-css-parity.js",
+    "verify:page-scripts": "node scripts/verify-page-scripts.js",
     "generate-llms": "node scripts/generate-llms-txt.js"
   },
   "dependencies": {
