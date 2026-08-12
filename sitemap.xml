@@ -2530,7 +2530,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (524) ── -->
+  <!-- ── News articles (526) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3612,6 +3612,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/evnroll-zero-torque-problem/</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/evnroll-zero-torque-problem-hero.jpg</image:loc>
+      <image:title>Zero Torque Has a Look Problem. Evnroll Is Selling the Workaround at $449.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/fairway-greene-stretch-layers-merino-sweater/</loc>
     <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
@@ -4229,6 +4239,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/gts-fairways-hit-tour-bags-as-titleists-metalwood-dominance-2026-04-13-hero.jpg</image:loc>
       <image:title>GTS Fairways Hit Tour Bags as Titleist&apos;s Metalwood Dominance Continues</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/head-golf-puerto-rico-properties-r/</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/head-golf-puerto-rico-properties-r-hero.jpg</image:loc>
+      <image:title>Five Puerto Rico Properties on One Résumé: Troon&apos;s Rio Mar Head Pro Hire Is a Local Play</image:title>
     </image:image>
   </url>
   <url>
