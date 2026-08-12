@@ -5543,6 +5543,17 @@ details[open] .faq-question::after { content: '−'; }
    answer engine should lift, and the border makes that visible to a human too.
    Mirrored in styles.min.css (WITB pages and other baked templates load that
    file) — see scripts/verify-css-parity.js. */
+/* Pull quote (features only). */
+.da-pullquote {
+  margin: 30px 0;
+  padding: 4px 0 4px 22px;
+  border-left: 3px solid var(--green);
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  line-height: 1.35;
+  color: var(--text);
+}
+
 .da-answer-block {
   /* Symmetric by default so the block never sits closer to one neighbour than
      the other. Contexts whose preceding element carries its own bottom margin

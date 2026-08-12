@@ -55,6 +55,60 @@ let FEATURED_HTML = '';
 
 // ── Feature definitions ─────────────────────────────────────────────────────────
 const FEATURES = {
+  // Brand-relationship piece. MANORS supplied the press materials and will link
+  // to it, so there is deliberately NO inlineCommerce here: no affiliate
+  // carousel and no affiliate wrapper on manorsgolf.com or reebok.com.
+  // Images are courtesy of MANORS; captions and alt text are the supplied
+  // strings, used verbatim.
+  'reebok-manors-ii': {
+    slug: 'reebok-manors-ii-united-kingdom-of-golf',
+    title: 'The United Kingdom of Golf: Inside Reebok x MANORS II',
+    titleTag: 'The United Kingdom of Golf: Inside Reebok x MANORS II | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'manors-golf',
+    lastUpdated: 'August 12, 2026',
+    dateModified: '2026-08-12T09:00:00.000Z',
+    publishedAt: '2026-08-12T09:00:00.000Z',
+    keyTakeaways: [
+      'MANORS ranks 4th in the United Kingdom and 52nd in the United States on the same search demand, a 48 place gap that frames the whole collaboration.',
+      'The United Kingdom of Golf is the second Reebok x MANORS collection, narrated by Ryder Cup winning captain Sam Torrance.',
+      'The Club C Revenge Golf swaps last year\'s traditional rubber outsole for a textured golf outsole, moving the shoe from the clubhouse onto the course.',
+      'Early access opens at manorsgolf.com on 12 August 2026, with Reebok\'s global launch on 30 September.',
+    ],
+    metaDescription: 'MANORS is the 4th most in-demand golf brand in Britain and the 52nd in America. Its second Reebok collaboration is a very British campaign built for a very American problem.',
+    seoKeywords: ['reebok x manors', 'reebok manors ii', 'the united kingdom of golf', 'manors golf', 'club c revenge golf', 'sam torrance', 'manors reebok collaboration'],
+    mdPath: path.join(ROOT, 'article-reebok-manors-ii.md'),
+    imgBase: '/images/features/reebok-manors-ii',
+    // The hero is 5:4 with the title lockup at the top and the crests at the
+    // bottom, both of which a 1.91:1 crop destroys, so the social card gets a
+    // dedicated contained 1200x630 variant. Schema keeps the hero itself.
+    hero: { file: 'reebok-manors-ii-hero.webp', file2x: 'reebok-manors-ii-hero@2x.webp', w: 1600, h: 840, alt: 'Reebok x MANORS The United Kingdom of Golf campaign poster showing golfers in a field with clothing scattered in the air.', caption: 'The United Kingdom of Golf, the second Reebok x MANORS collaboration, out 12 August.' },
+    ogImage: { file: 'reebok-manors-ii-og.webp', w: 1200, h: 630 },
+    // Body images are placed by md ![] order; index 0 is the hero (skipped in
+    // the body). Slots 4 and 5 are the half-width pair and run through
+    // sectionImages instead, which already has the two-up row.
+    inlineImages: [
+      { file: 'reebok-manors-ii-hero.webp', file2x: 'reebok-manors-ii-hero@2x.webp', w: 1600, h: 840, alt: 'Reebok x MANORS The United Kingdom of Golf campaign poster showing golfers in a field with clothing scattered in the air.', caption: '' },
+      { file: 'reebok-manors-ii-polo-london.webp', file2x: 'reebok-manors-ii-polo-london@2x.webp', w: 1200, h: 1600, alt: 'Model wearing the Reebok x MANORS mock neck polo on the bank of the Thames with the Palace of Westminster behind.', caption: 'The Mock Neck Polo takes its print from vintage UK football shirts of the 1990s.' },
+      { file: 'reebok-manors-ii-club-c-detail.webp', file2x: 'reebok-manors-ii-club-c-detail@2x.webp', w: 1600, h: 1067, alt: 'Reebok x MANORS Club C Revenge Golf shoe worn on grass, cream leather upper with Reebok side stripe.', caption: 'The Club C Revenge Golf carries a de-bossed Eighteenth emblem and a GB flag window box.' },
+      { file: 'reebok-manors-ii-campaign-wide.webp', file2x: 'reebok-manors-ii-campaign-wide@2x.webp', w: 1600, h: 1067, alt: 'Wide campaign frame from The United Kingdom of Golf showing golfers on a links-style course.', caption: 'The campaign was shot by Stink Studios and directed by Dan French, built largely on practical in-camera effects.' },
+      { file: 'reebok-manors-ii-davies-quote-bg.webp', file2x: 'reebok-manors-ii-davies-quote-bg@2x.webp', w: 1067, h: 1600, alt: 'Atmospheric course scene from the Reebok x MANORS United Kingdom of Golf campaign.', caption: '' },
+      { file: 'reebok-manors-ii-heritage.webp', file2x: 'reebok-manors-ii-heritage@2x.webp', w: 1280, h: 1600, alt: 'Reebok x MANORS campaign image styled after vintage British golf imagery.', caption: 'The collaboration returns to an idea MANORS first tried in 2021: that golf, not football, is the national game.' },
+      // Slot 9. Built from ranks only; no search volumes are read or emitted.
+      { file: 'reebok-manors-ii-di-chart.svg', w: 1200, h: 596, alt: 'Bar chart of MANORS rank by market in June 2026, showing the United Kingdom at fourth and the United States at fifty-second.', caption: 'MANORS ranks fourth in Britain and fifty-second in America on identical demand.' },
+      { file: 'reebok-manors-ii-outsole.webp', file2x: 'reebok-manors-ii-outsole@2x.webp', w: 1067, h: 1600, alt: 'Close view of the Reebok x MANORS Club C Revenge Golf outsole tread pattern.', caption: 'The tell is underfoot: this version carries a textured rubber golf outsole rather than last year\'s traditional rubber.' },
+      { file: 'reebok-manors-ii-group-shot.webp', file2x: 'reebok-manors-ii-group-shot@2x.webp', w: 1600, h: 1280, alt: 'Group of golfers in Reebok x MANORS apparel during the United Kingdom of Golf campaign shoot.', caption: 'The campaign salutes what MANORS calls the stubborn sods who actually play.' },
+      { file: 'reebok-manors-ii-closing.webp', file2x: 'reebok-manors-ii-closing@2x.webp', w: 1600, h: 1067, alt: 'Closing campaign image from Reebok x MANORS The United Kingdom of Golf.', caption: 'Early access opens at manorsgolf.com on 12 August. Reebok goes global on 30 September.' },
+    ],
+    sectionImages: {
+      'What is Reebok x MANORS II?': { layout: 'two-up', images: [
+        { file: 'reebok-manors-ii-polo-detail.webp', file2x: 'reebok-manors-ii-polo-detail@2x.webp', w: 1067, h: 1600, alt: 'Detail view of the Reebok x MANORS mock neck polo showing the all-over print and collar construction.', caption: 'Mesh panelling under the arms, and a mock neck silhouette borrowed from the game\'s biggest stages.' },
+        { file: 'reebok-manors-ii-harrington-back.webp', file2x: 'reebok-manors-ii-harrington-back@2x.webp', w: 1067, h: 1600, alt: 'Back view of the Reebok x MANORS Harrington Jacket showing a crest with two lions and a crown above United Kingdom of Golf lettering.', caption: 'A United Kingdom of Golf embroidery runs across the centre back of the Harrington Jacket.' },
+      ]},
+    },
+  },
   'pins-and-aces': {
     slug: 'who-owns-pins-and-aces',
     title: 'Who Owns Pins & Aces? One Ugly Headcover, Two Brothers-in-Law, and a $20 Million Golf Brand',
@@ -437,8 +491,13 @@ function mdToPlain(md) {
 
 function figureHtml(F, img, eager) {
   const cap = img.caption ? `<figcaption class="da-figcaption">${inlineMd(img.caption)}</figcaption>` : '';
+  // A 2x variant is opt-in per image via file2x. Images without one emit
+  // exactly the markup they did before, so existing features are untouched.
+  const srcset = img.file2x
+    ? ` srcset="${F.imgBase}/${img.file} 1x, ${F.imgBase}/${img.file2x} 2x"`
+    : '';
   return `<figure class="da-figure">`
-    + `<img src="${F.imgBase}/${img.file}" alt="${escHtml(img.alt)}" width="${img.w}" height="${img.h}" loading="${eager ? 'eager' : 'lazy'}">`
+    + `<img src="${F.imgBase}/${img.file}"${srcset} alt="${escHtml(img.alt)}" width="${img.w}" height="${img.h}" loading="${eager ? 'eager' : 'lazy'}">`
     + cap + `</figure>`;
 }
 
@@ -534,6 +593,15 @@ function parseMarkdown(md, F, dormiedData) {
       continue;
     }
 
+    // Pull quote. Features are the only page type that carries one, and the
+    // markdown had no handler until the MANORS piece supplied a "> " block.
+    if (b.startsWith('> ')) {
+      const q = b.replace(/^> ?/gm, '').trim();
+      words += q.split(/\s+/).length;
+      out.push(`<blockquote class="da-pullquote">${inlineMd(q, brandCtx)}</blockquote>`);
+      continue;
+    }
+
     // Paragraph
     words += b.replace(/\[[^\]]*\]\([^)]*\)/g, m => m.replace(/\([^)]*\)/, '')).split(/\s+/).length;
     out.push(`<p>${inlineMd(b, brandCtx)}</p>`);
@@ -551,7 +619,13 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   const dateFormatted = formatDate(publishedAt);
   const canonicalUrl  = `https://dormied.com/news/${F.slug}/`;
   const titleTag      = F.titleTag || `${F.title} | DORMIED`;
-  const ogImage       = `https://dormied.com${F.imgBase}/${F.hero.file}`;
+  const heroImage     = `https://dormied.com${F.imgBase}/${F.hero.file}`;
+  // og:image override, for a hero whose aspect ratio would crop badly in the
+  // 1.91:1 social card. Defaults to the hero, so every other feature is
+  // byte-identical. Schema keeps the hero itself.
+  const ogImage       = F.ogImage ? `https://dormied.com${F.imgBase}/${F.ogImage.file}` : heroImage;
+  const ogW           = F.ogImage ? F.ogImage.w : F.hero.w;
+  const ogH           = F.ogImage ? F.ogImage.h : F.hero.h;
   const keywordsStr   = (F.seoKeywords || []).join(', ');
   const rt            = readTime(wordCount);
 
@@ -578,7 +652,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
     ? `\n          <figcaption class="da-figcaption sc-article-hero-caption">${inlineMd(F.hero.caption)}</figcaption>`
     : '';
   const heroHtml = `<figure class="sc-article-image${heroCap ? ' sc-article-image--cap' : ''}">
-          <img class="sc-article-hero-img" src="${F.imgBase}/${F.hero.file}" alt="${escHtml(F.hero.alt)}" width="${F.hero.w}" height="${F.hero.h}" loading="eager">${heroCap}
+          <img class="sc-article-hero-img" src="${F.imgBase}/${F.hero.file}"${F.hero.file2x ? ` srcset="${F.imgBase}/${F.hero.file} 1x, ${F.imgBase}/${F.hero.file2x} 2x"` : ''} alt="${escHtml(F.hero.alt)}" width="${F.hero.w}" height="${F.hero.h}" loading="eager">${heroCap}
         </figure>`;
 
   // FAQPage JSON-LD (answers use the same plain text shown on-page)
@@ -614,8 +688,8 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   <meta property="og:title" content="${escHtml(F.title)}">
   <meta property="og:description" content="${escHtml(F.metaDescription)}">
   <meta property="og:image" content="${escHtml(ogImage)}">
-  <meta property="og:image:width" content="${F.hero.w}">
-  <meta property="og:image:height" content="${F.hero.h}">
+  <meta property="og:image:width" content="${ogW}">
+  <meta property="og:image:height" content="${ogH}">
   <meta property="og:site_name" content="DORMIED">
   <meta property="og:locale" content="en_US">
   <meta property="article:published_time" content="${dateISO}">
@@ -638,7 +712,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
     "@type": "Article",
     "headline": ${JSON.stringify(F.title)},
     "description": "${escHtml(F.metaDescription)}",
-    "image": "${escHtml(ogImage)}",
+    "image": "${escHtml(heroImage)}",
     "datePublished": "${dateISO}",
     "dateModified": "${modISO}",
     "author": ${authorLdField},

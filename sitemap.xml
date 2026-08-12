@@ -2530,7 +2530,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (520) ── -->
+  <!-- ── News articles (521) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5412,6 +5412,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/reebok-manors-ii-united-kingdom-of-golf/</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/features/reebok-manors-ii/reebok-manors-ii-og.webp</image:loc>
+      <image:title>The United Kingdom of Golf: Inside Reebok x MANORS II</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/reggie-bushs-third-travismathew-drop-signals-the-brands-long-2026-04-17/</loc>
     <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -7791,7 +7801,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -7809,7 +7819,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/3/</loc>
-    <lastmod>2026-08-01</lastmod>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -7827,7 +7837,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/6/</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
