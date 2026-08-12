@@ -66,21 +66,7 @@ Here is where MANORS sits in the June 2026 DORMIED Index, our latest confirmed s
 
 ![di-chart](/images/features/reebok-manors-ii/reebok-manors-ii-di-chart.svg)
 
-| Market | Rank | Rank change |
-| --- | --- | --- |
-| United Kingdom | 4 | +2 |
-| Australia | 12 | -2 |
-| China | 21 | +7 |
-| Germany | 24 | +1 |
-| France | 26 | +6 |
-| Canada | 32 | -7 |
-| South Korea | 32 | +1 |
-| Sweden | 34 | -6 |
-| Japan | 43 | +1 |
-| United States | 52 | -6 |
-| **Global** | **36** | **-6** |
-
-Three things stand out.
+Globally MANORS sits 36th. Three things stand out.
 
 **The home market is genuinely elite.** Fourth in Britain puts MANORS behind only Titleist, TaylorMade and FootJoy, and ahead of every apparel competitor it has. For an independent, [founder-controlled brand launched in 2019](/news/who-owns-manors-golf/), sitting above Nike Golf and adidas Golf in any market is a real achievement rather than a rounding error.
 
