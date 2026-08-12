@@ -2530,7 +2530,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (517) ── -->
+  <!-- ── News articles (518) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3769,6 +3769,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/footjoy-playoff-players-spikes-hero.png</image:loc>
       <image:title>Nine of Ten Playoff Players Wear Spikes. Retail Went the Other Way, and FootJoy Sells Both.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/footjoy-seasons-rain-suit-wets/</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/footjoy-seasons-rain-suit-wets-hero.jpg</image:loc>
+      <image:title>Two Seasons, $800, and the Rain Suit Wets Out. FootJoy Sells the Fix, Not the Replacement.</image:title>
     </image:image>
   </url>
   <url>
