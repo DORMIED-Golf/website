@@ -2530,7 +2530,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (526) ── -->
+  <!-- ── News articles (527) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4989,6 +4989,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nippon-shaft-has-quietly-won-54-of-the-last-89-womens-majors-nobody-talks-2026-07-13-hero.png</image:loc>
       <image:title>Nippon Shaft Has Quietly Won 54 of the Last 89 Women&apos;s Majors. Nobody Talks About It.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/oakley-golf-nothing-fall-collection/</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/oakley-golf-nothing-fall-collection-hero.jpg</image:loc>
+      <image:title>Nothing in the Fall Collection Requires a Golf Course. Turtleson Priced It That Way.</image:title>
     </image:image>
   </url>
   <url>
