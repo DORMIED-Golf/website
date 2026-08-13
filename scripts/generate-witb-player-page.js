@@ -283,6 +283,13 @@ function catIcon(clubType) {
 }
 
 /** Human-readable club type label */
+// Brand + model, tolerant of a null model. Some sources list a grip or ball by
+// brand only ("Grips: Iomic"), and a bare template literal turned that into the
+// literal string "Iomic null" in the JSON-LD ItemList on the live page.
+function itemName(i) {
+  return [i.raw_brand, i.raw_model].filter(Boolean).join(' ').trim();
+}
+
 function clubLabel(ct) {
   const labels = {
     'driver':     'Driver',
@@ -545,7 +552,7 @@ async function generateLede(anthropic, player, bags, currentBag, currentItems) {
     .map(i => {
       const loft  = i.loft_or_number ? ` (${i.loft_or_number})` : '';
       const shaft = (i.witb_shafts?.model || i.raw_shaft) ? ` / shaft: ${dedupeShaft(i.witb_shafts?.model || i.raw_shaft)}` : '';
-      return `${clubLabel(i.club_type)}: ${i.raw_brand} ${i.raw_model}${loft}${shaft}`;
+      return `${clubLabel(i.club_type)}: ${itemName(i)}${loft}${shaft}`;
     })
     .join('\n');
 
@@ -556,7 +563,7 @@ async function generateLede(anthropic, player, bags, currentBag, currentItems) {
   const histSummary = histBags.map(b => {
     const headlines = (b._items || [])
       .filter(i => ['driver', 'iron', 'putter', 'ball'].includes(i.club_type))
-      .map(i => `${clubLabel(i.club_type)}: ${i.raw_brand} ${i.raw_model}`);
+      .map(i => `${clubLabel(i.club_type)}: ${itemName(i)}`);
     return `${b.bag_date}: ${headlines.join(', ')}`;
   }).join('\n');
 
@@ -911,8 +918,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   const _descPutter = currentItems.find(i => i.club_type === 'putter');
   const _descBall   = currentItems.find(i => i.club_type === 'ball');
   const _descParts  = [
-    _descDriver ? `${_descDriver.raw_brand} ${_descDriver.raw_model} driver` : null,
-    _descIrons  ? `${_descIrons.raw_brand} ${_descIrons.raw_model} irons`   : null,
+    _descDriver ? `${itemName(_descDriver)} driver` : null,
+    _descIrons  ? `${itemName(_descIrons)} irons`   : null,
     _descPutter ? `${_descPutter.witb_brands?.name || _descPutter.raw_brand} putter` : null,
     _descBall   ? `${_descBall.raw_brand} ball`                              : null,
   ].filter(Boolean);
@@ -998,7 +1005,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   const bagItemsLd = currentItems.map((item, i) => ({
     '@type':    'ListItem',
     position:   i + 1,
-    name:       `${item.raw_brand} ${item.raw_model}`.trim(),
+    name:       itemName(item),
     description: clubLabel(item.club_type),
   }));
 
