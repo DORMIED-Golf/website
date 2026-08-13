@@ -2542,7 +2542,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (529) ── -->
+  <!-- ── News articles (530) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5161,6 +5161,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/payntr-golf-invented-shoe-hero.jpg</image:loc>
       <image:title>Payntr Just Invented a Golf Shoe Holiday. Nike Has Been Running That Play Since 2014.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/payntr-golf-magnetic-towel-brand-shoe/</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/payntr-golf-magnetic-towel-brand-shoe-hero.jpg</image:loc>
+      <image:title>A Magnetic Towel Brand Is Now Selling a $200 Golf Shoe. Payntr Built It.</image:title>
     </image:image>
   </url>
   <url>
