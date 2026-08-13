@@ -1018,7 +1018,7 @@ function generateArticleHtml(opts) {
   const aboutEntries = [
     { slug: brandSlug, name: brandName },
     ...secondaryBrands,
-  ].map(b => `{ "@type": "Organization", "name": "${escHtml(b.name)}", "url": "https://dormied.com/brands/${b.slug}/" }`);
+  ].filter(b => b.slug).map(b => `{ "@type": "Organization", "name": "${escHtml(b.name)}", "url": "https://dormied.com/brands/${b.slug}/" }`);
   const aboutJson = aboutEntries.length > 0
     ? `,\n    "about": [${aboutEntries.join(', ')}]`
     : '';
@@ -1194,8 +1194,10 @@ ${answerHtml}
               ${bodyHtml}
             </div>
 
-            <!-- Brand card -->
-            <div class="da-brand-card">
+            <!-- Brand card. Omitted entirely when the article has no brand:
+                 an untagged article must not render an empty card linking to
+                 /brands//. -->
+            ${!brandSlug ? '' : `<div class="da-brand-card">
               <div class="da-brand-card-header">
                 <span class="da-brand-card-label">DORMIED INDEX</span>
                 <a href="/brands/${escHtml(brandSlug)}/" class="da-brand-card-cta">View Brand →</a>
@@ -1213,15 +1215,15 @@ ${answerHtml}
                   <div class="bp-metric-card"><span class="bp-metric-label">12M Trend</span><span class="bp-metric-val${bT12mCls}">${bT12m}</span></div>
                 </div>
               </div>
-            </div>
+            </div>`}
 ${shopSectionHtml}
             ${secondaryBrandWidgets}
 ${faqHtml}
             <!-- More on [Brand] -->
-            <section class="da-bottom-section" id="da-more-brand-section" aria-labelledby="da-more-brand-heading" hidden>
+            ${!brandSlug ? '' : `<section class="da-bottom-section" id="da-more-brand-section" aria-labelledby="da-more-brand-heading" hidden>
               <h3 class="da-bottom-heading" id="da-more-brand-heading">More on ${escHtml(brandName)}</h3>
               <div id="da-more-brand-list" class="da-bottom-cards"></div>
-            </section>
+            </section>`}
 
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">

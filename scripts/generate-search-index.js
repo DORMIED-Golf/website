@@ -129,7 +129,9 @@ function buildNewsEntries() {
     // Parse date from <time datetime="...">
     const timem = html.match(/<time[^>]+datetime="([^"]+)"[^>]*>([^<]+)<\/time>/i);
     const dateStr   = timem ? timem[2].trim() : '';
-    const authorM   = bylineRaw.match(/By\s+([A-Za-z]+)/);
+    // Desk names carry a surname initial ("Adam R."). Capturing only the first
+    // word silently reverted every search result to the pre-rename byline.
+    const authorM   = bylineRaw.match(/By\s+([A-Za-z]+(?:\s+[A-Z]\.)?)/);
     const author    = authorM ? authorM[1] : 'DORMIED';
     const subtitle  = dateStr ? `By ${author} · ${dateStr}` : `By ${author}`;
 
