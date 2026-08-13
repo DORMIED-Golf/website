@@ -279,6 +279,16 @@
       "source": "/news/what-is-students-golf/",
       "destination": "/news/students-golf/",
       "permanent": true
+    },
+    {
+      "source": "/news/oakley-golf-nothing-fall-collection",
+      "destination": "/news/turtleson-fall-collection",
+      "permanent": true
+    },
+    {
+      "source": "/news/oakley-golf-nothing-fall-collection/",
+      "destination": "/news/turtleson-fall-collection/",
+      "permanent": true
     }
   ],
   "rewrites": [
