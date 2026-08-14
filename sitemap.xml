@@ -2542,7 +2542,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (530) ── -->
+  <!-- ── News articles (531) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5557,6 +5557,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/ryan-foxs-claret-jug-was-also-a-prototype-debut-what-srixons-bag-at-2026-07-20-hero.jpg</image:loc>
       <image:title>Ryan Fox&apos;s Claret Jug Was Also a Prototype Debut: What Srixon&apos;s Bag at Birkdale Actually Says</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/scotty-cameron-brand/</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/scotty-cameron-brand-hero.jpg</image:loc>
+      <image:title>A Brand Nobody Knows Is Selling the Feel Scotty Cameron Used to Own</image:title>
     </image:image>
   </url>
   <url>
