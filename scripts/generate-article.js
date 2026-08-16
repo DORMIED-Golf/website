@@ -163,6 +163,34 @@ function stripEmDashes(text) {
   return text.replace(/ — /g, ', ').replace(/—/g, ', ');
 }
 
+/**
+ * Last-resort meta description, used only when Opus omitted the field and the
+ * retry did not recover it. Takes the opening of the body and trims to a word
+ * boundary under 155 characters. Worse than a written description, far better
+ * than the empty <meta name="description"> that used to ship.
+ */
+function deriveMetaDescription(body, brandName) {
+  const plain = String(body || '')
+    .replace(/^#{1,6}\s+.*$/gm, ' ')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/[*_`>#]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!plain) return brandName ? `${brandName} news and analysis from DORMIED.` : 'Golf brand news and analysis from DORMIED.';
+  if (plain.length <= 155) return plain;
+  // 152 so the ellipsis still lands inside the 155-character budget.
+  const cut = plain.slice(0, 152);
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,;:]$/, '') + '...';
+}
+
+/** Last-resort keywords: brand name plus the title's substantive words. */
+function deriveKeywords(title, brandName) {
+  const STOP = new Set(['the','a','an','and','or','but','for','on','at','to','of','in','is','it','its','was','are','with','that','this','how','why','what','from','you','your','not','has','have','too','more','than','into','out','up','off','by','as','be']);
+  const words = String(title || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/)
+    .filter(w => w.length > 2 && !STOP.has(w));
+  return [brandName, ...new Set(words)].filter(Boolean).slice(0, 6);
+}
+
 // The external poster appends the article link to x_post_text (~24 chars against
 // Twitter's 280 limit), so copy longer than ~256 chars gets cut off mid-sentence
 // on the live post. The prompt targets under 220; this is a hard backstop for
@@ -1861,6 +1889,53 @@ async function main() {
       console.warn(`[generate] ⚠ Soft word-count warning: ${wc} words for "${raw.title}" (target 550-700)`);
     } else {
       console.log(`[generate] Word count: ${wc} words`);
+    }
+
+    // ── Metadata completeness gate ────────────────────────────────────────────
+    // Every gate above checks parsed.body and nothing else, so a response that
+    // came back with a title and a body but no meta_description, seo_keywords
+    // or x_post sailed through and shipped a page with an empty
+    // <meta name="description">, an empty og:description, no keywords, and an X
+    // post that degraded to the bare headline. Six articles shipped that way
+    // before this gate existed, roughly one in ten of the recent run.
+    //
+    // Retry once naming the fields that are missing, then derive the rest.
+    // Same reasoning as the headline gate: a finished article is worth too much
+    // to discard over metadata, but shipping it EMPTY is not acceptable either.
+    const metaGaps = p => {
+      const gaps = [];
+      if (!p.meta_description || !String(p.meta_description).trim())    gaps.push('meta_description');
+      if (!Array.isArray(p.seo_keywords) || !p.seo_keywords.length)     gaps.push('seo_keywords');
+      if (!p.x_post || !String(p.x_post).trim())                        gaps.push('x_post');
+      return gaps;
+    };
+
+    let metaMissing = metaGaps(parsed);
+    if (metaMissing.length) {
+      console.warn(`[generate] Missing ${metaMissing.join(', ')} for "${raw.title}" — retrying`);
+      const metaAddendum = `\n\nYour previous response omitted these required fields: ${metaMissing.join(', ')}. Return the SAME article, with an identical title and body, as valid JSON containing every field: title, body, meta_description, seo_keywords, x_post.`;
+      const metaRaw    = await callOpus(anthropic, raw.body + metaAddendum, brandInfo, author, false);
+      const metaParsed = parseOpusResponse(metaRaw);
+      if (metaParsed && !isInvalid(metaParsed.body)) {
+        // Keep the original title and body; adopt only what was missing. The
+        // retry is for metadata, so it must not quietly swap the article out.
+        for (const f of ['meta_description', 'seo_keywords', 'x_post', 'answer_block', 'faq']) {
+          const empty = !parsed[f] || (Array.isArray(parsed[f]) && !parsed[f].length);
+          if (empty && metaParsed[f]) parsed[f] = metaParsed[f];
+        }
+      }
+      metaMissing = metaGaps(parsed);
+    }
+
+    if (metaMissing.length) {
+      console.warn(`[generate] ⚠ Deriving ${metaMissing.join(', ')} for "${parsed.title}" after retry`);
+      if (!parsed.meta_description || !String(parsed.meta_description).trim()) {
+        parsed.meta_description = deriveMetaDescription(parsed.body, brandInfo.brand.name);
+      }
+      if (!Array.isArray(parsed.seo_keywords) || !parsed.seo_keywords.length) {
+        parsed.seo_keywords = deriveKeywords(parsed.title, brandInfo.brand.name);
+      }
+      if (!parsed.x_post || !String(parsed.x_post).trim()) parsed.x_post = parsed.title;
     }
 
     // ── Answer block + FAQ grounding ──────────────────────────────────────────
