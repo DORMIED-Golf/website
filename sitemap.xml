@@ -2542,7 +2542,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (532) ── -->
+  <!-- ── News articles (533) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3911,6 +3911,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/foresight-sports-important-club-mygolfspys-slow-hero.jpg</image:loc>
       <image:title>The Most Important Club in MyGolfSpy&apos;s Slow-Swing Driver Test Isn&apos;t a Club</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/foresight-sports-indoor-golf-trade-school/</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/foresight-sports-indoor-golf-trade-school-hero.jpg</image:loc>
+      <image:title>Indoor Golf Just Built a Trade School, and Track B Has a Seat for Foresight</image:title>
     </image:image>
   </url>
   <url>
