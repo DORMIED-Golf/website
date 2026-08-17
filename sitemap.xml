@@ -2542,7 +2542,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (537) ── -->
+  <!-- ── News articles (538) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2821,6 +2821,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/aretera-expands-ec1-line-to-85g-as-fitting-partners-push-for-heavier-2026-05-18-hero.png</image:loc>
       <image:title>Aretera Expands EC1 Line to 85g as Fitting Partners Push for Heavier Options</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/aretera-shops-hybrid-shaft/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/aretera-shops-hybrid-shaft-hero.png</image:loc>
+      <image:title>Nobody Shops for a Hybrid Shaft. Aretera Is Betting the Fitter Does.</image:title>
     </image:image>
   </url>
   <url>
