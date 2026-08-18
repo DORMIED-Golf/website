@@ -2542,7 +2542,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (539) ── -->
+  <!-- ── News articles (541) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2671,6 +2671,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/adams-new-idea-resurfaces-on-prime-day-and-thats-the-whole-brand-strategy-2026-06-23-hero.jpg</image:loc>
       <image:title>Adams New Idea Resurfaces on Prime Day, and That&apos;s the Whole Brand Strategy Now</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/adidas-golf-model-numbers-shoe/</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/adidas-golf-model-numbers-shoe-hero.jpg</image:loc>
+      <image:title>Two Model Numbers Ahead, and the Old Shoe Still Wins: Adidas Golf&apos;s CODECHAOS Cadence Problem</image:title>
     </image:image>
   </url>
   <url>
@@ -6207,6 +6217,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/features/take-this-job-and-shove-it/hero.webp</image:loc>
       <image:title>Take This Job and Shove It</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/takomo-golf-untested-weight-setting-cost/</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/takomo-golf-untested-weight-setting-cost-hero.jpg</image:loc>
+      <image:title>One Untested Weight Setting Cost Takomo Its Entire First Production Run</image:title>
     </image:image>
   </url>
   <url>
