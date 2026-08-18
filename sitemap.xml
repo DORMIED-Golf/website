@@ -2554,7 +2554,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (542) ── -->
+  <!-- ── News articles (543) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -7009,6 +7009,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/titleist-missed-every-value-iron-award-of-2026-it-was-still-in-every-shot-2026-07-30-hero.jpg</image:loc>
       <image:title>Titleist Missed Every Value Iron Award of 2026. It Was Still in Every Shot Hit.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/titleist-naming-rights/</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/titleist-naming-rights-hero.png</image:loc>
+      <image:title>Naming Rights Were the Cheap Part. Titleist Just Bought a Junior Golf Database.</image:title>
     </image:image>
   </url>
   <url>
