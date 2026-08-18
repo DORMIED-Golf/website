@@ -43,6 +43,19 @@ const path = require('path');
 
 const ROOT    = path.resolve(__dirname, '..');
 const VERBOSE = process.argv.includes('-v') || process.argv.includes('--verbose');
+const { dataVersion } = require('./lib/data-version.js');
+
+/**
+ * Dataset cache-busters that must track the CURRENT dataVersion().
+ *
+ * Only three generators interpolate dataVersion(); every other page carries the
+ * tag by hand, so a monthly data update silently leaves them pointing at the
+ * previous dataset. A returning visitor then keeps the cached file and reads
+ * last month's numbers on a page that looks current. After the July 2026 update
+ * that was 31 pages, including the homepage and /rankings/, and two of them had
+ * been stranded an extra cycle on a version older still.
+ */
+const DATASET_FILES = ['data.min.js', 'data-home.js'];
 
 /** marker -> script that must be loaded wherever the marker appears. */
 const RULES = [
@@ -84,6 +97,31 @@ function main() {
   }
 
   let failed = false;
+
+  // ── Dataset cache-busters ────────────────────────────────────────────────
+  const current = dataVersion();
+  const stale = [];
+  let datasetRefs = 0;
+  for (const file of DATASET_FILES) {
+    const re = new RegExp(file.replace('.', '\\.') + '\\?v=(\\d+)', 'g');
+    for (const p of pages) {
+      const html = fs.readFileSync(p, 'utf8');
+      for (const m of html.matchAll(re)) {
+        datasetRefs++;
+        if (m[1] !== current) stale.push(`${path.relative(ROOT, p)}  ${file}?v=${m[1]}`);
+      }
+    }
+  }
+  if (stale.length) {
+    failed = true;
+    console.error(`\n[page-scripts] !! ${stale.length} dataset reference(s) not on the current version (${current}):\n`);
+    for (const line of (VERBOSE ? stale : stale.slice(0, 10))) console.error(`        ${line}`);
+    if (!VERBOSE && stale.length > 10) console.error(`        ...and ${stale.length - 10} more (-v to list all)`);
+    console.error(`\n    These pages serve a cached copy of the PREVIOUS dataset, so returning`);
+    console.error(`    visitors read last month's numbers. Bump the tag wherever it is hand-written.`);
+  } else {
+    console.log(`[page-scripts]   dataset cache-busters: ${datasetRefs} reference(s), all on ${current}`);
+  }
 
   for (const { rule, matched, missing } of results) {
     if (matched < rule.minPages) {
