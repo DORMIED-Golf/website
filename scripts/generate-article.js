@@ -1360,7 +1360,7 @@ ${faqHtml}
   <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>
   <script src="/js/feed.min.js?v=20260717"></script>
   <script src="/js/da-article.min.js?v=20260522"></script>
-  ${hasShop ? '<script defer src="/js/shop-carousel.min.js?v=20260728"></script>' : ''}
+  ${hasShop ? '<script defer src="/js/shop-carousel.min.js?v=20260818"></script>' : ''}
 
 </body>
 </html>`;

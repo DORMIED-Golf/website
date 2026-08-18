@@ -25,6 +25,7 @@
   var next  = document.getElementById('bp-shop-next');
   var dots  = document.getElementById('bp-shop-dots');
   var slug  = section.getAttribute('data-brand-slug') || '';
+  var brandName = section.getAttribute('data-brand-name') || '';
   // "Shop This Bag" supplies an explicit, ordered product list instead of a
   // brand to page through: the page already decided which products (the ones in
   // the player's bag), so there is nothing to paginate.
@@ -63,8 +64,9 @@
     // keep fresh. That also means the staleness guard below does not apply.
     var isAmazon = p.source === 'amazon';
     var stale = isStale(p.feed_updated_at);
+    var showPrice = !isAmazon && !stale && p.current_price != null;
     var priceHtml = '';
-    if (!isAmazon && !stale && p.current_price != null) {
+    if (showPrice) {
       var onSale = p.original_price != null && Number(p.original_price) > Number(p.current_price);
       priceHtml =
         '<span class="bp-shop-price">' + esc(money(p.current_price, p.currency)) + '</span>' +
@@ -81,7 +83,15 @@
     var href = isAmazon
       ? esc(p.go_url)
       : '/api/go/' + encodeURIComponent(p.id) + '?src=brand&amp;slug=' + encodeURIComponent(slug);
-    var cta = isAmazon ? 'Check price on Amazon' : 'BUY NOW';
+    // A suppressed price used to leave an empty .bp-shop-price-row holding 22px
+    // of blank space under the name, next to a "BUY NOW" that showed no number.
+    // That reads as broken rather than deliberate. Same treatment as Amazon:
+    // drop the empty row and say plainly that the price lives on the merchant's
+    // site. MacGregor hit this because their Impact feed's DateLastUpdated is
+    // months old, so every one of their prices is correctly withheld.
+    var cta = isAmazon ? 'Check price on Amazon'
+            : showPrice ? 'BUY NOW'
+            : (brandName ? 'Check price at ' + brandName : 'Check price');
 
     // rel="sponsored nofollow" is mandatory on every affiliate link.
     return '' +
@@ -89,7 +99,7 @@
         '<div class="bp-shop-thumb-wrap">' + img + '</div>' +
         '<div class="bp-shop-body">' +
           '<p class="bp-shop-name">' + esc(p.name) + '</p>' +
-          '<div class="bp-shop-price-row">' + priceHtml + '</div>' +
+          (priceHtml ? '<div class="bp-shop-price-row">' + priceHtml + '</div>' : '') +
           '<a class="bp-shop-buy" href="' + href + '"' +
              ' rel="sponsored nofollow" target="_blank">' + esc(cta) + '</a>' +
         '</div>' +

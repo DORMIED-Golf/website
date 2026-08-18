@@ -1130,7 +1130,7 @@ ${faqHtml}
   <script defer src="/js/analytics.min.js?v=20260320a"></script>
   <script defer src="/js/signup.min.js?v=20260718d"></script>
   <script src="/js/search.min.js?v=20260529"></script>
-  ${hasShop ? '<script defer src="/js/shop-carousel.min.js?v=20260728"></script>' : ''}
+  ${hasShop ? '<script defer src="/js/shop-carousel.min.js?v=20260818"></script>' : ''}
 
   <!-- Mobile nav hamburger -->
   <script>

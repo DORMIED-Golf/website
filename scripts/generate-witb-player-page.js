@@ -1564,7 +1564,7 @@ ${witbFaqHtml}
   <!-- Required by the footer signup form below. Without it the form has no
        submit handler and a signup silently reloads the page. -->
   <script defer src="/js/signup.min.js?v=20260718d"></script>
-  ${(shopBrand || shopBag) ? '<script defer src="/js/shop-carousel.min.js?v=20260730"></script>' : ''}
+  ${(shopBrand || shopBag) ? '<script defer src="/js/shop-carousel.min.js?v=20260818"></script>' : ''}
   <script>
   // Player page view tracking — fire-and-forget, mirrors brand_page_views
   (function(pid){
