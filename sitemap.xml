@@ -2542,7 +2542,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (538) ── -->
+  <!-- ── News articles (539) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3791,6 +3791,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/five-irons-valencia-opening-shows-how-trackman-wins-without-selling-direct-2026-05-05-hero.jpg</image:loc>
       <image:title>Five Iron&apos;s Valencia Opening Shows How TrackMan Wins Without Selling Direct</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/flightscope-signings-cost-pga-tour-deal/</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/flightscope-signings-cost-pga-tour-deal-hero.jpg</image:loc>
+      <image:title>Five LPGA Signings Cost Less Than One PGA Tour Deal. FlightScope Did the Math.</image:title>
     </image:image>
   </url>
   <url>
