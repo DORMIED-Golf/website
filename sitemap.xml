@@ -2542,7 +2542,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (541) ── -->
+  <!-- ── News articles (542) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4641,6 +4641,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/kirklands-40-two-dozen-golf-ball-just-got-a-b-from-ball-lab-thats-the-2026-07-09-hero.jpg</image:loc>
       <image:title>Kirkland&apos;s $40 Two-Dozen Golf Ball Just Got a B From Ball Lab. That&apos;s the Whole Story.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/la-golf-9-8-nowhere-test/</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/la-golf-9-8-nowhere-test-hero.jpg</image:loc>
+      <image:title>A 9.8 Accuracy Score and Nowhere to Buy It: LA Golf Won the Test It Withdrew From</image:title>
     </image:image>
   </url>
   <url>
