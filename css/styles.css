@@ -7220,6 +7220,10 @@ details[open] .faq-question::after { content: '−'; }
    headline 19.3:1, proof 10.3:1, micro and quote 7.6:1, source 4.8:1, error
    6.5:1, and the button keeps #052e0e on brand green at 6.6:1. All AA.
    Reserved min-height so the baked block cannot shift layout. */
+/* When the block leads its column there is nothing above it to separate from,
+   and the top margin would drop it below the sidebar it should line up with. */
+.scb:first-child { margin-top: 0; }
+
 .scb {
   /* 56px above, not 32: Mediavine inserts an in-content unit directly
      before whatever block-level break follows a run of copy, and this block IS
