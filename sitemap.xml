@@ -2554,7 +2554,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (546) ── -->
+  <!-- ── News articles (548) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3136,6 +3136,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/bridgestone-golf-elite-compression-metric-bottom/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/bridgestone-golf-elite-compression-metric-bottom-hero.jpg</image:loc>
+      <image:title>Elite on One Compression Metric, Bottom Quartile on the Other: Bridgestone&apos;s Tour B XS Splits the Difference</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/bridgestone-sends-its-guy-to-talk-about-golf-ball-rollback-a-2026-04-21/</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -3303,6 +3313,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaway-chrome-tour-posts-a-zero-defect-ball-lab-score-thats-harder-than-2026-06-03-hero.png</image:loc>
       <image:title>Callaway Chrome Tour Posts a Zero-Defect Ball Lab Score. That&apos;s Harder Than It Sounds.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/callaway-dead-3-wood/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/callaway-dead-3-wood-hero.jpg</image:loc>
+      <image:title>Five Wins, One Dead 3-Wood: Callaway&apos;s Elyte Is Cashing the 7-Wood Trade</image:title>
     </image:image>
   </url>
   <url>
