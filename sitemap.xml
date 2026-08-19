@@ -2554,7 +2554,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (548) ── -->
+  <!-- ── News articles (549) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4123,6 +4123,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/fujikuras-junior-fitting-play-65-kids-free-ventus-shafts-and-a-curry-sized-2026-06-02-hero.jpg</image:loc>
       <image:title>Fujikura&apos;s Junior Fitting Play: 65 Kids, Free VENTUS Shafts, and a Curry-Sized Marketing Bet</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/full-swing-launch-monitor-hardware/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/full-swing-launch-monitor-hardware-hero.jpg</image:loc>
+      <image:title>Launch Monitor Hardware Is Nearly Interchangeable. Full Swing Just Moved Its Moat Into an App.</image:title>
     </image:image>
   </url>
   <url>
