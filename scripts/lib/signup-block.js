@@ -173,6 +173,11 @@ const TESTIMONIAL = {
 function formHtml() {
   return '' +
     `<form class="scb-form" action="${NEWSLETTER_ENDPOINT}" method="${NEWSLETTER_METHOD.toLowerCase()}" novalidate>` +
+      // Hidden fields so a native no-JS POST carries the same attribution the
+      // fetch upgrade sends. {{SLOT}}/{{PAGETYPE}} are substituted alongside
+      // {{ID}}; the form template still reads nothing from the data object.
+      `<input type="hidden" name="slot" value="{{SLOT}}">` +
+      `<input type="hidden" name="page_type" value="{{PAGETYPE}}">` +
       `<label class="scb-label" for="{{ID}}-email">Email address</label>` +
       `<div class="scb-row">` +
         `<input class="scb-input" id="{{ID}}-email" type="email" name="${NEWSLETTER_FIELD}" ` +
@@ -204,7 +209,10 @@ function signupBlockHtml({ slot, pageType, data, brandSlug, latestIssueUrl } = {
 
   // 2. Then the form, from a template that never saw the data.
   const id = `scb-${slot}`;
-  const form = formHtml().replace(/\{\{ID\}\}/g, id);
+  const form = formHtml()
+    .replace(/\{\{ID\}\}/g, id)
+    .replace(/\{\{SLOT\}\}/g, esc(slot))
+    .replace(/\{\{PAGETYPE\}\}/g, esc(pageType));
 
   const proofHtml = proofLine
     ? `<p class="scb-proof">${esc(proofLine)}</p>`

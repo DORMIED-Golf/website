@@ -17,7 +17,20 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
  * subscribeToBeehiiv — shared server-side subscription logic.
  * Returns { success: true } or throws with a user-safe message.
  */
-async function subscribeToBeehiiv(email) {
+/**
+ * Slots the site actually renders. The value is forwarded to Beehiiv as
+ * utm_source so conversion can be analysed per placement, and the open question
+ * (does equipment-intent WITB traffic convert for a brand newsletter at all?)
+ * cannot be answered from a blended number. Allowlisted rather than passed
+ * through, so nothing arbitrary from a request body reaches the vendor.
+ */
+const SLOTS = new Set([
+  'witb-primary', 'witb-secondary', 'brand', 'article', 'feature',
+  'scorecard-primary', 'scorecard-secondary', 'home', 'footer',
+]);
+const PAGE_TYPES = new Set(['witb', 'brand', 'article', 'feature', 'scorecard', 'home', 'footer']);
+
+async function subscribeToBeehiiv(email, slot, pageType) {
   const publicationId = process.env.BEEHIIV_PUBLICATION_ID;
   const apiKey        = process.env.BEEHIIV_API_KEY;
 
@@ -38,6 +51,9 @@ async function subscribeToBeehiiv(email) {
       email,
       reactivate_existing: true,
       send_welcome_email:  true,
+      utm_source:   slot     || 'unknown',
+      utm_medium:   pageType || 'unknown',
+      utm_campaign: 'scorecard-signup',
     }),
   });
 
@@ -78,6 +94,8 @@ module.exports = async (req, res) => {
 
   const html = wantsHtml(req);
   const { email } = req.body || {};
+  const slot     = SLOTS.has(req.body && req.body.slot) ? req.body.slot : (html ? 'no-js' : 'unknown');
+  const pageType = PAGE_TYPES.has(req.body && req.body.page_type) ? req.body.page_type : 'unknown';
 
   if (!email || typeof email !== 'string' || !EMAIL_RE.test(email.trim())) {
     if (html) return res.redirect(303, `${CONFIRM_PATH}?status=invalid`);
@@ -85,7 +103,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const result = await subscribeToBeehiiv(email.trim().toLowerCase());
+    const result = await subscribeToBeehiiv(email.trim().toLowerCase(), slot, pageType);
     if (html) return res.redirect(303, `${CONFIRM_PATH}?status=ok`);
     return res.status(200).json(result);
   } catch (err) {

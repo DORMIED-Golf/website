@@ -147,7 +147,10 @@
       fetch(form.getAttribute('action'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ email: email })
+        // slot + page_type ride along so Beehiiv records the placement as
+        // utm_source/utm_medium and per-slot conversion is queryable there too,
+        // not only in GA4.
+        body: JSON.stringify({ email: email, slot: ctx.slot, page_type: ctx.pageType })
       })
       .then(function (r) {
         return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, data: d }; });
