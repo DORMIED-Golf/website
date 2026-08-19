@@ -45,6 +45,7 @@ const ROOT    = path.resolve(__dirname, '..');
 const VERBOSE = process.argv.includes('-v') || process.argv.includes('--verbose');
 const { dataVersion } = require('./lib/data-version.js');
 const { cssVersion }  = require('./lib/css-version.js');
+const { assetVersion } = require('./lib/asset-version.js');
 
 /**
  * Dataset cache-busters that must track the CURRENT dataVersion().
@@ -68,6 +69,20 @@ const DATASET_FILES = ['data.min.js', 'data-home.js'];
  * agree with them.
  */
 const STYLESHEET_FILES = ['styles.css', 'styles.min.css'];
+
+/**
+ * Every /js/*.min.js cache-buster must equal its own file's content hash.
+ *
+ * This is the same failure the dataset and stylesheet checks exist for, and it
+ * had already happened here unnoticed: signup.min.js was rewritten end to end,
+ * popup removed and tracking added, while its URL stayed at 20260718d, so
+ * returning visitors kept running the old script. search.min.js, brand.min.js
+ * and feed-page.min.js were each shipping two different versions at once.
+ *
+ * data.min.js and data-home.js are excluded: they track the dataset, not their
+ * own bytes, and the dataset check above already covers them.
+ */
+const DATASET_EXEMPT = new Set(['data.min.js', 'data-home.js']);
 
 /** marker -> script that must be loaded wherever the marker appears. */
 const RULES = [
@@ -116,7 +131,11 @@ function main() {
   const stale = [];
   let datasetRefs = 0;
   for (const file of DATASET_FILES) {
-    const re = new RegExp(file.replace('.', '\\.') + '\\?v=(\\d+)', 'g');
+    // Anchor on the leading slash. Without it "data.min.js" also matches the
+    // tail of "scorecard-data.min.js" and captures the first digits of its
+    // content hash, which is exactly the substring trap that made an earlier
+    // cache-buster sweep silently miss every page it was meant to fix.
+    const re = new RegExp('/' + file.replace('.', '\\.') + '\\?v=(\\d+)', 'g');
     for (const p of pages) {
       const html = fs.readFileSync(p, 'utf8');
       for (const m of html.matchAll(re)) {
@@ -159,6 +178,33 @@ function main() {
     console.error(`    returning visitor keeps the cached copy for a week. Re-bake them.`);
   } else {
     console.log(`[page-scripts]   stylesheet cache-busters: ${cssRefs} reference(s), all on ${cssCurrent}`);
+  }
+
+  // ── JS asset cache-busters ───────────────────────────────────────────────
+  const jsStale = [];
+  let jsRefs = 0;
+  const jsRe = /\/js\/([a-z-]+\.min\.js)\?v=([0-9a-z]+)/g;
+  for (const p of pages) {
+    const html = fs.readFileSync(p, 'utf8');
+    for (const m of html.matchAll(jsRe)) {
+      const [, file, version] = m;
+      if (DATASET_EXEMPT.has(file)) continue;
+      jsRefs++;
+      let expected;
+      try { expected = assetVersion(`js/${file}`); }
+      catch (e) { jsStale.push(`${path.relative(ROOT, p)}  ${file} (asset missing)`); continue; }
+      if (version !== expected) jsStale.push(`${path.relative(ROOT, p)}  ${file}?v=${version} (expected ${expected})`);
+    }
+  }
+  if (jsStale.length) {
+    failed = true;
+    console.error(`\n[page-scripts] !! ${jsStale.length} script reference(s) not on their file's content hash:\n`);
+    for (const line of (VERBOSE ? jsStale : jsStale.slice(0, 10))) console.error(`        ${line}`);
+    if (!VERBOSE && jsStale.length > 10) console.error(`        ...and ${jsStale.length - 10} more (-v to list all)`);
+    console.error(`\n    The script changed but these pages request the old URL, so a returning`);
+    console.error(`    visitor keeps running the previous version. Re-bake them.`);
+  } else {
+    console.log(`[page-scripts]   script cache-busters: ${jsRefs} reference(s), all on their file hash`);
   }
 
   for (const { rule, matched, missing } of results) {

@@ -23,6 +23,7 @@ const feedBake        = require('./feed-bake');
 const { dataVersion } = require('./lib/data-version');
 const { pageEligible } = require('./witb-page-eligibility');
 const { cssVersion } = require('./lib/css-version.js');
+const { js: jsVersion } = require('./lib/asset-version.js');
 
 function loadDormiedData() {
   const raw = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
@@ -444,13 +445,13 @@ ${gridHtml}
   <!-- WITB dir data for client-side filtering -->
   <script>window.WITB_DIR_DATA = { brandNames: ${brandNamesJson} };</script>
 
-  <script defer src="/js/utils.min.js?v=20260318"></script>
-  <script defer src="/js/witb-dir.min.js?v=20260529"></script>
+  <script defer src="/js/utils.min.js?v=${jsVersion('utils.min.js')}"></script>
+  <script defer src="/js/witb-dir.min.js?v=${jsVersion('witb-dir.min.js')}"></script>
   <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
-  <script defer src="/js/feed.min.js?v=20260717"></script>
-  <script defer src="/js/analytics.min.js?v=20260320a"></script>
-  <script defer src="/js/signup.min.js?v=20260718d"></script>
-  <script defer src="/js/search.min.js?v=20260529"></script>
+  <script defer src="/js/feed.min.js?v=${jsVersion('feed.min.js')}"></script>
+  <script defer src="/js/analytics.min.js?v=${jsVersion('analytics.min.js')}"></script>
+  <script defer src="/js/signup.min.js?v=${jsVersion('signup.min.js')}"></script>
+  <script defer src="/js/search.min.js?v=${jsVersion('search.min.js')}"></script>
 </body>
 </html>`;
 }

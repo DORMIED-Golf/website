@@ -40,6 +40,7 @@ const { createClient } = require('@supabase/supabase-js');
 const feedBake = require('./feed-bake');
 const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
 const { cssVersion } = require('./lib/css-version.js');
+const { js: jsVersion } = require('./lib/asset-version.js');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -927,11 +928,11 @@ ${BRAND_CARD_HTML}${SHOP_SECTION_HTML}
   })();
   </script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
-  <script src="/js/analytics.min.js?v=20260320a"></script>
-  <script src="/js/signup.min.js?v=20260718d"></script>
-  <script src="/js/search.min.js?v=20260508"></script>
-  <script src="/js/feed.min.js?v=20260717"></script>
-  ${SHOP_SECTION_HTML ? '<script defer src="/js/shop-carousel.min.js?v=20260818"></script>' : ''}
+  <script src="/js/analytics.min.js?v=${jsVersion('analytics.min.js')}"></script>
+  <script src="/js/signup.min.js?v=${jsVersion('signup.min.js')}"></script>
+  <script src="/js/search.min.js?v=${jsVersion('search.min.js')}"></script>
+  <script src="/js/feed.min.js?v=${jsVersion('feed.min.js')}"></script>
+  ${SHOP_SECTION_HTML ? `<script defer src="/js/shop-carousel.min.js?v=${jsVersion('shop-carousel.min.js')}"></script>` : ''}
 
 </body>
 </html>`;

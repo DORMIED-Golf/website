@@ -609,10 +609,10 @@ ${SC_SIDEBAR_HTML}
   <!-- ══ SCRIPTS ══════════════════════════════════════════════════════════════ -->
   <!-- scorecard-article.min.js is intentionally excluded: content is pre-rendered -->
   <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
-  <script defer src="/js/utils.min.js?v=20260318"></script>
-  <script defer src="/js/analytics.min.js?v=20260320a"></script>
-  <script defer src="/js/signup.min.js?v=20260718d"></script>
-  <script defer src="/js/search.min.js?v=20260508"></script>
+  <script defer src="/js/utils.min.js?v=${jsVersion('utils.min.js')}"></script>
+  <script defer src="/js/analytics.min.js?v=${jsVersion('analytics.min.js')}"></script>
+  <script defer src="/js/signup.min.js?v=${jsVersion('signup.min.js')}"></script>
+  <script defer src="/js/search.min.js?v=${jsVersion('search.min.js')}"></script>
 
 
 </body>
@@ -628,6 +628,7 @@ const { regenerateSitemap } = require('./generate-sitemap');
 const { generateSearchIndex } = require('./generate-search-index');
 const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
 const { cssVersion } = require('./lib/css-version.js');
+const { js: jsVersion } = require('./lib/asset-version.js');
 
 // ── Vercel config: remove shell rewrites, add cache header ───────────────────
 

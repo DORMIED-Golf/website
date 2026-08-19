@@ -20,6 +20,7 @@ const feedBake = require('./feed-bake');
 
 const { dataVersion } = require('./lib/data-version');
 const { cssVersion } = require('./lib/css-version.js');
+const { js: jsVersion } = require('./lib/asset-version.js');
 const ROOT   = path.resolve(__dirname, '..');
 const OUT    = path.join(ROOT, 'witb', 'index.html');
 const SB_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -1605,13 +1606,13 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
   })();
   </script>
 
-  <script defer src="/js/utils.min.js?v=20260318"></script>
+  <script defer src="/js/utils.min.js?v=${jsVersion('utils.min.js')}"></script>
   <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
-  <script defer src="/js/feed.min.js?v=20260717"></script>
-  <script defer src="/js/search.min.js?v=20260529"></script>
+  <script defer src="/js/feed.min.js?v=${jsVersion('feed.min.js')}"></script>
+  <script defer src="/js/search.min.js?v=${jsVersion('search.min.js')}"></script>
   <!-- Required by the footer signup form below. Without it the form has no
        submit handler and a signup silently reloads the page. -->
-  <script defer src="/js/signup.min.js?v=20260718d"></script>
+  <script defer src="/js/signup.min.js?v=${jsVersion('signup.min.js')}"></script>
 </body>
 </html>`;
 }

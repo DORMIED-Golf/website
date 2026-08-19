@@ -249,6 +249,7 @@ function getRelatedBrands(dormiedData, brandSlug, curSearches, count = 5) {
 const { regenerateSitemap } = require('./generate-sitemap');
 const { generateSearchIndex } = require('./generate-search-index');
 const { cssVersion } = require('./lib/css-version.js');
+const { js: jsVersion } = require('./lib/asset-version.js');
 
 // ── Per-market helpers — match brand.js exactly ───────────────────────────────
 
@@ -1148,15 +1149,15 @@ ${scSignupHtml}
   <!-- Brand slug in its own block — isolated so no upstream error can block it -->
   <script>window.__BRAND_SLUG__='${escHtml(slug)}';${brandAffiliateLink(slug) ? `window.__BRAND_AFFILIATE_URL__='${escHtml(brandAffiliateLink(slug))}';` : ''}</script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
-  <script defer src="/js/utils.min.js?v=20260318"></script>
+  <script defer src="/js/utils.min.js?v=${jsVersion('utils.min.js')}"></script>
   <script defer src="/js/data.min.js?v=${dataVersion()}"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  <script defer src="/js/brand.min.js?v=20260707"></script>
-  <script defer src="/js/feed.min.js?v=20260717"></script>
-  <script defer src="/js/analytics.min.js?v=20260320a"></script>
-  <script defer src="/js/signup.min.js?v=20260718d"></script>
-  <script src="/js/search.min.js?v=20260529"></script>
-  ${hasShop ? '<script defer src="/js/shop-carousel.min.js?v=20260818"></script>' : ''}
+  <script defer src="/js/brand.min.js?v=${jsVersion('brand.min.js')}"></script>
+  <script defer src="/js/feed.min.js?v=${jsVersion('feed.min.js')}"></script>
+  <script defer src="/js/analytics.min.js?v=${jsVersion('analytics.min.js')}"></script>
+  <script defer src="/js/signup.min.js?v=${jsVersion('signup.min.js')}"></script>
+  <script src="/js/search.min.js?v=${jsVersion('search.min.js')}"></script>
+  ${hasShop ? `<script defer src="/js/shop-carousel.min.js?v=${jsVersion('shop-carousel.min.js')}"></script>` : ''}
 
   <!-- Mobile nav hamburger -->
   <script>

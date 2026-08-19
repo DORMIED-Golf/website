@@ -33,6 +33,7 @@ const { matchBagToProducts } = require('./lib/witb-shop-match');
 const AB               = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
 const { cssVersion } = require('./lib/css-version.js');
+const { js: jsVersion } = require('./lib/asset-version.js');
 
 // Explicit bag-item -> product overrides, keyed 'brand|club_type|normalised model'.
 // The only way a model too short to be distinctive (e.g. Cobra's "SB") can reach
@@ -1596,13 +1597,13 @@ ${witbFaqHtml}
     .witb-footnote a:hover{color:var(--green)}
   </style>
 
-  <script defer src="/js/utils.min.js?v=20260318"></script>
-  <script defer src="/js/feed.min.js?v=20260717"></script>
-  <script defer src="/js/search.min.js?v=20260529"></script>
+  <script defer src="/js/utils.min.js?v=${jsVersion('utils.min.js')}"></script>
+  <script defer src="/js/feed.min.js?v=${jsVersion('feed.min.js')}"></script>
+  <script defer src="/js/search.min.js?v=${jsVersion('search.min.js')}"></script>
   <!-- Required by the footer signup form below. Without it the form has no
        submit handler and a signup silently reloads the page. -->
-  <script defer src="/js/signup.min.js?v=20260718d"></script>
-  ${(shopBrand || shopBag) ? '<script defer src="/js/shop-carousel.min.js?v=20260818"></script>' : ''}
+  <script defer src="/js/signup.min.js?v=${jsVersion('signup.min.js')}"></script>
+  ${(shopBrand || shopBag) ? `<script defer src="/js/shop-carousel.min.js?v=${jsVersion('shop-carousel.min.js')}"></script>` : ''}
   <script>
   // Player page view tracking — fire-and-forget, mirrors brand_page_views
   (function(pid){

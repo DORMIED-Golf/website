@@ -1387,13 +1387,13 @@ ${faqHtml}
   })();
   </script>
   <script>document.getElementById('footer-year').textContent=new Date().getFullYear();</script>
-  <script src="/js/analytics.min.js?v=20260320a"></script>
-  <script src="/js/signup.min.js?v=20260718d"></script>
-  <script src="/js/search.min.js?v=20260508"></script>
+  <script src="/js/analytics.min.js?v=${jsVersion('analytics.min.js')}"></script>
+  <script src="/js/signup.min.js?v=${jsVersion('signup.min.js')}"></script>
+  <script src="/js/search.min.js?v=${jsVersion('search.min.js')}"></script>
   <script src="/js/brand-data/${escHtml(brandSlug)}.js?v=${escHtml(dataVersion)}"></script>
-  <script src="/js/feed.min.js?v=20260717"></script>
-  <script src="/js/da-article.min.js?v=20260522"></script>
-  ${hasShop ? '<script defer src="/js/shop-carousel.min.js?v=20260818"></script>' : ''}
+  <script src="/js/feed.min.js?v=${jsVersion('feed.min.js')}"></script>
+  <script src="/js/da-article.min.js?v=${jsVersion('da-article.min.js')}"></script>
+  ${hasShop ? `<script defer src="/js/shop-carousel.min.js?v=${jsVersion('shop-carousel.min.js')}"></script>` : ''}
 
 </body>
 </html>`;
@@ -1407,6 +1407,7 @@ const { regenerateSitemap } = require('./generate-sitemap');
 const { generateSearchIndex } = require('./generate-search-index');
 const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
 const { cssVersion } = require('./lib/css-version.js');
+const { js: jsVersion } = require('./lib/asset-version.js');
 
 // ── HTML verification ──────────────────────────────────────────────────────────
 // Called immediately after writing the article HTML. Throws on any failure so
