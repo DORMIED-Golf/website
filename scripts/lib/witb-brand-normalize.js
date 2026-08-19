@@ -50,14 +50,68 @@ const CANONICAL_BRANDS = {
 
 // normKey(brand) -> { normKey(model): canonical model }
 const CANONICAL_MODELS = {
+  callaway: {
+    xforged: 'X Forged',
+    xforgedut: 'X Forged UT',
+  },
+  cleveland: {
+    rtx4: 'RTX 4',
+    rtx6zipcoretourrack: 'RTX 6 ZipCore Tour Rack',
+    rtxzipcore: 'RTX ZipCore',
+    rtxzipcoretourrack: 'RTX ZipCore Tour Rack',
+  },
+  cobra: {
+    king: 'King',
+    kingf9speedback: 'King F9 SpeedBack',
+    kingspeedzonetour: 'King SpeedZone Tour',
+    optmmaxk: 'OPTM MAX-K',
+    radspeedbigtour: 'RadSpeed Big Tour',
+  },
   golfpride: {
     zgripcord: 'Z-Grip Cord',
     zgripcordalign: 'Z-Grip Cord Align',
+  },
+  labgolf: {
+    mezz1max: 'MEZZ.1 Max',
   },
   lamkin: {
     utx: 'UTx',
     utxmid: 'UTx Mid',
     utxmidsize: 'UTx Midsize',
+  },
+  odyssey: {
+    aione7s: 'Ai-ONE #7S',
+    metalxmilled9ht: 'Metal X Milled 9HT',
+    oworks1w: 'O-Works 1W',
+    oworks7s: 'O-Works 7S',
+    trihot5ktwo: 'Tri-Hot 5K Two',
+    whitehotversa1: 'White Hot Versa 1',
+  },
+  ping: {
+    g430max: 'G430 Max',
+    pldanser2prototype: 'PLD Anser 2 Prototype',
+    pldanserprototype: 'PLD Anser Prototype',
+    scottsdaletecallyblueonset: 'Scottsdale TEC Ally Blue Onset',
+  },
+  scottycameron: {
+    newportprototype: 'Newport Prototype',
+  },
+  srixon: {
+    zu85: 'Z U85',
+  },
+  taylormade: {
+    gaprlo: 'GAPR LO',
+    spiderxhydroblast: 'Spider X Hydro Blast',
+    tp5x: 'TP5x',
+    tp5xpix: 'TP5x Pix',
+  },
+  titleist: {
+    '681as': '681.AS',
+    '915fd': '915 Fd',
+    prov1x: 'Pro V1x',
+    u505: 'U-505',
+    vokeydesignwedgeworksprototype: 'Vokey Design WedgeWorks Prototype',
+    wedgeworks: 'WedgeWorks',
   },
 };
 
