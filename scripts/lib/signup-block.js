@@ -219,9 +219,12 @@ function signupBlockHtml({ slot, pageType, data, brandSlug, latestIssueUrl } = {
     : '';
 
   const testimonialHtml = TESTIMONIAL.enabled
+    // Curly quotes around the text and a dash before the source so it reads as
+    // an attributed quotation rather than a stray line of copy. The dash is a
+    // hyphen, not an em dash, which the copy rules forbid.
     ? `<figure class="scb-quote">` +
-        `<blockquote class="scb-quote-text">${esc(TESTIMONIAL.quote)}</blockquote>` +
-        `<figcaption class="scb-quote-src">${esc(TESTIMONIAL.source)}</figcaption>` +
+        `<blockquote class="scb-quote-text">&ldquo;${esc(TESTIMONIAL.quote)}&rdquo;</blockquote>` +
+        `<figcaption class="scb-quote-src">- ${esc(TESTIMONIAL.source)}</figcaption>` +
       `</figure>`
     : '';
 

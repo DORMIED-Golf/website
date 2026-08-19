@@ -1357,7 +1357,7 @@ ${faqHtml}
       <div class="footer-signup">
         <div class="footer-signup-header">
           <p class="footer-signup-label">THE SCORECARD</p>
-          <p class="footer-signup-sub">Golf's brand desk in your inbox. The biggest moves of the month, what drove them, and what they mean. Once a month.</p>
+          <p class="footer-signup-sub">Golf's brand desk in your inbox. The biggest moves of the month, what drove them, and what they mean. Once a month (sometimes more).</p>
         </div>
         <form class="footer-signup-form" novalidate>
           <div class="footer-signup-row">

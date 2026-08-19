@@ -7213,15 +7213,19 @@ details[open] .faq-question::after { content: '−'; }
 }
 
 /* ── The Scorecard inline signup block ─────────────────────────────────────────
-   Baked static markup with reserved min-height so it cannot shift layout. The
-   heights below are deliberate: the block must occupy its final size before any
-   script runs, and the success/error states swap INSIDE the same box. */
+   A WHITE card on the dark site, deliberately: at dark-on-dark it blended into
+   the page and read as more body copy. Every colour here is a literal rather
+   than a theme token, because the tokens are all tuned for the dark ground and
+   would fail contrast on white. Checked against #ffffff: eyebrow 5.02:1,
+   headline 19.3:1, proof 10.3:1, micro and quote 7.6:1, source 4.8:1, error
+   6.5:1, and the button keeps #052e0e on brand green at 6.6:1. All AA.
+   Reserved min-height so the baked block cannot shift layout. */
 .scb {
   margin: 32px 0;
   padding: 22px 22px 18px;
-  border: 1px solid var(--border-lite);
+  border: 1px solid #e5e7eb;
   border-radius: var(--radius);
-  background: transparent;
+  background: #ffffff;
   min-height: 268px;
 }
 .scb-eyebrow {
@@ -7230,7 +7234,7 @@ details[open] .faq-question::after { content: '−'; }
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--green);
+  color: #15803d;
   margin: 0 0 10px;
 }
 .scb-headline {
@@ -7238,14 +7242,14 @@ details[open] .faq-question::after { content: '−'; }
   font-size: 1.5rem;
   line-height: 1.2;
   font-weight: 700;
-  color: var(--text);
+  color: #0b0f0b;
   margin: 0 0 8px;
 }
 .scb-proof {
   font-family: var(--font-body);
   font-size: .95rem;
   line-height: 1.5;
-  color: var(--text-dim);
+  color: #374151;
   margin: 0 0 16px;
 }
 .scb-label {
@@ -7262,17 +7266,18 @@ details[open] .faq-question::after { content: '−'; }
   flex: 1 1 200px;
   min-width: 0;
   min-height: 44px;
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
+  background: #ffffff;
+  border: 1px solid #cbd5d1;
   border-radius: var(--radius);
-  color: var(--text);
+  color: #111827;
   font-family: var(--font-body);
   font-size: 15px;
   padding: 11px 14px;
   outline: 0;
   transition: border-color .15s;
 }
-.scb-input:focus { border-color: var(--green); }
+.scb-input::placeholder { color: #6b7280; }
+.scb-input:focus { border-color: #15803d; box-shadow: 0 0 0 2px rgba(21,128,61,.15); }
 .scb-btn {
   flex-shrink: 0;
   min-height: 44px;
@@ -7288,48 +7293,45 @@ details[open] .faq-question::after { content: '−'; }
   white-space: nowrap;
   transition: background .15s;
 }
-.scb-btn:hover { background: var(--green-dim); }
+.scb-btn:hover { background: var(--green-dim); border-color: var(--green-dim); }
 .scb-btn[disabled] { opacity: .7; cursor: default; }
 .scb-micro {
   font-family: var(--font-body);
   font-size: .8rem;
-  color: var(--text-muted);
+  color: #4b5563;
   margin: 10px 0 0;
 }
-/* Status region is always in the DOM so success and error text cannot add
-   height when they appear. */
 .scb-status {
   font-family: var(--font-body);
   font-size: .9rem;
   line-height: 1.45;
   margin: 10px 0 0;
   min-height: 20px;
-  color: var(--text-dim);
+  color: #374151;
 }
-.scb-status--err { color: var(--red); }
-.scb-status--ok  { color: var(--green); }
-.scb-status a { color: var(--green); }
+.scb-status--err { color: #b91c1c; }
+.scb-status--ok  { color: #15803d; }
+.scb-status a { color: #15803d; }
 .scb-quote {
   margin: 16px 0 0;
   padding: 12px 0 0;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid #e5e7eb;
 }
 .scb-quote-text {
   font-family: var(--font-body);
   font-size: .85rem;
   font-style: italic;
   line-height: 1.5;
-  color: var(--text-dim);
+  color: #4b5563;
   margin: 0;
 }
 .scb-quote-src {
   font-family: var(--font-mono);
   font-size: .72rem;
   letter-spacing: .04em;
-  color: var(--text-muted);
+  color: #6b7280;
   margin: 6px 0 0;
 }
-/* Success state replaces the form inside the SAME reserved box. */
 .scb--done .scb-form,
 .scb--done .scb-proof { display: none; }
 @media (max-width: 600px) {
