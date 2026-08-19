@@ -50,6 +50,24 @@ async function subscribeToBeehiiv(email) {
   return { success: true };
 }
 
+/**
+ * A browser with JS disabled submits the form natively, which arrives as
+ * application/x-www-form-urlencoded and expects a PAGE back, not JSON. Handing
+ * that reader a raw JSON body would look broken and lose their signup, so those
+ * requests get a 303 to a real confirmation page instead. The fetch upgrade in
+ * js/signup.js sends JSON and still gets JSON.
+ */
+const CONFIRM_PATH = '/scorecard/subscribed/';
+
+function wantsHtml(req) {
+  const ct = String(req.headers['content-type'] || '');
+  const accept = String(req.headers['accept'] || '');
+  if (ct.includes('application/json')) return false;
+  return ct.includes('application/x-www-form-urlencoded')
+      || ct.includes('multipart/form-data')
+      || (accept.includes('text/html') && !accept.includes('application/json'));
+}
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -58,16 +76,20 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+  const html = wantsHtml(req);
   const { email } = req.body || {};
 
   if (!email || typeof email !== 'string' || !EMAIL_RE.test(email.trim())) {
+    if (html) return res.redirect(303, `${CONFIRM_PATH}?status=invalid`);
     return res.status(400).json({ error: 'Please enter a valid email address.' });
   }
 
   try {
     const result = await subscribeToBeehiiv(email.trim().toLowerCase());
+    if (html) return res.redirect(303, `${CONFIRM_PATH}?status=ok`);
     return res.status(200).json(result);
   } catch (err) {
+    if (html) return res.redirect(303, `${CONFIRM_PATH}?status=error`);
     return res.status(502).json({ error: 'Something went wrong. Try again or email us at dormiedgolf@gmail.com' });
   }
 };

@@ -64,6 +64,7 @@ const RULES = [
   { marker: 'id="featured-list"',         script: 'feed.min.js',          minPages: 800, what: 'featured widget' },
   { marker: 'id="bp-latest-list"',        script: 'feed.min.js',          minPages: 150, what: 'brand LATEST list' },
   { marker: 'id="bp-shop-track"',         script: 'shop-carousel.min.js', minPages: 150, what: 'shop carousel' },
+  { marker: 'class="scb"',                script: 'signup.min.js',        minPages: 400, what: 'inline Scorecard signup' },
 ];
 
 /** Directories that are not part of the deploy artifact. */

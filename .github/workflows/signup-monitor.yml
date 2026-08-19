@@ -1,0 +1,67 @@
+name: Signup Monitor
+
+# The footer signup silently stopped reaching Beehiiv and nobody found out for an
+# unknown period. Structural checks cannot catch that: the markup was perfect,
+# the endpoint answered, and the failure was downstream. The only thing that
+# would have caught it on day one is actually submitting and asserting success.
+#
+# Submits a known address to the LIVE endpoint weekly and fails loudly on any
+# response that is not a confirmed subscription.
+#
+# The address is dormiedgolf+monitor@gmail.com. Plus-addressing means it lands
+# in the normal inbox, filters trivially in Gmail, is suppressible in Beehiiv,
+# and is obvious as a monitor in the subscriber list. Beehiiv dedupes on the
+# address, so a weekly run does not accumulate subscribers.
+
+on:
+  schedule:
+    - cron: '17 9 * * 1'     # Mondays 09:17 UTC
+  workflow_dispatch:
+    inputs:
+      endpoint:
+        description: 'Override the endpoint (use to demonstrate the failure case)'
+        required: false
+        default: ''
+
+jobs:
+  submit:
+    name: Live signup still reaches Beehiiv
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Submit a known address and assert success
+        env:
+          MONITOR_EMAIL: dormiedgolf+monitor@gmail.com
+          ENDPOINT_OVERRIDE: ${{ github.event.inputs.endpoint }}
+        run: |
+          set -euo pipefail
+          ENDPOINT="${ENDPOINT_OVERRIDE:-https://dormied.com/api/subscribe}"
+          echo "Submitting $MONITOR_EMAIL to $ENDPOINT"
+
+          BODY_FILE=$(mktemp)
+          CODE=$(curl -sS -o "$BODY_FILE" -w '%{http_code}' \
+            -X POST "$ENDPOINT" \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json' \
+            --max-time 30 \
+            -d "{\"email\":\"$MONITOR_EMAIL\"}" || echo "000")
+
+          BODY=$(cat "$BODY_FILE")
+          echo "HTTP $CODE"
+          echo "Body: $BODY"
+
+          if [ "$CODE" != "200" ]; then
+            echo "::error::Signup endpoint returned HTTP $CODE, expected 200. Signups may be failing for real readers."
+            exit 1
+          fi
+
+          # A 200 alone is not proof. The handler returns {"success":true} only
+          # after Beehiiv accepts, so assert on that rather than the status code.
+          if ! printf '%s' "$BODY" | grep -q '"success"[[:space:]]*:[[:space:]]*true'; then
+            echo "::error::Endpoint answered 200 but did not confirm the subscription. Body: $BODY"
+            exit 1
+          fi
+
+          echo "Signup confirmed by Beehiiv."

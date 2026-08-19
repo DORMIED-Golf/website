@@ -38,6 +38,7 @@ const path = require('path');
 const vm   = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const feedBake = require('./feed-bake');
+const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -489,6 +490,20 @@ function mdToPlain(md) {
     .join('\n\n');
 }
 
+
+/** Newest published Scorecard issue, for the signup block's success state. */
+function latestScorecardUrl() {
+  try {
+    const dir = path.join(ROOT, 'scorecard');
+    const MON = { january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12 };
+    const issues = fs.readdirSync(dir, { withFileTypes: true })
+      .filter(e => e.isDirectory() && /^[a-z]+-\d{4}$/.test(e.name))
+      .map(e => { const [mm, y] = e.name.split('-'); return { name: e.name, key: Number(y) * 100 + (MON[mm] || 0) }; })
+      .sort((a, b) => b.key - a.key);
+    return issues.length ? `/scorecard/${issues[0].name}/` : '/scorecard/';
+  } catch (e) { return '/scorecard/'; }
+}
+
 function figureHtml(F, img, eager) {
   const cap = img.caption ? `<figcaption class="da-figcaption">${inlineMd(img.caption)}</figcaption>` : '';
   // A 2x variant is opt-in per image via file2x. Images without one emit
@@ -811,6 +826,7 @@ ${takeawaysHtml}
               ${bioHtml}
               ${bodyHtml}
             </div>
+${scbHtml({ slot: 'feature', pageType: 'feature', brandSlug: F.brandSlug || '', latestIssueUrl: latestScorecardUrl() })}
 ${BRAND_CARD_HTML}${SHOP_SECTION_HTML}
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">

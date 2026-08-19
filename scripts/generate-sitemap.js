@@ -426,7 +426,14 @@ async function regenerateSitemap() {
     : [];
 
   // ── 3. Scorecard issues ────────────────────────────────────────────────────
-  const scorecardPages = walkSubdirs('scorecard').filter(notRedirected('scorecard'));
+  // Only real issues, which are always {month}-{year}. /scorecard/subscribed/ is
+  // the no-JS signup confirmation page: it is noindex and has no content date,
+  // so it must not be enumerated as an issue (doing so aborted the whole sitemap
+  // rather than fabricating a lastmod, which is the correct refusal).
+  const ISSUE_SLUG = /^[a-z]+-\d{4}$/;
+  const scorecardPages = walkSubdirs('scorecard')
+    .filter(notRedirected('scorecard'))
+    .filter(p => ISSUE_SLUG.test(p.slug));
   const scorecardEntries = scorecardPages.length
     ? [
         `\n  <!-- ── Scorecard issues ── -->`,

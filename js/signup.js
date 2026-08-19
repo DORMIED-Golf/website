@@ -1,220 +1,202 @@
 /**
- * DORMIED — Email Signup Module
+ * DORMIED Email Signup
  *
- * Handles:
- *  1. Footer signup form (`.footer-signup-form`)
- *  2. Scroll-triggered popup (injected dynamically)
+ * Handles two form shapes, one code path:
+ *   1. Inline "Scorecard" blocks  (section.scb, baked per page type)
+ *   2. Footer signup form         (.footer-signup-form, the persistent control)
  *
- * Depends on: nothing (vanilla JS, no framework).
- * Loaded on every page.
+ * THERE IS NO POPUP. The modal was removed: it converted badly, cost
+ * main-thread work on mobile, and exposed the site to Google's intrusive
+ * interstitial treatment on mobile search landings. The inline blocks replace
+ * it and are baked into the HTML with reserved height, so nothing here inserts
+ * markup or changes layout.
+ *
+ * PROGRESSIVE ENHANCEMENT
+ * Every form already has action + method and submits natively without JS,
+ * landing on a real confirmation page. This file only UPGRADES that to an
+ * in-place success state. A script error must never be able to swallow a
+ * signup, which is why the markup works on its own first.
+ *
+ * NO SILENT CATCHES
+ * The footer form once stopped reaching Beehiiv and nobody found out for an
+ * unknown period. Every failure path here fires scorecard_signup_error with an
+ * error_type and logs to console. Nothing shows success without confirmation.
  */
 (function () {
   'use strict';
 
-  var LS_SEEN        = 'dormied_popup_seen';
-  var LS_SUBSCRIBED  = 'dormied_subscribed';
-  var EMAIL_RE       = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var LS_SUBSCRIBED = 'dormied_subscribed';
+  var EMAIL_RE      = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var ERROR_MSG     = 'Something went wrong. Try again or email us at dormiedgolf@gmail.com';
 
-  var SUCCESS_MSG = 'You are in. First Scorecard lands next month.';
-  var ERROR_MSG   = 'Something went wrong. Try again or email us at dormiedgolf@gmail.com';
-
-  /* ── Shared: call /api/subscribe ──────────────────────────────────────── */
-  function submitEmail(email, btn, onSuccess, onError) {
-    btn.disabled = true;
-    btn.dataset.originalText = btn.dataset.originalText || btn.textContent;
-    btn.textContent = 'Sending…';
-
-    fetch('/api/subscribe', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ email: email }),
-    })
-    .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
-    .then(function (res) {
-      if (res.ok && res.data.success) {
-        try { localStorage.setItem(LS_SUBSCRIBED, '1'); } catch (e) {}
-        onSuccess();
-      } else {
-        btn.disabled    = false;
-        btn.textContent = btn.dataset.originalText;
-        onError(res.data.error || ERROR_MSG);
-      }
-    })
-    .catch(function () {
-      btn.disabled    = false;
-      btn.textContent = btn.dataset.originalText;
-      onError(ERROR_MSG);
-    });
+  /* ── GA4 via the existing GTM dataLayer (no new analytics library) ────────── */
+  function track(event, ctx, extra) {
+    try {
+      window.dataLayer = window.dataLayer || [];
+      var payload = {
+        event:      event,
+        slot:       ctx.slot,
+        page_type:  ctx.pageType,
+        page_path:  location.pathname
+      };
+      if (ctx.brandSlug) payload.brand_slug = ctx.brandSlug;
+      if (extra) for (var k in extra) if (extra.hasOwnProperty.call(extra, k)) payload[k] = extra[k];
+      window.dataLayer.push(payload);
+    } catch (e) {
+      // Tracking must never break a signup.
+      if (window.console) console.warn('[signup] track failed', e);
+    }
   }
 
-  /* ── Inline signup forms (.footer-signup-form) ────────────────────────────
-     Wires every instance on the page (footer + any in-page CTA, e.g. the
-     /scorecard hero). Each form may set data-source for tracking. */
-  function initFooterForm() {
-    var forms = document.querySelectorAll('.footer-signup-form');
-    for (var i = 0; i < forms.length; i++) wireSignupForm(forms[i]);
+  /* Map a server response to the error_type vocabulary the GA4 alarm reads. */
+  function errorType(status, body) {
+    if (status === 400) return 'invalid_email';
+    if (status === 409) return 'already_subscribed';
+    if (status === 502 || status === 500) return 'endpoint_error';
+    if (body && /already/i.test(body.error || '')) return 'already_subscribed';
+    return 'unknown';
   }
 
-  function wireSignupForm(form) {
-    var input  = form.querySelector('.footer-signup-input');
-    var btn    = form.querySelector('.footer-signup-btn');
-    var msg    = form.querySelector('.footer-signup-msg');
-    var source = form.getAttribute('data-source') || 'footer';
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var email = (input.value || '').trim();
-      if (!EMAIL_RE.test(email)) {
-        showMsg(msg, 'Please enter a valid email address.', false);
-        return;
-      }
-      clearMsg(msg);
-      submitEmail(
-        email, btn,
-        function () { // success
-          form.innerHTML = '<p class="footer-signup-success">' + SUCCESS_MSG + '</p>';
-          if (window.DORMIED_TRACK) window.DORMIED_TRACK('scorecard_signup', { source: source });
-        },
-        function (err) { // error
-          showMsg(msg, err || ERROR_MSG, false);
-        }
-      );
-    });
+  /* ── Context for a form, read from the baked data attributes ─────────────── */
+  function contextFor(form) {
+    var block = form.closest ? form.closest('.scb') : null;
+    if (block) {
+      return {
+        slot:      block.getAttribute('data-slot')       || 'inline',
+        pageType:  block.getAttribute('data-page-type')  || 'unknown',
+        brandSlug: block.getAttribute('data-brand-slug') || '',
+        nextMonth: block.getAttribute('data-next-month') || '',
+        latestIssue: block.getAttribute('data-latest-issue') || '',
+        block:     block,
+        status:    block.querySelector('.scb-status'),
+        btn:       form.querySelector('.scb-btn'),
+        input:     form.querySelector('.scb-input')
+      };
+    }
+    // Footer: the control, instrumented identically so the two are comparable.
+    return {
+      slot:      'footer',
+      pageType:  document.body.getAttribute('data-page-type') || 'footer',
+      brandSlug: '',
+      nextMonth: '',
+      latestIssue: '',
+      block:     form,
+      status:    form.querySelector('.footer-signup-msg'),
+      btn:       form.querySelector('.footer-signup-btn'),
+      input:     form.querySelector('.footer-signup-input')
+    };
   }
 
-  function showMsg(el, text, isSuccess) {
+  function setStatus(ctx, text, kind, htmlSuffix) {
+    var el = ctx.status;
     if (!el) return;
-    el.textContent  = text;
-    el.className    = 'footer-signup-msg ' + (isSuccess ? 'footer-signup-msg--ok' : 'footer-signup-msg--err');
+    el.textContent = text;
+    if (htmlSuffix) el.innerHTML = el.innerHTML + htmlSuffix;
+    el.className = (ctx.slot === 'footer' ? 'footer-signup-msg' : 'scb-status') +
+                   (kind ? ' ' + (ctx.slot === 'footer' ? 'footer-signup-msg--' : 'scb-status--') + kind : '');
     el.style.display = 'block';
   }
-  function clearMsg(el) {
-    if (!el) return;
-    el.textContent   = '';
-    el.style.display = 'none';
+
+  /* Success swaps content INSIDE the same box, so height never moves.
+     The CSS min-height reserves space for the INITIAL render, but it cannot know
+     the natural height at every breakpoint, and hiding the form on success would
+     otherwise collapse the box by hundreds of pixels. So freeze the measured
+     height first: that is exact at any viewport and needs no guessed value. */
+  function freezeHeight(el) {
+    if (!el || !el.getBoundingClientRect) return;
+    var h = el.getBoundingClientRect().height;
+    if (h > 0) el.style.minHeight = h + 'px';
   }
 
-  /* ── Popup ────────────────────────────────────────────────────────────── */
-  var POPUP_HTML =
-    '<div id="signup-overlay" class="signup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-heading">'
-  +   '<div class="signup-popup">'
-  +     '<button class="signup-popup-close" id="popup-close" aria-label="Close">&times;</button>'
-  +     '<div class="signup-popup-inner">'
-  +       '<img class="signup-popup-img" src="/_vercel/image?url=%2Fimages%2Fscorecard-cover.jpg&w=400&q=75" alt="DORMIED, The Scorecard" width="180" height="320" loading="lazy">'
-  +       '<div class="signup-popup-content">'
-  +         '<h2 class="signup-popup-heading" id="popup-heading">Get The Scorecard.</h2>'
-  +         '<p class="signup-popup-body">Your group chat will be talking about these brands next month. You\'ll already know why.</p>'
-  +         '<ul class="signup-popup-bullets">'
-  +           '<li>The biggest brand moves in golf, explained</li>'
-  +           '<li>Data from 215 brands across 10 global markets</li>'
-  +           '<li>Once a month. Free. No filler.</li>'
-  +         '</ul>'
-  +         '<form class="signup-popup-form" id="popup-form" novalidate>'
-  +           '<input class="signup-popup-input" id="popup-email" type="email" placeholder="Your email" required autocomplete="email">'
-  +           '<button class="signup-popup-btn" id="popup-btn" type="submit">Subscribe</button>'
-  +           '<p class="signup-popup-error" id="popup-error"></p>'
-  +         '</form>'
-  +       '</div>'
-  +     '</div>'
-  +   '</div>'
-  + '</div>';
-
-  function injectPopup() {
-    var div = document.createElement('div');
-    div.innerHTML = POPUP_HTML;
-    document.body.appendChild(div.firstChild);
+  function showSuccess(ctx) {
+    freezeHeight(ctx.block);
+    try { localStorage.setItem(LS_SUBSCRIBED, '1'); } catch (e) {}
+    var line = ctx.nextMonth
+      ? 'You are in. The next issue lands ' + ctx.nextMonth + '.'
+      : 'You are in. The next issue lands soon.';
+    var link = ctx.latestIssue
+      ? ' <a href="' + ctx.latestIssue + '">Read the latest issue</a>'
+      : '';
+    if (ctx.block && ctx.block.classList) ctx.block.classList.add('scb--done');
+    setStatus(ctx, line, 'ok', link);
   }
 
-  function closePopup(markSeen) {
-    var overlay = document.getElementById('signup-overlay');
-    if (!overlay) return;
-    overlay.classList.remove('signup-overlay--visible');
-    setTimeout(function () {
-      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-    }, 320);
-    if (markSeen) {
-      try { localStorage.setItem(LS_SEEN, '1'); } catch (e) {}
-    }
-  }
+  /* ── Submit ──────────────────────────────────────────────────────────────── */
+  function wire(form) {
+    var ctx = contextFor(form);
+    if (!ctx.input || !ctx.btn) return;   // markup we do not recognise: leave the native submit alone
 
-  function openPopup() {
-    var overlay = document.getElementById('signup-overlay');
-    if (!overlay) return;
-    // Small delay so the CSS transition fires
-    requestAnimationFrame(function () {
-      overlay.classList.add('signup-overlay--visible');
-    });
-  }
-
-  function initPopup() {
-    // Skip on mobile viewports < 480px
-    if (window.innerWidth < 480) return;
-
-    // Skip if already seen or subscribed
-    try {
-      if (localStorage.getItem(LS_SEEN) || localStorage.getItem(LS_SUBSCRIBED)) return;
-    } catch (e) {}
-
-    injectPopup();
-
-    // Wire up close/dismiss
-    document.getElementById('popup-close').addEventListener('click', function () {
-      closePopup(true);
-    });
-    document.getElementById('signup-overlay').addEventListener('click', function (e) {
-      if (e.target === this) closePopup(true);
-    });
-
-    // Form submit
-    document.getElementById('popup-form').addEventListener('submit', function (e) {
-      e.preventDefault();
-      var emailInput = document.getElementById('popup-email');
-      var btn        = document.getElementById('popup-btn');
-      var errEl      = document.getElementById('popup-error');
-      var email      = (emailInput.value || '').trim();
+    form.addEventListener('submit', function (e) {
+      var email = (ctx.input.value || '').trim();
 
       if (!EMAIL_RE.test(email)) {
-        errEl.textContent   = 'Please enter a valid email address.';
-        errEl.style.display = 'block';
+        e.preventDefault();
+        setStatus(ctx, 'Please enter a valid email address.', 'err');
+        track('scorecard_signup_error', ctx, { error_type: 'invalid_email' });
         return;
       }
-      errEl.style.display = 'none';
 
-      submitEmail(
-        email, btn,
-        function () { // success — replace content, auto-close after 3s
-          var popup = document.querySelector('.signup-popup');
-          popup.innerHTML = '<p class="signup-popup-success">' + SUCCESS_MSG + '</p>';
-          setTimeout(function () { closePopup(false); }, 3000);
-          if (window.DORMIED_TRACK) window.DORMIED_TRACK('scorecard_signup', { source: 'popup' });
-        },
-        function (err) { // error
-          errEl.textContent   = err || ERROR_MSG;
-          errEl.style.display = 'block';
+      e.preventDefault();   // only after validation, so a no-JS submit is untouched
+      track('scorecard_signup_submit', ctx);
+
+      ctx.btn.disabled = true;
+      var original = ctx.btn.textContent;
+      ctx.btn.textContent = 'Sending...';
+      setStatus(ctx, '', '');
+
+      fetch(form.getAttribute('action'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email: email })
+      })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, data: d }; });
+      })
+      .then(function (res) {
+        if (res.ok && res.data && res.data.success) {
+          track('scorecard_signup_success', ctx);
+          showSuccess(ctx);
+          return;
         }
-      );
+        ctx.btn.disabled = false;
+        ctx.btn.textContent = original;
+        var type = errorType(res.status, res.data);
+        setStatus(ctx, (res.data && res.data.error) || ERROR_MSG, 'err');
+        track('scorecard_signup_error', ctx, { error_type: type });
+        if (window.console) console.warn('[signup] submission rejected', res.status, res.data);
+      })
+      .catch(function (err) {
+        ctx.btn.disabled = false;
+        ctx.btn.textContent = original;
+        setStatus(ctx, ERROR_MSG, 'err');
+        track('scorecard_signup_error', ctx, { error_type: 'network' });
+        if (window.console) console.error('[signup] network failure', err);
+      });
     });
-
-    // Scroll trigger at 60%
-    var triggered = false;
-    function onScroll() {
-      if (triggered) return;
-      var scrolled = window.scrollY + window.innerHeight;
-      var total    = document.documentElement.scrollHeight;
-      if (scrolled / total >= 0.60) {
-        triggered = true;
-        window.removeEventListener('scroll', onScroll);
-        openPopup();
-        try { localStorage.setItem(LS_SEEN, '1'); } catch (e) {}
-      }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  /* ── Boot ─────────────────────────────────────────────────────────────── */
+  /* ── View tracking ───────────────────────────────────────────────────────────
+     Gives a real conversion rate (signups per block SEEN) rather than per
+     pageview, which is the number that decides whether the WITB placement earns
+     its space. Observes only the signup blocks and disconnects after firing. */
+  function observeViews(blocks) {
+    if (!('IntersectionObserver' in window) || !blocks.length) return;
+    var io = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        var en = entries[i];
+        if (!en.isIntersecting) continue;
+        var form = en.target.querySelector('form');
+        if (form) track('scorecard_signup_view', contextFor(form));
+        io.unobserve(en.target);
+      }
+    }, { threshold: 0.5 });
+    for (var i = 0; i < blocks.length; i++) io.observe(blocks[i]);
+  }
+
   function init() {
-    initFooterForm();
-    initPopup();
+    var forms = document.querySelectorAll('.scb-form, .footer-signup-form');
+    for (var i = 0; i < forms.length; i++) wire(forms[i]);
+    observeViews(document.querySelectorAll('.scb'));
   }
 
   if (document.readyState === 'loading') {
@@ -222,5 +204,4 @@
   } else {
     init();
   }
-
 }());

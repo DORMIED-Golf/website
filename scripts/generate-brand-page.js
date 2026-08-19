@@ -29,6 +29,7 @@ const { dataVersion } = require('./lib/data-version');
 const { brandAffiliateLink } = require('./lib/brand-affiliate-links');
 const AB = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
+const { signupBlockHtml } = require('./lib/signup-block.js');
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const SITE_ROOT = path.resolve(__dirname, '..');
@@ -509,8 +510,31 @@ function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
   return items.slice(0, MAX_FAQ_ITEMS);
 }
 
+
+/** Newest published Scorecard issue, for the signup block's success state. */
+function latestScorecardUrl() {
+  try {
+    const dir = path.join(ROOT, 'scorecard');
+    const MON = { january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12 };
+    const issues = fs.readdirSync(dir, { withFileTypes: true })
+      .filter(e => e.isDirectory() && /^[a-z]+-\d{4}$/.test(e.name))
+      .map(e => { const [m, y] = e.name.split('-'); return { name: e.name, key: Number(y) * 100 + (MON[m] || 0) }; })
+      .sort((a, b) => b.key - a.key);
+    return issues.length ? `/scorecard/${issues[0].name}/` : '/scorecard/';
+  } catch (e) { return '/scorecard/'; }
+}
+
 function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '', hasShop = false }) {
   const { rank, di, momPct, t3m, t12m } = stats;
+
+  // Inline Scorecard signup. The proof line is this brand's own live rank and
+  // month-over-month move, so the pitch is made with the number the reader came
+  // for rather than a generic claim.
+  const scSignupHtml = signupBlockHtml({
+    slot: 'brand', pageType: 'brand', brandSlug: slug,
+    data: { brandName: brand.name, rank, momChange: momPct },
+    latestIssueUrl: latestScorecardUrl(),
+  });
 
   // WITB-style title: exact query phrase first, plain-language promise, year from the
   // latest snapshot so it rolls over automatically. Equipment brands (those with an
@@ -1017,6 +1041,7 @@ ${countryRows}
 
 ${onTourHtml}
 ${faqHtml}
+${scSignupHtml}
 
             <!-- ── Similar Brands ── -->
             <section class="bp-section" aria-labelledby="bp-similar-heading">

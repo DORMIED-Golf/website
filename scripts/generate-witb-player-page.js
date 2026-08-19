@@ -25,6 +25,8 @@ const path            = require('path');
 const vm              = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const Anthropic        = require('@anthropic-ai/sdk');
+const { signupBlockHtml } = require('./lib/signup-block.js');
+const { witbSignupData }  = require('./lib/signup-data.js');
 const { pageEligible } = require('./witb-page-eligibility');
 const feedBake         = require('./feed-bake');
 const { matchBagToProducts } = require('./lib/witb-shop-match');
@@ -820,7 +822,27 @@ function buildComparisonRows(tourComp, playerBrandsByCategory) {
 
 // ── HTML page builder ─────────────────────────────────────────────────────────
 
-function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag }) {
+
+/**
+ * Newest published Scorecard issue, for the signup block's success state. A new
+ * subscriber with nothing to do is a wasted moment, so the success line sends
+ * them straight into a real issue.
+ */
+function latestScorecardUrl() {
+  try {
+    const dir = path.join(ROOT, 'scorecard');
+    const MON = { january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12 };
+    const issues = fs.readdirSync(dir, { withFileTypes: true })
+      .filter(e => e.isDirectory() && /^[a-z]+-\d{4}$/.test(e.name))
+      .map(e => { const [m, y] = e.name.split('-'); return { name: e.name, key: Number(y) * 100 + (MON[m] || 0) }; })
+      .sort((a, b) => b.key - a.key);
+    return issues.length ? `/scorecard/${issues[0].name}/` : '/scorecard/';
+  } catch (e) {
+    return '/scorecard/';
+  }
+}
+
+function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag, signupData, latestIssueUrl }) {
   const { name, slug, owgr_rank, rolex_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
@@ -841,6 +863,17 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
             <h2 class="da-answer-label" id="da-answer-heading">Quick Answer</h2>
             <p class="da-answer-text">${esc(witbAnswer)}</p>
           </section>` : '';
+
+  // ── Inline Scorecard signup blocks ────────────────────────────────────────
+  // PRIMARY sits right after the Quick Answer: peak intent and peak abandonment
+  // in the same moment, because the reader just got the answer they searched for
+  // and has no remaining reason to scroll. SECONDARY catches the ones who read on.
+  const scSignupPrimary = signupBlockHtml({
+    slot: 'witb-primary', pageType: 'witb', data: signupData, latestIssueUrl,
+  });
+  const scSignupSecondary = signupBlockHtml({
+    slot: 'witb-secondary', pageType: 'witb', data: signupData, latestIssueUrl,
+  });
 
   const witbFaqHtml = witbFaq.length ? `
           <!-- FAQ -->
@@ -1264,6 +1297,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
                stamping data-slot-rendered-content on it when it sat there. -->
           <section class="witb-section" style="padding-top:24px;border-bottom:none" aria-label="Equipment overview">
 ${witbAnswerHtml}
+${scSignupPrimary}
             <p class="witb-player-lede">${esc(ledes.lede)}</p>
           </section>
 
@@ -1355,6 +1389,7 @@ ${(shopBrand && !shopBag) ? `
           </section>` : ''}
 
 ${witbFaqHtml}
+${scSignupSecondary}
 
           <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
           <div class="tail-feeds">
@@ -1794,7 +1829,9 @@ async function main() {
     log(`WARN: Shop This Bag matching failed: ${e.message} — no section`);
   }
 
-  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag });
+  const signupData     = await witbSignupData(sb);
+  const latestIssueUrl = latestScorecardUrl();
+  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag, signupData, latestIssueUrl });
 
   const noindex = html.includes('noindex');
 

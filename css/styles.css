@@ -7211,3 +7211,130 @@ details[open] .faq-question::after { content: '−'; }
   .bp-shop-card { flex: 0 0 66%; }                        /* mobile: ~1.5 visible */
   .bp-shop-arrow { display: none; }
 }
+
+/* ── The Scorecard inline signup block ─────────────────────────────────────────
+   Baked static markup with reserved min-height so it cannot shift layout. The
+   heights below are deliberate: the block must occupy its final size before any
+   script runs, and the success/error states swap INSIDE the same box. */
+.scb {
+  margin: 32px 0;
+  padding: 22px 22px 18px;
+  border: 1px solid var(--border-lite);
+  border-radius: var(--radius);
+  background: transparent;
+  min-height: 268px;
+}
+.scb-eyebrow {
+  font-family: var(--font-display);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 0 0 10px;
+}
+.scb-headline {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+.scb-proof {
+  font-family: var(--font-body);
+  font-size: .95rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin: 0 0 16px;
+}
+.scb-label {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.scb-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.scb-input {
+  flex: 1 1 200px;
+  min-width: 0;
+  min-height: 44px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 11px 14px;
+  outline: 0;
+  transition: border-color .15s;
+}
+.scb-input:focus { border-color: var(--green); }
+.scb-btn {
+  flex-shrink: 0;
+  min-height: 44px;
+  background: var(--green);
+  border: 1px solid var(--green);
+  border-radius: var(--radius);
+  color: #052e0e;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px 20px;
+  white-space: nowrap;
+  transition: background .15s;
+}
+.scb-btn:hover { background: var(--green-dim); }
+.scb-btn[disabled] { opacity: .7; cursor: default; }
+.scb-micro {
+  font-family: var(--font-body);
+  font-size: .8rem;
+  color: var(--text-muted);
+  margin: 10px 0 0;
+}
+/* Status region is always in the DOM so success and error text cannot add
+   height when they appear. */
+.scb-status {
+  font-family: var(--font-body);
+  font-size: .9rem;
+  line-height: 1.45;
+  margin: 10px 0 0;
+  min-height: 20px;
+  color: var(--text-dim);
+}
+.scb-status--err { color: var(--red); }
+.scb-status--ok  { color: var(--green); }
+.scb-status a { color: var(--green); }
+.scb-quote {
+  margin: 16px 0 0;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--border);
+}
+.scb-quote-text {
+  font-family: var(--font-body);
+  font-size: .85rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin: 0;
+}
+.scb-quote-src {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+  margin: 6px 0 0;
+}
+/* Success state replaces the form inside the SAME reserved box. */
+.scb--done .scb-form,
+.scb--done .scb-proof { display: none; }
+@media (max-width: 600px) {
+  .scb { padding: 18px 16px 16px; min-height: 300px; }
+  .scb-headline { font-size: 1.3rem; }
+  .scb-row { flex-direction: column; }
+  .scb-input, .scb-btn { width: 100%; }
+}

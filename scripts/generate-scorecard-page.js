@@ -243,8 +243,8 @@ ${rows}
 
 // ── Article sections ──────────────────────────────────────────────────────────
 
-function buildSectionsHtml(issue, brandNameMap) {
-  return (issue.sections || []).map(section => {
+function buildSectionsHtml(issue, brandNameMap, signupPrimary) {
+  return (issue.sections || []).map((section, sectionIndex) => {
     // Apply em-dash sanitizer before auto-linking (Bug 6).
     const cleanBody  = stripEmDashes(section.body || '');
     const linkedBody = autoLinkBrandsInSection(cleanBody, issue.brandMentions, brandNameMap);
@@ -254,11 +254,12 @@ function buildSectionsHtml(issue, brandNameMap) {
       : '';
     // id goes on the H2 so TOC anchor-links scroll to the heading (Bug 3/4).
     const sectionId = section.heading ? '' : ` id="${escHtml(section.id)}"`;
+    const afterFirst = (sectionIndex === 0 && signupPrimary) ? `\n${signupPrimary}` : '';
     return `    <section class="sc-article-section"${sectionId}>${headingHtml}
       <div class="section-body">
         ${linkedBody}
       </div>
-    </section>`;
+    </section>${afterFirst}`;
   }).join('\n\n');
 }
 
@@ -334,7 +335,16 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
 
   const imageHtml    = buildImageHtml(issue);
   const tocHtml      = buildTocHtml(issue);
-  const sectionsHtml = buildSectionsHtml(issue, brandNameMap);
+  const scMonth = String(issue.monthLabel || '').split(' ')[0] || '';
+  const scSignupPrimary = scbHtml({
+    slot: 'scorecard-primary', pageType: 'scorecard',
+    data: { monthLabel: scMonth }, latestIssueUrl: '/scorecard/',
+  });
+  const scSignupSecondary = scbHtml({
+    slot: 'scorecard-secondary', pageType: 'scorecard',
+    data: { monthLabel: scMonth }, latestIssueUrl: '/scorecard/',
+  });
+  const sectionsHtml = buildSectionsHtml(issue, brandNameMap, scSignupPrimary);
   const snapshotHtml = buildSnapshotHtml(issue);
   const moreHtml     = buildMoreIssuesHtml(issue, allIssues);
   const prevNextHtml = buildPrevNextHtml(issue, allIssues);
@@ -526,6 +536,8 @@ ${sectionsHtml}
 
 ${snapshotHtml}
 
+${scSignupSecondary}
+
             </div><!-- /sc-article-body -->
 
 ${moreHtml}
@@ -614,6 +626,7 @@ ${SC_SIDEBAR_HTML}
 
 const { regenerateSitemap } = require('./generate-sitemap');
 const { generateSearchIndex } = require('./generate-search-index');
+const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
 
 // ── Vercel config: remove shell rewrites, add cache header ───────────────────
 

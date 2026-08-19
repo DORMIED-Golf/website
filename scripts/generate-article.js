@@ -104,6 +104,20 @@ const DISALLOWED_TITLE_PATTERNS = [
 ];
 
 /** Brand tokens worth matching on, so "Pins and Aces" still matches "Pins & Aces". */
+
+/** Newest published Scorecard issue, for the signup block's success state. */
+function latestScorecardUrl() {
+  try {
+    const dir = path.join(ROOT, 'scorecard');
+    const MON = { january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12 };
+    const issues = fs.readdirSync(dir, { withFileTypes: true })
+      .filter(e => e.isDirectory() && /^[a-z]+-\d{4}$/.test(e.name))
+      .map(e => { const [mm, y] = e.name.split('-'); return { name: e.name, key: Number(y) * 100 + (MON[mm] || 0) }; })
+      .sort((a, b) => b.key - a.key);
+    return issues.length ? `/scorecard/${issues[0].name}/` : '/scorecard/';
+  } catch (e) { return '/scorecard/'; }
+}
+
 function brandTokens(brandName) {
   return String(brandName || '')
     .split(/[^a-z0-9]+/i)
@@ -1239,6 +1253,7 @@ ${answerHtml}
             <div class="da-article-body">
               ${bodyHtml}
             </div>
+${scbHtml({ slot: 'article', pageType: 'article', brandSlug, data: { brandName }, latestIssueUrl: latestScorecardUrl() })}
 
             <!-- Brand card. Omitted entirely when the article has no brand:
                  an untagged article must not render an empty card linking to
@@ -1390,6 +1405,7 @@ ${faqHtml}
 
 const { regenerateSitemap } = require('./generate-sitemap');
 const { generateSearchIndex } = require('./generate-search-index');
+const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
 
 // ── HTML verification ──────────────────────────────────────────────────────────
 // Called immediately after writing the article HTML. Throws on any failure so
