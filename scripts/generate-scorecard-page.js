@@ -437,7 +437,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260804">
+  <link rel="stylesheet" href="/css/styles.css?v=${cssVersion()}">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json">${newsLd}</script>
@@ -627,6 +627,7 @@ ${SC_SIDEBAR_HTML}
 const { regenerateSitemap } = require('./generate-sitemap');
 const { generateSearchIndex } = require('./generate-search-index');
 const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
+const { cssVersion } = require('./lib/css-version.js');
 
 // ── Vercel config: remove shell rewrites, add cache header ───────────────────
 

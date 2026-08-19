@@ -44,6 +44,7 @@ const path = require('path');
 const ROOT    = path.resolve(__dirname, '..');
 const VERBOSE = process.argv.includes('-v') || process.argv.includes('--verbose');
 const { dataVersion } = require('./lib/data-version.js');
+const { cssVersion }  = require('./lib/css-version.js');
 
 /**
  * Dataset cache-busters that must track the CURRENT dataVersion().
@@ -56,6 +57,17 @@ const { dataVersion } = require('./lib/data-version.js');
  * been stranded an extra cycle on a version older still.
  */
 const DATASET_FILES = ['data.min.js', 'data-home.js'];
+
+/**
+ * Stylesheet cache-busters, which must equal the CONTENT hash of the two
+ * stylesheets. The version was a hand-written date in nine generators and sat
+ * unchanged through three stylesheet edits, so the signup card served its dark
+ * first draft to every returning visitor for a week: the file on the server was
+ * right, but Cache-Control is public max-age=604800 and the URL never moved.
+ * cssVersion() now derives from the files, and this asserts the baked pages
+ * agree with them.
+ */
+const STYLESHEET_FILES = ['styles.css', 'styles.min.css'];
 
 /** marker -> script that must be loaded wherever the marker appears. */
 const RULES = [
@@ -122,6 +134,31 @@ function main() {
     console.error(`    visitors read last month's numbers. Bump the tag wherever it is hand-written.`);
   } else {
     console.log(`[page-scripts]   dataset cache-busters: ${datasetRefs} reference(s), all on ${current}`);
+  }
+
+  // ── Stylesheet cache-busters ─────────────────────────────────────────────
+  const cssCurrent = cssVersion();
+  const cssStale = [];
+  let cssRefs = 0;
+  for (const file of STYLESHEET_FILES) {
+    const re = new RegExp(file.replace('.', '\\.') + '\\?v=([0-9a-z]+)', 'g');
+    for (const p of pages) {
+      const html = fs.readFileSync(p, 'utf8');
+      for (const m of html.matchAll(re)) {
+        cssRefs++;
+        if (m[1] !== cssCurrent) cssStale.push(`${path.relative(ROOT, p)}  ${file}?v=${m[1]}`);
+      }
+    }
+  }
+  if (cssStale.length) {
+    failed = true;
+    console.error(`\n[page-scripts] !! ${cssStale.length} stylesheet reference(s) not on the current content hash (${cssCurrent}):\n`);
+    for (const line of (VERBOSE ? cssStale : cssStale.slice(0, 10))) console.error(`        ${line}`);
+    if (!VERBOSE && cssStale.length > 10) console.error(`        ...and ${cssStale.length - 10} more (-v to list all)`);
+    console.error(`\n    The stylesheet changed but these pages still request the old URL, so a`);
+    console.error(`    returning visitor keeps the cached copy for a week. Re-bake them.`);
+  } else {
+    console.log(`[page-scripts]   stylesheet cache-busters: ${cssRefs} reference(s), all on ${cssCurrent}`);
   }
 
   for (const { rule, matched, missing } of results) {

@@ -32,6 +32,7 @@ const feedBake         = require('./feed-bake');
 const { matchBagToProducts } = require('./lib/witb-shop-match');
 const AB               = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
+const { cssVersion } = require('./lib/css-version.js');
 
 // Explicit bag-item -> product overrides, keyed 'brand|club_type|normalised model'.
 // The only way a model too short to be distinctive (e.g. Cobra's "SB") can reach
@@ -1201,8 +1202,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     .owgr-logo{display:block;height:22px;width:auto}
   </style>
 
-  <link rel="preload" href="/css/styles.min.css?v=20260804" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260804"></noscript>
+  <link rel="preload" href="/css/styles.min.css?v=${cssVersion()}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=${cssVersion()}"></noscript>
 
   <!-- JSON-LD -->
   <script type="application/ld+json">

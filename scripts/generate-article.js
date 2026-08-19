@@ -1134,7 +1134,7 @@ function generateArticleHtml(opts) {
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260804">
+  <link rel="stylesheet" href="/css/styles.css?v=${cssVersion()}">
 
   <!-- ── Structured Data ── -->
   <script type="application/ld+json">
@@ -1406,6 +1406,7 @@ ${faqHtml}
 const { regenerateSitemap } = require('./generate-sitemap');
 const { generateSearchIndex } = require('./generate-search-index');
 const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
+const { cssVersion } = require('./lib/css-version.js');
 
 // ── HTML verification ──────────────────────────────────────────────────────────
 // Called immediately after writing the article HTML. Throws on any failure so

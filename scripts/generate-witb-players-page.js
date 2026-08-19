@@ -22,6 +22,7 @@ const { createClient } = require('@supabase/supabase-js');
 const feedBake        = require('./feed-bake');
 const { dataVersion } = require('./lib/data-version');
 const { pageEligible } = require('./witb-page-eligibility');
+const { cssVersion } = require('./lib/css-version.js');
 
 function loadDormiedData() {
   const raw = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
@@ -202,7 +203,7 @@ function buildPage(players, brandNames, latestFeedHtml, topStoriesHtml) {
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.min.css?v=20260804">
+  <link rel="stylesheet" href="/css/styles.min.css?v=${cssVersion()}">
 
   <script type="application/ld+json">
   {

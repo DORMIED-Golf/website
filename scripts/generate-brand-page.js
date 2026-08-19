@@ -248,6 +248,7 @@ function getRelatedBrands(dormiedData, brandSlug, curSearches, count = 5) {
 
 const { regenerateSitemap } = require('./generate-sitemap');
 const { generateSearchIndex } = require('./generate-search-index');
+const { cssVersion } = require('./lib/css-version.js');
 
 // ── Per-market helpers — match brand.js exactly ───────────────────────────────
 
@@ -806,7 +807,7 @@ ${faqItems.map(it => `              <div class="da-faq-item">
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=20260804">
+  <link rel="stylesheet" href="/css/styles.css?v=${cssVersion()}">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json" id="brand-jsonld">${jsonld}</script>${faqJsonLdTag}

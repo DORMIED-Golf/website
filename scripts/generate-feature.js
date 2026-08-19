@@ -39,6 +39,7 @@ const vm   = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const feedBake = require('./feed-bake');
 const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
+const { cssVersion } = require('./lib/css-version.js');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -719,7 +720,7 @@ function buildPage(F, parsed, dormiedLatestHtml) {
 
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <link rel="stylesheet" href="/css/fonts.css">
-  <link rel="stylesheet" href="/css/styles.css?v=20260804">
+  <link rel="stylesheet" href="/css/styles.css?v=${cssVersion()}">
 
   <script type="application/ld+json">
   {

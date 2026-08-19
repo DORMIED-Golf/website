@@ -19,6 +19,7 @@ const { createClient } = require('@supabase/supabase-js');
 const feedBake = require('./feed-bake');
 
 const { dataVersion } = require('./lib/data-version');
+const { cssVersion } = require('./lib/css-version.js');
 const ROOT   = path.resolve(__dirname, '..');
 const OUT    = path.join(ROOT, 'witb', 'index.html');
 const SB_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -973,8 +974,8 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
     .witb-fp-date{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);flex-shrink:0}
   </style>
 
-  <link rel="preload" href="/css/styles.min.css?v=20260804" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=20260804"></noscript>
+  <link rel="preload" href="/css/styles.min.css?v=${cssVersion()}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/styles.min.css?v=${cssVersion()}"></noscript>
 
   <!-- JSON-LD: Dataset -->
   <script type="application/ld+json">
