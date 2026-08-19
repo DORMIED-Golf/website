@@ -544,14 +544,32 @@ An article succeeds when it leaves the reader with one concrete insight they did
 Also generate:
 - A meta description (120-155 characters) for SEO
 - 3-5 SEO keywords relevant to the article
-- An X/Twitter post (STRICTLY under 220 characters). The article link is appended when this is posted and eats about 24 characters against Twitter's 280 limit, so anything over 220 gets cut off mid-sentence on the live post. It MUST be a complete thought that ends with a period — never let it trail off. Count your characters and stay under 220. Write it as a standalone observation or take that makes someone want to click. It should feel like something a sharp golf industry insider would post, not a brand account promoting its own content. CRITICAL: Do NOT start with the brand name — the first word must not be the brand name or any word from the brand name. Start with a different angle: a number, an action verb, a descriptor, or an industry observation. Do not use hashtags. Do not use "check out", "read more", "new article", "we wrote about", or "link in bio" language. No em dashes. No exclamation points. The post should work on its own as a hot take even if someone never clicks.
+- An X/Twitter post. This is the highest-leverage line in the response, and its rules are deliberately not the article's.
 
-Examples of good X posts (notice none start with the brand name):
-"Buying the biggest screen in Times Square for a month is not something a mid-tier brand does. Wilson is playing a different game."
-"Blacked-out steel with a luxury price tag is the kind of quiet flex that sells to the right 2% of golfers. Nippon Shaft gets that."
-"A collab between XXIO and Vessel tells you exactly where the women's premium market is headed."
-"Two straight travel bag wins from MyGolfSpy and still ranked 45th globally. Sometimes the best product has nothing to do with marketing spend."
-"Showing up in a rewards app alongside Miura and Bettinardi is a volume play disguised as a premium move."
+  BE REDUCTIVE. The post's job is to land ONE idea hard enough that a reader either nods or argues with it. It is not a summary. Reductive posts travel because they are instantly digestible and take a position; the reader who wants the reasoning clicks through, and the reasoning is what the article is for. Explaining yourself in the post removes the only reason to click.
+
+  TARGET 80 to 140 characters. Hard cap 220: the article link is appended when this posts and eats about 24 characters against Twitter's 280 limit, so anything longer is cut off mid-sentence on the live post. Shorter is almost always better. If it lands in nine words, use nine.
+
+  ONE claim. Take the single most interesting thing in the article, state it flatly as a position, and stop. Do NOT append the mechanism, the caveat, the second example, or the "and here is why". Withholding the explanation is the entire point: that gap is the click.
+
+  It must be a complete thought ending in a period, and it must have a point of view. A neutral restatement of the news is not a post. Say what the thing MEANS, not what happened.
+
+  Study these rewrites. The weak versions are real posts that explained themselves and left nothing to click for:
+    WEAK:   "Five winners this year carried a 7-wood. The 3-wood is following the 2-iron out of the bag, and Callaway's Elyte happens to be sitting in the right slot at the right time."
+    STRONG: "The 3-wood is following the 2-iron out of the bag. Five winners this year carried a 7-wood instead."
+    WEAK:   "Naming rights on a junior rankings page cost almost nothing. Unlimited access to the player data behind it is the actual purchase, and Titleist just made it."
+    STRONG: "Titleist did not buy naming rights on a junior rankings page. It bought the player data behind it."
+    WEAK:   "Laser rangefinders are the easiest category in golf to copy and the hardest to defend on price. Blue Tees buying airtime on the Big Break reboot is what trying to escape that looks like."
+    STRONG: "Rangefinders are the easiest thing in golf to copy. Blue Tees is buying TV time to stop competing on price."
+
+  CRITICAL: Do NOT start with the brand name. The first word must not be the brand name or any word from it. Open on a number, a verb, a descriptor, or the observation itself. No hashtags. No "check out", "read more", "new article", "we wrote about", or "link in bio". No em dashes. No exclamation points.
+
+Examples of the target shape. None starts with the brand name, none exceeds 140 characters,
+and not one of them explains itself:
+"A collab between XXIO and Vessel tells you exactly where the women's premium market is headed."  (94 chars)
+"Showing up in a rewards app alongside Miura and Bettinardi is a volume play disguised as a premium move."  (104 chars)
+"Buying the biggest screen in Times Square for a month is not something a mid-tier brand does. Wilson is playing a different game."  (129 chars)
+"Two straight travel bag wins from MyGolfSpy and still ranked 45th globally. The best product and the biggest budget are not the same thing."  (139 chars)
 
 ALSO GENERATE, for answer engines:
 
@@ -577,7 +595,7 @@ Return valid JSON only — no markdown fences, no preamble, exactly this structu
   "body": "paragraph one\\n\\nparagraph two\\n\\nparagraph three\\n\\nparagraph four\\n\\nparagraph five",
   "meta_description": "120-155 character SEO description including brand name",
   "seo_keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
-  "x_post": "STRICTLY under 220 chars, a complete sentence ending in a period, no hashtags, hot take voice",
+  "x_post": "ONE reductive claim with a point of view. Target 80-140 chars, hard cap 220. Ends in a period. No hashtags. Do not explain it.",
   "answer_block": "40-60 words, direct answer first, entity-dense, no fact absent from the body",
   "faq": [{"q": "...", "a": "..."}]
 }`;
