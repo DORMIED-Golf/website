@@ -7225,7 +7225,7 @@ details[open] .faq-question::after { content: '−'; }
      before whatever block-level break follows a run of copy, and this block IS
      that break, so an ad sits above it on every page type no matter where it is
      moved. Relocation cannot fix that; separation and the white ground can. */
-  margin: 56px 0 32px;
+  margin: 56px 0;
   padding: 22px 22px 18px;
   border: 1px solid #e5e7eb;
   border-radius: var(--radius);
