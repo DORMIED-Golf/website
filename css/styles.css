@@ -7221,7 +7221,11 @@ details[open] .faq-question::after { content: '−'; }
    6.5:1, and the button keeps #052e0e on brand green at 6.6:1. All AA.
    Reserved min-height so the baked block cannot shift layout. */
 .scb {
-  margin: 32px 0;
+  /* 56px above, not 32: Mediavine inserts an in-content unit directly
+     before whatever block-level break follows a run of copy, and this block IS
+     that break, so an ad sits above it on every page type no matter where it is
+     moved. Relocation cannot fix that; separation and the white ground can. */
+  margin: 56px 0 32px;
   padding: 22px 22px 18px;
   border: 1px solid #e5e7eb;
   border-radius: var(--radius);
