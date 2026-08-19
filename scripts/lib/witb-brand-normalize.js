@@ -30,6 +30,46 @@ const PROMOTED_SUB_BRANDS = [
 const normKey = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
 /**
+ * CANONICAL SPELLINGS.
+ *
+ * Sources spell the same product several ways and each variant becomes its own
+ * row, which splits a product across brand pages and tour-usage counts. It had
+ * already happened four times: PING appeared as both "PING" and "Ping" across
+ * 773 items, Golf Pride's Z-Grip Cord had three spellings, and Lamkin's UTx and
+ * UTx Mid had two each. Earlier the same thing produced a duplicate witb_brands
+ * row for "Super Stroke" with a null dormied_brand_slug, which silently broke
+ * the brand link.
+ *
+ * Keyed on the normalised form, so any punctuation or casing variant collapses
+ * to the manufacturer's own spelling. Applied on every write path, so the
+ * weekly crawl and a manual update store a club identically.
+ */
+const CANONICAL_BRANDS = {
+  ping: 'PING',
+};
+
+// normKey(brand) -> { normKey(model): canonical model }
+const CANONICAL_MODELS = {
+  golfpride: {
+    zgripcord: 'Z-Grip Cord',
+    zgripcordalign: 'Z-Grip Cord Align',
+  },
+  lamkin: {
+    utx: 'UTx',
+    utxmid: 'UTx Mid',
+    utxmidsize: 'UTx Midsize',
+  },
+};
+
+/** Apply the canonical spelling for a brand/model pair. */
+function canonicalize(brand, model) {
+  const b = CANONICAL_BRANDS[normKey(brand)] || brand;
+  const byBrand = CANONICAL_MODELS[normKey(b)];
+  const m = (byBrand && model != null) ? (byBrand[normKey(model)] || model) : model;
+  return { brand: b, model: m };
+}
+
+/**
  * Normalize one item's brand/model pair.
  *
  * @param {string|null} rawBrand   brand as the source reported it
@@ -51,16 +91,18 @@ function normalizeBrandModel(rawBrand, rawModel, brandSlug = null) {
 
     // Strip the now-redundant prefix: "Scotty Cameron Phantom 9.5R" -> "Phantom 9.5R".
     const stripped = model.replace(new RegExp('^\\s*' + sub.prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*', 'i'), '').trim();
+    const promotedNames = canonicalize(sub.brand, stripped || model || null);
     return {
-      raw_brand:  sub.brand,
+      raw_brand:  promotedNames.brand,
       // Never strip a model down to nothing — keep the original if that happens.
-      raw_model:  stripped || model || null,
+      raw_model:  promotedNames.model,
       brand_slug: sub.slug,
       promoted:   true,
     };
   }
 
-  return { raw_brand: rawBrand, raw_model: rawModel, brand_slug: brandSlug, promoted: false };
+  const names = canonicalize(rawBrand, rawModel);
+  return { raw_brand: names.brand, raw_model: names.model, brand_slug: brandSlug, promoted: false };
 }
 
-module.exports = { PROMOTED_SUB_BRANDS, normalizeBrandModel };
+module.exports = { PROMOTED_SUB_BRANDS, CANONICAL_BRANDS, CANONICAL_MODELS, normalizeBrandModel, canonicalize };
