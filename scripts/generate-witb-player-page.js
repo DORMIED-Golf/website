@@ -864,15 +864,18 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
             <p class="da-answer-text">${esc(witbAnswer)}</p>
           </section>` : '';
 
-  // ── Inline Scorecard signup blocks ────────────────────────────────────────
-  // PRIMARY sits right after the Quick Answer: peak intent and peak abandonment
-  // in the same moment, because the reader just got the answer they searched for
-  // and has no remaining reason to scroll. SECONDARY catches the ones who read on.
+  // ── Inline Scorecard signup block ─────────────────────────────────────────
+  // ONE block, right after the Quick Answer: peak intent and peak abandonment in
+  // the same moment, because the reader just got the answer they searched for
+  // and has no remaining reason to scroll. It also has real clearance, measuring
+  // 290px from the nearest Mediavine unit.
+  //
+  // There was a second block after the FAQ. It was dropped: Mediavine reliably
+  // places an in-content unit there, so it sat ~40px under an ad on the site's
+  // highest-traffic pages, and relocating it does not help because Mediavine
+  // inserts before whatever block-level break follows the copy.
   const scSignupPrimary = signupBlockHtml({
     slot: 'witb-primary', pageType: 'witb', data: signupData, latestIssueUrl,
-  });
-  const scSignupSecondary = signupBlockHtml({
-    slot: 'witb-secondary', pageType: 'witb', data: signupData, latestIssueUrl,
   });
 
   const witbFaqHtml = witbFaq.length ? `
@@ -1389,7 +1392,6 @@ ${(shopBrand && !shopBag) ? `
           </section>` : ''}
 
 ${witbFaqHtml}
-${scSignupSecondary}
 
           <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
           <div class="tail-feeds">
