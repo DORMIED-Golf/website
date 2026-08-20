@@ -1927,6 +1927,37 @@ details[open] .faq-question::after { content: '−'; }
    Text-only, baked at build time, fixed reserved heights (no CLS).
    Desktop only in this pass. */
 .sidebar-mods { display: none; }
+
+/* ── Latest Scorecard sidebar card ───────────────────────────────────────────
+   Sits directly under Top Stories, one card for the newest issue. Unlike
+   .sidebar-mods above, this is visible at EVERY width on purpose: the module
+   exists to drive Scorecard traffic, and hiding it below 1200px would hide it
+   from most of that traffic. On mobile the aside reflows to the foot of the
+   page, so the card lands under Top Stories there too. */
+.sidebar-scorecard {
+  margin: 0 0 32px 0;
+}
+.sidebar-scorecard .feed-card {
+  margin-bottom: 0;
+}
+.sidebar-scorecard-more {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.sidebar-scorecard-more a {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+  text-decoration: none;
+}
+.sidebar-scorecard-more a:hover {
+  text-decoration: underline;
+}
+
 @media (min-width: 1200px) {
   .sidebar-mods { display: block; }
   /* Consistent 32px vertical rhythm between every sidebar section (Top Stories,
@@ -7264,7 +7295,10 @@ details[open] .faq-question::after { content: '−'; }
    Reserved min-height so the baked block cannot shift layout. */
 /* When the block leads its column there is nothing above it to separate from,
    and the top margin would drop it below the sidebar it should line up with. */
-.scb:first-child { margin-top: 0; }
+/* Leading block: drop most of the 56px rhythm, but not all of it. At 0 the
+   card sat 20px under the hero section's bottom rule on /scorecard/ and
+   read as attached to it. */
+.scb:first-child { margin-top: 28px; }
 
 .scb {
   /* 56px above, not 32: Mediavine inserts an in-content unit directly

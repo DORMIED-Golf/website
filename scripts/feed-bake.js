@@ -2,6 +2,12 @@
 // Server-side port of feed.js rendering functions for baking article feed
 // links into generated HTML at build time. Mirrors feed.js markup exactly.
 
+var fs   = require('fs');
+var path = require('path');
+var vm   = require('vm');
+var ROOT = path.resolve(__dirname, '..');
+var scorecardIssue = require('./lib/scorecard-issue.js');
+
 // On image error, swap to a fixed-dimension neutral placeholder (keeps the
 // element and its reserved box) rather than removing it. Removing the img
 // collapses the thumbnail box and shifts sidebar layout (CLS). The SVG scales
@@ -359,12 +365,92 @@ function renderLatestFeedHtml(articles, dormiedData) {
   return articles.map(function (a) { return renderArticleCard(a, dormiedData); }).join('');
 }
 
+/* ── Latest Scorecard sidebar card ───────────────────────────────────────────
+   One card for the newest issue, sitting directly under Top Stories, with a
+   link through to the archive. It reads js/scorecard-data.js, so publishing an
+   issue moves this card on the next bake with no edit here.
+
+   Deliberately NOT inside .sidebar-mods. That container is display:none below
+   1200px, and the entire point of this module is Scorecard traffic, most of
+   which is mobile. As a sibling it stays visible at every width: under Top
+   Stories in the aside on desktop, and at the foot of the page on mobile where
+   the aside reflows.
+
+   currentSlug suppresses the card on the very issue page it would link to.   */
+var _scorecardIssuesCache = null;
+function loadScorecardIssues() {
+  if (_scorecardIssuesCache) return _scorecardIssuesCache;
+  _scorecardIssuesCache = [];
+  try {
+    var src = fs.readFileSync(path.join(ROOT, 'js/scorecard-data.js'), 'utf8');
+    var ctx = { window: {} };
+    vm.createContext(ctx);
+    vm.runInContext(src, ctx);
+    _scorecardIssuesCache = (ctx.window.DORMIED_SCORECARD_DATA || {}).issues || [];
+  } catch (e) {
+    console.warn('[feed-bake] scorecard data load failed:', e.message);
+  }
+  return _scorecardIssuesCache;
+}
+
+function latestScorecardSectionHtml(currentSlug) {
+  var issues = loadScorecardIssues();
+  var issue  = issues[0];
+  if (!issue) return '';
+  if (currentSlug && issue.slug === currentSlug) return '';
+
+  var url      = '/scorecard/' + issue.slug + '/';
+  var headline = scorecardIssue.issueHeadline(issue);
+  var thumbSrc = scorecardIssue.issueThumb(issue);
+
+  var thumb = '';
+  if (thumbSrc) {
+    thumb = '<img class="feed-card-thumb"'
+          + ' src="'    + escHtml(vitUrl(thumbSrc, 160)) + '"'
+          + ' srcset="' + escHtml(vitUrl(thumbSrc,  80)) + ' 80w,'
+                        + escHtml(vitUrl(thumbSrc, 160)) + ' 160w,'
+                        + escHtml(vitUrl(thumbSrc, 400)) + ' 400w"'
+          + ' sizes="(min-width: 1200px) 180px, 80px"'
+          + ' width="80" height="60" loading="lazy" alt=""'
+          + ' onerror="' + THUMB_FALLBACK + '">';
+  }
+
+  return '<section class="sidebar-scorecard" aria-labelledby="sidebar-scorecard-heading">'
+       +   '<h2 class="latest-feed-heading" id="sidebar-scorecard-heading">Latest Scorecard</h2>'
+       +   '<article class="feed-card feed-card--dormied">'
+       +     thumb
+       +     '<div class="feed-card-body">'
+       +       '<div class="feed-card-meta">'
+       +         '<span class="feed-time">' + escHtml(issue.monthLabel || '') + '</span>'
+       +       '</div>'
+       +       '<a href="' + escHtml(url) + '" class="feed-card-title"'
+       +          ' data-track-title="'  + escHtml(headline) + '"'
+       +          ' data-track-source="DORMIED"'
+       +          ' data-track-url="'    + escHtml(url) + '">'
+       +         escHtml(headline)
+       +       '</a>'
+       +       '<p class="feed-card-byline">By Adam R. &amp; Travis R.</p>'
+       +     '</div>'
+       +   '</article>'
+       +   '<div class="sidebar-scorecard-more"><a href="/scorecard/">Read Past Issues &#x2192;</a></div>'
+       + '</section>';
+}
+
+/* Wrap the module core in its markers, with the Scorecard card ahead of it.
+   Split out from the fetch so refresh-modules can vary the card per page
+   without re-querying Supabase for the parts that do not change. */
+function composeSidebarMods(coreHtml, currentSlug) {
+  var card = latestScorecardSectionHtml(currentSlug);
+  if (!card && !coreHtml) return '';
+  return '<!-- sidebar-mods:start -->' + card + (coreHtml || '') + '<!-- sidebar-mods:end -->';
+}
+
 /* ── Sidebar modules: Brands on the Move + Recently Updated Bags ──────────────
    Baked into prerendered HTML at build time (no client-side fetch), text-only,
    fixed reserved height (no CLS), desktop-only via CSS. Optional manual pin per
    module via dormied_sidebar_config.pinned_slug; otherwise pure auto.
    Returns '' on any failure so a data hiccup never breaks a bake.             */
-async function fetchSidebarModulesHtml(supabase, dormiedData) {
+async function fetchSidebarModulesCore(supabase, dormiedData) {
   try {
     // Manual pins (optional)
     const { data: cfgRows } = await supabase.from('dormied_sidebar_config').select('module_key, pinned_slug');
@@ -422,10 +508,10 @@ async function fetchSidebarModulesHtml(supabase, dormiedData) {
         + escHtml(r.name) + ' <span class="sidebar-mod-note">' + escHtml(r.note) + '</span></a>';
     }).join('');
 
-    let html = '<!-- sidebar-mods:start --><div class="sidebar-mods">';
+    let html = '<div class="sidebar-mods">';
     if (moverRows.length) html += '<section class="sidebar-mod" aria-label="Brands on the move"><h2 class="latest-feed-heading">Brands on the Move</h2><div class="sidebar-mod-rows">' + moversHtml + '</div></section>';
     if (bagRows.length)   html += '<section class="sidebar-mod" aria-label="Recently updated bags"><h2 class="latest-feed-heading">Recently Updated Bags</h2><div class="sidebar-mod-rows">' + bagsHtml + '</div></section>';
-    html += '</div><!-- sidebar-mods:end -->';
+    html += '</div>';
     return html;
   } catch (e) {
     console.warn('[feed-bake] sidebar modules failed:', e.message);
@@ -433,4 +519,12 @@ async function fetchSidebarModulesHtml(supabase, dormiedData) {
   }
 }
 
-module.exports = { fetchLatestArticles, fetchTopStoriesArticles, fetchFeaturedArticles, renderLatestFeedHtml, renderFeedPageCard, renderHomeLatestHtml, fetchSidebarModulesHtml };
+/* Existing signature, preserved for the nine generators that call it. Pass
+   { currentSlug } from a scorecard issue page so the card does not link to the
+   page it is sitting on. */
+async function fetchSidebarModulesHtml(supabase, dormiedData, opts) {
+  const core = await fetchSidebarModulesCore(supabase, dormiedData);
+  return composeSidebarMods(core, opts && opts.currentSlug);
+}
+
+module.exports = { fetchLatestArticles, fetchTopStoriesArticles, fetchFeaturedArticles, renderLatestFeedHtml, renderFeedPageCard, renderHomeLatestHtml, fetchSidebarModulesHtml, fetchSidebarModulesCore, composeSidebarMods };

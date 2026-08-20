@@ -41,7 +41,18 @@ window.DORMIED_SCORECARD_DATA = {
           alt:     "Carnival Golf x Disney Never Outgrow Play collection laid out flat, with a Golf Pro Mickey tee, a red embroidered Mickey jacket, a Carnival Golf Club polo, numbered iron covers and branded golf balls",
           caption: "Carnival Golf's Disney \"Never Outgrow Play\" collection, the drop behind the largest single-month move this index has recorded. Photo by @carnivalgolf.",
         },
-        strip: [],
+        /* The card surfaces (homepage, hub) prefer the strip; the article
+           page, og:image and X post keep using the tagged hero above. Three
+           squares fill the card the way every prior issue does -- the lone
+           portrait hero left 362px of dead space either side on desktop. */
+        strip: [
+          { src: "/images/scorecard/august-2026/hero.webp",
+            label: "Carnival Golf x Disney" },
+          { src: "/images/scorecard/august-2026/ryan-fox.webp",
+            label: "Ryan Fox, 2026 Open Championship" },
+          { src: "/images/scorecard/august-2026/hamilton.webp",
+            label: "Lewis Hamilton, Lululemon Golf" },
+        ],
       },
       toc: [
         { id: "at-the-top",       label: "At The Top"       },

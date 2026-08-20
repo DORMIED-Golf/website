@@ -39,6 +39,16 @@ const SITE_ROOT = path.resolve(__dirname, '..');
 // Baked standard sidebar for issue pages (Top Stories + Latest + modules).
 // Set once in main(); '' when Supabase is unavailable.
 let SC_SIDEBAR_HTML = '';
+// The sidebar is baked once per run, but the Latest Scorecard card inside it
+// must not link to the issue page it is sitting on. The aside carries a token
+// where the modules go; scSidebarFor() fills it per issue.
+const SC_MODS_TOKEN = '<!--SC_MODS_SLOT-->';
+let SC_MODS_CORE = '';
+function scSidebarFor(slug) {
+  const feedBake = require('./feed-bake');
+  const mods = feedBake.composeSidebarMods(SC_MODS_CORE, slug);
+  return SC_SIDEBAR_HTML.replace(SC_MODS_TOKEN, mods);
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -622,7 +632,7 @@ ${prevNextHtml}
 
           <!-- ── Sidebar: standard (Top Stories + Latest + baked modules) ── -->
           <aside class="sidebar-ad-col">
-${SC_SIDEBAR_HTML}
+${scSidebarFor(issue.slug)}
           </aside>
 
         </div><!-- /table-layout -->
@@ -774,10 +784,10 @@ async function main() {
   try {
     const sb = getSupabase();
     const feedBake = require('./feed-bake');
-    const [topStories, latest, modsHtml] = await Promise.all([
+    const [topStories, latest, modsCore] = await Promise.all([
       feedBake.fetchTopStoriesArticles(sb, 5),
       feedBake.fetchLatestArticles(sb, 10, null),
-      feedBake.fetchSidebarModulesHtml(sb, dormiedData),
+      feedBake.fetchSidebarModulesCore(sb, dormiedData),
     ]);
     // Issue-page sidebar order: Latest, then modules, then Top Stories.
     let aside = '';
@@ -787,7 +797,8 @@ async function main() {
               <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(latest, dormiedData)}</div>
             </section>\n`;
     }
-    if (modsHtml) aside += `            ${modsHtml}\n`;
+    SC_MODS_CORE = modsCore || '';
+    aside += `            ${SC_MODS_TOKEN}\n`;
     if (topStories.length) {
       aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-stories-heading">
               <h2 class="latest-feed-heading" id="sc-issue-stories-heading">Top Stories</h2>

@@ -145,11 +145,11 @@ async function main() {
   const sb = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   // One fetch of the shared feed source; render everything from it.
-  const [latestPool, topPool, featuredPool, modsHtml] = await Promise.all([
+  const [latestPool, topPool, featuredPool, modsCore] = await Promise.all([
     feedBake.fetchLatestArticles(sb, 13, null),          // pool to slice + exclude
     feedBake.fetchTopStoriesArticles(sb, data, 10),
     feedBake.fetchFeaturedArticles(sb, 10),
-    feedBake.fetchSidebarModulesHtml(sb, data),
+    feedBake.fetchSidebarModulesCore(sb, data),
   ]);
 
   const render = (arr) => (arr && arr.length) ? feedBake.renderLatestFeedHtml(arr, data) : '';
@@ -191,6 +191,10 @@ async function main() {
 
     // (B) sidebar modules — modsHtml already includes its start/end markers, so
     // replace the whole region (also self-heals any duplicated markers).
+    // Composed per file: the Latest Scorecard card is suppressed on the issue
+    // page it would otherwise link to, so the slug has to come from the path.
+    const scMatch = rel.match(/^scorecard\/([^/]+)\/index\.html$/);
+    const modsHtml = feedBake.composeSidebarMods(modsCore, scMatch ? scMatch[1] : null);
     if (modsHtml && html.includes('<!-- sidebar-mods:start -->')) {
       html = replaceRegionInclusive(html, '<!-- sidebar-mods:start -->', '<!-- sidebar-mods:end -->', modsHtml);
     }
@@ -220,7 +224,7 @@ async function main() {
   }
 
   console.log(`[refresh-modules] ${DRY_RUN ? 'would refresh' : 'refreshed'} ${changed} of ${scanned} pages`);
-  console.log(`[refresh-modules] feed: latest=${latestPool.length} topStories=${topPool.length} featured=${featuredPool.length} mods=${modsHtml ? 'yes' : 'no'}`);
+  console.log(`[refresh-modules] feed: latest=${latestPool.length} topStories=${topPool.length} featured=${featuredPool.length} mods=${modsCore ? 'yes' : 'no'}`);
 }
 
 // Only run when invoked directly. Without this, `require()`-ing this file for
