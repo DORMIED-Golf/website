@@ -2560,7 +2560,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (553) ── -->
+  <!-- ── News articles (555) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5102,6 +5102,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/nike-golf-swim-champion-aheads-ontario/</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/nike-golf-swim-champion-aheads-ontario-hero.jpg</image:loc>
+      <image:title>Hired Out of Nike Swim and Champion: Ahead&apos;s New Ontario Rep Has Never Sold Golf</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/nike-golf-takes-a-public-hit-as-mygolfspy-names-roshe-g-among-most-2026-05-19/</loc>
     <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -7575,6 +7585,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/ust-mamiyas-aftermarket-sales-hire-signals-a-brand-ready-to-fight-for-2026-05-04-hero.jpg</image:loc>
       <image:title>UST Mamiya&apos;s Aftermarket Sales Hire Signals a Brand Ready to Fight for Relevance</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/va-composites-strange-fitter-shaft-brand/</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/va-composites-strange-fitter-shaft-brand-hero.jpg</image:loc>
+      <image:title>A Media Studio Is a Strange Build for a Fitter-Only Shaft Brand. VA Composites Made One Anyway.</image:title>
     </image:image>
   </url>
   <url>
