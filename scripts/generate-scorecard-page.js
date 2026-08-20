@@ -114,6 +114,43 @@ function buildBrandNameMap(dormiedData) {
  *
  * Brands are sorted longest-first so "TaylorMade Golf" matches before "TaylorMade".
  */
+/**
+ * Link the first mention of each named player to their WITB page, using the
+ * same token walk as the brand linker so an existing <a> is never nested and a
+ * name inside a tag attribute is never touched.
+ *
+ * Separate from brands on purpose: a player is not a brand row, and the target
+ * is /witb/players/{slug}/ rather than /brands/{slug}/.
+ */
+function autoLinkPlayersInSection(html, playerMentions) {
+  const toLink = (playerMentions || [])
+    .filter(p => p && p.slug && p.name)
+    .sort((a, b) => b.name.length - a.name.length);
+  if (toLink.length === 0) return html;
+
+  const linked = new Set();
+  return html.replace(
+    /(<a[\s>][\s\S]*?<\/a>)|(<[^>]+>)|([^<]+)/g,
+    (match, anchorTag, tag, text) => {
+      if (anchorTag) return anchorTag;
+      if (tag)       return tag;
+      if (!text)     return match;
+      let result = text;
+      for (const { slug, name } of toLink) {
+        if (linked.has(slug)) continue;
+        const re = new RegExp(escapeRegex(name));
+        if (re.test(result)) {
+          result = result.replace(re, () => {
+            linked.add(slug);
+            return `<a href="/witb/players/${slug}/">${name}</a>`;
+          });
+        }
+      }
+      return result;
+    }
+  );
+}
+
 function autoLinkBrandsInSection(html, brandMentions, brandNameMap) {
   const toLink = (brandMentions || [])
     .map(slug => ({ slug, name: brandNameMap[slug] }))
@@ -170,6 +207,16 @@ function buildImageHtml(issue) {
   const strip = issue.images.strip || [];
   const hero  = issue.images.hero;
 
+  // The hero renders FIRST and independently of the strip. It used to be shown
+  // only when there was no strip, so an issue with both had its hero appear
+  // nowhere on the page while still being the og:image.
+  const heroHtml = hero
+    ? `<figure class="sc-hero-figure">` +
+        `<img class="sc-hero-img" src="${escHtml(hero.src || hero)}" alt="${escHtml((hero.alt) || issue.title)}" loading="eager">` +
+        (hero.caption ? `<figcaption class="sc-hero-caption">${escHtml(hero.caption)}</figcaption>` : '') +
+      `</figure>`
+    : '';
+
   if (strip.length > 0) {
     // Wrap each image in <figure><figcaption> for proper caption semantics (Bug 1).
     const items = strip.map(img =>
@@ -179,14 +226,10 @@ function buildImageHtml(issue) {
       `</figure>`
     ).join('');
     // Wrap triptych in a constrained-width div; mobile stacking handled via CSS (Bug 1, Bug 2).
-    return `<div class="sc-image-triptych"><div class="sc-image-strip sc-image-strip--article">${items}</div></div>`;
+    return heroHtml + `<div class="sc-image-triptych"><div class="sc-image-strip sc-image-strip--article">${items}</div></div>`;
   }
 
-  if (hero) {
-    return `<img class="sc-hero-img" src="${escHtml(hero)}" alt="${escHtml(issue.title)}" loading="lazy">`;
-  }
-
-  return '';
+  return heroHtml;
 }
 
 // ── Table of contents ─────────────────────────────────────────────────────────
@@ -247,7 +290,8 @@ function buildSectionsHtml(issue, brandNameMap, signupPrimary) {
   return (issue.sections || []).map((section, sectionIndex) => {
     // Apply em-dash sanitizer before auto-linking (Bug 6).
     const cleanBody  = stripEmDashes(section.body || '');
-    const linkedBody = autoLinkBrandsInSection(cleanBody, issue.brandMentions, brandNameMap);
+    const withBrands = autoLinkBrandsInSection(cleanBody, issue.brandMentions, brandNameMap);
+    const linkedBody = autoLinkPlayersInSection(withBrands, issue.playerMentions);
     // Use sc-main-heading for proper display-font H2s (Bug 4).
     const headingHtml = section.heading
       ? `\n      <h2 class="sc-main-heading" id="${escHtml(section.id)}">${escHtml(section.heading)}</h2>`
@@ -255,11 +299,19 @@ function buildSectionsHtml(issue, brandNameMap, signupPrimary) {
     // id goes on the H2 so TOC anchor-links scroll to the heading (Bug 3/4).
     const sectionId = section.heading ? '' : ` id="${escHtml(section.id)}"`;
     const afterFirst = (sectionIndex === 0 && signupPrimary) ? `\n${signupPrimary}` : '';
+    // Section images carry their own caption, which is where the photo credit
+    // lives. Rendered after the body so the copy introduces the picture.
+    const sectionImgs = (section.images || []).map(im =>
+      `<figure class="sc-section-figure">` +
+        `<img class="sc-section-img" src="${escHtml(im.src)}" alt="${escHtml(im.alt || '')}" loading="lazy">` +
+        (im.caption ? `<figcaption class="sc-section-caption">${escHtml(im.caption)}</figcaption>` : '') +
+      `</figure>`
+    ).join('');
     return `    <section class="sc-article-section"${sectionId}>${headingHtml}
       <div class="section-body">
         ${linkedBody}
       </div>
-    </section>${afterFirst}`;
+    </section>${sectionImgs}${afterFirst}`;
   }).join('\n\n');
 }
 
@@ -329,7 +381,14 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
   const canonicalUrl = `https://dormied.com/scorecard/${slug}/`;
   const metaDesc     = buildMetaDesc(issue);
   const pageTitle    = `${issue.title} | DORMIED`;
-  const ogImage      = (issue.images && issue.images.hero) || 'https://dormied.com/images/og-image.jpg';
+  // Social scrapers need an absolute URL, and the hero is stored root-relative
+  // so the <img> stays portable. An `og` override lets a tall hero supply a
+  // properly proportioned 1200x630 card instead of being centre-cropped.
+  const heroObj      = (issue.images && issue.images.hero) || null;
+  const rawOg        = (heroObj && (heroObj.og || heroObj.src)) || (typeof heroObj === 'string' ? heroObj : null);
+  const ogImage      = rawOg
+    ? (rawOg.startsWith('http') ? rawOg : 'https://dormied.com' + rawOg)
+    : 'https://dormied.com/images/og-image.jpg';
   const displayDate  = formatDate(issue.dateISO);
   const authorStr    = 'Adam R. & Travis R.';
 
@@ -370,7 +429,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
       },
     },
     description: metaDesc,
-    image: (issue.images && issue.images.hero) || 'https://dormied.com/images/og-image.jpg',
+    image: ogImage,
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
   });
 

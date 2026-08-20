@@ -19,6 +19,122 @@ window.DORMIED_SCORECARD_DATA = {
 
   issues: [
 
+    /* ── AUGUST 2026 ───────────────────────────────────────────────────── */
+    {
+      slug:       "august-2026",
+      title:      "The Open Crowned a Champion. The Index Crowned a Cartoon Mouse | The Scorecard | August 2026",
+      subtitle:   "A Bangkok streetwear label with a Mickey Mouse licence just posted the biggest single-month move in the history of the DORMIED Index. It beat a Formula 1 team by 200 percentage points.",
+      date:       "Aug 19, 2026",
+      dateISO:    "2026-08-19",
+      monthLabel: "August 2026",
+      images: {
+        /* og is a contained 1200x630 card: the hero is a tall portrait flat-lay
+           and a 1.91:1 crop would throw away most of the collection. */
+        hero: {
+          src:     "/images/scorecard/august-2026/hero.webp",
+          og:      "/images/scorecard/august-2026/og.webp",
+          alt:     "Carnival Golf x Disney Never Outgrow Play collection laid out flat, with a Golf Pro Mickey tee, a red embroidered Mickey jacket, a Carnival Golf Club polo, numbered iron covers and branded golf balls",
+          caption: "Carnival Golf's Disney \"Never Outgrow Play\" collection, the drop behind the largest single-month move this index has recorded. Photo by @carnivalgolf.",
+        },
+        strip: [],
+      },
+      toc: [
+        { id: "at-the-top",       label: "At The Top"       },
+        { id: "the-biggest-move", label: "The Biggest Move" },
+        { id: "the-field",        label: "The Field"        },
+        { id: "the-drop-zone",    label: "The Drop Zone"    },
+        { id: "the-long-game",    label: "The Long Game"    },
+        { id: "global-dispatch",  label: "Global Dispatch"  },
+        { id: "closing",          label: "Closing"          },
+      ],
+      sections: [
+        {
+          id:      "intro",
+          heading: null,
+          body:    "<p>Ryan Fox holed an eleven-and-a-half-foot birdie putt on the 72nd at Royal Birkdale to win The Open at 39, becoming only the third New Zealander to take a men's major. He did it with a complete Srixon bag, ball included. It was the best story in golf all month and one of the best finishes in years. It was also, by the index's reckoning, not close to the biggest brand story of July. That belonged to a Bangkok streetwear label with a Mickey Mouse licence and a 52-year-old women's apparel company that most of the industry had already written off as dead. July was the month the majors stopped being the engine. The Claret Jug went to a player nobody picked, and the attention went somewhere else entirely.</p>",
+        },
+        {
+          id:      "at-the-top",
+          heading: "At The Top: Malbon's Best Month Ever Arrived Two Months After Its Worst",
+          body:    "<p>Malbon climbed 22.7% to fourth, the highest position the brand has ever held on this index. Two issues ago we had it in the Drop Zone at minus 33.3%, with Jason Day's camo shorts drawing open calls from fans to drop the brand and a Tustin warehouse sale moving inventory at 70% off. Sixty days later it is fourth globally, third in the UK, and fifth in Japan. Whatever friction the backlash created, it did not stick. Above it, Titleist holds 100.0 for a seventh straight month and TaylorMade sits at 81.7, both perfectly flat. TravisMathew gave back 18.2% and Callaway slipped 18.5% to fifth, swapping places with Malbon in the process. The top two have not moved since February. Everything underneath them is churning.</p>",
+          images: [
+            { src: "/images/scorecard/august-2026/index-cards.webp",
+              alt: "DORMIED Index July 2026 top five, biggest movers and biggest drops",
+              caption: "The July 2026 snapshot: Titleist and TaylorMade unmoved at the top, Carnival Golf up 49 places, and four brands giving back more than 46%." },
+          ],
+        },
+        {
+          id:      "the-biggest-move",
+          heading: "The Biggest Move: A Bangkok Streetwear Label Just Broke the Index Record",
+          body:    "<p>Carnival Golf rose 515.4% in July, climbing 49 spots to a 52-week peak. That is the largest single-month move in the history of this index, and it is not close. McLaren Golf set the previous mark at 307.4% in April with a Formula 1 team, a world top-five player, and a launch timed to the Miami Grand Prix behind it. Carnival did it with cartoon characters. The Thai label, best known in sneaker circles for its Bangkok streetwear roots, dropped its Disney \"Never Outgrow Play\" collection on July 11, a Mickey and Friends range that included a Classic Goofy polo. Golf apparel has spent three years chasing crossover credibility through musicians, actors, and fashion houses. Carnival went and licensed the most recognisable characters on earth and let nostalgia do the rest. The DI still sits at 0.7, so this is a small brand having an enormous month rather than a new power in the category. But a 49-spot climb tells you the ceiling for licensed nostalgia in our game is higher than anyone in the industry has been pricing it. Worth noting we now track 215 brands, up from 175 in May, and the wider net is exactly why a move like this surfaces at all.</p>",
+          images: [
+            { src: "/images/scorecard/august-2026/carnival-2.webp",
+              alt: "Carnival Golf x Disney apparel including a navy Minnie polo, a patterned bucket hat, a green Goofy tee and a colour-blocked vest with character embroidery",
+              caption: "More of the July 11 range: a Minnie polo, a Goofy tee, a Donald headcover and a character-embroidered vest. Photo by @carnivalgolf." },
+          ],
+        },
+        {
+          id:      "the-field",
+          heading: "The Field: A Resurrection, a Formula 1 Champion, and a Brand That Got Its Crowd Back",
+          body:    "<p>Tail Activewear jumped 120.3% to a 52-week peak after relaunching on July 4 under new ownership. The women's brand has been making golf, tennis, and pickleball apparel since 1974, and by earlier this year retailers were listing it as discontinued and dumping remaining stock into resale bins under $39. The relaunch discount code is WELCOMEBACK, which is either the most on-the-nose piece of copywriting of the year or exactly the right call. Fifty-two-year-old apparel brands do not usually get second acts. This one is at its highest search interest in a year.</p>\n<p>Lululemon Golf climbed 22.3% to a 52-week peak on the back of Lewis Hamilton. The seven-time Formula 1 champion teased a golf-specific collaboration on July 9 and launched the Rest Day content series a week later, putting loose trousers and zip-up polos in front of an audience that has never read a WITB in its life. Note what that means alongside the Drop Zone below. Formula 1 arrived in golf twice this year. The version selling $375 irons is in freefall. The version selling knitwear is at a 52-week high.</p>\n<p>Public Drip recovered 47.7% after last month's 32.3% fall, when the Brooklyn label's move into green grass retail alienated an audience built on not being in the pro shop. One month of correction, one month of recovery. The distribution story did not kill the brand, it just cost it a cycle. TPT Golf and Kastel Denmark both rose 52.6% to their own 52-week peaks with no single visible catalyst behind either. The moves are real. The reasons are not yet.</p>",
+          images: [
+            { src: "/images/scorecard/august-2026/hamilton.webp",
+              alt: "Lewis Hamilton driving a golf cart in Lululemon golf apparel alongside a playing partner",
+              caption: "Hamilton's Rest Day series put Lululemon Golf in front of an audience that has never read a WITB. Photo by Lululemon." },
+          ],
+        },
+        {
+          id:      "the-drop-zone",
+          heading: "The Drop Zone: Everything That Rose on a Major Gave It Back",
+          body:    "<p>McLaren Golf fell another 33.1%, a fourth consecutive monthly decline, and now sits 67th after peaking at seventh in April. The full arc reads plus 307, minus 63, minus 80, minus 33. Justin Rose is still playing the irons. The clubs still work. The conversation ended in June and has not restarted, which is the specific failure mode of a brand built on arrival rather than accumulation.</p>\n<p>Vuori dropped 46.3%, and we own this one. We made Vuori the Long Game call in May and it delivered three straight months of gains on the Tom Holland partnership, a Bloomberg feature, and a Wall Street Journal China announcement. Then July arrived with no new campaign beat and the number gave back most of the quarter's gains in one month. The three-month trend is still plus 95.4%, so the underlying trajectory holds. But it is a clean lesson in what celebrity-led apparel momentum actually is: a series of events, not a state.</p>\n<p>ACCRA fell 47.2%, giving back nearly all of the 131.6% surge it posted in May when Wyndham Clark won the CJ Cup with an ACCRA putter shaft. Breezy Golf slid 45.3% as the Bob Does Sports U.S. Open content cycle wound down. Both are the same shape: a component or content brand spikes on one tournament, then returns to baseline eight weeks later. The index has now caught this pattern often enough that it should probably have a name.</p>",
+        },
+        {
+          id:      "the-long-game",
+          heading: "The Long Game: Srixon Won a Major and the Number Has Not Registered Yet",
+          body:    "<p>Srixon sits 13th at a 52-week peak and its best rank ever, and its July move was exactly zero percent. That is the anomaly worth watching. Fox won The Open on July 19 with a Srixon ZXi RKT LS+ driver, ZXi irons, and a Z-Star XV ball, one of the most complete single-brand winning bags a major has produced in years, and the win landed with eleven days left in the measurement window. Search interest from a Sunday-evening major does not clear inside a fortnight. If The Open is worth anything at all to a brand, August is where Srixon shows it, and the size of that move will tell us something useful about what a major is actually worth in 2026. We built out Ryan Fox's WITB page the day after Birkdale, and it sits alongside Cameron Young and 193 other current tour bags on the site, all tracked club by club and shaft by shaft. If you want to see what a Claret Jug bag looks like from grip to ball, that is where it lives.</p>",
+          images: [
+            { src: "/images/scorecard/august-2026/ryan-fox.webp",
+              alt: "Ryan Fox celebrating with both arms raised after holing the winning putt at Royal Birkdale",
+              caption: "Fox on the 72nd at Royal Birkdale, winning The Open with a complete Srixon bag. Photo by Bill Streicher, Imagn Images." },
+            { src: "/images/scorecard/august-2026/witb-page.webp",
+              alt: "The DORMIED What's In The Bag hub showing recent bags and top ranked players",
+              caption: "195 tour bags tracked club by club, including Fox's, built the day after Birkdale." },
+          ],
+        },
+        {
+          id:      "global-dispatch",
+          heading: "Global Dispatch: A British Brand Had Its Best Month Everywhere Except Britain",
+          body:    "<p>The Open returned to Royal Birkdale in July, and Manors Golf climbed 22.1% globally, its strongest month of the year. In the UK, the London label slipped two places to sixth. The brand that passed it going the other way was Malbon, up two spots to third in Britain. Read those together and you get something more interesting than either number alone: a British major introduced a British brand to the rest of the world while British golfers spent the month buying Los Angeles streetwear. Manors has the Reebok collaboration doing real work on its behalf internationally. At home, it is competing against an American brand that has spent two years making UK golf culture part of its own story. Home-field advantage is not what it used to be in apparel.</p>",
+        },
+        {
+          id:      "closing",
+          heading: "The Closing Note: Thank You, Sincerely",
+          body:    "<p>Six issues ago this was a spreadsheet and an argument. It is now 215 brands across ten markets, 195 tour bags tracked club by club, and a readership that has grown every single month since March without us buying a single ad. That is entirely down to people forwarding this email and posting about the index, and we are more grateful for that than a paragraph can carry. If The Scorecard is worth your ten minutes each month, the two things that help us most are following @DORMIED_GOLF on X and sending this to the one person in your group chat who has opinions about shaft profiles. They exist. You know exactly who they are. As for what July taught us: a cartoon mouse outperformed a Formula 1 team, a brand that was declared dead came back at a 52-week high, and the man who won the Claret Jug moved his equipment sponsor by precisely nothing. Our game's attention economy makes no sense, and watching it is the best job in golf.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>",
+        },
+      ],
+      indexSnapshot: [
+        { rank: 1, id: "titleist",     name: "Titleist",     di: 100.0, mom: 0     },
+        { rank: 2, id: "taylormade",   name: "TaylorMade",   di: 81.7,  mom: 0     },
+        { rank: 3, id: "travismathew", name: "TravisMathew", di: 54.9,  mom: -18.2 },
+        { rank: 4, id: "malbon",       name: "Malbon",       di: 54.9,  mom: 22.7  },
+        { rank: 5, id: "callaway",     name: "Callaway",     di: 44.7,  mom: -18.5 },
+      ],
+      brandMentions: [
+        "srixon", "malbon", "titleist", "taylormade", "travismathew", "callaway",
+        "carnival-golf", "mclaren-golf", "tail-activewear", "lululemon-golf",
+        "public-drip", "tpt-golf", "kastel-denmark", "vuori", "accra",
+        "breezy-golf", "manors-golf",
+      ],
+      playerMentions: [
+        { slug: "ryan-fox",      name: "Ryan Fox"      },
+        { slug: "jason-day",     name: "Jason Day"     },
+        { slug: "justin-rose",   name: "Justin Rose"   },
+        { slug: "wyndham-clark", name: "Wyndham Clark" },
+        { slug: "cameron-young", name: "Cameron Young" },
+      ],
+    },
+
+
     /* ── JULY 2026 ─────────────────────────────────────────────────────── */
     {
       slug:       "july-2026",

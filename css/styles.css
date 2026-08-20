@@ -7350,3 +7350,17 @@ details[open] .faq-question::after { content: '−'; }
      a 200px HEIGHT, which is what made the email field a tall empty box. */
   .scb-input, .scb-btn { width: 100%; flex: 0 0 auto; }
 }
+
+/* Scorecard hero + in-section images. The caption carries the photo credit. */
+.sc-hero-figure { margin: 0 0 28px; }
+.sc-hero-img { width: 100%; height: auto; display: block; border-radius: var(--radius); }
+.sc-hero-caption,
+.sc-section-caption {
+  font-family: var(--font-body);
+  font-size: .8rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 8px 0 0;
+}
+.sc-section-figure { margin: 24px 0; }
+.sc-section-img { width: 100%; height: auto; display: block; border-radius: var(--radius); }
