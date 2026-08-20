@@ -2560,7 +2560,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (551) ── -->
+  <!-- ── News articles (553) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4932,6 +4932,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/metalwood-studio-discontinued-1990-reopens-g/</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/metalwood-studio-discontinued-1990-reopens-g-hero.jpg</image:loc>
+      <image:title>Discontinued in 1990, Back at $275: Metalwood Studio Reopens the G.H.BASS Archive</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/mini-drivers-are-no-longer-a-niche-callaway-just-made-that-o-2026-04-16/</loc>
     <lastmod>2026-04-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -5429,6 +5439,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/ping-limited-run-finishes-go-players-hero.jpg</image:loc>
       <image:title>Limited-Run Finishes Go to Better Players. PING Just Aimed One at the 20-Handicap.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/ping-scottsdale-tec-becomes-model-line/</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/ping-scottsdale-tec-becomes-model-line-hero.jpg</image:loc>
+      <image:title>Two New Necks, Zero Press Releases: PING&apos;s Scottsdale TEC Quietly Becomes a Five-Model Line</image:title>
     </image:image>
   </url>
   <url>
