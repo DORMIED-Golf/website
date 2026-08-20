@@ -61,9 +61,12 @@
     }
 
     el.innerHTML = issues.map(function (issue) {
-      var thumb = issue.images && (issue.images.hero || (issue.images.strip && issue.images.strip[0] && issue.images.strip[0].src));
+      // hero is an object on newer issues, so resolve through the shared
+      // helper rather than escaping it straight into src.
+      var util  = window.DORMIED_SCORECARD_UTIL;
+      var thumb = util ? util.thumb(issue) : '';
       var thumbHtml = thumb
-        ? '<img class="sc-archive-thumb" src="' + escHtml(thumb) + '" alt="" loading="lazy">'
+        ? '<img class="sc-archive-thumb" src="' + escHtml(thumb) + '" alt="' + escHtml(util.thumbAlt(issue)) + '" loading="lazy">'
         : '<div class="sc-archive-thumb sc-archive-thumb--placeholder"></div>';
 
       return '<a href="/scorecard/' + escHtml(issue.slug) + '/" class="sc-archive-card">' +
@@ -71,7 +74,7 @@
         '<div class="sc-archive-card-body">' +
           '<span class="sc-label sc-label--sm">THE SCORECARD</span>' +
           '<div class="sc-archive-date">' + escHtml(issue.date) + '</div>' +
-          '<div class="sc-archive-title">' + escHtml(issue.title) + '</div>' +
+          '<div class="sc-archive-title">' + escHtml(util ? util.headline(issue) : issue.title) + '</div>' +
           '<p class="sc-archive-sub">' + escHtml(issue.subtitle) + '</p>' +
         '</div>' +
       '</a>';
@@ -94,8 +97,14 @@
       return '<div class="sc-image-strip' + (isHero ? ' sc-image-strip--hero' : '') + '">' + items + '</div>';
     }
 
-    if (hero) {
-      return '<img class="sc-hero-img" src="' + escHtml(hero) + '" alt="" loading="lazy">';
+    var heroSrc = window.DORMIED_SCORECARD_UTIL
+      ? window.DORMIED_SCORECARD_UTIL.thumb(issue) : (typeof hero === 'string' ? hero : '');
+    if (heroSrc) {
+      var heroAlt = window.DORMIED_SCORECARD_UTIL
+        ? window.DORMIED_SCORECARD_UTIL.thumbAlt(issue) : '';
+      var heroSize = window.DORMIED_SCORECARD_UTIL
+        ? window.DORMIED_SCORECARD_UTIL.sizeAttrs(issue) : '';
+      return '<img class="sc-hero-img" src="' + escHtml(heroSrc) + '" alt="' + escHtml(heroAlt) + '"' + heroSize + ' loading="lazy">';
     }
 
     return '';

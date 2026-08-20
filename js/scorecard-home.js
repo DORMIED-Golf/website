@@ -24,11 +24,14 @@
 
     var issue = data.issues[0]; // Always the latest issue
 
-    // Build image HTML
+    var util = window.DORMIED_SCORECARD_UTIL;
+
+    // Build image HTML: the triptych when the issue has one, otherwise the
+    // hero. hero is an object on newer issues, so it goes through util.thumb()
+    // rather than being escaped straight into src.
     var imgHtml = '';
     if (issue.images) {
       var strip = issue.images.strip || [];
-      var hero  = issue.images.hero;
       if (strip.length > 0) {
         var items = strip.map(function (img) {
           return '<div class="sc-strip-item">' +
@@ -37,8 +40,13 @@
           '</div>';
         }).join('');
         imgHtml = '<div class="sc-image-strip sc-image-strip--home">' + items + '</div>';
-      } else if (hero) {
-        imgHtml = '<img class="sc-home-img" src="' + escHtml(hero) + '" alt="" loading="lazy">';
+      } else {
+        var heroSrc = util ? util.thumb(issue) : '';
+        if (heroSrc) {
+          imgHtml = '<img class="sc-home-img" src="' + escHtml(heroSrc) +
+            '" alt="' + escHtml(util ? util.thumbAlt(issue) : '') + '"' +
+            (util ? util.sizeAttrs(issue) : '') + ' loading="lazy">';
+        }
       }
     }
 
@@ -55,7 +63,9 @@
         '<span class="section-month">' + escHtml(issue.monthLabel) + '</span>' +
       '</div>' +
       (imgHtml ? imgHtml : '') +
-      '<p class="sc-home-article-title">' + escHtml(issue.title) + '</p>' +
+      // Headline only: the section header already shows the month, so the
+      // "| The Scorecard | August 2026" suffix is repeated furniture.
+      '<p class="sc-home-article-title">' + escHtml(util ? util.headline(issue) : issue.title) + '</p>' +
       '<p class="sc-home-sub">' + escHtml(issue.subtitle) + '</p>' +
       (snippet ? '<p class="sc-home-snippet">' + escHtml(snippet) + '</p>' : '') +
       '<a href="/scorecard/' + escHtml(issue.slug) + '/" class="hero-cta sc-home-cta">Read The Scorecard →</a>';

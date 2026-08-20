@@ -33,6 +33,11 @@ window.DORMIED_SCORECARD_DATA = {
         hero: {
           src:     "/images/scorecard/august-2026/hero.webp",
           og:      "/images/scorecard/august-2026/og.webp",
+          /* Intrinsic size, so cards can reserve the box before the file
+             loads. A 1290x1600 portrait dropped into a width:100% card is
+             1136px tall and shoves everything below it down on arrival. */
+          w:       1290,
+          h:       1600,
           alt:     "Carnival Golf x Disney Never Outgrow Play collection laid out flat, with a Golf Pro Mickey tee, a red embroidered Mickey jacket, a Carnival Golf Club polo, numbered iron covers and branded golf balls",
           caption: "Carnival Golf's Disney \"Never Outgrow Play\" collection, the drop behind the largest single-month move this index has recorded. Photo by @carnivalgolf.",
         },
@@ -109,7 +114,7 @@ window.DORMIED_SCORECARD_DATA = {
         {
           id:      "closing",
           heading: "The Closing Note: Thank You, Sincerely",
-          body:    "<p>Six issues ago this was a spreadsheet and an argument. It is now 215 brands across ten markets, 195 tour bags tracked club by club, and a readership that has grown every single month since March without us buying a single ad. That is entirely down to people forwarding this email and posting about the index, and we are more grateful for that than a paragraph can carry. If The Scorecard is worth your ten minutes each month, the two things that help us most are following @DORMIED_GOLF on X and sending this to the one person in your group chat who has opinions about shaft profiles. They exist. You know exactly who they are. As for what July taught us: a cartoon mouse outperformed a Formula 1 team, a brand that was declared dead came back at a 52-week high, and the man who won the Claret Jug moved his equipment sponsor by precisely nothing. Our game's attention economy makes no sense, and watching it is the best job in golf.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>",
+          body:    "<p>Six issues ago this was a spreadsheet and an argument. It is now 215 brands across ten markets, 195 tour bags tracked club by club, and a readership that has grown every single month since March without us buying a single ad. That is entirely down to people forwarding this email and posting about the index, and we are more grateful for that than a paragraph can carry. If The Scorecard is worth your ten minutes each month, the two things that help us most are following <a href=\"https://x.com/DORMIED_GOLF\" target=\"_blank\" rel=\"noopener\">@DORMIED_GOLF</a> on X and sending this to the one person in your group chat who has opinions about shaft profiles. They exist. You know exactly who they are. As for what July taught us: a cartoon mouse outperformed a Formula 1 team, a brand that was declared dead came back at a 52-week high, and the man who won the Claret Jug moved his equipment sponsor by precisely nothing. Our game's attention economy makes no sense, and watching it is the best job in golf.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>",
         },
       ],
       indexSnapshot: [
@@ -571,3 +576,66 @@ window.DORMIED_SCORECARD_DATA = {
   ], /* end issues */
 
 }; /* end DORMIED_SCORECARD_DATA */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Shared issue helpers.
+
+   scorecard-home.js and scorecard-archive.js both need "which image
+   represents this issue" and "what do I call it in a link". Both had their
+   own copy reaching straight for images.strip[0], and both broke the day an
+   issue shipped with a tagged hero and no strip: the homepage rendered
+   src="[object Object]" because hero became an object, and the archive rows
+   fell through to a grey placeholder. This file is the only dependency the
+   two scripts share, so the helpers live here. The build-side twin is
+   scripts/lib/scorecard-issue.js — keep the two in step.
+   ───────────────────────────────────────────────────────────────────────── */
+window.DORMIED_SCORECARD_UTIL = {
+  /* The image representing an issue, or '' if it has none. */
+  thumb: function (issue) {
+    var imgs = (issue && issue.images) || {};
+    var hero = imgs.hero;
+    /* hero is an object on newer issues, a bare path on older ones. */
+    var heroSrc = hero && (typeof hero === 'string' ? hero : hero.src);
+    if (heroSrc) return heroSrc;
+    var strip = imgs.strip || [];
+    if (strip.length && strip[0] && strip[0].src) return strip[0].src;
+    return '';
+  },
+  /* Intrinsic size of thumb() as an attribute string, or '' when unrecorded.
+     Lets the browser reserve the box before the image loads. */
+  sizeAttrs: function (issue) {
+    var imgs = (issue && issue.images) || {};
+    var hero = imgs.hero;
+    var h = (hero && typeof hero !== 'string') ? hero : null;
+    if (h && h.w && h.h) return ' width="' + h.w + '" height="' + h.h + '"';
+    var s0 = (imgs.strip || [])[0];
+    if (s0 && s0.w && s0.h) return ' width="' + s0.w + '" height="' + s0.h + '"';
+    return '';
+  },
+  /* Alt text for thumb(), never undefined. */
+  thumbAlt: function (issue) {
+    var imgs = (issue && issue.images) || {};
+    var hero = imgs.hero;
+    if (hero && typeof hero !== 'string' && hero.alt) return hero.alt;
+    var strip = imgs.strip || [];
+    if (strip.length && strip[0] && strip[0].label) return strip[0].label;
+    return '';
+  },
+  /* The headline half of `title`, falling back to the subtitle's opening
+     line: issues before June 2026 have no headline, and the month is already
+     printed in the card eyebrow. */
+  headline: function (issue) {
+    if (!issue) return '';
+    var title = issue.title || '';
+    var head = title.split('|')[0].replace(/^\s+|\s+$/g, '');
+    if (head && head.toLowerCase() !== 'the scorecard') return head;
+    var sub = (issue.subtitle || '').replace(/^\s+|\s+$/g, '');
+    if (sub) {
+      var first = (sub.match(/^.*?[.!?](?=\s|$)/) || [sub])[0].replace(/^\s+|\s+$/g, '');
+      return first.length > 95
+        ? first.slice(0, 92).replace(/\s+\S*$/, '') + '…'
+        : first;
+    }
+    return issue.monthLabel || title;
+  }
+};

@@ -131,11 +131,14 @@ function main() {
   const stale = [];
   let datasetRefs = 0;
   for (const file of DATASET_FILES) {
-    // Anchor on the leading slash. Without it "data.min.js" also matches the
-    // tail of "scorecard-data.min.js" and captures the first digits of its
-    // content hash, which is exactly the substring trap that made an earlier
-    // cache-buster sweep silently miss every page it was meant to fix.
-    const re = new RegExp('/' + file.replace('.', '\\.') + '\\?v=(\\d+)', 'g');
+    // Anchor on a slash OR a quote. A delimiter is required because bare
+    // "data.min.js" also matches the tail of "scorecard-data.min.js" and
+    // captures the first digits of its content hash -- the substring trap that
+    // made an earlier cache-buster sweep silently miss every page it was meant
+    // to fix. But requiring specifically a SLASH was the mirror-image mistake:
+    // the homepage lists its scripts as quoted relative paths, so its
+    // data-home.js reference was never checked either.
+    const re = new RegExp('[/\'"]' + file.replace('.', '\\.') + '\\?v=(\\d+)', 'g');
     for (const p of pages) {
       const html = fs.readFileSync(p, 'utf8');
       for (const m of html.matchAll(re)) {
@@ -183,7 +186,14 @@ function main() {
   // ── JS asset cache-busters ───────────────────────────────────────────────
   const jsStale = [];
   let jsRefs = 0;
-  const jsRe = /\/js\/([a-z-]+\.min\.js)\?v=([0-9a-z]+)/g;
+  // Match a root-absolute "/js/x.min.js" OR a relative "js/x.min.js" opened by
+  // a quote. The homepage builds its script list as an array of RELATIVE paths
+  // inside a loader, so a pattern requiring the leading slash skipped all
+  // eleven of its scripts -- including scorecard-data.min.js, which is how the
+  // homepage went on serving July's Scorecard from cache after August shipped.
+  // The leading delimiter is still required: bare "data.min.js" would otherwise
+  // match the tail of "scorecard-data.min.js" and read a hash as a version.
+  const jsRe = /(?:\/|['"])js\/([a-z-]+\.min\.js)\?v=([0-9a-z]+)/g;
   for (const p of pages) {
     const html = fs.readFileSync(p, 'utf8');
     for (const m of html.matchAll(jsRe)) {

@@ -22,6 +22,8 @@
     "deploy": "vercel --prod",
     "verify:css": "node scripts/verify-css-parity.js",
     "verify:page-scripts": "node scripts/verify-page-scripts.js",
+    "fix:assets": "node scripts/fix-asset-versions.js",
+    "verify:assets": "node scripts/fix-asset-versions.js --check",
     "generate-llms": "node scripts/generate-llms-txt.js"
   },
   "dependencies": {

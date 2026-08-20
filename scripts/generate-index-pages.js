@@ -31,6 +31,7 @@ const THUMB_FALLBACK = "this.onerror=null;this.removeAttribute('srcset');"
   + "this.src='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2730%27%3E%3Crect%20width%3D%2740%27%20height%3D%2730%27%20fill%3D%27%23e8eaed%27%2F%3E%3C%2Fsvg%3E'";
 
 const { regenerateSitemap } = require('./generate-sitemap');
+const { issueThumb, issueThumbAlt, issueThumbSizeAttrs, issueHeadline } = require('./lib/scorecard-issue.js');
 
 /* ── Load .env ────────────────────────────────────────────────────────────── */
 (function loadDotenv() {
@@ -892,7 +893,10 @@ async function generateScorecard() {
       ).join('');
       return `<div class="sc-image-strip${isHero ? ' sc-image-strip--hero' : ''}">${items}</div>`;
     }
-    if (hero) return `<img class="sc-hero-img" src="${escHtml(hero)}" alt="" loading="lazy">`;
+    // hero is an object on newer issues; resolve through the shared helper so
+    // an issue with a tagged hero and no strip still renders an image.
+    const heroSrc = issueThumb(issue);
+    if (heroSrc) return `<img class="sc-hero-img" src="${escHtml(heroSrc)}" alt="${escHtml(issueThumbAlt(issue))}"${issueThumbSizeAttrs(issue)} loading="lazy">`;
     return '';
   }
 
@@ -914,7 +918,7 @@ async function generateScorecard() {
         `<span class="sc-hero-date">${escHtml(latest.date)}</span>` +
       `</div>` +
       buildScImageHtml(latest, true) +
-      `<h2 class="sc-hero-title">${escHtml(latest.title)}</h2>` +
+      `<h2 class="sc-hero-title">${escHtml(issueHeadline(latest))}</h2>` +
       `<p class="sc-hero-sub">${escHtml(latest.subtitle || '')}</p>` +
       (latestLedeText ? `<p class="sc-hero-lede">${escHtml(latestLedeText)}</p>` : '') +
       `<a href="/scorecard/${escHtml(latest.slug)}/" class="sc-read-link">Read The Scorecard &#x2192;</a>` +
@@ -922,10 +926,9 @@ async function generateScorecard() {
 
   /* Archive: all other issues — mirrors renderArchive() in scorecard-archive.js */
   const archiveHtml = archive.map(issue => {
-    const thumb = issue.images && (issue.images.hero ||
-      (issue.images.strip && issue.images.strip[0] && issue.images.strip[0].src));
+    const thumb = issueThumb(issue);
     const thumbHtml = thumb
-      ? `<img class="sc-archive-thumb" src="${escHtml(thumb)}" alt="" loading="lazy">`
+      ? `<img class="sc-archive-thumb" src="${escHtml(thumb)}" alt="${escHtml(issueThumbAlt(issue))}" loading="lazy">`
       : `<div class="sc-archive-thumb sc-archive-thumb--placeholder"></div>`;
     const issueLede = wordsTruncate(
       stripHtml((Array.isArray(issue.sections) && issue.sections[0] &&
@@ -938,7 +941,7 @@ async function generateScorecard() {
         `<div class="sc-archive-card-body">` +
           `<span class="sc-label sc-label--sm">THE SCORECARD</span>` +
           `<div class="sc-archive-date">${escHtml(issue.date)}</div>` +
-          `<div class="sc-archive-title">${escHtml(issue.title)}</div>` +
+          `<div class="sc-archive-title">${escHtml(issueHeadline(issue))}</div>` +
           `<p class="sc-archive-sub">${escHtml(issue.subtitle || '')}</p>` +
           (issueLede ? `<p class="sc-archive-lede">${escHtml(issueLede)}</p>` : '') +
         `</div>` +

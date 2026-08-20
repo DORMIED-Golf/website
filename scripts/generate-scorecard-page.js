@@ -318,17 +318,26 @@ function buildSectionsHtml(issue, brandNameMap, signupPrimary) {
 // ── More issues (cross-links) ─────────────────────────────────────────────────
 
 function buildMoreIssuesHtml(issue, allIssues) {
-  const others = allIssues.filter(i => i.slug !== issue.slug).slice(0, 3);
+  const others = allIssues.filter(i => i.slug !== issue.slug).slice(0, 4);
   if (others.length === 0) return '';
   const items = others.map(i => {
-    const label = i.monthLabel || i.title;
+    // The headline, not the month. "June 2026" gives a reader no reason to
+    // click; "The Quiet Man Won the Loud Major" does.
+    const label   = issueHeadline(i);
     const dateStr = i.date || '';
+    const thumb   = issueThumb(i);
+    const thumbHtml = thumb
+      ? `<img class="scorecard-related-thumb" src="${escHtml(thumb)}" alt="${escHtml(issueThumbAlt(i))}" loading="lazy" width="120" height="80">`
+      : `<span class="scorecard-related-thumb scorecard-related-thumb--placeholder" aria-hidden="true"></span>`;
     return (
       `      <li class="scorecard-related-card">` +
         `<a href="/scorecard/${escHtml(i.slug)}/">` +
-          `<span class="scorecard-related-eyebrow">The Scorecard</span>` +
-          `<span class="scorecard-related-title">${escHtml(label)}</span>` +
-          (dateStr ? `<span class="scorecard-related-date">${escHtml(dateStr)}</span>` : '') +
+          thumbHtml +
+          `<span class="scorecard-related-text">` +
+            `<span class="scorecard-related-eyebrow">${escHtml(i.monthLabel || 'The Scorecard')}</span>` +
+            `<span class="scorecard-related-title">${escHtml(label)}</span>` +
+            (dateStr ? `<span class="scorecard-related-date">${escHtml(dateStr)}</span>` : '') +
+          `</span>` +
         `</a>` +
       `</li>`
     );
@@ -688,6 +697,7 @@ const { generateSearchIndex } = require('./generate-search-index');
 const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
 const { cssVersion } = require('./lib/css-version.js');
 const { js: jsVersion } = require('./lib/asset-version.js');
+const { issueThumb, issueThumbAlt, issueHeadline } = require('./lib/scorecard-issue.js');
 
 // ── Vercel config: remove shell rewrites, add cache header ───────────────────
 
