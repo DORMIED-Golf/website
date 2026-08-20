@@ -7346,5 +7346,7 @@ details[open] .faq-question::after { content: '−'; }
   .scb { padding: 18px 16px 16px; min-height: 300px; }
   .scb-headline { font-size: 1.3rem; }
   .scb-row { flex-direction: column; }
-  .scb-input, .scb-btn { width: 100%; }
+  /* Reset the flex: in a column the desktop `flex: 1 1 200px` basis becomes
+     a 200px HEIGHT, which is what made the email field a tall empty box. */
+  .scb-input, .scb-btn { width: 100%; flex: 0 0 auto; }
 }
