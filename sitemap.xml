@@ -2560,7 +2560,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (556) ── -->
+  <!-- ── News articles (558) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3129,6 +3129,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bridgestone-bets-big-on-tiger-nostalgia-with-vhs-themed-major-capsule-2026-05-07-hero.jpg</image:loc>
       <image:title>Bridgestone Bets Big on Tiger Nostalgia with VHS-Themed Major Capsule</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/bridgestone-golf-99-7-wet-test/</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/bridgestone-golf-99-7-wet-test-hero.jpg</image:loc>
+      <image:title>99.7 Percent Spin Retention in the Wet: Bridgestone Won a Test It Can&apos;t Print on a Box</image:title>
     </image:image>
   </url>
   <url>
@@ -4999,6 +5009,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/miura-finally-builds-left-handed-irons-and-prices-them-like-collector-2026-07-21-hero.jpg</image:loc>
       <image:title>Miura Finally Builds Left-Handed Irons, and Prices Them Like Collector Pieces</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/miura-golf-96-000-iura-set/</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/miura-golf-96-000-iura-set-hero.jpg</image:loc>
+      <image:title>96,000 Points Bought a $3,136 Miura Set. The Brand That Never Discounts Now Has a Discount Channel.</image:title>
     </image:image>
   </url>
   <url>
