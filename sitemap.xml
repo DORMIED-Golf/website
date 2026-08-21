@@ -2560,7 +2560,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (558) ── -->
+  <!-- ── News articles (559) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3869,6 +3869,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/flightscope-signings-cost-pga-tour-deal-hero.jpg</image:loc>
       <image:title>Five LPGA Signings Cost Less Than One PGA Tour Deal. FlightScope Did the Math.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/flightscope-sponsoring-award-watches-how-college/</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/flightscope-sponsoring-award-watches-how-college-hero.jpg</image:loc>
+      <image:title>Sponsoring an Award Nobody Watches Is How FlightScope Gets Into College Golf</image:title>
     </image:image>
   </url>
   <url>
