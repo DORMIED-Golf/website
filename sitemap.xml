@@ -2560,7 +2560,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (559) ── -->
+  <!-- ── News articles (560) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4899,6 +4899,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/makefields-july-4th-play-a-blue-putter-a-51100-kbs-shaft-and-the-last-real-2026-07-01-hero.jpg</image:loc>
       <image:title>Makefield&apos;s July 4th Play: A Blue Putter, a #51/100 KBS Shaft, and the Last Real American-Made Argument in Golf</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/malbon-35-pieces-sports-mall-anchor/</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/malbon-35-pieces-sports-mall-anchor-hero.jpg</image:loc>
+      <image:title>35 Pieces, Two Sports and a Mall Anchor: Gap Runs It Back With Malbon</image:title>
     </image:image>
   </url>
   <url>
