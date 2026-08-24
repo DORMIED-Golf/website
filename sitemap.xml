@@ -541,7 +541,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/jake-knapp/</loc>
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2026-08-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2560,7 +2560,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (562) ── -->
+  <!-- ── News articles (564) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4512,6 +4512,12 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/jake-knapp-putter/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/news/jason-days-wardrobe-is-doing-more-for-malbon-than-his-swing-2026-05-22/</loc>
     <lastmod>2026-05-22</lastmod>
     <changefreq>weekly</changefreq>
@@ -4710,6 +4716,12 @@
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/kbs-wins-two-tours-in-a-weekend-and-nobody-will-remember-by-tuesday-2026-06-01-hero.jpg</image:loc>
       <image:title>KBS Wins Two Tours in a Weekend, And Nobody Will Remember By Tuesday</image:title>
     </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/kevin-kisner-golf-shoes/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/kirkland-golf-costco-found-club/</loc>
@@ -8181,25 +8193,25 @@
   <!-- ── News pagination ── -->
   <url>
     <loc>https://dormied.com/news/page/10/</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/11/</loc>
-    <lastmod>2026-06-19</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/12/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/13/</loc>
-    <lastmod>2026-06-08</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -8241,7 +8253,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-08-17</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -8265,7 +8277,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/23/</loc>
-    <lastmod>2026-04-15</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
