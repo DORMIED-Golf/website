@@ -2566,7 +2566,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (566) ── -->
+  <!-- ── News articles (565) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -7711,16 +7711,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/vessel-just-swept-mygolfspys-bag-categories-the-index-says-otherwise-2026-06-15-hero.jpg</image:loc>
       <image:title>Vessel Just Swept MyGolfSpy&apos;s Bag Categories. The Index Says Otherwise.</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/vessel-missing-shipping-window-season/</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://dormied.com/images/articles/vessel-missing-shipping-window-season-hero.jpg</image:loc>
-      <image:title>Missing One Shipping Window Can Kill a Season. BooYaa Said It Out Loud, and Vessel Solved It Years Ago</image:title>
     </image:image>
   </url>
   <url>

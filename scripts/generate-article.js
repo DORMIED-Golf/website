@@ -2055,6 +2055,27 @@ async function main() {
     // Fall back to the DORMIED default rather than a raw source URL, which may block hotlinking.
     const ogImageUrl  = localUrl || 'https://dormied.com/images/og-image.jpg';
 
+    // Measure the image once, at ingest. The homepage hero blows its thumbnail
+    // up to roughly 750x260, and the sources we scrape publish plenty of small
+    // og:images (71 of the published corpus are under 500px wide, two of them
+    // 72x72). Recording the intrinsic size lets renderHomeLatestHtml refuse to
+    // headline one, instead of discovering it visually after publish.
+    let imageWidth = null, imageHeight = null;
+    if (imageUrl) {
+      try {
+        const probeUrl = imageUrl.startsWith('http') ? imageUrl : 'https://dormied.com' + imageUrl;
+        const res = await fetch(probeUrl);
+        if (res.ok) {
+          const meta = await require('sharp')(Buffer.from(await res.arrayBuffer())).metadata();
+          imageWidth  = meta.width  || null;
+          imageHeight = meta.height || null;
+        }
+      } catch (e) {
+        // Non-fatal: a null width simply means the hero picker will not choose it.
+        console.warn(`[generate] image measure failed for ${slug}: ${e.message}`);
+      }
+    }
+
     // ── TRANSACTIONAL PUBLISH ─────────────────────────────────────────────────
     // Order: write HTML → verify HTML → insert Supabase → regenerate sitemap.
     // If HTML write or verification fails, Supabase and sitemap are untouched.
@@ -2119,6 +2140,8 @@ async function main() {
         title,
         body,
         image_url:            imageUrl,
+        image_width:          imageWidth,
+        image_height:         imageHeight,
         source_url:           raw.source_url,
         source_name:          sourceName,
         meta_description,

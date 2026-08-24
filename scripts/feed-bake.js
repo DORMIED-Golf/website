@@ -222,11 +222,41 @@ function renderFeedPageCard(article, dormiedData, isLCP) {
    next 3 (side-by-side on desktop, stacked on mobile), then the next 8 as a
    list. Mirrors feed.js renderLatestFromDormied so the baked markup equals the
    runtime render (no layout shift when feed.js refreshes). */
+/**
+ * Minimum intrinsic width to headline the homepage.
+ *
+ * The hero is the only slot that blows a thumbnail up: CSS gives
+ * .home-dormied-section .feed-card--full .feed-card-thumb--lg a full-width box
+ * 200 to 260px tall, roughly 750px across on desktop. Everywhere else the same
+ * --lg class is a 120x90 chip, which even a 200px source fills sharply.
+ *
+ * 35% of published articles have an image under 900px and 71 are under 500px,
+ * including two at 72x72, because the sources publish small og:images and the
+ * scraper takes what it is given. Putting one of those in the hero is a ~10x
+ * upscale on the LCP element. 1200 is the floor that still looks sharp at the
+ * 750px slot without starving the picker.
+ */
+var HERO_MIN_IMAGE_WIDTH = 1200;
+
 function renderHomeLatestHtml(articles, dormiedData) {
   if (!articles || !articles.length) return '';
-  var hero = articles[0];
-  var trio = articles.slice(1, 4);    // items 2-4: desktop 3-across, mobile listed
-  var list = articles.slice(4, 12);   // items 5-12: standard list
+  // Headline the newest article whose image can actually fill the hero box.
+  // Only the first four are eligible so the homepage still leads with
+  // something current; if none qualifies, take the widest of those four and
+  // fall back to the newest when nothing has been measured at all.
+  var pool = articles.slice(0, 4);
+  var hero = null;
+  for (var h = 0; h < pool.length; h++) {
+    if (pool[h].imageUrl && pool[h].imageWidth >= HERO_MIN_IMAGE_WIDTH) { hero = pool[h]; break; }
+  }
+  if (!hero) {
+    var widest = pool.filter(function (a) { return a.imageUrl && a.imageWidth; })
+                     .sort(function (a, b) { return b.imageWidth - a.imageWidth; })[0];
+    hero = widest || articles[0];
+  }
+  var rest = articles.filter(function (a) { return a !== hero; });
+  var trio = rest.slice(0, 3);    // items 2-4: desktop 3-across, mobile listed
+  var list = rest.slice(3, 11);   // items 5-12: standard list
   var trioHtml = trio.length
     ? '<div class="home-latest-trio">'
       + trio.map(function (a) { return renderArticleCard(a, dormiedData); }).join('')
@@ -246,6 +276,7 @@ function normalizeDormiedRow(a) {
     pubDate:     a.published_at,
     description: a.meta_description || '',
     imageUrl:    a.image_url || null,
+    imageWidth:  a.image_width || null,
     brandIds:    [a.brand_slug].concat(a.secondary_brand_slugs || []).filter(Boolean),
     slug:        a.slug,
   };
@@ -255,7 +286,7 @@ async function fetchLatestArticles(supabase, limit, excludeSlug) {
   var fetchLimit = excludeSlug ? limit + 3 : limit;
   const { data, error } = await supabase
     .from('dormied_articles')
-    .select('id,brand_slug,secondary_brand_slugs,title,meta_description,image_url,slug,category,published_at,author')
+    .select('id,brand_slug,secondary_brand_slugs,title,meta_description,image_url,image_width,slug,category,published_at,author')
     .eq('status', 'published')
     .order('published_at', { ascending: false })
     .limit(fetchLimit);
@@ -275,7 +306,7 @@ async function fetchLatestArticles(supabase, limit, excludeSlug) {
 async function fetchFeaturedArticles(supabase, limit) {
   const { data, error } = await supabase
     .from('dormied_articles')
-    .select('id,brand_slug,secondary_brand_slugs,title,meta_description,image_url,slug,category,published_at,author,featured')
+    .select('id,brand_slug,secondary_brand_slugs,title,meta_description,image_url,image_width,slug,category,published_at,author,featured')
     .eq('status', 'published')
     .not('featured', 'is', null)
     .order('featured', { ascending: true })
