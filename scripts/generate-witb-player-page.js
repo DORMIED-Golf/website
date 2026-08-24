@@ -343,6 +343,33 @@ function itemName(item) {
  * for. Slots that are missing are dropped from the sentence rather than filled,
  * so the grammar has to survive any combination being absent.
  */
+/**
+ * Phrase every club of a type, not just the first one.
+ *
+ * firstOfType() silently discarded extra rows, so a bag holding two driver
+ * heads was announced as holding one. That is not hypothetical: Niklas Lemke
+ * carries two Titleist GTS2 heads at 9 and 10 degrees and Christo Lamprecht a
+ * PING G430 LST at 10.5 alongside a G440 Max at 12, both from a sourced WITB
+ * writeup, and both pages said "plays a ... driver" in the Quick Answer while
+ * the lede two lines below correctly described both heads. The answer block is
+ * the part Google and the answer engines lift, so the page contradicted itself
+ * exactly where it is quoted from.
+ *
+ * Irons and wedges already filtered for all rows. This brings drivers and
+ * putters in line. Output for a single club is unchanged.
+ */
+function clubPhrase(items, type, label, aOrAn, join) {
+  const rows = items.filter(i => i.club_type === type);
+  if (!rows.length) return '';
+  const names = rows.map(itemName).filter(Boolean);
+  if (!names.length) return '';
+  if (names.length === 1) return `${aOrAn(names[0])} ${label}`;
+  const COUNT = { 2: 'two', 3: 'three', 4: 'four' };
+  const allSame = names.every(n => n === names[0]);
+  if (allSame) return `${COUNT[names.length] || names.length} ${names[0]} ${label}s`;
+  return `${join(names)} ${label}s`;
+}
+
 function buildWitbAnswerBlock(name, items, currentDate) {
   const driver = itemName(firstOfType(items, 'driver'));
   const irons  = itemName(items.find(i => i.club_type === 'iron'));
@@ -360,16 +387,24 @@ function buildWitbAnswerBlock(name, items, currentDate) {
   // Brand names that open on a vowel are common enough here (Odyssey, Aldila,
   // Apex, Evnroll) that a hardcoded "a" reads as a typo on a live page.
   const aOrAn = s => `${/^[aeiou]/i.test(s) ? 'an' : 'a'} ${s}`;
-  if (driver) withWedge.push(`${aOrAn(driver)} driver`);
+  const driverPhrase = clubPhrase(items, 'driver', 'driver', aOrAn, join);
+  const putterPhrase = clubPhrase(items, 'putter', 'putter', aOrAn, join);
+  if (driverPhrase) withWedge.push(driverPhrase);
   if (irons)  withWedge.push(`${irons} irons`);
   if (wedge)  withWedge.push(`${wedge} wedges`);
-  if (putter) withWedge.push(`${aOrAn(putter)} putter`);
+  if (putterPhrase) withWedge.push(putterPhrase);
   if (ball)   withWedge.push(`the ${ball} ball`);
   if (!withWedge.length) return '';
 
-  const driverRow = firstOfType(items, 'driver');
-  const shaftSentence = driverRow && driverRow.raw_shaft
-    ? ` The driver is built with ${aOrAn(dedupeShaft(driverRow.raw_shaft))} shaft.`
+  // Agree in number with the phrase above, and only claim a shared shaft when
+  // the rows actually agree on one.
+  const driverRows = items.filter(i => i.club_type === 'driver');
+  const driverRow  = driverRows[0];
+  const shafts     = [...new Set(driverRows.map(d => d.raw_shaft).filter(Boolean))];
+  const shaftSentence = (driverRow && driverRow.raw_shaft && shafts.length === 1)
+    ? (driverRows.length > 1
+        ? ` The drivers are built with ${aOrAn(dedupeShaft(shafts[0]))} shaft.`
+        : ` The driver is built with ${aOrAn(dedupeShaft(shafts[0]))} shaft.`)
     : '';
 
   const sentence = (parts, tail) => `${name} plays ${join(parts)}, as recorded in the ${currentDate} bag snapshot.${tail}`;
@@ -408,7 +443,17 @@ function buildWitbFaq(name, items, currentDate) {
   const irons  = items.filter(i => i.club_type === 'iron');
   const wedges = items.filter(i => i.club_type === 'wedge');
 
-  if (driver) {
+  // Same fix as the answer block: a bag with two driver heads must not answer
+  // as though it holds one. Single-driver output is unchanged.
+  const driverRows = items.filter(i => i.club_type === 'driver');
+  if (driverRows.length > 1) {
+    const listed = driverRows.map(d => `${itemName(d)}${d.loft_or_number ? ` at ${d.loft_or_number}` : ''}`);
+    const tail = listed.length === 2
+      ? `${listed[0]} and ${listed[1]}`
+      : `${listed.slice(0, -1).join(', ')}, and ${listed[listed.length - 1]}`;
+    add(`What driver does ${name} use?`,
+        `${name} carries ${({2:'two',3:'three',4:'four'})[listed.length] || listed.length} drivers as of the ${currentDate} snapshot: ${tail}.`);
+  } else if (driver) {
     const loft = driver.loft_or_number ? ` at ${driver.loft_or_number}` : '';
     add(`What driver does ${name} use?`,
         `${name} plays a ${itemName(driver)} driver${loft}, as of the ${currentDate} snapshot.`);
