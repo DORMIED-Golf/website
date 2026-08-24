@@ -81,6 +81,9 @@ const FEATURES = {
     seoKeywords: ['kevin kisner shoes', 'kevin kisner golf shoes', 'what golf shoes does kevin kisner wear', 'kevin kisner footjoy', 'kevin kisner witb', 'kevin kisner peter millar', 'kevin kisner nike'],
     mdPath: path.join(ROOT, 'article-kevin-kisner-shoes.md'),
     imgBase: '/images/features/kevin-kisner-golf-shoes',
+    hero: { file: 'hero.webp', w: 1200, h: 641, alt: 'Kevin Kisner, centre, laughing alongside two teammates in red team kit during a TGL match.' },
+    // Source is 1.87:1, so the social card is a near-trivial trim.
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
   },
 
   'jake-knapp-putter': {
@@ -105,6 +108,11 @@ const FEATURES = {
     seoKeywords: ['jake knapp putter', 'what putter does jake knapp use', 'jake knapp putter 2026', 'jake knapp scotty cameron', 'jake knapp witb', 'scotty cameron phantom 9.2r', 'jake knapp pxg'],
     mdPath: path.join(ROOT, 'article-jake-knapp-putter.md'),
     imgBase: '/images/features/jake-knapp-putter',
+    hero: { file: 'hero.webp', w: 876, h: 584, alt: 'Jake Knapp in a PXG cap and striped polo, holding his Scotty Cameron Phantom mallet putter.' },
+    // The hero is 1.5:1. A 1.91:1 centre crop starts 62px down and takes
+    // the cap and part of the forehead with it, so the card is contained
+    // on the site background rather than cropped.
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
   },
 
   // Brand-relationship piece. MANORS supplied the press materials and will link
