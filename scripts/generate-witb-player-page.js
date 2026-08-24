@@ -844,6 +844,42 @@ function latestScorecardUrl() {
   }
 }
 
+/**
+ * Related DORMIED coverage, keyed by player slug.
+ *
+ * A WITB page answers "what is in the bag" and nothing else, so when a player
+ * attracts search demand the bag rows cannot satisfy, the page ranks, collects
+ * the impressions and converts none of them. Kevin Kisner takes roughly 668
+ * monthly impressions for footwear queries on a page with no footwear content
+ * anywhere in it.
+ *
+ * Renders only for players with an entry, so adding coverage later is a one
+ * line change here rather than a template edit, and every other player page is
+ * byte-identical.
+ */
+const PLAYER_RELATED = {
+  'kevin-kisner': {
+    href: '/news/kevin-kisner-golf-shoes/',
+    note: 'Kisner wears FootJoy golf shoes, most often the Tour X, with Peter Millar apparel. Neither brand makes a club, which is the point.',
+    linkText: 'What golf shoes does Kevin Kisner wear?',
+  },
+  'jake-knapp': {
+    href: '/news/jake-knapp-putter/',
+    note: 'Knapp putts with Scotty Cameron Phantom models and has changed the model repeatedly through 2026, despite being a PXG staff player.',
+    linkText: 'What putter does Jake Knapp use?',
+  },
+};
+
+function buildRelatedCoverageHtml(slug) {
+  const r = PLAYER_RELATED[slug];
+  if (!r) return '';
+  return `
+            <aside class="witb-related-note">
+              <p class="witb-related-text">${esc(r.note)}</p>
+              <a class="witb-related-link" href="${esc(r.href)}">${esc(r.linkText)}</a>
+            </aside>`;
+}
+
 function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag, signupData, latestIssueUrl }) {
   const { name, slug, owgr_rank, rolex_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
@@ -947,7 +983,20 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   // Title and description are PER-PLAYER: composed from real bag data so no
   // two player pages share the same meta text. This is the uniqueness gate
   // that must hold before scaling to 160 players.
-  const currentYear = new Date().getFullYear();
+  // The title year is the SNAPSHOT's year once the snapshot is over 12 months
+  // old, not today's. Stamping the current year on a bag captured years ago
+  // makes the title assert a currency the page itself contradicts two lines
+  // down: Zach Johnson's page read "What's In The Bag 2026" above a body that
+  // correctly said "Snapshot: March 2022" throughout. The body was always
+  // honest; only the title was not, and the title is the part Google shows.
+  // Newer snapshots keep the current year, which is what a reader searching
+  // "<player> witb 2026" is entitled to see.
+  const STALE_TITLE_DAYS = 365;
+  const _snapDate   = currentBag && currentBag.bag_date ? new Date(currentBag.bag_date) : null;
+  const _snapAge    = _snapDate ? (Date.now() - _snapDate.getTime()) / 86400000 : 0;
+  const currentYear = (_snapDate && _snapAge > STALE_TITLE_DAYS)
+    ? _snapDate.getUTCFullYear()
+    : new Date().getFullYear();
   const pageTitle   = `${esc(name)} WITB: What's In The Bag ${currentYear} | DORMIED`;
 
   // Build description from this player's actual bag items (unique per player)
@@ -1303,7 +1352,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
           <section class="witb-section" style="padding-top:24px;border-bottom:none" aria-label="Equipment overview">
 ${witbAnswerHtml}
 ${scSignupPrimary}
-            <p class="witb-player-lede">${esc(ledes.lede)}</p>
+            <p class="witb-player-lede">${esc(ledes.lede)}</p>${buildRelatedCoverageHtml(slug)}
           </section>
 
           <!-- 2. CURRENT BAG -->

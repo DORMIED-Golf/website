@@ -58,6 +58,52 @@ let FEATURED_HTML = '';
 
 // ── Feature definitions ─────────────────────────────────────────────────────────
 const FEATURES = {
+  // Two question-intent pieces from Search Console gap analysis. Both use
+  // quickAnswer rather than keyTakeaways: the reader typed a question, so the
+  // block above the body answers it in one sentence. Neither has art yet and
+  // both ship without it, because the text is the whole deliverable and an
+  // invented image would enter og:image and schema as though it depicted the
+  // subject.
+  'kevin-kisner-shoes': {
+    slug: 'kevin-kisner-golf-shoes',
+    title: 'What Golf Shoes Does Kevin Kisner Wear? The Answer Explains His Entire Bag',
+    titleTag: 'What Golf Shoes Does Kevin Kisner Wear? | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'footjoy',
+    leadRole: 'bio',
+    lastUpdated: 'August 24, 2026',
+    dateModified: '2026-08-24T12:00:00.000Z',
+    publishedAt: '2026-08-24T12:00:00.000Z',
+    quickAnswer: 'Kevin Kisner wears FootJoy shoes, most commonly the Tour X, with Peter Millar apparel, and plays a mixed bag containing Callaway, TaylorMade, Srixon, Titleist, and Odyssey equipment rather than a single manufacturer\'s staff setup.',
+    metaDescription: 'Kevin Kisner wears FootJoy golf shoes, most often the Tour X, with Peter Millar apparel. His clubs come from five different brands.',
+    seoKeywords: ['kevin kisner shoes', 'kevin kisner golf shoes', 'what golf shoes does kevin kisner wear', 'kevin kisner footjoy', 'kevin kisner witb', 'kevin kisner peter millar', 'kevin kisner nike'],
+    mdPath: path.join(ROOT, 'article-kevin-kisner-shoes.md'),
+    imgBase: '/images/features/kevin-kisner-golf-shoes',
+  },
+
+  'jake-knapp-putter': {
+    slug: 'jake-knapp-putter',
+    title: 'What Putter Does Jake Knapp Use? A Scotty Cameron, and He Keeps Changing It',
+    titleTag: 'What Putter Does Jake Knapp Use? | DORMIED',
+    byline: 'Travis R.',
+    authors: ['Travis R.'],
+    category: 'Feature',
+    brandSlug: 'scotty-cameron',
+    leadRole: 'bio',
+    lastUpdated: 'August 24, 2026',
+    dateModified: '2026-08-24T12:00:00.000Z',
+    publishedAt: '2026-08-24T12:00:00.000Z',
+    // Deliberately says "most recently" and never names a settled current
+    // putter: the premise of the piece is that the slot rotates.
+    quickAnswer: 'Jake Knapp putts with Scotty Cameron Phantom models, most recently a Phantom 9.2R Tour Prototype, despite being a PXG staff player, and he has changed putters repeatedly through 2026.',
+    metaDescription: 'Jake Knapp putts with Scotty Cameron Phantom models, most recently a 9.2R Tour Prototype, despite being a PXG staff player. He has changed putters repeatedly in 2026.',
+    seoKeywords: ['jake knapp putter', 'what putter does jake knapp use', 'jake knapp putter 2026', 'jake knapp scotty cameron', 'jake knapp witb', 'scotty cameron phantom 9.2r', 'jake knapp pxg'],
+    mdPath: path.join(ROOT, 'article-jake-knapp-putter.md'),
+    imgBase: '/images/features/jake-knapp-putter',
+  },
+
   // Brand-relationship piece. MANORS supplied the press materials and will link
   // to it, so there is deliberately NO inlineCommerce here: no affiliate
   // carousel and no affiliate wrapper on manorsgolf.com or reebok.com.
@@ -542,7 +588,15 @@ function tableHtml(block) {
 
 // ── Markdown parse ───────────────────────────────────────────────────────────────
 function parseMarkdown(md, F, dormiedData) {
-  const blocks = md.replace(/\r\n/g, '\n').split(/\n\n+/).map(b => b.trim()).filter(Boolean);
+  // Strip HTML comments BEFORE blocking. Source files carry a dev-notes block
+  // at the end (target queries, source conflicts, refresh instructions) that is
+  // editorial scaffolding, not article body. Nothing here handled comments, so
+  // the block fell through to the paragraph branch and would have shipped its
+  // whole contents into the page, including internal notes on which competing
+  // sources were rejected and why. Stripping at the source is the only place
+  // that catches it regardless of where in the file the comment sits.
+  const clean = md.replace(/\r\n/g, '\n').replace(/<!--[\s\S]*?-->/g, '');
+  const blocks = clean.split(/\n\n+/).map(b => b.trim()).filter(Boolean);
   const brandCtx = buildBrandCtx(dormiedData);  // auto-links brand names in prose
   const out = [];
   const faqs = [];
@@ -636,13 +690,17 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   const dateFormatted = formatDate(publishedAt);
   const canonicalUrl  = `https://dormied.com/news/${F.slug}/`;
   const titleTag      = F.titleTag || `${F.title} | DORMIED`;
-  const heroImage     = `https://dormied.com${F.imgBase}/${F.hero.file}`;
+  // hero is OPTIONAL. A text-only piece ships rather than waiting on art, and
+  // an invented placeholder is worse than none: it would go into og:image and
+  // schema as though it depicted the subject. With no hero the social card
+  // falls back to the site card, which is honest about being generic.
+  const heroImage     = F.hero ? `https://dormied.com${F.imgBase}/${F.hero.file}` : 'https://dormied.com/images/og-image.jpg';
   // og:image override, for a hero whose aspect ratio would crop badly in the
   // 1.91:1 social card. Defaults to the hero, so every other feature is
   // byte-identical. Schema keeps the hero itself.
   const ogImage       = F.ogImage ? `https://dormied.com${F.imgBase}/${F.ogImage.file}` : heroImage;
-  const ogW           = F.ogImage ? F.ogImage.w : F.hero.w;
-  const ogH           = F.ogImage ? F.ogImage.h : F.hero.h;
+  const ogW           = F.ogImage ? F.ogImage.w : (F.hero ? F.hero.w : 1200);
+  const ogH           = F.ogImage ? F.ogImage.h : (F.hero ? F.hero.h : 630);
   const keywordsStr   = (F.seoKeywords || []).join(', ');
   const rt            = readTime(wordCount);
 
@@ -650,14 +708,23 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   // allowed to be bullets: a structured callout is exempt from the no-bullets
   // rule that governs narrative copy, and a 2,000-word feature does not reduce
   // to one honest paragraph the way a wire story does.
+  // Question-intent pieces get a one-paragraph "Quick Answer" instead of the
+  // bullet list, matching the WITB player pages: a reader who searched a
+  // question wants the sentence, and an extraction model wants one contiguous
+  // answer rather than four fragments it has to reassemble. Markup is identical
+  // to buildWitbAnswerBlock's so the two page types present the same shape.
   const takeaways = Array.isArray(F.keyTakeaways) ? F.keyTakeaways.filter(Boolean) : [];
-  const takeawaysHtml = takeaways.length ? `
+  const takeawaysHtml = F.quickAnswer ? `
+      <section class="da-answer-block" aria-labelledby="ft-answer-heading">
+        <h2 class="da-answer-label" id="ft-answer-heading">Quick Answer</h2>
+        <p class="da-answer-text">${escHtml(F.quickAnswer)}</p>
+      </section>` : (takeaways.length ? `
       <section class="da-answer-block" aria-labelledby="ft-takeaways-heading">
         <h2 class="da-answer-label" id="ft-takeaways-heading">Key Takeaways</h2>
         <ul class="da-answer-list">
           ${takeaways.map(t => `<li>${escHtml(t)}</li>`).join('\n          ')}
         </ul>
-      </section>` : '';
+      </section>` : '');
   const authorsLd     = F.authors.map(a => `{ "@type": "Person", "name": "${escHtml(a)}", "url": "https://dormied.com/about/" }`).join(', ');
   const authorLdField = F.authors.length > 1 ? `[${authorsLd}]` : authorsLd;
 
@@ -665,10 +732,10 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   const lastUpdHtml  = F.lastUpdated ? `<p class="da-last-updated">Last updated: ${escHtml(F.lastUpdated)}</p>` : '';
   const bioHtml      = (F.leadRole === 'bio' && lead) ? `<p class="da-bio">${inlineMd(lead)}</p>` : '';
 
-  const heroCap  = F.hero.caption
+  const heroCap  = (F.hero && F.hero.caption)
     ? `\n          <figcaption class="da-figcaption sc-article-hero-caption">${inlineMd(F.hero.caption)}</figcaption>`
     : '';
-  const heroHtml = `<figure class="sc-article-image${heroCap ? ' sc-article-image--cap' : ''}">
+  const heroHtml = !F.hero ? '' : `<figure class="sc-article-image${heroCap ? ' sc-article-image--cap' : ''}">
           <img class="sc-article-hero-img" src="${F.imgBase}/${F.hero.file}"${F.hero.file2x ? ` srcset="${F.imgBase}/${F.hero.file} 1x, ${F.imgBase}/${F.hero.file2x} 2x"` : ''} alt="${escHtml(F.hero.alt)}" width="${F.hero.w}" height="${F.hero.h}" loading="eager">${heroCap}
         </figure>`;
 
@@ -1079,7 +1146,7 @@ async function main() {
       const row = {
         brand_slug: F.brandSlug || '', secondary_brand_slugs: [],
         title: F.title, body: mdToPlain(md),
-        image_url: `${F.imgBase}/${F.hero.file}`,
+        image_url: F.hero ? `${F.imgBase}/${F.hero.file}` : null,
         source_url: `https://dormied.com/news/${F.slug}/`, source_name: 'DORMIED',
         meta_description: F.metaDescription, seo_keywords: F.seoKeywords,
         published_at: F.publishedAt, status: 'published', slug: F.slug,
