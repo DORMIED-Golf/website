@@ -2560,7 +2560,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (560) ── -->
+  <!-- ── News articles (561) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5569,6 +5569,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/public-drip-walks-into-the-pro-shop-a-brooklyn-streetwear-brand-hits-green-2026-06-04-hero.jpg</image:loc>
       <image:title>Public Drip Walks Into the Pro Shop: A Brooklyn Streetwear Brand Hits Green Grass Retail</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/puma-golf-collab-polo-drop/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/puma-golf-collab-polo-drop-hero.png</image:loc>
+      <image:title>An $85 Collab Polo With No Drop Timer: Puma Golf Priced Realtree Like Regular Inventory</image:title>
     </image:image>
   </url>
   <url>
