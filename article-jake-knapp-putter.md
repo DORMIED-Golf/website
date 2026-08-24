@@ -10,7 +10,7 @@ Jake Knapp's most recent start had a Scotty Cameron Phantom 9.2R Tour Prototype 
 
 This is the detail that makes the churn worth writing about rather than just cataloguing.
 
-Knapp signed with [PXG](https://dormied.com/brands/pxg/) and plays a near-full bag of their equipment. His irons are PXG, split between a 0311 Gen4 X at the 4 and 0317 ST blades through the set. His mini-driver, a 13 degree Secret Weapon, is PXG. He has carried a PXG Sugar Daddy II wedge. PXG also makes putters, an entire line of them, and markets them heavily.
+Knapp signed with [PXG](https://dormied.com/brands/pxg/) and built his bag around their equipment. His irons are PXG, a 0211 ST set from the 4 down, with a Titleist T250 driving iron above them. His mini-driver, a 13 degree Secret Weapon, is PXG. He carries a PXG Sugar Daddy II wedge. PXG also makes putters, an entire line of them, and markets them heavily.
 
 He putts with a [Scotty Cameron](https://dormied.com/brands/scotty-cameron/).
 
@@ -41,7 +41,7 @@ That is also why this question gets searched so heavily and answered so badly. S
 
 ## A note on our own data
 
-DORMIED's [Jake Knapp WITB page](https://dormied.com/witb/players/jake-knapp/) currently records a Scotty Cameron Phantom 9.2 Tour Prototype from a March 2025 bag snapshot. That was accurate when captured and is now behind the player. It is a good illustration of the limits of snapshot-based bag tracking against a player who treats the putter slot as a rotating door, and that page is due a refresh.
+DORMIED's [Jake Knapp WITB page](https://dormied.com/witb/players/jake-knapp/) recorded a Scotty Cameron Phantom 9.2 Tour Prototype from a March 2025 bag snapshot until we refreshed it alongside this article. That was accurate when captured and had fallen a long way behind the player. It is a good illustration of the limits of snapshot-based bag tracking against a player who treats the putter slot as a rotating door.
 
 We would rather say that plainly than let a stale line stand. The bag data on this site is a record of verified snapshots, not a live feed, and for most players that distinction does not matter much. For Knapp's putter it matters a great deal.
 

@@ -93,7 +93,10 @@ const FEATURES = {
     brandSlug: 'scotty-cameron',
     leadRole: 'bio',
     lastUpdated: 'August 24, 2026',
-    dateModified: '2026-08-24T12:00:00.000Z',
+    // Bumped when the bag refresh landed and the "note on our own data"
+    // section plus the irons line were corrected to match. publishedAt is
+    // unchanged: the piece went live once.
+    dateModified: '2026-08-24T17:30:00.000Z',
     publishedAt: '2026-08-24T12:00:00.000Z',
     // Deliberately says "most recently" and never names a settled current
     // putter: the premise of the piece is that the slot rotates.
