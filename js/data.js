@@ -2,7 +2,7 @@
 // Generated 2026-08-18 — Full dataset with all 10 markets (41 months each)
 window.DORMIED_DATA = {
   "meta": {
-    "lastUpdated": "2026-08-18",
+    "lastUpdated": "2026-08-25",
     "currentMonth": "Jul 2026",
     "previousMonth": "Jun 2026",
     "threeMonthsAgo": "Apr 2026",
@@ -6483,7 +6483,7 @@ window.DORMIED_DATA = {
       "subCategories": [
         "Gloves"
       ],
-      "description": "Asher Golf turned golf gloves into a statement piece, bringing bold colors and modern design to a product category that had remained stubbornly traditional. Founded in Draper, Utah in 2018, Asher built its brand on premium leather gloves available in vibrant colorways—navy, pink, red, camo—that stood out against the sea of white Footjoy and Titleist gloves dominating golf courses. The company's design philosophy emphasized both aesthetics and function, using premium cabretta leather and thoughtful construction details while refusing to accept that golf gloves had to be boring. Asher expanded beyond gloves into headcovers, alignment sticks, and other course accessories, all sharing the same design language: clean, colorful, modern, and willing to stand out. The brand found an audience among younger golfers and those treating golf equipment as self-expression, players who wanted their bag and accessories to reflect personal style. Asher's growth paralleled the broader shift in golf culture toward individuality and away from country club conformity, riding the same wave that elevated brands like Malbon Golf and Bad Birdie. The company embraced direct-to-consumer sales and social media marketing, building a community around the idea that golf accessories could be both functional and fun. Asher also partnered with influencers and content creators in the golf space, leveraging the modern golf media ecosystem rather than traditional advertising. While the brand remains small compared to industry giants, it represents the ongoing democratization of golf style and the willingness of a new generation of golfers to reject the notion that golf requires aesthetic conformity. In a sport historically resistant to color and personality, Asher sells permission to stand out.",
+      "description": "Asher Golf turned golf gloves into a statement piece, bringing bold colors and modern design to a product category that had remained stubbornly traditional. Founded in Draper, Utah in 2018, Asher built its brand on premium leather gloves available in vibrant colorways—navy, pink, red, camo—that stood out against the sea of white FootJoy and Titleist gloves dominating golf courses. The company's design philosophy emphasized both aesthetics and function, using premium cabretta leather and thoughtful construction details while refusing to accept that golf gloves had to be boring. Asher expanded beyond gloves into headcovers, alignment sticks, and other course accessories, all sharing the same design language: clean, colorful, modern, and willing to stand out. The brand found an audience among younger golfers and those treating golf equipment as self-expression, players who wanted their bag and accessories to reflect personal style. Asher's growth paralleled the broader shift in golf culture toward individuality and away from country club conformity, riding the same wave that elevated brands like Malbon Golf and Bad Birdie. The company embraced direct-to-consumer sales and social media marketing, building a community around the idea that golf accessories could be both functional and fun. Asher also partnered with influencers and content creators in the golf space, leveraging the modern golf media ecosystem rather than traditional advertising. While the brand remains small compared to industry giants, it represents the ongoing democratization of golf style and the willingness of a new generation of golfers to reject the notion that golf requires aesthetic conformity. In a sport historically resistant to color and personality, Asher sells permission to stand out.",
       "searchesByMarket": {
         "global": {
           "Mar 2023": 4400,
@@ -27649,7 +27649,7 @@ window.DORMIED_DATA = {
     },
     {
       "id": "footjoy",
-      "name": "Footjoy",
+      "name": "FootJoy",
       "logo": "/images/logos/footjoy.jpg",
       "website": "https://www.footjoy.com",
       "headquarters": "Fairhaven, Massachusetts, USA",
