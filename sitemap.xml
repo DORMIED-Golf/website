@@ -319,7 +319,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/charlie-woods/</loc>
-    <lastmod>2026-07-19</lastmod>
+    <lastmod>2026-08-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1147,7 +1147,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/tiger-woods/</loc>
-    <lastmod>2024-05-14</lastmod>
+    <lastmod>2026-08-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2566,7 +2566,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (570) ── -->
+  <!-- ── News articles (571) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2875,6 +2875,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/areteras-35-gram-wood-shaft-is-a-bet-on-a-shrinking-buyer-senior-players-2026-06-16-hero.jpg</image:loc>
       <image:title>Aretera&apos;s 35-Gram Wood Shaft Is a Bet on a Shrinking Buyer: Senior Players Who Still Want Tour-Spec Torque</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/arnie-mcnair-clothing/</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/features/arnie-mcnair-clothing/og.webp</image:loc>
+      <image:title>Arnie McNair Clothing: Every Piece, Every Price, and Why It Keeps Selling Out</image:title>
     </image:image>
   </url>
   <url>
@@ -8075,7 +8085,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/who-is-arnie-mcnair/</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-08-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -8363,13 +8373,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/5/</loc>
-    <lastmod>2026-08-01</lastmod>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -8387,7 +8397,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/8/</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>

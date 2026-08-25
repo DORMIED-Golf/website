@@ -4,7 +4,7 @@
 
 *Adam R. covers apparel, accessories, and golf culture for DORMIED. He has been tracking brand drops and collaborations since 2018.*
 
-Who is Arnie McNair? Strictly speaking, nobody. Arnie McNair does not exist. The name is a pseudonym for an anonymous country club golfer from Minnesota who started posting on Golf Twitter (now X) in late 2024, built a following inside the platform's so-called Burnerverse, and turned it into one of the most talked-about new apparel brands in golf without ever showing his face. The brand that carries the fake name is very real: officially launched January 24, 2026, it sells American-made, natural-fiber golf clothing exclusively through [arnie-mcnair.com](https://www.arnie-mcnair.com) in small seasonal batches, and its $95 McNair Polo has become the shirt a certain kind of golfer will wait six weeks for. This is the story of how a man with no name built a genuine cult brand, what the clothes actually are, and why the anonymity is not a gimmick but the entire business model.
+Who is Arnie McNair? Strictly speaking, nobody. Arnie McNair does not exist. The name is a pseudonym for an anonymous country club golfer from Minnesota who started posting on Golf Twitter (now X) in late 2024, built a following inside the platform's so-called Burnerverse, and turned it into one of the most talked-about new apparel brands in golf without ever showing his face. The brand that carries the fake name is very real: officially launched January 24, 2026, it sells American-made, natural-fiber golf clothing exclusively through [arnie-mcnair.com](https://www.arnie-mcnair.com) in small seasonal batches, and its $105 Arnie Polo has become the shirt a certain kind of golfer will wait six weeks for. This is the story of how a man with no name built a genuine cult brand, what the clothes actually are, and why the anonymity is not a gimmick but the entire business model.
 
 In one sentence: Arnie McNair is an American golf apparel brand launched in January 2026 by an anonymous Minnesota golfer, selling made-to-order, natural-fiber clothing produced almost entirely in the USA, positioned as a deliberate rejection of the synthetic, logo-heavy direction of modern golf wear.
 
@@ -14,15 +14,15 @@ DORMIED tracks brand search interest across 10 global markets every month. Arnie
 
 | Metric | Value |
 |---|---|
-| Global DORMIED Index rank | 115 of 215+ |
-| Three-month change | +50.6% |
-| Monthly global searches | 2,900 |
-| Month-over-month change | -19.4% |
-| Brand age | Under 6 months |
+| Global DORMIED Index rank | 119 of 215 |
+| Month-over-month change | +24.1% |
+| Three-month change | -13.7% |
+| Monthly global searches | 3,600 |
+| Brand age | About 7 months |
 
-*Source: DORMIED Index, June 2026 snapshot.*
+*Source: DORMIED Index, July 2026 snapshot.*
 
-Read those numbers honestly and two things are true at once. Arnie McNair is small: rank 115, a fraction of the search volume of a Malbon or a Random Golf Club. And Arnie McNair got big fast, then cooled. It reached rank 104 back in April, one of the quickest standing starts in the Index, and it is still up 50.6 percent over three months, a top-quartile climb among the 215-plus brands we track. But it has slipped in the two months since, down 19.4 percent month over month and off that April peak. The pattern is not a warning sign; it is the shape of the business. A made-to-order brand that sells in limited seasonal windows spikes when a drop opens and cools while the Army, as the brand calls its buyers, waits for the next one. The line that matters is the three-month line, and it still points up, even as the month-to-month reading shows the order-window rhythm.
+Read those numbers honestly and two things are true at once. Arnie McNair is small: rank 119, a fraction of the search volume of a Malbon or a Random Golf Club. And Arnie McNair got big fast, then settled into a rhythm. It reached rank 108 back in April, one of the quickest standing starts in the Index, and the three-month line has since turned negative at 13.7 percent down. The month-over-month reading, up 24.1 percent, is the more useful number. The pattern is not a warning sign; it is the shape of the business. A made-to-order brand that sells in limited seasonal windows spikes when a drop opens and cools while the Army, as the brand calls its buyers, waits for the next one. Read the monthly line for the pulse and the three-month line for the season.
 
 ## The Burnerverse origin story
 
@@ -40,7 +40,7 @@ Strip away the mystique and the product is deliberately old-fashioned, which is 
 
 Arnie McNair makes traditional golf clothing from natural fibers: American-grown Supima cotton, cotton twill, and cashmere sourced from Italy, the one exception to an otherwise domestic supply chain that the brand labels honestly rather than hiding. Almost everything is produced in the United States. There are no visible logos, on the theory that golf clothing is not a billboard and good design speaks quietly. The proportions are classic: tailored but not tight, refined but not restrictive.
 
-The flagship is the McNair Polo at $95, a price that positions the brand above the mass market but below the luxury houses, and squarely in "buy fewer, better things" territory. Much of that price reflects the brand's manufacturing choices: American-grown Supima cotton, domestic production, and small made-to-order production runs that cost significantly more than mass-produced synthetic polos. The catalog has grown to include sweaters, twill pieces, and accessories, all released the same way: small seasonal batches, sold in limited order windows, made to order with a four-to-six week lead time. When a window closes, production runs are batched and the waiting begins. Availability is intentionally restricted; subscribers get notice of each release, and sold-out items stay sold out.
+The flagship is the Arnie Polo at $105, a price that positions the brand above the mass market but below the luxury houses, and squarely in "buy fewer, better things" territory. Much of that price reflects the brand's manufacturing choices: American-grown Supima cotton, domestic production, and small made-to-order production runs that cost significantly more than mass-produced synthetic polos. The catalog has grown to include sweaters, twill pieces, and accessories, all released the same way: small seasonal batches, sold in limited order windows, made to order with a four-to-six week lead time. When a window closes, production runs are batched and the waiting begins. Availability is intentionally restricted; subscribers get notice of each release, and sold-out items stay sold out.
 
 That model is the opposite of everything modern DTC apparel is built on, and it is a large part of the appeal. Scarcity is not manufactured through hype-drop theatrics; it is a byproduct of how the clothes are actually made. The brand describes it as deliberate work, done the right way, and the four-to-six week wait functions as a filter: the customer who orders an Arnie McNair polo has opted into the whole philosophy.
 
@@ -58,7 +58,7 @@ The bet has costs. Anonymous founders cannot do trunk shows, cannot glad-hand pr
 
 ## The bigger picture
 
-DORMIED exists to read brand momentum, and Arnie McNair is a nearly pure case study in how attention converts to commerce in golf now. No retail presence, no tour validation in the traditional sense, no paid acquisition anyone can detect. Just a voice, a villain, a product that matches the argument, and a distribution model that turns patience into loyalty. The search data says the formula worked fast: a standing start in January, a peak at rank 104 by April, and interest still up 50.6 percent over three months even after a spring cool-down.
+DORMIED exists to read brand momentum, and Arnie McNair is a nearly pure case study in how attention converts to commerce in golf now. No retail presence, no tour validation in the traditional sense, no paid acquisition anyone can detect. Just a voice, a villain, a product that matches the argument, and a distribution model that turns patience into loyalty. The search data says the formula worked fast: a standing start in January, a peak at rank 108 by April, and monthly interest up 24.1 percent again in July after a spring cool-down.
 
 The open question is scale. Made-to-order batch production and intentional scarcity build cult brands; they do not build big ones, and the founder has been explicit that independence, no trends, no private equity, no shortcuts, is the point. Golf has watched this movie before with brands that chose to stay small and brands that chose to cash in, and the Burnerverse will be watching which ending Arnie picks. For now, the most interesting new brand in golf apparel is run by a man who does not exist, and the joke lands because the clothes are real.
 
@@ -71,7 +71,7 @@ Arnie McNair is the pseudonym of an anonymous country club golfer from Minnesota
 Yes. Arnie McNair is a real American golf apparel company selling made-to-order clothing through its website in limited seasonal order windows. The founder has said the anonymity reflects both the brand's philosophy and his preference to keep the focus on the products rather than himself.
 
 **What does Arnie McNair sell?**
-Traditional golf clothing made from natural fibers: polos, sweaters, and twill pieces built from American-grown Supima cotton, cotton twill, and Italian cashmere, with no visible logos. The flagship McNair Polo retails at $95.
+Traditional golf clothing made from natural fibers: polos, sweaters, and twill pieces built from American-grown Supima cotton, cotton twill, and Italian cashmere, with no visible logos. The flagship Arnie Polo retails at $105.
 
 **Where is Arnie McNair clothing made?**
 Almost entirely in the United States. The brand prioritizes American manufacturing and American-grown cotton, with Italian cashmere as the labeled exception where the craftsmanship cannot be sourced domestically.
@@ -86,8 +86,8 @@ The founder has said the brand matters more than the person behind it, and the a
 Pieces marked AM are dedicated to the founder's brother, a United States Marine who passed away in 2004. Proceeds from AM-marked items go to Stop Soldier Suicide.
 
 **Is Arnie McNair growing?**
-By DORMIED's tracking, it grew fast and has since cooled. Search interest in Arnie McNair is up 50.6 percent over the past three months, a top-quartile climb among the 215-plus brands DORMIED tracks, but the brand has slipped to rank 115 as of June 2026 after peaking at rank 104 in April. It remains small in absolute terms.
+By DORMIED's tracking, it grew fast and has since cooled. Arnie McNair ranks 119th of the 215 brands DORMIED tracks as of July 2026, up four places on the month with search interest up 24.1 percent, but the three-month trend is down 13.7 percent after peaking at rank 108 in April. It remains small in absolute terms.
 
 ---
 
-*Track Arnie McNair's monthly movement on the [Arnie McNair brand page](https://dormied.com/brands/arnie-mcnair/) and the full market on the [DORMIED Index](https://dormied.com/). Related culture-brand coverage: [What Is Random Golf Club?](https://dormied.com/news/what-is-random-golf-club/) and [Confidential Sources](https://dormied.com/news/confidential-sources/), our feature on golf's other famous anonymous founders.*
+*See the full range and current prices in [Arnie McNair Clothing: Every Piece and Price](https://dormied.com/news/arnie-mcnair-clothing/). Track the brand's monthly movement on the [Arnie McNair brand page](https://dormied.com/brands/arnie-mcnair/) and the full market on the [DORMIED Index](https://dormied.com/). Related culture-brand coverage: [What Is Random Golf Club?](https://dormied.com/news/what-is-random-golf-club/) and [Confidential Sources](https://dormied.com/news/confidential-sources/), our feature on golf's other famous anonymous founders.*

@@ -5626,6 +5626,19 @@ details[open] .faq-question::after { content: '−'; }
   color: var(--green);
   margin: 0 0 10px;
 }
+
+/* Shared-surname disambiguation, e.g. Tom Kim vs Michael Kim. Renders only
+   when another tracked player shares the surname. Deliberately quiet: it is a
+   clarification, not a warning. */
+.witb-disambig {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 10px 0 0;
+}
+.witb-disambig a { color: var(--green); text-decoration: none; }
+.witb-disambig a:hover { text-decoration: underline; }
 .da-answer-text { margin: 0; color: var(--text); }
 .da-answer-list { margin: 0; padding-left: 18px; color: var(--text); }
 .da-answer-list li { margin: 0 0 6px; }

@@ -770,6 +770,54 @@ async function fetchBagsWithItems(sb, playerId) {
 }
 
 /**
+ * Players who share this player's surname, for an explicit disambiguation line.
+ *
+ * "tom kim witb" was being served by /witb/players/michael-kim/ and
+ * "alex fitzpatrick witb" by /witb/players/matthew-fitzpatrick/. None of the
+ * usual on-page causes were present: both pages already carry the full name in
+ * title, H1, meta and JSON-LD, and neither mentions the other player at all.
+ * The confusion is at the entity level, so the fix is to state the distinction
+ * outright rather than to remove a signal that was never there.
+ *
+ * A surname audit found nine shared-surname groups across the player set, so
+ * this is generated from the data rather than hardcoded for the two reported
+ * pairs: Kim (3), Lee (3), Fitzpatrick, Griffin, Hojgaard, Johnson, Smith and
+ * Woods. Note Ben Griffin also appears on the low-CTR list, sharing a surname
+ * with Lanto Griffin.
+ */
+async function fetchSameSurnamePeers(sb, player) {
+  const surnameOf = n => {
+    const parts = String(n || '').trim().split(/\s+/);
+    // Generational suffixes are not surnames: "Harold Varner III" and
+    // "Charles Howell III" are not a collision.
+    while (parts.length > 1 && /^(?:[IVX]+|Jr\.?|Sr\.?)$/i.test(parts[parts.length - 1])) parts.pop();
+    return (parts[parts.length - 1] || '').toLowerCase();
+  };
+  const mine = surnameOf(player.name);
+  if (!mine) return [];
+  // Deliberately NOT filtered to ranked players. Tiger and Charlie Woods are
+  // both unranked and are the likeliest pair on the site to be confused; an
+  // owgr_rank filter silently dropped exactly the case that matters most.
+  // Both pages exist, so the links resolve.
+  const { data } = await sb.from('witb_players').select('name, slug, owgr_rank');
+  return (data || [])
+    .filter(p => p.slug !== player.slug && surnameOf(p.name) === mine)
+    .sort((a, b) => (a.owgr_rank ?? 1e9) - (b.owgr_rank ?? 1e9));
+}
+
+/** One sentence naming the other players who share this surname. */
+function disambiguationHtml(player, peers) {
+  if (!peers || !peers.length) return '';
+  const links = peers.map(p =>
+    `<a href="/witb/players/${esc(p.slug)}/">${esc(p.name)}</a>`);
+  const list = links.length === 1 ? links[0]
+    : links.length === 2 ? `${links[0]} and ${links[1]}`
+    : `${links.slice(0, -1).join(', ')} and ${links[links.length - 1]}`;
+  return `\n            <p class="witb-disambig">This is ${esc(player.name)}'s bag. `
+       + `Not to be confused with ${list}, tracked separately.</p>`;
+}
+
+/**
  * Returns the Set of player IDs for all players with a current bag and a world ranking.
  * This is the canonical denominator for tour comparison ("N of 158", not 160).
  */
@@ -925,7 +973,7 @@ function buildRelatedCoverageHtml(slug) {
             </aside>`;
 }
 
-function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag, signupData, latestIssueUrl }) {
+function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag, signupData, latestIssueUrl, surnamePeers }) {
   const { name, slug, owgr_rank, rolex_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
@@ -937,6 +985,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   const yearRange = minYear === maxYear ? String(minYear) : `${minYear}-${maxYear}`;
 
   // ── Answer block + FAQ, both derived from the bag rows ────────────────────
+  const disambigHtml = disambiguationHtml(player, surnamePeers);
   const witbAnswer = buildWitbAnswerBlock(name, currentItems, currentDate);
   const witbFaq    = buildWitbFaq(name, currentItems, currentDate);
 
@@ -944,7 +993,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
           <!-- ANSWER BLOCK -->
           <section class="da-answer-block" aria-labelledby="da-answer-heading">
             <h2 class="da-answer-label" id="da-answer-heading">Quick Answer</h2>
-            <p class="da-answer-text">${esc(witbAnswer)}</p>
+            <p class="da-answer-text">${esc(witbAnswer)}</p>${disambigHtml}
           </section>` : '';
 
   // ── Inline Scorecard signup block ─────────────────────────────────────────
@@ -1929,7 +1978,8 @@ async function main() {
 
   const signupData     = await witbSignupData(sb);
   const latestIssueUrl = latestScorecardUrl();
-  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag, signupData, latestIssueUrl });
+  const surnamePeers = await fetchSameSurnamePeers(sb, player);
+  const html = buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag, signupData, latestIssueUrl, surnamePeers });
 
   const noindex = html.includes('noindex');
 

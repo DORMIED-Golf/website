@@ -64,6 +64,40 @@ const FEATURES = {
   // both ship without it, because the text is the whole deliverable and an
   // invented image would enter og:image and schema as though it depicted the
   // subject.
+  // Product-intent counterpart to who-is-arnie-mcnair. That article ranks 5.1
+  // on 4,636 weekly impressions but answers "who is", so the product cluster
+  // ("arnie mcnair clothing" 202 impr, "polo" 164, "visor" 61) converts nothing.
+  // This piece owns products and prices and must NOT drift into founder
+  // territory, or the two start competing for the same intent.
+  'arnie-mcnair-clothing': {
+    slug: 'arnie-mcnair-clothing',
+    title: 'Arnie McNair Clothing: Every Piece, Every Price, and Why It Keeps Selling Out',
+    titleTag: 'Arnie McNair Clothing: Every Piece and Price | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'arnie-mcnair',
+    leadRole: 'bio',
+    lastUpdated: 'August 25, 2026',
+    dateModified: '2026-08-25T12:00:00.000Z',
+    publishedAt: '2026-08-25T12:00:00.000Z',
+    quickAnswer: 'Arnie McNair\'s collection consists of the Arnie Polo and McNair Polo, Washington Shorts, the Vincenzo Cashmere sweater, the AM and George visors, and the Eisenhower belt and wallet, all produced in limited seasonal runs from natural fibres.',
+    metaDescription: 'Arnie McNair sells two polos, Washington Shorts, a cashmere sweater, two visors and Eisenhower leather goods. The Arnie Polo is $105.',
+    seoKeywords: ['arnie mcnair clothing', 'arnie mcnair polo', 'arnie mcnair visor', 'arnie mcnair price', 'arnie mcnair shop', 'arnie mcnair sold out', 'arnie mcnair american made'],
+    mdPath: path.join(ROOT, 'article-arnie-mcnair-clothing.md'),
+    imgBase: '/images/features/arnie-mcnair-clothing',
+    hero: { file: 'hero.webp', w: 1320, h: 876, alt: 'The Arnie McNair building at sunset, a brick warehouse with a painted sign reading Arnie McNair, American Made, Est. 2026 above a hound carrying a rose.', caption: 'Photo by Arnie McNair.' },
+    // 1320x876 is 1.51, so the social card trims sky and road to reach 1.91 but
+    // keeps the sign, which is the whole point of the frame.
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    sectionImages: {
+      'The polos': { layout: 'two-up', images: [
+        { file: 'polo-blue.webp', w: 1086, h: 1448, alt: 'An Arnie McNair pocket polo in slate blue on a wooden hanger, showing the two-button placket and woven neck label.', caption: 'The pocket polo silhouette, with a two-button placket and a chest pocket. Photo by Arnie McNair.' },
+        { file: 'polo-butter.webp', w: 1320, h: 1834, alt: 'An Arnie McNair pocket polo in butter yellow on a wooden hanger, showing the spread collar and chest pocket.', caption: 'Butter Yellow, one of the three colourways the Arnie Polo runs in at $105. Photo by Arnie McNair.' },
+      ]},
+    },
+  },
+
   'kevin-kisner-shoes': {
     slug: 'kevin-kisner-golf-shoes',
     title: 'What Golf Shoes Does Kevin Kisner Wear? The Answer Explains His Entire Bag',
@@ -443,14 +477,17 @@ const FEATURES = {
     category: 'Feature',
     brandSlug: 'arnie-mcnair',
     leadRole: 'bio',
-    lastUpdated: 'July 9, 2026',
-    dateModified: '2026-07-09T00:00:00.000Z',
+    lastUpdated: 'August 25, 2026',
+    // Bumped for the price correction: the flagship polo moved from the $95
+      // McNair Polo to the $105 Arnie Polo. A genuine content change on a page
+      // taking 4,636 impressions a week. publishedAt is deliberately untouched.
+      dateModified: '2026-08-25T12:00:00.000Z',
     keyTakeaways: [
       'An anonymous Minnesota golfer is behind the cult American-made apparel brand.',
-      'The $95 McNair Polo is the product the brand is built around.',
+      'The $105 Arnie Polo is the product the brand is built around.',
       'DORMIED Index data shows the demand is real, not just online noise.',
     ],
-    metaDescription: 'Who is Arnie McNair? The anonymous Minnesota golfer behind the cult American-made apparel brand, what the $95 McNair Polo is, and what the DORMIED data shows.',
+    metaDescription: 'Who is Arnie McNair? The anonymous Minnesota golfer behind the cult American-made apparel brand, what the $105 Arnie Polo is, and what the DORMIED data shows.',
     seoKeywords: ['arnie mcnair', 'arnie mcnair clothing', 'arnie mcnair golf', 'arnie mcnair polo', 'who is arnie mcnair'],
     mdPath: path.join(ROOT, 'article-arnie-mcnair.md'),
     imgBase: '/images/features/arnie-mcnair',

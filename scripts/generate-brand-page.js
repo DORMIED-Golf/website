@@ -177,7 +177,16 @@ function getBrandStats(dormiedData, brandSlug) {
 // not household names. Each fn returns a ~150-160 char string.
 const EVALUATIVE_META = {
   'takomo-golf': (brand, rank, totalBrands) =>
-    `Is Takomo legit? The Finnish direct-to-consumer brand ranks #${rank} of ${totalBrands} golf brands on the DORMIED Index. Independent rank, momentum, founder, and who plays it.`,
+    `Takomo golf clubs ranked: the Finnish direct-to-consumer brand sits #${rank} of ${totalBrands} on the DORMIED Index. Rank, momentum and market-by-market demand.`,
+
+  // The brand page was taking 2,120 weekly impressions at 0.28% CTR because
+  // its meta was a truncated version of brand.description, which opens on the
+  // same "interesting brand story" framing as /news/who-is-arnie-mcnair/ and
+  // competes with it for the same intent. That article ranks 5.1 and does the
+  // narrative properly. This page's only unique asset is the data, so the meta
+  // now leads with it.
+  'arnie-mcnair': (brand, rank, totalBrands) =>
+    `Arnie McNair ranks #${rank} of ${totalBrands} golf brands on the DORMIED Index. Monthly momentum, DI score and demand across 10 markets, updated every month.`,
 };
 
 function buildMetaDesc(brand, stats, totalBrands) {
