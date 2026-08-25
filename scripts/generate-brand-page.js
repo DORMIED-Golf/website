@@ -179,14 +179,6 @@ const EVALUATIVE_META = {
   'takomo-golf': (brand, rank, totalBrands) =>
     `Takomo golf clubs ranked: the Finnish direct-to-consumer brand sits #${rank} of ${totalBrands} on the DORMIED Index. Rank, momentum and market-by-market demand.`,
 
-  // The brand page was taking 2,120 weekly impressions at 0.28% CTR because
-  // its meta was a truncated version of brand.description, which opens on the
-  // same "interesting brand story" framing as /news/who-is-arnie-mcnair/ and
-  // competes with it for the same intent. That article ranks 5.1 and does the
-  // narrative properly. This page's only unique asset is the data, so the meta
-  // now leads with it.
-  'arnie-mcnair': (brand, rank, totalBrands) =>
-    `Arnie McNair ranks #${rank} of ${totalBrands} golf brands on the DORMIED Index. Monthly momentum, DI score and demand across 10 markets, updated every month.`,
 };
 
 function buildMetaDesc(brand, stats, totalBrands) {
@@ -194,6 +186,28 @@ function buildMetaDesc(brand, stats, totalBrands) {
   if (evalFn && stats && stats.rank) {
     return evalFn(brand, stats.rank, totalBrands);
   }
+  // Data-led default for EVERY brand page.
+  //
+  // The previous default was a truncated brand.description, which reads as the
+  // brand's own boilerplate and gives a searcher no reason to choose this page
+  // over the brand's own site, or over an article of ours covering the same
+  // brand. It also actively cannibalised: /brands/arnie-mcnair/ opened on the
+  // same "interesting brand story" framing as /news/who-is-arnie-mcnair/ and
+  // took 2,120 weekly impressions at 0.28% CTR.
+  //
+  // Section-wide the numbers are worse: brand pages draw 8,279 impressions at
+  // 0.45% CTR from position 15.9, the poorest surface on the site. The one
+  // thing these pages have that nothing else does is the ranking data, so the
+  // meta now leads with it and re-bakes current every month.
+  if (stats && stats.rank) {
+    const mom = Number(stats.momPct);
+    const dir = !Number.isFinite(mom) || Math.abs(mom) < 0.05
+      ? 'holding flat month over month'
+      : mom > 0 ? `up ${Math.abs(mom).toFixed(1)}% month over month`
+                : `down ${Math.abs(mom).toFixed(1)}% month over month`;
+    return `${brand.name} ranks #${stats.rank} of ${totalBrands} golf brands on the DORMIED Index, ${dir}. Monthly demand, momentum and market split.`;
+  }
+
   const desc = (brand.description || '').trim();
   if (!desc) {
     return `${brand.name} brand profile on DORMIED. Global search interest trends, market rankings, and monthly momentum.`;

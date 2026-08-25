@@ -5650,6 +5650,35 @@ details[open] .faq-question::after { content: '−'; }
 .da-faq-a { margin: 0; }
 
 /* ── Brand card ──────────────────────────────────────────────────────────── */
+
+/* Intent-cluster module: sibling pages answering different questions about the
+   same brand. Sits below the body so cluster links never enter article prose. */
+.da-intent-cluster {
+  margin: 32px 0 0;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+}
+.da-cluster-heading {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 0 0 10px;
+}
+.da-cluster-list { list-style: none; margin: 0; padding: 0; }
+.da-cluster-list li { margin: 0 0 6px; }
+.da-cluster-list a {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-lite);
+}
+.da-cluster-list a:hover { color: var(--green); }
 .da-brand-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-lite);

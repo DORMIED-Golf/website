@@ -928,6 +928,58 @@ async function uploadImageToSupabase(supabase, imageUrl, slug) {
 
 // ── Static HTML generation ────────────────────────────────────────────────────
 
+/* ── Intent clusters ────────────────────────────────────────────────────────
+   Where several of our pages answer DIFFERENT questions about the SAME brand,
+   Google was splitting the query set across them instead of picking one.
+   "takomo" returned four DORMIED urls for 135 impressions and zero clicks, at
+   position 35.5 on the head term. "malbon golf" split 829 impressions across
+   two urls for 7 clicks.
+
+   The titles were already intent-distinct, so the missing piece was that the
+   pages did not acknowledge each other: where-is-takomo-golf-from and the
+   weight-setting story linked to nothing in the cluster at all, and the two
+   Malbon articles each linked the brand page but never each other.
+
+   Rendered as a module below the body, never injected into prose, so the
+   anchor text stays intent-labelled and the article copy is untouched.        */
+const INTENT_CLUSTERS = {
+  takomo: {
+    members: ['are-takomo-irons-good', 'where-is-takomo-golf-from', 'takomo-golf-untested-weight-setting-cost'],
+    brand:   'takomo-golf',
+    labels: {
+      'are-takomo-irons-good':                    'Are Takomo irons any good?',
+      'where-is-takomo-golf-from':                'Where is Takomo Golf from?',
+      'takomo-golf-untested-weight-setting-cost': 'The Ignis D2 non-conformance recall',
+      '__brand__':                                'Takomo rank and monthly momentum',
+    },
+  },
+  malbon: {
+    members: ['who-owns-malbon-golf', 'why-is-malbon-so-popular'],
+    brand:   'malbon',
+    labels: {
+      'who-owns-malbon-golf':     'Who owns Malbon Golf?',
+      'why-is-malbon-so-popular': 'Why is Malbon so popular?',
+      '__brand__':                'Malbon rank and monthly momentum',
+    },
+  },
+};
+
+/** Sibling-intent module for an article inside a cluster. '' for everything else. */
+function buildIntentClusterHtml(slug) {
+  const key = Object.keys(INTENT_CLUSTERS).find(k => INTENT_CLUSTERS[k].members.includes(slug));
+  if (!key) return '';
+  const c = INTENT_CLUSTERS[key];
+  const items = c.members.filter(m => m !== slug)
+    .map(m => `<li><a href="/news/${escHtml(m)}/">${escHtml(c.labels[m] || m)}</a></li>`);
+  if (c.brand) items.push(`<li><a href="/brands/${escHtml(c.brand)}/">${escHtml(c.labels.__brand__)}</a></li>`);
+  if (!items.length) return '';
+  return `
+            <section class="da-intent-cluster" aria-labelledby="da-cluster-heading">
+              <h2 class="da-cluster-heading" id="da-cluster-heading">More on this brand</h2>
+              <ul class="da-cluster-list">${items.join('')}</ul>
+            </section>`;
+}
+
 function generateArticleHtml(opts) {
   const {
     title, bodyHtml, imageUrl, ogImageUrl, localUrl, imageAlt, slug, category,
@@ -1252,7 +1304,7 @@ function generateArticleHtml(opts) {
 ${answerHtml}
             <div class="da-article-body">
               ${bodyHtml}
-            </div>
+            </div>${buildIntentClusterHtml(slug)}
 ${scbHtml({ slot: 'article', pageType: 'article', brandSlug, data: { brandName }, latestIssueUrl: latestScorecardUrl() })}
 
             <!-- Brand card. Omitted entirely when the article has no brand:
