@@ -2566,7 +2566,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (565) ── -->
+  <!-- ── News articles (567) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4365,6 +4365,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/gotterups-third-win-is-bridgestones-best-marketing-in-a-decade-2026-07-06-hero.jpg</image:loc>
       <image:title>Gotterup&apos;s Third Win Is Bridgestone&apos;s Best Marketing in a Decade</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/graphite-design-diamana-sorted-shafts-launch/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/graphite-design-diamana-sorted-shafts-launch-hero.png</image:loc>
+      <image:title>Diamana Sorted Its Shafts by Launch Two Decades Ago. Graphite Design Gets There in 2027.</image:title>
     </image:image>
   </url>
   <url>
@@ -7361,6 +7371,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/top-irons-titleist-t100-hero.webp</image:loc>
       <image:title>Top Irons on Tour 2026: The Models Filling Pro Bags Right Now</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/toulon-golf-316l-marine-steel-putter/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/toulon-golf-316l-marine-steel-putter-hero.jpg</image:loc>
+      <image:title>316L Is a Marine Steel, Not a Putter Steel. Toulon Golf Used It Anyway.</image:title>
     </image:image>
   </url>
   <url>
