@@ -2566,7 +2566,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (568) ── -->
+  <!-- ── News articles (570) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5904,6 +5904,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/scotty-cameron-toe-flow-mallet/</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/scotty-cameron-toe-flow-mallet-hero.jpg</image:loc>
+      <image:title>Toe Flow in a Mallet Was Supposed to Be a Contradiction. Scotty Cameron&apos;s Phantom 9.5R Sells It for $549</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/scotty-camerons-new-phantom-bookends-reveal-a-quieter-strategy-shift-2026-06-16/</loc>
     <lastmod>2026-06-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -7391,6 +7401,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/toulon-golf-316l-marine-steel-putter-hero.jpg</image:loc>
       <image:title>316L Is a Marine Steel, Not a Putter Steel. Toulon Golf Used It Anyway.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/toulon-golf-etched-flat-molded-sole/</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/toulon-golf-etched-flat-molded-sole-hero.jpg</image:loc>
+      <image:title>Etched Flat, Then Molded: The Toulon Sole Plate That May Never Ship Again</image:title>
     </image:image>
   </url>
   <url>
