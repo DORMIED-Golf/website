@@ -135,8 +135,10 @@
             + ' src="'    + escHtml(vitUrl(article.imageUrl, 160)) + '"'
             + ' srcset="' + escHtml(vitUrl(article.imageUrl,  80)) + ' 80w,'
                           + escHtml(vitUrl(article.imageUrl, 160)) + ' 160w,'
-                          + escHtml(vitUrl(article.imageUrl, 400)) + ' 400w"'
-            + ' sizes="(min-width: 1200px) 180px, 80px"'
+                          + escHtml(vitUrl(article.imageUrl, 400)) + ' 400w,'
+                          + escHtml(vitUrl(article.imageUrl, 600)) + ' 600w,'
+                          + escHtml(vitUrl(article.imageUrl, 800)) + ' 800w"'
+            + ' sizes="(min-width: 1200px) 300px, 80px"'
             + ' width="80" height="60" loading="lazy" alt="" onerror="' + THUMB_FALLBACK + '">';
     }
 
