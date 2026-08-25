@@ -2566,7 +2566,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (567) ── -->
+  <!-- ── News articles (568) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2885,6 +2885,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/ava-golf-launches-on-the-back-of-arccos-and-garmin-data-the-instruction-2026-07-22-hero.jpg</image:loc>
       <image:title>AVA Golf Launches on the Back of Arccos and Garmin Data. The Instruction Layer Has a New Player.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/b-draddy-else-marks-40-labor/</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/b-draddy-else-marks-40-labor-hero.jpg</image:loc>
+      <image:title>Everyone Else Marks Down 40% at Labor Day. B. Draddy Is Offering 15.</image:title>
     </image:image>
   </url>
   <url>
