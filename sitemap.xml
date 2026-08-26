@@ -2566,7 +2566,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (577) ── -->
+  <!-- ── News articles (578) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4355,6 +4355,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/good-good-golf-callaway-found-deal-hero.jpg</image:loc>
       <image:title>Four Million Followers, No Approval Rights: Callaway Just Found Out What the Good Good Deal Actually Cost</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/good-good-golf-retailers-cleared-shelves/</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/good-good-golf-retailers-cleared-shelves-hero.webp</image:loc>
+      <image:title>Retailers Cleared the Shelves Before the TOUR Said Anything. Good Good Just Learned Which Partner Enforces the Rules.</image:title>
     </image:image>
   </url>
   <url>
