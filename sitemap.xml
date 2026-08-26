@@ -2566,7 +2566,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (572) ── -->
+  <!-- ── News articles (574) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5458,6 +5458,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/payntr-golf-10-bump-pushes-shoes/</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/payntr-golf-10-bump-pushes-shoes-hero.jpg</image:loc>
+      <image:title>A 10 Percent Tariff Bump Pushes Payntr Golf Shoes Past $250. Announcing It 15 Months Early Is the Real Move.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/payntr-golf-invented-shoe/</loc>
     <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -7421,6 +7431,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/toulon-golf-etched-flat-molded-sole-hero.jpg</image:loc>
       <image:title>Etched Flat, Then Molded: The Toulon Sole Plate That May Never Ship Again</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/toulon-golf-plumbers-neck-barely-hangs/</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/toulon-golf-plumbers-neck-barely-hangs-hero.jpg</image:loc>
+      <image:title>A Plumber&apos;s Neck That Barely Hangs. Toulon Golf Built It That Way on Purpose.</image:title>
     </image:image>
   </url>
   <url>
