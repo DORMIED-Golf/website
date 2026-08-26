@@ -2566,7 +2566,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (576) ── -->
+  <!-- ── News articles (577) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5005,6 +5005,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/malbon-film-crew-junior-golf-event-hero.jpg</image:loc>
       <image:title>Malbon Hired a Film Crew for a Junior Golf Event. That&apos;s the Whole Story.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/maxfli-13-7-compression-spread-pro/</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/maxfli-13-7-compression-spread-pro-hero.jpg</image:loc>
+      <image:title>A 13.7-Point Compression Spread Is What $15 Off A Pro V1 Actually Buys. Maxfli&apos;s Ball Lab Card Explains Why.</image:title>
     </image:image>
   </url>
   <url>
