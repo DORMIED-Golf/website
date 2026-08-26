@@ -2566,7 +2566,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (574) ── -->
+  <!-- ── News articles (576) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2795,6 +2795,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/arccos-golf-every-coachs-lay-number-hero.jpg</image:loc>
       <image:title>Every Coach&apos;s Lay-Up Number Is Worth Negative 0.22 Strokes. Arccos Put a Figure On It.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/arccos-golf-exactly-group-mens-chart/</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/arccos-golf-exactly-group-mens-chart-hero.jpg</image:loc>
+      <image:title>Exactly One Group in the Men&apos;s Chart Clears 260 Yards. Arccos Has 10 Million Drives Behind It.</image:title>
     </image:image>
   </url>
   <url>
@@ -7731,6 +7741,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/under-armour-golf-is-losing-its-territory-reps-to-brands-you-2026-04-20-hero.png</image:loc>
       <image:title>Under Armour Golf Is Losing Its Territory Reps to Brands You&apos;ve Never Heard Of</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/under-armour-golf-wide-sizes-cost/</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/under-armour-golf-wide-sizes-cost-hero.jpg</image:loc>
+      <image:title>Wide Sizes Cost Shelf Space Nobody Has. Under Armour Engineered Around Them.</image:title>
     </image:image>
   </url>
   <url>
