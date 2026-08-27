@@ -192,12 +192,24 @@ module.exports = async (req, res) => {
       if (data.length < 1000) break;
     }
 
-    if (!rows.length) return res.status(200).json({ brand, count: 0, limit, offset, products: [] });
+    // Gift cards are catalogue items but never a product we want to feature.
+    // Arccos ships 10 of them (up to $500), Pins & Aces 4 and Malbon 1, and a
+    // "Digital Gift Card - $500.00" card in a Shop Arccos carousel reads as a
+    // filler listing. Filtered here rather than in a sync because the syncs set
+    // is_active:true on every upsert, so a hand deactivation is undone nightly,
+    // and because this one place covers the Impact, Shopify, CJ and Amazon
+    // sources at once. Explicit ids= requests are unaffected: a gift card can
+    // only get into that list if someone put it there deliberately.
+    const GIFT_CARD = /(gift\s*card|e-?gift|giftcard)/i;
+    const productRows = rows.filter(r =>
+      !(GIFT_CARD.test(r.name || '') || /gift\s*cards?/i.test(r.category || '')));
+
+    if (!productRows.length) return res.status(200).json({ brand, count: 0, limit, offset, products: [] });
 
     // Collapse: one winner per item_group_id. A null group is its own group
     // (defensive — item_group_id is populated on 100% of current rows).
     const winners = new Map();
-    for (const row of rows) {
+    for (const row of productRows) {
       const key = row.item_group_id ? `g:${row.item_group_id}` : `i:${row.id}`;
       winners.set(key, betterOf(winners.get(key), row));
     }
