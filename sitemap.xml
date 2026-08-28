@@ -2572,7 +2572,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (582) ── -->
+  <!-- ── News articles (584) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4581,6 +4581,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/j-lindeberg-cities-explain-winter-line-hero.jpg</image:loc>
       <image:title>Salzburg, Zürich, Munich: The Showroom Cities That Explain J.Lindeberg&apos;s Winter Line</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/j-lindeberg-vent-500-se-shoe/</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/j-lindeberg-vent-500-se-shoe-hero.jpg</image:loc>
+      <image:title>Marked Down to $122.50 With No New Model Coming: J.Lindeberg&apos;s Vent 500 SE Was Never a $245 Shoe</image:title>
     </image:image>
   </url>
   <url>
@@ -6597,6 +6607,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/taylormade-current-gen-driver-june-sale-hero.jpg</image:loc>
       <image:title>A $171 Cut on a Current-Gen Driver in June Is Not a Sale. It&apos;s a Warning TaylorMade Already Lived Through.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/taylormade-dollars-wedge-driver-defending-price/</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/taylormade-dollars-wedge-driver-defending-price-hero.jpg</image:loc>
+      <image:title>Thirty Dollars Off a Wedge, $320 Off a Driver: TaylorMade Is Defending a Price Callaway Isn&apos;t</image:title>
     </image:image>
   </url>
   <url>
