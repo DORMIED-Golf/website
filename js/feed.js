@@ -430,7 +430,7 @@
 
       if (dormied.length >= 3) {
         var allBrands = getAllBrands();
-        var picked    = dormied.slice(0, limit);
+        var picked    = dormied;   // validated below, then sliced
 
         // article_clicks carries no author, so this used to derive one from the
         // article's first brand. That guess is wrong whenever a piece was not
@@ -443,17 +443,35 @@
           .map(function (r) { return (r.url.match(/^\/news\/([^/]+)\/?$/) || [])[1]; })
           .filter(Boolean);
 
+        // status=eq.published makes this AUTHORITATIVE, not just an author
+        // lookup. article_clicks is a log and outlives the article it points
+        // at, so an unpublished piece with click history was being re-rendered
+        // as a live link. Mirrors the same fix in scripts/feed-bake.js.
         var authorReq = slugs.length
-          ? fetch(SB_URL + '/rest/v1/dormied_articles?select=slug,author&slug=in.(' +
+          ? fetch(SB_URL + '/rest/v1/dormied_articles?select=slug,author&status=eq.published&slug=in.(' +
                   encodeURIComponent(slugs.join(',')) + ')',
               { headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON } })
-              .then(function (r) { return r.ok ? r.json() : []; })
-              .catch(function () { return []; })
+              .then(function (r) { return r.ok ? r.json() : null; })
+              .catch(function () { return null; })
           : Promise.resolve([]);
 
         return authorReq.then(function (authorRows) {
+          // null means the lookup failed. Leave the baked markup alone rather
+          // than replacing it with unverified links.
+          if (authorRows === null) return;
+
           var authorBySlug = {};
-          (authorRows || []).forEach(function (a) { if (a.author) authorBySlug[a.slug] = a.author; });
+          var publishedSlugs = {};
+          (authorRows || []).forEach(function (a) {
+            publishedSlugs[a.slug] = true;
+            if (a.author) authorBySlug[a.slug] = a.author;
+          });
+
+          picked = picked.filter(function (row) {
+            var sl = (row.url.match(/^\/news\/([^/]+)\/?$/) || [])[1];
+            return sl && publishedSlugs[sl];
+          }).slice(0, limit);
+          if (picked.length < 3) return;
 
           var articles = picked.map(function (row) {
             var slug         = (row.url.match(/^\/news\/([^/]+)\/?$/) || [])[1];

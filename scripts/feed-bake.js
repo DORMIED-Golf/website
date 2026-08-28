@@ -345,7 +345,9 @@ async function fetchTopStoriesArticles(supabase, dormiedData, limit) {
     });
 
     if (dormied.length >= 3) {
-      var picked = dormied.slice(0, limit);
+      // Validate BEFORE slicing, so dropping an unpublished story does not
+      // leave the module short.
+      var picked = dormied;
 
       // article_clicks has no author column, so this module used to derive one
       // from the article's first brand. That guess disagrees with the byline on
@@ -360,18 +362,46 @@ async function fetchTopStoriesArticles(supabase, dormiedData, limit) {
         .map(function (r) { return (r.url.match(/^\/news\/([^/]+)\/?$/) || [])[1]; })
         .filter(Boolean);
 
+      // This lookup is AUTHORITATIVE, not just an author enrichment.
+      //
+      // Top Stories ranks article_clicks, which is a log: rows survive the
+      // article they point at. Suppressing /news/vessel-missing-shipping-window
+      // -season/ removed the page, the dormied_articles publish state, the
+      // sitemap entry and every baked link, but its click history stayed, so
+      // this module kept re-baking a link to it into the tail of every page.
+      // Ahrefs found 1,023 pages pointing at one 404 and the site health score
+      // fell from 100 to 35. A click log must never be the only thing deciding
+      // what gets linked.
+      //
+      // On a lookup failure we fall through to Latest rather than rendering
+      // unverified URLs: a wrong-but-live module beats 1,000 broken links.
       var authorBySlug = {};
+      var publishedSlugs = new Set();
       if (slugs.length) {
         var res = await supabase
           .from('dormied_articles')
           .select('slug,author')
+          .eq('status', 'published')
           .in('slug', slugs);
         if (res.error) {
-          console.warn('[feed-bake] top-stories author lookup failed:', res.error.message);
-        } else {
-          (res.data || []).forEach(function (a) { if (a.author) authorBySlug[a.slug] = a.author; });
+          console.warn('[feed-bake] top-stories validation failed, falling back to Latest:', res.error.message);
+          return fetchLatestArticles(supabase, limit, null);
         }
+        (res.data || []).forEach(function (a) {
+          publishedSlugs.add(a.slug);
+          if (a.author) authorBySlug[a.slug] = a.author;
+        });
       }
+
+      var dropped = picked.length;
+      picked = picked.filter(function (row) {
+        var sl = (row.url.match(/^\/news\/([^/]+)\/?$/) || [])[1];
+        return sl && publishedSlugs.has(sl);
+      });
+      dropped -= picked.length;
+      if (dropped) console.warn(`[feed-bake] top-stories: dropped ${dropped} click row(s) whose article is no longer published`);
+      if (picked.length < 3) return fetchLatestArticles(supabase, limit, null);
+      picked = picked.slice(0, limit);
 
       return picked.map(function (row) {
         var slug = (row.url.match(/^\/news\/([^/]+)\/?$/) || [])[1];

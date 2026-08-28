@@ -225,6 +225,11 @@ async function fetchRecentArticles(supabase, brandSlug, limit = 8) {
     .from('dormied_articles')
     .select('slug, title, published_at, image_url')
     .eq('brand_slug', brandSlug)
+    // Without this the "Latest on {Brand}" module links to suppressed and draft
+    // articles. It is how /brands/vessel/ kept a link to the suppressed
+    // vessel-missing-shipping-window-season piece after every other surface had
+    // dropped it. Same omission as the Top Stories click log, different query.
+    .eq('status', 'published')
     .order('published_at', { ascending: false })
     .limit(limit);
 
