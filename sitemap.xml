@@ -2572,7 +2572,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (584) ── -->
+  <!-- ── News articles (586) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4964,6 +4964,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/macgregor-driver-head-alone-pricing-club/</loc>
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/macgregor-driver-head-alone-pricing-club-hero.jpg</image:loc>
+      <image:title>A $15 Gap Between the Driver and the Head Alone: MacGregor Is Pricing for Club Builders</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/macgregor-is-now-a-price-anchor-for-dtc-brands-and-that-might-be-the-point-2026-05-06/</loc>
     <lastmod>2026-05-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -6057,6 +6067,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/shot-scope-sold-software-device-killing-hero.jpg</image:loc>
       <image:title>Shot Scope Just Sold Software Into the Device Killing Its Own Watch Business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/shot-scope-yards-fewer-penalty/</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/shot-scope-yards-fewer-penalty-hero.jpg</image:loc>
+      <image:title>Seven More Yards, Not One Fewer Penalty Shot: Shot Scope Published the Number That Hurts</image:title>
     </image:image>
   </url>
   <url>
