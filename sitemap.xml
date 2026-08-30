@@ -2572,7 +2572,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (587) ── -->
+  <!-- ── News articles (589) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2941,6 +2941,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bad-birdie-goes-footwear-by-renting-payntrs-engineering-instead-of-2026-06-18-hero.webp</image:loc>
       <image:title>Bad Birdie Goes Footwear by Renting PAYNTR&apos;s Engineering Instead of Building Its Own</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/bad-birdie-resort-credit-rack-pro/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/bad-birdie-resort-credit-rack-pro-hero.png</image:loc>
+      <image:title>A $300 Resort Credit and a Rack in the Pro Shop: Bad Birdie Turned a Photo Shoot Into Distribution</image:title>
     </image:image>
   </url>
   <url>
@@ -7667,6 +7677,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/trackman-home-simulator-sale-starts-retail-hero.jpg</image:loc>
       <image:title>The Home Simulator Sale Starts in a Retail Hitting Bay. Trackman Just Took Every One in Delray.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/trackman-recruit-data/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/trackman-recruit-data-hero.jpg</image:loc>
+      <image:title>The Recruit Enters His Own Data: Upgame by Trackman Lands Inside College Golf Recruiting</image:title>
     </image:image>
   </url>
   <url>
