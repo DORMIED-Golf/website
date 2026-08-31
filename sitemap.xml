@@ -2572,7 +2572,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (589) ── -->
+  <!-- ── News articles (590) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6307,6 +6307,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/summit-golf-brands-locks-down-keisers-next-resort-before-it-even-opens-2026-05-27-hero.png</image:loc>
       <image:title>Summit Golf Brands Locks Down Keiser&apos;s Next Resort Before It Even Opens</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/sun-day-red-country-club-brands/</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/sun-day-red-country-club-brands-hero.jpg</image:loc>
+      <image:title>Three Rounds a Week, One Summer of Washes: Sun Day Red&apos;s Skort Outlasted the Country Club Brands</image:title>
     </image:image>
   </url>
   <url>
