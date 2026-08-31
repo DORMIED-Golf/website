@@ -69,6 +69,29 @@ const FEATURES = {
   // ("arnie mcnair clothing" 202 impr, "polo" 164, "visor" 61) converts nothing.
   // This piece owns products and prices and must NOT drift into founder
   // territory, or the two start competing for the same intent.
+  // Greenfield: "byrdie golf" takes 462 impressions at position 9.7 with ZERO
+  // clicks, one query, one URL (/brands/byrdie-golf/), and no editorial page.
+  // Author is Victoria H. because byrdie-golf carries the Women's sub-category
+  // and authorForBrand() routes it there; verified, not assumed.
+  'byrdie-golf': {
+    slug: 'what-is-byrdie-golf',
+    title: 'What Is Byrdie Golf? Two Grandmothers Started It Without Meaning To',
+    titleTag: 'What Is Byrdie Golf? | DORMIED',
+    byline: 'Victoria H.',
+    authors: ['Victoria H.'],
+    category: 'Feature',
+    brandSlug: 'byrdie-golf',
+    leadRole: 'bio',
+    lastUpdated: 'August 31, 2026',
+    dateModified: '2026-08-31T12:00:00.000Z',
+    publishedAt: '2026-08-31T12:00:00.000Z',
+    quickAnswer: 'Byrdie Golf Social Wear is a Charlotte-based women\'s golf apparel brand founded in 2021 by Rachelle Wates and Hayden Hendrix, known for retro country club styling, collaborations with Cole Haan and Dolce Vita, and a deliberate blurring of the line between golf wear and going-out wear.',
+    metaDescription: 'Byrdie Golf Social Wear is a women\'s golf apparel brand founded in 2021 in Charlotte, North Carolina by Rachelle Wates and Hayden Hendrix. Pieces run roughly $40 to $215.',
+    seoKeywords: ['byrdie golf', 'what is byrdie golf', 'byrdie golf social wear', 'byrdie golf founders', 'byrdie golf clothing', 'byrdie golf charlotte', 'womens golf apparel brand'],
+    mdPath: path.join(ROOT, 'article-byrdie-golf.md'),
+    imgBase: '/images/features/byrdie-golf',
+  },
+
   'arnie-mcnair-clothing': {
     slug: 'arnie-mcnair-clothing',
     title: 'Arnie McNair Clothing: Every Piece, Every Price, and Why It Keeps Selling Out',

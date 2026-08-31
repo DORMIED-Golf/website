@@ -168,6 +168,15 @@ function getBrandStats(dormiedData, brandSlug) {
 }
 
 // ── Meta description ──────────────────────────────────────────────────────────
+// Brands whose formulaic "Rank + Trend" title buries what the brand actually
+// IS. /brands/byrdie-golf/ takes 462 impressions at position 9.7 for "byrdie
+// golf" and converts zero, and the title led with our data role rather than
+// telling a searcher who has just heard the name what they are looking at.
+// Keyed by slug so the default stays formulaic for the other 214.
+const BRAND_TITLE_OVERRIDE = {
+  'byrdie-golf': "Byrdie Golf Social Wear: Women's Golf Apparel Brand | DORMIED",
+};
+
 
 // Brands whose winnable SERP click is evaluative, not navigational. For a
 // challenger/DTC brand, the searcher who just heard the name wants an independent
@@ -579,6 +588,7 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
   } else {
     pageTitle = `${brand.name}: Golf Brand Rank + Trend (${titleYear}) | DORMIED`;
   }
+  if (BRAND_TITLE_OVERRIDE[slug]) pageTitle = BRAND_TITLE_OVERRIDE[slug];
   pageTitle = escHtml(pageTitle);
   const metaDesc     = escHtml(buildMetaDesc(brand, stats, (dormiedData.brands || []).length));
   const canonicalUrl = `https://dormied.com/brands/${escHtml(slug)}/`;

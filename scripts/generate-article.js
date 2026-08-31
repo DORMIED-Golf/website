@@ -944,12 +944,21 @@ async function uploadImageToSupabase(supabase, imageUrl, slug) {
    anchor text stays intent-labelled and the article copy is untouched.        */
 const INTENT_CLUSTERS = {
   takomo: {
-    members: ['are-takomo-irons-good', 'where-is-takomo-golf-from', 'takomo-golf-untested-weight-setting-cost'],
+    // Five editorial pages plus the brand page. The cluster was built from a
+    // four-URL count; the live data shows SIX Takomo urls taking impressions,
+    // and the two biggest were both outside it: who-owns-takomo-golf (738
+    // impressions) and the bag-launch story (114). "takomo" itself sits at
+    // position 27.5 across five of them.
+    members: ['are-takomo-irons-good', 'where-is-takomo-golf-from', 'who-owns-takomo-golf',
+              'takomo-golf-untested-weight-setting-cost',
+              'takomos-third-bag-launch-is-a-masterclass-in-dtc-hustle-2026-05-13'],
     brand:   'takomo-golf',
     labels: {
       'are-takomo-irons-good':                    'Are Takomo irons any good?',
       'where-is-takomo-golf-from':                'Where is Takomo Golf from?',
+      'who-owns-takomo-golf':                     'Who owns Takomo Golf?',
       'takomo-golf-untested-weight-setting-cost': 'The Ignis D2 non-conformance recall',
+      'takomos-third-bag-launch-is-a-masterclass-in-dtc-hustle-2026-05-13': 'The third bag launch and the DTC playbook',
       '__brand__':                                'Takomo rank and monthly momentum',
     },
   },

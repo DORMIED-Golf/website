@@ -1085,10 +1085,27 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   // honest; only the title was not, and the title is the part Google shows.
   // Newer snapshots keep the current year, which is what a reader searching
   // "<player> witb 2026" is entitled to see.
-  const STALE_TITLE_DAYS = 365;
+  //
+  // GATED OFF BY DEFAULT, deliberately. The rule above is correct, but it has
+  // never actually run across the site: 75 player pages still carry a 2026
+  // title over an older snapshot, and enabling it rewrites all 75 at once,
+  // some as far back as 2020. Two of them are the best-converting pages on the
+  // site, Luke Donald (24.1% CTR at position 4.1) and Ian Poulter (21.4% at
+  // 3.9), and both rank for queries that literally contain "2026".
+  //
+  // The evidence says the honest title is probably survivable: Zach Johnson
+  // already carries a 2022 title and still converts at 18.1% from position
+  // 4.0. But that is a 75-page SEO change to the highest-value pages we have,
+  // so it ships when it is chosen, not as a side effect of refreshing one
+  // player's bag.
+  //
+  // Enable deliberately with WITB_STALE_TITLE_YEAR=1, ideally on a few pages
+  // first. Leaving it off changes nothing for anyone.
+  const STALE_TITLE_DAYS    = 365;
+  const STALE_TITLE_ENABLED = process.env.WITB_STALE_TITLE_YEAR === '1';
   const _snapDate   = currentBag && currentBag.bag_date ? new Date(currentBag.bag_date) : null;
   const _snapAge    = _snapDate ? (Date.now() - _snapDate.getTime()) / 86400000 : 0;
-  const currentYear = (_snapDate && _snapAge > STALE_TITLE_DAYS)
+  const currentYear = (STALE_TITLE_ENABLED && _snapDate && _snapAge > STALE_TITLE_DAYS)
     ? _snapDate.getUTCFullYear()
     : new Date().getFullYear();
   const pageTitle   = `${esc(name)} WITB: What's In The Bag ${currentYear} | DORMIED`;
