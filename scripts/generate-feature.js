@@ -90,6 +90,11 @@ const FEATURES = {
     seoKeywords: ['byrdie golf', 'what is byrdie golf', 'byrdie golf social wear', 'byrdie golf founders', 'byrdie golf clothing', 'byrdie golf charlotte', 'womens golf apparel brand'],
     mdPath: path.join(ROOT, 'article-byrdie-golf.md'),
     imgBase: '/images/features/byrdie-golf',
+    // 1900x1200 (1.58), comfortably landscape and well over the 1200px floor
+    // the homepage hero picker requires, so the social card is a plain crop
+    // rather than a contained card.
+    hero: { file: 'hero.webp', w: 1900, h: 1200, alt: 'A golfer in a brown mock-neck top and plaid skirt crouching to place a ball on a putting green, a putter upright in her other hand.', caption: 'Photo by VIE Magazine.' },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
   },
 
   'arnie-mcnair-clothing': {
@@ -1218,6 +1223,15 @@ async function main() {
         brand_slug: F.brandSlug || '', secondary_brand_slugs: [],
         title: F.title, body: mdToPlain(md),
         image_url: F.hero ? `${F.imgBase}/${F.hero.file}` : null,
+        // Features declare their hero dimensions in config, so record them
+        // rather than re-measuring. Without these the row has a null
+        // image_width, and renderHomeLatestHtml treats null as "not known to
+        // be large enough" and will never headline the piece, however good the
+        // art is. generate-article.js measures at ingest; features had no
+        // equivalent, so every feature published after the backfill was
+        // silently ineligible for the homepage hero.
+        image_width:  F.hero && F.hero.w ? F.hero.w : null,
+        image_height: F.hero && F.hero.h ? F.hero.h : null,
         source_url: `https://dormied.com/news/${F.slug}/`, source_name: 'DORMIED',
         meta_description: F.metaDescription, seo_keywords: F.seoKeywords,
         published_at: F.publishedAt, status: 'published', slug: F.slug,
