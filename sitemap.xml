@@ -2578,7 +2578,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (591) ── -->
+  <!-- ── News articles (593) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -7676,6 +7676,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/trackman-callaway-money-funded-venue/</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/trackman-callaway-money-funded-venue-hero.png</image:loc>
+      <image:title>Callaway Money Funded the Venue. Trackman Still Owns the Bays.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/trackman-every-simulator-shot-played-perfect/</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -8443,6 +8453,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/why-tour-pros-are-mixing-metal-and-plastic-spikes-and-what-it-means-for-2026-05-05-hero.png</image:loc>
       <image:title>Why Tour Pros Are Mixing Metal and Plastic Spikes — And What It Means for Your Next Shoe Purchase</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/williams-athletic-club-150-country/</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/williams-athletic-club-150-country-hero.png</image:loc>
+      <image:title>150 Country Clubs Is a Ceiling, Not a Base. Williams Athletic Club Books Coterie.</image:title>
     </image:image>
   </url>
   <url>
