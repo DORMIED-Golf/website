@@ -2578,7 +2578,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (595) ── -->
+  <!-- ── News articles (597) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4267,6 +4267,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/full-swings-disappearing-act-from-tigers-garage-to-marriotts-2026-04-13-hero.png</image:loc>
       <image:title>Full Swing&apos;s Disappearing Act: From Tiger&apos;s Garage to Marriott&apos;s Marketing Copy</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/garmin-golf-yard-apart-accuracy-price/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/garmin-golf-yard-apart-accuracy-price-hero.png</image:loc>
+      <image:title>One Yard Apart on Accuracy, $400 Apart on Price: What Garmin&apos;s G82 Is Actually Selling</image:title>
     </image:image>
   </url>
   <url>
@@ -6363,6 +6373,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sun-day-red-keeps-showing-up-in-womens-golf-coverage-the-customer-base-is-2026-07-07-hero.jpg</image:loc>
       <image:title>Sun Day Red Keeps Showing Up In Women&apos;s Golf Coverage. The Customer Base Is Another Question.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/sun-day-red-quilted-jacket-polos/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/sun-day-red-quilted-jacket-polos-hero.jpg</image:loc>
+      <image:title>A Quilted Jacket Earns What Three Polos Do. Sun Day Red Finally Built a Fall Line.</image:title>
     </image:image>
   </url>
   <url>
