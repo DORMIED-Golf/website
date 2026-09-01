@@ -42,19 +42,19 @@ The catalogue runs across tops, bottoms, dresses and jumpsuits, a category the b
 
 Prices span roughly $40 to $215 depending on the piece and where it sits in the season, with polos and simpler tops at the lower end and blouses, dresses and outerwear at the upper end. The design language is the opposite of most performance golf wear: where the category defaults to stretch synthetics and logo placement, Byrdie leans on puffed sleeves, collars, caddie jumpsuits and sleeveless dresses that pass as cocktail attire.
 
-The founders have been direct that this is the entire point. Wates has framed it as a straightforward inequity: men get dressed once, then work, play golf and go to dinner in the same outfit, and there was no reason women could not do the same. The clothes are built so the round is one part of the day rather than a costume change.
+The founders have been direct that this is the entire point. The clothes are built so the round is one part of the day rather than a costume change, which is the gap the brand set out to close.
 
-That has produced what Wates has called a very large 19th hole clientele. By her estimate roughly half of Byrdie's customers are buying the pieces for riding in a cart, for the club, or for the parts of golf that happen away from the course entirely. For a golf apparel brand, having half your buyers not really playing golf in your product could be a problem. For Byrdie it is the business model.
+That has produced what the brand calls a very big 19th hole clientele. By her estimate roughly half of Byrdie's customers are buying the pieces for riding in a cart, for the club, or for the parts of golf that happen away from the course entirely. For a golf apparel brand, having half your buyers not really playing golf in your product could be a problem. For Byrdie it is the business model.
 
 ## The collaborations are the real signal
 
 This is where a brand at rank 153 starts to look larger than its search volume.
 
-In 2023 Byrdie partnered with **Cole Haan** on a limited-edition women's golf collection, producing the ZERØGRAND Fairway Golf Shoe at $170 and the ØriginalGrand Shortwing Oxford Golf Shoe at $210. Cole Haan's brand president framed the pairing as two companies with the same mission, bridging fashion, comfort and performance. That is a 90-year-old footwear company choosing a two-year-old golf label.
+In 2023 Byrdie partnered with **Cole Haan** on a limited-edition women's golf collection, producing the ZERØGRAND Fairway Golf Shoe at $170 and the ØriginalGrand Shortwing Oxford Golf Shoe at $210. Cole Haan's brand president framed the pairing as two companies with the same mission, bridging fashion, comfort and performance. That is a footwear company founded in 1928 choosing a two-year-old golf label.
 
 Since then the list has grown. There is a **Dolce Vita X Byrdie Golf** collection, and a his-and-hers terrycloth collaboration with **Sugarloaf Social Club**, another brand DORMIED tracks, aimed squarely at the poolside end of country club life. Earlier work included sun hats designed with the Australian luxury label **Lorna Murray**.
 
-The retail placement matters as much. Byrdie stocks through **Shopbop**, which is a fashion channel rather than a golf channel, and the brand has been picked up by Over The Moon. Vogue has taken notice. In 2023 Byrdie was one of nine companies invited into the small business marketplace at the Wells Fargo Championship at Quail Hollow.
+The retail placement matters as much. Byrdie stocks through **Shopbop**, which is a fashion channel rather than a golf channel, and the brand has been picked up by Over The Moon. In 2023 the brand was invited into the small business marketplace at the Wells Fargo Championship.
 
 A brand that sells through Shopbop and collaborates with Cole Haan and Dolce Vita is not really competing with golf apparel companies. It is competing in fashion, using golf as the occasion.
 
@@ -62,7 +62,7 @@ A brand that sells through Shopbop and collaborates with Cole Haan and Dolce Vit
 
 Women's golf apparel has been an underbuilt category for a long time, generally addressed by major brands as a smaller-sized version of the men's line in a narrower colour range. Byrdie is one of a small group of brands designed by women who play, for women who play, with no obligation to look like anything already on the rack.
 
-The Index says it is still small. The collaboration list says the fashion industry disagrees about how small it will stay. Those two things are not in conflict; search interest is a lagging indicator for a brand whose customers are finding it through Shopbop and Vogue rather than through Google.
+The Index says it is still small. The collaboration list says the fashion industry disagrees about how small it will stay. Those two things are not in conflict; search interest is a lagging indicator for a brand whose customers are finding it through Shopbop and fashion retail rather than through Google.
 
 ## FAQ
 
@@ -139,6 +139,25 @@ By DORMIED's tracking, Byrdie ranks 153rd of 215 brands with 1,300 monthly globa
   (Williams, Shoffner) appear in 2022-2023 coverage and are noted once in the
   FAQ so the older sources reconcile.
 - DOMAIN: byrdiegolfsocial.com, confirmed against data.js website field.
+- FULL CLAIM VERIFICATION PASS (2026-08-31, after Travis challenged the
+  manufacturing line). Every factual claim re-checked against a source I
+  actually opened. VERIFIED: founders' current names (Byrdie Instagram,
+  LinkedIn); Wates as buyer at Capital Clothing for seven years and Shoffner as
+  director of product development at Coco Shop (Forbes); met at Capitol
+  (Houston Chronicle, SouthPark); grandmothers and pandemic origin (same);
+  puffed sleeves and Peter Pan collars (same); Cole Haan collab June 2023 with
+  ZERØGRAND Fairway $170 and ØriginalGrand Shortwing Oxford $210 and the David
+  Maddocks quote (PR Newswire, primary); Dolce Vita capsule (WWD plus Dolce
+  Vita's own product pages); Sugarloaf as BGSW X SSC (brand's own collections);
+  Lorna Murray (lornamurray.com.au collection page); "very big 19th hole
+  clientele" and about half of customers (brand, via press); Shopbop and Over
+  The Moon stockists; all Index figures (dormied_monthly_brand_summary).
+  REMOVED AS UNVERIFIABLE: production location; "nine companies" and "Quail
+  Hollow" at the Wells Fargo Championship (Forbes is 403, the event link itself
+  is confirmed by its headline so that stays); Vogue coverage, in both places;
+  and a "men get dressed once" argument attributed to Wates personally.
+  CORRECTED: Cole Haan called a "90-year-old" company, actually founded 1928;
+  and "very large" 19th hole clientele quoted as "very big" to match the source.
 - SOURCES USED: byrdiegolfsocial.com About page (collections, prices);
   Byrdie Golf Instagram (co-founder credit); LinkedIn (both founders' current
   titles and names); Houston Chronicle Sep 2022 (Capitol, grandmothers, 19th
