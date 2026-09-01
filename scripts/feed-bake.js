@@ -89,7 +89,23 @@ function brandNameFromData(dormiedData, id) {
   return id;
 }
 
-function renderArticleCard(article, dormiedData) {
+/* One card renderer, three box sizes.
+ *
+ * The same .feed-card markup renders at 276px in the sidebar, 231 to 352px in
+ * the homepage trio, and 116px in a homepage list row. `sizes` is what tells
+ * the browser which srcset entry to pick, so a single string cannot serve all
+ * three: the sidebar's old "(min-width: 1200px) 300px, 80px" would have fed a
+ * 160w image into a 283px trio card at a 900px viewport, and widening it to
+ * cover the trio would make the eight list rows fetch 800w for a 116px slot.
+ *
+ * Callers that do not care keep the sidebar default. Mirror any change here in
+ * js/feed.js renderArticleCard, which re-renders the same cards client side.
+ */
+var CARD_SIZES_DEFAULT = '(min-width: 1200px) 300px, 80px';
+var CARD_SIZES_TRIO    = '(min-width: 1200px) 25vw, (min-width: 600px) 32vw, 80px';
+var CARD_SIZES_ROW     = '(min-width: 600px) 120px, 80px';
+
+function renderArticleCard(article, dormiedData, sizes) {
   var thumb = '';
   if (article.imageUrl) {
     thumb = '<img class="feed-card-thumb"'
@@ -99,7 +115,7 @@ function renderArticleCard(article, dormiedData) {
                         + escHtml(vitUrl(article.imageUrl, 400)) + ' 400w,'
                         + escHtml(vitUrl(article.imageUrl, 600)) + ' 600w,'
                         + escHtml(vitUrl(article.imageUrl, 800)) + ' 800w"'
-          + ' sizes="(min-width: 1200px) 300px, 80px"'
+          + ' sizes="' + escHtml(sizes || CARD_SIZES_DEFAULT) + '"'
           + ' width="80" height="60" loading="lazy" alt="" onerror="' + THUMB_FALLBACK + '">';
   }
 
@@ -261,12 +277,12 @@ function renderHomeLatestHtml(articles, dormiedData) {
   var list = rest.slice(3, 11);   // items 5-12: standard list
   var trioHtml = trio.length
     ? '<div class="home-latest-trio">'
-      + trio.map(function (a) { return renderArticleCard(a, dormiedData); }).join('')
+      + trio.map(function (a) { return renderArticleCard(a, dormiedData, CARD_SIZES_TRIO); }).join('')
       + '</div>'
     : '';
   return renderFeedPageCard(hero, dormiedData, true)
        + trioHtml
-       + list.map(function (a) { return renderArticleCard(a, dormiedData); }).join('');
+       + list.map(function (a) { return renderArticleCard(a, dormiedData, CARD_SIZES_ROW); }).join('');
 }
 
 function normalizeDormiedRow(a) {

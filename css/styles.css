@@ -5934,7 +5934,71 @@ details[open] .faq-question::after { content: '−'; }
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    align-items: start;
+    /* stretch, not start: with start each card sized to its own content and a
+       short headline left one column visibly shorter than its neighbours. */
+    align-items: stretch;
+  }
+  /* The trio takes the sidebar card's shape: picture across the full column,
+     text beneath. Same 276x72 proportion as .sidebar-ad-col .feed-card-thumb,
+     expressed as a ratio so it holds at every column width (231px at 851,
+     352px at 1440), so the two modules read as one component. */
+  .home-latest-trio .feed-card {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .home-latest-trio .feed-card-thumb {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 23 / 6;
+  }
+  /* Three lines RESERVED, not just clamped. Clamping alone caps a long
+     headline but lets a short one collapse the card, which is what put the
+     byline and tags at three different heights across the row. 4.05em is
+     3 lines at the title's own 1.35 line-height. */
+  .home-latest-trio .feed-card-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 4.05em;
+  }
+}
+
+/* ── Row cards: let the thumbnail fill the row ───────────────────────────────
+   An 80x60 chip against 86px of text left a dead strip under every thumbnail
+   and gave the picture nothing to do. Stretching it to the row height makes
+   the image the thing the eye lands on and pushes the text column right.
+
+   Fixed width with a stretched height, not the reverse: deriving the width
+   from the height would make the card's main size depend on its cross size,
+   which is circular in flex and resolves differently across engines.
+   object-fit: cover (already on .feed-card-thumb) does the cropping.
+
+   Desktop only. On mobile these rows are already tall, because the headline
+   wraps and the excerpt runs three lines, so a stretched thumbnail would take
+   half the card.
+
+   Scoped to direct children of the two list containers so it cannot reach the
+   trio (nested in .home-latest-trio, and stacked at this width), the homepage
+   hero (.home-dormied-section .feed-card--full, which is full-bleed), or the
+   sidebar cards on either page. */
+@media (min-width: 600px) {
+  .home-dormied-section .latest-feed-list > .feed-card:not(.feed-card--full),
+  .feed-list > .feed-card--full {
+    align-items: stretch;
+  }
+  .home-dormied-section .latest-feed-list > .feed-card:not(.feed-card--full) .feed-card-thumb {
+    width: 116px;
+    height: auto;
+    align-self: stretch;
+  }
+  /* 150 rather than 116: the news rows carry an excerpt, so the row is 112px
+     of content against the homepage's 86, and the same 4:3 read needs more
+     width. */
+  .feed-list > .feed-card--full .feed-card-thumb--lg {
+    width: 150px;
+    height: auto;
+    align-self: stretch;
   }
 }
 

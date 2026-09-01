@@ -128,7 +128,16 @@
   }
 
   /* ── Article card HTML (compact — used on homepage and brand pages) ─────── */
-  function renderArticleCard(article, showBrandTags, allBrands) {
+  /* The same markup renders at three very different box widths: 276px in the
+     sidebar, 231-352px in the homepage trio, 116px in a homepage list row. One
+     `sizes` string cannot serve all three, so callers that need a different box
+     pass one; everyone else gets the sidebar default. Keep these in step with
+     scripts/feed-bake.js, which bakes the identical markup. */
+  var CARD_SIZES_DEFAULT = '(min-width: 1200px) 300px, 80px';
+  var CARD_SIZES_TRIO    = '(min-width: 1200px) 25vw, (min-width: 600px) 32vw, 80px';
+  var CARD_SIZES_ROW     = '(min-width: 600px) 120px, 80px';
+
+  function renderArticleCard(article, showBrandTags, allBrands, sizes) {
     var thumb = '';
     if (article.imageUrl) {
       thumb = '<img class="feed-card-thumb"'
@@ -138,7 +147,7 @@
                           + escHtml(vitUrl(article.imageUrl, 400)) + ' 400w,'
                           + escHtml(vitUrl(article.imageUrl, 600)) + ' 600w,'
                           + escHtml(vitUrl(article.imageUrl, 800)) + ' 800w"'
-            + ' sizes="(min-width: 1200px) 300px, 80px"'
+            + ' sizes="' + escHtml(sizes || CARD_SIZES_DEFAULT) + '"'
             + ' width="80" height="60" loading="lazy" alt="" onerror="' + THUMB_FALLBACK + '">';
     }
 
@@ -351,14 +360,14 @@
       var list      = articles.slice(4, 12);  // items 5-12: standard list
       var trioHtml  = trio.length
         ? '<div class="home-latest-trio">' +
-            trio.map(function (a) { return renderArticleCard(a, true, allBrands); }).join('') +
+            trio.map(function (a) { return renderArticleCard(a, true, allBrands, CARD_SIZES_TRIO); }).join('') +
           '</div>'
         : '';
 
       listEl.innerHTML =
         renderFeedPageCard(hero, allBrands, true) +  // isLCP=true: eager + fetchpriority=high
         trioHtml +
-        list.map(function (a) { return renderArticleCard(a, true, allBrands); }).join('');
+        list.map(function (a) { return renderArticleCard(a, true, allBrands, CARD_SIZES_ROW); }).join('');
     });
   }
 
