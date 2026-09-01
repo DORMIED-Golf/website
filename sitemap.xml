@@ -2578,7 +2578,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (599) ── -->
+  <!-- ── News articles (601) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3217,6 +3217,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/bridgestone-golf-elite-compression-metric-bottom-hero.jpg</image:loc>
       <image:title>Elite on One Compression Metric, Bottom Quartile on the Other: Bridgestone&apos;s Tour B XS Splits the Difference</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/bridgestone-golf-moi-driver/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/bridgestone-golf-moi-driver-hero.jpg</image:loc>
+      <image:title>MOI Is a Driver Word. Bridgestone Just Put It on a Golf Ball.</image:title>
     </image:image>
   </url>
   <url>
@@ -5567,6 +5577,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/padraig-harringtons-28-year-wilson-deal-is-the-longest-active-player-2026-07-07-hero.jpg</image:loc>
       <image:title>Padraig Harrington&apos;s 28-Year Wilson Deal Is the Longest Active Player Contract in Golf. Sunday&apos;s Win Explains Why.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/palm-golf-co-250-000-rounds-year-zero-tour-events/</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/palm-golf-co-250-000-rounds-year-zero-tour-events-hero.webp</image:loc>
+      <image:title>250,000 Rounds a Year, Zero Tour Events: Magnolia and Palm Golf Courses Rebuilt for Everyone Else</image:title>
     </image:image>
   </url>
   <url>
