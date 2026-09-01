@@ -2578,7 +2578,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (593) ── -->
+  <!-- ── News articles (595) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3767,6 +3767,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/eastside-golf-now-sells-hoodies-between-gates-thats-not-a-small-detail-2026-07-27-hero.png</image:loc>
       <image:title>Eastside Golf Now Sells Hoodies Between Gates. That&apos;s Not a Small Detail.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/ecco-owning-tannery-why-shoe/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/ecco-owning-tannery-why-shoe-hero.jpg</image:loc>
+      <image:title>Owning the Tannery Is Why Ecco Can Sell You the Same Shoe Twice</image:title>
     </image:image>
   </url>
   <url>
@@ -5737,6 +5747,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/pings-third-generation-handoff-is-the-anti-private-equity-case-study-golf-2026-07-01-hero.jpg</image:loc>
       <image:title>PING&apos;s Third-Generation Handoff Is the Anti-Private-Equity Case Study Golf Equipment Needed</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/powerbilt-golf-putter/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/powerbilt-golf-putter-hero.jpg</image:loc>
+      <image:title>Five New Putter Shapes, and the PowerBilt Name Is Nowhere on Them</image:title>
     </image:image>
   </url>
   <url>
