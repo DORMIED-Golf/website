@@ -181,10 +181,10 @@ function formHtml() {
       `<label class="scb-label" for="{{ID}}-email">Email address</label>` +
       `<div class="scb-row">` +
         `<input class="scb-input" id="{{ID}}-email" type="email" name="${NEWSLETTER_FIELD}" ` +
-          `placeholder="Your email" required autocomplete="email" inputmode="email">` +
-        `<button class="scb-btn" type="submit">Get The Scorecard</button>` +
+          `placeholder="you@email.com" required autocomplete="email" inputmode="email">` +
+        `<button class="scb-btn" type="submit">Subscribe free &rarr;</button>` +
       `</div>` +
-      `<p class="scb-micro">Monthly, sometimes more. Unsubscribe anytime.</p>` +
+      `<p class="scb-micro">Free &middot; sent when it's worth sending &middot; unsubscribe anytime</p>` +
     `</form>`;
 }
 
@@ -198,14 +198,24 @@ function formHtml() {
  * @param {object} [opts.data]      input for the copy resolver
  * @param {string} [opts.brandSlug] for per-brand conversion analysis
  * @param {string} [opts.latestIssueUrl] where the success state sends the reader
+ * @param {object} [opts.copy] REPAIR ONLY. Hand-authored pages own their block
+ *                 outright and there is no data object to resolve, so
+ *                 refresh-signup-blocks.js reads the copy already on the page
+ *                 and hands it back rather than inventing new copy for it.
+ *                 Generators must not pass this: they have the data, and going
+ *                 through resolveCopy is what keeps the fallbacks honest.
  */
-function signupBlockHtml({ slot, pageType, data, brandSlug, latestIssueUrl } = {}) {
+function signupBlockHtml({ slot, pageType, data, brandSlug, latestIssueUrl, copy } = {}) {
   // Fail the BUILD, not the form: a page must never ship a form posting nowhere.
   assertEndpoint();
   if (!slot || !pageType) throw new Error('[signup-block] slot and pageType are required.');
 
-  // 1. Copy first, in its own step, where a failure is contained.
-  const { headline, proofLine } = resolveCopy(pageType, data);
+  // 1. Copy first, in its own step, where a failure is contained. Note that an
+  //    override still runs through clean() and still falls back to the home
+  //    copy on empty, so it cannot put an empty headline on a page either.
+  const { headline, proofLine } = copy
+    ? { headline: clean(copy.headline) || COPY.home().headline, proofLine: clean(copy.proofLine) || '' }
+    : resolveCopy(pageType, data);
 
   // 2. Then the form, from a template that never saw the data.
   const id = `scb-${slot}`;
@@ -218,13 +228,15 @@ function signupBlockHtml({ slot, pageType, data, brandSlug, latestIssueUrl } = {
     ? `<p class="scb-proof">${esc(proofLine)}</p>`
     : '';
 
+  // The quote gets its own column (design 3B) rather than a footnote under the
+  // form. A decorative open-quote mark carries the "this is a quotation" signal
+  // that the curly quotes used to, so the text itself is set clean; the mark is
+  // aria-hidden because <blockquote> already says it to a screen reader.
   const testimonialHtml = TESTIMONIAL.enabled
-    // Curly quotes around the text and a dash before the source so it reads as
-    // an attributed quotation rather than a stray line of copy. The dash is a
-    // hyphen, not an em dash, which the copy rules forbid.
     ? `<figure class="scb-quote">` +
-        `<blockquote class="scb-quote-text">&ldquo;${esc(TESTIMONIAL.quote)}&rdquo;</blockquote>` +
-        `<figcaption class="scb-quote-src">- ${esc(TESTIMONIAL.source)}</figcaption>` +
+        `<span class="scb-quote-mark" aria-hidden="true">&ldquo;</span>` +
+        `<blockquote class="scb-quote-text">${esc(TESTIMONIAL.quote)}</blockquote>` +
+        `<figcaption class="scb-quote-src">${esc(TESTIMONIAL.source)}</figcaption>` +
       `</figure>`
     : '';
 
@@ -235,11 +247,15 @@ function signupBlockHtml({ slot, pageType, data, brandSlug, latestIssueUrl } = {
       ` data-next-month="${esc(nextMonthLabel())}"` +
       (latestIssueUrl ? ` data-latest-issue="${esc(latestIssueUrl)}"` : '') +
       ` aria-labelledby="${esc(id)}-heading">` +
-      `<p class="scb-eyebrow">The Scorecard by DORMIED</p>` +
-      `<h3 class="scb-headline" id="${esc(id)}-heading">${esc(headline)}</h3>` +
-      proofHtml +
-      form +
-      `<div class="scb-status" role="status" aria-live="polite"></div>` +
+      // Everything the reader acts on stays in one column so the success swap
+      // still happens inside a single box and freezeHeight() has one target.
+      `<div class="scb-main">` +
+        `<p class="scb-eyebrow">The Scorecard &middot; Newsletter</p>` +
+        `<h3 class="scb-headline" id="${esc(id)}-heading">${esc(headline)}</h3>` +
+        proofHtml +
+        form +
+        `<div class="scb-status" role="status" aria-live="polite"></div>` +
+      `</div>` +
       testimonialHtml +
     `</section>`;
 }
