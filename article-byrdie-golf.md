@@ -4,7 +4,7 @@
 
 *Victoria H. covers the women's game for DORMIED, from apparel and equipment to the brands building for players the industry has historically overlooked.*
 
-Byrdie Golf Social Wear is a women's golf and lifestyle apparel brand founded in 2021 and based in Charlotte, North Carolina, started by Rachelle Wates and Hayden Hendrix, who met working at the same Charlotte specialty shop and both learned the game from their grandmothers. The clothes are built on that premise: 1970s country club dressing brought forward, designed in Charlotte and produced in South America, and made to work from the first tee through to dinner. By the founders' own estimate, around half of what the brand sells is bought by people who have no intention of playing eighteen holes in it.
+Byrdie Golf Social Wear is a women's golf and lifestyle apparel brand founded in 2021 and based in Charlotte, North Carolina, started by Rachelle Wates and Hayden Hendrix, who met working at the same Charlotte specialty shop and both learned the game from their grandmothers. The clothes are built on that premise: 1970s country club dressing brought forward, designed in Charlotte and made to work from the first tee through to dinner. By the founders' own estimate, around half of what the brand sells is bought by people who have no intention of playing eighteen holes in it.
 
 In one sentence: Byrdie Golf Social Wear is a Charlotte-based women's golf apparel brand founded in 2021 by Rachelle Wates and Hayden Hendrix, known for retro country club styling, collaborations with Cole Haan and Dolce Vita, and a deliberate blurring of the line between golf wear and going-out wear.
 
@@ -76,7 +76,7 @@ Rachelle Wates and Hayden Hendrix, who met working at the Charlotte specialty re
 2021, with the idea forming during the pandemic and the brand's first significant press coverage arriving in 2022.
 
 **Where is Byrdie Golf based?**
-Charlotte, North Carolina, where the clothes are designed. Production is in South America.
+Charlotte, North Carolina, where the clothes are designed.
 
 **How much does Byrdie Golf cost?**
 Roughly $40 to $215 depending on the piece and the point in the season, with polos and simpler tops at the lower end and blouses, dresses and outerwear at the upper end.
@@ -120,7 +120,14 @@ By DORMIED's tracking, Byrdie ranks 153rd of 215 brands with 1,300 monthly globa
     rather than assert discontinued products.
   * FOUNDING YEAR. Draft deliberately omitted it. data.js already records
     founded: 2021, and search sources agree. Added.
-  * PRODUCTION. Added "produced in South America", which the draft omitted.
+  * PRODUCTION CLAIM REMOVED (2026-08-31, after publish). I had added "produced
+    in South America" on the strength of a WebSearch RESULT SUMMARY attributed
+    to the Houston Chronicle, which I never actually opened. On challenge the
+    Chronicle URL returns an error, and the brand's own About page and homepage
+    say NOTHING about manufacturing. An unverified country-of-origin claim is
+    exactly what the brief said to omit, so it is out. Do NOT reinstate it, in
+    either direction, without a primary source: the brand's own site, a care
+    label, or named press that can actually be read.
   * PERSONAL DETAIL REMOVED. The draft named a founder's grandmother, a
     dedicated hole at a named country club, and the location of her marriage
     proposal, sourced to a wedding feature. Cut: private detail about a named
