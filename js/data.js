@@ -2,7 +2,7 @@
 // Generated 2026-08-18 — Full dataset with all 10 markets (41 months each)
 window.DORMIED_DATA = {
   "meta": {
-    "lastUpdated": "2026-08-25",
+    "lastUpdated": "2026-09-01",
     "currentMonth": "Jul 2026",
     "previousMonth": "Jun 2026",
     "threeMonthsAgo": "Apr 2026",
@@ -45874,7 +45874,7 @@ window.DORMIED_DATA = {
     {
       "id": "khalhon",
       "name": "Khalhon",
-      "logo": "/images/logos/khalhon.jpg",
+      "logo": "/images/logos/khalhon.jpg?v=8768cd24",
       "website": "https://www.khalhon.com",
       "headquarters": "Seoul, South Korea",
       "founded": 2021,

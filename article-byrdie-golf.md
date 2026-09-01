@@ -44,7 +44,7 @@ Prices span roughly $40 to $215 depending on the piece and where it sits in the 
 
 The founders have been direct that this is the entire point. The clothes are built so the round is one part of the day rather than a costume change, which is the gap the brand set out to close.
 
-That has produced what the brand calls a very big 19th hole clientele. By her estimate roughly half of Byrdie's customers are buying the pieces for riding in a cart, for the club, or for the parts of golf that happen away from the course entirely. For a golf apparel brand, having half your buyers not really playing golf in your product could be a problem. For Byrdie it is the business model.
+That has produced what the brand calls a very big 19th hole clientele. By the founders' estimate roughly half of Byrdie's customers are buying the pieces for riding in a cart, for the club, or for the parts of golf that happen away from the course entirely. For a golf apparel brand, having half your buyers not really playing golf in your product could be a problem. For Byrdie it is the business model.
 
 ## The collaborations are the real signal
 
