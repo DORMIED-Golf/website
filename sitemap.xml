@@ -2578,7 +2578,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (603) ── -->
+  <!-- ── News articles (604) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6223,6 +6223,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/snell-golf-20-36-balls-hero.jpg</image:loc>
       <image:title>20 of 36 Balls Over the USGA Weight Limit. Snell&apos;s Cast Urethane Return Is a Factory Story.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/snell-golf-longest-ball/</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/snell-golf-longest-ball-hero.jpg</image:loc>
+      <image:title>The Longest Ball at 115 MPH Comes From a Company With No Shelf Space. Snell Won Anyway.</image:title>
     </image:image>
   </url>
   <url>
