@@ -101,9 +101,9 @@ function brandNameFromData(dormiedData, id) {
  * Callers that do not care keep the sidebar default. Mirror any change here in
  * js/feed.js renderArticleCard, which re-renders the same cards client side.
  */
-var CARD_SIZES_DEFAULT = '(min-width: 1200px) 300px, 80px';
-var CARD_SIZES_TRIO    = '(min-width: 1200px) 25vw, (min-width: 600px) 32vw, 80px';
-var CARD_SIZES_ROW     = '(min-width: 600px) 120px, 80px';
+var CARD_SIZES_DEFAULT = '(min-width: 1200px) 300px, (min-width: 600px) 120px, 104px';
+var CARD_SIZES_TRIO    = '(min-width: 1200px) 25vw, (min-width: 600px) 32vw, 104px';
+var CARD_SIZES_ROW     = '(min-width: 600px) 120px, 104px';
 
 function renderArticleCard(article, dormiedData, sizes) {
   var thumb = '';
@@ -491,7 +491,7 @@ function latestScorecardSectionHtml(currentSlug) {
                         + escHtml(vitUrl(thumbSrc, 400)) + ' 400w,'
                         + escHtml(vitUrl(thumbSrc, 600)) + ' 600w,'
                         + escHtml(vitUrl(thumbSrc, 800)) + ' 800w"'
-          + ' sizes="(min-width: 1200px) 300px, 80px"'
+          + ' sizes="' + CARD_SIZES_DEFAULT + '"'
           + ' width="80" height="60" loading="lazy" alt=""'
           + ' onerror="' + THUMB_FALLBACK + '">';
   }

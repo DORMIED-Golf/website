@@ -133,9 +133,9 @@
      `sizes` string cannot serve all three, so callers that need a different box
      pass one; everyone else gets the sidebar default. Keep these in step with
      scripts/feed-bake.js, which bakes the identical markup. */
-  var CARD_SIZES_DEFAULT = '(min-width: 1200px) 300px, 80px';
-  var CARD_SIZES_TRIO    = '(min-width: 1200px) 25vw, (min-width: 600px) 32vw, 80px';
-  var CARD_SIZES_ROW     = '(min-width: 600px) 120px, 80px';
+  var CARD_SIZES_DEFAULT = '(min-width: 1200px) 300px, (min-width: 600px) 120px, 104px';
+  var CARD_SIZES_TRIO    = '(min-width: 1200px) 25vw, (min-width: 600px) 32vw, 104px';
+  var CARD_SIZES_ROW     = '(min-width: 600px) 120px, 104px';
 
   function renderArticleCard(article, showBrandTags, allBrands, sizes) {
     var thumb = '';

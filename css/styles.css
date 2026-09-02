@@ -2557,6 +2557,22 @@ details[open] .faq-question::after { content: '−'; }
 .bp-latest-see-all a:hover {
   text-decoration: underline;
 }
+/* Row cards: the thumbnail fills the row.
+   An 80x60 chip against 80 to 130px of text left a dead strip under every
+   image and gave the picture nothing to do. The thumbnail now stretches to
+   whatever height the row is, which pushes the text column right.
+
+   This is the DEFAULT rather than a per-section opt-in, because these cards
+   appear in eight places (homepage LATEST, the news index, Top Stories,
+   Featured, Latest, Latest on [Brand], the article tail block, the scorecard
+   sidebar module) and an opt-in list silently misses the ones nobody
+   remembered. The column-shaped placements all override width and height at
+   higher specificity and are unaffected: the .sidebar-ad-col cards above
+   1200px, the homepage hero, .home-featured-large, and the trio.
+
+   Fixed width, stretched height, not the reverse: deriving the width from the
+   height makes a flex item's main size depend on its cross size, which is
+   circular. object-fit: cover does the cropping. */
 .feed-card {
   padding: 10px;
   background: var(--surface);
@@ -2564,18 +2580,22 @@ details[open] .faq-question::after { content: '−'; }
   border-radius: 4px;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 10px;
   transition: border-color .15s;
 }
 .feed-card:hover       { border-color: var(--green); }
 .feed-card-thumb       {
-  width: 80px;
-  height: 60px;
+  width: 104px;
+  height: auto;
+  align-self: stretch;
   object-fit: cover;
   border-radius: 3px;
   display: block;
   flex-shrink: 0;
+}
+@media (min-width: 600px) {
+  .feed-card-thumb { width: 116px; }
 }
 .feed-card-body        { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
 .feed-card-meta        {
@@ -3578,11 +3598,13 @@ details[open] .faq-question::after { content: '−'; }
   color: var(--green);
 }
 
-/* Full-page feed card */
-.feed-card--full { align-items: flex-start; }
-.feed-card-thumb--lg { width: 80px; height: 60px; }
+/* Full-page feed card. Wider than the plain thumb at both breakpoints because
+   these rows carry an excerpt, so they are 110 to 185px tall rather than 80,
+   and the same read needs more width. */
+.feed-card--full { align-items: stretch; }
+.feed-card-thumb--lg { width: 120px; height: auto; }
 @media (min-width: 600px) {
-  .feed-card-thumb--lg { width: 120px; height: 90px; }
+  .feed-card-thumb--lg { width: 150px; }
 }
 .feed-card-title--lg {
   font-size: .85rem;
@@ -5961,44 +5983,6 @@ details[open] .faq-question::after { content: '−'; }
     -webkit-box-orient: vertical;
     overflow: hidden;
     min-height: 4.05em;
-  }
-}
-
-/* ── Row cards: let the thumbnail fill the row ───────────────────────────────
-   An 80x60 chip against 86px of text left a dead strip under every thumbnail
-   and gave the picture nothing to do. Stretching it to the row height makes
-   the image the thing the eye lands on and pushes the text column right.
-
-   Fixed width with a stretched height, not the reverse: deriving the width
-   from the height would make the card's main size depend on its cross size,
-   which is circular in flex and resolves differently across engines.
-   object-fit: cover (already on .feed-card-thumb) does the cropping.
-
-   Desktop only. On mobile these rows are already tall, because the headline
-   wraps and the excerpt runs three lines, so a stretched thumbnail would take
-   half the card.
-
-   Scoped to direct children of the two list containers so it cannot reach the
-   trio (nested in .home-latest-trio, and stacked at this width), the homepage
-   hero (.home-dormied-section .feed-card--full, which is full-bleed), or the
-   sidebar cards on either page. */
-@media (min-width: 600px) {
-  .home-dormied-section .latest-feed-list > .feed-card:not(.feed-card--full),
-  .feed-list > .feed-card--full {
-    align-items: stretch;
-  }
-  .home-dormied-section .latest-feed-list > .feed-card:not(.feed-card--full) .feed-card-thumb {
-    width: 116px;
-    height: auto;
-    align-self: stretch;
-  }
-  /* 150 rather than 116: the news rows carry an excerpt, so the row is 112px
-     of content against the homepage's 86, and the same 4:3 read needs more
-     width. */
-  .feed-list > .feed-card--full .feed-card-thumb--lg {
-    width: 150px;
-    height: auto;
-    align-self: stretch;
   }
 }
 
