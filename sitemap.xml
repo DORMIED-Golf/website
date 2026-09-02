@@ -2578,7 +2578,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (601) ── -->
+  <!-- ── News articles (603) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2927,6 +2927,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/b-draddy-else-marks-40-labor-hero.jpg</image:loc>
       <image:title>Everyone Else Marks Down 40% at Labor Day. B. Draddy Is Offering 15.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/b-draddy-fabric-golf-patent/</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/b-draddy-fabric-golf-patent-hero.jpg</image:loc>
+      <image:title>The One Fabric in Golf Nobody Can Patent, and B. Draddy Built a Brand on It</image:title>
     </image:image>
   </url>
   <url>
@@ -8053,6 +8063,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/va-composites-strange-fitter-shaft-brand-hero.jpg</image:loc>
       <image:title>A Media Studio Is a Strange Build for a Fitter-Only Shaft Brand. VA Composites Made One Anyway.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/vessel-golf-fake-leather/</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/vessel-golf-fake-leather-hero.jpg</image:loc>
+      <image:title>Selling Golf on Fake Leather Worked. Now Vessel Wants $999 for the Real Thing.</image:title>
     </image:image>
   </url>
   <url>
