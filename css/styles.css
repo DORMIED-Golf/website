@@ -47,6 +47,15 @@
   --radius-sm:   4px;
   --radius-lg:   10px;
 
+  /* Stacked-card thumbnails (sidebar cards, homepage trio).
+     These were 276x72, a 3.83:1 letterbox. Measured against the 603 published
+     articles that carry image dimensions, the median hero is 1.429:1 and 75%
+     are 1.584 or flatter, so object-fit: cover was throwing away about 63% of
+     a typical image's height and beheading anyone in it. 16:9 keeps roughly
+     80% of the median image. Going to 3:2 would keep 95%, at the cost of
+     another 35px of height per card. */
+  --card-thumb-ratio: 16 / 9;
+
   /* Layout */
   --content-max: 1440px;
   --sidebar-w:   300px;
@@ -2662,7 +2671,8 @@ details[open] .faq-question::after { content: '−'; }
   }
   .sidebar-ad-col .feed-card-thumb {
     width: 100%;
-    height: 72px;
+    height: auto;
+    aspect-ratio: var(--card-thumb-ratio);
   }
   .sidebar-ad-col .feed-card-title {
     display: -webkit-box;
@@ -5961,9 +5971,9 @@ details[open] .faq-question::after { content: '−'; }
     align-items: stretch;
   }
   /* The trio takes the sidebar card's shape: picture across the full column,
-     text beneath. Same 276x72 proportion as .sidebar-ad-col .feed-card-thumb,
-     expressed as a ratio so it holds at every column width (231px at 851,
-     352px at 1440), so the two modules read as one component. */
+     text beneath. A ratio rather than a fixed height so it holds at every
+     column width (231px at 851, 352px at 1440), so the two modules read as one
+     component. */
   .home-latest-trio .feed-card {
     flex-direction: column;
     gap: 6px;
@@ -5971,7 +5981,7 @@ details[open] .faq-question::after { content: '−'; }
   .home-latest-trio .feed-card-thumb {
     width: 100%;
     height: auto;
-    aspect-ratio: 23 / 6;
+    aspect-ratio: var(--card-thumb-ratio);
   }
   /* Three lines RESERVED, not just clamped. Clamping alone caps a long
      headline but lets a short one collapse the card, which is what put the
@@ -6002,10 +6012,13 @@ details[open] .faq-question::after { content: '−'; }
   min-height: 1300px;   /* hero (~340px) + trio 3 stacked (~240px) + 8 small (~640px) + header */
 }
 @media (min-width: 600px) {
-  #home-dormied-section[hidden] { min-height: 1240px; }   /* hero + trio 1 row + 8 small */
+  /* +98: the trio thumbnail went from a 3.83:1 letterbox to 16:9, which is
+     86px to 184px at a 352px column. Mobile is unchanged, because the trio
+     stacks into row cards there and those size to their text, not to a ratio. */
+  #home-dormied-section[hidden] { min-height: 1338px; }   /* hero + trio 1 row + 8 small */
 }
 @media (min-width: 1100px) {
-  #home-dormied-section[hidden] { min-height: 1100px; }
+  #home-dormied-section[hidden] { min-height: 1198px; }
 }
 
 /* ── FEATURED section: large cards (slots 1-2) — full-width hero treatment ── */
