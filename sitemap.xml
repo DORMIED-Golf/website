@@ -2578,7 +2578,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (606) ── -->
+  <!-- ── News articles (607) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3327,6 +3327,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/brooks-koepka-is-a-free-agent-again-this-time-nobodys-rushing-to-sign-him-2026-04-30-hero.jpg</image:loc>
       <image:title>Brooks Koepka Is a Free Agent Again. This Time, Nobody&apos;s Rushing to Sign Him.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/bushnell-golf-banned-tour-working-well/</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/bushnell-golf-banned-tour-working-well-hero.png</image:loc>
+      <image:title>Banned On Tour For Working Too Well, Green Books Are Now A $49 Bushnell Product</image:title>
     </image:image>
   </url>
   <url>
