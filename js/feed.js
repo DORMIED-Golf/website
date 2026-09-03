@@ -209,7 +209,7 @@
             + ' srcset="' + escHtml(vitUrl(article.imageUrl,  400)) + ' 400w,'
                           + escHtml(vitUrl(article.imageUrl,  800)) + ' 800w,'
                           + escHtml(vitUrl(article.imageUrl, 1200)) + ' 1200w"'
-            + ' sizes="(min-width:1200px) 750px,(min-width:600px) 600px,100vw"'
+            + ' sizes="(min-width: 1200px) 76vw, 100vw"'
             + ' width="600" height="375" ' + imgAttrs + ' alt="" onerror="' + THUMB_FALLBACK + '">';
     }
 

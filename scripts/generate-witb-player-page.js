@@ -1822,7 +1822,12 @@ function updateSearchIndex(player, bags, html, noindex) {
   si.entries = si.entries.filter(e => !(e.type === 'witb-player' && e.url === url));
 
   // Subtitle: "#N · M snapshots tracked, YYYY[-YYYY]"  (or "Unranked · ...").
-  const rank     = player.owgr_rank === null ? 'Unranked' : `#${player.owgr_rank}`;
+  // Falls back to the Rolex ranking the same way the page header does. Without
+  // this a women's player is "Unranked" in site search while her own page reads
+  // "#8 ROLEX RANKING", which is how Asterisk Talley has been listed.
+  const rank     = player.owgr_rank  != null ? `#${player.owgr_rank}`
+                 : player.rolex_rank != null ? `#${player.rolex_rank}`
+                 : 'Unranked';
   const bagYears = bags.map(b => parseInt(b.bag_date.slice(0, 4), 10)).filter(y => !isNaN(y));
   const minY     = bagYears.length ? Math.min(...bagYears) : new Date().getFullYear();
   const maxY     = bagYears.length ? Math.max(...bagYears) : new Date().getFullYear();

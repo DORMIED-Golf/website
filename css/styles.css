@@ -56,6 +56,15 @@
      another 35px of height per card. */
   --card-thumb-ratio: 16 / 9;
 
+  /* Full-bleed cards: the homepage hero and the two large Featured cards.
+     These were a fixed 200px tall on mobile and 260px above 600px. At 357px
+     wide that 200px IS 16:9, so mobile was always fine; desktop was the
+     outlier, a 1075x260 box at 4.13:1 holding a 750x525 source, which kept 35%
+     of the picture and sliced the subject in half. Held apart from
+     --card-thumb-ratio because the two scale very differently: moving the
+     small thumbnails to 3:2 costs ~35px a card, moving this one costs ~110px. */
+  --hero-thumb-ratio: 16 / 9;
+
   /* Layout */
   --content-max: 1440px;
   --sidebar-w:   300px;
@@ -5940,7 +5949,8 @@ details[open] .faq-question::after { content: '−'; }
 }
 .home-dormied-section .feed-card--full .feed-card-thumb--lg {
   width: 100%;
-  height: 200px;
+  height: auto;
+  aspect-ratio: var(--hero-thumb-ratio);
   border-radius: 0;
 }
 .home-dormied-section .feed-card--full .feed-card-body {
@@ -5951,9 +5961,6 @@ details[open] .faq-question::after { content: '−'; }
   line-height: 1.4;
 }
 @media (min-width: 600px) {
-  .home-dormied-section .feed-card--full .feed-card-thumb--lg {
-    height: 260px;
-  }
   .home-dormied-section .feed-card--full .feed-card-title--lg {
     font-size: 1.15rem;
   }
@@ -6015,10 +6022,10 @@ details[open] .faq-question::after { content: '−'; }
   /* +98: the trio thumbnail went from a 3.83:1 letterbox to 16:9, which is
      86px to 184px at a 352px column. Mobile is unchanged, because the trio
      stacks into row cards there and those size to their text, not to a ratio. */
-  #home-dormied-section[hidden] { min-height: 1338px; }   /* hero + trio 1 row + 8 small */
+  #home-dormied-section[hidden] { min-height: 1682px; }   /* hero + trio 1 row + 8 small */
 }
 @media (min-width: 1100px) {
-  #home-dormied-section[hidden] { min-height: 1198px; }
+  #home-dormied-section[hidden] { min-height: 1542px; }
 }
 
 /* ── FEATURED section: large cards (slots 1-2) — full-width hero treatment ── */
@@ -6036,14 +6043,14 @@ details[open] .faq-question::after { content: '−'; }
 }
 .home-featured-large .feed-card .feed-card-thumb--lg {
   width: 100%;
-  height: 200px;
+  height: auto;
+  aspect-ratio: var(--hero-thumb-ratio);
   border-radius: 0;
   flex-shrink: 0;
 }
 .home-featured-large .feed-card .feed-card-body { padding: 14px 16px; width: 100%; box-sizing: border-box; }
 .home-featured-large .feed-card .feed-card-title--lg { font-size: 1rem; line-height: 1.4; }
 @media (min-width: 600px) {
-  .home-featured-large .feed-card .feed-card-thumb--lg { height: 260px; }
   .home-featured-large .feed-card .feed-card-title--lg { font-size: 1.15rem; }
 }
 
