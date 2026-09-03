@@ -2578,7 +2578,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (608) ── -->
+  <!-- ── News articles (610) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5050,6 +5050,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/macgregor-iron/</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/macgregor-iron-hero.jpg</image:loc>
+      <image:title>The One Iron Category That Needs No R&amp;D Budget, and MacGregor Just Priced It at $599</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/macgregor-is-now-a-price-anchor-for-dtc-brands-and-that-might-be-the-point-2026-05-06/</loc>
     <lastmod>2026-05-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -5277,6 +5287,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/miuras-km-008-reissue-is-a-1250-blade-in-a-moi-arms-race-thats-the-point-2026-07-14-hero.jpg</image:loc>
       <image:title>Miura&apos;s KM-008 Reissue Is a $1,250 Blade in a MOI Arms Race. That&apos;s the Point.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/mizuno-34-degree-7-iron/</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/mizuno-34-degree-7-iron-hero.jpg</image:loc>
+      <image:title>A 34-Degree 7-Iron in 2026. Mizuno Just Bet That Loft Inflation Peaked.</image:title>
     </image:image>
   </url>
   <url>
