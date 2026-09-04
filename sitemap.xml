@@ -2596,7 +2596,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (613) ── -->
+  <!-- ── News articles (615) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5778,6 +5778,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/ping-30-yard-miss-both-him/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/ping-30-yard-miss-both-him-hero.jpg</image:loc>
+      <image:title>A 30-Yard Miss Both Ways, and Nobody Would Sell Him Out of His PING G430</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/ping-limited-milled-blade-custom-lab/</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -6081,6 +6091,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/retief-goosens-fifth-champions-win-proves-the-grip-wars-are-real-2026-04-27-hero.png</image:loc>
       <image:title>Retief Goosen&apos;s Fifth Champions Win Proves the Grip Wars Are Real</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/rhoback-gonzaga-play-fbs-football/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/rhoback-gonzaga-play-fbs-football-hero.jpg</image:loc>
+      <image:title>Gonzaga Does Not Play FBS Football. Rhoback&apos;s Gameday Collection Includes It Anyway.</image:title>
     </image:image>
   </url>
   <url>
