@@ -2596,7 +2596,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (616) ── -->
+  <!-- ── News articles (617) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5485,6 +5485,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/nine-new-colorways-zero-new-shoes-sun-day-red-learns-the-sneaker-business-2026-08-04-hero.jpg</image:loc>
       <image:title>Nine New Colorways, Zero New Shoes: Sun Day Red Learns the Sneaker Business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/nippon-shaft-108-gram-modus3-anywhere/</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/nippon-shaft-108-gram-modus3-anywhere-hero.jpg</image:loc>
+      <image:title>A 108-Gram MODUS3 You Can&apos;t Buy Anywhere. Nippon Shaft Built It Only for Honma.</image:title>
     </image:image>
   </url>
   <url>
