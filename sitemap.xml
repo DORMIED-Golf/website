@@ -2596,7 +2596,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (617) ── -->
+  <!-- ── News articles (618) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4925,6 +4925,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/features/kevin-kisner-golf-shoes/og.webp</image:loc>
       <image:title>What Golf Shoes Does Kevin Kisner Wear? The Answer Explains His Entire Bag</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/kirkland-golf-27-grinds/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/kirkland-golf-27-grinds-hero.jpg</image:loc>
+      <image:title>27 Grinds Are the Only Moat Vokey Has Left, and Kirkland Just Proved It</image:title>
     </image:image>
   </url>
   <url>
