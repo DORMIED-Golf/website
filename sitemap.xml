@@ -2614,7 +2614,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (625) ── -->
+  <!-- ── News articles (626) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6392,6 +6392,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/srixon-foundry-forged-titleist-nike-hogan/</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/srixon-foundry-forged-titleist-nike-hogan-hero.jpg</image:loc>
+      <image:title>The Foundry That Forged for Titleist, Nike and Hogan Is Finally on Srixon&apos;s Box</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/srixons-all-american-collection-is-a-calendar-play-not-a-product-story-2026-05-27/</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>weekly</changefreq>
@@ -8528,7 +8538,7 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/what-is-william-murray-golf-hero.png</image:loc>
-      <image:title>William Murray Golf: Bill Murray&apos;s Brand, Explained</image:title>
+      <image:title>William Murray Golf: Six Brothers, One Very Loud Label</image:title>
     </image:image>
   </url>
   <url>
@@ -8558,7 +8568,7 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/where-are-callaway-clubs-made-hero.webp</image:loc>
-      <image:title>Where Are Callaway Clubs Made? Carlsbad, Monterrey and Asia</image:title>
+      <image:title>Where Are Callaway Clubs Made? The Answer Changed in 2010</image:title>
     </image:image>
   </url>
   <url>
@@ -8678,7 +8688,7 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-malbon-golf-hero.jpg</image:loc>
-      <image:title>Who Owns Malbon Golf?</image:title>
+      <image:title>Who Owns Malbon Golf? The Founders and the $33M Round</image:title>
     </image:image>
   </url>
   <url>
@@ -8708,7 +8718,7 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/who-owns-odyssey-golf-hero.jpg</image:loc>
-      <image:title>Who Owns Odyssey Golf?</image:title>
+      <image:title>Who Owns Odyssey Golf? The Nine-Figure Deal Behind It</image:title>
     </image:image>
   </url>
   <url>
