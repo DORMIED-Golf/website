@@ -97,6 +97,97 @@ const FEATURES = {
     ogImage: { file: 'og.webp', w: 1200, h: 630 },
   },
 
+  // Three brand explainers published together on 2026-09-08. All three target
+  // "what is X" queries that /brands/{slug}/ was already ranking for with zero
+  // clicks. No ogImage on any of them: the heroes are landscape and over the
+  // 1200px floor, so og falls back to the hero rather than needing a crop.
+  'khalhon': {
+    slug: 'what-is-khalhon',
+    title: 'What Is Khalhon? The Seoul Golf Brand That Got Sean Wotherspoon Into Golf',
+    titleTag: 'What Is Khalhon? | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'khalhon',
+    leadRole: 'bio',
+    lastUpdated: 'September 8, 2026',
+    dateModified: '2026-09-08T12:00:00.000Z',
+    publishedAt: '2026-09-08T12:00:00.000Z',
+    quickAnswer: 'Khalhon is a Seoul-based golf apparel brand founded in the mid-2020s that sits between sport, streetwear and quiet luxury. It is best known for a capsule with Round Two co-founder Sean Wotherspoon, his first work in golf, and a footwear collaboration with Payntr Golf that launched at the Hypegolf Clubhouse pop-up in SoHo.',
+    metaDescription: 'Khalhon is a Seoul golf apparel brand known for its Sean Wotherspoon capsule and a Payntr Golf footwear collaboration launched at Hypegolf Clubhouse in SoHo.',
+    seoKeywords: ['khalhon', 'what is khalhon', 'khalon', 'khalhon golf', 'khalhon sean wotherspoon', 'khalhon payntr', 'korean golf brand', 'seoul golf apparel'],
+    mdPath: path.join(ROOT, 'article-khalhon.md'),
+    imgBase: '/images/features/khalhon',
+    hero: { file: 'hero.webp', w: 1920, h: 720, alt: 'Khalhon Fall Winter 2026 campaign imagery from the Sean Wotherspoon capsule.', caption: 'The Sean Wotherspoon capsule, Fall/Winter 2026. Photo by Khalhon.' },
+    sectionImages: {
+      'Why the Wotherspoon capsule matters': { layout: 'single', images: [
+        { file: 'wotherspoon.webp', w: 1000, h: 1246, alt: 'Sean Wotherspoon photographed for the Khalhon capsule collection.', caption: 'Wotherspoon, the Round Two co-founder behind the Nike Air Max 1/97 corduroy, in his first golf collaboration. Photo by Khalhon.' },
+      ]},
+      'Seoul as the starting point': { layout: 'two-up', images: [
+        { file: 'capsule-1.webp', w: 408, h: 490, alt: 'Khalhon golf apparel worn on course.', caption: 'Photo by Khalhon.' },
+        { file: 'capsule-2.webp', w: 408, h: 490, alt: 'Khalhon golf apparel detail.', caption: 'Photo by Khalhon.' },
+      ]},
+    },
+  },
+
+  'monzee': {
+    slug: 'what-is-monzee',
+    title: 'What Is Monzee? The Japanese Golf Brand Named After a Made-Up Monkey',
+    titleTag: 'What Is Monzee? | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'monzee',
+    leadRole: 'bio',
+    lastUpdated: 'September 8, 2026',
+    dateModified: '2026-09-08T12:00:00.000Z',
+    publishedAt: '2026-09-08T12:00:00.000Z',
+    quickAnswer: 'Monzee is a Japanese golf brand making headcovers, bags and accessories. Its name comes from an imaginary creature the brand describes as a mix of monkey and chimpanzee, and its designer, Yuki, grew up in Carlsbad, California. It has collaborated with Engineered Garments on a capsule built by upcycling unused apparel and fabric.',
+    metaDescription: 'Monzee is a Japanese golf brand making headcovers and bags, named after an imaginary monkey-chimpanzee hybrid, with a designer raised in Carlsbad, California.',
+    seoKeywords: ['monzee', 'what is monzee', 'monzee golf', 'monzee headcover', 'monzee engineered garments', 'japanese golf brand', 'golf headcovers japan'],
+    mdPath: path.join(ROOT, 'article-monzee.md'),
+    imgBase: '/images/features/monzee',
+    hero: { file: 'hero.webp', w: 1454, h: 793, alt: 'Monzee golf headcovers and accessories.', caption: 'Photo by Monzee.' },
+    sectionImages: {
+      'A Japanese brand with a Southern California childhood': { layout: 'single', images: [
+        { file: 'headcover.webp', w: 1200, h: 1200, alt: 'A Monzee golf club headcover.', caption: 'Photo by Monzee.' },
+      ]},
+      'The Engineered Garments collaboration': { layout: 'two-up', images: [
+        { file: 'bag.webp', w: 1200, h: 1200, alt: 'A Monzee golf bag.', caption: 'Photo by Monzee.' },
+        { file: 'powerpuff.webp', w: 1200, h: 1200, alt: 'A Monzee headcover with a Powerpuff Girls motif.', caption: 'Photo by Monzee.' },
+      ]},
+    },
+  },
+
+  'fantl-sport': {
+    slug: 'what-is-fantl-sport',
+    title: 'What Is Fantl Sport? The New Zealand Brand Built on Still Being Out There Tomorrow',
+    titleTag: 'What Is Fantl Sport? | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'fantl-sport',
+    leadRole: 'bio',
+    lastUpdated: 'September 8, 2026',
+    dateModified: '2026-09-08T12:00:00.000Z',
+    publishedAt: '2026-09-08T12:00:00.000Z',
+    quickAnswer: 'Fantl Sport is a golf apparel brand founded in New Zealand in 2021, making a deliberately small range of technical, minimalist pieces designed to work on the course and off it. Its line is "Tools to keep you on course", and it sits at the premium end of golf apparel.',
+    metaDescription: 'Fantl Sport is a New Zealand golf apparel brand founded in 2021, making minimalist technical clothing built for longevity. Premium priced, deliberately small range.',
+    seoKeywords: ['fantl sport', 'what is fantl sport', 'fantl golf', 'fantl sport nz', 'new zealand golf apparel', 'fantl sport review', 'one shot at life fantl'],
+    mdPath: path.join(ROOT, 'article-fantl-sport.md'),
+    imgBase: '/images/features/fantl-sport',
+    hero: { file: 'hero.webp', w: 1600, h: 772, alt: 'Fantl Sport golf apparel photographed on course.', caption: 'Photo by Fantl Sport.' },
+    sectionImages: {
+      'A golf brand from the wrong country': { layout: 'single', images: [
+        { file: 'range.webp', w: 1600, h: 772, alt: 'Fantl Sport apparel from the brand range.', caption: 'Photo by Fantl Sport.' },
+      ]},
+      'Built to last, which is a harder sell than it sounds': { layout: 'two-up', images: [
+        { file: 'look-1.webp', w: 1080, h: 1350, alt: 'A Fantl Sport polo worn on course.', caption: 'Photo by Fantl Sport.' },
+        { file: 'look-2.webp', w: 1080, h: 1350, alt: 'Fantl Sport outerwear worn on course.', caption: 'Photo by Fantl Sport.' },
+      ]},
+    },
+  },
+
   'arnie-mcnair-clothing': {
     slug: 'arnie-mcnair-clothing',
     title: 'Arnie McNair Clothing: Every Piece, Every Price, and Why It Keeps Selling Out',
