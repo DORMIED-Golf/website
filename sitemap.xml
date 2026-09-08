@@ -2596,7 +2596,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (619) ── -->
+  <!-- ── News articles (620) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2965,6 +2965,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/b-draddy-reason-presidents-cup-keeps-hero.jpg</image:loc>
       <image:title>The Real Reason the Presidents Cup Keeps Picking B. Draddy: 200 Embroidery Heads in Wisconsin</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/b-draddy-scripted-days-womens-line/</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/b-draddy-scripted-days-womens-line-hero.jpg</image:loc>
+      <image:title>Seven Scripted Days and a Women&apos;s Line With No Track Record: B. Draddy Picked a Hard Debut</image:title>
     </image:image>
   </url>
   <url>
