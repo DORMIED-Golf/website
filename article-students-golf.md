@@ -75,4 +75,4 @@ By DORMIED's tracking, yes. Students climbed four spots to rank 97 of the 215+ b
 
 ---
 
-*Track Students' monthly movement on the [Students Golf brand page](https://dormied.com/brands/students-golf/) and the full market on the [DORMIED Index](https://dormied.com/). Related coverage: [Who Owns Malbon Golf?](https://dormied.com/news/who-owns-malbon-golf/) and [What Is Random Golf Club?](https://dormied.com/news/what-is-random-golf-club/).*
+*Track Students' monthly movement on the [Students Golf brand page](https://dormied.com/brands/students-golf/) and the full market on the [DORMIED Index](https://dormied.com/). Related coverage: [Who Owns Malbon Golf?](https://dormied.com/news/who-owns-malbon-golf/) and [What Is Random Golf Club?](https://dormied.com/news/what-is-random-golf-club/). Golf's culture brands outside America: [What Is Khalhon?](https://dormied.com/news/what-is-khalhon/) in Seoul and [What Is Monzee?](https://dormied.com/news/what-is-monzee/) in Japan.*
