@@ -2596,7 +2596,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (620) ── -->
+  <!-- ── News articles (622) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -7604,6 +7604,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/titleist-1-59-loser-stayed-bag/</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/titleist-1-59-loser-stayed-bag-hero.jpg</image:loc>
+      <image:title>1.59 Yards Separated the Winner From the Loser, and the Titleist Stayed in the Bag</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/titleist-bets-that-custom-fitting-can-sell-what-marketing-already-owns-2026-05-18/</loc>
     <lastmod>2026-05-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -8141,6 +8151,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/two-tour-wins-in-one-week-signal-superstrokes-grip-on-both-ends-of-the-bag-2026-05-11-hero.jpg</image:loc>
       <image:title>Two Tour Wins in One Week Signal SuperStroke&apos;s Grip on Both Ends of the Bag</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/under-armour-golf-company-owns-shoe/</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/under-armour-golf-company-owns-shoe-hero.jpg</image:loc>
+      <image:title>A $4 Billion Badminton Company Now Owns the Best Golf Shoe Story Under Armour Had</image:title>
     </image:image>
   </url>
   <url>
