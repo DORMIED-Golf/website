@@ -2614,7 +2614,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (627) ── -->
+  <!-- ── News articles (629) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -2753,6 +2753,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/adidas-golf-model-numbers-shoe-hero.jpg</image:loc>
       <image:title>Two Model Numbers Ahead, and the Old Shoe Still Wins: Adidas Golf&apos;s CODECHAOS Cadence Problem</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/adidas-golf-players-shoes-hero-model/</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/adidas-golf-players-shoes-hero-model-hero.jpg</image:loc>
+      <image:title>Three Sponsored Players, Three Different Shoes: Adidas Golf Gave Up on the Hero Model</image:title>
     </image:image>
   </url>
   <url>
@@ -5373,6 +5383,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/mizuno-34-degree-7-iron-hero.jpg</image:loc>
       <image:title>A 34-Degree 7-Iron in 2026. Mizuno Just Bet That Loft Inflation Peaked.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/mizuno-discounting-winner-july-distribution/</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/mizuno-discounting-winner-july-distribution-hero.webp</image:loc>
+      <image:title>Discounting a Most Wanted Winner in July Is a Distribution Tell. Mizuno Did It Twice.</image:title>
     </image:image>
   </url>
   <url>
