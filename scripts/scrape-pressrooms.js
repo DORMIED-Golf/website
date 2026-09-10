@@ -133,6 +133,34 @@ const RSS_SOURCES = [
     name: 'MyGolfSpy',
     url:  'https://feeds.feedburner.com/Mygolfspy',
     type: 'rss',
+    // Quality over quantity: only MyGolfSpy's news desk becomes a DORMIED
+    // story. Everything else in their feed is service content.
+    //
+    // The paths are not what they look like from the outside. There is no
+    // /news/ on mygolfspy.com at all; news lives under /news-opinion/. And
+    // instruction is not a sibling section, it is NESTED inside news, at
+    // /news-opinion/instruction/why-do-my-wedge-shots-keep-pulling-left/, so
+    // "starts with /news-opinion/" on its own would let every how-to through.
+    // Buyer's guides are at /buyers-guide/, singular.
+    //
+    // So: anything under /news-opinion/ at any depth, except the instruction
+    // subsection. That keeps /news-opinion/first-look/ (product launches) and
+    // /news-opinion/tour/, which carry news in the path and are the desk's
+    // actual output, while dropping the how-tos.
+    //
+    // Everything without news-opinion in the path is excluded by omission,
+    // including /labs/, /buyers-guide/, /we-tried-it/, /pro-golf/, /youtube/,
+    // /golf-talk/ and /golf-travel/. It is an allowlist on purpose: a section
+    // MyGolfSpy adds next month stays out until someone decides otherwise,
+    // rather than quietly turning up in the drafts.
+    //
+    // Share of the 770 MyGolfSpy items ingested to date: news-opinion top
+    // level 582, instruction 73, buyers-guide 47, we-tried-it 20, labs 18,
+    // pro-golf 13, youtube 5, tour 4, first-look 3, golf-talk 3, golf-travel 2.
+    acceptUrl: (u) =>
+      /^https?:\/\/(?:www\.)?mygolfspy\.com\/news-opinion\//i.test(u) &&
+      !/^https?:\/\/(?:www\.)?mygolfspy\.com\/news-opinion\/instruction\//i.test(u) &&
+      !/^https?:\/\/(?:www\.)?mygolfspy\.com\/news-opinion\/?(?:[?#].*)?$/i.test(u),
   },
 ];
 // Note: Breezy Golf excluded per request (blog is gift guides, not press releases)
@@ -291,6 +319,9 @@ async function scrapeRssSource(supabase, source, parser) {
   const cutoff = new Date(Date.now() - MAX_AGE_MS);
   let ingested = 0;
   let skipped  = 0;
+  let offSection = 0;      // rejected by the source's acceptUrl allowlist
+  let considered = 0;      // in-date items that reached the section test
+  let firstLinkSeen = '';  // for the diagnostic when the allowlist rejects everything
 
   for (const item of feed.items) {
     const pubDate = item.isoDate ? new Date(item.isoDate) : null;
@@ -298,6 +329,19 @@ async function scrapeRssSource(supabase, source, parser) {
 
     const sourceUrl = (item.link || '').trim();
     if (!sourceUrl) { skipped++; continue; }
+
+    // Section allowlist, where a source defines one. Counted separately from
+    // the generic skip so "we deliberately ignored a buyer's guide" never looks
+    // like "the scraper broke".
+    if (typeof source.acceptUrl === 'function') {
+      considered++;
+      if (!firstLinkSeen) firstLinkSeen = sourceUrl;
+      if (!source.acceptUrl(sourceUrl)) {
+        offSection++;
+        skipped++;
+        continue;
+      }
+    }
 
     // Get body text from feed
     const rawContent = item['content:encoded'] || item.content || item.contentSnippet || item.summary || '';
@@ -345,7 +389,19 @@ async function scrapeRssSource(supabase, source, parser) {
     await delay(DELAY_MS);
   }
 
-  console.log(`[pressrooms:${source.id}] Done — ingested: ${ingested}, skipped/dup: ${skipped}`);
+  const offSectionNote = offSection ? `, off-section: ${offSection}` : '';
+  console.log(`[pressrooms:${source.id}] Done — ingested: ${ingested}, skipped/dup: ${skipped}${offSectionNote}`);
+
+  // A section allowlist that rejects EVERY in-date item is far more likely to be
+  // a broken assumption than a quiet week. FeedBurner has switched between
+  // publisher URLs and feedproxy redirect URLs before; if it does that again no
+  // link matches mygolfspy.com, and the source silently contributes nothing
+  // while still reporting a clean run. Say so instead.
+  if (considered > 0 && offSection === considered) {
+    console.warn(`[pressrooms:${source.id}] !! all ${considered} in-date item(s) failed the section allowlist. ` +
+                 `Either nothing was published in an allowed section, or the source's URL shape changed. ` +
+                 `First link seen: ${firstLinkSeen || '(none)'}`);
+  }
 }
 
 // ── HTML Scraper — Generic ────────────────────────────────────────────────────
