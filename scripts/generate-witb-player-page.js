@@ -358,6 +358,61 @@ function itemName(item) {
  * Irons and wedges already filtered for all rows. This brings drivers and
  * putters in line. Output for a single club is unchanged.
  */
+/**
+ * The one interesting thing about this bag, for the title tag.
+ *
+ * WHY THIS EXISTS
+ * On "<player> witb" queries the CTR curve is a cliff, not a slope: position
+ * 1.42 returns 56.9% (Zach Johnson), 3.37 returns 19.8% (Jake Knapp), and 6.93
+ * returns 1.35% (Justin Thomas). The pages are identical in template and the
+ * bag data is accurate, so the visible difference against the sites beating us
+ * is the title. Ours restated the query; Golf Monthly ranks above us with
+ * "Mini Driver And Four Different Brands Feature In PXG Staffer's Set-Up".
+ *
+ * Everything here is DERIVED, never written by hand and never invented: each
+ * hook is a fact already sitting in witb_bag_items. If a bag has nothing
+ * unusual in it the function returns '' and the title stays plain, which is
+ * the honest outcome. Most bags are ordinary and should not pretend otherwise.
+ *
+ * Returns at most two facts, because a third pushes the title past the point
+ * Google renders any of it.
+ */
+function bagHook(items) {
+  if (!items || !items.length) return '';
+  const NUM = { 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six', 7: 'Seven' };
+  const of = t => items.filter(i => i.club_type === t);
+  const facts = [];
+
+  // Two putters is the single most arresting thing a tour bag can show, and it
+  // is nearly always a pre-tournament indecision story worth the click.
+  if (of('putter').length >= 2) facts.push('Two Putters');
+
+  if (of('mini-driver').length) facts.push('A Mini Driver');
+
+  const proto = items.find(i => /proto/i.test(i.raw_model || '') && i.club_type === 'putter');
+  if (proto && !facts.includes('Two Putters')) facts.push('A Prototype Putter');
+
+  // High-lofted fairways are unusual enough on tour to be a talking point.
+  for (const t of ['9-wood', '7-wood']) {
+    if (of(t).length && facts.length < 2) { facts.push(`A ${t.replace('wood', 'Wood')}`); break; }
+  }
+
+  // A split iron set (different brands across the set) signals a fitting story.
+  const ironBrands = new Set(of('iron').map(i => (i.witb_brands && i.witb_brands.name) || i.raw_brand).filter(Boolean));
+  if (ironBrands.size >= 2 && facts.length < 2) facts.push('A Split Iron Set');
+
+  // Brand spread, counted across the clubs only: grips and balls inflate it
+  // without saying anything about how the player is fitted.
+  const CLUBS = new Set(['driver', 'mini-driver', '2-wood', '3-wood', '4-wood', '5-wood', '6-wood', '7-wood',
+                         '9-wood', 'hybrid', 'utility', 'utility-iron', 'driving-iron', 'iron', 'wedge', 'putter']);
+  const brands = new Set(items.filter(i => CLUBS.has(i.club_type))
+                              .map(i => (i.witb_brands && i.witb_brands.name) || i.raw_brand)
+                              .filter(Boolean));
+  if (brands.size >= 4 && facts.length < 2) facts.push(`${NUM[brands.size] || brands.size} Brands`);
+
+  return facts.slice(0, 2).join(' And ');
+}
+
 function clubPhrase(items, type, label, aOrAn, join) {
   const rows = items.filter(i => i.club_type === type);
   if (!rows.length) return '';
@@ -1108,7 +1163,35 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   const currentYear = (STALE_TITLE_ENABLED && _snapDate && _snapAge > STALE_TITLE_DAYS)
     ? _snapDate.getUTCFullYear()
     : new Date().getFullYear();
-  const pageTitle   = `${esc(name)} WITB: What's In The Bag ${currentYear} | DORMIED`;
+  // Title shape follows the convention every site that outranks us uses, and
+  // that the source WITB posts themselves use: "<Player> WITB <Year> (<Month>)".
+  // GolfWRX, Today's Golfer and Golf Monthly all stamp the snapshot month;
+  // freshness is the buying signal on this query and "2026" alone does not
+  // carry it in September. The derived hook then differentiates the snippet.
+  // "What's In The Bag" moves out of the title and stays in the H1, the body
+  // and the FAQ: "<player> witb" outweighs the spelled-out phrase roughly 20 to
+  // 1 in our own query data (3,360 impressions against 172 for Jake Knapp).
+  // The month is stamped ONLY when the snapshot is from the same year the title
+  // claims. Otherwise the two halves would combine into a date that does not
+  // exist: Zach Johnson's bag is 17 March 2022, so "WITB 2026 (March)" reads as
+  // March 2026 and is a more precise lie than "2026" alone. That page is 27% of
+  // site traffic and Ian Poulter (Sep 2021) and Luke Donald (Jul 2025) have the
+  // same shape, all three among the best converters on the site.
+  //
+  // Fixing the YEAR on those pages is the separate 75-page change that is
+  // deliberately still gated behind WITB_STALE_TITLE_YEAR. Until that ships,
+  // stale pages keep the plain title rather than gaining false precision.
+  const _snapYear   = _snapDate ? _snapDate.getUTCFullYear() : null;
+  const _snapMonth  = (_snapDate && _snapYear === currentYear)
+    ? _snapDate.toLocaleDateString('en-US', { month: 'long', timeZone: 'UTC' })
+    : '';
+  const _hook       = bagHook(currentItems);
+  const _titleBase  = _snapMonth
+    ? `${esc(name)} WITB ${currentYear} (${_snapMonth})`
+    : `${esc(name)} WITB ${currentYear}`;
+  const pageTitle   = _hook
+    ? `${_titleBase}: ${esc(_hook)} | DORMIED`
+    : `${_titleBase} | DORMIED`;
 
   // Build description from this player's actual bag items (unique per player)
   const _descDriver = currentItems.find(i => i.club_type === 'driver');
