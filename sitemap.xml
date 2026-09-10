@@ -265,7 +265,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/byeong-hun-an/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2024-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -295,7 +295,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/cameron-young/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -541,7 +541,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/j-j-spaun/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-08-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -751,7 +751,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/lucas-glover/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -781,13 +781,13 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/luke-list/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://dormied.com/witb/players/luke-potter/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -841,7 +841,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/matt-wallace/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-08-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1087,7 +1087,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/ryo-hisatsune/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2632,7 +2632,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (638) ── -->
+  <!-- ── News articles (639) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -3541,6 +3541,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaway-put-its-name-on-a-tour-where-first-place-pays-10000-thats-the-2026-08-01-hero.jpg</image:loc>
       <image:title>Callaway Put Its Name on a Tour Where First Place Pays $10,000. That&apos;s the Smart Money.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/callaway-spin-48-ball-robot-test/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/callaway-spin-48-ball-robot-test-hero.jpg</image:loc>
+      <image:title>Second-Lowest Wedge Spin in a 48-Ball Robot Test: Callaway&apos;s Supersoft Won the Wrong Number</image:title>
     </image:image>
   </url>
   <url>
