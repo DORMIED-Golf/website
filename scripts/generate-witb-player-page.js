@@ -383,14 +383,24 @@ function bagHook(items) {
   const of = t => items.filter(i => i.club_type === t);
   const facts = [];
 
-  // Two putters is the single most arresting thing a tour bag can show, and it
-  // is nearly always a pre-tournament indecision story worth the click.
-  if (of('putter').length >= 2) facts.push('Two Putters');
+  // More than one putter is the single most arresting thing a tour bag can
+  // show, and it is nearly always a pre-tournament indecision story worth the
+  // click. COUNT THE PUTTERS: this said "Two Putters" for any bag with two or
+  // more, which put a false number on four live pages, Lucas Glover carrying
+  // four and J.J. Spaun, Luke List and Ryo Hisatsune carrying three.
+  const putters = of('putter').length;
+  const multiPutter = putters >= 2;
+  if (multiPutter) facts.push(`${NUM[putters] || putters} Putters`);
 
   if (of('mini-driver').length) facts.push('A Mini Driver');
 
+  // Suppressed when the putter count is already the headline, or the title
+  // reads "Four Putters And A Prototype Putter". Tracked with a flag rather
+  // than by matching the fact string: that check was written against the
+  // literal "Two Putters" and stopped working the moment the count became
+  // three or four.
   const proto = items.find(i => /proto/i.test(i.raw_model || '') && i.club_type === 'putter');
-  if (proto && !facts.includes('Two Putters')) facts.push('A Prototype Putter');
+  if (proto && !multiPutter) facts.push('A Prototype Putter');
 
   // High-lofted fairways are unusual enough on tour to be a talking point.
   for (const t of ['9-wood', '7-wood']) {
