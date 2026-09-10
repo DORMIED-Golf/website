@@ -2632,7 +2632,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (636) ── -->
+  <!-- ── News articles (638) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -4391,6 +4391,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/full-swings-disappearing-act-from-tigers-garage-to-marriotts-2026-04-13-hero.png</image:loc>
       <image:title>Full Swing&apos;s Disappearing Act: From Tiger&apos;s Garage to Marriott&apos;s Marketing Copy</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/g-fore-400-pairs-79-days/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/g-fore-400-pairs-79-days-hero.png</image:loc>
+      <image:title>400 Pairs, 79 Days, One Arcade Storefront. G/FORE Is Not Selling Shoes at Pebble.</image:title>
     </image:image>
   </url>
   <url>
@@ -8217,6 +8227,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/true-linkswear-lands-sergio-romo-and-a-cleaner-look-at-what-athlete-2026-06-29-hero.jpg</image:loc>
       <image:title>TRUE Linkswear Lands Sergio Romo, and a Cleaner Look at What Athlete Endorsements Are Actually Worth</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/true-linkswear-permits-travel-borrowed-location/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/true-linkswear-permits-travel-borrowed-location-hero.jpg</image:loc>
+      <image:title>No Permits, No Travel, No Borrowed Location: TRUE linkswear Moved Into a Golf Course It Owns</image:title>
     </image:image>
   </url>
   <url>
