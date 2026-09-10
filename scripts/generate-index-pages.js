@@ -988,7 +988,8 @@ async function generateScorecard() {
 }
 
 /* /rankings is a static page (sidebar hydrated client-side). It has no content
-   generator, so we only inject the baked sidebar modules at its slot marker. */
+   generator, so we inject the baked sidebar modules at its slot marker and keep
+   the one date in the HTML honest. */
 async function generateRankings() {
   const filePath = path.join(ROOT, 'rankings/index.html');
   if (!fs.existsSync(filePath)) return;
@@ -996,6 +997,36 @@ async function generateRankings() {
   let html = fs.readFileSync(filePath, 'utf8');
   html = await injectSidebarMods(html);
   html = await injectPageFeeds(html);
+
+  // The "Current Period" tile is hydrated client-side, so a reader always sees
+  // the right month. The BAKED value is what a crawler reads first, and it had
+  // been sitting at "April 2026" since April while the data said Jul 2026. On
+  // the one page whose entire claim is a monthly ranking, shipping a five month
+  // old date in the HTML is the wrong first impression, and this page ranks
+  // 21st to 28th for "top golf brands" and "best golf brands".
+  //
+  // Baked from js/data.js so it moves with the data instead of drifting again.
+  try {
+    const src  = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
+    const ctx  = { window: {}, console }; vm.createContext(ctx); vm.runInContext(src, ctx);
+    const cur  = ctx.window.DORMIED_DATA && ctx.window.DORMIED_DATA.meta
+               && ctx.window.DORMIED_DATA.meta.currentMonth;   // e.g. "Jul 2026"
+    if (cur) {
+      const [mon, yr] = cur.split(' ');
+      const FULL = { Jan:'January', Feb:'February', Mar:'March', Apr:'April', May:'May', Jun:'June',
+                     Jul:'July', Aug:'August', Sep:'September', Oct:'October', Nov:'November', Dec:'December' };
+      const label = `${FULL[mon] || mon} ${yr}`;
+      const re = /(<span class="hot-take-val" id="stat-current-period">)[^<]*(<\/span>)/;
+      if (re.test(html)) {
+        const before = html.match(re)[0];
+        html = html.replace(re, `$1${label}$2`);
+        if (!before.includes(`>${label}<`)) console.log(`     current period baked: ${label}`);
+      }
+    }
+  } catch (e) {
+    console.warn(`     could not bake current period: ${e.message}`);
+  }
+
   fs.writeFileSync(filePath, html, 'utf8');
   console.log('  ✔  rankings/index.html — sidebar modules + baked feeds updated');
 }

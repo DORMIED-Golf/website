@@ -128,40 +128,17 @@ const RSS_SOURCES = [
     url:  'https://golfonemedia.com/feed/',
     type: 'rss',
   },
-  {
-    id:   'mygolfspy',
-    name: 'MyGolfSpy',
-    url:  'https://feeds.feedburner.com/Mygolfspy',
-    type: 'rss',
-    // Quality over quantity: only MyGolfSpy's news desk becomes a DORMIED
-    // story. Everything else in their feed is service content.
-    //
-    // The paths are not what they look like from the outside. There is no
-    // /news/ on mygolfspy.com at all; news lives under /news-opinion/. And
-    // instruction is not a sibling section, it is NESTED inside news, at
-    // /news-opinion/instruction/why-do-my-wedge-shots-keep-pulling-left/, so
-    // "starts with /news-opinion/" on its own would let every how-to through.
-    // Buyer's guides are at /buyers-guide/, singular.
-    //
-    // So: anything under /news-opinion/ at any depth, except the instruction
-    // subsection. That keeps /news-opinion/first-look/ (product launches) and
-    // /news-opinion/tour/, which carry news in the path and are the desk's
-    // actual output, while dropping the how-tos.
-    //
-    // Everything without news-opinion in the path is excluded by omission,
-    // including /labs/, /buyers-guide/, /we-tried-it/, /pro-golf/, /youtube/,
-    // /golf-talk/ and /golf-travel/. It is an allowlist on purpose: a section
-    // MyGolfSpy adds next month stays out until someone decides otherwise,
-    // rather than quietly turning up in the drafts.
-    //
-    // Share of the 770 MyGolfSpy items ingested to date: news-opinion top
-    // level 582, instruction 73, buyers-guide 47, we-tried-it 20, labs 18,
-    // pro-golf 13, youtube 5, tour 4, first-look 3, golf-talk 3, golf-travel 2.
-    acceptUrl: (u) =>
-      /^https?:\/\/(?:www\.)?mygolfspy\.com\/news-opinion\//i.test(u) &&
-      !/^https?:\/\/(?:www\.)?mygolfspy\.com\/news-opinion\/instruction\//i.test(u) &&
-      !/^https?:\/\/(?:www\.)?mygolfspy\.com\/news-opinion\/?(?:[?#].*)?$/i.test(u),
-  },
+  // MyGolfSpy REMOVED as a source, 2026-09-10.
+  // It was already narrowed to the /news-opinion/ desk only. The Search
+  // Console data then showed the wire pipeline as a whole does not earn its
+  // place: of 265 articles that first appeared in search between 25 Jul and
+  // 25 Aug, measured across their freshest 14 days, 70% took zero clicks and
+  // the average was 1.11. Forty-five hand-written articles out-earn 589
+  // pipeline ones per page by roughly twelve to one. So the last allowed
+  // MyGolfSpy section goes too, rather than keeping a source whose only
+  // permitted output is not worth drafting.
+  // The acceptUrl mechanism it introduced stays and still works for any
+  // other feed that needs narrowing.
 ];
 // Note: Breezy Golf excluded per request (blog is gift guides, not press releases)
 // Skipped (broken): TaylorMade (redirect loop), Scotty Cameron/FootJoy/Golf Pride/Wilson (403)

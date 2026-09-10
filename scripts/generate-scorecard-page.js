@@ -483,6 +483,8 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
   <link rel="canonical" href="${canonicalUrl}">
 
   <!-- ── Favicon ── -->
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
   <link rel="icon" type="image/png" href="/images/favicon.png">
   <link rel="apple-touch-icon" href="/images/dormied-icon.png">
 
