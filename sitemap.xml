@@ -2632,7 +2632,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (634) ── -->
+  <!-- ── News articles (636) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5454,6 +5454,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/mizuno-parts-twenty-putters-price/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/mizuno-parts-twenty-putters-price-hero.jpg</image:loc>
+      <image:title>Nine Parts, Twenty Putters, One $400 Price: The Mizuno M.Craft X Math</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/mygolfspy-just-called-the-adipower-26-the-best-value-in-golf-2026-04-17/</loc>
     <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -6937,6 +6947,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/swag-golf-cashes-carolinas-stanley-cup-run-into-headcovers-and-the-2026-06-15-hero.jpg</image:loc>
       <image:title>Swag Golf Cashes Carolina&apos;s Stanley Cup Run Into Headcovers, and the Playbook Is Getting Familiar</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/swag-golf-pen-cup/</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/swag-golf-pen-cup-hero.jpg</image:loc>
+      <image:title>A Pen Cup With a Packers Logo Is Not a Golf Product. Swag Golf Made One Anyway.</image:title>
     </image:image>
   </url>
   <url>
