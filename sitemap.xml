@@ -2614,7 +2614,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (633) ── -->
+  <!-- ── News articles (634) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -6449,6 +6449,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/srixon-foundry-forged-titleist-nike-hogan-hero.jpg</image:loc>
       <image:title>The Foundry That Forged for Titleist, Nike and Hogan Is Finally on Srixon&apos;s Box</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/srixon-years-p790-players-distance-iron/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/srixon-years-p790-players-distance-iron-hero.jpg</image:loc>
+      <image:title>Nine Years After the P790, Srixon Finally Built a Player&apos;s Distance Iron</image:title>
     </image:image>
   </url>
   <url>
