@@ -2756,6 +2756,23 @@ details[open] .faq-question::after { content: '−'; }
   margin: 0 auto;
   padding: 40px 16px 32px;
 }
+/* Headline over a byline row, with the CTAs sharing that row on a wide screen so
+   they sit level with the byline text rather than below it. 900px, not 768px,
+   because below that the buttons and the byline fight for the same line. */
+@media (min-width: 900px) {
+  .home-hero-inner { padding: 44px 16px 48px; }
+  .home-hero-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  /* Descendant selector, not a bare .home-hero-sub: this block sits above that
+     rule in the file and a media query adds no specificity, so its 8px bottom
+     margin would survive and push the buttons half of it low. */
+  .home-hero-bottom .home-hero-sub { margin-bottom: 0; }
+  .home-hero-bottom .hero-cta-group { margin-top: 0; flex-shrink: 0; }
+}
 .hero-eyebrow {
   display: flex;
   align-items: center;
@@ -2810,32 +2827,6 @@ details[open] .faq-question::after { content: '−'; }
   border: 1px solid var(--green);
 }
 .hero-cta:hover { background: #1aae52; text-decoration: none; }
-
-/* ── Market Pulse Strip ──────────────────────────────────────────────────────── */
-.market-pulse-label {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin: 16px 0 4px;
-}
-.market-pulse {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px 14px;
-  margin-top: 2px;
-}
-.mp-item {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-.mp-delta { margin-left: 3px; font-weight: 700; }
-.mp-delta--up   { color: var(--green); }
-.mp-delta--down { color: var(--red); }
-.mp-delta--flat { color: var(--text-muted); }
 
 /* ── Section Headers ─────────────────────────────────────────────────────────── */
 .section-header {
@@ -7671,3 +7662,315 @@ details[open] .faq-question::after { content: '−'; }
 }
 .sc-section-figure { margin: 24px 0; }
 .sc-section-img { width: 100%; height: auto; display: block; border-radius: var(--radius); }
+
+/* ── Market Ticker ───────────────────────────────────────────────────────────
+   The Index by market, as a Yahoo-Finance-style tape directly under the nav.
+   Mobile-first: below 768px it stacks into a picker row plus swipeable brand
+   cards; at 768px and up it becomes the single terminal row.
+
+   The tape is above the fold, so every rule that affects its height is ALSO
+   inlined into the critical <style> block in index.html. If you change a
+   dimension here, change it there too — this page's CLS history is exactly the
+   bug where async styles.min.css reflowed above-the-fold layout after paint. */
+.dt-tape {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--green);
+  border-bottom: 1px solid var(--border);
+}
+.dt-tape-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.dt-tape[hidden] { display: none; }
+
+.dt-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.53rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.dt-delta { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.dt-up    { color: var(--green); }
+.dt-down  { color: var(--red); }
+.dt-flat  { color: var(--text-muted); }
+.dt-spark { display: block; flex: 0 0 auto; overflow: visible; }
+
+/* ── Market picker ─────────────────────────────────────────────────────────── */
+.dt-picker { position: relative; }
+.dt-picker-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: var(--green);
+  text-align: left;
+  transition: opacity .15s;
+}
+.dt-picker-btn:hover { opacity: .8; }
+.dt-reticle { flex: 0 0 auto; }
+/* Market name and index delta are one size at every width — the tape reads as
+   the same instrument on a phone as on a desktop. */
+.dt-picker-name {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+.dt-caret { font-family: var(--font-mono); font-size: 0.5625rem; color: var(--green); }
+
+.dt-menu {
+  position: absolute;
+  z-index: 40;
+  margin: 0;
+  padding: 5px;
+  list-style: none;
+  max-height: 280px;
+  overflow-y: auto;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-lite);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .7), 0 0 0 1px rgba(34, 197, 94, .05);
+}
+.dt-menu[hidden] { display: none; }
+.dt-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background .1s;
+}
+.dt-opt:hover, .dt-opt.is-focus { background: var(--bg-hover); }
+.dt-opt-flag { font-size: 0.875rem; line-height: 1; }
+.dt-opt-name {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+.dt-opt .dt-delta { font-size: 0.75rem; }
+.dt-opt-tick {
+  width: 9px;
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--green);
+}
+
+/* ── Country index cell ────────────────────────────────────────────────────── */
+.dt-index-row { display: flex; align-items: center; gap: 10px; }
+/* Same size as .dt-picker-name so the market and its move read as one line.
+   Weight, not size, is what separates the number from the name. */
+.dt-index-delta { font-size: 0.875rem; font-weight: 700; }
+
+/* ── Brand rail ────────────────────────────────────────────────────────────── */
+.dt-rail {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.dt-rail::-webkit-scrollbar { height: 6px; }
+.dt-rail::-webkit-scrollbar-track { background: var(--bg-surface); }
+.dt-rail::-webkit-scrollbar-thumb { background: var(--border-lite); border-radius: 3px; }
+.dt-brand { display: flex; flex: 0 0 auto; text-decoration: none; }
+.dt-brand:hover { text-decoration: none; }
+.dt-brand-head { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.dt-brand-name {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dt-logo {
+  flex: 0 0 auto;
+  border: 1px solid var(--border-lite);
+  border-radius: 3px;
+  background: var(--bg-active);
+  object-fit: contain;
+}
+.dt-logo--ini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--text-dim);
+  line-height: 1;
+}
+.dt-brand-di { font-family: var(--font-mono); color: var(--text); font-variant-numeric: tabular-nums; }
+
+/* ── Rail header (mobile only) ─────────────────────────────────────────────── */
+.dt-rail-head { display: none; }
+.dt-swipe {
+  font-family: var(--font-mono);
+  font-size: 0.53rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+/* ── Scroll arrows (desktop only) ──────────────────────────────────────────── */
+.dt-arrows { display: none; }
+.dt-arrow {
+  width: 34px;
+  align-self: stretch;
+  background: none;
+  border: 0;
+  border-right: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background .1s, color .15s;
+}
+.dt-arrow:last-child { border-right: 0; }
+.dt-arrow:hover { background: var(--bg-hover); color: var(--green); }
+.dt-arrow[disabled] { opacity: .3; cursor: default; }
+.dt-arrow[disabled]:hover { background: none; color: var(--text-dim); }
+
+.dt-picker-btn:focus-visible,
+.dt-opt:focus-visible,
+.dt-brand:focus-visible,
+.dt-arrow:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Mobile (< 768px) ──────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  /* Three columns: picker button, delta, sparkline. The eyebrow runs under the
+     first two and the sparkline spans both rows so it sits beside the delta and
+     centres against the whole block, instead of floating alone on the top line.
+     .dt-index and .dt-index-row are display:contents so their children land on
+     this grid directly. */
+  .dt-head {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 4px;
+    padding: 10px 16px;
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--border);
+  }
+  .dt-picker    { grid-column: 1; grid-row: 1; }
+  .dt-index     { display: contents; }
+  .dt-index-row { display: contents; }
+  .dt-index .dt-eyebrow { grid-column: 1 / 3; grid-row: 2; }
+  .dt-index-delta { grid-column: 2; grid-row: 1; }
+  .dt-spark--index {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    align-self: center;
+    justify-self: start;
+    width: 110px;
+    height: 34px;
+  }
+  /* The menu is measured against .dt-head, not .dt-picker: the picker is only
+     as wide as the market name here, so left/right insets against it clipped the
+     dropdown to about 130px and cut every label off. */
+  .dt-picker { position: static; }
+  .dt-menu { top: calc(100% - 4px); left: 12px; right: 12px; }
+
+  .dt-rail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px 6px;
+  }
+  .dt-rail { gap: 8px; padding: 0 16px 12px; }
+  .dt-brand {
+    flex-direction: column;
+    gap: 7px;
+    width: 148px;
+    padding: 10px 11px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color .15s;
+  }
+  .dt-brand:hover { border-color: var(--green-dim); }
+  .dt-brand-name { font-size: 0.75rem; }
+  .dt-logo { width: 22px; height: 22px; }
+  .dt-logo--ini { font-size: 0.625rem; }
+  /* column-reverse: the sparkline sits above the numbers on the card, but the
+     numbers stay first in source order so they are read before the decoration. */
+  .dt-brand-body { display: flex; flex-direction: column-reverse; gap: 7px; }
+  .dt-brand-nums { display: flex; align-items: baseline; justify-content: space-between; }
+  .dt-brand-di { font-size: 0.9375rem; font-weight: 700; }
+  .dt-brand .dt-delta { font-size: 0.75rem; }
+  .dt-spark--brand { width: 100%; height: 30px; }
+}
+
+/* ── Desktop (>= 768px): the single terminal row ───────────────────────────── */
+@media (min-width: 768px) {
+  .dt-tape-inner { flex-direction: row; align-items: stretch; }
+  .dt-head { display: contents; }
+  .dt-picker {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    padding: 0 18px;
+    border-right: 1px solid var(--border);
+  }
+  .dt-caret { color: var(--text-dim); }
+  .dt-menu { top: 100%; left: 8px; width: 224px; max-height: none; }
+  .dt-opt { min-height: 0; padding: 7px 10px; gap: 9px; }
+  .dt-opt-name { font-size: 0.8125rem; }
+  .dt-opt-flag { font-size: 0.8125rem; }
+  .dt-opt .dt-delta { font-size: 0.6875rem; }
+  .dt-opt-tick { width: 8px; font-size: 0.5625rem; }
+
+  .dt-index {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    width: 210px;
+    padding: 11px 18px;
+    background: var(--bg-raised);
+    border-right: 1px solid var(--border);
+  }
+  .dt-index-row { justify-content: space-between; }
+  .dt-eyebrow { font-size: 0.59rem; }
+
+  .dt-rail { flex: 1 1 auto; align-items: stretch; }
+  .dt-brand {
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    width: 198px;
+    padding: 11px 16px;
+    border-right: 1px solid var(--border);
+    transition: background .1s;
+  }
+  .dt-brand:hover { background: var(--bg-hover); }
+  .dt-brand-name { font-size: 0.78125rem; }
+  .dt-logo { width: 18px; height: 18px; }
+  .dt-logo--ini { font-size: 0.59rem; }
+  .dt-brand-body { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .dt-brand-nums { display: flex; flex-direction: column; }
+  .dt-brand-di { font-size: 0.9375rem; font-weight: 500; }
+  .dt-brand .dt-delta { font-size: 0.71875rem; }
+
+  .dt-arrows { display: flex; flex: 0 0 auto; align-items: stretch; border-left: 1px solid var(--border); }
+}

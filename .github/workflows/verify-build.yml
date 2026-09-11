@@ -43,3 +43,11 @@ jobs:
       # Every sitemap URL must resolve to a file that exists.
       - name: Sitemap resolves
         run: npm run verify:sitemap --silent
+
+      # The homepage ticker is baked from js/data.js at build time, into both
+      # js/ticker-data.js and the prerendered tape in index.html. Nothing at
+      # runtime recomputes it, so a data.js update that skips the regenerate
+      # step would leave last month's numbers on the top of the homepage
+      # looking perfectly current.
+      - name: Homepage ticker is current
+        run: npm run verify:ticker --silent

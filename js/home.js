@@ -1,7 +1,8 @@
 /* ─────────────────────────────────────────────────────────────────────────
    home.js  —  DORMIED Homepage
    Self-contained — depends only on window.DORMIED_DATA (data.js).
-   Computes: top 5, biggest movers, biggest drops, market pulse, daily H2H.
+   Computes: top 5, biggest movers, biggest drops, daily H2H.
+   (Index by market moved to the hero ticker — see js/ticker.js.)
    ───────────────────────────────────────────────────────────────────────── */
 
 (function () {
@@ -134,29 +135,6 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────────── */
-  /* ── COMPUTE MARKET PULSE ─────────────────────────────────────────────── */
-  /* ─────────────────────────────────────────────────────────────────────── */
-  function computeMarketPulse() {
-    var data   = window.DORMIED_DATA;
-    var meta   = data.meta;
-    var cur    = meta.currentMonth;
-    var prev   = meta.previousMonth;
-    var brands = data.brands;
-
-    return meta.markets.map(function (mkt) {
-      var cSum = 0, pSum = 0;
-      brands.forEach(function (b) {
-        var g = b.searchesByMarket && b.searchesByMarket[mkt.key];
-        if (!g) return;
-        cSum += (g[cur]  || 0);
-        pSum += (g[prev] || 0);
-      });
-      var pct = pSum > 0 ? (cSum - pSum) / pSum * 100 : null;
-      return { key: mkt.key, label: mkt.label, flag: mkt.flag, pct: pct };
-    });
-  }
-
-  /* ─────────────────────────────────────────────────────────────────────── */
   /* ── DAILY HEAD-TO-HEAD ───────────────────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────────────── */
   function getDailyMatchup(ranked) {
@@ -187,23 +165,6 @@
       brand2:   catBrands[offset + 1],
       category: cat
     };
-  }
-
-  /* ─────────────────────────────────────────────────────────────────────── */
-  /* ── RENDER: MARKET PULSE ─────────────────────────────────────────────── */
-  /* ─────────────────────────────────────────────────────────────────────── */
-  function renderMarketPulse(markets) {
-    var el = document.getElementById('market-pulse');
-    if (!el) return;
-
-    el.innerHTML = markets.map(function (m) {
-      var pctStr = fmtPct(m.pct);
-      var cls    = m.pct === null ? '' : parseFloat(Math.abs(m.pct).toFixed(1)) === 0 ? 'mp-delta--flat' : m.pct > 0 ? 'mp-delta--up' : 'mp-delta--down';
-      var delta  = pctStr
-        ? '<span class="mp-delta ' + cls + '">' + esc(pctStr) + '</span>'
-        : '';
-      return '<span class="mp-item">' + esc(m.flag) + ' ' + esc(m.label) + delta + '</span>';
-    }).join('');
   }
 
   /* ─────────────────────────────────────────────────────────────────────── */
@@ -824,11 +785,9 @@
     }
 
     var ranked  = computeHomeRankings();
-    var markets = computeMarketPulse();
     var matchup = getDailyMatchup(ranked);
 
     renderHeroMeta();
-    renderMarketPulse(markets);
     renderScoreboard(ranked);
     renderH2H(matchup, ranked);
 

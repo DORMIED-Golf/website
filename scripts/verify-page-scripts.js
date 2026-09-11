@@ -92,6 +92,11 @@ const RULES = [
   { marker: 'id="bp-latest-list"',        script: 'feed.min.js',          minPages: 150, what: 'brand LATEST list' },
   { marker: 'id="bp-shop-track"',         script: 'shop-carousel.min.js', minPages: 150, what: 'shop carousel' },
   { marker: 'class="scb"',                script: 'signup.min.js',        minPages: 400, what: 'inline Scorecard signup' },
+  // Homepage only, hence minPages 1. The tape is prerendered, so without its
+  // script it still paints a complete, correct-looking Global ticker — the
+  // market picker just silently does nothing and no visitor ever leaves Global.
+  // That is precisely the class of failure this gate exists to catch.
+  { marker: 'id="dt-picker-btn"',         script: 'ticker.min.js',        minPages: 1,   what: 'market ticker picker' },
 ];
 
 /** Directories that are not part of the deploy artifact. */

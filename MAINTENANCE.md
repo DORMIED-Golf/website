@@ -60,6 +60,22 @@ Use today's date in `YYYYMMDD` format. This forces browsers to fetch the new dat
 - `brands/brand.html`
 - `feed/index.html`
 
+### 2b. Rebuild the homepage market ticker
+
+```bash
+npm run regenerate:ticker
+```
+
+The ticker under the nav is baked from `js/data.js` at build time — both
+`js/ticker-data.js` (11 markets × top 10 brands × 12 months) and the Global tape
+prerendered into `index.html`. Nothing recomputes it in the browser, so skipping
+this leaves last month's numbers sitting at the top of the homepage looking
+current. `npm run verify:ticker` fails the build if it is stale, and CI runs it
+on every push.
+
+Then re-run `node scripts/fix-asset-versions.js` so the `?v=` on
+`js/ticker-data.js` tracks the new content.
+
 ### 3. Update `sitemap.xml`
 
 Change the `<lastmod>` date on the homepage entry:
