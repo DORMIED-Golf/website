@@ -148,7 +148,9 @@ async function main() {
   const [latestPool, topPool, featuredPool, modsCore] = await Promise.all([
     feedBake.fetchLatestArticles(sb, 13, null),          // pool to slice + exclude
     feedBake.fetchTopStoriesArticles(sb, data, 10),
-    feedBake.fetchFeaturedArticles(sb, 10),
+    // 5, not 10: this slot fills #featured-list, the one-column sidebar
+    // widget. The homepage mosaic fetches its own ten client-side.
+    feedBake.fetchFeaturedArticles(sb, 5),
     feedBake.fetchSidebarModulesCore(sb, data),
   ]);
 

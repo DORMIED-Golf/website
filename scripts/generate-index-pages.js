@@ -104,7 +104,9 @@ async function getPageFeeds() {
       const [stories, latest, featured] = await Promise.all([
         feedBake.fetchTopStoriesArticles(sb, data, 5),
         feedBake.fetchLatestArticles(sb, 10, null),
-        feedBake.fetchFeaturedArticles(sb, 10),
+        // 5, not 10: this slot fills #featured-list, the one-column sidebar
+        // widget. The homepage mosaic fetches its own ten client-side.
+        feedBake.fetchFeaturedArticles(sb, 5),
       ]);
       _pageFeedsCache = {
         stories:  (stories  && stories.length)  ? feedBake.renderLatestFeedHtml(stories,  data) : '',

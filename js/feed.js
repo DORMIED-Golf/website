@@ -644,6 +644,11 @@
      two-large-plus-a-row layout, which looks deliberate at any size. */
   var FEATURED_LIMIT  = 10;
   var FEATURED_MOSAIC = 10;
+  /* The sidebar widget on /rankings and /brands shares this curated list but is
+     one narrow column, so it keeps showing five. Without this cap it renders
+     whatever the fetch returns, and raising the homepage to ten slots would
+     silently double the length of that sidebar. */
+  var FEATURED_SIDEBAR = 5;
 
   /* ── Fetch: featured articles (curated, featured 1-N asc) ─────────────── */
   function fetchFeaturedArticles(cb) {
@@ -750,7 +755,7 @@
         return;
       }
       var allBrands = getAllBrands();
-      el.innerHTML = articles.map(function (a) {
+      el.innerHTML = articles.slice(0, FEATURED_SIDEBAR).map(function (a) {
         return renderArticleCard(a, true, allBrands);
       }).join('');
       if (wrapEl) wrapEl.hidden = false;
