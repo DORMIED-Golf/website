@@ -2632,7 +2632,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (643) ── -->
+  <!-- ── News articles (644) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -5341,6 +5341,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/maxflis-streetwear-detour-what-a-siegelman-stable-collab-says-about-a-2026-06-19-hero.jpg</image:loc>
       <image:title>Maxfli&apos;s Streetwear Detour: What a Siegelman Stable Collab Says About a Dormant Brand</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/mclaren-golf-forged-cast-late-series/</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/mclaren-golf-forged-cast-late-series-hero.jpg</image:loc>
+      <image:title>Neither Forged Nor Cast, and Five Months Late: McLaren&apos;s Series 1 Blade Finally Ships</image:title>
     </image:image>
   </url>
   <url>
