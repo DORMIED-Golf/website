@@ -2632,7 +2632,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (642) ── -->
+  <!-- ── News articles (643) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -7077,6 +7077,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/taylormade-has-won-all-three-majors-titleist-has-won-more-tournaments-both-2026-06-29-hero.jpg</image:loc>
       <image:title>TaylorMade Has Won All Three Majors. Titleist Has Won More Tournaments. Both Things Matter.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/taylormade-mizuno-irons-odyssey-putters/</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/taylormade-mizuno-irons-odyssey-putters-hero.webp</image:loc>
+      <image:title>$280 Off Mizuno Irons, $100 Off Odyssey Putters, and a TaylorMade Page With No Number on It</image:title>
     </image:image>
   </url>
   <url>
