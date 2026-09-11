@@ -2632,7 +2632,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (640) ── -->
+  <!-- ── News articles (642) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -7080,6 +7080,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/taylormade-package-set/</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/taylormade-package-set-hero.jpg</image:loc>
+      <image:title>A $1,899.99 Package Set Made the Bestseller List. TaylorMade&apos;s Kalea Gold Is Not for Beginners.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/taylormade-plants-its-kingdom-flag-in-hertfordshire-and-the-uk-fitting-2026-07-09/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
@@ -8997,6 +9007,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/wilson-goes-big-in-times-square-but-can-billboards-fix-a-bra-2026-04-09-hero.jpg</image:loc>
       <image:title>Wilson Goes Big in Times Square, But Can Billboards Fix a Brand Problem?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/wilson-lengths-lie-angle-option-where/</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/wilson-lengths-lie-angle-option-where-hero.jpg</image:loc>
+      <image:title>Two Lengths, No Lie Angle Option: Where Wilson&apos;s $199 Zero-Torque Savings Came From</image:title>
     </image:image>
   </url>
   <url>
