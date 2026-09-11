@@ -2632,7 +2632,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (639) ── -->
+  <!-- ── News articles (640) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-06-17</lastmod>
@@ -8057,6 +8057,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/tour-edge-just-beat-the-big-four-in-driver-testing-time-to-s-2026-04-17-hero.jpg</image:loc>
       <image:title>Tour Edge Just Beat the Big Four in Driver Testing. Time to Stop Calling It a Value Brand.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/tour-edge-low-spin-heads-tied/</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/tour-edge-low-spin-heads-tied-hero.jpg</image:loc>
+      <image:title>Two Low-Spin Tour Heads Tied for Last. Tour Edge Got the Headline.</image:title>
     </image:image>
   </url>
   <url>
