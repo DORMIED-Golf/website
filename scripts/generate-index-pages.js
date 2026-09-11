@@ -1009,8 +1009,17 @@ async function generateRankings() {
   try {
     const src  = fs.readFileSync(path.join(ROOT, 'js/data.js'), 'utf8');
     const ctx  = { window: {}, console }; vm.createContext(ctx); vm.runInContext(src, ctx);
-    const cur  = ctx.window.DORMIED_DATA && ctx.window.DORMIED_DATA.meta
-               && ctx.window.DORMIED_DATA.meta.currentMonth;   // e.g. "Jul 2026"
+    const D    = ctx.window.DORMIED_DATA;
+    const meta = (D && D.meta) || {};
+    const cur  = meta.currentMonth;   // e.g. "Jul 2026"
+
+    const MONTH_NUM = { Jan:'01', Feb:'02', Mar:'03', Apr:'04', May:'05', Jun:'06',
+                        Jul:'07', Aug:'08', Sep:'09', Oct:'10', Nov:'11', Dec:'12' };
+    const ymOf = label => {              // "Mar 2023" -> "2023-03"
+      const [mon, yr] = String(label).split(' ');
+      return MONTH_NUM[mon] ? `${yr}-${MONTH_NUM[mon]}` : null;
+    };
+
     if (cur) {
       const [mon, yr] = cur.split(' ');
       const FULL = { Jan:'January', Feb:'February', Mar:'March', Apr:'April', May:'May', Jun:'June',
@@ -1023,8 +1032,47 @@ async function generateRankings() {
         if (!before.includes(`>${label}<`)) console.log(`     current period baked: ${label}`);
       }
     }
+
+    // The Dataset JSON-LD describes the data, so both of these must come from
+    // the data. Hand-written, they drifted badly and silently: dateModified sat
+    // on 2026-05-18 across three monthly updates, and temporalCoverage claimed
+    // the series began 2025-03 when it begins 2023-03 — telling every crawler
+    // the index has two fewer years of history than it actually has. Nothing
+    // renders either value, so neither could be caught by looking at the page.
+    if (meta.lastUpdated) {
+      const re = /("dateModified":\s*")[^"]*(")/;
+      if (re.test(html)) {
+        const before = html.match(re)[0];
+        html = html.replace(re, `$1${meta.lastUpdated}$2`);
+        if (!before.includes(`"${meta.lastUpdated}"`)) {
+          console.log(`     dataset dateModified baked: ${meta.lastUpdated}`);
+        }
+      }
+    }
+
+    if (Array.isArray(D && D.brands)) {
+      // Coverage is the union across brands: a brand added last year must not
+      // pull the dataset's start date forward.
+      let earliest = null;
+      for (const b of D.brands) {
+        for (const label of Object.keys((b.searchesByMarket && b.searchesByMarket.global) || {})) {
+          const ym = ymOf(label);
+          if (ym && (!earliest || ym < earliest)) earliest = ym;
+        }
+      }
+      if (earliest) {
+        const re = /("temporalCoverage":\s*")[^"]*(")/;
+        if (re.test(html)) {
+          const before = html.match(re)[0];
+          html = html.replace(re, `$1${earliest}/..$2`);
+          if (!before.includes(`"${earliest}/..`)) {
+            console.log(`     dataset temporalCoverage baked: ${earliest}/..`);
+          }
+        }
+      }
+    }
   } catch (e) {
-    console.warn(`     could not bake current period: ${e.message}`);
+    console.warn(`     could not bake dataset metadata: ${e.message}`);
   }
 
   fs.writeFileSync(filePath, html, 'utf8');
