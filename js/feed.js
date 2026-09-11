@@ -637,13 +637,13 @@
   }
 
   /* How many curated slots the homepage FEATURED module can show, and the count
-     the mosaic needs to tile without a hole. Two large cards each span two of
-     four columns and stack on the left; the remaining eight wrap the right side
-     (2x2) and the bottom row (1x4). 2 + 8 = 10 exactly fills a 4x3 grid. Any
-     other count leaves a gap, so below ten the module keeps the older
-     two-large-plus-a-row layout, which looks deliberate at any size. */
-  var FEATURED_LIMIT  = 10;
-  var FEATURED_MOSAIC = 10;
+     the mosaic needs to tile without a hole. One lead spans a 2x2 block at the
+     top left; the remaining eight wrap its right side (2x2) and the bottom row
+     (1x4). 1 + 8 = 9 exactly fills a 4x3 grid. Any other count leaves a gap, so
+     below nine the module keeps the older two-large-plus-a-row layout, which
+     looks deliberate at any size. */
+  var FEATURED_LIMIT  = 9;
+  var FEATURED_MOSAIC = 9;
   /* The sidebar widget on /rankings and /brands shares this curated list but is
      one narrow column, so it keeps showing five. Without this cap it renders
      whatever the fetch returns, and raising the homepage to ten slots would
