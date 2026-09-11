@@ -136,6 +136,10 @@
   var CARD_SIZES_DEFAULT = '(min-width: 1200px) 300px, (min-width: 600px) 120px, 104px';
   var CARD_SIZES_TRIO    = '(min-width: 1200px) 25vw, (min-width: 600px) 32vw, 104px';
   var CARD_SIZES_ROW     = '(min-width: 600px) 120px, 104px';
+  /* Featured mosaic: full page width in four columns, so a small card is ~25vw
+     and a large one (spanning two) ~50vw. The larger figure is the safe one to
+     advertise for both. */
+  var CARD_SIZES_FEAT    = '(min-width: 1200px) 50vw, (min-width: 600px) 50vw, 104px';
 
   function renderArticleCard(article, showBrandTags, allBrands, sizes) {
     var thumb = '';
@@ -632,7 +636,16 @@
     });
   }
 
-  /* ── Fetch: featured articles (curated, featured 1-5 asc) ─────────────── */
+  /* How many curated slots the homepage FEATURED module can show, and the count
+     the mosaic needs to tile without a hole. Two large cards each span two of
+     four columns and stack on the left; the remaining eight wrap the right side
+     (2x2) and the bottom row (1x4). 2 + 8 = 10 exactly fills a 4x3 grid. Any
+     other count leaves a gap, so below ten the module keeps the older
+     two-large-plus-a-row layout, which looks deliberate at any size. */
+  var FEATURED_LIMIT  = 10;
+  var FEATURED_MOSAIC = 10;
+
+  /* ── Fetch: featured articles (curated, featured 1-N asc) ─────────────── */
   function fetchFeaturedArticles(cb) {
     var headers = { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON };
     var url = SB_URL + '/rest/v1/dormied_articles'
@@ -640,7 +653,7 @@
       + '&status=eq.published'
       + '&featured=not.is.null'
       + '&order=featured.asc'
-      + '&limit=5';
+      + '&limit=' + FEATURED_LIMIT;
     fetch(url, { headers: headers })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (rows) {
@@ -686,22 +699,30 @@
         return;
       }
       var allBrands = getAllBrands();
-      var large     = articles.slice(0, 2);
-      var compact   = articles.slice(2, 5);
+      var html;
 
-      // Wrap large cards so they inherit the full-width hero CSS (.home-featured-large)
-      var html = '<div class="home-featured-large">'
-        + large.map(function (a) {
-            return renderFeedPageCard(a, allBrands, false);
-          }).join('')
-        + '</div>';
-
-      if (compact.length) {
-        html += '<div class="home-featured-3up">'
-          + compact.map(function (a) {
-              return renderArticleCard(a, true, allBrands);
+      if (articles.length >= FEATURED_MOSAIC) {
+        // Mosaic: every card is the same component so the grid rows line up.
+        // The first two are widened by CSS (span 2 columns) rather than being a
+        // different card, which is what keeps their height equal to the small
+        // ones on the same row.
+        html = '<div class="home-featured-grid">'
+          + articles.slice(0, FEATURED_MOSAIC).map(function (a) {
+              return renderArticleCard(a, true, allBrands, CARD_SIZES_FEAT);
             }).join('')
           + '</div>';
+      } else {
+        // Fewer than ten curated: the older layout, which has no holes.
+        var large   = articles.slice(0, 2);
+        var compact = articles.slice(2);
+        html = '<div class="home-featured-large">'
+          + large.map(function (a) { return renderFeedPageCard(a, allBrands, false); }).join('')
+          + '</div>';
+        if (compact.length) {
+          html += '<div class="home-featured-3up">'
+            + compact.map(function (a) { return renderArticleCard(a, true, allBrands); }).join('')
+            + '</div>';
+        }
       }
 
       contentEl.innerHTML = html;

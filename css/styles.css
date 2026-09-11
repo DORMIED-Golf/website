@@ -2737,11 +2737,18 @@ details[open] .faq-question::after { content: '−'; }
     flex-wrap: wrap;
     gap: 32px;
   }
-  /* Two-column layout: main content + sidebar, footer CTA spans full width */
+  /* Two columns on the first line (Latest + Top Stories), then the wide modules
+     and the footer CTA each take a full line of their own. The sidebar column
+     exists for a sticky ad that is not running, so everything below the feed
+     gets the whole page rather than two thirds of it. */
   .home-layout .home-main       { order: 1; }
   .home-layout .sidebar-ad-col  { order: 2; }
-  .home-layout .home-footer-cta { order: 3; flex-basis: 100%; }
+  .home-layout .home-wide       { order: 3; flex-basis: 100%; min-width: 0; }
+  .home-layout .home-footer-cta { order: 4; flex-basis: 100%; }
 }
+/* Below 1200px everything is one column already, so .home-wide is just a
+   pass-through and must not add a second set of gaps. */
+.home-wide { min-width: 0; }
 
 /* ── Homepage Hero ───────────────────────────────────────────────────────────── */
 .home-hero {
@@ -6045,6 +6052,49 @@ details[open] .faq-question::after { content: '−'; }
   .home-featured-large .feed-card .feed-card-title--lg { font-size: 1.15rem; }
 }
 
+/* ── FEATURED mosaic (10 curated slots) ──────────────────────────────────────
+   Two leads stacked on the left, cards 3-6 wrapping the right in a 2x2, and
+   7-10 running along the bottom: 2 + 8 tiles a 4x3 grid exactly, which is why
+   feed.js only uses this layout at exactly ten and keeps the older one below
+   that. Every card is the same component as the homepage trio so the boxes
+   match; the leads are widened, not restyled. */
+.home-featured-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+.home-featured-grid .feed-card { flex-direction: column; gap: 6px; }
+.home-featured-grid .feed-card-thumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--card-thumb-ratio);
+}
+/* Three lines reserved, not just clamped — a short headline would otherwise
+   collapse its card and break the row it shares. Matches .home-latest-trio. */
+.home-featured-grid .feed-card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 4.05em;
+}
+@media (min-width: 700px) {
+  .home-featured-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1000px) {
+  .home-featured-grid { grid-template-columns: repeat(4, 1fr); }
+  .home-featured-grid > :nth-child(1) { grid-area: 1 / 1 / 2 / 3; }
+  .home-featured-grid > :nth-child(2) { grid-area: 2 / 1 / 3 / 3; }
+  /* Doubling the thumb ratio on the two leads keeps their picture the same
+     HEIGHT as the single-column cards beside them. Without this a lead is twice
+     as wide at 16:9, so it is twice as tall and the row stops lining up. */
+  .home-featured-grid > :nth-child(1) .feed-card-thumb,
+  .home-featured-grid > :nth-child(2) .feed-card-thumb {
+    aspect-ratio: calc(var(--card-thumb-ratio) * 2);
+  }
+}
+
 /* ── FEATURED section: 3-up compact card grid (slots 3-5) ────────────────── */
 .home-featured-3up {
   display: grid;
@@ -6584,31 +6634,6 @@ details[open] .faq-question::after { content: '−'; }
     overflow-y: auto;
   }
   .site-search-results { max-height: none; }
-}
-
-/* ── News page context block (breaks structural-similarity signal across paginated pages) ── */
-.news-page-context {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-  margin-bottom: 16px;
-  background: var(--bg-card, #111);
-  border: 1px solid var(--border, #222);
-  border-radius: 4px;
-  font-size: 0.75rem;
-  color: var(--text-muted, #888);
-  flex-wrap: wrap;
-}
-.news-page-context-label {
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--green, #4caf50);
-  font-size: 0.7rem;
-}
-.news-page-context-detail,
-.news-page-context-stats {
-  font-size: 0.75rem;
 }
 
 /* ── Mobile nav (hamburger) ─────────────────────────────────────────────────
