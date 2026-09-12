@@ -606,7 +606,7 @@ function readPlayerPages() {
   } catch { return new Set(); }
 }
 
-function buildChangesHtml(changes, brands, playerMap) {
+function buildChangesHtml(changes, brands, playerMap, excludePlayerId) {
   if (!changes || changes.length === 0) {
     return `<div class="witb-moves-empty">No bag changes recorded yet. Check back after Tuesday's update.</div>`;
   }
@@ -637,10 +637,16 @@ function buildChangesHtml(changes, brands, playerMap) {
   const MOVE_PLAYER_LIMIT = 6;
   const byPlayer = new Map();
   for (const c of changes) {
+    // The most recent changer already has the whole Freshest Bag section above,
+    // so repeating them as card one here is wasted space.
+    if (excludePlayerId && c.player_id === excludePlayerId) continue;
     if (!byPlayer.has(c.player_id)) byPlayer.set(c.player_id, []);
     byPlayer.get(c.player_id).push(c);
   }
   const picked = [...byPlayer.entries()].slice(0, MOVE_PLAYER_LIMIT);
+  if (!picked.length) {
+    return `<div class="witb-moves-empty">No other bag changes recorded yet. Check back after Tuesday's update.</div>`;
+  }
 
   const cards = picked.map(([playerId, rows]) => {
     const p    = playerMap?.get(playerId);
@@ -687,7 +693,7 @@ function buildChangesHtml(changes, brands, playerMap) {
       <div class="witb-move-head">
         ${face}
         <span class="witb-move-ident">
-          <span class="witb-move-player">${href ? `<a href="${href}">${esc(name)}</a>` : esc(name)}</span>
+          <span class="witb-move-player">${buildFlagHtmlInline(p?.country_code, p?.nation)} ${href ? `<a href="${href}">${esc(name)}</a>` : esc(name)}</span>
           <span class="witb-move-meta">${esc(rankLine)}</span>
         </span>
         <span class="witb-move-date">${esc(date)}</span>
@@ -772,6 +778,24 @@ function fmtBagDateShort(isoDate) {
   return `${mon} ${d.getUTCFullYear()}`;
 }
 
+/* Who Freshest Bag spotlights. Exported as its own function so Recent Bag
+   Updates can exclude exactly that player instead of independently guessing who
+   the section above is showing.
+
+   Prefers the most recently CHANGED bag over the most recently DATED one: a
+   player's first crawl gives them the newest bag_date but no change rows, so
+   keying on date alone picks a bag with nothing to annotate. */
+function pickFreshestPlayer({ rankedPlayers, bagDateMap, changes }) {
+  const dated = rankedPlayers.filter(p => p.current_bag_id && bagDateMap.get(p.current_bag_id));
+  if (!dated.length) return null;
+  const changedFirst = (changes || [])
+    .map(c => c.player_id)
+    .find(id => dated.some(p => p.id === id));
+  return (changedFirst && dated.find(p => p.id === changedFirst))
+    || dated.reduce((best, p) =>
+        (bagDateMap.get(p.current_bag_id) || '') > (bagDateMap.get(best.current_bag_id) || '') ? p : best);
+}
+
 /* ── Freshest Bag ────────────────────────────────────────────────────────────
    Editorial spotlight on the most recently updated bag. The prototype pairs each
    row with a product photo; we have no licensed source for those, so rows are
@@ -790,19 +814,8 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
     'driving-iron':'Driving Iron','iron':'Irons','wedge':'Wedges','putter':'Putter','ball':'Ball','grip':'Grip',
   };
 
-  const dated = rankedPlayers.filter(p => p.current_bag_id && bagDateMap.get(p.current_bag_id));
-  if (!dated.length) return '';
-
-  /* Prefer the most recently CHANGED bag over the most recently DATED one. A
-     player's first crawl gives them the newest bag_date but no change rows, so
-     keying on date alone picked a bag with nothing to annotate and printed
-     "every slot is unchanged" under a heading that promises the opposite. */
-  const changedFirst = (changes || [])
-    .map(c => c.player_id)
-    .find(id => dated.some(p => p.id === id));
-  const player = (changedFirst && dated.find(p => p.id === changedFirst))
-    || dated.reduce((best, p) =>
-        (bagDateMap.get(p.current_bag_id) || '') > (bagDateMap.get(best.current_bag_id) || '') ? p : best);
+  const player = pickFreshestPlayer({ rankedPlayers, bagDateMap, changes });
+  if (!player) return '';
 
   const items = currentItems.filter(i => i.bag_id === player.current_bag_id);
   if (!items.length) return '';
@@ -1034,7 +1047,8 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
   } = computeWidgetData({ currentItems: rankedCurrentItems, playerMap, brands, diBySlug, shaftItems: rankedShaftItems, totalPlayers });
 
   const scatterSVG     = buildScatterSVG(scatterData);
-  const changesHtml    = buildChangesHtml(changes, brands, playerMap);
+  const freshestPlayer = pickFreshestPlayer({ rankedPlayers, bagDateMap, changes });
+  const changesHtml    = buildChangesHtml(changes, brands, playerMap, freshestPlayer?.id);
   const leaderboardsHtml = leaderboards.map(buildLeaderboard).join('\n');
   const dykHtml        = buildDykHtml(dyk);
 
