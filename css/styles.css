@@ -7158,12 +7158,74 @@ details[open] .faq-question::after { content: '−'; }
 }
 
 /* Bag Moves rows — reuse .witb-lb-row base, match leaderboard type scale */
+/* ── Recent Bag Updates: one card per player ─────────────────────────────────
+   Was one flat row per change, so a player who rebuilt five slots read as five
+   separate events and crowded everyone else out. Six players, two across. */
+.witb-moves-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 760px) {
+  .witb-moves-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.witb-move-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  transition: border-color .15s;
+}
+.witb-move-card:hover { border-color: var(--green); }
+.witb-move-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border-lite);
+}
+.witb-move-face {
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  object-fit: cover;
+  /* Head-and-shoulders crops: centring a square cuts the top of the head. */
+  object-position: 50% 12%;
+  background: var(--bg-raised);
+}
+.witb-move-face--ini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  color: var(--text-muted);
+}
+.witb-move-ident { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+.witb-move-meta {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  color: var(--text-muted);
+}
+/* One change per line inside the card. */
+.witb-move-change {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+.witb-move-card .witb-move-change:last-child { border-bottom: 0; padding-bottom: 0; }
 .witb-move-player {
   font-family: var(--font-body);
   font-size: .875rem;
   color: var(--text);
-  flex: 1.2;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .witb-move-player a { color: var(--text); }
 .witb-move-player a:hover { color: var(--green); }
@@ -7180,7 +7242,7 @@ details[open] .faq-question::after { content: '−'; }
   font-family: var(--font-body);
   font-size: .8125rem;
   color: var(--text);
-  flex: 2;
+  flex: 1;
   min-width: 0;
 }
 .witb-move-detail a { color: var(--text); }
@@ -7299,7 +7361,9 @@ details[open] .faq-question::after { content: '−'; }
   font-size: 1.8rem;
   font-weight: 700;
   font-style: italic;
-  color: var(--green);
+  /* White, not green: neutral spec figures, not deltas. Was being forced
+     per-card by an inline style that fought this rule. */
+  color: var(--text);
   line-height: 1;
   margin-bottom: 4px;
 }

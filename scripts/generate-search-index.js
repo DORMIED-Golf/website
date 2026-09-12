@@ -213,6 +213,26 @@ function buildWitbPlayerEntries() {
     return entries;
   }
 
+  /* Headshots come from js/witb-leaders.js, which the WITB generator already
+     writes and which carries slug -> headshot for every ranked player. Read
+     from there rather than from Supabase so this script keeps its useful
+     property of being entirely offline and secret-free, and rather than
+     deriving the storage URL by convention, which would silently 404 the day
+     the naming changes. Unranked players are absent from that file and fall
+     back to the club icon in the search UI. */
+  const headshotBySlug = (() => {
+    try {
+      const src = fs.readFileSync(path.join(SITE_ROOT, 'js', 'witb-leaders.js'), 'utf8');
+      const m = src.match(/window\.DORMIED_WITB_LEADERS\s*=\s*(\{[\s\S]*\})\s*;?\s*$/);
+      if (!m) return new Map();
+      const data = JSON.parse(m[1]);
+      return new Map((data.allPlayers || []).filter(p => p.headshot).map(p => [p.slug, p.headshot]));
+    } catch {
+      return new Map();
+    }
+  })();
+  console.log(`  Player headshots available: ${headshotBySlug.size}`);
+
   for (const slug of slugs) {
     const htmlPath = path.join(playersDir, slug, 'index.html');
     if (!fs.existsSync(htmlPath)) continue;
@@ -249,7 +269,7 @@ function buildWitbPlayerEntries() {
       title:       name,
       subtitle,
       url:         `/witb/players/${slug}/`,
-      thumbnail:   null,
+      thumbnail:   headshotBySlug.get(slug) || null,
       search_text: searchText,
     });
   }

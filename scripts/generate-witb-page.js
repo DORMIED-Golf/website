@@ -180,7 +180,9 @@ async function fetchAllData() {
   const { data: changes, error: changesErr } = await sb.from('witb_changes')
     .select('player_id, club_type, change_type, old_value, new_value, detected_at')
     .order('detected_at', { ascending: false })
-    .limit(15);
+    // 15 was enough for a flat row list but not for six DISTINCT players: a
+    // single rebuild can be 5+ changes for one golfer.
+    .limit(120);
   if (changesErr) console.error('  witb_changes query error:', changesErr.message);
   console.log(`  Changes: ${changes?.length || 0}`);
 
@@ -355,7 +357,9 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
   const dyk = {};
   if (lofts.length >= 20) {
     dyk.avgLoft = (lofts.reduce((s, v) => s + v, 0) / lofts.length).toFixed(1);
-    dyk.minLoft = Math.min(...lofts);
+    // toFixed(1) so it reads 6.0 next to avgLoft's 9.3 — a bare "6" beside a
+    // one-decimal figure looks like a different kind of number.
+    dyk.minLoft = Math.min(...lofts).toFixed(1);
     dyk.loftCount = lofts.length;
   }
 
@@ -575,6 +579,14 @@ function buildLeaderboard(cat) {
 
 // ── Changes / Bag Moves HTML ───────────────────────────────────────────────
 
+/* Vercel image proxy. Widths must be one of vercel.json images.sizes — anything
+   else 404s, which is how the homepage ticker logos briefly shipped broken. 80
+   covers a 40px avatar at DPR 2. */
+function vitUrl(src, w) {
+  if (!src) return src;
+  return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+}
+
 function buildChangesHtml(changes, brands, playerMap) {
   if (!changes || changes.length === 0) {
     return `<div class="witb-moves-empty">No bag changes recorded yet. Check back after Tuesday's update.</div>`;
@@ -607,28 +619,72 @@ function buildChangesHtml(changes, brands, playerMap) {
     );
   } catch { /* players dir not built yet */ }
 
-  return changes.map(c => {
-    const p = playerMap?.get(c.player_id);
+  // One card per player, six most recent. Was one flat row per change, which
+  // meant a player who rebuilt five slots dominated the list and read as five
+  // separate events.
+  const MOVE_PLAYER_LIMIT = 6;
+  const byPlayer = new Map();
+  for (const c of changes) {
+    if (!byPlayer.has(c.player_id)) byPlayer.set(c.player_id, []);
+    byPlayer.get(c.player_id).push(c);
+  }
+  const picked = [...byPlayer.entries()].slice(0, MOVE_PLAYER_LIMIT);
+
+  const cards = picked.map(([playerId, rows]) => {
+    const p    = playerMap?.get(playerId);
     const name = p?.name || 'Unknown player';
-    const player = (p?.slug && playerPages.has(p.slug))
-      ? `<a href="/witb/players/${esc(p.slug)}/">${esc(name)}</a>`
-      : esc(name);
-    const date = c.detected_at ? new Date(c.detected_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
-    let moveHtml;
-    if (c.change_type === 'added') {
-      moveHtml = `<span class="witb-move-tag witb-move-tag--added">Added</span>${linkValue(c.new_value)}`;
-    } else if (c.change_type === 'removed') {
-      moveHtml = `<span class="witb-move-tag witb-move-tag--removed">Removed</span>${linkValue(c.old_value)}`;
-    } else {
-      moveHtml = `${linkValue(c.old_value)} <span class="witb-move-arrow">&rarr;</span> ${linkValue(c.new_value)}`;
-    }
-    return `<div class="witb-lb-row">
-      <span class="witb-move-player">${player}</span>
-      <span class="witb-move-club">${esc(c.club_type)}</span>
-      <span class="witb-move-detail">${moveHtml}</span>
-      <span class="witb-move-date">${date}</span>
-    </div>`;
+    const hasPage = p?.slug && playerPages.has(p.slug);
+    const href = hasPage ? `/witb/players/${esc(p.slug)}/` : null;
+
+    const ini = (() => {
+      const parts = String(name).trim().split(/\s+/);
+      return (parts.length >= 2 ? parts[0][0] + parts[parts.length - 1][0] : String(name).slice(0, 2)).toUpperCase();
+    })();
+    const face = p?.headshot_url
+      ? `<img class="witb-move-face" src="${esc(vitUrl(p.headshot_url, 80))}" width="40" height="40" loading="lazy" decoding="async" alt=""`
+        + ` onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        + `<span class="witb-move-face witb-move-face--ini" style="display:none">${esc(ini)}</span>`
+      : `<span class="witb-move-face witb-move-face--ini">${esc(ini)}</span>`;
+
+    const dates = rows.map(r => r.detected_at).filter(Boolean).sort();
+    const date  = dates.length
+      ? new Date(dates[dates.length - 1]).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+      : '';
+
+    const rowsHtml = rows.map(c => {
+      let moveHtml;
+      if (c.change_type === 'added') {
+        moveHtml = `<span class="witb-move-tag witb-move-tag--added">Added</span>${linkValue(c.new_value)}`;
+      } else if (c.change_type === 'removed') {
+        moveHtml = `<span class="witb-move-tag witb-move-tag--removed">Removed</span>${linkValue(c.old_value)}`;
+      } else {
+        moveHtml = `${linkValue(c.old_value)} <span class="witb-move-arrow">&rarr;</span> ${linkValue(c.new_value)}`;
+      }
+      return `<div class="witb-move-change">
+        <span class="witb-move-club">${esc(c.club_type)}</span>
+        <span class="witb-move-detail">${moveHtml}</span>
+      </div>`;
+    }).join('');
+
+    const rankLine = [
+      p?.owgr_rank ? `#${p.owgr_rank}` : null,
+      `${rows.length} change${rows.length === 1 ? '' : 's'}`,
+    ].filter(Boolean).join(' \u00b7 ');
+
+    return `<article class="witb-move-card">
+      <div class="witb-move-head">
+        ${face}
+        <span class="witb-move-ident">
+          <span class="witb-move-player">${href ? `<a href="${href}">${esc(name)}</a>` : esc(name)}</span>
+          <span class="witb-move-meta">${esc(rankLine)}</span>
+        </span>
+        <span class="witb-move-date">${esc(date)}</span>
+      </div>
+      ${rowsHtml}
+    </article>`;
   }).join('');
+
+  return `<div class="witb-moves-grid">${cards}</div>`;
 }
 
 // ── Did You Know HTML ──────────────────────────────────────────────────────
@@ -638,7 +694,7 @@ function buildDykHtml(dyk) {
 
   if (dyk.avgLoft) {
     cards.push(`<div class="witb-dyk-card">
-      <div class="witb-dyk-stat" style="color:var(--text)">${dyk.avgLoft}&deg;</div>
+      <div class="witb-dyk-stat">${dyk.avgLoft}&deg;</div>
       <div class="witb-dyk-label">Avg Driver Loft</div>
       <div class="witb-dyk-detail">Across ${dyk.loftCount} drivers with parsed loft data</div>
     </div>`);
@@ -646,7 +702,7 @@ function buildDykHtml(dyk) {
 
   if (dyk.minLoft) {
     cards.push(`<div class="witb-dyk-card">
-      <div class="witb-dyk-stat" style="color:var(--text)">${dyk.minLoft}&deg;</div>
+      <div class="witb-dyk-stat">${dyk.minLoft}&deg;</div>
       <div class="witb-dyk-label">Lowest Driver Loft</div>
       <div class="witb-dyk-detail">The flattest driver currently in play on tour</div>
     </div>`);
@@ -654,7 +710,7 @@ function buildDykHtml(dyk) {
 
   if (dyk.threeWoodCount !== undefined) {
     cards.push(`<div class="witb-dyk-card">
-      <div class="witb-dyk-stat" style="color:var(--text)">${dyk.threeWoodCount} vs ${dyk.miniDriverCount}</div>
+      <div class="witb-dyk-stat">${dyk.threeWoodCount} vs ${dyk.miniDriverCount}</div>
       <div class="witb-dyk-label">3-Wood vs Mini-Driver</div>
       <div class="witb-dyk-detail">${dyk.threeWoodCount} players carry a traditional 3-wood; ${dyk.miniDriverCount} carry a mini-driver</div>
     </div>`);
@@ -662,7 +718,7 @@ function buildDykHtml(dyk) {
 
   if (dyk.highWoodCount) {
     cards.push(`<div class="witb-dyk-card">
-      <div class="witb-dyk-stat" style="color:var(--text)">${dyk.highWoodCount}</div>
+      <div class="witb-dyk-stat">${dyk.highWoodCount}</div>
       <div class="witb-dyk-label">Players with 7-Wood+</div>
       <div class="witb-dyk-detail">${dyk.highWoodCount} players carry a 7-wood or higher on tour this season</div>
     </div>`);
@@ -755,11 +811,37 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
   // Canonical set: players with a non-null OWGR rank (158 today; sentinel 4990 included)
   const rankedPlayers      = players.filter(p => p.owgr_rank !== null);
   const rankedBagIds       = new Set(rankedPlayers.map(p => p.current_bag_id).filter(Boolean));
-  const rankedCurrentItems = currentItems.filter(i => rankedBagIds.has(i.bag_id));
-  const rankedShaftItems   = shaftItems.filter(i => rankedBagIds.has(i.bag_id));
+  const rankedCurrentItemsAll = currentItems.filter(i => rankedBagIds.has(i.bag_id));
 
-  // All stats derived from the canonical set so every figure reconciles
-  const totalPlayers    = rankedPlayers.length;
+  /* ── Stats window ───────────────────────────────────────────────────────────
+     is_current says a bag is a player's latest, NOT that it is recent. 83 of the
+     207 current bags are over a year old and one dates to Nov 2020, because a
+     player who has not been re-crawled keeps whatever bag was last recorded.
+     Those bags were dragging retired equipment into "tour usage": a 2022 setup
+     counts a Vokey SM8 as in play today.
+
+     So every aggregate below reads only bags dated within STATS_WINDOW_MONTHS.
+     This is a real cut — 207 bags/2,096 items down to roughly 124/1,298 — and
+     it deliberately shrinks the headline counts rather than overstating them.
+     Player-facing lists (Find a Player, Recent Bags) are NOT windowed: a stale
+     bag is still that player's bag and their page should still exist. */
+  const STATS_WINDOW_MONTHS = Number(process.env.WITB_STATS_WINDOW_MONTHS || 12);
+  const statsCutoff = new Date();
+  statsCutoff.setMonth(statsCutoff.getMonth() - STATS_WINDOW_MONTHS);
+  const bagIsFresh = bagId => {
+    const d = bagDateMap.get(bagId);
+    return d ? new Date(d) >= statsCutoff : false;
+  };
+
+  const rankedCurrentItems = rankedCurrentItemsAll.filter(i => bagIsFresh(i.bag_id));
+  const rankedShaftItems   = shaftItems.filter(i => rankedBagIds.has(i.bag_id) && bagIsFresh(i.bag_id));
+  const statsBagIds        = new Set(rankedCurrentItems.map(i => i.bag_id));
+  console.log(`  Stats window: last ${STATS_WINDOW_MONTHS} months — `
+    + `${statsBagIds.size} of ${new Set(rankedCurrentItemsAll.map(i => i.bag_id)).size} ranked bags, `
+    + `${rankedCurrentItems.length} of ${rankedCurrentItemsAll.length} items`);
+
+  // All stats derived from the windowed set so every figure reconciles
+  const totalPlayers    = statsBagIds.size;
   const totalItems      = rankedCurrentItems.length;
   // Canonical brand set: brands appearing in at least one ranked current bag item
   const brandSlugsInRankedBags = new Set(
@@ -1102,35 +1184,10 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
         <!-- FIND A PLAYER -->
         ${buildFindPlayerHtml(rankedPlayers, bagDateMap)}
 
-        <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
-        <section class="witb-section" aria-labelledby="scatter-heading">
-          <h2 class="witb-section-title" id="scatter-heading">Tour Usage vs. Amateur Attention</h2>
-          <p class="witb-section-sub">Current tour usage vs. the ${esc(snapshotLabel)} DORMIED Index score. Same brands, measured two ways.</p>
-          <div class="witb-scatter-layout">
-            <div class="witb-scatter-filter" id="scatter-filter" aria-label="Filter brands on chart">
-              <div class="witb-scatter-filter-bar">
-                <input type="search" id="scatter-brand-search" class="witb-scatter-search" placeholder="Search brands&hellip;" autocomplete="off" aria-label="Search brands">
-                <button type="button" class="witb-scatter-btn" id="scatter-select-all">Select all</button>
-                <button type="button" class="witb-scatter-btn" id="scatter-clear-all">Clear all</button>
-              </div>
-              <div class="witb-scatter-checkboxes" id="scatter-checkboxes" role="group" aria-label="Brand checkboxes"></div>
-            </div>
-            <div class="witb-scatter-wrap">
-              <div class="witb-scatter-frame">
-                <div class="witb-scatter-ytitle" aria-hidden="true">DI Score</div>
-                <div class="witb-scatter-inner">${scatterSVG}</div>
-              </div>
-            </div>
-          </div>
-          <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:8px;text-transform:uppercase;letter-spacing:.05em">
-            Brands above the dashed line are pro favorites the amateur game underrates. Below: more attention than tour usage. Dot size = player count. Click any dot to view brand page.
-          </p>
-        </section>
-
         <!-- WIDGET 3: BAG MOVES -->
         <section class="witb-section" aria-labelledby="moves-heading">
-          <h2 class="witb-section-title" id="moves-heading">This Week's Bag Moves</h2>
-          <p class="witb-section-sub">Equipment changes detected on the most recent update</p>
+          <h2 class="witb-section-title" id="moves-heading">Recent Bag Updates</h2>
+          <p class="witb-section-sub">The last six players to change equipment</p>
           ${changesHtml}
         </section>
 
@@ -1148,29 +1205,6 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
           <p class="witb-section-sub">Most-played specific model across all tracked players</p>
           <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px">
             ${topModelsHtml}${shaftModelRowHtml}
-          </div>
-        </section>
-
-        <!-- WIDGET 6: BRAND TOUR SHARE -->
-        <section class="witb-section" aria-labelledby="share-heading">
-          <h2 class="witb-section-title" id="share-heading">Brand Tour Share</h2>
-          <p class="witb-section-sub">Proportional share of bag slots by brand</p>
-
-          <div class="witb-treemap-group">
-            <div class="witb-treemap-title">Clubs (drivers, woods, hybrids, irons, wedges, putters)</div>
-            ${buildPropBar(treemapClub)}
-          </div>
-          <div class="witb-treemap-group">
-            <div class="witb-treemap-title">Balls</div>
-            ${buildPropBar(treemapBall)}
-          </div>
-          <div class="witb-treemap-group">
-            <div class="witb-treemap-title">Grips</div>
-            ${buildPropBar(treemapGrip)}
-          </div>
-          <div class="witb-treemap-group">
-            <div class="witb-treemap-title">Shafts</div>
-            ${buildPropBar(treemapShaft)}
           </div>
         </section>
 
@@ -1301,25 +1335,48 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
         </section>`;
         })()}
 
+        <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
+        <section class="witb-section" aria-labelledby="scatter-heading">
+          <h2 class="witb-section-title" id="scatter-heading">Tour Usage vs. Amateur Attention</h2>
+          <p class="witb-section-sub">Current tour usage vs. the ${esc(snapshotLabel)} DORMIED Index score. Same brands, measured two ways.</p>
+          <div class="witb-scatter-layout">
+            <div class="witb-scatter-filter" id="scatter-filter" aria-label="Filter brands on chart">
+              <div class="witb-scatter-filter-bar">
+                <input type="search" id="scatter-brand-search" class="witb-scatter-search" placeholder="Search brands&hellip;" autocomplete="off" aria-label="Search brands">
+                <button type="button" class="witb-scatter-btn" id="scatter-select-all">Select all</button>
+                <button type="button" class="witb-scatter-btn" id="scatter-clear-all">Clear all</button>
+              </div>
+              <div class="witb-scatter-checkboxes" id="scatter-checkboxes" role="group" aria-label="Brand checkboxes"></div>
+            </div>
+            <div class="witb-scatter-wrap">
+              <div class="witb-scatter-frame">
+                <div class="witb-scatter-ytitle" aria-hidden="true">DI Score</div>
+                <div class="witb-scatter-inner">${scatterSVG}</div>
+              </div>
+            </div>
+          </div>
+          <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:8px;text-transform:uppercase;letter-spacing:.05em">
+            Brands above the dashed line are pro favorites the amateur game underrates. Below: more attention than tour usage. Dot size = player count. Click any dot to view brand page.
+          </p>
+        </section>
+
         <!-- WIDGET 9: METHODOLOGY -->
         <section class="witb-section witb-section--method" aria-labelledby="method-heading">
           <div class="scorecard-intro-body">
             <h2 class="scorecard-intro-h2" id="method-heading">What This Data Is</h2>
-            <p class="scorecard-intro-p">The DORMIED WITB dataset tracks the current equipment setup of ${totalPlayers} professional golfers, pulling current bag data on a weekly basis. Each player's bag is recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball, and grips. Brand, model, shaft, and loft are captured where available.</p>
+            <p class="scorecard-intro-p">The current equipment setup of ${totalPlayers} professional golfers, refreshed weekly and recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball and grips, with brand, model, shaft and loft where available.</p>
 
-            <p class="scorecard-intro-p">This is equipment-in-play data, not equipment-sold data. A brand appearing here means a tour-level professional has chosen it in competition - which is a meaningfully different signal than market share, retail velocity, or endorsement deals. Some of the most tour-popular brands barely register in amateur golfers' awareness. That gap is the most interesting thing this page exists to show.</p>
+            <p class="scorecard-intro-p">This is equipment in play, not equipment sold. A brand here means a tour professional chose it in competition, which is a different signal from market share or endorsement spend. Some of the most tour-popular brands barely register with amateurs, and that gap is what this page exists to show.</p>
 
             <h2 class="scorecard-intro-h2">Reading the Tour Usage vs. Amateur Attention Chart</h2>
-            <p class="scorecard-intro-p">The signature chart plots two independent signals against each other. The X axis is tour usage share: what percentage of the ${totalPlayers} tracked players carry at least one product from that brand in their bag. The Y axis is the DORMIED Index (DI) score for that brand in ${esc(snapshotLabel)}, the most recent monthly snapshot, which measures global search interest relative to the highest-scoring brand in the Index that month.</p>
+            <p class="scorecard-intro-p">Two independent signals, plotted against each other. X is tour usage: the share of tracked players carrying at least one product from that brand. Y is the brand's <a href="/rankings/">DORMIED Index</a> score for ${esc(snapshotLabel)}, which measures global search interest relative to the month's top brand.</p>
 
-            <p class="scorecard-intro-p">The dashed diagonal is a reference line, not a regression. Brands sitting above the line are pro favorites the amateur game has not yet matched with search attention - either because the brand does not market aggressively, serves a niche the mainstream has not discovered, or benefits from tour contracts that do not translate to retail awareness. Brands sitting below the line command more amateur attention than their tour presence suggests - often large heritage brands with strong retail and marketing footprints even when pros have shifted toward competitors.</p>
+            <p class="scorecard-intro-p">The dashed diagonal is a reference line, not a regression. Above it are pro favorites the amateur game has not caught up with. Below it are brands commanding more attention than their tour presence suggests, usually heritage names with strong retail reach.</p>
 
             <h2 class="scorecard-intro-h2">How the Tour-Usage-to-DI Join Works</h2>
-            <p class="scorecard-intro-p">The WITB brand database maps each equipment brand to its corresponding entry in the <a href="/rankings/">DORMIED Index</a>. Not every tour brand has a DORMIED Index entry - particularly grip companies and shaft manufacturers that do not compete in the retail consumer markets tracked by the Index. Brands without a mapping appear in the leaderboards and share views but are excluded from the scatter chart, which requires both a tour usage figure and a DI score to plot. As of this writing, ${brandsNoDI} of ${totalBrands} tracked equipment brands represented in ranked bags lack a DI mapping; those brands render as plain text throughout this page rather than as hyperlinks to brand pages.</p>
+            <p class="scorecard-intro-p">Each equipment brand is mapped to its <a href="/rankings/">DORMIED Index</a> entry. Not all have one, particularly grip and shaft makers that do not compete in the retail categories the Index tracks. Those brands still appear in the leaderboards but are excluded from the chart, which needs both figures to plot: ${brandsNoDI} of ${totalBrands} brands in ranked bags currently lack a mapping and render as plain text rather than links.</p>
 
-            <p class="scorecard-intro-p">The DORMIED Index measures consumer search interest, not brand sentiment or purchase intent. A high DI score means many people are searching for a brand globally. A low score means the brand is either niche, regional, or simply not a household name outside the sport. For equipment brands especially, the gap between tour presence and public awareness can be dramatic - and that gap tells you something about where the market might be heading, or where it is already moving without the mainstream noticing yet.</p>
-
-            <p class="scorecard-intro-p">Data source: equipment data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker.com</a> and <a href="https://golfwrx.com/" rel="noopener noreferrer" target="_blank">GolfWRX</a>. Consumer search data: <a href="/rankings/">DORMIED Index</a>, ${esc(snapshotLabel)} snapshot. All analysis is DORMIED's independent editorial work.</p>
+            <p class="scorecard-intro-p">The Index measures search interest, not sentiment or purchase intent. A low score means a brand is niche or regional rather than disliked. For equipment especially, the distance between tour presence and public awareness can be large, and that distance is often where the market is moving before the mainstream notices.</p>
           </div>
         </section>
 
@@ -1624,10 +1681,23 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
 // Writes js/witb-leaders.js so the homepage can render WITB LEADERS and
 // Most Viewed WITBs fallback without client-side Supabase aggregation.
 
-function writeWitbLeadersData({ players, currentItems }) {
+function writeWitbLeadersData({ players, currentItems, bagDateMap }) {
   const rankedPlayers = players.filter(p => p.owgr_rank !== null);
   const rankedBagIds  = new Set(rankedPlayers.map(p => p.current_bag_id).filter(Boolean));
-  const rankedCurrentItems = currentItems.filter(i => rankedBagIds.has(i.bag_id));
+
+  /* Same 12-month window as the page's own stats. Without it the homepage WITB
+     LEADERS column and /witb/ Top Model Per Category disagree outright — the
+     unwindowed data made PING G430 LST the top driver at 16 players while the
+     windowed page said Titleist GTS2 at 12, because bags last recorded in 2022
+     still counted. Two surfaces, one stat, one answer. */
+  const STATS_WINDOW_MONTHS = Number(process.env.WITB_STATS_WINDOW_MONTHS || 12);
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - STATS_WINDOW_MONTHS);
+  const fresh = bagId => {
+    const d = bagDateMap && bagDateMap.get(bagId);
+    return d ? new Date(d) >= cutoff : false;
+  };
+  const rankedCurrentItems = currentItems.filter(i => rankedBagIds.has(i.bag_id) && fresh(i.bag_id));
 
   // Full ranked set sorted by OWGR — used for Most Viewed WITBs in-memory lookup.
   // Includes only the fields the card needs; no second anon-key Supabase fetch required.
@@ -1658,10 +1728,15 @@ function writeWitbLeadersData({ players, currentItems }) {
       const dormiedSlug = item.witb_brands?.dormied_brand_slug || null;
       if (!brand) continue;
       const key = `${brand}|||${model}`;
-      if (!counts[key]) counts[key] = { brand, model, dormiedSlug, count: 0 };
-      counts[key].count++;
+      if (!counts[key]) counts[key] = { brand, model, dormiedSlug, players: new Set() };
+      // Distinct PLAYERS, not item rows. Counting rows disagreed with /witb/ Top
+      // Model Per Category by one on the top driver, because a player carrying
+      // two of the same head counted twice. Player count is what both surfaces
+      // claim to show.
+      counts[key].players.add(item.witb_bags?.player_id ?? item.bag_id);
     }
     return Object.values(counts)
+      .map(c => ({ brand: c.brand, model: c.model, dormiedSlug: c.dormiedSlug, count: c.players.size }))
       .sort((a, b) => b.count - a.count || a.brand.localeCompare(b.brand))
       .slice(0, 5);
   }
