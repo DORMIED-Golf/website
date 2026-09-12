@@ -557,7 +557,7 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
     // Recently Updated Bags: 5 most recent distinct players from witb_changes
     const { data: changes } = await supabase
       .from('witb_changes')
-      .select('player_id, club_type, change_type, detected_at, witb_players!player_id(name, slug)')
+      .select('player_id, club_type, change_type, detected_at, witb_players!player_id(name, slug, headshot_url)')
       .order('detected_at', { ascending: false })
       .limit(60);
     const seen = new Set();
@@ -567,7 +567,7 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
       if (!p || !p.slug || seen.has(p.slug)) continue;
       seen.add(p.slug);
       const verb = c.change_type === 'added' ? 'added' : c.change_type === 'removed' ? 'dropped' : 'new';
-      bagRows.push({ slug: p.slug, name: p.name, note: (verb + ' ' + (c.club_type || 'club')).toUpperCase() });
+      bagRows.push({ slug: p.slug, name: p.name, headshot: p.headshot_url || null, note: (verb + ' ' + (c.club_type || 'club')).toUpperCase() });
     }
     if (pins.recent_bags) {
       const idx = bagRows.findIndex(function (r) { return r.slug === pins.recent_bags; });
@@ -584,9 +584,27 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
       return '<a href="/brands/' + escHtml(r.brand_slug) + '/" class="sidebar-mod-row feed-brand-tag ' + (up ? 'feed-brand-tag--up' : 'feed-brand-tag--down') + '">'
         + escHtml(nameOf(r.brand_slug)) + ' <span class="feed-tag-pct">' + escHtml(pct) + '</span></a>';
     }).join('');
+    // A player with no headshot on file falls back to initials rather than a gap,
+    // so the rows stay the same height whichever it is. Two of 207 need it
+    // (Charlie Woods, Lorenzo Rodriguez), plus anyone added before the next
+    // headshot backfill runs.
+    const playerInitials = function (name) {
+      const parts = String(name || '').trim().split(/\s+/);
+      return (parts.length >= 2 ? parts[0][0] + parts[parts.length - 1][0]
+                                : String(name || '').slice(0, 2)).toUpperCase();
+    };
     const bagsHtml = bagRows.map(function (r) {
+      const ini = escHtml(playerInitials(r.name));
+      const face = r.headshot
+        ? '<img class="sidebar-mod-face" src="' + escHtml(vitUrl(r.headshot, 80)) + '"'
+          + ' width="28" height="28" loading="lazy" decoding="async" alt=""'
+          + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+          + '<span class="sidebar-mod-face sidebar-mod-face--ini" style="display:none">' + ini + '</span>'
+        : '<span class="sidebar-mod-face sidebar-mod-face--ini">' + ini + '</span>';
       return '<a href="/witb/players/' + escHtml(r.slug) + '/" class="sidebar-mod-row sidebar-mod-row--bag">'
-        + escHtml(r.name) + ' <span class="sidebar-mod-note">' + escHtml(r.note) + '</span></a>';
+        + face
+        + '<span class="sidebar-mod-bag-name">' + escHtml(r.name) + '</span>'
+        + '<span class="sidebar-mod-note">' + escHtml(r.note) + '</span></a>';
     }).join('');
 
     let html = '<div class="sidebar-mods">';

@@ -3054,14 +3054,55 @@ details[open] .faq-question::after { content: '−'; }
   font-size: 0.58rem;
 }
 
-/* ── Most Viewed WITBs cards ──────────────────────────────────────────── */
+/* ── Most Viewed WITBs cards ──────────────────────────────────────────────────
+   Deliberately the SAME box as .mv-card (Most Viewed Brands): 156px wide with a
+   100x100 image. It used to be min-width:120px/width:auto, which made every card
+   a different width depending on name length and left the two rows looking like
+   unrelated components. Only the image treatment differs — a logo wants
+   `contain` on its own background, a face wants `cover`. */
 .mv-witb-card {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  min-width: 120px;
-  width: auto;
-  gap: 2px;
+  /* No gap override: inherit .mv-card's 5px so the two rows are the same height
+     to the pixel, not just the same width. */
+}
+.mv-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  object-fit: cover;
+  /* Biased above centre: these are head-and-shoulders crops, so centring a
+     square on them cuts the top of the head. */
+  object-position: 50% 12%;
+  background: var(--bg-raised);
+}
+.mv-photo--ini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+/* One line, ellipsised. Wrapping here would make a card with a long name taller
+   than its neighbours, which is the whole reason the stacked first/last layout
+   was dropped. */
+.mv-name--player {
+  font-family: var(--font-mono);
+  /* 0.58rem to match .mv-name exactly — the two rows share a box, so they
+     should share their type scale too. */
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.3;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .mv-name--first {
   font-family: var(--font-mono);
@@ -3086,14 +3127,36 @@ details[open] .faq-question::after { content: '−'; }
   align-items: center;
   gap: 4px;
   justify-content: center;
-  margin-top: 2px;
 }
 .mv-witb-flag { font-size: 1em; line-height: 1; display: inline-flex; align-items: center; }
 .mv-witb-rank {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   color: var(--green);
 }
+
+/* ── Recently Updated Bags rows: player face + name + change note ──────────── */
+.sidebar-mod-row--bag { display: flex; align-items: center; gap: 9px; }
+.sidebar-mod-face {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  object-position: 50% 12%;
+  background: var(--bg-raised);
+}
+.sidebar-mod-face--ini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+/* Name takes the slack so the note stays hard right, as it did before the
+   avatar was added. */
+.sidebar-mod-bag-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ── WITB Leaders section ─────────────────────────────────────────────── */
 .witb-leaders-section { margin-bottom: 32px; }
@@ -3160,8 +3223,11 @@ details[open] .faq-question::after { content: '−'; }
 .mv-pct--down { color: var(--red); }
 .mv-pct--flat { color: var(--text-muted); }
 
-/* Fix 2: Taller Most Viewed WITBs cards */
-.mv-witb-card { padding: 18px 12px; min-height: 88px; }
+/* The old "Fix 2" padded this card out (18px 12px, min-height 88px) because it
+   carried no image and looked stunted next to Most Viewed Brands. It now has a
+   100x100 headshot, so that padding is what made it 14px TALLER than the brand
+   card instead. Removed rather than tuned: .mv-card's own 10px 8px is correct
+   for both, which is the point of them sharing a box. */
 
 /* Fix 3: Green border on WITB Leaders and Standings sb-cols */
 .witb-leaders-section .sb-col,

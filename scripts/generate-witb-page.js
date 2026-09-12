@@ -145,7 +145,7 @@ async function fetchAllData() {
 
   // 2. Players (include fields needed for Find A Player section)
   const players = await paginate((from, to) =>
-    sb.from('witb_players').select('id, name, slug, owgr_rank, current_bag_id, country_code, nation').range(from, to)
+    sb.from('witb_players').select('id, name, slug, owgr_rank, current_bag_id, country_code, nation, headshot_url').range(from, to)
   );
   const playerMap = new Map(players.map(p => [p.id, p]));
   console.log(`  Players: ${players.length}`);
@@ -1640,6 +1640,9 @@ function writeWitbLeadersData({ players, currentItems }) {
       owgr_rank:    p.owgr_rank,
       country_code: p.country_code || null,
       nation:       p.nation       || null,
+      // Most Viewed WITBs renders a headshot; carried here so the card needs no
+      // second Supabase call (witb_players is RLS-protected from the anon key).
+      headshot:     p.headshot_url || null,
     }));
 
   // Top 5 for the WITB LEADERS sidebar column

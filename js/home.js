@@ -710,9 +710,24 @@
       var parts  = (p.name || '').trim().split(/\s+/);
       var first  = parts[0] || '';
       var last   = parts.slice(1).join(' ') || '';
+      // Headshot at the same 100x100 as the Most Viewed Brands logo tile, so the
+      // two rows read as one component. No headshot on file falls back to
+      // initials rather than a gap, which would make this card shorter than its
+      // neighbours and break the row.
+      var ini  = esc(initials(p.name));
+      var face = p.headshot
+        ? '<img class="mv-photo" src="' + esc(vitUrl(p.headshot, 200)) + '" width="100" height="100"'
+          + ' loading="lazy" decoding="async" alt=""'
+          + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+          + '<span class="mv-photo mv-photo--ini" style="display:none">' + ini + '</span>'
+        : '<span class="mv-photo mv-photo--ini">' + ini + '</span>';
+      // One name line, not the old stacked first/last: with a headshot above it
+      // the stack is no longer doing work, and two lines made this card 29px
+      // taller than the Most Viewed Brands card it sits under. Long names
+      // ellipsis rather than wrap so every card in the row is the same height.
       return '<a href="/witb/players/' + esc(p.slug) + '/" class="mv-card mv-witb-card">'
-        + '<div class="mv-name mv-name--first">' + esc(first) + '</div>'
-        + (last ? '<div class="mv-name mv-name--last">' + esc(last) + '</div>' : '')
+        + face
+        + '<div class="mv-name mv-name--player">' + esc(first + (last ? ' ' + last : '')) + '</div>'
         + '<div class="mv-witb-meta">'
         + (flag ? '<span class="mv-witb-flag">' + flag + '</span>' : '')
         + (p.owgr_rank ? '<span class="mv-witb-rank">#' + p.owgr_rank + '</span>' : '')
