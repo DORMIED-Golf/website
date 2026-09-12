@@ -306,7 +306,12 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
       .map(b => ({ ...b, count: b.players.size }))
       .sort((a, b) => b.count - a.count);
     const topCount = sorted[0]?.count || 1;
-    return { ...cat, brands: sorted, topCount };
+    // Share denominator: the sum across every brand listed in this category, so
+    // the column reads as share OF THE CATEGORY. Not totalPlayers, because a
+    // player can carry several brands in one category (four wedges, two woods)
+    // and the shares would then not sum to 100.
+    const totalCount = sorted.reduce((n, b) => n + b.count, 0) || 1;
+    return { ...cat, brands: sorted, topCount, totalCount };
   });
 
   // --- Top model per category ---
@@ -558,6 +563,8 @@ function buildLeaderboard(cat) {
     const nameHtml = b.dormied_slug
       ? `${logoHtml}<a href="/brands/${esc(b.dormied_slug)}/">${esc(b.name)}</a>`
       : `${logoHtml}${esc(b.name)}`;
+    // Share of the category, one decimal. Leader in green, everyone else dimmed.
+    const share = (b.count / (cat.totalCount || 1) * 100).toFixed(1);
     return `<div class="witb-lb-row">
       <span class="witb-lb-rank">${i + 1}</span>
       <span class="witb-lb-name">${nameHtml}</span>
@@ -565,6 +572,7 @@ function buildLeaderboard(cat) {
       <span class="witb-lb-bar-wrap">
         <div class="witb-lb-bar-bg"><div class="witb-lb-bar-fill" style="width:${pct}%"></div></div>
       </span>
+      <span class="witb-lb-share${i === 0 ? ' witb-lb-share--lead' : ''}">${share}%</span>
     </div>`;
   }).join('');
 
@@ -817,6 +825,9 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
       club_type: c.club_type,
       raw_brand: '',
       raw_model: c.old_value,
+      // Removal rows come from change-log text, not a joined item, so there is
+      // no witb_brands relation to hang a link on. Left as plain text.
+      _noLink: true,
       loft_or_number: null,
       raw_shaft: null,
       _removed: true,
@@ -830,7 +841,14 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
   const rows = ordered.map(i => {
     const brand = i.witb_brands?.name || i.raw_brand || '';
     const model = (i.raw_model || '').trim();
-    const name  = [brand, model].filter(Boolean).join(' ') || 'Unspecified';
+    const dslug = i._noLink ? null : (i.witb_brands?.dormied_brand_slug || null);
+    // Link the brand token only, leaving the model as plain text, so the link
+    // target matches what it says. Same rule the leaderboards use.
+    const name  = brand
+      ? (dslug
+          ? `<a href="/brands/${esc(dslug)}/">${esc(brand)}</a>${model ? ' ' + esc(model) : ''}`
+          : esc([brand, model].filter(Boolean).join(' ')))
+      : (esc(model) || 'Unspecified');
     const spec  = [i.loft_or_number, i.raw_shaft].filter(Boolean).join(' \u00b7 ');
     const st    = i._removed ? 'Removed' : (statusByType.get(i.club_type) === 'Removed' ? '' : (statusByType.get(i.club_type) || ''));
     const cls   = st === 'Removed' ? ' witb-fb-model--out' : '';
@@ -840,7 +858,7 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
     return `<div class="witb-fb-row">
       <span class="witb-fb-slot">${esc(SLOT_LABEL[i.club_type] || i.club_type)}</span>
       <span class="witb-fb-body">
-        <span class="witb-fb-model${cls}">${esc(name)}</span>
+        <span class="witb-fb-model${cls}">${name}</span>
         ${i._removed ? '<span class="witb-fb-spec">Out of the bag</span>' : (spec ? `<span class="witb-fb-spec">${esc(spec)}</span>` : '')}
       </span>
       ${tag}
@@ -880,7 +898,7 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
     <div class="witb-fb-head">
       ${face}
       <span class="witb-fb-ident">
-        <span class="witb-fb-name">${nameHtml}</span>
+        <span class="witb-fb-name">${buildFlagHtmlInline(player.country_code, player.nation)} ${nameHtml}</span>
         <span class="witb-fb-meta">#${player.owgr_rank} &middot; ${esc(String(items.length))} items logged</span>
       </span>
     </div>
@@ -1244,10 +1262,25 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
     .witb-fb-row:last-child{border-bottom:none}
     .witb-fb-slot{font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);width:84px;flex-shrink:0}
     .witb-fb-body{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+    .witb-fb-model a{color:var(--text)}
+    .witb-fb-model a:hover{color:var(--green)}
     .witb-fb-model{font-size:.8125rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .witb-fb-model--out{color:var(--text-muted);text-decoration:line-through}
     .witb-fb-spec{font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     @media (max-width:520px){.witb-fb-head{flex-wrap:wrap}.witb-fb-slot{width:64px}}
+    /* Brand Momentum heat grid */
+    .witb-mom-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+    .witb-mom-row--head{padding-bottom:6px;border-bottom:1px solid var(--border-lite);margin-bottom:6px}
+    .witb-mom-name{flex:1;min-width:0;display:flex;align-items:center;gap:6px}
+    .witb-mom-head{font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);width:48px;text-align:center;flex-shrink:0}
+    .witb-mom-name.witb-mom-head{width:auto;text-align:left}
+    .witb-mom-cell{display:flex;align-items:center;justify-content:center;width:48px;height:28px;border-radius:2px;flex-shrink:0;font-family:var(--font-mono);font-size:.72rem;font-weight:700}
+    .witb-mom-cell--up{color:var(--green)}
+    .witb-mom-cell--down{color:#f87171}
+    .witb-mom-cell--flat{background:var(--bg-raised);color:var(--text-muted)}
+    @media (max-width:560px){.witb-mom-head,.witb-mom-cell{width:38px}}
+    .witb-lb-share{font-family:var(--font-mono);font-size:.72rem;color:var(--text-dim);width:46px;text-align:right;flex-shrink:0}
+    .witb-lb-share--lead{color:var(--green)}
     .witb-fp-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
     .witb-fp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     @media(max-width:500px){.witb-fp-grid{grid-template-columns:1fr}}
@@ -1501,22 +1534,31 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
               return out;
             };
 
-            return { ww: windowDeltas(7), mm: windowDeltas(30), threeM: windowDeltas(90) };
+            // 1M/3M/6M/12M. Week-over-week was mostly noise: the crawl is weekly,
+            // so a 7-day window compares many bags against themselves and reads 0.
+            return {
+              m1:  windowDeltas(30),
+              m3:  windowDeltas(90),
+              m6:  windowDeltas(182),
+              m12: windowDeltas(365),
+            };
           })();
 
           // Returns inner HTML for a .witb-lb-count cell
-          function fmtMom(current, deltaMap) {
-            if (!deltaMap) return '-';
-            const delta = deltaMap.get(current.dormied_slug) ?? 0;
-            const sign  = delta > 0 ? '+' : '';
-            const color = delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--red)' : '';
-            return color
-              ? `<span style="color:${color};font-weight:600">${sign}${delta}</span>`
-              : `${sign}${delta}`;
+          /* Heat cell, so the eye finds where movement is concentrated before it
+             reads any number. Fill opacity scales with the size of the move and
+             caps at .45 so a large swing stays legible; a dot means no change. */
+          function momCell(current, deltaMap) {
+            if (!deltaMap) return `<span class="witb-mom-cell witb-mom-cell--flat">&middot;</span>`;
+            const v = deltaMap.get(current.dormied_slug) ?? 0;
+            if (v === 0) return `<span class="witb-mom-cell witb-mom-cell--flat">&middot;</span>`;
+            const alpha = Math.min(0.45, 0.10 + Math.abs(v) * 0.05).toFixed(2);
+            const rgb   = v > 0 ? '34,197,94' : '239,68,68';
+            const cls   = v > 0 ? 'witb-mom-cell--up' : 'witb-mom-cell--down';
+            return `<span class="witb-mom-cell ${cls}" style="background:rgba(${rgb},${alpha})">${v > 0 ? '+' : ''}${v}</span>`;
           }
 
-          const colHdr = (label) =>
-            `<span class="witb-lb-count" style="font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)">${label}</span>`;
+          const colHdr = (label) => `<span class="witb-mom-head">${label}</span>`;
 
           const brandRows = topClubBrands.map((b, i) => {
             const initials = (b.name || '').replace(/[^A-Za-z0-9]/g, '').substring(0, 2).toUpperCase();
@@ -1526,12 +1568,12 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
             const nameHtml = b.dormied_slug
               ? `${logoHtml}<a href="/brands/${esc(b.dormied_slug)}/">${esc(b.name)}</a>`
               : `${logoHtml}${esc(b.name)}`;
-            return `<div class="witb-lb-row">
-              <span class="witb-lb-rank">${i + 1}</span>
-              <span class="witb-lb-name">${nameHtml}</span>
-              <span class="witb-lb-count">${fmtMom(b, momentumHistory.ww)}</span>
-              <span class="witb-lb-count">${fmtMom(b, momentumHistory.mm)}</span>
-              <span class="witb-lb-count">${fmtMom(b, momentumHistory.threeM)}</span>
+            return `<div class="witb-mom-row">
+              <span class="witb-lb-name witb-mom-name">${nameHtml}</span>
+              ${momCell(b, momentumHistory.m1)}
+              ${momCell(b, momentumHistory.m3)}
+              ${momCell(b, momentumHistory.m6)}
+              ${momCell(b, momentumHistory.m12)}
             </div>`;
           }).join('');
 
@@ -1539,13 +1581,12 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
           <h2 class="witb-section-title" id="momentum-heading">Brand Momentum</h2>
           <p class="witb-section-sub">Tour usage changes</p>
           <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px">
-            <div class="witb-lb-row" style="padding-bottom:4px;border-bottom:1px solid var(--border-lite);margin-bottom:2px">
-              <span class="witb-lb-rank" style="visibility:hidden" aria-hidden="true">0</span>
-              <span class="witb-lb-name" style="font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)">Brand</span>
-              ${colHdr('W/W')}${colHdr('M/M')}${colHdr('3M')}
+            <div class="witb-mom-row witb-mom-row--head">
+              <span class="witb-lb-name witb-mom-name witb-mom-head">Brand</span>
+              ${colHdr('1M')}${colHdr('3M')}${colHdr('6M')}${colHdr('12M')}
             </div>
             ${brandRows}
-            <p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:10px;text-transform:uppercase;letter-spacing:.05em">Change in ranked players carrying the brand, vs. their bags 7, 30 and 90 days ago. Counts only players tracked in both windows, so new additions do not read as gains.</p>
+            <p style="font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);margin-top:10px;text-transform:uppercase;letter-spacing:.05em;line-height:1.6">Change in ranked players carrying the brand vs. their bags 1, 3, 6 and 12 months ago. Fill intensity is the size of the move; a dot means no change. Counts only players tracked in both windows, so new additions do not read as gains.</p>
           </div>
         </section>`;
         })()}
