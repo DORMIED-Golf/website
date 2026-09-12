@@ -21,6 +21,7 @@
     "regenerate:search-index": "node scripts/generate-search-index.js",
     "regenerate:ticker": "node scripts/generate-ticker-data.js",
     "verify:ticker": "node scripts/generate-ticker-data.js --check",
+    "backfill:headshots": "node scripts/backfill-player-headshots.js",
     "deploy": "vercel --prod",
     "verify:css": "node scripts/verify-css-parity.js",
     "refresh:signup-blocks": "node scripts/refresh-signup-blocks.js",
