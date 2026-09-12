@@ -137,7 +137,7 @@ async function fetchAllData() {
     sb.from('witb_bag_items')
       // bag_date is carried for the Brand Momentum windows, which reconstruct
       // each player's bag as of a past date from the historical (non-current) rows.
-      .select('club_type, raw_brand, raw_model, loft_or_number, brand_id, bag_id, witb_brands!brand_id(slug, name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id, bag_date)')
+      .select('club_type, raw_brand, raw_model, raw_shaft, loft_or_number, brand_id, bag_id, witb_brands!brand_id(slug, name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id, bag_date)')
       .range(from, to)
   );
   const currentItems = items.filter(i => i.witb_bags?.is_current === true);
@@ -587,6 +587,17 @@ function vitUrl(src, w) {
   return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
 }
 
+/* Player slugs that have a generated WITB page, so nothing links to a 404.
+   Shared by Recent Bag Updates and Freshest Bag. */
+function readPlayerPages() {
+  try {
+    return new Set(
+      fs.readdirSync(path.join(ROOT, 'witb', 'players'), { withFileTypes: true })
+        .filter(d => d.isDirectory()).map(d => d.name)
+    );
+  } catch { return new Set(); }
+}
+
 function buildChangesHtml(changes, brands, playerMap) {
   if (!changes || changes.length === 0) {
     return `<div class="witb-moves-empty">No bag changes recorded yet. Check back after Tuesday's update.</div>`;
@@ -610,14 +621,7 @@ function buildChangesHtml(changes, brands, playerMap) {
     return esc(val);
   };
 
-  // Player slugs that have a generated WITB page, so we never link to a 404.
-  let playerPages = new Set();
-  try {
-    playerPages = new Set(
-      fs.readdirSync(path.join(ROOT, 'witb', 'players'), { withFileTypes: true })
-        .filter(d => d.isDirectory()).map(d => d.name)
-    );
-  } catch { /* players dir not built yet */ }
+  const playerPages = readPlayerPages();
 
   // One card per player, six most recent. Was one flat row per change, which
   // meant a player who rebuilt five slots dominated the list and read as five
@@ -760,7 +764,133 @@ function fmtBagDateShort(isoDate) {
   return `${mon} ${d.getUTCFullYear()}`;
 }
 
-function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
+/* ── Freshest Bag ────────────────────────────────────────────────────────────
+   Editorial spotlight on the most recently updated bag. The prototype pairs each
+   row with a product photo; we have no licensed source for those, so rows are
+   slot / model / spec / status only and the layout is a single column rather than
+   an image panel plus list.
+
+   The prototype's intro was hand-written prose about one specific player. That
+   cannot be generated honestly for whoever happens to be freshest this week, so
+   the intro here states only what the data says: how many slots changed and how. */
+function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes, playerPages }) {
+  const SLOT_ORDER = ['driver','mini-driver','3-wood','4-wood','5-wood','7-wood','9-wood',
+                      'hybrid','utility','utility-iron','driving-iron','iron','wedge','putter','ball','grip'];
+  const SLOT_LABEL = {
+    'driver':'Driver','mini-driver':'Mini Driver','3-wood':'3-Wood','4-wood':'4-Wood','5-wood':'5-Wood',
+    '7-wood':'7-Wood','9-wood':'9-Wood','hybrid':'Hybrid','utility':'Utility','utility-iron':'Utility Iron',
+    'driving-iron':'Driving Iron','iron':'Irons','wedge':'Wedges','putter':'Putter','ball':'Ball','grip':'Grip',
+  };
+
+  const dated = rankedPlayers.filter(p => p.current_bag_id && bagDateMap.get(p.current_bag_id));
+  if (!dated.length) return '';
+
+  /* Prefer the most recently CHANGED bag over the most recently DATED one. A
+     player's first crawl gives them the newest bag_date but no change rows, so
+     keying on date alone picked a bag with nothing to annotate and printed
+     "every slot is unchanged" under a heading that promises the opposite. */
+  const changedFirst = (changes || [])
+    .map(c => c.player_id)
+    .find(id => dated.some(p => p.id === id));
+  const player = (changedFirst && dated.find(p => p.id === changedFirst))
+    || dated.reduce((best, p) =>
+        (bagDateMap.get(p.current_bag_id) || '') > (bagDateMap.get(best.current_bag_id) || '') ? p : best);
+
+  const items = currentItems.filter(i => i.bag_id === player.current_bag_id);
+  if (!items.length) return '';
+
+  // Status per slot, from the change log for this player.
+  const mine = (changes || []).filter(c => c.player_id === player.id);
+  const statusByType = new Map();
+  for (const c of mine) {
+    const t = c.change_type === 'added' ? 'Added' : c.change_type === 'removed' ? 'Removed' : 'Swapped';
+    if (!statusByType.has(c.club_type)) statusByType.set(c.club_type, t);
+  }
+
+  /* Removed clubs are gone from the current bag, so there is no item row for
+     them. Without synthesising one the intro claims "1 removed" and the list
+     shows nothing removed. Add them back as struck-through rows so the bag reads
+     as a before-and-after, which is what the section is for. */
+  const removedRows = mine
+    .filter(c => c.change_type === 'removed' && c.old_value)
+    .map(c => ({
+      club_type: c.club_type,
+      raw_brand: '',
+      raw_model: c.old_value,
+      loft_or_number: null,
+      raw_shaft: null,
+      _removed: true,
+    }));
+
+  const ordered = [...items, ...removedRows].sort((a, b) => {
+    const ai = SLOT_ORDER.indexOf(a.club_type), bi = SLOT_ORDER.indexOf(b.club_type);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+
+  const rows = ordered.map(i => {
+    const brand = i.witb_brands?.name || i.raw_brand || '';
+    const model = (i.raw_model || '').trim();
+    const name  = [brand, model].filter(Boolean).join(' ') || 'Unspecified';
+    const spec  = [i.loft_or_number, i.raw_shaft].filter(Boolean).join(' \u00b7 ');
+    const st    = i._removed ? 'Removed' : (statusByType.get(i.club_type) === 'Removed' ? '' : (statusByType.get(i.club_type) || ''));
+    const cls   = st === 'Removed' ? ' witb-fb-model--out' : '';
+    const tag   = st
+      ? `<span class="witb-move-tag witb-move-tag--${st === 'Removed' ? 'removed' : 'added'}">${st}</span>`
+      : '';
+    return `<div class="witb-fb-row">
+      <span class="witb-fb-slot">${esc(SLOT_LABEL[i.club_type] || i.club_type)}</span>
+      <span class="witb-fb-body">
+        <span class="witb-fb-model${cls}">${esc(name)}</span>
+        ${i._removed ? '<span class="witb-fb-spec">Out of the bag</span>' : (spec ? `<span class="witb-fb-spec">${esc(spec)}</span>` : '')}
+      </span>
+      ${tag}
+    </div>`;
+  }).join('');
+
+  const counts = { Added: 0, Removed: 0, Swapped: 0 };
+  for (const t of statusByType.values()) counts[t]++;
+  const parts = Object.entries(counts).filter(([, n]) => n > 0).map(([k, n]) => `${n} ${k.toLowerCase()}`);
+  // Title case for prose; fmtBagDateShort returns "SEP 2026", which is correct
+  // in a table cell and shouty in a sentence.
+  const when  = fmtBagDateShort(bagDateMap.get(player.current_bag_id))
+    .replace(/^([A-Z])([A-Z]{2})/, (_, a, b) => a + b.toLowerCase());
+  const intro = parts.length
+    ? `${esc(player.name)}'s bag was last recorded ${esc(when)} with ${esc(parts.join(', '))} across ${statusByType.size} slot${statusByType.size === 1 ? '' : 's'}.`
+    : `${esc(player.name)}'s bag was last recorded ${esc(when)}. Every slot is unchanged since the previous snapshot.`;
+
+  const ini = (() => {
+    const ps = String(player.name || '').trim().split(/\s+/);
+    return (ps.length >= 2 ? ps[0][0] + ps[ps.length - 1][0] : String(player.name || '').slice(0, 2)).toUpperCase();
+  })();
+  const face = player.headshot_url
+    ? `<img class="witb-fb-face" src="${esc(vitUrl(player.headshot_url, 200))}" width="88" height="88" loading="lazy" decoding="async" alt=""`
+      + ` onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      + `<span class="witb-fb-face witb-fb-face--ini" style="display:none">${esc(ini)}</span>`
+    : `<span class="witb-fb-face witb-fb-face--ini">${esc(ini)}</span>`;
+
+  const hasPage = player.slug && playerPages.has(player.slug);
+  const nameHtml = hasPage
+    ? `<a href="/witb/players/${esc(player.slug)}/">${esc(player.name)}</a>`
+    : esc(player.name);
+
+  return `<section class="witb-section" aria-labelledby="freshest-heading">
+  <h2 class="witb-section-title" id="freshest-heading">Freshest Bag</h2>
+  <p class="witb-section-sub">The most recently recorded setup on tour</p>
+  <div class="witb-fb-card">
+    <div class="witb-fb-head">
+      ${face}
+      <span class="witb-fb-ident">
+        <span class="witb-fb-name">${nameHtml}</span>
+        <span class="witb-fb-meta">#${player.owgr_rank} &middot; ${esc(String(items.length))} items logged</span>
+      </span>
+    </div>
+    <p class="witb-fb-intro">${intro}</p>
+    ${rows}
+  </div>
+</section>`;
+}
+
+function buildFindPlayerHtml(rankedPlayers, bagDateMap, searchableCount) {
   // Recent bags: 5 players with the most recent current bag_date
   const withDate = rankedPlayers.filter(p => p.current_bag_id && bagDateMap.has(p.current_bag_id));
   const recentBags = [...withDate]
@@ -772,26 +902,54 @@ function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
     .sort((a, b) => a.owgr_rank - b.owgr_rank)
     .slice(0, 5);
 
+  function initialsOf(name) {
+    const parts = String(name || '').trim().split(/\s+/);
+    return (parts.length >= 2 ? parts[0][0] + parts[parts.length - 1][0] : String(name || '').slice(0, 2)).toUpperCase();
+  }
+
   function playerRow(p, showDate) {
+    // Flag AND headshot: the design dropped flags, but they carry nationality at
+    // a glance and were kept on request.
     const flag    = buildFlagHtmlInline(p.country_code, p.nation);
-    const rankStr = `#${p.owgr_rank}`;
+    const ini     = esc(initialsOf(p.name));
+    const face    = p.headshot_url
+      ? `<img class="witb-fp-face" src="${esc(vitUrl(p.headshot_url, 80))}" width="34" height="34" loading="lazy" decoding="async" alt=""`
+        + ` onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        + `<span class="witb-fp-face witb-fp-face--ini" style="display:none">${ini}</span>`
+      : `<span class="witb-fp-face witb-fp-face--ini">${ini}</span>`;
+    // #1/#2/#3 take medal colours, everyone else green.
+    const rankCls = p.owgr_rank === 1 ? ' witb-fp-rank--gold'
+                  : p.owgr_rank === 2 ? ' witb-fp-rank--silver'
+                  : p.owgr_rank === 3 ? ' witb-fp-rank--bronze' : '';
     const dateStr = showDate ? fmtBagDateShort(bagDateMap.get(p.current_bag_id)) : '';
     return `<a href="/witb/players/${esc(p.slug)}/" class="witb-fp-row">
+        ${face}
         <span class="witb-fp-flag">${flag}</span>
         <span class="witb-fp-name">${esc(p.name)}</span>
-        <span class="witb-fp-rank">${esc(rankStr)}</span>
+        <span class="witb-fp-rank${rankCls}">#${p.owgr_rank}</span>
         ${dateStr ? `<span class="witb-fp-date">${esc(dateStr)}</span>` : ''}
       </a>`;
   }
 
   const recentHtml = recentBags.map(p => playerRow(p, true)).join('');
   const topHtml    = topRanked.map(p => playerRow(p, false)).join('');
+  const countLabel = searchableCount ? `Search ${fmt(searchableCount)} players\u2026` : 'Search players\u2026';
 
   return `<section class="witb-section witb-find-player" aria-labelledby="find-player-heading">
   <div class="witb-fp-header">
     <h2 class="witb-section-title" id="find-player-heading">Find a Player</h2>
     <a href="/witb/players/" class="btn btn--cta btn--mono">Browse All Players &rarr;</a>
   </div>
+  <!-- Drives the existing site-wide search overlay rather than a second search
+       implementation: that one already indexes every player, ranked or not. -->
+  <form class="witb-fp-search" id="witb-fp-search" role="search" action="/witb/players/" method="get">
+    <input type="search" id="witb-fp-q" class="witb-fp-input" placeholder="${esc(countLabel)}"
+      autocomplete="off" aria-label="Search players">
+    <button type="submit" class="witb-fp-btn" aria-label="Search players">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+      Search
+    </button>
+  </form>
   <div class="witb-fp-grid">
     <div class="witb-fp-col">
       <div class="witb-fp-col-label">Recent Bags</div>
@@ -1046,6 +1204,50 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
     .witb-scatter-cb-label input[type=checkbox]{accent-color:var(--green);cursor:pointer;width:11px;height:11px}
     /* Find A Player section */
     .witb-find-player{background:var(--bg-raised);border:1px solid var(--green-dim);border-radius:var(--radius);padding:16px 14px 12px}
+    /* Hero stat block, moved out of the text strip that sat above Find a Player */
+    .witb-hero-content{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+    .witb-hero-stats{display:flex;border:1px solid var(--border);border-radius:var(--radius);flex-shrink:0}
+    .witb-hero-stat{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 18px;border-right:1px solid var(--border)}
+    .witb-hero-stat:last-child{border-right:none}
+    .witb-hero-stat-val{font-family:var(--font-display);font-size:1.8rem;font-weight:700;font-style:italic;color:var(--green);line-height:1}
+    .witb-hero-stat-label{font-family:var(--font-mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted)}
+    .witb-hero-updated{font-family:var(--font-mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:10px 0 0}
+    @media (max-width:620px){.witb-hero-stats{width:100%}.witb-hero-stat{flex:1;padding:10px 8px}.witb-hero-stat-val{font-size:1.3rem}}
+
+    /* Find a Player is the page's primary action, so it is the only section on a
+       raised, green-bordered surface. */
+    .witb-find-player{background:var(--bg-raised);border:1px solid var(--green-dim);border-radius:var(--radius);padding:16px 14px 12px}
+    .witb-fp-search{display:flex;max-width:520px;margin:0 0 14px}
+    .witb-fp-input{flex:1;min-width:0;background:var(--bg-surface);border:1px solid var(--border);border-right:0;border-radius:4px 0 0 4px;padding:9px 12px;font-family:var(--font-mono);font-size:.75rem;color:var(--text)}
+    .witb-fp-input::placeholder{color:var(--text-muted)}
+    .witb-fp-input:focus{outline:none;border-color:var(--green)}
+    .witb-fp-btn{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#052e0e;border:1px solid var(--green);border-radius:0 4px 4px 0;padding:9px 14px;font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
+    .witb-fp-btn:hover{background:#1aae52}
+    .witb-fp-face{width:34px;height:34px;border-radius:3px;flex-shrink:0;object-fit:cover;object-position:50% 12%;background:var(--bg-surface)}
+    .witb-fp-face--ini{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted)}
+    .witb-fp-rank--gold{color:var(--gold)}
+    .witb-fp-rank--silver{color:var(--silver)}
+    .witb-fp-rank--bronze{color:var(--bronze)}
+
+    /* Freshest Bag. Single column, no product images; see the generator note. */
+    .witb-fb-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+    .witb-fb-head{display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--border-lite)}
+    .witb-fb-face{width:88px;height:88px;border-radius:var(--radius-sm);flex-shrink:0;object-fit:cover;object-position:50% 12%;background:var(--bg-raised)}
+    .witb-fb-face--ini{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:1.3rem;color:var(--text-muted)}
+    .witb-fb-ident{display:flex;flex-direction:column;gap:3px;min-width:0}
+    .witb-fb-name{font-family:var(--font-display);font-size:1.35rem;font-weight:700;font-style:italic;text-transform:uppercase;letter-spacing:.02em;color:var(--text)}
+    .witb-fb-name a{color:var(--text)}
+    .witb-fb-name a:hover{color:var(--green)}
+    .witb-fb-meta{font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted)}
+    .witb-fb-intro{font-size:.875rem;line-height:1.65;color:var(--text-dim);margin:10px 0 4px}
+    .witb-fb-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+    .witb-fb-row:last-child{border-bottom:none}
+    .witb-fb-slot{font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);width:84px;flex-shrink:0}
+    .witb-fb-body{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+    .witb-fb-model{font-size:.8125rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .witb-fb-model--out{color:var(--text-muted);text-decoration:line-through}
+    .witb-fb-spec{font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    @media (max-width:520px){.witb-fb-head{flex-wrap:wrap}.witb-fb-slot{width:64px}}
     .witb-fp-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
     .witb-fp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     @media(max-width:500px){.witb-fp-grid{grid-template-columns:1fr}}
@@ -1155,13 +1357,35 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
   <main>
     <section class="hero-section" aria-labelledby="witb-page-title">
       <div class="container">
-        <div class="hero-content">
+        <div class="hero-content witb-hero-content">
           <div class="hero-text">
             <h1 id="witb-page-title" class="hero-title">What's In The Bag</h1>
             <p class="hero-subhead">Tour Equipment Data</p>
             <p class="hero-desc">What the tour actually plays, and how it lines up with what the amateur game is paying attention to.</p>
           </div>
+          <!-- Summary stats. Moved out of a text strip above Find a Player and
+               into the hero so the page opens on the numbers rather than burying
+               them above the fold's primary action. -->
+          <div class="witb-hero-stats" aria-label="WITB summary stats">
+            <div class="witb-hero-stat">
+              <span class="witb-hero-stat-val">${fmt(totalPlayers)}</span>
+              <span class="witb-hero-stat-label">Players</span>
+            </div>
+            <div class="witb-hero-stat">
+              <span class="witb-hero-stat-val">${fmt(totalItems)}</span>
+              <span class="witb-hero-stat-label">Items</span>
+            </div>
+            <div class="witb-hero-stat">
+              <span class="witb-hero-stat-val">${fmt(totalBrands)}</span>
+              <span class="witb-hero-stat-label">Brands</span>
+            </div>
+            <div class="witb-hero-stat">
+              <span class="witb-hero-stat-val">${fmt(uniqueClubTypes)}</span>
+              <span class="witb-hero-stat-label">Categories</span>
+            </div>
+          </div>
         </div>
+        ${lastUpdatedDisplay ? `<p class="witb-hero-updated">Updated <span class="witb-pulse-val">${esc(lastUpdatedDisplay)}</span></p>` : ''}
       </div>
     </section>
 
@@ -1169,20 +1393,11 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
       <!-- ── LEFT / MAIN COLUMN ─────────────────────────────────────────── -->
       <div class="witb-main">
 
-        <!-- WIDGET 1: TOUR PULSE STRIP -->
-        <div class="witb-pulse" aria-label="WITB summary stats">
-          <span><span class="witb-pulse-val">${fmt(totalPlayers)}</span> players tracked</span>
-          <span class="witb-pulse-sep">&middot;</span>
-          <span><span class="witb-pulse-val">${fmt(totalItems)}</span> items logged</span>
-          <span class="witb-pulse-sep">&middot;</span>
-          <span><span class="witb-pulse-val">${fmt(totalBrands)}</span> brands represented</span>
-          <span class="witb-pulse-sep">&middot;</span>
-          <span><span class="witb-pulse-val">${fmt(uniqueClubTypes)}</span> club categories</span>
-          ${lastUpdatedDisplay ? `<span class="witb-pulse-sep">&middot;</span><span>Updated <span class="witb-pulse-val">${esc(lastUpdatedDisplay)}</span></span>` : ''}
-        </div>
-
         <!-- FIND A PLAYER -->
-        ${buildFindPlayerHtml(rankedPlayers, bagDateMap)}
+        ${buildFindPlayerHtml(rankedPlayers, bagDateMap, players.length)}
+
+        <!-- FRESHEST BAG -->
+        ${buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems: rankedCurrentItemsAll, changes, playerPages: readPlayerPages() })}
 
         <!-- WIDGET 3: BAG MOVES -->
         <section class="witb-section" aria-labelledby="moves-heading">
@@ -1656,6 +1871,29 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
       updateChart();
     });
 
+    // Find a Player field hands off to the site-wide search overlay, which
+    // already indexes all players with headshots. Falls through to a normal
+    // form submit to /witb/players/ if that overlay is not present.
+    (function(){
+      var form = document.getElementById('witb-fp-search');
+      var q    = document.getElementById('witb-fp-q');
+      if (!form || !q) return;
+      function handoff(){
+        var trigger = document.querySelector('.site-search-trigger');
+        var input   = document.querySelector('.site-search-input');
+        if (!trigger || !input) return false;
+        trigger.click();
+        input.value = q.value;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.focus();
+        return true;
+      }
+      form.addEventListener('submit', function(e){
+        if (!q.value.trim()) return;      // empty submit goes to the browse page
+        if (handoff()) e.preventDefault();
+      });
+    })();
+
     // Search filters checkbox labels (not chart dots)
     document.getElementById('scatter-brand-search').addEventListener('input', function(){
       var q = this.value.toLowerCase().trim();
@@ -1808,7 +2046,14 @@ async function main() {
     ['Shafts leaderboard',  html.includes('id="shafts"')],
     ['Grips leaderboard',   html.includes('id="grips"')],
     ['Scatter filter',      html.includes('scatter-brand-search')],
-    ['pgaclubtracker',      html.includes('pgaclubtracker')],
+    // The data-source paragraph that named pgaclubtracker was removed from the
+    // methodology on request, so asserting its presence would now fail forever.
+    // Replaced with checks on the sections this page gained instead.
+    ['Freshest Bag',        html.includes('freshest-heading')],
+    ['Recent Bag Updates',  html.includes('witb-move-card')],
+    ['Hero stats',          html.includes('witb-hero-stats')],
+    ['Player search field', html.includes('witb-fp-search')],
+    ['No Brand Tour Share',!html.includes('share-heading')],
     ['dormied-latest-list', html.includes('dormied-latest-list')],
     ['home-stories-list',   html.includes('home-stories-list')],
     ['Hamburger btn',       html.includes('nav-hamburger')],
