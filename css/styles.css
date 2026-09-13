@@ -7305,6 +7305,13 @@ details[open] .faq-question::after { content: '−'; }
   flex: 1;
   min-width: 0;
 }
+.witb-move-more {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-muted);
+}
 .witb-move-detail a { color: var(--text); }
 .witb-move-detail a:hover { color: var(--green); }
 .witb-move-arrow { color: var(--text-muted); padding: 0 3px; }

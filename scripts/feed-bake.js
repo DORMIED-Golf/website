@@ -568,7 +568,7 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
     // Recently Updated Bags: 5 most recent distinct players from witb_changes
     const { data: changes } = await supabase
       .from('witb_changes')
-      .select('player_id, club_type, change_type, detected_at, witb_players!player_id(name, slug, headshot_url)')
+      .select('player_id, club_type, change_type, detected_at, old_bag_date, witb_players!player_id(name, slug, headshot_url)')
       .order('detected_at', { ascending: false })
       .limit(60);
     const seen = new Set();
@@ -577,8 +577,14 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
       const p = c.witb_players;
       if (!p || !p.slug || seen.has(p.slug)) continue;
       seen.add(p.slug);
-      const verb = c.change_type === 'added' ? 'added' : c.change_type === 'removed' ? 'dropped' : 'new';
-      bagRows.push({ slug: p.slug, name: p.name, headshot: p.headshot_url || null, note: (verb + ' ' + (c.club_type || 'club')).toUpperCase() });
+      // A null old_bag_date means this row came from a debut: the player's first
+      // bag, diffed against nothing. "ADDED GRIP" would be a strange way to
+      // announce someone joining the dataset, so say what actually happened.
+      const note = c.old_bag_date === null
+        ? 'NEW BAG'
+        : ((c.change_type === 'added' ? 'added' : c.change_type === 'removed' ? 'dropped' : 'new')
+           + ' ' + (c.club_type || 'club')).toUpperCase();
+      bagRows.push({ slug: p.slug, name: p.name, headshot: p.headshot_url || null, note: note });
     }
     if (pins.recent_bags) {
       const idx = bagRows.findIndex(function (r) { return r.slug === pins.recent_bags; });

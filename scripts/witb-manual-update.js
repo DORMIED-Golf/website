@@ -98,12 +98,30 @@ async function upsertShaft(supabase, { slug, model }) {
   return data?.id || null;
 }
 
-// Mirror of witb-scrape.js detectChanges — records added/removed/swapped clubs.
+/**
+ * Mirror of witb-scrape.js detectChanges — records added/removed/swapped clubs.
+ *
+ * oldBagId may be null: that is a DEBUT, a player's first bag. It used to be
+ * skipped entirely, on the reasoning that there is nothing to diff against. The
+ * cost was that a new player never appeared in Freshest Bag, Recent Bag Updates
+ * or the site-wide Recently Updated Bags module -- arriving with a full bag, the
+ * most newsworthy update there is, was the one event that surfaced nowhere.
+ *
+ * A debut diffs against the empty bag, so every club comes out as 'added' with a
+ * null old_bag_date. That null is the discriminator the renderers use to say
+ * "new bag" rather than "11 changes": no row from a real diff has ever had one
+ * (0 of 386 at the time of writing), because a real diff always knows the date
+ * of the bag it replaced.
+ */
 async function detectChanges(supabase, player_id, oldBagId, newBagId, oldBagDate, newBagDate) {
   const [{ data: oldItems }, { data: newItems }] = await Promise.all([
-    supabase.from('witb_bag_items').select('club_type, raw_brand, raw_model').eq('bag_id', oldBagId),
+    oldBagId
+      ? supabase.from('witb_bag_items').select('club_type, raw_brand, raw_model').eq('bag_id', oldBagId)
+      : Promise.resolve({ data: [] }),
     supabase.from('witb_bag_items').select('club_type, raw_brand, raw_model').eq('bag_id', newBagId),
   ]);
+  // Never carry a stale date into a debut row; the discriminator depends on it.
+  if (!oldBagId) oldBagDate = null;
   const toMap = rows => {
     const m = {};
     for (const i of (rows || [])) m[i.club_type] = `${i.raw_brand || ''} ${i.raw_model || ''}`.trim();
@@ -200,13 +218,23 @@ async function applyBag(supabase, bag, players) {
   await supabase.from('witb_players')
     .update({ current_bag_id: bag_id, last_updated: new Date().toISOString() }).eq('id', player.id);
 
+  // A debut (no oldBag) is diffed against the empty bag rather than skipped, so
+  // the player reaches the freshness modules. Re-running the same bag_date is
+  // still a no-op: oldBag is then this same bag and the id check short-circuits.
   let changeCount = 0;
-  if (oldBag && oldBag.id !== bag_id) {
-    const changes = await detectChanges(supabase, player.id, oldBag.id, bag_id, oldBag.bag_date, bag_date);
+  const isDebut = !oldBag;
+  if (isDebut || oldBag.id !== bag_id) {
+    const changes = await detectChanges(
+      supabase, player.id,
+      isDebut ? null : oldBag.id, bag_id,
+      isDebut ? null : oldBag.bag_date, bag_date);
     changeCount = changes.length;
     changes.forEach(c => console.log(`  ${c.change_type}: ${c.club_type}  ${c.old_value || '-'} -> ${c.new_value || '-'}`));
   }
-  return { status: created ? 'created' : 'updated', slug: player.slug, detail: `${items.length} items${created ? ' (new player)' : `, ${changeCount} change(s)`}` };
+  const detail = created
+    ? `${items.length} items (new player, ${changeCount} debut row(s))`
+    : `${items.length} items, ${changeCount} change(s)`;
+  return { status: created ? 'created' : 'updated', slug: player.slug, detail };
 }
 
 async function main() {

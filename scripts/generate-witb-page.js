@@ -181,7 +181,7 @@ async function fetchAllData() {
 
   // 5. Recent bag changes (for Widget 3)
   const { data: changes, error: changesErr } = await sb.from('witb_changes')
-    .select('player_id, club_type, change_type, old_value, new_value, detected_at')
+    .select('player_id, club_type, change_type, old_value, new_value, detected_at, old_bag_date')
     .order('detected_at', { ascending: false })
     // 15 was enough for a flat row list but not for six DISTINCT players: a
     // single rebuild can be 5+ changes for one golfer.
@@ -698,7 +698,17 @@ function buildChangesHtml(changes, brands, playerMap, excludePlayerId) {
       ? new Date(dates[dates.length - 1]).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
       : '';
 
-    const rowsHtml = rows.map(c => {
+    // A debut: every row diffed against the empty bag, so old_bag_date is null.
+    // No row from a real diff has one, because a real diff knows the date of the
+    // bag it replaced.
+    const isDebut = rows.every(c => c.old_bag_date == null);
+
+    // Six cards sit in a grid, so one card listing eleven slots while its
+    // neighbour lists one leaves a ragged column. A debut is the only thing that
+    // reaches eleven, but the cap is uniform rather than special-cased.
+    const ROW_LIMIT = 6;
+    const shown = rows.slice(0, ROW_LIMIT);
+    const rowsHtml = shown.map(c => {
       let moveHtml;
       if (c.change_type === 'added') {
         moveHtml = `<span class="witb-move-tag witb-move-tag--added">Added</span>${linkValue(c.new_value)}`;
@@ -711,11 +721,18 @@ function buildChangesHtml(changes, brands, playerMap, excludePlayerId) {
         <span class="witb-move-club">${esc(c.club_type)}</span>
         <span class="witb-move-detail">${moveHtml}</span>
       </div>`;
-    }).join('');
+    }).join('')
+      + (rows.length > ROW_LIMIT
+          ? `<div class="witb-move-change"><span class="witb-move-club"></span>`
+            + `<span class="witb-move-detail witb-move-more">`
+            + `+${rows.length - ROW_LIMIT} more slot${rows.length - ROW_LIMIT === 1 ? '' : 's'}</span></div>`
+          : '');
 
     const rankLine = [
       p?.owgr_rank ? `#${p.owgr_rank}` : null,
-      `${rows.length} change${rows.length === 1 ? '' : 's'}`,
+      // "11 changes" would describe a player who rebuilt their whole bag, not one
+      // who just joined the dataset.
+      isDebut ? 'New bag' : `${rows.length} change${rows.length === 1 ? '' : 's'}`,
     ].filter(Boolean).join(' \u00b7 ');
 
     return `<article class="witb-move-card">
@@ -851,6 +868,11 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
 
   // Status per slot, from the change log for this player.
   const mine = (changes || []).filter(c => c.player_id === player.id);
+  /* A debut: every row diffed against the empty bag, so old_bag_date is null.
+     Each slot is then technically "Added", but tagging all sixteen of them says
+     nothing the intro does not already say more clearly, so the tags are
+     suppressed and the section reads as what it is -- a bag, listed. */
+  const isDebut = mine.length > 0 && mine.every(c => c.old_bag_date == null);
   const statusByType = new Map();
   for (const c of mine) {
     const t = c.change_type === 'added' ? 'Added' : c.change_type === 'removed' ? 'Removed' : 'Swapped';
@@ -892,7 +914,7 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
           : esc([brand, model].filter(Boolean).join(' ')))
       : (esc(model) || 'Unspecified');
     const spec  = [i.loft_or_number, i.raw_shaft].filter(Boolean).join(' \u00b7 ');
-    const st    = i._removed ? 'Removed' : (statusByType.get(i.club_type) === 'Removed' ? '' : (statusByType.get(i.club_type) || ''));
+    const st    = isDebut ? '' : (i._removed ? 'Removed' : (statusByType.get(i.club_type) === 'Removed' ? '' : (statusByType.get(i.club_type) || '')));
     const cls   = st === 'Removed' ? ' witb-fb-model--out' : '';
     const tag   = st
       ? `<span class="witb-move-tag witb-move-tag--${st === 'Removed' ? 'removed' : 'added'}">${st}</span>`
@@ -914,9 +936,13 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
   // in a table cell and shouty in a sentence.
   const when  = fmtBagDateShort(bagDateMap.get(player.current_bag_id))
     .replace(/^([A-Z])([A-Z]{2})/, (_, a, b) => a + b.toLowerCase());
-  const intro = parts.length
-    ? `${esc(player.name)}'s bag was last recorded ${esc(when)} with ${esc(parts.join(', '))} across ${statusByType.size} slot${statusByType.size === 1 ? '' : 's'}.`
-    : `${esc(player.name)}'s bag was last recorded ${esc(when)}. Every slot is unchanged since the previous snapshot.`;
+  // A debut has no previous snapshot to compare against, so "10 added across 10
+  // slots" would describe a total rebuild rather than a first appearance.
+  const intro = isDebut
+    ? `${esc(player.name)} enters the dataset with a bag recorded ${esc(when)}. All ${statusByType.size} slot${statusByType.size === 1 ? '' : 's'} are on record for the first time, so there is nothing yet to compare them against.`
+    : parts.length
+      ? `${esc(player.name)}'s bag was last recorded ${esc(when)} with ${esc(parts.join(', '))} across ${statusByType.size} slot${statusByType.size === 1 ? '' : 's'}.`
+      : `${esc(player.name)}'s bag was last recorded ${esc(when)}. Every slot is unchanged since the previous snapshot.`;
 
   const ini = (() => {
     const ps = String(player.name || '').trim().split(/\s+/);

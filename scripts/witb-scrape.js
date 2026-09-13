@@ -578,12 +578,24 @@ async function fetchAllPlayers() {
 
 /**
  * Diff two bags' items by club_type and write witb_changes rows.
+ *
+ * oldBagId may be null: that is a DEBUT, a player's first bag, diffed against
+ * the empty bag so every club records as 'added' with a null old_bag_date.
+ * Debuts used to be skipped, which meant a player arriving with a full bag --
+ * the most newsworthy update there is -- was the one event that never reached
+ * Freshest Bag, Recent Bag Updates or the sidebar module. Kept identical to the
+ * manual updater's copy of this function; if you change one, change both.
  */
 async function detectChanges(supabase, player_id, oldBagId, newBagId, oldBagDate, newBagDate) {
   const [{ data: oldItems }, { data: newItems }] = await Promise.all([
-    supabase.from('witb_bag_items').select('club_type, raw_brand, raw_model').eq('bag_id', oldBagId),
+    oldBagId
+      ? supabase.from('witb_bag_items').select('club_type, raw_brand, raw_model').eq('bag_id', oldBagId)
+      : Promise.resolve({ data: [] }),
     supabase.from('witb_bag_items').select('club_type, raw_brand, raw_model').eq('bag_id', newBagId),
   ]);
+  // The null old_bag_date is what the renderers read to say "new bag" rather
+  // than "11 changes", so never let a stale date reach a debut row.
+  if (!oldBagId) oldBagDate = null;
 
   const oldMap = {};
   for (const i of (oldItems || [])) {
@@ -894,13 +906,12 @@ async function runWeeklyCrawl(supabase) {
             .update({ current_bag_id: bagRes.bag_id })
             .eq('id', existing.id);
 
-          // Detect changes vs old bag
-          if (currentBag) {
-            const n = await detectChanges(supabase, existing.id,
-              currentBag.id, bagRes.bag_id,
-              currentBag.bag_date, bag_date);
-            changes_detected += n;
-          }
+          // Detect changes vs the old bag, or vs the empty bag when this is the
+          // player's first: a debut belongs in the freshness modules too.
+          const n = await detectChanges(supabase, existing.id,
+            currentBag ? currentBag.id : null, bagRes.bag_id,
+            currentBag ? currentBag.bag_date : null, bag_date);
+          changes_detected += n;
           changedSlugs.push(canonSlug);
         }
         players_scraped++;
