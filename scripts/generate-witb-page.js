@@ -445,11 +445,18 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
   const shaftShareTotal = shaftLeaderboard.reduce((s, b) => s + b.count, 0) || 1;
   const treemapShaft = shaftLeaderboard.map(b => ({ ...b, pct: b.count / shaftShareTotal * 100 }));
 
-  // Inject real shaft data into the leaderboards array in place of the empty stub
+  // Inject real shaft data into the leaderboards array in place of the empty stub.
+  //
+  // All THREE fields, not two. Shafts are the one category not keyed on
+  // club_type -- they come off raw_shaft -- so they miss the generic pass that
+  // derives these, and the stub they replace was built from an empty brand list
+  // with totalCount 1. Setting brands and topCount but not totalCount left every
+  // share dividing by that 1, which rendered Fujikura's 71 bags as "7100.0%".
   const shaftLb = leaderboards.find(l => l.key === 'shafts');
   if (shaftLb) {
-    shaftLb.brands   = shaftLeaderboard;
-    shaftLb.topCount = shaftTopCount;
+    shaftLb.brands     = shaftLeaderboard;
+    shaftLb.topCount   = shaftTopCount;
+    shaftLb.totalCount = shaftShareTotal;
   }
 
   const topShaftModel = Object.values(shaftModelBags)
@@ -572,7 +579,21 @@ function buildLeaderboard(cat) {
       ? `${logoHtml}<a href="/brands/${esc(b.dormied_slug)}/">${esc(b.name)}</a>`
       : `${logoHtml}${esc(b.name)}`;
     // Share of the category, one decimal. Leader in green, everyone else dimmed.
-    const share = (b.count / (cat.totalCount || 1) * 100).toFixed(1);
+    //
+    // No `|| 1` fallback here. That is what let the shafts leaderboard ship
+    // "8200.0%": a missing denominator quietly became 1 and every share turned
+    // into count x 100, which is wrong in a way that still looks like a number.
+    // A category that reaches this point with no total is a build bug, so say so
+    // and stop rather than render something a reader would believe.
+    if (!(cat.totalCount > 0)) {
+      throw new Error(`leaderboard "${cat.key}" has no totalCount (${cat.totalCount}); `
+        + 'shares would be meaningless. Set it where the category is built.');
+    }
+    if (cat.totalCount < b.count) {
+      throw new Error(`leaderboard "${cat.key}": ${b.name} counts ${b.count} but the category `
+        + `total is ${cat.totalCount}; a brand cannot exceed its own category.`);
+    }
+    const share = (b.count / cat.totalCount * 100).toFixed(1);
     return `<div class="witb-lb-row">
       <span class="witb-lb-rank">${i + 1}</span>
       <span class="witb-lb-name">${nameHtml}</span>
