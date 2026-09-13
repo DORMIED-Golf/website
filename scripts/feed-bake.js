@@ -89,6 +89,17 @@ function brandNameFromData(dormiedData, id) {
   return id;
 }
 
+/* The logo path off the brand record, never a '/images/logos/<id>.jpg' guess:
+   all 215 have a file but two of them are .png and .gif, so a constructed
+   path would 404 for those two and silently drop them to a monogram. */
+function brandLogoFromData(dormiedData, id) {
+  if (!dormiedData || !dormiedData.brands) return null;
+  for (var i = 0; i < dormiedData.brands.length; i++) {
+    if (dormiedData.brands[i].id === id) return dormiedData.brands[i].logo || null;
+  }
+  return null;
+}
+
 /* One card renderer, three box sizes.
  *
  * The same .feed-card markup renders at 276px in the sidebar, 231 to 352px in
@@ -578,11 +589,28 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
     if (!moverRows.length && !bagRows.length) return '';
 
     const nameOf = function (slug) { return brandNameFromData(dormiedData, slug) || slug; };
+    // Two initials, matching the brand-directory monogram (Titleist -> TI).
+    const brandInitials = function (name) {
+      return String(name || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase();
+    };
     const moversHtml = moverRows.map(function (r) {
-      const up  = r.mom_change_pct >= 0;
-      const pct = (up ? '+' : '') + r.mom_change_pct.toFixed(1) + '%';
+      const up   = r.mom_change_pct >= 0;
+      const pct  = (up ? '+' : '') + r.mom_change_pct.toFixed(1) + '%';
+      const name = nameOf(r.brand_slug);
+      const ini  = escHtml(brandInitials(name));
+      const src  = brandLogoFromData(dormiedData, r.brand_slug);
+      // Same img-then-monogram pattern as the bag rows below, so a missing or
+      // broken logo costs a monogram rather than a hole in the row.
+      const logo = src
+        ? '<img class="sidebar-mod-logo" src="' + escHtml(vitUrl(src, 80)) + '"'
+          + ' width="28" height="28" loading="lazy" decoding="async" alt=""'
+          + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+          + '<span class="sidebar-mod-logo sidebar-mod-logo--ini" style="display:none">' + ini + '</span>'
+        : '<span class="sidebar-mod-logo sidebar-mod-logo--ini">' + ini + '</span>';
       return '<a href="/brands/' + escHtml(r.brand_slug) + '/" class="sidebar-mod-row feed-brand-tag ' + (up ? 'feed-brand-tag--up' : 'feed-brand-tag--down') + '">'
-        + escHtml(nameOf(r.brand_slug)) + ' <span class="feed-tag-pct">' + escHtml(pct) + '</span></a>';
+        + logo
+        + '<span class="sidebar-mod-brand-name">' + escHtml(name) + '</span>'
+        + '<span class="feed-tag-pct">' + escHtml(pct) + '</span></a>';
     }).join('');
     // A player with no headshot on file falls back to initials rather than a gap,
     // so the rows stay the same height whichever it is. Two of 207 need it

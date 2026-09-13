@@ -921,7 +921,7 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
 </section>`;
 }
 
-function buildFindPlayerHtml(rankedPlayers, bagDateMap, searchableCount) {
+function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
   // Recent bags: 5 players with the most recent current bag_date
   const withDate = rankedPlayers.filter(p => p.current_bag_id && bagDateMap.has(p.current_bag_id));
   const recentBags = [...withDate]
@@ -964,23 +964,16 @@ function buildFindPlayerHtml(rankedPlayers, bagDateMap, searchableCount) {
 
   const recentHtml = recentBags.map(p => playerRow(p, true)).join('');
   const topHtml    = topRanked.map(p => playerRow(p, false)).join('');
-  const countLabel = searchableCount ? `Search ${fmt(searchableCount)} players\u2026` : 'Search players\u2026';
 
+  // No search field here by design. The nav's site-wide search already indexes
+  // every player, so a second box on this section was a duplicate entry point
+  // that also crowded the heading on narrow screens. Browse All Players covers
+  // the "I want the full list" case.
   return `<section class="witb-section witb-find-player" aria-labelledby="find-player-heading">
   <div class="witb-fp-header">
     <h2 class="witb-section-title" id="find-player-heading">Find a Player</h2>
     <a href="/witb/players/" class="btn btn--cta btn--mono">Browse All Players &rarr;</a>
   </div>
-  <!-- Drives the existing site-wide search overlay rather than a second search
-       implementation: that one already indexes every player, ranked or not. -->
-  <form class="witb-fp-search" id="witb-fp-search" role="search" action="/witb/players/" method="get">
-    <input type="search" id="witb-fp-q" class="witb-fp-input" placeholder="${esc(countLabel)}"
-      autocomplete="off" aria-label="Search players">
-    <button type="submit" class="witb-fp-btn" aria-label="Search players">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
-      Search
-    </button>
-  </form>
   <div class="witb-fp-grid">
     <div class="witb-fp-col">
       <div class="witb-fp-col-label">Recent Bags</div>
@@ -1249,12 +1242,6 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
     /* Find a Player is the page's primary action, so it is the only section on a
        raised, green-bordered surface. */
     .witb-find-player{background:var(--bg-raised);border:1px solid var(--green-dim);border-radius:var(--radius);padding:16px 14px 12px}
-    .witb-fp-search{display:flex;max-width:520px;margin:0 0 14px}
-    .witb-fp-input{flex:1;min-width:0;background:var(--bg-surface);border:1px solid var(--border);border-right:0;border-radius:4px 0 0 4px;padding:9px 12px;font-family:var(--font-mono);font-size:.75rem;color:var(--text)}
-    .witb-fp-input::placeholder{color:var(--text-muted)}
-    .witb-fp-input:focus{outline:none;border-color:var(--green)}
-    .witb-fp-btn{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#052e0e;border:1px solid var(--green);border-radius:0 4px 4px 0;padding:9px 14px;font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
-    .witb-fp-btn:hover{background:#1aae52}
     .witb-fp-face{width:34px;height:34px;border-radius:3px;flex-shrink:0;object-fit:cover;object-position:50% 12%;background:var(--bg-surface)}
     .witb-fp-face--ini{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted)}
     .witb-fp-rank--gold{color:var(--gold)}
@@ -1281,7 +1268,10 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
     .witb-fb-model{font-size:.8125rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .witb-fb-model--out{color:var(--text-muted);text-decoration:line-through}
     .witb-fb-spec{font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    @media (max-width:520px){.witb-fb-head{flex-wrap:wrap}.witb-fb-slot{width:64px}}
+    /* The one-line ellipsis works at desktop width; at 375px it cuts model and
+       shaft names to "Titleist Vokey Design Wed...", so let them wrap instead. */
+    @media (max-width:520px){.witb-fb-head{flex-wrap:wrap}.witb-fb-slot{width:64px}
+      .witb-fb-model,.witb-fb-spec{white-space:normal;overflow:visible;text-overflow:clip}}
     /* Brand Momentum heat grid */
     .witb-mom-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
     .witb-mom-row--head{padding-bottom:6px;border-bottom:1px solid var(--border-lite);margin-bottom:6px}
@@ -1441,7 +1431,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
       <div class="witb-main">
 
         <!-- FIND A PLAYER -->
-        ${buildFindPlayerHtml(rankedPlayers, bagDateMap, players.length)}
+        ${buildFindPlayerHtml(rankedPlayers, bagDateMap)}
 
         <!-- FRESHEST BAG -->
         ${buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems: rankedCurrentItemsAll, changes, playerPages: readPlayerPages() })}
@@ -1926,29 +1916,6 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
       updateChart();
     });
 
-    // Find a Player field hands off to the site-wide search overlay, which
-    // already indexes all players with headshots. Falls through to a normal
-    // form submit to /witb/players/ if that overlay is not present.
-    (function(){
-      var form = document.getElementById('witb-fp-search');
-      var q    = document.getElementById('witb-fp-q');
-      if (!form || !q) return;
-      function handoff(){
-        var trigger = document.querySelector('.site-search-trigger');
-        var input   = document.querySelector('.site-search-input');
-        if (!trigger || !input) return false;
-        trigger.click();
-        input.value = q.value;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.focus();
-        return true;
-      }
-      form.addEventListener('submit', function(e){
-        if (!q.value.trim()) return;      // empty submit goes to the browse page
-        if (handoff()) e.preventDefault();
-      });
-    })();
-
     // Search filters checkbox labels (not chart dots)
     document.getElementById('scatter-brand-search').addEventListener('input', function(){
       var q = this.value.toLowerCase().trim();
@@ -2107,7 +2074,7 @@ async function main() {
     ['Freshest Bag',        html.includes('freshest-heading')],
     ['Recent Bag Updates',  html.includes('witb-move-card')],
     ['Hero stats',          html.includes('witb-hero-stats')],
-    ['Player search field', html.includes('witb-fp-search')],
+    ['No player search box', !html.includes('witb-fp-search')],
     ['No Brand Tour Share',!html.includes('share-heading')],
     ['dormied-latest-list', html.includes('dormied-latest-list')],
     ['home-stories-list',   html.includes('home-stories-list')],

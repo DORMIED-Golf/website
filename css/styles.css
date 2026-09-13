@@ -1942,9 +1942,10 @@ details[open] .faq-question::after { content: '−'; }
 }
 
 /* Baked sidebar modules (Brands on the Move / Recently Updated Bags).
-   Text-only, baked at build time, fixed reserved heights (no CLS).
-   Desktop only in this pass. */
-.sidebar-mods { display: none; }
+   Baked at build time with fixed reserved heights (no CLS). Shown at every
+   width: on mobile the sidebar column reflows below the wide modules, so these
+   read under Featured rather than being dropped from the page entirely. */
+.sidebar-mods { display: block; }
 
 /* ── Latest Scorecard sidebar card ───────────────────────────────────────────
    Sits directly under Top Stories, one card for the newest issue. Unlike
@@ -1976,38 +1977,37 @@ details[open] .faq-question::after { content: '−'; }
   text-decoration: underline;
 }
 
-@media (min-width: 1200px) {
-  .sidebar-mods { display: block; }
-  /* Consistent 32px vertical rhythm between every sidebar section (Top Stories,
-     Latest, Featured, Brands on the Move, Recently Updated Bags). Scoped to the
-     sidebar column so the home main feed spacing is unchanged. */
-  .sidebar-ad-col .latest-feed-section,
-  .sidebar-ad-col .home-stories-section,
-  .sidebar-ad-col .sidebar-mod { margin: 0 0 32px 0; padding-bottom: 0; }
-  .sidebar-ad-col .sidebar-mods { margin: 0; }
-  .sidebar-mod { margin: 0 0 32px 0; }
-  .sidebar-mod-rows { height: 160px; overflow: hidden; }
-  .sidebar-mod-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 28px;
-    margin: 0 0 4px;
-    box-sizing: border-box;
-  }
-  .sidebar-mod-row--bag {
-    font-size: .8rem;
-    color: var(--text);
-    text-decoration: none;
-    border-bottom: 1px solid var(--border);
-  }
-  .sidebar-mod-row--bag:hover { color: var(--green); text-decoration: none; }
-  .sidebar-mod-note {
-    font-family: var(--font-mono);
-    font-size: .68rem;
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
+/* Consistent 32px vertical rhythm between every sidebar section (Top Stories,
+   Latest, Featured, Brands on the Move, Recently Updated Bags). Scoped to the
+   sidebar column so the home main feed spacing is unchanged. */
+.sidebar-ad-col .latest-feed-section,
+.sidebar-ad-col .home-stories-section,
+.sidebar-ad-col .sidebar-mod { margin: 0 0 32px 0; padding-bottom: 0; }
+.sidebar-ad-col .sidebar-mods { margin: 0; }
+.sidebar-mod { margin: 0 0 32px 0; }
+/* Fixed height reserves the space before the rows paint. Five rows of 28px
+   plus their 4px gaps; keep the three in step if any one of them changes. */
+.sidebar-mod-rows { height: 160px; overflow: hidden; }
+.sidebar-mod-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 28px;
+  margin: 0 0 4px;
+  box-sizing: border-box;
+}
+.sidebar-mod-row--bag {
+  font-size: .8rem;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-mod-row--bag:hover { color: var(--green); text-decoration: none; }
+.sidebar-mod-note {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 /* On Tour comparative line (matches WITB player page numbers) */
@@ -2725,8 +2725,17 @@ details[open] .faq-question::after { content: '−'; }
 }
 .home-main { flex: 1; min-width: 0; padding: 0 0 48px; }
 @media (max-width: 1199px) {
-  /* On mobile the sidebar (Latest) stacks below home-main (Top Stories).
-     Remove the excess bottom padding and section margin so the gap is ~24px. */
+  /* Single column. The sidebar column is moved past the wide modules so its
+     contents (Top Stories, Latest Scorecard, Brands on the Move, Recently
+     Updated WITBs) read after Featured, which is the last wide module, rather
+     than splitting the feed in half. Mirrored in index.html's critical CSS so
+     the async stylesheet does not re-sort the page after first paint. */
+  .home-layout .home-main       { order: 1; }
+  .home-layout .home-wide       { order: 2; }
+  .home-layout .sidebar-ad-col  { order: 3; }
+  .home-layout .home-footer-cta { order: 4; }
+
+  /* Remove the excess bottom padding and section margin so the gap is ~24px. */
   .home-main { padding-bottom: 0; }
   .home-stories-section { margin-bottom: 0; }
   .latest-feed-heading { margin-top: 24px; }
@@ -3157,6 +3166,28 @@ details[open] .faq-question::after { content: '−'; }
 /* Name takes the slack so the note stays hard right, as it did before the
    avatar was added. */
 .sidebar-mod-bag-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Brands on the Move logos. Same 28px slot as the player headshots opposite,
+   but square with contain: these are wordmarks on their own background, and
+   cover would crop them the way a circular mask crops a face deliberately. */
+.sidebar-mod-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  object-fit: contain;
+  background: var(--bg-raised);
+  margin-right: 8px;
+}
+.sidebar-mod-logo--ini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+.sidebar-mod-brand-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ── WITB Leaders section ─────────────────────────────────────────────── */
 .witb-leaders-section { margin-bottom: 32px; }
@@ -6807,6 +6838,11 @@ details[open] .faq-question::after { content: '−'; }
     gap: 40px;
   }
 }
+/* A grid item's automatic minimum size is its min-content width, so the single
+   mobile column was sized by the widest un-wrappable thing inside it (the
+   leaderboard rows) rather than by the viewport. That pushed the column to
+   570px inside a 375px screen and took every section with it. */
+.witb-main { min-width: 0; }
 
 /* Hero / intro */
 .witb-hero {
@@ -6976,6 +7012,18 @@ details[open] .faq-question::after { content: '−'; }
   user-select: none;
 }
 .witb-scatter-inner { flex: 1; min-width: 0; overflow: hidden; }
+/* Below the two-column breakpoint the plot is squeezed to about 300px, which
+   scales its 9px axis type down to 4px and makes the chart decorative. Pan it
+   at a legible size instead of shrinking it; the tooltip is position:fixed so
+   the scroll container does not clip it. */
+@media (max-width: 700px) {
+  .witb-scatter-inner { overflow-x: auto; overflow-y: hidden; }
+  .witb-scatter-svg { min-width: 620px; }
+  /* Both are grid items of .witb-scatter-layout, so without this the SVG's
+     min-width becomes the column's min-content and drags the filter panel
+     out to 664px alongside it. */
+  .witb-scatter-wrap, .witb-scatter-filter { min-width: 0; }
+}
 .witb-scatter-xtitle {
   font-family: var(--font-mono);
   font-size: .58rem;
