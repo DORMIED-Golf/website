@@ -100,6 +100,37 @@ function buildFlagHtml(countryCode, nation) {
   return '';
 }
 
+/** Vercel's image optimizer. 80 and 160 are both in vercel.json images.sizes;
+ *  a width that is not on that list returns a 400, not a resized image. */
+function vitUrl(src, w) {
+  if (!src) return src;
+  return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+}
+
+/**
+ * The 44px portrait at the head of each card, mirroring the logo tile on the
+ * brand directory so the two grids read as the same component.
+ *
+ * Round, not the brand grid's rounded square: these are faces, and every other
+ * headshot on the site (sidebar modules, Most Viewed WITBs) is a circle. The
+ * 50%/12% origin is the same face-framing crop those use, which is why the
+ * stored images all had to be normalised to 4:5 first -- it is tuned for that
+ * ratio and lands somewhere else on a square or landscape source.
+ */
+function buildFaceHtml(player) {
+  const parts = String(player.name || '').trim().split(/\s+/);
+  const ini = esc((parts.length >= 2 ? parts[0][0] + parts[parts.length - 1][0]
+                                     : String(player.name || '').slice(0, 2)).toUpperCase());
+  if (!player.headshot_url) {
+    return `<span class="player-dir-face player-dir-face--ini">${ini}</span>`;
+  }
+  return `<img class="player-dir-face" src="${esc(vitUrl(player.headshot_url, 80))}"`
+    + ` srcset="${esc(vitUrl(player.headshot_url, 80))} 1x, ${esc(vitUrl(player.headshot_url, 160))} 2x"`
+    + ` width="44" height="44" loading="lazy" decoding="async" alt=""`
+    + ` onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    + `<span class="player-dir-face player-dir-face--ini" style="display:none">${ini}</span>`;
+}
+
 const LOGO_CAP = 5; // max logos shown before "+N more"
 
 function buildLogoStrip(brands) {
@@ -150,6 +181,7 @@ function buildPlayerCard(player, bagDate, filterMap, logoList) {
     `data-bag="${esc(JSON.stringify(bagData))}" ` +
     `data-brands="${esc(allBrandSlugs.join('|'))}">` +
     `<a href="/witb/players/${esc(slug)}/" class="player-dir-link" aria-label="${esc(name)}">` +
+      buildFaceHtml(player) +
       `<div class="player-dir-name">${esc(name)}</div>` +
       `<div class="player-dir-rankrow">${flagHtml}<span class="player-dir-rank">${esc(rankDisplay)}</span></div>` +
       `<div class="player-dir-date">${esc(dateDisplay)}</div>` +
@@ -236,6 +268,10 @@ function buildPage(players, brandNames, latestFeedHtml, topStoriesHtml) {
     /* Inner player link (name + rank + date) */
     .player-dir-link{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 10px 8px;text-decoration:none;color:inherit;flex:1}
     .player-dir-link:hover{text-decoration:none}
+    /* 44px portrait, same slot the brand directory gives its logo tile. Circular
+       because it is a face; object-position 50% 12% is the shared face crop. */
+    .player-dir-face{width:44px;height:44px;border-radius:50%;flex-shrink:0;object-fit:cover;object-position:50% 12%;background:var(--bg-raised);margin-bottom:2px}
+    .player-dir-face--ini{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.72rem;font-weight:700;color:var(--text-muted);border:1px solid var(--border-lite);box-sizing:border-box}
     .player-dir-name{font-family:var(--font-mono);font-size:.78rem;font-weight:600;color:var(--text);line-height:1.2}
     /* Rank row: flag immediately left of the rank number */
     .player-dir-rankrow{display:flex;align-items:center;justify-content:center;gap:4px}
@@ -473,7 +509,7 @@ async function main() {
   console.log('[witb-players-page] Loading players...');
   const { data: allPlayers, error: pErr } = await sb
     .from('witb_players')
-    .select('id, slug, name, owgr_rank, rolex_rank, country_code, nation, current_bag_id')
+    .select('id, slug, name, owgr_rank, rolex_rank, country_code, nation, current_bag_id, headshot_url')
     .order('owgr_rank', { ascending: true, nullsFirst: false });
   if (pErr) throw new Error(`Players query failed: ${pErr.message}`);
 

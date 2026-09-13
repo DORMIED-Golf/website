@@ -603,7 +603,7 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
       // broken logo costs a monogram rather than a hole in the row.
       const logo = src
         ? '<img class="sidebar-mod-logo" src="' + escHtml(vitUrl(src, 80)) + '"'
-          + ' width="28" height="28" loading="lazy" decoding="async" alt=""'
+          + ' width="22" height="22" loading="lazy" decoding="async" alt=""'
           + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
           + '<span class="sidebar-mod-logo sidebar-mod-logo--ini" style="display:none">' + ini + '</span>'
         : '<span class="sidebar-mod-logo sidebar-mod-logo--ini">' + ini + '</span>';

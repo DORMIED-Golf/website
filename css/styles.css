@@ -3170,9 +3170,13 @@ details[open] .faq-question::after { content: '−'; }
 /* Brands on the Move logos. Same 28px slot as the player headshots opposite,
    but square with contain: these are wordmarks on their own background, and
    cover would crop them the way a circular mask crops a face deliberately. */
+/* 22px inside a 28px row, not 28px: a circular headshot can sit flush to the
+   row edge and still read as deliberate, but a square logo tile touching top
+   and bottom looks jammed in. The 3px of air each side comes from the row's
+   align-items:center. */
 .sidebar-mod-logo {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   border-radius: 3px;
   flex-shrink: 0;
   object-fit: contain;
