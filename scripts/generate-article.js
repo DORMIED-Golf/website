@@ -132,6 +132,23 @@ function brandTokens(brandName) {
  * but it is never worth discarding a finished 600-word article over, so the
  * caller warns and ships rather than skipping the way a bad body does.
  */
+/**
+ * Problems with an SEO title, empty array when it is usable. Kept separate from
+ * titleIssues(): the headline is editorial and can be long; this is the line
+ * search results truncate near 60 characters, so it has hard limits instead.
+ */
+function seoTitleIssues(seoTitle, brandName, body, headline) {
+  const t = String(seoTitle || '').trim();
+  if (!t) return ['empty'];
+  const issues = [];
+  if (t.length > 60) issues.push(`${t.length} chars (max 60)`);
+  if (/\|\s*DORMIED\s*$/i.test(t)) issues.push('carries the site suffix');
+  if (brandName && !t.toLowerCase().includes(String(brandName).toLowerCase())) issues.push('missing brand name');
+  const bad = AB.ungroundedNumbers(t, `${body || ''} ${headline || ''}`);
+  if (bad.length) issues.push(`ungrounded number ${bad[0]}`);
+  return issues;
+}
+
 function titleIssues(title, brandName) {
   if (!title || !title.trim()) return ['empty title'];
   const t     = title.trim();
@@ -446,6 +463,25 @@ function formatDate(isoDate) {
  * @param {string} primaryName - Primary brand display name
  * @param {Array<{slug:string, name:string}>} secondaryBrands - Additional brands (optional)
  */
+/**
+ * The hero image an article originally shipped with, when its local file is
+ * still committed. The publish path points og:image at this Vercel-served copy
+ * because it is the reliable one for X cards; the --regenerate-all path used the
+ * Supabase URL instead, so re-rendering a page silently swapped its share image.
+ * localUrl is only returned when the matching .webp exists, because the page
+ * builds a <picture> webp source from it and a missing source does not fall back.
+ */
+function shippedHero(slug) {
+  const dir = path.resolve(__dirname, '..', 'images', 'articles');
+  for (const ext of ['jpg', 'jpeg', 'png', 'webp']) {
+    if (!fs.existsSync(path.join(dir, `${slug}-hero.${ext}`))) continue;
+    const url = `https://dormied.com/images/articles/${slug}-hero.${ext}`;
+    const hasWebp = ext === 'webp' || fs.existsSync(path.join(dir, `${slug}-hero.webp`));
+    return { url, localUrl: hasWebp ? url : null };
+  }
+  return null;
+}
+
 function bodyToHtml(plainText, primarySlug, primaryName, secondaryBrands = []) {
   const paras = plainText.split(/\n\n+/).filter(p => p.trim());
 
@@ -464,6 +500,16 @@ function bodyToHtml(plainText, primarySlug, primaryName, secondaryBrands = []) {
   // then split back into paragraphs after replacement.
   // We do per-paragraph processing but pass `linked` across paragraphs.
   return paras.map(p => {
+    // Section subheadings. A paragraph that is a single "## " or "### " line is a
+    // heading, rendered with the same classes features use so the existing
+    // .da-article-body .sc-main-heading styling applies. Brand auto-linking is
+    // skipped inside headings: a link in an h2 reads as navigation, not a title.
+    const hm = !p.includes('\n') && p.match(/^(#{2,3})\s+(.+)$/);
+    if (hm) {
+      const tag = hm[1].length === 2 ? 'h2' : 'h3';
+      const cls = tag === 'h2' ? 'sc-main-heading' : 'sc-sub-heading';
+      return `<${tag} class="${cls}">${escHtml(stripEmDashes(hm[2].trim()))}</${tag}>`;
+    }
     let out = p;
     for (const { slug, name } of allBrands) {
       if (linked.has(slug)) continue; // already linked in an earlier paragraph
@@ -539,6 +585,10 @@ Structure:
 - Lead sentence: the news, stated plainly and with authority
 - Body (4-5 paragraphs): context, history, editorial analysis, and industry implications. Each paragraph should add something — new context, a different angle, a concrete detail. Do not pad with filler.
 - Closing paragraph: a forward-looking observation about this brand's trajectory. Required. Must appear as the final paragraph. It should feel like the article's last word on the subject — where this brand is heading, what this move implies, what to watch for.
+- Section subheadings (REQUIRED for any body of 500 words or more): 2 to 4 of them. Each goes on its own line beginning "## ", separated from the paragraphs around it by a blank line. Never before the lead paragraph and never after the closing paragraph. Each heading introduces the 2 or 3 paragraphs that follow it.
+  Subheadings are for readers scanning and for search engines reading the page outline, so they must say what the section establishes, specifically: "Why the 3-Wood Is Disappearing From Tour Bags", "A $375 Iron Priced Against Mizuno". 3 to 9 words, title case, no em dashes, no clickbait, no number that does not appear in the body.
+  Never a generic label. BANNED as a heading: "Background", "Context", "Overview", "Analysis", "Why It Matters", "What It Means", "The Bottom Line", "What's Next", "Looking Ahead", "Conclusion", "Final Thoughts", "The Takeaway".
+  Never a DORMIED Index rank, position, score or brand count in a heading ("Ranked 47th", "Sits Fourth Among 169 Brands"). The page shows the brand's current rank beside the article and it changes monthly; a heading that freezes one will contradict it.
 
 DISALLOWED opening phrases (will be auto-rejected):
 "Based on", "According to", "From my", "From the", "Looking at", "After reviewing", "Having reviewed", "The search results", "The news", "The data shows", "It appears", "It seems", "[Brand name]" as the first word.
@@ -557,6 +607,7 @@ An article succeeds when it leaves the reader with one concrete insight they did
 
 Also generate:
 - A meta description (120-155 characters) for SEO
+- An SEO title (field "seo_title"): what search results show above the link. 60 characters or fewer, counted. It must contain the brand name and say plainly what the article is about, so a searcher knows before clicking. It is NOT the headline and should not be a truncated headline: rewrite it as a clear, specific search title. No em dashes, no "| DORMIED" suffix, no number that is not in the body.
 - 3-5 SEO keywords relevant to the article
 - An X/Twitter post. This is the highest-leverage line in the response, and its rules are deliberately not the article's.
 
@@ -606,7 +657,8 @@ FAQ (field "faq")
 Return valid JSON only — no markdown fences, no preamble, exactly this structure:
 {
   "title": "the headline",
-  "body": "paragraph one\\n\\nparagraph two\\n\\nparagraph three\\n\\nparagraph four\\n\\nparagraph five",
+  "seo_title": "60 characters or fewer, brand name included, plain description of the article",
+  "body": "lead paragraph\\n\\nparagraph two\\n\\n## A Specific Section Heading\\n\\nparagraph three\\n\\nparagraph four\\n\\n## Another Specific Section Heading\\n\\nparagraph five\\n\\nclosing paragraph",
   "meta_description": "120-155 character SEO description including brand name",
   "seo_keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
   "x_post": "ONE reductive claim with a point of view. Target 80-140 chars, hard cap 220. Ends in a period. No hashtags. Do not explain it.",
@@ -991,7 +1043,7 @@ function buildIntentClusterHtml(slug) {
 
 function generateArticleHtml(opts) {
   const {
-    title, bodyHtml, imageUrl, ogImageUrl, localUrl, imageAlt, slug, category,
+    title, seoTitle, bodyHtml, imageUrl, ogImageUrl, localUrl, imageAlt, slug, category,
     published_at, source_url, source_name, meta_description, seo_keywords,
     brandSlug, brandName, brandLogo, dataVersion,
     readTime, author, dormiedData, dormiedLatestHtml,
@@ -1109,7 +1161,12 @@ function generateArticleHtml(opts) {
   const dateModISO     = date_modified ? new Date(date_modified).toISOString() : dateISO;
   const canonicalUrl   = `https://dormied.com/news/${slug}/`;
   const ogImage        = ogImageUrl || imageUrl || 'https://dormied.com/images/og-image.jpg';
-  const titleTag       = `${title} | DORMIED`;
+  // The <title> is what search results show, and they truncate near 60
+  // characters. The headline stays the visible h1 and og:title; this line uses
+  // the dedicated SEO title when there is one, and keeps the site suffix only
+  // when it fits. 602 of 626 articles overflowed with "${title} | DORMIED".
+  const fitTitle       = t => (t && `${t} | DORMIED`.length <= 60) ? `${t} | DORMIED` : t;
+  const titleTag       = fitTitle(seoTitle) || fitTitle(title);
   const keywordsStr    = (seo_keywords || []).join(', ');
 
   const initials       = brandName.split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
@@ -1573,7 +1630,7 @@ async function main() {
 
     const { data: allRows, error: allErr } = await supabase
       .from('dormied_articles')
-      .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, date_modified, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq, answer_block')
+      .select('matched_article_id, brand_slug, secondary_brand_slugs, published_at, date_modified, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq, answer_block, seo_title')
       .neq('status', 'suppressed')
       .order('published_at', { ascending: false });
 
@@ -1592,7 +1649,12 @@ async function main() {
       // Feature articles (category 'Feature') are owned by generate-feature.js,
       // not the brand-article template, whether or not they tag a brand. Skip so
       // we never clobber their HTML.
-      if (row.category === 'Feature' || !row.brand_slug) { skipped++; continue; }
+      if (row.category === 'Feature') { skipped++; continue; }
+      // Brandless articles stay out of a blanket run, as they always have, but
+      // render when named with --only: the template already omits the brand card
+      // when there is no brand, and without this the 2 brandless articles could
+      // never pick up a change to their stored body.
+      if (!row.brand_slug && !(onlySlugs && onlySlugs.has(row.slug))) { skipped++; continue; }
 
       const bSlug  = row.brand_slug || '';
       const brand  = regenBrandsMap.get(bSlug) || {};
@@ -1632,9 +1694,11 @@ async function main() {
         const html = generateArticleHtml({
           affiliateBrandSlugs,
           title:            row.title,
+          seoTitle:         row.seo_title,
           bodyHtml:         bHtml,
           imageUrl:         row.image_url || '',
-          ogImageUrl:       row.image_url || 'https://dormied.com/images/og-image.jpg',
+          ogImageUrl:       shippedHero(row.slug)?.url || row.image_url || 'https://dormied.com/images/og-image.jpg',
+          localUrl:     shippedHero(row.slug)?.localUrl || null,
           imageAlt:         `${bName}: ${correctCategory}`,
           slug:             row.slug,
           category:         correctCategory,
@@ -1714,7 +1778,7 @@ async function main() {
   // and the pipeline never re-generates a manually-removed article.
   const { data: existing, error: existErr } = await supabase
     .from('dormied_articles')
-    .select('status, matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq, answer_block');
+    .select('status, matched_article_id, brand_slug, secondary_brand_slugs, published_at, title, slug, body, image_url, source_url, source_name, meta_description, seo_keywords, category, author, faq, answer_block, seo_title');
 
   if (existErr) {
     console.error('[generate] Failed to fetch existing articles:', existErr.message);
@@ -1768,9 +1832,11 @@ async function main() {
       const html = generateArticleHtml({
         affiliateBrandSlugs,
         title:           row.title,
+        seoTitle:        row.seo_title,
         bodyHtml:        bHtml,
         imageUrl:        row.image_url || '',
-        ogImageUrl:      row.image_url || 'https://dormied.com/images/og-image.jpg',
+        ogImageUrl:      shippedHero(row.slug)?.url || row.image_url || 'https://dormied.com/images/og-image.jpg',
+        localUrl:    shippedHero(row.slug)?.localUrl || null,
         imageAlt:        `${bName}: ${backfillCategory}`,
         slug:            row.slug,
         category:        backfillCategory,
@@ -2059,6 +2125,23 @@ async function main() {
     }
     answerBlock = answerBlock || null;
 
+    // SEO title: validated, never invented. A failing one is dropped and the page
+    // falls back to the headline, which is what every article did before.
+    let seoTitle = typeof parsed.seo_title === 'string' ? stripEmDashes(parsed.seo_title).trim() : '';
+    const seoProblems = seoTitleIssues(seoTitle, brandInfo.brand.name, bodyForGrounding, parsed.title);
+    if (seoTitle && seoProblems.length) {
+      console.warn(`[generate] ⚠ SEO title dropped for "${raw.title}": ${seoProblems.join(', ')}`);
+      seoTitle = null;
+    }
+    seoTitle = seoTitle || null;
+
+    // Subheadings are advisory, not a gate: a finished article is never thrown
+    // away over its outline. The warning is what surfaces a prompt regression.
+    const subheads = (bodyForGrounding.match(/^##\s+\S/gm) || []).length;
+    if (wordCount(bodyForGrounding) >= 500 && subheads < 2) {
+      console.warn(`[generate] ⚠ Only ${subheads} section subheading(s) in "${raw.title}" (${wordCount(bodyForGrounding)} words, want 2-4)`);
+    }
+
     let groundedFaq = AB.cleanFaq(parsed.faq);
     if (groundedFaq.length) {
       const g = AB.answersGrounded(groundedFaq, bodyForGrounding);
@@ -2157,7 +2240,7 @@ async function main() {
       : null;
     const html = generateArticleHtml({
       affiliateBrandSlugs,
-      title, bodyHtml, imageUrl, ogImageUrl, localUrl,
+      title, seoTitle, bodyHtml, imageUrl, ogImageUrl, localUrl,
       imageAlt:        `${brandInfo.brand.name}: ${articleCategory}`,
       slug, category:  articleCategory,
       published_at:    publishedAt,
@@ -2202,6 +2285,7 @@ async function main() {
         brand_slug:           brandSlug,
         secondary_brand_slugs: secondaryBrands.map(b => b.slug),
         title,
+        seo_title:            seoTitle,
         body,
         image_url:            imageUrl,
         image_width:          imageWidth,

@@ -36,6 +36,14 @@ function getSupabase() {
 
 const SITE_ROOT = path.resolve(__dirname, '..');
 
+/** The issue's actual headline, without the " | The Scorecard | Month" trail. */
+function scorecardHeadline(issue) {
+  const first = String(issue.title || '').split(' | ')[0].trim();
+  if (first && first.toLowerCase() !== 'the scorecard') return first;
+  return `The Scorecard: ${issue.monthLabel || String(issue.title).split(' | ').pop()}`;
+}
+
+
 // Baked standard sidebar for issue pages (Top Stories + Latest + modules).
 // Set once in main(); '' when Supabase is unavailable.
 let SC_SIDEBAR_HTML = '';
@@ -431,7 +439,10 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
   const newsLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
-    headline: issue.title,
+    // The issue title carries its own suffix ("... | The Scorecard | August 2026"),
+    // and a headline is the story's headline, not a breadcrumb. Older issues
+    // have no headline at all ("The Scorecard | May 2026"), so name them.
+    headline: scorecardHeadline(issue),
     datePublished: issue.dateISO,
     dateModified: issue.dateISO,
     author: [
