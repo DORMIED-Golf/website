@@ -100,7 +100,20 @@ function sb() {
   return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 }
 
-/** slug -> tour id, from the Tour's own sitemap. */
+/**
+ * slug -> tour id, from the Tour's own sitemap.
+ *
+ * TWO PASSES, because the sitemap has two URL shapes and a player may appear in
+ * only one of them. This originally matched the plain /player/ path alone, on
+ * the assumption that a tour-prefixed entry was always a duplicate of it. It is
+ * not: a golfer who has only ever played the Korn Ferry Tour, PGA Tour Champions
+ * or PGA Tour Americas has NO plain entry, and 1,579 of the sitemap's 4,294
+ * slugs were invisible as a result. Michael Johnson is one of them, and his
+ * headshot is a real 149KB photo that we were silently skipping.
+ *
+ * The plain path still wins where both exist, so nothing that resolved before
+ * resolves differently now.
+ */
 async function fetchTourIds() {
   const res = await fetch(SITEMAP, {
     headers: { 'User-Agent': UA },
@@ -110,15 +123,44 @@ async function fetchTourIds() {
   const xml = await res.text();
 
   const map = new Map();
-  const re = /https:\/\/www\.pgatour\.com\/player\/(\d+)\/([a-z0-9-]+)/g;
-  let m;
-  while ((m = re.exec(xml)) !== null) {
-    // First occurrence wins: the plain /player/ path precedes the
-    // /korn-ferry-tour/player/ duplicates for the same golfer.
+
+  // Pass 1 — the plain /player/ path, authoritative. First occurrence wins.
+  for (const m of xml.matchAll(/https:\/\/www\.pgatour\.com\/player\/(\d+)\/([a-z0-9-]+)/g)) {
     if (!map.has(m[2])) map.set(m[2], m[1]);
   }
-  if (map.size < 1000) {
-    throw new Error(`sitemap yielded only ${map.size} players — refusing to run on a partial fetch`);
+  const plainCount = map.size;
+
+  // Pass 2 — tour-prefixed paths, ONLY for slugs pass 1 did not resolve.
+  const prefixed = new Map();   // slug -> Set of ids
+  for (const m of xml.matchAll(/https:\/\/www\.pgatour\.com\/[a-z-]+\/player\/(\d+)\/([a-z0-9-]+)/g)) {
+    if (map.has(m[2])) continue;
+    if (!prefixed.has(m[2])) prefixed.set(m[2], new Set());
+    prefixed.get(m[2]).add(m[1]);
+  }
+
+  // 27 slugs in the sitemap genuinely belong to two different golfers (two
+  // Chris Andersons, two John Cooks). Where pass 1 settled it there is no
+  // question; where it did not, picking either id is a coin flip that puts a
+  // stranger's face on a player page, so refuse and say which ones.
+  const ambiguous = [];
+  for (const [slug, ids] of prefixed) {
+    if (ids.size === 1) map.set(slug, [...ids][0]);
+    else ambiguous.push(`${slug} (ids ${[...ids].join(', ')})`);
+  }
+
+  // Both floors matter. map.size guards against a truncated fetch; plainCount
+  // guards against the plain path changing shape and quietly leaving pass 2 to
+  // carry everything, which would silently drop the precedence rule above.
+  if (map.size < 1000 || plainCount < 1000) {
+    throw new Error(`sitemap yielded ${plainCount} plain / ${map.size} total slugs `
+      + '— refusing to run on a partial fetch');
+  }
+
+  console.log(`[headshots] sitemap: ${plainCount} via /player/, `
+    + `${map.size - plainCount} more via tour-prefixed paths`);
+  if (ambiguous.length) {
+    console.log(`[headshots] ${ambiguous.length} slug(s) skipped as ambiguous (same slug, different golfers):`);
+    ambiguous.forEach(a => console.log('            ' + a));
   }
   return map;
 }
