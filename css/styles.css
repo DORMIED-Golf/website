@@ -343,13 +343,13 @@ button, select, input {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 14px 24px;
-  gap: 4px;
+  padding: 12px 18px;
+  gap: 2px;
 }
 
 .stat-value {
   font-family: var(--font-display);
-  font-size: 2.25rem;
+  font-size: 1.8rem;
   font-weight: 700;
   font-style: italic;
   color: var(--green);
@@ -358,10 +358,10 @@ button, select, input {
 
 .stat-label {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   white-space: nowrap;
 }
 
@@ -1190,17 +1190,25 @@ button, select, input {
   .brand-logo-initials { font-size: 0.65rem; }
   .brand-name          { font-size: 0.8rem; }
 
-  /* Hero stats — stack each item on its own row */
+  /* Hero stats — stay a single row, matching the /witb/ hero. Stacking these
+     into three full-width bands turned a compact strip into most of a phone
+     screen before the reader reached the table the page exists for. Each cell
+     takes an equal share and the value drops a size instead. */
   .hero-stats {
-    flex-direction: column;
-    align-items: stretch;
+    width: 100%;
   }
   .hero-stats .stat-item {
-    padding: 10px 16px;
+    flex: 1;
+    padding: 10px 8px;
   }
-  .hero-stats .stat-divider {
-    width: auto;   /* span full width */
-    height: 1px;
+  .hero-stats .stat-value {
+    font-size: 1.3rem;
+  }
+  .hero-stats .stat-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
+    white-space: normal;
+    text-align: center;
   }
 
   /* Hot takes — handled by grid media query in .hot-takes block above */
@@ -7837,6 +7845,19 @@ details[open] .faq-question::after { content: '−'; }
   text-transform: uppercase;
   color: var(--green);
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* Their mark is already a circle on a near-black field, so it needs no plate of
+   its own; the radius just keeps the transparent corners from catching a
+   background if this block is ever placed on a lighter surface. */
+.scb .scb-quote-logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: contain;
 }
 .scb--done .scb-form,
 .scb--done .scb-proof { display: none; }

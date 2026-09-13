@@ -12,12 +12,18 @@
     "full history is present. A stale entry on one low-churn legal page is a smaller and more",
     "visible failure than all 8 silently collapsing on every CI run.",
     "",
-    "Dates are YYYY-MM-DD and must reflect genuine content change, never a build or deploy."
+    "Dates are YYYY-MM-DD and must reflect genuine content change, never a build or deploy.",
+    "",
+    "TWO ENTRIES HERE ARE NOT USED. generate-sitemap.js computes /news/ from the newest",
+    "published article and /witb/ from the most recent current-bag date, because those are",
+    "better freshness signals than a hand-kept date and cannot go stale by being forgotten.",
+    "Their keys are kept so the file still lists every static page and so bumping one in good",
+    "faith is harmless - but do not expect a change here to move their <lastmod>."
   ],
   "pages": {
     "/":           "2026-09-12",
     "/rankings/":  "2026-09-12",
-    "/witb/":      "2026-07-16",
+    "/witb/":      "2026-09-12",
     "/brands/":    "2026-09-12",
     "/news/":      "2026-09-12",
     "/scorecard/": "2026-07-16",

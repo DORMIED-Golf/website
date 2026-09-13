@@ -21,6 +21,9 @@ const feedBake = require('./feed-bake');
 const { dataVersion } = require('./lib/data-version');
 const { cssVersion } = require('./lib/css-version.js');
 const { js: jsVersion } = require('./lib/asset-version.js');
+// Same rule /witb/players/ uses to decide who gets a page, so the hero's player
+// count and the directory's cannot drift apart.
+const { pageEligible } = require('./witb-page-eligibility');
 const ROOT   = path.resolve(__dirname, '..');
 const OUT    = path.join(ROOT, 'witb', 'index.html');
 const SB_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -393,11 +396,16 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
       .map(i => i.witb_bags.player_id)
   ).size;
 
-  // Annotate ball / grip leaderboards with denominator note
+  // Annotate ball / grip leaderboards with denominator note.
+  //
+  // "active bags", not "players": the hero counts every player in the dataset
+  // (205), these count the bags dated inside the stats window (112). Calling
+  // both "players" made the smaller number look like a contradiction of the
+  // headline rather than a narrower, stated denominator.
   const ballsLb = leaderboards.find(l => l.key === 'balls');
-  if (ballsLb) ballsLb.denominatorNote = `${ballPlayerCount} of ${totalPlayers} players in dataset`;
+  if (ballsLb) ballsLb.denominatorNote = `${ballPlayerCount} of ${totalPlayers} active bags in dataset`;
   const gripsLb = leaderboards.find(l => l.key === 'grips');
-  if (gripsLb) gripsLb.denominatorNote = `${gripPlayerCount} of ${totalPlayers} players in dataset`;
+  if (gripsLb) gripsLb.denominatorNote = `${gripPlayerCount} of ${totalPlayers} active bags in dataset`;
 
   // --- Top club brands by unique player count (for Brand Momentum table) ---
   const topClubBrands = Object.entries(brandPlayerSets)
@@ -1022,6 +1030,27 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
     + `${statsBagIds.size} of ${new Set(rankedCurrentItemsAll.map(i => i.bag_id)).size} ranked bags, `
     + `${rankedCurrentItems.length} of ${rankedCurrentItemsAll.length} items`);
 
+  /* ── Two different numbers, deliberately ─────────────────────────────────────
+     The hero reports the DATASET: every player with a page, every item in their
+     current bags. A reader asking "how big is this" means the whole thing, and
+     205 is also what /witb/players/ shows them, so the two pages agree.
+
+     Every COMPUTED statistic below stays on the WINDOWED set -- 112 bags dated
+     within the last 12 months -- because a 2021 bag is not evidence of what the
+     tour plays now. That is why the hero says 205 players and a leaderboard note
+     says "106 of 112 active bags": different denominators for different
+     questions. Each note names "active bags" rather than "players" so the gap
+     reads as the deliberate distinction it is rather than a contradiction. */
+  const datasetPlayers = players.filter(p => pageEligible(p.owgr_rank, p.slug)).length;
+  const datasetBagIds  = new Set(
+    players.filter(p => pageEligible(p.owgr_rank, p.slug)).map(p => p.current_bag_id).filter(Boolean)
+  );
+  const datasetItems     = currentItems.filter(i => datasetBagIds.has(i.bag_id));
+  const datasetBrands    = new Set(datasetItems.filter(i => i.witb_brands?.slug).map(i => i.witb_brands.slug)).size;
+  const datasetClubTypes = new Set(datasetItems.map(i => i.club_type)).size;
+  console.log(`  Dataset (hero): ${datasetPlayers} players, ${datasetItems.length} items, `
+    + `${datasetBrands} brands, ${datasetClubTypes} categories`);
+
   // All stats derived from the windowed set so every figure reconciles
   const totalPlayers    = statsBagIds.size;
   const totalItems      = rankedCurrentItems.length;
@@ -1152,7 +1181,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>What's In The Bag - Tour Equipment Data | DORMIED</title>
-  <meta name="description" content="What the tour actually plays and how it lines up with what the rest of golf pays attention to. DORMIED WITB tracks ${totalPlayers} tour players across ${totalBrands} brands.">
+  <meta name="description" content="What the tour actually plays and how it lines up with what the rest of golf pays attention to. DORMIED WITB tracks ${datasetPlayers} tour players across ${datasetBrands} brands.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://dormied.com/witb/">
 
@@ -1164,7 +1193,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://dormied.com/witb/">
   <meta property="og:title" content="What's In The Bag - Tour Equipment Data | DORMIED">
-  <meta property="og:description" content="What the tour actually plays vs. what the rest of golf pays attention to. ${totalPlayers} players, ${totalBrands} brands, updated weekly.">
+  <meta property="og:description" content="What the tour actually plays vs. what the rest of golf pays attention to. ${datasetPlayers} players, ${datasetBrands} brands, updated weekly.">
   <meta property="og:image" content="https://dormied.com/images/og-image.jpg">
   <meta property="og:site_name" content="DORMIED">
 
@@ -1307,7 +1336,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
     "@context": "https://schema.org",
     "@type": "Dataset",
     "name": "DORMIED WITB - Tour Equipment Data",
-    "description": "What ${totalPlayers} PGA Tour players carry in their bags, updated weekly. Covers ${totalBrands} brands across drivers, irons, wedges, putters, balls, and grips.",
+    "description": "What ${datasetPlayers} PGA Tour players carry in their bags, updated weekly. Covers ${datasetBrands} brands across drivers, irons, wedges, putters, balls, and grips.",
     "url": "https://dormied.com/witb/",
     "dateModified": "${dateModified}",
     "creator": {
@@ -1405,19 +1434,19 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
                them above the fold's primary action. -->
           <div class="witb-hero-stats" aria-label="WITB summary stats">
             <div class="witb-hero-stat">
-              <span class="witb-hero-stat-val">${fmt(totalPlayers)}</span>
+              <span class="witb-hero-stat-val">${fmt(datasetPlayers)}</span>
               <span class="witb-hero-stat-label">Players</span>
             </div>
             <div class="witb-hero-stat">
-              <span class="witb-hero-stat-val">${fmt(totalItems)}</span>
+              <span class="witb-hero-stat-val">${fmt(datasetItems.length)}</span>
               <span class="witb-hero-stat-label">Items</span>
             </div>
             <div class="witb-hero-stat">
-              <span class="witb-hero-stat-val">${fmt(totalBrands)}</span>
+              <span class="witb-hero-stat-val">${fmt(datasetBrands)}</span>
               <span class="witb-hero-stat-label">Brands</span>
             </div>
             <div class="witb-hero-stat">
-              <span class="witb-hero-stat-val">${fmt(uniqueClubTypes)}</span>
+              <span class="witb-hero-stat-val">${fmt(datasetClubTypes)}</span>
               <span class="witb-hero-stat-label">Categories</span>
             </div>
           </div>
@@ -1624,7 +1653,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
         <section class="witb-section witb-section--method" aria-labelledby="method-heading">
           <div class="scorecard-intro-body">
             <h2 class="scorecard-intro-h2" id="method-heading">What This Data Is</h2>
-            <p class="scorecard-intro-p">The current equipment setup of ${totalPlayers} professional golfers, refreshed weekly and recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball and grips, with brand, model, shaft and loft where available.</p>
+            <p class="scorecard-intro-p">The current equipment setup of ${datasetPlayers} professional golfers, refreshed weekly and recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball and grips, with brand, model, shaft and loft where available. Tour-usage percentages are calculated on the ${totalPlayers} bags updated within the last 12 months, which is why a leaderboard note cites a smaller denominator than the player count above: an older bag stays on its player page but does not count as evidence of what the tour plays now.</p>
 
             <p class="scorecard-intro-p">This is equipment in play, not equipment sold. A brand here means a tour professional chose it in competition, which is a different signal from market share or endorsement spend. Some of the most tour-popular brands barely register with amateurs, and that gap is what this page exists to show.</p>
 

@@ -161,6 +161,10 @@ const TESTIMONIAL = {
   enabled: true,
   quote: 'One of our favorite X accounts... deeply researched and very well written.',
   source: 'Country Club Confidential',
+  // Their mark, supplied by them, sitting beside the attribution. Decorative:
+  // alt is empty because the name it accompanies is right there in text, and a
+  // screen reader announcing the logo would just say the source twice.
+  logo: '/images/country-club-confidential.png',
 };
 
 // ── Markup ───────────────────────────────────────────────────────────────────
@@ -236,7 +240,12 @@ function signupBlockHtml({ slot, pageType, data, brandSlug, latestIssueUrl, copy
     ? `<figure class="scb-quote">` +
         `<span class="scb-quote-mark" aria-hidden="true">&ldquo;</span>` +
         `<blockquote class="scb-quote-text">${esc(TESTIMONIAL.quote)}</blockquote>` +
-        `<figcaption class="scb-quote-src">${esc(TESTIMONIAL.source)}</figcaption>` +
+        `<figcaption class="scb-quote-src">` +
+          (TESTIMONIAL.logo
+            ? `<img class="scb-quote-logo" src="${esc(TESTIMONIAL.logo)}" width="22" height="22" loading="lazy" decoding="async" alt="">`
+            : '') +
+          `<span>${esc(TESTIMONIAL.source)}</span>` +
+        `</figcaption>` +
       `</figure>`
     : '';
 
