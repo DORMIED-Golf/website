@@ -491,6 +491,48 @@ ${gridHtml}
   <script defer src="/js/analytics.min.js?v=${jsVersion('analytics.min.js')}"></script>
   <script defer src="/js/signup.min.js?v=${jsVersion('signup.min.js')}"></script>
   <script defer src="/js/search.min.js?v=${jsVersion('search.min.js')}"></script>
+
+  <!-- Mobile nav hamburger. This page carried the button and the panel but
+       never the handler, so the menu was inert here and only here. Same code
+       as every other template; it is inline rather than in a shared js/ file
+       because that is where the rest of the site keeps it. -->
+  <script>
+  (function(){
+    var btn   = document.getElementById('nav-hamburger');
+    var panel = document.getElementById('mobile-nav-panel');
+    if (!btn || !panel) return;
+
+    function openNav() {
+      btn.setAttribute('aria-expanded', 'true');
+      panel.classList.add('open');
+      panel.removeAttribute('hidden');
+    }
+    function closeNav() {
+      btn.setAttribute('aria-expanded', 'false');
+      panel.classList.remove('open');
+      panel.setAttribute('hidden', '');
+    }
+
+    btn.addEventListener('click', function() {
+      btn.getAttribute('aria-expanded') === 'true' ? closeNav() : openNav();
+    });
+
+    // Close on link tap
+    panel.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', closeNav);
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeNav();
+    });
+
+    // Close on tap outside
+    document.addEventListener('click', function(e) {
+      if (!btn.contains(e.target) && !panel.contains(e.target)) closeNav();
+    });
+  })();
+  </script>
 </body>
 </html>`;
 }

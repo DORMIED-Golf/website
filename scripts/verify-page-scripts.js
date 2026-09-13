@@ -97,6 +97,19 @@ const RULES = [
   // market picker just silently does nothing and no visitor ever leaves Global.
   // That is precisely the class of failure this gate exists to catch.
   { marker: 'id="dt-picker-btn"',         script: 'ticker.min.js',        minPages: 1,   what: 'market ticker picker' },
+
+  // The one rule whose "script" is an INLINE handler rather than a file: every
+  // template bakes the hamburger's ~30 lines into the page itself, so there is
+  // no src to check for. The required string is the exact getElementById the
+  // handler opens with.
+  //
+  // This caught nothing when written because it was written to close a bug that
+  // had already shipped: /witb/players/ carried the button and the panel but
+  // never the handler, so on mobile the menu was dead on that page and only
+  // that page. It survived 60+ commits because the button renders perfectly and
+  // nothing else in the build looks at it -- the exact failure mode in this
+  // file's header, repeated with a different hook.
+  { marker: 'id="nav-hamburger"', script: "getElementById('nav-hamburger')", minPages: 900, what: 'mobile nav hamburger' },
 ];
 
 /** Directories that are not part of the deploy artifact. */
