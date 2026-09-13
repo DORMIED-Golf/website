@@ -213,7 +213,10 @@ function buildPage(players, brandNames, latestFeedHtml, topStoriesHtml) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>WITB Player Directory | DORMIED</title>
-  <meta name="description" content="What's in the bag for ${count} ranked tour pros? DORMIED tracks every driver, iron, wedge, putter, ball, and shaft - updated weekly from verified caddie sources. Filter by brand and club type.">
+  <!-- Under 160 characters so it is not truncated in results, and "tour pros"
+       rather than "ranked tour pros": the count includes unranked players, who
+       get a page and render "Unranked". -->
+  <meta name="description" content="What's in the bag for ${count} tour pros? DORMIED tracks every driver, iron, wedge, putter, ball and shaft, updated weekly. Filter by brand and club type.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://dormied.com/witb/players/">
 

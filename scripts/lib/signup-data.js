@@ -13,9 +13,14 @@
 
 let witbCache = null;
 
+// Same rule the player pages, the grid and the /witb/ hero use to decide who
+// the site publishes. Without it this file counts a different population from
+// every other surface.
+const { pageEligible } = require('../witb-page-eligibility');
+
 /**
  * { bagCount, changeCount, playerName, changeLabel }
- * bagCount    players holding a current bag
+ * bagCount    PUBLISHED players holding a current bag
  * changeCount rows in witb_changes over the trailing 30 days
  * playerName  + changeLabel describe the most recent logged change
  *
@@ -31,10 +36,17 @@ async function witbSignupData(supabase) {
   try {
     const since = new Date(Date.now() - 30 * 864e5).toISOString();
 
-    const [{ count: bagCount }, { count: changeCount }] = await Promise.all([
-      supabase.from('witb_players').select('*', { count: 'exact', head: true }).not('current_bag_id', 'is', null),
+    // Rows rather than a head-count, because the eligibility rule needs
+    // owgr_rank and slug. A bare count said 210 while /witb/ said 208 players
+    // and /witb/players/ listed 208: the extra two are the blocklisted unranked
+    // players, who have bags in the database but no page anywhere on the site.
+    // Two adjacent pages quoting different totals for the same thing reads as a
+    // mistake, and one of them was.
+    const [{ data: bagPlayers }, { count: changeCount }] = await Promise.all([
+      supabase.from('witb_players').select('slug, owgr_rank').not('current_bag_id', 'is', null),
       supabase.from('witb_changes').select('*', { count: 'exact', head: true }).gte('detected_at', since),
     ]);
+    const bagCount = (bagPlayers || []).filter(p => pageEligible(p.owgr_rank, p.slug)).length;
 
     let playerName = null, changeLabel = null;
     const { data: latest } = await supabase

@@ -32,6 +32,9 @@ const feedBake         = require('./feed-bake');
 const { matchBagToProducts } = require('./lib/witb-shop-match');
 const AB               = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
+const { regenerateSitemap } = require('./generate-sitemap');
+// Bulk runs regenerate the sitemap once at the end instead of per page.
+const SKIP_SITEMAP = process.argv.includes('--skip-sitemap');
 const { cssVersion } = require('./lib/css-version.js');
 const { js: jsVersion } = require('./lib/asset-version.js');
 
@@ -1874,32 +1877,29 @@ ${witbFaqHtml}
 
 // ── Sitemap update ────────────────────────────────────────────────────────────
 
-function updateSitemap(slug, today, noindex) {
-  if (noindex) return;
-
-  const sitemapPath = path.join(ROOT, 'sitemap.xml');
-  let sitemap = fs.readFileSync(sitemapPath, 'utf8');
-  const url   = `https://dormied.com/witb/players/${slug}/`;
-
-  if (sitemap.includes(url)) {
-    sitemap = sitemap.replace(
-      new RegExp(`(<loc>${url.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}</loc>\\s*<lastmod>)[^<]+(</lastmod>)`),
-      `$1${today}$2`
-    );
-    log('Sitemap: updated lastmod for existing entry');
-  } else {
-    const entry = `
-  <url>
-    <loc>${url}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>`;
-    sitemap = sitemap.replace('</urlset>', entry + '\n</urlset>');
-    log('Sitemap: added new entry');
-  }
-
-  fs.writeFileSync(sitemapPath, sitemap, 'utf8');
+/**
+ * The sitemap is NOT patched here.
+ *
+ * This used to rewrite sitemap.xml in place, stamping `today` as the lastmod.
+ * Two things wrong with that. It fabricated the date from the build rather than
+ * the content, which is the exact mtime defect generate-sitemap.js exists to
+ * remove -- it derives a player's lastmod from their current bag_date and its
+ * header says "never mtime". And `today` was computed in UTC, so every run
+ * after about 5pm local stamped TOMORROW: 33 URLs were sitting in the shipped
+ * sitemap dated a day ahead, including a player whose bag has not changed since
+ * April 2025. Crawlers discount a sitemap that claims the future.
+ *
+ * generate-brand-page.js already learned this ("Never patch-appended -- that
+ * was the source of duplicate entries") and delegates. So does
+ * generate-index-pages.js. This was the last holdout.
+ *
+ * Single-player runs regenerate the whole sitemap below. Bulk runs pass
+ * --skip-sitemap and generate-all-witb-pages.js regenerates once at the end,
+ * rather than 208 times.
+ */
+async function updateSitemap(noindex) {
+  if (noindex || SKIP_SITEMAP) return;
+  await regenerateSitemap();
 }
 
 // ── Search index update ───────────────────────────────────────────────────────
@@ -2107,7 +2107,7 @@ async function main() {
   fs.writeFileSync(outPath, html, 'utf8');
   log(`Wrote: ${outPath} (${(html.length / 1024).toFixed(1)} KB)`);
 
-  updateSitemap(PLAYER_SLUG, today, noindex);
+  await updateSitemap(noindex);
   updateSearchIndex(player, bags, html, noindex);
 
   log(`Done. Page: /witb/players/${PLAYER_SLUG}/`);

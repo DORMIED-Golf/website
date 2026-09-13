@@ -1012,6 +1012,20 @@ async function generateRankings() {
         html = html.replace(re, `$1${label}$2`);
         if (!before.includes(`>${label}<`)) console.log(`     current period baked: ${label}`);
       }
+
+      /* The table's sr-only heading names the period too, and was NOT baked: it
+         sat on "April 2026" through five monthly updates while the visible stat
+         above it tracked the data correctly. Client-side JS rewrites it on load,
+         so nobody looking at the page could see the problem -- but the static
+         text is what a crawler reads first, and it said the rankings were five
+         months old. Baked here so the two cannot diverge again. */
+      const h2re = /(<h2 id="rankings-heading"[^>]*>)[^<]*(<\/h2>)/;
+      if (h2re.test(html)) {
+        const before = html.match(h2re)[0];
+        const h2text = `DORMIED Index Rankings: ${label}`;
+        html = html.replace(h2re, `$1${h2text}$2`);
+        if (!before.includes(h2text)) console.log(`     rankings heading baked: ${h2text}`);
+      }
     }
 
     // The Dataset JSON-LD describes the data, so both of these must come from

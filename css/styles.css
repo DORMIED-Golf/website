@@ -1741,7 +1741,11 @@ details[open] .faq-question::after { content: '−'; }
   text-align: center;
 }
 
+/* A <p role="heading">, not an <h1>: this panel is hidden on every generated
+   brand page, and as an h1 it made "Brand not found" the first heading in the
+   source on all 215 of them. */
 .brand-error-title {
+  margin-top: 0;
   font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 700;

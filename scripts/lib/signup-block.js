@@ -260,7 +260,13 @@ function signupBlockHtml({ slot, pageType, data, brandSlug, latestIssueUrl, copy
       // still happens inside a single box and freezeHeight() has one target.
       `<div class="scb-main">` +
         `<p class="scb-eyebrow">The Scorecard &middot; Newsletter</p>` +
-        `<h3 class="scb-headline" id="${esc(id)}-heading">${esc(headline)}</h3>` +
+        // h2, not h3. The block is a top-level page section, a sibling of
+        // Latest / Top Stories / Featured, which are all h2. As an h3 it created
+        // an h1 -> h3 jump on 458 news articles: any article short enough to
+        // carry no body h2 put this headline directly under the article title.
+        // The styling is class-scoped with explicit margins, so the tag change
+        // is visually identical.
+        `<h2 class="scb-headline" id="${esc(id)}-heading">${esc(headline)}</h2>` +
         proofHtml +
         form +
         `<div class="scb-status" role="status" aria-live="polite"></div>` +

@@ -947,7 +947,7 @@ ${faqItems.map(it => `              <div class="da-faq-item">
 
     <div id="brand-error" class="brand-error" hidden>
       <div class="container">
-        <h1 class="brand-error-title">Brand not found</h1>
+        <p class="brand-error-title" role="heading" aria-level="2">Brand not found</p>
         <p class="brand-error-msg">We couldn't find a brand matching that URL. It may have been removed or the URL may be incorrect.</p>
         <a href="/" class="detail-link" style="display:inline-flex;width:auto;">← Back to the DORMIED Index</a>
       </div>

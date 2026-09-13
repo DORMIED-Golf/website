@@ -25,6 +25,7 @@ const path             = require('path');
 const fs               = require('fs');
 const { createClient } = require('@supabase/supabase-js');
 const { pageEligible } = require('./witb-page-eligibility');
+const { regenerateSitemap } = require('./generate-sitemap');
 
 const GENERATOR = path.join(__dirname, 'generate-witb-player-page.js');
 const ROOT      = path.resolve(__dirname, '..');
@@ -103,7 +104,9 @@ async function main() {
     process.stdout.write(`${num} ${slug} ... `);
 
     try {
-      const out = execFileSync('node', [GENERATOR, slug], {
+      // --skip-sitemap: regenerating the sitemap 208 times would be 208 full
+      // DB reads for one file. It is rebuilt once after the loop instead.
+      const out = execFileSync('node', [GENERATOR, slug, '--skip-sitemap'], {
         cwd:      ROOT,
         encoding: 'utf8',
         timeout:  120000, // 2-minute timeout per page
@@ -208,6 +211,11 @@ async function main() {
   }
 
   console.log('='.repeat(70) + '\n');
+
+  // One rebuild for the whole run, from the database, so every lastmod is the
+  // player's bag_date. The per-page generator no longer touches sitemap.xml.
+  console.log('[generate-all] Regenerating sitemap...');
+  await regenerateSitemap();
 
   if (errors.length > 0) process.exitCode = 1;
 }
