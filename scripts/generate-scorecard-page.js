@@ -327,7 +327,18 @@ function buildSectionsHtml(issue, brandNameMap, signupPrimary) {
     const afterFirst = (sectionIndex === 0 && signupPrimary) ? `\n${signupPrimary}` : '';
     // Section images carry their own caption, which is where the photo credit
     // lives. Rendered after the body so the copy introduces the picture.
-    const sectionImgs = (section.images || []).map(im =>
+    // An entry with `row` is a set of images shown side by side under one
+    // caption, for small sources (screenshots, statements) that would blur if
+    // stretched to the full column. Each image keeps its native width as a cap.
+    const rowImg = im =>
+      `<img class="sc-section-img" src="${escHtml(im.src)}" alt="${escHtml(im.alt || '')}"` +
+      (im.w && im.h ? ` width="${im.w}" height="${im.h}" style="max-width:${im.w}px"` : '') + ` loading="lazy">`;
+    const sectionImgs = (section.images || []).map(im => im.row
+      ? `<figure class="sc-section-figure sc-section-figure--row">` +
+          `<div class="sc-figure-row">${im.row.map(rowImg).join('')}</div>` +
+          (im.caption ? `<figcaption class="sc-section-caption">${escHtml(im.caption)}</figcaption>` : '') +
+        `</figure>`
+      :
       `<figure class="sc-section-figure">` +
         `<img class="sc-section-img" src="${escHtml(im.src)}" alt="${escHtml(im.alt || '')}" loading="lazy">` +
         (im.caption ? `<figcaption class="sc-section-caption">${escHtml(im.caption)}</figcaption>` : '') +

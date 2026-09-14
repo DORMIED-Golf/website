@@ -119,9 +119,21 @@ window.DORMIED_SCORECARD_DATA = {
               "caption": "Eleven days from the ad to the partnership ending, and a week more to the executive exits."
             },
             {
-              "src": "/images/scorecard/september-2026/good-good-statement.jpg",
-              "alt": "Good Good Golf statement saying it posted a video that depicted actions not aligned with its values, has taken it down and sincerely apologises",
-              "caption": "Good Good's statement after taking the video down."
+              "row": [
+                {
+                  "src": "/images/scorecard/september-2026/good-good-statement.jpg",
+                  "alt": "Good Good Golf statement saying it posted a video that depicted actions not aligned with its values, has taken it down and sincerely apologises",
+                  "w": 399,
+                  "h": 501
+                },
+                {
+                  "src": "/images/scorecard/september-2026/callaway-statement.jpg",
+                  "alt": "Letter from Callaway CEO Chip Brewer apologising for the co-branded video, confirming Callaway approved it and describing internal and external investigations",
+                  "w": 404,
+                  "h": 495
+                }
+              ],
+              "caption": "Good Good's statement (left) and Callaway CEO Chip Brewer's letter of August 22 (right), confirming Callaway approved the spot before it ran."
             },
             {
               "src": "/images/scorecard/september-2026/good-good-championship.jpg",
@@ -135,11 +147,6 @@ window.DORMIED_SCORECARD_DATA = {
           "heading": "The Field: The Co-Defendant Had Its Best Month in Years",
           "body": "<p><a href=\"/brands/callaway/\">Callaway</a> rose 123.6% to a 52-week peak and third overall. Read that against the paragraph above. The company that approved the ad, appeared in every headline about it, and then publicly terminated the partnership posted its strongest month on this index in a year. Attention does not sort by fault. It sorts by volume, and Callaway's name was in every one of those stories. Whether that converts to anything a CFO would recognise is a separate question entirely, and we would not bet on it.</p>\n<p><a href=\"/brands/uneekor/\">Uneekor</a> climbed 124.1% and 26 places to its own 52-week peak, the launch monitor category continuing its quiet run into the indoor season. <a href=\"/brands/haywood-golf/\">Haywood Golf</a> rose 83.3%, <a href=\"/brands/new-level-golf/\">New Level Golf</a> 86.2%, and <a href=\"/brands/arnie-mcnair/\">Arnie McNair</a> 83.3% with a 30-spot climb, all three at 52-week peaks and none with a single visible catalyst behind them. The moves are real. The reasons are not yet.</p>\n<p><a href=\"/brands/barstool-golf/\">Barstool Golf</a> and <a href=\"/brands/random-golf-club/\">Random Golf Club</a> both rose 50%, which is the detail in this issue most worth chewing on. When the biggest creator brand in golf detonated, the other creator brands went up rather than down. Nobody searching for the Good Good story stopped to wonder whether YouTube golf as a whole was the problem. <a href=\"/brands/cleveland-golf/\">Cleveland Golf</a> also climbed 49.1% to a 52-week peak on the back of <a href=\"/news/cleveland-bet-the-whole-company-on-wedges-rtz-2-is-the-first-real-test-2026-08-04/\">its RTZ 2 wedge push</a>, which is the rare August story in this issue that is just a company selling golf clubs.</p>",
           "images": [
-            {
-              "src": "/images/scorecard/september-2026/callaway-statement.jpg",
-              "alt": "Letter from Callaway CEO Chip Brewer apologising for the co-branded video, confirming Callaway approved it and describing internal and external investigations",
-              "caption": "Chip Brewer's letter of August 22, confirming Callaway approved the spot before it ran."
-            },
             {
               "src": "/images/scorecard/september-2026/rtz-2-wedge.jpg",
               "alt": "A Cleveland RTZ 2 wedge",
