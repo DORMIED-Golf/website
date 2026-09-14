@@ -235,6 +235,30 @@ function buildImageHtml(issue) {
       `</figure>`
     : '';
 
+  // The strip exists for the card surfaces (homepage, hub). On the article page
+  // it repeated the hero, and on phones, where the strip stacks full width, the
+  // hero appeared twice in a row. Drop any strip image the page already shows
+  // (the hero or a section image), and the whole strip if fewer than two remain.
+  const shown = new Set([
+    hero && (hero.src || hero),
+    ...(issue.sections || []).flatMap(sec => (sec.images || []).flatMap(im => (im.row ? im.row : [im]).map(r => r.src))),
+  ].filter(Boolean));
+  const extra = strip.filter(img => !shown.has(img.src));
+  if (!hero && strip.length > 0 || extra.length >= 2) {
+    const items = (hero ? extra : strip).map(img =>
+      `<figure class="sc-strip-figure">` +
+        `<img class="sc-strip-img" src="${escHtml(img.src)}" alt="${escHtml(img.label || '')}" loading="lazy">` +
+        (img.label ? `<figcaption class="sc-strip-figcaption">${escHtml(img.label)}</figcaption>` : '') +
+      `</figure>`
+    ).join('');
+    return heroHtml + `<div class="sc-image-triptych"><div class="sc-image-strip sc-image-strip--article">${items}</div></div>`;
+  }
+  return heroHtml;
+}
+
+function buildImageHtmlLegacy(issue) {
+  const strip = issue.images.strip || [];
+  const heroHtml = '';
   if (strip.length > 0) {
     // Wrap each image in <figure><figcaption> for proper caption semantics (Bug 1).
     const items = strip.map(img =>
