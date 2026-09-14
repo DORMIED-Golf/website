@@ -115,15 +115,15 @@ const COPY = {
   scorecard({ monthLabel } = {}) {
     return {
       headline: monthLabel
-        ? 'Want the Next Scorecard Before Anyone Else?'
-        : 'Want the Next Scorecard Before Anyone Else?',
+        ? `You are reading the ${monthLabel} issue. Get the next one first.`
+        : 'Get the next issue first.',
       proofLine: 'The Scorecard lands monthly, sometimes more when there is something worth sharing.',
     };
   },
 
   home() {
     return {
-      headline: "Want Golf's Brand Desk in Your Inbox?",
+      headline: "Golf's brand desk, monthly.",
       proofLine: '215 brands. 10 markets. One email. The moves that mattered and what drove them.',
     };
   },
