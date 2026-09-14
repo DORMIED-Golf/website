@@ -174,7 +174,7 @@ function getBrandStats(dormiedData, brandSlug) {
 // telling a searcher who has just heard the name what they are looking at.
 // Keyed by slug so the default stays formulaic for the other 214.
 const BRAND_TITLE_OVERRIDE = {
-  'byrdie-golf': "Byrdie Golf Social Wear: Women's Golf Apparel Brand | DORMIED",
+  'byrdie-golf': "Byrdie Golf Social Wear: Women's Golf Apparel | DORMIED",
 };
 
 
@@ -578,17 +578,24 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
   // WITB-style title: exact query phrase first, plain-language promise, year from the
   // latest snapshot so it rolls over automatically. Equipment brands (those with an
   // ON TOUR section) promise "Who Plays It"; apparel/no-tour brands promise Rank + Trend.
-  // Long names drop ", Trend" to stay near 60 chars. No em dashes.
+  // Search results truncate near 60 characters, so the longest shape that fits
+  // wins and the brand name is never the part that gets cut. No em dashes.
   const titleYear = (stats.currentMonth || '').split(' ')[1] || String(new Date().getFullYear());
   const hasTour   = !!onTourHtml;
-  let pageTitle;
-  if (hasTour) {
-    pageTitle = `${brand.name}: Golf Brand Rank, Trend + Who Plays It (${titleYear}) | DORMIED`;
-    if (pageTitle.length > 65) pageTitle = `${brand.name}: Golf Brand Rank + Who Plays It (${titleYear}) | DORMIED`;
-  } else {
-    pageTitle = `${brand.name}: Golf Brand Rank + Trend (${titleYear}) | DORMIED`;
-  }
-  if (BRAND_TITLE_OVERRIDE[slug]) pageTitle = BRAND_TITLE_OVERRIDE[slug];
+  const titleShapes = hasTour
+    ? [
+        `${brand.name}: Golf Brand Rank, Trend + Who Plays It (${titleYear}) | DORMIED`,
+        `${brand.name}: Golf Brand Rank + Who Plays It (${titleYear}) | DORMIED`,
+        `${brand.name}: Brand Rank + Who Plays It (${titleYear}) | DORMIED`,
+      ]
+    : [
+        `${brand.name}: Golf Brand Rank + Trend (${titleYear}) | DORMIED`,
+        `${brand.name}: Golf Brand Rank (${titleYear}) | DORMIED`,
+      ];
+  titleShapes.push(`${brand.name}: Golf Brand Rank | DORMIED`, `${brand.name} | DORMIED`);
+  let pageTitle = BRAND_TITLE_OVERRIDE[slug]
+    || titleShapes.find(t => t.length <= 60)
+    || titleShapes[titleShapes.length - 1];
   pageTitle = escHtml(pageTitle);
   const metaDesc     = escHtml(buildMetaDesc(brand, stats, (dormiedData.brands || []).length));
   const canonicalUrl = `https://dormied.com/brands/${escHtml(slug)}/`;
@@ -1053,7 +1060,7 @@ ${shopSectionHtml}
 
             <!-- ── Rankings by Market ── -->
             <section class="bp-section" aria-labelledby="bp-countries-heading">
-              <h2 class="bp-section-title" id="bp-countries-heading">Rankings by Market</h2>
+              <h2 class="bp-section-title" id="bp-countries-heading">Where Does ${escHtml(brand.name)} Rank in Each Market?</h2>
               <p class="bp-section-sub">Brand interest is not uniform. Where ${escHtml(brand.name)} is searched hardest, and where it lags, varies market to market.</p>
               <div class="table-scroll-wrap">
                 <table class="bp-country-table">
@@ -1077,7 +1084,7 @@ ${countryRows}
 
             <!-- ── Category Standing (populated by brand.js) ── -->
             <section class="bp-section" aria-labelledby="bp-cat-heading" hidden>
-              <h2 class="bp-section-title" id="bp-cat-heading">Category Standing</h2>
+              <h2 class="bp-section-title" id="bp-cat-heading">How Does ${escHtml(brand.name)} Rank in Its Category?</h2>
               <div class="bp-cat-grid" id="bp-cat-grid"></div>
             </section>
 
@@ -1087,7 +1094,7 @@ ${scSignupHtml}
 
             <!-- ── Similar Brands ── -->
             <section class="bp-section" aria-labelledby="bp-similar-heading">
-              <h2 class="bp-section-title bp-section-title--green" id="bp-similar-heading">Similar Brands</h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-similar-heading">Which Golf Brands Are Similar to ${escHtml(brand.name)}?</h2>
               <p class="bp-section-sub">Same category · closest search interest</p>
               <div class="bp-similar-grid" id="bp-similar-grid">${relatedHtml}
               </div>
@@ -1095,7 +1102,7 @@ ${scSignupHtml}
 
             <!-- ── Latest on Brand ── -->
             <section class="bp-section" id="bp-latest" aria-labelledby="bp-latest-heading"${articles.length === 0 ? ' hidden' : ''}>
-              <h2 class="bp-section-title bp-section-title--green" id="bp-latest-heading">Latest on <span id="bp-latest-brand-name">${escHtml(brand.name)}</span></h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-latest-heading">What Is the Latest News on <span id="bp-latest-brand-name">${escHtml(brand.name)}</span>?</h2>
               <div id="bp-latest-list" class="latest-feed-list">
                 ${articlesHtml}
               </div>
@@ -1515,7 +1522,7 @@ ${modelRows}
   return `
             <!-- ── ${escHtml(brandName)} On Tour ── -->
             <section class="bp-section bp-on-tour-section" aria-labelledby="bp-on-tour-heading">
-              <h2 class="bp-section-title bp-section-title--green" id="bp-on-tour-heading">${escHtml(brandName)} On Tour</h2>
+              <h2 class="bp-section-title bp-section-title--green" id="bp-on-tour-heading">Which Tour Players Use ${escHtml(brandName)}?</h2>
               <p class="bp-section-sub">Who plays ${escHtml(brandName)} right now, pulled from the <a href="/witb/players/">DORMIED WITB</a> tour database.</p>
 ${catBlocks}
             </section>`;

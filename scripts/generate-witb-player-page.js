@@ -1199,12 +1199,18 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     ? _snapDate.toLocaleDateString('en-US', { month: 'long', timeZone: 'UTC' })
     : '';
   const _hook       = bagHook(currentItems);
+  // Search results truncate near 60 characters. The longest shape that fits
+  // wins: the hook goes first, then the site suffix, and the player name, year
+  // and snapshot month are never cut. Built unescaped so the length is the
+  // length a reader sees; escaped once where it is written into the page.
   const _titleBase  = _snapMonth
-    ? `${esc(name)} WITB ${currentYear} (${_snapMonth})`
-    : `${esc(name)} WITB ${currentYear}`;
-  const pageTitle   = _hook
-    ? `${_titleBase}: ${esc(_hook)} | DORMIED`
-    : `${_titleBase} | DORMIED`;
+    ? `${name} WITB ${currentYear} (${_snapMonth})`
+    : `${name} WITB ${currentYear}`;
+  const pageTitle   = [
+    _hook ? `${_titleBase}: ${_hook} | DORMIED` : null,
+    _hook ? `${_titleBase}: ${_hook}` : null,
+    `${_titleBase} | DORMIED`,
+  ].filter(Boolean).find(t => t.length <= 60) || _titleBase;
 
   // Build description from this player's actual bag items (unique per player)
   const _descDriver = currentItems.find(i => i.club_type === 'driver');
@@ -1217,8 +1223,16 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     _descPutter ? `${_descPutter.witb_brands?.name || _descPutter.raw_brand} putter` : null,
     _descBall   ? `${_descBall.raw_brand} ball`                              : null,
   ].filter(Boolean);
-  const _descGear   = _descParts.length ? _descParts.join(', ') : 'full bag';
-  const metaDesc    = `${name} WITB ${currentYear}: ${_descGear}. Full equipment breakdown and bag history across ${bags.length} snapshots.`;
+  // Search results truncate descriptions near 160 characters. Trim the closing
+  // sentence first, then the ball, then the putter; the driver and irons stay.
+  const _snaps      = `${bags.length} ${bags.length === 1 ? 'snapshot' : 'snapshots'}`;
+  const _descTails  = [` Full equipment breakdown and bag history across ${_snaps}.`, ` Bag history across ${_snaps}.`, ''];
+  let metaDesc = '';
+  for (let keep = _descParts.length; keep >= Math.min(2, _descParts.length) && !metaDesc; keep--) {
+    const gear = keep ? _descParts.slice(0, keep).join(', ') : 'full bag';
+    metaDesc = _descTails.map(t => `${name} WITB ${currentYear}: ${gear}.${t}`).find(d => d.length <= 160) || '';
+  }
+  if (!metaDesc) metaDesc = `${name} WITB ${currentYear}: full equipment breakdown and bag history by DORMIED.`;
 
   const canonicalUrl = `https://dormied.com/witb/players/${slug}/`;
 
@@ -1383,7 +1397,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>${pageTitle}</title>
+  <title>${esc(pageTitle)}</title>
   <meta name="description" content="${esc(metaDesc)}">
   <meta name="robots" content="${noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}">
   <link rel="canonical" href="${canonicalUrl}">
@@ -1566,7 +1580,7 @@ ${scSignupPrimary}
 
           <!-- 2. CURRENT BAG -->
           <section class="witb-section" aria-labelledby="current-bag-heading">
-            <h2 class="witb-section-title" id="current-bag-heading">Current Bag</h2>
+            <h2 class="witb-section-title" id="current-bag-heading">What Clubs Does ${esc(name)} Play?</h2>
             <p class="witb-section-sub">Snapshot: ${esc(currentDate)}</p>
 
             <!-- Desktop table (hidden on mobile) -->
@@ -1614,7 +1628,7 @@ ${shopBag ? `
 
           <!-- 3. HOW THIS BAG COMPARES -->
           <section class="witb-section" aria-labelledby="compare-heading">
-            <h2 class="witb-section-title" id="compare-heading">How This Bag Compares to the Tour</h2>
+            <h2 class="witb-section-title" id="compare-heading">How Does ${esc(name)}'s Bag Compare to the Tour?</h2>
             <p class="witb-section-sub">Brand usage across ${rankedCount} current bags</p>
             <div class="witb-comp-grid">
               ${compHtml}
@@ -1624,7 +1638,7 @@ ${shopBag ? `
 
           <!-- 4. BAG HISTORY -->
           <section class="witb-section" aria-labelledby="history-heading">
-            <h2 class="witb-section-title" id="history-heading">Bag History</h2>
+            <h2 class="witb-section-title" id="history-heading">How Has ${esc(name)}'s Bag Changed Over Time?</h2>
             <p class="witb-section-sub">${bags.length} snapshots tracked, ${yearRange}</p>
 
             ${ledes.history_narrative ? `<div class="witb-hist-narrative">

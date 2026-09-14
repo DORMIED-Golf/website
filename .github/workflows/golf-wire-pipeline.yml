@@ -148,6 +148,9 @@ jobs:
           # brands and player bags, so they go stale the moment anything
           # publishes. Regenerated here for the same reason the news index is.
           node scripts/generate-llms-txt.js
+          # The sitemap lists published articles only, and the articles promoted
+          # above were still drafts when generate-article.js last wrote it.
+          node scripts/generate-sitemap.js
 
           git add -A
 

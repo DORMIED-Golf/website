@@ -86,7 +86,7 @@ const FEATURES = {
     dateModified: '2026-08-31T12:00:00.000Z',
     publishedAt: '2026-08-31T12:00:00.000Z',
     quickAnswer: 'Byrdie Golf Social Wear is a Charlotte-based women\'s golf apparel brand founded in 2021 by Rachelle Wates and Hayden Hendrix, known for retro country club styling, collaborations with Cole Haan and Dolce Vita, and a deliberate blurring of the line between golf wear and going-out wear.',
-    metaDescription: 'Byrdie Golf Social Wear is a women\'s golf apparel brand founded in 2021 in Charlotte, North Carolina by Rachelle Wates and Hayden Hendrix. Pieces run roughly $40 to $215.',
+    metaDescription: 'Byrdie Golf Social Wear is a women\'s golf apparel brand founded in 2021 in Charlotte, NC by Rachelle Wates and Hayden Hendrix. Pieces run about $40 to $215.',
     seoKeywords: ['byrdie golf', 'what is byrdie golf', 'byrdie golf social wear', 'byrdie golf founders', 'byrdie golf clothing', 'byrdie golf charlotte', 'womens golf apparel brand'],
     subject: "Byrdie Golf",
     mdPath: path.join(ROOT, 'article-byrdie-golf.md'),
@@ -175,7 +175,7 @@ const FEATURES = {
     dateModified: '2026-09-08T12:00:00.000Z',
     publishedAt: '2026-09-08T12:00:00.000Z',
     quickAnswer: 'Fantl Sport is a golf apparel brand founded in New Zealand in 2021, making a deliberately small range of technical, minimalist pieces designed to work on the course and off it. Its line is "Tools to keep you on course", and it sits at the premium end of golf apparel.',
-    metaDescription: 'Fantl Sport is a New Zealand golf apparel brand founded in 2021, making minimalist technical clothing built for longevity. Premium priced, deliberately small range.',
+    metaDescription: 'Fantl Sport is a New Zealand golf apparel brand founded in 2021, making minimalist technical clothing built to last. Premium priced, deliberately small range.',
     seoKeywords: ['fantl sport', 'what is fantl sport', 'fantl golf', 'fantl sport nz', 'new zealand golf apparel', 'fantl sport review', 'one shot at life fantl'],
     subject: "Fantl Sport",
     mdPath: path.join(ROOT, 'article-fantl-sport.md'),
@@ -263,7 +263,7 @@ const FEATURES = {
     // Deliberately says "most recently" and never names a settled current
     // putter: the premise of the piece is that the slot rotates.
     quickAnswer: 'Jake Knapp putts with Scotty Cameron Phantom models, most recently a Phantom 9.2R Tour Prototype, despite being a PXG staff player, and he has changed putters repeatedly through 2026.',
-    metaDescription: 'Jake Knapp putts with Scotty Cameron Phantom models, most recently a 9.2R Tour Prototype, despite being a PXG staff player. He has changed putters repeatedly in 2026.',
+    metaDescription: 'Jake Knapp putts with Scotty Cameron Phantom models, most recently a 9.2R Tour Prototype, despite being a PXG staffer. He has changed putters often in 2026.',
     seoKeywords: ['jake knapp putter', 'what putter does jake knapp use', 'jake knapp putter 2026', 'jake knapp scotty cameron', 'jake knapp witb', 'scotty cameron phantom 9.2r', 'jake knapp pxg'],
     subject: "Jake Knapp",
     mdPath: path.join(ROOT, 'article-jake-knapp-putter.md'),
@@ -283,7 +283,7 @@ const FEATURES = {
   'reebok-manors-ii': {
     slug: 'reebok-manors-ii-united-kingdom-of-golf',
     title: 'The United Kingdom of Golf: Inside Reebok x MANORS II',
-    titleTag: 'The United Kingdom of Golf: Inside Reebok x MANORS II | DORMIED',
+    titleTag: 'Reebok x MANORS II: The United Kingdom of Golf | DORMIED',
     byline: 'Adam R.',
     authors: ['Adam R.'],
     category: 'Feature',
@@ -297,7 +297,7 @@ const FEATURES = {
       'The Club C Revenge Golf swaps last year\'s traditional rubber outsole for a textured golf outsole, moving the shoe from the clubhouse onto the course.',
       'Early access opens at manorsgolf.com on 12 August 2026, with Reebok\'s global launch on 30 September.',
     ],
-    metaDescription: 'MANORS is the 4th most in-demand golf brand in Britain and the 52nd in America. Its second Reebok collaboration is a very British campaign built for a very American problem.',
+    metaDescription: 'MANORS is the 4th most in-demand golf brand in Britain and 52nd in America. Its second Reebok collab is a British campaign for an American problem.',
     seoKeywords: ['reebok x manors', 'reebok manors ii', 'the united kingdom of golf', 'manors golf', 'club c revenge golf', 'sam torrance', 'manors reebok collaboration'],
     subject: "Reebok x MANORS",
     mdPath: path.join(ROOT, 'article-reebok-manors-ii.md'),
@@ -333,7 +333,7 @@ const FEATURES = {
   'pins-and-aces': {
     slug: 'who-owns-pins-and-aces',
     title: 'Who Owns Pins & Aces? One Ugly Headcover, Two Brothers-in-Law, and a $20 Million Golf Brand',
-    titleTag: 'Who Owns Pins & Aces? Founders, Edel Deal + Revenue | DORMIED',
+    titleTag: 'Who Owns Pins & Aces? Founders + the Edel Deal | DORMIED',
     byline: 'Adam R.',
     authors: ['Adam R.'],
     category: 'Feature',
@@ -348,7 +348,7 @@ const FEATURES = {
       'Grew into a roughly $20 million golf brand on accessories rather than clubs.',
       'Acquired Edel Golf, moving a novelty-first brand into serious equipment.',
     ],
-    metaDescription: 'Who owns Pins & Aces? The two brothers-in-law who founded it in 2018, how a headcover complaint became a $20 million brand, the Edel Golf acquisition, and what the data shows.',
+    metaDescription: 'Who owns Pins & Aces? The brothers-in-law who founded it in 2018, how a headcover gripe became a $20 million brand, and the Edel Golf deal.',
     seoKeywords: ['who owns pins and aces', 'pins and aces', 'pins and aces golf', 'pins and aces founders', 'pins and aces edel golf', 'nick mertz jon major'],
     subject: "Pins & Aces",
     mdPath: path.join(ROOT, 'article-pins-and-aces.md'),
@@ -379,7 +379,7 @@ const FEATURES = {
   'primo-golf': {
     slug: 'primo-golf',
     title: 'Who Owns Primo Golf? Four Cousins, One DM, and Phil Mickelson in Joggers',
-    titleTag: 'Who Owns Primo Golf? Cousins, Grant Horvat + Mickelson | DORMIED',
+    titleTag: 'Who Owns Primo Golf? Cousins, Horvat + Mickelson | DORMIED',
     byline: 'Adam R.',
     authors: ['Adam R.'],
     category: 'Feature',
@@ -435,7 +435,7 @@ const FEATURES = {
       'Chapter 1, the first collection, prices polos at $95 and outerwear from $140 to $200.',
       'It enters the DORMIED Index at 215 of 215 with a DI score of 0.0 and zero recorded searches, the only brand of the 215 in that position.',
     ],
-    metaDescription: "What is Maejer Golf? Mason Mount's British luxury golf brand launched in July 2026 and enters the DORMIED Index at 215 of 215 with zero recorded searches. Who owns it, what it costs, and what happens next.",
+    metaDescription: "What is Maejer Golf? Mason Mount's British luxury golf brand launched in July 2026. Who owns it, what it costs, and where it sits on the DORMIED Index.",
     seoKeywords: ['maejer golf', 'what is maejer golf', 'who owns maejer golf', 'mason mount golf brand', 'maejer', 'mason mount handicap', 'owen farrell golf brand'],
     subject: "Maejer Golf",
     mdPath: path.join(ROOT, 'article-maejer-golf.md'),
@@ -496,7 +496,7 @@ const FEATURES = {
   'take-this-job-and-shove-it': {
     slug: 'take-this-job-and-shove-it',
     title: 'Take This Job and Shove It',
-    titleTag: 'Take This Job and Shove It: A Country Club Confidential Story | DORMIED',
+    titleTag: 'Take This Job and Shove It | Country Club Confidential',
     byline: 'Adam R. and Travis R.',
     authors: ['Adam R.', 'Travis R.'],
     category: 'Feature',
@@ -508,7 +508,7 @@ const FEATURES = {
       'An assistant pro, a tyrant boss, and the most elaborate resignation in golf.',
       'Includes the behind-the-scenes account from the anonymous founders.',
     ],
-    metaDescription: 'A Country Club Confidential story, running in full on DORMIED: an assistant pro, a tyrant boss, and the most elaborate resignation in golf. Plus the behind-the-scenes from the anonymous founders.',
+    metaDescription: 'A Country Club Confidential story, in full on DORMIED: an assistant pro, a tyrant boss, the most elaborate resignation in golf, and notes from the founders.',
     seoKeywords: ['Country Club Confidential', 'golf pro shop story', 'take this job and shove it', 'assistant pro resignation', 'golf newsletter', 'DORMIED'],
     subject: "Country Club Confidential",
     mdPath: path.join(ROOT, 'article-ccc-take-this-job.md'),
@@ -550,7 +550,7 @@ const FEATURES = {
   'vice-golf-balls': {
     slug: 'vice-golf-balls',
     title: "Vice Golf Balls: The Full Lineup, the Customization, and the Data Behind Golf's Fastest-Rising Ball Brand",
-    titleTag: 'Vice Golf Balls: Full Lineup, Customization, and the Data | DORMIED',
+    titleTag: 'Vice Golf Balls: Lineup, Customization + Data | DORMIED',
     byline: 'Travis R.',
     authors: ['Travis R.'],
     category: 'Feature',
@@ -605,7 +605,7 @@ const FEATURES = {
   'who-is-arnie-mcnair': {
     slug: 'who-is-arnie-mcnair',
     title: 'Who Is Arnie McNair? How an Anonymous Golfer Built a Cult Brand',
-    titleTag: 'Who Is Arnie McNair? The Anonymous Golfer Behind the Cult Brand | DORMIED',
+    titleTag: 'Who Is Arnie McNair? The Golfer Behind the Brand | DORMIED',
     byline: 'Adam R.',
     authors: ['Adam R.'],
     category: 'Feature',
@@ -1201,6 +1201,11 @@ async function main() {
     console.error('Usage: node scripts/generate-feature.js <feature-key>\n  keys: ' + Object.keys(FEATURES).join(', '));
     process.exit(1);
   }
+  // Search results truncate titles near 60 characters and descriptions near
+  // 160. Feature copy is hand-written, so an overrun fails here instead of
+  // shipping a clipped snippet.
+  if (F.titleTag.length > 60) throw new Error(`[feature] ${key}: titleTag is ${F.titleTag.length} chars (max 60): ${F.titleTag}`);
+  if (F.metaDescription.length > 160) throw new Error(`[feature] ${key}: metaDescription is ${F.metaDescription.length} chars (max 160)`);
   // A fixed config date always wins; otherwise the existing row's published_at is
   // preserved on rebuild (looked up below); only a genuinely new feature falls back
   // to now(). This stops a rebuild from resetting published_at and reposting the feature.

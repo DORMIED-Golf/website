@@ -28,6 +28,7 @@
     "verify:signup-blocks": "node scripts/refresh-signup-blocks.js --check",
     "verify:page-scripts": "node scripts/verify-page-scripts.js",
     "verify:headings": "node scripts/verify-headings.js",
+    "verify:seo": "node scripts/verify-seo.js",
     "fix:assets": "node scripts/fix-asset-versions.js",
     "verify:assets": "node scripts/fix-asset-versions.js --check",
     "generate-llms": "node scripts/generate-llms-txt.js"

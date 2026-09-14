@@ -259,7 +259,7 @@ function buildTocHtml(issue) {
     `        <li><a href="#${escHtml(item.id)}">${escHtml(item.label)}</a></li>`
   ).join('\n');
   return `<nav class="scorecard-toc" aria-label="Sections in this issue">
-      <h2 class="scorecard-toc-title">In this issue</h2>
+      <h2 class="scorecard-toc-title">What Is in This Issue of The Scorecard?</h2>
       <ol class="scorecard-toc-list">
 ${items}
       </ol>
@@ -285,7 +285,7 @@ function buildSnapshotHtml(issue) {
   }).join('\n');
   return `
     <section class="sc-article-section sc-snapshot-section" id="index-snapshot">
-      <h2 class="sc-section-heading">Index Snapshot</h2>
+      <h2 class="sc-section-heading">What Does the DORMIED Index Snapshot Show?</h2>
       <div class="section-body">
         <p class="sc-snapshot-label">Top ${snap.length} · ${escHtml(issue.monthLabel)}</p>
         <div class="sc-table-wrap">
@@ -302,6 +302,42 @@ ${rows}
     </section>`;
 }
 
+// ── Section headings ──────────────────────────────────────────────────────────
+// Every section h2 is phrased as a question. The recurring Scorecard sections
+// keep their editorial name in the table of contents, and a hook written after
+// the name ("At The Top: Malbon's Best Month Ever...") becomes a deck line under
+// the question. A heading already written as a question is used as is. Anything
+// else renders unchanged and fails verify:headings, which is the point: a new
+// section needs its question added here.
+const SECTION_QUESTIONS = {
+  'at-the-top':       'Which Golf Brands Are at the Top of the DORMIED Index?',
+  'the-biggest-move': 'Which Golf Brand Made the Biggest Move This Month?',
+  'the-field':        'Which Other Golf Brands Moved This Month?',
+  'the-drop-zone':    'Which Golf Brands Dropped This Month?',
+  'the-long-game':    'Which Golf Brands Are Playing the Long Game?',
+  'global-dispatch':  'How Did Golf Brands Move in Global Markets?',
+  'closing':          'What Is the Takeaway From This Issue?',
+};
+
+function sectionQuestion(section) {
+  const heading = stripEmDashes(String(section.heading || '').trim());
+  if (/\?$/.test(heading)) return { question: heading, deck: '' };
+  const question = SECTION_QUESTIONS[section.id];
+  if (!question) {
+    console.warn(`[scorecard] section "${section.id}" has no question heading: "${heading}"`);
+    return { question: heading, deck: '' };
+  }
+  const colon = heading.indexOf(': ');
+  return { question, deck: colon > 0 ? heading.slice(colon + 2).trim() : '' };
+}
+
+// Issue headlines are written for the newsletter and can run past the 60
+// characters a search result shows. Name the search title here when the fitted
+// shapes in main() would otherwise drop the hook entirely.
+const SEO_TITLE_OVERRIDE = {
+  'august-2026': 'The Index Crowned a Cartoon Mouse | The Scorecard',
+};
+
 // ── Article sections ──────────────────────────────────────────────────────────
 
 function buildSectionsHtml(issue, brandNameMap, signupPrimary) {
@@ -311,8 +347,10 @@ function buildSectionsHtml(issue, brandNameMap, signupPrimary) {
     const withBrands = autoLinkBrandsInSection(cleanBody, issue.brandMentions, brandNameMap);
     const linkedBody = autoLinkPlayersInSection(withBrands, issue.playerMentions);
     // Use sc-main-heading for proper display-font H2s (Bug 4).
+    const q = sectionQuestion(section);
     const headingHtml = section.heading
-      ? `\n      <h2 class="sc-main-heading" id="${escHtml(section.id)}">${escHtml(section.heading)}</h2>`
+      ? `\n      <h2 class="sc-main-heading" id="${escHtml(section.id)}">${escHtml(q.question)}</h2>` +
+        (q.deck ? `\n      <p class="sc-section-deck">${escHtml(q.deck)}</p>` : '')
       : '';
     // id goes on the H2 so TOC anchor-links scroll to the heading (Bug 3/4).
     const sectionId = section.heading ? '' : ` id="${escHtml(section.id)}"`;
@@ -361,7 +399,7 @@ function buildMoreIssuesHtml(issue, allIssues) {
     );
   }).join('\n');
   return `    <section class="sc-more-issues">
-      <h2 class="sc-section-heading">More from The Scorecard</h2>
+      <h2 class="sc-section-heading">What Else Has The Scorecard Covered?</h2>
       <ul class="scorecard-related-list">
 ${items}
       </ul>
@@ -407,7 +445,19 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
   const slug         = issue.slug;
   const canonicalUrl = `https://dormied.com/scorecard/${slug}/`;
   const metaDesc     = buildMetaDesc(issue);
-  const pageTitle    = `${issue.title} | DORMIED`;
+  // The stored title carries a " | The Scorecard | Month" trail that alone runs
+  // past the 60 characters search results show. The longest shape that fits wins.
+  const _headline    = scorecardHeadline(issue);
+  let pageTitle      = [
+    SEO_TITLE_OVERRIDE[issue.slug],
+    /^the scorecard\b/i.test(_headline) ? null : `${_headline} | The Scorecard | DORMIED`,
+    `${_headline} | DORMIED`,
+    _headline,
+  ].filter(Boolean).find(t => t.length <= 60);
+  if (!pageTitle) {
+    pageTitle = `The Scorecard, ${issue.monthLabel || issue.slug} | DORMIED`;
+    console.warn(`[scorecard] ${issue.slug}: headline is too long for a search title; add one to SEO_TITLE_OVERRIDE`);
+  }
   // Social scrapers need an absolute URL, and the hero is stored root-relative
   // so the <img> stays portable. An `og` override lets a tall hero supply a
   // properly proportioned 1200x630 card instead of being centre-cropped.
@@ -470,7 +520,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home',          item: 'https://dormied.com/' },
       { '@type': 'ListItem', position: 2, name: 'The Scorecard', item: 'https://dormied.com/scorecard/' },
-      { '@type': 'ListItem', position: 3, name: issue.title,     item: canonicalUrl },
+      { '@type': 'ListItem', position: 3, name: scorecardHeadline(issue), item: canonicalUrl },
     ],
   });
 
@@ -591,13 +641,13 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
         <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
         <a href="/scorecard/" class="breadcrumb-link">Scorecard</a>
         <span class="breadcrumb-separator" aria-hidden="true">&rsaquo;</span>
-        <span class="breadcrumb-item--current" aria-current="page">${escHtml(issue.title)}</span>
+        <span class="breadcrumb-item--current" aria-current="page">${escHtml(scorecardHeadline(issue))}</span>
       </nav>
 
       <!-- ── Article Header ── -->
       <header class="sc-article-header container">
         <a href="/scorecard/" class="sc-label sc-label--link">THE SCORECARD</a>
-        <h1 class="sc-article-title">${escHtml(issue.title)}</h1>
+        <h1 class="sc-article-title">${escHtml(scorecardHeadline(issue))}</h1>
         ${issue.subtitle ? `<p class="sc-article-subtitle">${escHtml(issue.subtitle)}</p>` : ''}
         <!-- Byline + date as a distinct meta block, visually separate from dek (Bug 12) -->
         <div class="scorecard-meta">

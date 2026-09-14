@@ -8226,3 +8226,13 @@ details[open] .faq-question::after { content: '−'; }
 
   .dt-arrows { display: flex; flex: 0 0 auto; align-items: stretch; border-left: 1px solid var(--border); }
 }
+
+/* Scorecard section deck: the editorial hook under a question heading */
+.sc-section-deck {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--text-dim);
+  margin: -6px 0 18px;
+}

@@ -455,7 +455,13 @@ async function regenerateSitemap() {
     : [];
 
   // ── 4. News articles (with image blocks) ──────────────────────────────────
-  const newsPages = walkSubdirs('news', ['page']).filter(notRedirected('news')); // exclude news/page/ + redirects
+  // Published articles only. The pipeline commits an article's page before
+  // publish-articles.js promotes its row, and a draft held on the image gate
+  // keeps that committed page while the row stays draft. Walking the directory
+  // alone advertised two held drafts in the sitemap for days.
+  const newsPages = walkSubdirs('news', ['page'])
+    .filter(notRedirected('news'))                 // exclude news/page/ + redirects
+    .filter(p => articleBySlug.has(p.slug));       // exclude unpublished drafts
   const newsEntries = newsPages.length
     ? [
         `\n  <!-- ── News articles (${newsPages.length}) ── -->`,

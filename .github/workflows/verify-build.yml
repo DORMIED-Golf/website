@@ -49,6 +49,13 @@ jobs:
       - name: Headings are questions
         run: npm run verify:headings --silent
 
+      # Titles fit in 60 characters and descriptions in 160, each page has one h1,
+      # headings never skip a level, canonical and og:url agree, and every
+      # indexable page is in the sitemap. Generators enforce these themselves;
+      # this catches a hand edit or a template regression.
+      - name: SEO structure
+        run: npm run verify:seo --silent
+
       # Every sitemap URL must resolve to a file that exists.
       - name: Sitemap resolves
         run: npm run verify:sitemap --silent

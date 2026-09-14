@@ -149,6 +149,43 @@ function seoTitleIssues(seoTitle, brandName, body, headline) {
   return issues;
 }
 
+/**
+ * A <title> of 60 characters or fewer for an article with no usable SEO title
+ * and a longer headline. Prefers a whole clause that names the brand, then cuts
+ * at a word boundary without ending on a connective.
+ */
+function clipTitle(headline, brandName) {
+  const h = String(headline || '').replace(/\s+/g, ' ').trim();
+  if (h.length <= 60) return h;
+  const brand = String(brandName || '').toLowerCase();
+  const clause = h.split(/(?<=[.?!:])\s+/)
+    .map(c => c.replace(/[.:]$/, '').trim())
+    .find(c => c.length >= 20 && c.length <= 60 && (!brand || c.toLowerCase().includes(brand)));
+  if (clause) return clause;
+  const DANGLING = /\s+(a|an|and|as|at|but|by|for|from|in|into|is|its|of|on|or|than|that|the|to|with)$/i;
+  let cut = h.slice(0, 61).replace(/\s+\S*$/, '');
+  while (DANGLING.test(cut)) cut = cut.replace(DANGLING, '');
+  return cut.replace(/[,;:.\s]+$/, '');
+}
+
+/**
+ * A meta description of 160 characters or fewer. Keeps whole sentences where
+ * they fit, otherwise cuts at a word boundary and ends with an ellipsis. The
+ * prompt asks for 120 to 155, so this only trims an overrun.
+ */
+function fitDescription(text) {
+  const d = String(text || '').replace(/\s+/g, ' ').trim();
+  if (d.length <= 160) return d;
+  let out = '';
+  for (const s of d.split(/(?<=[.?!])\s+/)) {
+    const next = out ? `${out} ${s}` : s;
+    if (next.length > 160) break;
+    out = next;
+  }
+  if (out.length >= 80) return out;
+  return d.slice(0, 158).replace(/\s+\S*$/, '').replace(/[,;:.\s]+$/, '') + '\u2026';
+}
+
 function titleIssues(title, brandName) {
   if (!title || !title.trim()) return ['empty title'];
   const t     = title.trim();
@@ -1165,8 +1202,11 @@ function generateArticleHtml(opts) {
   // characters. The headline stays the visible h1 and og:title; this line uses
   // the dedicated SEO title when there is one, and keeps the site suffix only
   // when it fits. 602 of 626 articles overflowed with "${title} | DORMIED".
-  const fitTitle       = t => (t && `${t} | DORMIED`.length <= 60) ? `${t} | DORMIED` : t;
-  const titleTag       = fitTitle(seoTitle) || fitTitle(title);
+  const fitTitle       = t => !t ? '' : `${t} | DORMIED`.length <= 60 ? `${t} | DORMIED` : t.length <= 60 ? t : '';
+  const titleTag       = fitTitle(seoTitle) || fitTitle(title) || clipTitle(title, brandName);
+  // The meta tags get a description that fits in 160 characters; the visible
+  // subtitle keeps the full text.
+  const metaDescription = fitDescription(meta_description);
   const keywordsStr    = (seo_keywords || []).join(', ');
 
   const initials       = brandName.split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
@@ -1212,7 +1252,7 @@ function generateArticleHtml(opts) {
 
   <!-- ── Primary SEO ── -->
   <title>${escHtml(titleTag)}</title>
-  <meta name="description" content="${escHtml(meta_description)}">
+  <meta name="description" content="${escHtml(metaDescription)}">
   <meta name="keywords" content="${escHtml(keywordsStr)}">
   <meta name="author" content="${escHtml(author)}">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -1228,7 +1268,7 @@ function generateArticleHtml(opts) {
   <meta property="og:type" content="article">
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:title" content="${escHtml(title)}">
-  <meta property="og:description" content="${escHtml(meta_description)}">
+  <meta property="og:description" content="${escHtml(metaDescription)}">
   <meta property="og:image" content="${escHtml(ogImage)}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -1242,7 +1282,7 @@ function generateArticleHtml(opts) {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@DORMIED_GOLF">
   <meta name="twitter:title" content="${escHtml(title)}">
-  <meta name="twitter:description" content="${escHtml(meta_description)}">
+  <meta name="twitter:description" content="${escHtml(metaDescription)}">
   <meta name="twitter:image" content="${escHtml(ogImage)}">
 
   <!-- ── Sitemap ── -->
@@ -1262,7 +1302,7 @@ function generateArticleHtml(opts) {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "${escHtml(title)}",
-    "description": "${escHtml(meta_description)}",
+    "description": "${escHtml(metaDescription)}",
     "image": "${escHtml(ogImage)}",
     "datePublished": "${dateISO}",
     "dateModified": "${dateModISO}",
@@ -2179,7 +2219,7 @@ async function main() {
     // Strip em dashes from body and x_post — the prompt forbids them but LLMs
     // still slip them in. Post-processing guarantees they never reach the page.
     const body             = stripEmDashes(parsed.body);
-    const meta_description = stripEmDashes(parsed.meta_description);
+    const meta_description = fitDescription(stripEmDashes(parsed.meta_description));
     const x_post           = fitXPost(stripEmDashes(parsed.x_post), 250);
     const publishedAt = raw.published_at || new Date().toISOString();
     const slug        = makeSlug(title, publishedAt, brandInfo.brand.name, x => takenSlugs.has(x));

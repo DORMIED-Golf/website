@@ -22,6 +22,16 @@
   },
   "redirects": [
     {
+      "source": "/feed",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/feed/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
       "source": "/witb/players/ludwig-aberg",
       "destination": "/witb/players/ludvig-aberg",
       "permanent": true
@@ -293,14 +303,6 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/feed",
-      "destination": "/feed/index.html"
-    },
-    {
-      "source": "/feed/",
-      "destination": "/feed/index.html"
-    },
     {
       "source": "/brands",
       "destination": "/brands/index.html"

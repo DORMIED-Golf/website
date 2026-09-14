@@ -377,7 +377,7 @@ function buildPage(players, brandNames, latestFeedHtml, topStoriesHtml) {
 
           <!-- Main column -->
           <div class="table-main">
-            <h2 id="players-grid-heading" class="sr-only">WITB player directory</h2>
+            <h2 id="players-grid-heading" class="sr-only">Which Tour Players Have a WITB on DORMIED?</h2>
 
             <!-- Filter bar -->
             <div class="brands-filter-bar filter-bar" role="search" aria-label="Search and filter players">

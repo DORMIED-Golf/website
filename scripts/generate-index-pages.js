@@ -769,6 +769,21 @@ async function generateNews() {
       .replace(
         /<link rel="canonical"[^>]+>/,
         `<link rel="canonical" href="https://dormied.com/news/page/${p}/">`
+      )
+      /* Each page is its own URL, so og:url, the descriptions and the h1 name
+         the page. Copied from page 1 unchanged, all 25 pages shared its og:url,
+         description and h1. */
+      .replace(
+        /(<meta property="og:url" content=")[^"]*(")/,
+        `$1https://dormied.com/news/page/${p}/$2`
+      )
+      .replace(
+        /(<meta\s+(?:name="description"|property="og:description"|name="twitter:description")\s+content="[^"]*?)\.?(")/g,
+        `$1. Page ${p}.$2`
+      )
+      .replace(
+        /(<h1[^>]+id="feed-title"[^>]*>)The Feed(<\/h1>)/,
+        `$1The Feed, Page ${p}$2`
       );
 
     /* Add rel prev/next (clean insert before   <!-- Grow.me -->
@@ -899,7 +914,7 @@ async function generateScorecard() {
         `<span class="sc-hero-date">${escHtml(latest.date)}</span>` +
       `</div>` +
       buildScImageHtml(latest, true) +
-      `<h2 class="sc-hero-title">${escHtml(issueHeadline(latest))}</h2>` +
+      `<p class="sc-hero-title">${escHtml(issueHeadline(latest))}</p>` +
       `<p class="sc-hero-sub">${escHtml(latest.subtitle || '')}</p>` +
       (latestLedeText ? `<p class="sc-hero-lede">${escHtml(latestLedeText)}</p>` : '') +
       `<a href="/scorecard/${escHtml(latest.slug)}/" class="sc-read-link">Read The Scorecard &#x2192;</a>` +
@@ -953,10 +968,10 @@ async function generateScorecard() {
   html = injectIntoId(html, 'sc-hero', heroHtml);
   html = injectIntoId(html, 'sc-archive-grid', archiveHtml);
 
-  /* Restore the "Previous Issues" heading text */
+  /* Restore the archive heading text (a question, like every h2) */
   html = html.replace(
     /(<h2[^>]+id="sc-archive-heading"[^>]*>)[^<]*/,
-    '$1Previous Issues'
+    '$1What Did Earlier Scorecard Issues Cover?'
   );
 
   /* Sidebar modules (Brands on the Move / Recently Updated Bags) — positioned at
@@ -1022,7 +1037,7 @@ async function generateRankings() {
       const h2re = /(<h2 id="rankings-heading"[^>]*>)[^<]*(<\/h2>)/;
       if (h2re.test(html)) {
         const before = html.match(h2re)[0];
-        const h2text = `DORMIED Index Rankings: ${label}`;
+        const h2text = `What Are the Top Golf Brands in the DORMIED Index for ${label}?`;
         html = html.replace(h2re, `$1${h2text}$2`);
         if (!before.includes(h2text)) console.log(`     rankings heading baked: ${h2text}`);
       }
