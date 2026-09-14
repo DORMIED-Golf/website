@@ -32,9 +32,9 @@ const { indexablePages } = require('./lib/seo-pages');
 const VERBOSE = process.argv.includes('-v') || process.argv.includes('--verbose');
 
 // Pages whose section titles are named, not questions: the homepage, /rankings,
-// the Scorecard, and the static about/contact/privacy/terms pages.
+// the Scorecard, every WITB page, and the static about/contact/privacy/terms pages.
 const EXEMPT_PAGE = rel => rel === 'index.html'
-  || /^(rankings|scorecard|about|contact|privacy|terms)\//.test(rel);
+  || /^(rankings|scorecard|witb|about|contact|privacy|terms)\//.test(rel);
 // Shared sidebar module labels.
 const EXEMPT_CLASS = /\blatest-feed-heading\b/;
 

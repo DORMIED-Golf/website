@@ -1077,7 +1077,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   const witbAnswerHtml = witbAnswer ? `
           <!-- ANSWER BLOCK -->
           <section class="da-answer-block" aria-labelledby="da-answer-heading">
-            <h2 class="da-answer-label" id="da-answer-heading">What Is in ${esc(name)}'s Bag?</h2>
+            <h2 class="da-answer-label" id="da-answer-heading">Quick Answer</h2>
             <p class="da-answer-text">${esc(witbAnswer)}</p>${disambigHtml}
           </section>` : '';
 
@@ -1098,7 +1098,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   const witbFaqHtml = witbFaq.length ? `
           <!-- FAQ -->
           <section class="da-bottom-section da-faq-section" aria-labelledby="witb-faq-heading">
-            <h2 class="da-bottom-heading" id="witb-faq-heading">What Do Golfers Ask About ${esc(name)}'s Bag?</h2>
+            <h2 class="da-bottom-heading" id="witb-faq-heading">Frequently Asked Questions</h2>
             ${witbFaq.map(x => `<div class="da-faq-item"><h3 class="da-faq-q">${esc(x.q)}</h3><p class="da-faq-a">${esc(x.a)}</p></div>`).join('\n            ')}
           </section>` : '';
 
@@ -1489,7 +1489,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     .witb-player-head{display:flex;align-items:center;gap:16px}
     .witb-player-head-text{min-width:0}
     .witb-player-head .witb-player-rank{margin-bottom:0}
-    .witb-player-face{height:calc(clamp(2rem,5vw,3.5rem) * 1.05 + 8px + 1.25rem + 2px);width:auto;aspect-ratio:1/1;border-radius:50%;object-fit:cover;object-position:50% 12%;flex-shrink:0;background:var(--bg-card,#101610)}
+    .witb-player-face{height:calc(clamp(2rem,5vw,3.5rem) * 1.05 + 8px + 1.25rem + 2px);width:auto;aspect-ratio:1/1;border-radius:3px;object-fit:cover;object-position:50% 12%;flex-shrink:0;background:var(--bg-card,#101610)}
     .witb-player-lede{font-size:1rem;line-height:1.7;color:var(--text)}
     .owgr-logo-link{display:inline-flex;align-items:center;opacity:.9;flex-shrink:0}
     .owgr-logo-link:hover{opacity:1;text-decoration:none}
@@ -1606,7 +1606,7 @@ ${scSignupPrimary}
 
           <!-- 2. CURRENT BAG -->
           <section class="witb-section" aria-labelledby="current-bag-heading">
-            <h2 class="witb-section-title" id="current-bag-heading">What Clubs Does ${esc(name)} Play?</h2>
+            <h2 class="witb-section-title" id="current-bag-heading">Current Bag</h2>
             <p class="witb-section-sub">Snapshot: ${esc(currentDate)}</p>
 
             <!-- Desktop table (hidden on mobile) -->
@@ -1654,7 +1654,7 @@ ${shopBag ? `
 
           <!-- 3. HOW THIS BAG COMPARES -->
           <section class="witb-section" aria-labelledby="compare-heading">
-            <h2 class="witb-section-title" id="compare-heading">How Does ${esc(name)}'s Bag Compare to the Tour?</h2>
+            <h2 class="witb-section-title" id="compare-heading">How This Bag Compares to the Tour</h2>
             <p class="witb-section-sub">Brand usage across ${rankedCount} current tour bags from the last ${STATS_WINDOW_MONTHS} months</p>
             <div class="witb-comp-grid">
               ${compHtml}
@@ -1664,7 +1664,7 @@ ${shopBag ? `
 
           <!-- 4. BAG HISTORY -->
           <section class="witb-section" aria-labelledby="history-heading">
-            <h2 class="witb-section-title" id="history-heading">How Has ${esc(name)}'s Bag Changed Over Time?</h2>
+            <h2 class="witb-section-title" id="history-heading">Bag History</h2>
             <p class="witb-section-sub">${bags.length} snapshots tracked, ${yearRange}</p>
 
             ${ledes.history_narrative ? `<div class="witb-hist-narrative">

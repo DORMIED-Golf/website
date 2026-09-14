@@ -3161,7 +3161,7 @@ details[open] .faq-question::after { content: '−'; }
 .sidebar-mod-face {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
+  border-radius: 3px;
   flex-shrink: 0;
   object-fit: cover;
   object-position: 50% 12%;
@@ -8223,7 +8223,7 @@ details[open] .faq-question::after { content: '−'; }
 
 /* Brand On Tour: headshot before each player name */
 .bp-tour-player-link { display: inline-flex; align-items: center; gap: 6px; }
-.bp-tour-face { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; object-position: 50% 12%; flex-shrink: 0; background: var(--bg-card, #101610); }
+.bp-tour-face { width: 20px; height: 20px; border-radius: 3px; object-fit: cover; object-position: 50% 12%; flex-shrink: 0; background: var(--bg-card, #101610); }
 .bp-tour-face--ini { display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.5rem; color: var(--text-muted); border: 1px solid var(--border); }
 
 /* News feed pagination: crawlable links to every /news/page/N/ */

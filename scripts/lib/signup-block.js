@@ -73,8 +73,8 @@ function nextMonthLabel(d = new Date()) {
 const COPY = {
   witb({ bagCount, changeCount, playerName, changeLabel } = {}) {
     const headline = bagCount
-      ? `Want Every Change Across ${bagCount} Tour Bags?`
-      : 'Want Every Tour Bag Change?';
+      ? `We track every club in ${bagCount} tour bags.`
+      : 'We track every club on tour.';
     let proofLine = '';
     if (changeCount > 0 && playerName && changeLabel) {
       proofLine = `${changeCount} bag changes logged in the last 30 days, including ${playerName}'s ${changeLabel}.`;

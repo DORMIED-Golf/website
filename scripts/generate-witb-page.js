@@ -960,7 +960,7 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
     : esc(player.name);
 
   return `<section class="witb-section" aria-labelledby="freshest-heading">
-  <h2 class="witb-section-title" id="freshest-heading">Which Tour Player Has the Freshest WITB?</h2>
+  <h2 class="witb-section-title" id="freshest-heading">Freshest Bag</h2>
   <p class="witb-section-sub">The most recently recorded setup on tour</p>
   <div class="witb-fb-card">
     <div class="witb-fb-head">
@@ -1026,7 +1026,7 @@ function buildFindPlayerHtml(rankedPlayers, bagDateMap) {
   // the "I want the full list" case.
   return `<section class="witb-section witb-find-player" aria-labelledby="find-player-heading">
   <div class="witb-fp-header">
-    <h2 class="witb-section-title" id="find-player-heading">Which Tour Player's WITB Are You Looking For?</h2>
+    <h2 class="witb-section-title" id="find-player-heading">Find a Player</h2>
     <a href="/witb/players/" class="btn btn--cta btn--mono">Browse All Players &rarr;</a>
   </div>
   <div class="witb-fp-grid">
@@ -1514,14 +1514,14 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
 
         <!-- WIDGET 3: BAG MOVES -->
         <section class="witb-section" aria-labelledby="moves-heading">
-          <h2 class="witb-section-title" id="moves-heading">What Are the Latest Tour Bag Updates?</h2>
+          <h2 class="witb-section-title" id="moves-heading">Recent Bag Updates</h2>
           <p class="witb-section-sub">The last six players to change equipment</p>
           ${changesHtml}
         </section>
 
         <!-- WIDGET 4 + 5: LEADERBOARDS + TOP MODELS -->
         <section class="witb-section" aria-labelledby="lb-heading">
-          <h2 class="witb-section-title" id="lb-heading">Which Brand Do Tour Players Use Most in Each Category?</h2>
+          <h2 class="witb-section-title" id="lb-heading">Most-Used Brand by Category</h2>
           <p class="witb-section-sub">Player count across current bags</p>
           <div class="witb-lb-grid">
             ${leaderboardsHtml}
@@ -1529,7 +1529,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
         </section>
 
         <section class="witb-section" aria-labelledby="model-heading">
-          <h2 class="witb-section-title" id="model-heading">What Is the Most-Used Club Model in Each Category?</h2>
+          <h2 class="witb-section-title" id="model-heading">Top Model Per Category</h2>
           <p class="witb-section-sub">Most-played specific model across all tracked players</p>
           <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px">
             ${topModelsHtml}${shaftModelRowHtml}
@@ -1538,7 +1538,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
 
         <!-- WIDGET 7: DID YOU KNOW -->
         <section class="witb-section" aria-labelledby="dyk-heading">
-          <h2 class="witb-section-title" id="dyk-heading">What Do Tour Players' Club Specs Show?</h2>
+          <h2 class="witb-section-title" id="dyk-heading">Spec Notes</h2>
           <p class="witb-section-sub">Computed from current bag data</p>
           ${dykHtml}
         </section>
@@ -1658,7 +1658,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
           }).join('');
 
           return `<section class="witb-section" aria-labelledby="momentum-heading">
-          <h2 class="witb-section-title" id="momentum-heading">Which Equipment Brands Are Gaining or Losing Tour Players?</h2>
+          <h2 class="witb-section-title" id="momentum-heading">Brand Momentum</h2>
           <p class="witb-section-sub">Tour usage changes</p>
           <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px">
             <div class="witb-mom-row witb-mom-row--head">
@@ -1673,7 +1673,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
 
         <!-- WIDGET 2: TOUR USAGE vs AMATEUR ATTENTION (signature) -->
         <section class="witb-section" aria-labelledby="scatter-heading">
-          <h2 class="witb-section-title" id="scatter-heading">Does Tour Usage Match Amateur Attention for Golf Brands?</h2>
+          <h2 class="witb-section-title" id="scatter-heading">Tour Usage vs. Amateur Attention</h2>
           <p class="witb-section-sub">Current tour usage vs. the ${esc(snapshotLabel)} DORMIED Index score. Same brands, measured two ways.</p>
           <div class="witb-scatter-layout">
             <div class="witb-scatter-filter" id="scatter-filter" aria-label="Filter brands on chart">
@@ -1699,17 +1699,17 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
         <!-- WIDGET 9: METHODOLOGY -->
         <section class="witb-section witb-section--method" aria-labelledby="method-heading">
           <div class="scorecard-intro-body">
-            <h2 class="scorecard-intro-h2" id="method-heading">What Is the DORMIED WITB Data?</h2>
+            <h2 class="scorecard-intro-h2" id="method-heading">What This Data Is</h2>
             <p class="scorecard-intro-p">The current equipment setup of ${datasetPlayers} professional golfers, refreshed weekly and recorded at the item level: driver, fairway woods, hybrids, irons, wedges, putter, ball and grips, with brand, model, shaft and loft where available. Tour-usage percentages are calculated on the ${totalPlayers} bags updated within the last 12 months, which is why a leaderboard note cites a smaller denominator than the player count above: an older bag stays on its player page but does not count as evidence of what the tour plays now.</p>
 
             <p class="scorecard-intro-p">This is equipment in play, not equipment sold. A brand here means a tour professional chose it in competition, which is a different signal from market share or endorsement spend. Some of the most tour-popular brands barely register with amateurs, and that gap is what this page exists to show.</p>
 
-            <h2 class="scorecard-intro-h2">How Do You Read the Tour Usage vs. Amateur Attention Chart?</h2>
+            <h2 class="scorecard-intro-h2">Reading the Tour Usage vs. Amateur Attention Chart</h2>
             <p class="scorecard-intro-p">Two independent signals, plotted against each other. X is tour usage: the share of tracked players carrying at least one product from that brand. Y is the brand's <a href="/rankings/">DORMIED Index</a> score for ${esc(snapshotLabel)}, which measures global search interest relative to the month's top brand.</p>
 
             <p class="scorecard-intro-p">The dashed diagonal is a reference line, not a regression. Above it are pro favorites the amateur game has not caught up with. Below it are brands commanding more attention than their tour presence suggests, usually heritage names with strong retail reach.</p>
 
-            <h2 class="scorecard-intro-h2">How Does DORMIED Match Tour Usage to the DORMIED Index?</h2>
+            <h2 class="scorecard-intro-h2">How the Tour-Usage-to-DI Join Works</h2>
             <p class="scorecard-intro-p">Each equipment brand is mapped to its <a href="/rankings/">DORMIED Index</a> entry. Not all have one, particularly grip and shaft makers that do not compete in the retail categories the Index tracks. Those brands still appear in the leaderboards but are excluded from the chart, which needs both figures to plot: ${brandsNoDI} of ${totalBrands} brands in ranked bags currently lack a mapping and render as plain text rather than links.</p>
 
             <p class="scorecard-intro-p">The Index measures search interest, not sentiment or purchase intent. A low score means a brand is niche or regional rather than disliked. For equipment especially, the distance between tour presence and public awareness can be large, and that distance is often where the market is moving before the mainstream notices.</p>

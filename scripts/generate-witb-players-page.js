@@ -273,7 +273,7 @@ function buildPage(players, brandNames, latestFeedHtml, topStoriesHtml) {
     .player-dir-link:hover{text-decoration:none}
     /* 44px portrait, same slot the brand directory gives its logo tile. Circular
        because it is a face; object-position 50% 12% is the shared face crop. */
-    .player-dir-face{width:44px;height:44px;border-radius:50%;flex-shrink:0;object-fit:cover;object-position:50% 12%;background:var(--bg-raised);margin-bottom:2px}
+    .player-dir-face{width:44px;height:44px;border-radius:3px;flex-shrink:0;object-fit:cover;object-position:50% 12%;background:var(--bg-raised);margin-bottom:2px}
     .player-dir-face--ini{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.72rem;font-weight:700;color:var(--text-muted);border:1px solid var(--border-lite);box-sizing:border-box}
     .player-dir-name{font-family:var(--font-mono);font-size:.78rem;font-weight:600;color:var(--text);line-height:1.2}
     /* Rank row: flag immediately left of the rank number */
@@ -377,7 +377,7 @@ function buildPage(players, brandNames, latestFeedHtml, topStoriesHtml) {
 
           <!-- Main column -->
           <div class="table-main">
-            <h2 id="players-grid-heading" class="sr-only">Which Tour Players Have a WITB on DORMIED?</h2>
+            <h2 id="players-grid-heading" class="sr-only">WITB player directory</h2>
 
             <!-- Filter bar -->
             <div class="brands-filter-bar filter-bar" role="search" aria-label="Search and filter players">
