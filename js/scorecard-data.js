@@ -19,6 +19,243 @@ window.DORMIED_SCORECARD_DATA = {
 
   issues: [
 
+    /* ── SEPTEMBER 2026 ────────────────────────────────────────────────── */
+    {
+      "slug": "september-2026",
+      "title": "Is All Publicity Good Good Publicity? | The Scorecard | September 2026",
+      "subtitle": "Good Good is the most-searched golf brand on earth and it has less business than it had a month ago. Attention is not a currency. It is a magnifier.",
+      "date": "Sep 14, 2026",
+      "dateISO": "2026-09-14",
+      "monthLabel": "September 2026",
+      "images": {
+        "hero": {
+          "src": "/images/scorecard/september-2026/good-good-quantum-driver.jpg",
+          "og": "/images/scorecard/september-2026/og.jpg",
+          "w": 1600,
+          "h": 1600,
+          "alt": "The Callaway Quantum Max driver co-branded with Good Good Golf, black carbon crown with light blue Callaway and Good Good graphics",
+          "caption": "The co-branded Quantum Max driver at the centre of it. Photo by Callaway."
+        },
+        "strip": [
+          {
+            "src": "/images/scorecard/september-2026/good-good-quantum-driver.jpg",
+            "label": "Callaway x Good Good Quantum Max"
+          },
+          {
+            "src": "/images/scorecard/september-2026/big-break.jpg",
+            "label": "Big Break, filmed and never aired"
+          },
+          {
+            "src": "/images/scorecard/september-2026/good-good-championship.jpg",
+            "label": "The Good Good Championship"
+          }
+        ]
+      },
+      "toc": [
+        {
+          "id": "intro",
+          "label": "The Lede"
+        },
+        {
+          "id": "at-the-top",
+          "label": "At The Top"
+        },
+        {
+          "id": "the-biggest-move",
+          "label": "The Biggest Move"
+        },
+        {
+          "id": "the-field",
+          "label": "The Field"
+        },
+        {
+          "id": "the-drop-zone",
+          "label": "The Drop Zone"
+        },
+        {
+          "id": "the-long-game",
+          "label": "The Long Game"
+        },
+        {
+          "id": "global-dispatch",
+          "label": "Global Dispatch"
+        },
+        {
+          "id": "closing",
+          "label": "Closing"
+        }
+      ],
+      "sections": [
+        {
+          "id": "intro",
+          "heading": "The Lede: The Biggest Month This Index Has Ever Recorded Was Not About Golf",
+          "body": "<p>On August 20, <a href=\"/brands/good-good-golf/\">Good Good Golf</a> posted an advertisement for a co-branded driver in which one of its co-founders shoulder-checked a female golfer to the ground, stood over her, and told her not to touch his club. The video was deleted the same day. It did not matter. Within eleven days the company had lost its equipment partner, its PGA Tour title sponsorship, a fully filmed season of a network television show, shelf space at three national retailers, and eventually its chief executive and its president. The story ran on CNN, NBC News, the Associated Press, and Al Jazeera. It stopped being a golf story roughly forty-eight hours in, which is precisely why this index has never recorded a month like it. Good Good finished August as the most-searched brand in golf by a factor of more than two. The question the whole industry has been circling since is whether any of that attention is worth having.</p>"
+        },
+        {
+          "id": "at-the-top",
+          "heading": "At The Top: Titleist Lost the Top Spot Without Losing a Single Search",
+          "body": "<p><a href=\"/brands/good-good-golf/\">Good Good Golf</a> sits first at 100.0, up eleven places, at the highest DI any brand has reached against this field. <a href=\"/brands/titleist/\">Titleist</a> is second at 44.7 and its month-over-month change was exactly zero. That is the number worth sitting with. Titleist did not decline. Its raw search interest in August was identical to July. It lost the top spot it had held for seven consecutive months because the scale is measured against the leader, and the leader's number was so large it compressed everything beneath it. <a href=\"/brands/taylormade/\">TaylorMade</a> at 36.5, <a href=\"/brands/travismathew/\">TravisMathew</a> at 24.5, <a href=\"/brands/footjoy/\">FootJoy</a> at 20.0, <a href=\"/brands/scotty-cameron/\">Scotty Cameron</a> at 16.5 and <a href=\"/brands/pxg/\">PXG</a> at 9.0 all posted the same flat zero. Five of the top nine brands in golf were entirely unmoved in August and every one of them looks like it had a terrible month. It is the cleanest illustration this index has produced of how relative measurement works, and the industry should understand it before drawing conclusions from a single column.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/september-2026/di-top-10.svg",
+              "alt": "Bar chart of the DORMIED Index top 10 for August 2026: Good Good Golf at 100.0, Titleist and Callaway at 44.7, TaylorMade 36.5, TravisMathew 24.5, Malbon and FootJoy 20.0, Sun Day Red and Scotty Cameron 16.5, Vice Golf 13.5",
+              "caption": "The August top 10. Good Good's bar is more than twice the length of anything beneath it."
+            },
+            {
+              "src": "/images/scorecard/september-2026/titleist-vs-good-good.svg",
+              "alt": "Line chart of DI score by month in 2026: Titleist at 100 from January to July then 44.7 in August, Good Good Golf between 16.4 and 24.6 then 100 in August",
+              "caption": "Titleist's line falls in August without a single search lost. The scale is set by the leader."
+            }
+          ]
+        },
+        {
+          "id": "the-biggest-move",
+          "heading": "The Biggest Move: Eleven Days That Cost Good Good Everything It Had Built",
+          "body": "<p><a href=\"/brands/good-good-golf/\">Good Good Golf</a> rose 809.1% in August. That is more than double <a href=\"/brands/carnival-golf/\">Carnival Golf</a>'s record from July and nearly triple what <a href=\"/brands/mclaren-golf/\">McLaren Golf</a> managed on its launch in April, and unlike either of those it happened to a brand that was already inside the top fifteen. The ad, a promotion for a Quantum driver made with <a href=\"/brands/callaway/\">Callaway</a>, was explained by the company as a parody of a 2026 horror film. Nobody accepted that. Callaway CEO Chip Brewer apologised on August 22 and confirmed that Callaway had approved the spot before it ran, calling the approval something that should never have happened. PGA Tour CEO Brian Rolapp described the company's initial response as defensive and late. Golf Galaxy asked for its branding to be stripped from the Big Break season it was sponsoring. By August 27 Callaway had severed the relationship outright, Good Good had stepped away from its own PGA Tour event in Austin, and Golf Channel had cancelled a completed season of television that no longer had a prize to award. CEO Matt Kendrick and president Joe Flannery left the company the following week. Eighteen months ago this was a business that had raised $45 million with Peyton Manning on the cap table, a signature equipment partnership, a network TV franchise revival, and its name on a FedExCup Fall event. We covered <a href=\"/news/good-good-golf-callaway-found-deal/\">what the Callaway deal actually cost</a> on August 24 and <a href=\"/news/good-good-golf-retailers-cleared-shelves/\">which partner moved first</a> on August 26. The retailers cleared their shelves before the Tour said a word.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/september-2026/eleven-days.svg",
+              "alt": "Timeline from August 20 to September 2, 2026: the ad posted and deleted, Callaway apology, Big Break delayed, retailers pull stock, Callaway ends the partnership and Big Break is cancelled, CEO and president leave",
+              "caption": "Eleven days from the ad to the partnership ending, and a week more to the executive exits."
+            },
+            {
+              "src": "/images/scorecard/september-2026/good-good-statement.jpg",
+              "alt": "Good Good Golf statement saying it posted a video that depicted actions not aligned with its values, has taken it down and sincerely apologises",
+              "caption": "Good Good's statement after taking the video down."
+            },
+            {
+              "src": "/images/scorecard/september-2026/good-good-championship.jpg",
+              "alt": "The Good Good Championship logo, a golfer in a cowboy hat mid-swing between the words Good Good",
+              "caption": "The Good Good Championship. Good Good stepped away from the Austin PGA Tour event on August 27."
+            }
+          ]
+        },
+        {
+          "id": "the-field",
+          "heading": "The Field: The Co-Defendant Had Its Best Month in Years",
+          "body": "<p><a href=\"/brands/callaway/\">Callaway</a> rose 123.6% to a 52-week peak and third overall. Read that against the paragraph above. The company that approved the ad, appeared in every headline about it, and then publicly terminated the partnership posted its strongest month on this index in a year. Attention does not sort by fault. It sorts by volume, and Callaway's name was in every one of those stories. Whether that converts to anything a CFO would recognise is a separate question entirely, and we would not bet on it.</p>\n<p><a href=\"/brands/uneekor/\">Uneekor</a> climbed 124.1% and 26 places to its own 52-week peak, the launch monitor category continuing its quiet run into the indoor season. <a href=\"/brands/haywood-golf/\">Haywood Golf</a> rose 83.3%, <a href=\"/brands/new-level-golf/\">New Level Golf</a> 86.2%, and <a href=\"/brands/arnie-mcnair/\">Arnie McNair</a> 83.3% with a 30-spot climb, all three at 52-week peaks and none with a single visible catalyst behind them. The moves are real. The reasons are not yet.</p>\n<p><a href=\"/brands/barstool-golf/\">Barstool Golf</a> and <a href=\"/brands/random-golf-club/\">Random Golf Club</a> both rose 50%, which is the detail in this issue most worth chewing on. When the biggest creator brand in golf detonated, the other creator brands went up rather than down. Nobody searching for the Good Good story stopped to wonder whether YouTube golf as a whole was the problem. <a href=\"/brands/cleveland-golf/\">Cleveland Golf</a> also climbed 49.1% to a 52-week peak on the back of <a href=\"/news/cleveland-bet-the-whole-company-on-wedges-rtz-2-is-the-first-real-test-2026-08-04/\">its RTZ 2 wedge push</a>, which is the rare August story in this issue that is just a company selling golf clubs.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/september-2026/callaway-statement.jpg",
+              "alt": "Letter from Callaway CEO Chip Brewer apologising for the co-branded video, confirming Callaway approved it and describing internal and external investigations",
+              "caption": "Chip Brewer's letter of August 22, confirming Callaway approved the spot before it ran."
+            },
+            {
+              "src": "/images/scorecard/september-2026/rtz-2-wedge.jpg",
+              "alt": "A Cleveland RTZ 2 wedge",
+              "caption": "The Cleveland RTZ 2 wedge, the rare August story that was just a company selling golf clubs. Photo by GOLF.com."
+            }
+          ]
+        },
+        {
+          "id": "the-drop-zone",
+          "heading": "The Drop Zone: A Very Short Resurrection, and Two Calls We Got Wrong",
+          "body": "<p><a href=\"/brands/tail-activewear/\">Tail Activewear</a> fell 70%, the steepest decline of the month, exactly one month after we put its 120.3% relaunch surge in The Field and called it a rare second act for a 52-year-old brand. The WELCOMEBACK moment lasted four weeks. A relaunch generates a spike of curiosity; holding it requires product people want, and July's number told us nothing about whether that exists.</p>\n<p>We owe two corrections. <a href=\"/brands/srixon/\">Srixon</a> fell 18.2%. Last month we argued that <a href=\"/witb/players/ryan-fox/\">Ryan Fox</a>'s Open win with a complete Srixon bag had landed too late in July to register, and that August would show what a major is actually worth to an equipment brand. August showed us: nothing. The Claret Jug moved Srixon's number down. That is a genuinely useful finding and it is not the one we predicted. <a href=\"/brands/la-golf/\">LA Golf</a> dropped 33.1%, also against our July call that the Bryson DeChambeau driver split had opened a lane to the top ten. It went the other way. Elsewhere <a href=\"/brands/takomo-golf/\">Takomo Golf</a> fell 33.1% to sixteenth, a long way from the third place it held in May, and <a href=\"/brands/kastel-denmark/\">Kastel Denmark</a> gave back 34.5% of last month's peak.</p>"
+        },
+        {
+          "id": "the-long-game",
+          "heading": "The Long Game: The Number That Will Price Every Creator Deal in Golf",
+          "body": "<p>Watch <a href=\"/brands/good-good-golf/\">Good Good Golf</a> in September and October, and watch it more closely than you watched August. An 809% spike built on scandal has no precedent here, so nobody knows the decay curve. There are two outcomes and they mean opposite things. If the number falls below where Good Good sat in July, the lesson every brand manager in golf takes is that notoriety is a liability that permanently reprices a creator partnership, and the terms on every influencer deal in the sport get rewritten this winter. If it settles above July, the uncomfortable conclusion is that four million followers and a news cycle are worth more than a sponsorship roster, and the industry will quietly act on that even while saying otherwise. Interim CEO Nahid Giga inherits a brand with more awareness than it has ever had and fewer partners than it has had since 2022. The next two data points decide which of those facts matters more.</p>"
+        },
+        {
+          "id": "global-dispatch",
+          "heading": "Global Dispatch: France Moved 53 Places for a Story It Had No Reason to Hear",
+          "body": "<p>Good Good climbed in all ten markets we track, and the pattern is the story. It reached first in the United States and Canada, second in Australia, third in the United Kingdom. Those are the markets where a YouTube golf brand with four million subscribers already had a footprint. Then look further out. France jumped 53 places, South Korea 50, Japan 46, China 23. These are markets where Good Good had no retail presence, no local media coverage, and no meaningful audience before August. A product launch cannot do that. A major championship cannot do that. The only thing that moves a brand 50 places in a market that has never heard of it is a story that escapes the sport entirely and gets picked up by general news desks. That is what breaking containment looks like when you can see it in the numbers, and it is the most expensive kind of awareness there is.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/september-2026/good-good-by-market.svg",
+              "alt": "Bar chart of places Good Good Golf gained by market in August 2026: France 53 to 12th, South Korea 50 to 14th, Japan 46 to 21st, United Kingdom 26 to 3rd, China 23 to 13th, Sweden 20 to 8th, Australia 19 to 2nd, Germany 18 to 14th, Canada 13 to 1st, United States 11 to 1st",
+              "caption": "Every market moved. The biggest climbs came where Good Good had no audience at all."
+            }
+          ]
+        },
+        {
+          "id": "closing",
+          "heading": "The Closing Note: No",
+          "body": "<p>That is the answer to the question at the top. Good Good is the most-searched golf brand on earth and it has less business than it had a month ago. It lost an equipment partner that took three years to build, a tour event that took a decade of credibility to earn, a television franchise that had been off air since 2015, and the two executives who assembled all of it. Twelve competitors filmed a full season of a show nobody will see. Somewhere in this is a lesson about what attention is actually for, and the honest version is that it is not a currency at all. It is a magnifier. It made a small brand enormous and it made an eleven-day collapse visible in ten countries at once. The brands sitting at 0.0% this month, unchanged and suddenly ranked half as high, had the better August.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/september-2026/big-break.jpg",
+              "alt": "A Big Break production still",
+              "caption": "Twelve competitors filmed a complete season of Big Break that will never air. Photo by Men's Journal."
+            }
+          ]
+        }
+      ],
+      "indexSnapshot": [
+        {
+          "rank": 1,
+          "id": "good-good-golf",
+          "name": "Good Good Golf",
+          "di": 100,
+          "mom": 809.1
+        },
+        {
+          "rank": 2,
+          "id": "titleist",
+          "name": "Titleist",
+          "di": 44.7,
+          "mom": 0
+        },
+        {
+          "rank": 3,
+          "id": "callaway",
+          "name": "Callaway",
+          "di": 44.7,
+          "mom": 123.6
+        },
+        {
+          "rank": 4,
+          "id": "taylormade",
+          "name": "TaylorMade",
+          "di": 36.5,
+          "mom": 0
+        },
+        {
+          "rank": 5,
+          "id": "travismathew",
+          "name": "TravisMathew",
+          "di": 24.5,
+          "mom": 0
+        }
+      ],
+      "brandMentions": [
+        "good-good-golf",
+        "titleist",
+        "taylormade",
+        "travismathew",
+        "footjoy",
+        "scotty-cameron",
+        "pxg",
+        "carnival-golf",
+        "mclaren-golf",
+        "callaway",
+        "uneekor",
+        "haywood-golf",
+        "new-level-golf",
+        "arnie-mcnair",
+        "barstool-golf",
+        "random-golf-club",
+        "cleveland-golf",
+        "tail-activewear",
+        "srixon",
+        "la-golf",
+        "takomo-golf",
+        "kastel-denmark"
+      ],
+      "playerMentions": [
+        {
+          "slug": "ryan-fox",
+          "name": "Ryan Fox"
+        },
+        {
+          "slug": "bryson-dechambeau",
+          "name": "Bryson DeChambeau"
+        }
+      ]
+    },
+
+
     /* ── AUGUST 2026 ───────────────────────────────────────────────────── */
     {
       slug:       "august-2026",
