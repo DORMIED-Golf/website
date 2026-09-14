@@ -7157,6 +7157,7 @@ details[open] .faq-question::after { content: '−'; }
 /* Leaderboard tables */
 .witb-lb-section {
   margin-bottom: 32px;
+  min-width: 0;
 }
 .witb-lb-title {
   font-family: var(--font-display);
@@ -7337,10 +7338,14 @@ details[open] .faq-question::after { content: '−'; }
   gap: 24px;
 }
 @media (min-width: 700px) {
-  .witb-lb-grid { grid-template-columns: 1fr 1fr; }
+  .witb-lb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-@media (min-width: 1100px) {
-  .witb-lb-grid { grid-template-columns: repeat(3, 1fr); }
+/* Three columns only once the main column (the viewport less the 300px
+   sidebar) can hold three full rows of rank, logo and name, count, bar and
+   share, about 330px each. At 1100px it tried anyway, and because a plain 1fr
+   track cannot shrink below its content the third column ran into the sidebar. */
+@media (min-width: 1400px) {
+  .witb-lb-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 /* Treemap / proportional bars */
@@ -8234,3 +8239,7 @@ details[open] .faq-question::after { content: '−'; }
 .sc-figure-row .sc-section-img { flex: 1 1 0; min-width: 0; }
 .sc-section-figure--row .sc-section-caption { text-align: center; }
 @media (max-width: 520px) { .sc-figure-row { flex-direction: column; align-items: center; } .sc-figure-row .sc-section-img { width: 100%; } }
+
+/* Site search: hide WebKit's native clear (the blue X) on type="search"; the panel has its own close control */
+.site-search-input::-webkit-search-cancel-button,
+.site-search-input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; display: none; }
