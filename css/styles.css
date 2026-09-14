@@ -1844,7 +1844,7 @@ details[open] .faq-question::after { content: '−'; }
 .bp-description {
   /* Opener parity with the WITB player page lede (.witb-player-lede) */
   font-size: 1rem;
-  color: var(--text-dim);
+  color: var(--text);
   line-height: 1.7;
   margin-top: 16px;
 }
@@ -6382,12 +6382,6 @@ details[open] .faq-question::after { content: '−'; }
   margin-top: 24px;
 }
 
-/* ── Bug 5: Constrain body copy to readable max-width ───────────────────── */
-.sc-article-body {
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
-}
 
 /* ── Bug 6: Closing signature styling ───────────────────────────────────── */
 .scorecard-signature {
@@ -8227,12 +8221,10 @@ details[open] .faq-question::after { content: '−'; }
   .dt-arrows { display: flex; flex: 0 0 auto; align-items: stretch; border-left: 1px solid var(--border); }
 }
 
-/* Scorecard section deck: the editorial hook under a question heading */
-.sc-section-deck {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1.05rem;
-  line-height: 1.35;
-  color: var(--text-dim);
-  margin: -6px 0 18px;
-}
+/* Brand On Tour: headshot before each player name */
+.bp-tour-player-link { display: inline-flex; align-items: center; gap: 6px; }
+.bp-tour-face { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; object-position: 50% 12%; flex-shrink: 0; background: var(--bg-card, #101610); }
+.bp-tour-face--ini { display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.5rem; color: var(--text-muted); border: 1px solid var(--border); }
+
+/* News feed pagination: crawlable links to every /news/page/N/ */
+.news-pager{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:28px 0 8px;font-family:var(--font-mono);font-size:.8rem}.news-pager-nums{display:flex;flex-wrap:wrap;gap:6px}.news-pager a,.news-pager-num--current{border:1px solid var(--border);border-radius:4px;padding:4px 9px;text-decoration:none}.news-pager a{color:var(--text-dim)}.news-pager a:hover{color:var(--green);border-color:var(--green)}.news-pager-num--current{color:#050a05;background:var(--green);border-color:var(--green)}

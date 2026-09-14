@@ -259,7 +259,7 @@ function buildTocHtml(issue) {
     `        <li><a href="#${escHtml(item.id)}">${escHtml(item.label)}</a></li>`
   ).join('\n');
   return `<nav class="scorecard-toc" aria-label="Sections in this issue">
-      <h2 class="scorecard-toc-title">What Is in This Issue of The Scorecard?</h2>
+      <h2 class="scorecard-toc-title">In this issue</h2>
       <ol class="scorecard-toc-list">
 ${items}
       </ol>
@@ -285,7 +285,7 @@ function buildSnapshotHtml(issue) {
   }).join('\n');
   return `
     <section class="sc-article-section sc-snapshot-section" id="index-snapshot">
-      <h2 class="sc-section-heading">What Does the DORMIED Index Snapshot Show?</h2>
+      <h2 class="sc-section-heading">Index Snapshot</h2>
       <div class="section-body">
         <p class="sc-snapshot-label">Top ${snap.length} · ${escHtml(issue.monthLabel)}</p>
         <div class="sc-table-wrap">
@@ -300,35 +300,6 @@ ${rows}
         </div>
       </div>
     </section>`;
-}
-
-// ── Section headings ──────────────────────────────────────────────────────────
-// Every section h2 is phrased as a question. The recurring Scorecard sections
-// keep their editorial name in the table of contents, and a hook written after
-// the name ("At The Top: Malbon's Best Month Ever...") becomes a deck line under
-// the question. A heading already written as a question is used as is. Anything
-// else renders unchanged and fails verify:headings, which is the point: a new
-// section needs its question added here.
-const SECTION_QUESTIONS = {
-  'at-the-top':       'Which Golf Brands Are at the Top of the DORMIED Index?',
-  'the-biggest-move': 'Which Golf Brand Made the Biggest Move This Month?',
-  'the-field':        'Which Other Golf Brands Moved This Month?',
-  'the-drop-zone':    'Which Golf Brands Dropped This Month?',
-  'the-long-game':    'Which Golf Brands Are Playing the Long Game?',
-  'global-dispatch':  'How Did Golf Brands Move in Global Markets?',
-  'closing':          'What Is the Takeaway From This Issue?',
-};
-
-function sectionQuestion(section) {
-  const heading = stripEmDashes(String(section.heading || '').trim());
-  if (/\?$/.test(heading)) return { question: heading, deck: '' };
-  const question = SECTION_QUESTIONS[section.id];
-  if (!question) {
-    console.warn(`[scorecard] section "${section.id}" has no question heading: "${heading}"`);
-    return { question: heading, deck: '' };
-  }
-  const colon = heading.indexOf(': ');
-  return { question, deck: colon > 0 ? heading.slice(colon + 2).trim() : '' };
 }
 
 // Issue headlines are written for the newsletter and can run past the 60
@@ -347,10 +318,8 @@ function buildSectionsHtml(issue, brandNameMap, signupPrimary) {
     const withBrands = autoLinkBrandsInSection(cleanBody, issue.brandMentions, brandNameMap);
     const linkedBody = autoLinkPlayersInSection(withBrands, issue.playerMentions);
     // Use sc-main-heading for proper display-font H2s (Bug 4).
-    const q = sectionQuestion(section);
     const headingHtml = section.heading
-      ? `\n      <h2 class="sc-main-heading" id="${escHtml(section.id)}">${escHtml(q.question)}</h2>` +
-        (q.deck ? `\n      <p class="sc-section-deck">${escHtml(q.deck)}</p>` : '')
+      ? `\n      <h2 class="sc-main-heading" id="${escHtml(section.id)}">${escHtml(section.heading)}</h2>`
       : '';
     // id goes on the H2 so TOC anchor-links scroll to the heading (Bug 3/4).
     const sectionId = section.heading ? '' : ` id="${escHtml(section.id)}"`;
@@ -399,7 +368,7 @@ function buildMoreIssuesHtml(issue, allIssues) {
     );
   }).join('\n');
   return `    <section class="sc-more-issues">
-      <h2 class="sc-section-heading">What Else Has The Scorecard Covered?</h2>
+      <h2 class="sc-section-heading">More from The Scorecard</h2>
       <ul class="scorecard-related-list">
 ${items}
       </ul>
@@ -857,7 +826,7 @@ async function main() {
     let aside = '';
     if (latest.length) {
       aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-latest-heading">
-              <h2 class="latest-feed-heading" id="sc-issue-latest-heading">What Is the Latest Golf Brand News?</h2>
+              <h2 class="latest-feed-heading" id="sc-issue-latest-heading">Latest</h2>
               <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(latest, dormiedData)}</div>
             </section>\n`;
     }
@@ -865,7 +834,7 @@ async function main() {
     aside += `            ${SC_MODS_TOKEN}\n`;
     if (topStories.length) {
       aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-stories-heading">
-              <h2 class="latest-feed-heading" id="sc-issue-stories-heading">What Are the Top Golf Stories Right Now?</h2>
+              <h2 class="latest-feed-heading" id="sc-issue-stories-heading">Trending</h2>
               <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(topStories, dormiedData)}</div>
             </section>\n`;
     }

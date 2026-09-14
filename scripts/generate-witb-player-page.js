@@ -773,7 +773,7 @@ Return valid JSON only, no markdown fences:
 async function fetchPlayerData(sb, slug) {
   const { data: player, error } = await sb
     .from('witb_players')
-    .select('id, name, slug, owgr_rank, rolex_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation, first_seen, last_updated')
+    .select('id, name, slug, owgr_rank, rolex_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation, first_seen, last_updated, headshot_url')
     .eq('slug', slug)
     .single();
   if (error) throw new Error(`Player not found (slug="${slug}"): ${error.message}`);
@@ -885,16 +885,33 @@ function disambiguationHtml(player, peers) {
        + `Not to be confused with ${list}, tracked separately.</p>`;
 }
 
+const { STATS_WINDOW_MONTHS, statsCutoff, isActiveBagDate } = require('./lib/witb-tour-set');
+
+/** Vercel's image optimizer; the width must be one of vercel.json images.sizes. */
+function vitUrl(src, w) {
+  return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+}
+
 /**
- * Returns the Set of player IDs for all players with a current bag and a world ranking.
- * This is the canonical denominator for tour comparison ("N of 158", not 160).
+ * The tour behind every comparison figure: ranked players whose current bag is
+ * dated within the stats window (lib/witb-tour-set.js), the same set the /witb
+ * hub reports as active bags. It used to be every ranked player, so a 2021 bag
+ * counted as tour usage and the page said "of 195" while the hub said 115.
  */
 async function fetchRankedPlayerIds(sb) {
   const { data: players } = await sb
     .from('witb_players')
     .select('id')
     .not('owgr_rank', 'is', null);
-  return new Set((players || []).map(p => p.id));
+  const ranked = new Set((players || []).map(p => p.id));
+  const { data: bags } = await sb
+    .from('witb_bags')
+    .select('player_id, bag_date')
+    .eq('is_current', true);
+  const cutoff = statsCutoff();
+  return new Set((bags || [])
+    .filter(b => ranked.has(b.player_id) && isActiveBagDate(b.bag_date, cutoff))
+    .map(b => b.player_id));
 }
 
 /**
@@ -1469,7 +1486,11 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     .witb-rank-sep{color:var(--border-lite)}
     .witb-rank-updated{color:var(--text-muted)}
     .witb-player-underline{width:56px;height:3px;background:var(--green);margin:12px 0 0}
-    .witb-player-lede{font-size:1rem;line-height:1.7;color:var(--text-dim)}
+    .witb-player-head{display:flex;align-items:center;gap:16px}
+    .witb-player-head-text{min-width:0}
+    .witb-player-head .witb-player-rank{margin-bottom:0}
+    .witb-player-face{height:calc(clamp(2rem,5vw,3.5rem) * 1.05 + 8px + 1.25rem + 2px);width:auto;aspect-ratio:1/1;border-radius:50%;object-fit:cover;object-position:50% 12%;flex-shrink:0;background:var(--bg-card,#101610)}
+    .witb-player-lede{font-size:1rem;line-height:1.7;color:var(--text)}
     .owgr-logo-link{display:inline-flex;align-items:center;opacity:.9;flex-shrink:0}
     .owgr-logo-link:hover{opacity:1;text-decoration:none}
     .owgr-logo{display:block;height:22px;width:auto}
@@ -1553,8 +1574,13 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     <section class="bp-header-section" aria-labelledby="player-title">
       <div class="container">
         <p class="witb-player-eyebrow">Tour Equipment</p>
-        <h1 class="witb-player-title" id="player-title">${esc(name)}</h1>
-        <p class="witb-player-rank">${owgrLine}</p>
+        <div class="witb-player-head">${player.headshot_url ? `
+          <img class="witb-player-face" src="${esc(vitUrl(player.headshot_url, 200))}" srcset="${esc(vitUrl(player.headshot_url, 200))} 1x, ${esc(vitUrl(player.headshot_url, 400))} 2x" width="96" height="96" alt="${esc(name)}" decoding="async" fetchpriority="high">` : ''}
+          <div class="witb-player-head-text">
+            <h1 class="witb-player-title" id="player-title">${esc(name)}</h1>
+            <p class="witb-player-rank">${owgrLine}</p>
+          </div>
+        </div>
         <div class="witb-player-underline" aria-hidden="true"></div>
       </div>
     </section>
@@ -1629,11 +1655,11 @@ ${shopBag ? `
           <!-- 3. HOW THIS BAG COMPARES -->
           <section class="witb-section" aria-labelledby="compare-heading">
             <h2 class="witb-section-title" id="compare-heading">How Does ${esc(name)}'s Bag Compare to the Tour?</h2>
-            <p class="witb-section-sub">Brand usage across ${rankedCount} current bags</p>
+            <p class="witb-section-sub">Brand usage across ${rankedCount} current tour bags from the last ${STATS_WINDOW_MONTHS} months</p>
             <div class="witb-comp-grid">
               ${compHtml}
             </div>
-            <p class="witb-footnote">Player counts reflect unique players carrying at least one item from that brand in the relevant category. Computed from current bags.</p>
+            <p class="witb-footnote">Player counts reflect unique players carrying at least one item from that brand in the relevant category. Computed from ranked players\' current bags dated within the last ${STATS_WINDOW_MONTHS} months, the same set the WITB hub uses.</p>
           </section>
 
           <!-- 4. BAG HISTORY -->
@@ -1670,20 +1696,20 @@ ${witbFaqHtml}
           <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
           <div class="tail-feeds">
             <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="player-latest-m-heading">
-              <h2 class="latest-feed-heading" id="player-latest-m-heading">What Is the Latest Golf Brand News?</h2>
+              <h2 class="latest-feed-heading" id="player-latest-m-heading">Latest</h2>
               <div class="latest-feed-list">
                 ${latestFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
               </div>
             </section>
             <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
             <section class="home-stories-section latest-feed-section" aria-labelledby="player-stories-heading">
-              <h2 class="latest-feed-heading" id="player-stories-heading">What Are the Top Golf Stories Right Now?</h2>
+              <h2 class="latest-feed-heading" id="player-stories-heading">Trending</h2>
               <div id="home-stories-list" class="latest-feed-list" data-limit="10">
                 ${topStoriesHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
               </div>
             </section>
             <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="player-featured-heading">
-              <h2 class="latest-feed-heading" id="player-featured-heading">Which DORMIED Features Should You Read?</h2>
+              <h2 class="latest-feed-heading" id="player-featured-heading">Features</h2>
               <div id="featured-list" class="latest-feed-list">
                 ${featuredFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
               </div>
@@ -1696,7 +1722,7 @@ ${witbFaqHtml}
         <!-- SIDEBAR: Latest (5), then Brands on the Move + Recently Updated Bags -->
         <aside class="sidebar-ad-col">
           <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="player-latest-heading">
-            <h2 class="latest-feed-heading" id="player-latest-heading">What Is the Latest Golf Brand News?</h2>
+            <h2 class="latest-feed-heading" id="player-latest-heading">Latest</h2>
             <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
               ${latestFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
             </div>
@@ -1838,7 +1864,7 @@ ${witbFaqHtml}
     }
 
     /* ── BAG HISTORY SNAPSHOTS ── */
-    .witb-hist-narrative{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;font-size:.9375rem;line-height:1.65;color:var(--text-dim)}
+    .witb-hist-narrative{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;font-size:.9375rem;line-height:1.65;color:var(--text)}
     .witb-snapshots{display:flex;flex-direction:column;gap:6px}
     .witb-snapshot{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg-surface)}
     .witb-snap-summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none}

@@ -95,7 +95,7 @@ By DORMIED's tracking, Byrdie ranks 153rd of 215 brands with 1,300 monthly globa
 
 ---
 
-*Track Byrdie's monthly movement on the [Byrdie Golf brand page](https://dormied.com/brands/byrdie-golf/) and the full market on the [DORMIED Index](https://dormied.com/). Related coverage: [What Is Students Golf?](https://dormied.com/news/what-is-students-golf/)*
+*Track Byrdie's monthly movement on the [Byrdie Golf brand page](https://dormied.com/brands/byrdie-golf/) and the full market on the [DORMIED Index](https://dormied.com/). Related coverage: [What Is Students Golf?](https://dormied.com/news/students-golf/)*
 
 <!-- DEV / PUBLISHING NOTES, NOT ARTICLE BODY, DO NOT RENDER -->
 <!--

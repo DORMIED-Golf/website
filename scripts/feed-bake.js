@@ -508,7 +508,7 @@ function latestScorecardSectionHtml(currentSlug) {
   }
 
   return '<section class="sidebar-scorecard" aria-labelledby="sidebar-scorecard-heading">'
-       +   '<h2 class="latest-feed-heading" id="sidebar-scorecard-heading">What Did the Latest Scorecard Find?</h2>'
+       +   '<h2 class="latest-feed-heading" id="sidebar-scorecard-heading">Read the latest Scorecard</h2>'
        +   '<article class="feed-card feed-card--dormied">'
        +     thumb
        +     '<div class="feed-card-body">'
@@ -642,8 +642,8 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
     }).join('');
 
     let html = '<div class="sidebar-mods">';
-    if (moverRows.length) html += '<section class="sidebar-mod" aria-label="Brands on the move"><h2 class="latest-feed-heading">Which Golf Brands Are Moving This Month?</h2><div class="sidebar-mod-rows">' + moversHtml + '</div></section>';
-    if (bagRows.length)   html += '<section class="sidebar-mod" aria-label="Recently updated bags"><h2 class="latest-feed-heading">Which Tour Bags Changed Recently?</h2><div class="sidebar-mod-rows">' + bagsHtml + '</div></section>';
+    if (moverRows.length) html += '<section class="sidebar-mod" aria-label="Brands on the move"><h2 class="latest-feed-heading">Biggest Movers</h2><div class="sidebar-mod-rows">' + moversHtml + '</div></section>';
+    if (bagRows.length)   html += '<section class="sidebar-mod" aria-label="Recently updated bags"><h2 class="latest-feed-heading">Recently Updated WITBs</h2><div class="sidebar-mod-rows">' + bagsHtml + '</div></section>';
     html += '</div>';
     return html;
   } catch (e) {

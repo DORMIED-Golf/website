@@ -534,6 +534,8 @@
     updateHeroStats(state.rankings);
     updateChangeHeader();
     renderTable();
+    // Leaders follow the market and period like everything else on the page.
+    renderCategoryLeaders(state.rankings);
   }
 
   // ─── Period Filter ─────────────────────────────────────────────────────────
@@ -700,17 +702,18 @@
     const el = document.getElementById('cat-leaders-grid');
     if (!el) return;
 
-    // Only show the 4 pure single-category leaders — no multi-category brands
+    // The top-ranked brand in each of the four categories, by the brand's primary
+    // (first listed) category. Multi-category brands used to be skipped outright,
+    // which hid the #1 brand in the Index (Good Good Golf) from its own category.
     const PURE_CATS = ['Clubs & Balls', 'Apparel & Footwear', 'Bags & Accessories', 'Tech & Training Aids'];
     const seen = {};
     const leaders = [];
     rankings.forEach(function (b) {
-      const cat = b.category || '';
-      // Skip multi-category brands (contain semicolons) or unmapped categories
+      const cat = (b.category || '').split(';')[0].trim();
       if (!PURE_CATS.includes(cat)) return;
       if (!seen[cat]) {
         seen[cat] = true;
-        leaders.push(b);
+        leaders.push({ ...b, leaderCat: cat });
       }
     });
 
@@ -726,7 +729,7 @@
       return `<a href="/brands/${b.id}/" style="display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .75rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;text-decoration:none;color:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(255,255,255,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
         ${logoHtml}
         <div style="min-width:0">
-          <div style="font-family:var(--font-mono,'JetBrains Mono',monospace);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted,#6b7a6b);line-height:1;margin-bottom:.25rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.category || 'Other'}</div>
+          <div style="font-family:var(--font-mono,'JetBrains Mono',monospace);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted,#6b7a6b);line-height:1;margin-bottom:.25rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.leaderCat}</div>
           <div style="font-weight:600;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.name}</div>
           <div style="font-size:.75rem;margin-top:.1rem"><span style="color:var(--clr-muted,#6b7a6b)">#${b.rank} &nbsp;</span><span style="${momClass}">${momStr}</span></div>
         </div>
@@ -766,7 +769,10 @@
     const topGainer = rankings.filter(b => b.interestChange > 0).sort((a, b) => b.interestChange - a.interestChange)[0];
     const gainerEl  = document.getElementById('stat-top-gainer');
     if (gainerEl && topGainer) {
-      gainerEl.innerHTML = brandMiniCard(topGainer, `#${topGainer.rank} · +${topGainer.interestChange.toFixed(0)}%`);
+      const gMove  = topGainer.movement;
+      const gSpots = (gMove === null || gMove === undefined) ? ''
+        : gMove === 0 ? ' · no change' : ` · ${gMove > 0 ? '+' : ''}${gMove} spots`;
+      gainerEl.innerHTML = brandMiniCard(topGainer, `#${topGainer.rank}${gSpots} · +${topGainer.interestChange.toFixed(0)}%`);
     }
 
     // YTD Climber — biggest positive rank move since Jan 1 of current year

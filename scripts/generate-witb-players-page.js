@@ -420,13 +420,13 @@ ${gridHtml}
           <!-- Sidebar -->
           <aside class="sidebar-ad-col">
             <section class="home-stories-section latest-feed-section" aria-labelledby="players-stories-heading">
-              <h2 class="latest-feed-heading" id="players-stories-heading">What Are the Top Golf Stories Right Now?</h2>
+              <h2 class="latest-feed-heading" id="players-stories-heading">Trending</h2>
               <div id="home-stories-list" class="latest-feed-list">
                 ${topStoriesHtml || '<p class="latest-feed-loading">Loading...</p>'}
               </div>
             </section>
             <section class="home-stories-section latest-feed-section" aria-labelledby="players-latest-heading">
-              <h2 class="latest-feed-heading" id="players-latest-heading">What Is the Latest Golf Brand News?</h2>
+              <h2 class="latest-feed-heading" id="players-latest-heading">Latest</h2>
               <div id="dormied-latest-list" class="latest-feed-list">
                 ${latestFeedHtml || '<p class="latest-feed-loading">Loading...</p>'}
               </div>

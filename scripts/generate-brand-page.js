@@ -536,8 +536,8 @@ function buildFaqItems({ brand, stats, dormiedData, onTourData, facts }) {
       const namesText = top.map(p => p.name).join(', ');
       const namesHtml = top.map(p => `<a href="/witb/players/${escHtml(p.slug)}/">${escHtml(p.name)}</a>`).join(', ');
       const total = onTourData[0].totalRanked;
-      const aText = `Yes. ${all.length} of the ${total} ranked players in the DORMIED WITB database currently carry ${brand.name} equipment, including ${namesText}.`;
-      const aHtml = `Yes. ${all.length} of the ${total} ranked players in the <a href="/witb/players/">DORMIED WITB database</a> currently carry ${escHtml(brand.name)} equipment, including ${namesHtml}.`;
+      const aText = `Yes. ${all.length} of the ${total} ranked players with a current bag from the last ${STATS_WINDOW_MONTHS} months in the DORMIED WITB database carry ${brand.name} equipment, including ${namesText}.`;
+      const aHtml = `Yes. ${all.length} of the ${total} ranked players with a current bag from the last ${STATS_WINDOW_MONTHS} months in the <a href="/witb/players/">DORMIED WITB database</a> carry ${escHtml(brand.name)} equipment, including ${namesHtml}.`;
       items.push({ q: `Do any pros play ${brand.name}?`, aHtml, aText });
     }
   }
@@ -599,7 +599,7 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
   pageTitle = escHtml(pageTitle);
   const metaDesc     = escHtml(buildMetaDesc(brand, stats, (dormiedData.brands || []).length));
   const canonicalUrl = `https://dormied.com/brands/${escHtml(slug)}/`;
-  const ogImage      = escHtml(brand.logo || 'https://dormied.com/images/og-image.jpg');
+  const ogImage      = escHtml(brand.logo ? (brand.logo.startsWith('/') ? `https://dormied.com${brand.logo}` : brand.logo) : 'https://dormied.com/images/og-image.jpg');
 
   const momStr = fmtPct(momPct);
   const t3mStr = fmtPct(t3m);
@@ -1111,20 +1111,20 @@ ${scSignupHtml}
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">
               <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="bp-latest-m-heading">
-                <h2 class="latest-feed-heading" id="bp-latest-m-heading">What Is the Latest Golf Brand News?</h2>
+                <h2 class="latest-feed-heading" id="bp-latest-m-heading">Latest</h2>
                 <div class="latest-feed-list">
                   ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
               <section class="home-stories-section latest-feed-section" aria-labelledby="bp-stories-heading">
-                <h2 class="latest-feed-heading" id="bp-stories-heading">What Are the Top Golf Stories Right Now?</h2>
+                <h2 class="latest-feed-heading" id="bp-stories-heading">Trending</h2>
                 <div id="home-stories-list" class="latest-feed-list" data-limit="10">
                   ${topStoriesHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="bp-featured-heading">
-                <h2 class="latest-feed-heading" id="bp-featured-heading">Which DORMIED Features Should You Read?</h2>
+                <h2 class="latest-feed-heading" id="bp-featured-heading">Features</h2>
                 <div id="featured-list" class="latest-feed-list">
                   ${featuredFeedHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
@@ -1137,7 +1137,7 @@ ${scSignupHtml}
           <!-- Sidebar: LATEST widget (5), then Brands on the Move + Recently Updated Bags -->
           <aside class="sidebar-ad-col">
             <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="bp-dormied-latest-heading">
-              <h2 class="latest-feed-heading" id="bp-dormied-latest-heading">What Is the Latest Golf Brand News?</h2>
+              <h2 class="latest-feed-heading" id="bp-dormied-latest-heading">Latest</h2>
               <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
@@ -1243,12 +1243,22 @@ async function witbPaginate(buildQuery, pageSize = 1000) {
   return rows;
 }
 
+const { STATS_WINDOW_MONTHS, statsCutoff, isActiveBagDate } = require('./lib/witb-tour-set');
+
+function tourFaceHtml(p) {
+  const parts = String(p.name || '').trim().split(/\s+/);
+  const ini = escHtml((parts.length >= 2 ? parts[0][0] + parts[parts.length - 1][0] : String(p.name || '').slice(0, 2)).toUpperCase());
+  if (!p.headshot_url) return `<span class="bp-tour-face bp-tour-face--ini" aria-hidden="true">${ini}</span>`;
+  const u = w => escHtml('/_vercel/image?url=' + encodeURIComponent(p.headshot_url) + '&w=' + w + '&q=75');
+  return `<img class="bp-tour-face" src="${u(40)}" srcset="${u(40)} 1x, ${u(80)} 2x" width="20" height="20" loading="lazy" decoding="async" alt="">`;
+}
+
 async function fetchWitbTourData(supabase) {
   console.log('[brand-page] Fetching WITB tour data for On Tour sections...');
 
   const { data: players, error: pErr } = await supabase
     .from('witb_players')
-    .select('id, name, slug, owgr_rank, current_bag_id')
+    .select('id, name, slug, owgr_rank, current_bag_id, headshot_url')
     .not('owgr_rank', 'is', null)
     .order('owgr_rank', { ascending: true });
   if (pErr) {
@@ -1266,22 +1276,28 @@ async function fetchWitbTourData(supabase) {
   const itemsAll = await witbPaginate((from, to) =>
     supabase
       .from('witb_bag_items')
-      .select('bag_id, club_type, raw_model, raw_brand, witb_brands!brand_id(name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id)')
+      .select('bag_id, club_type, raw_model, raw_brand, witb_brands!brand_id(name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id, bag_date)')
       .range(from, to)
   ).catch(e => { console.warn('[brand-page] fetchWitbTourData items error:', e.message); return []; });
-  const items = itemsAll.filter(i => i.witb_bags?.is_current && rankedIds.has(i.witb_bags.player_id));
+  // The tour is ranked players whose current bag falls inside the stats window
+  // (lib/witb-tour-set.js), the same set the /witb hub reports as active bags.
+  const cutoff  = statsCutoff();
+  const onTour  = i => i.witb_bags?.is_current && rankedIds.has(i.witb_bags.player_id) && isActiveBagDate(i.witb_bags.bag_date, cutoff);
+  const items = itemsAll.filter(onTour);
 
   const shaftAll = await witbPaginate((from, to) =>
     supabase
       .from('witb_bag_items')
-      .select('bag_id, witb_shafts!shaft_id(dormied_brand_slug, model), witb_bags!bag_id(is_current, player_id)')
+      .select('bag_id, witb_shafts!shaft_id(dormied_brand_slug, model), witb_bags!bag_id(is_current, player_id, bag_date)')
       .not('shaft_id', 'is', null)
       .range(from, to)
   ).catch(e => { console.warn('[brand-page] fetchWitbTourData shafts error:', e.message); return []; });
-  const shaftItemsRaw = shaftAll.filter(i => i.witb_bags?.is_current && rankedIds.has(i.witb_bags.player_id));
+  const shaftItemsRaw = shaftAll.filter(onTour);
+  const activeIds = new Set(items.map(i => i.witb_bags.player_id));
+  const activePlayers = (players || []).filter(p => activeIds.has(p.id));
 
-  console.log(`[brand-page] On Tour: ${(players || []).length} ranked players, ${items.length} bag items, ${shaftItemsRaw.length} shaft items`);
-  return { players: players || [], items, shaftItems: shaftItemsRaw };
+  console.log(`[brand-page] On Tour: ${activePlayers.length} active tour bags (ranked, last ${STATS_WINDOW_MONTHS} months), ${items.length} bag items, ${shaftItemsRaw.length} shaft items`);
+  return { players: activePlayers, items, shaftItems: shaftItemsRaw };
 }
 
 function computeOnTourData({ players, items, shaftItems }, brandSlug, nameBySlug) {
@@ -1498,7 +1514,7 @@ function buildOnTourHtml(brandName, onTourData) {
     const modelRows = (modelGroups || []).map(({ model, count, players }) => {
       const playerLinks = '<div class="bp-tour-players">'
         + players.map(p =>
-          `<a href="/witb/players/${escHtml(p.slug)}/" class="bp-tour-player-link">${escHtml(p.name)}</a>`
+          `<a href="/witb/players/${escHtml(p.slug)}/" class="bp-tour-player-link">${tourFaceHtml(p)}${escHtml(p.name)}</a>`
         ).join('')
         + '</div>';
       return `              <tr class="bp-tour-model-row">

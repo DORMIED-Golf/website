@@ -743,6 +743,7 @@ async function generateNews() {
 
   /* Inject article list */
   newsHtml = injectIntoId(newsHtml, 'feed-list', feedHtml);
+  newsHtml = injectIntoId(newsHtml, 'news-pager', newsPagerHtml(1, totalPages));
 
   /* Sidebar modules at the <!-- SIDEBAR_MODS_SLOT --> marker (between Top Stories and Featured) */
   newsHtml = await injectSidebarMods(newsHtml);
@@ -794,6 +795,7 @@ async function generateNews() {
     pageHtml = dedupeRelLinks(pageHtml, p, totalPages);
 
     pageHtml = injectIntoId(pageHtml, 'feed-list', pageFeedHtml);
+    pageHtml = injectIntoId(pageHtml, 'news-pager', newsPagerHtml(p, totalPages));
 
     const dir = path.join(ROOT, `news/page/${p}`);
     fs.mkdirSync(dir, { recursive: true });
@@ -802,6 +804,21 @@ async function generateNews() {
   }
 
   return { totalPages, articleCount: articles.length };
+}
+
+/**
+ * Crawlable page links for the news feed. Pages 2-N were reachable only through
+ * the sitemap: <link rel=prev/next> is not a link a crawler follows from the
+ * page body, and nothing on the site pointed at /news/page/N/.
+ */
+function newsPagerHtml(p, total) {
+  const href = n => (n === 1 ? '/news/' : `/news/page/${n}/`);
+  const nums = Array.from({ length: total }, (_, i) => i + 1).map(n => (n === p
+    ? `<span class="news-pager-num news-pager-num--current" aria-current="page">${n}</span>`
+    : `<a class="news-pager-num" href="${href(n)}">${n}</a>`)).join('');
+  const prev = p > 1 ? `<a class="news-pager-step" href="${href(p - 1)}">&larr; Newer</a>` : '';
+  const next = p < total ? `<a class="news-pager-step" href="${href(p + 1)}">Older &rarr;</a>` : '';
+  return `${prev}<span class="news-pager-nums">${nums}</span>${next}`;
 }
 
 /** Fix up rel prev/next links */
@@ -914,7 +931,7 @@ async function generateScorecard() {
         `<span class="sc-hero-date">${escHtml(latest.date)}</span>` +
       `</div>` +
       buildScImageHtml(latest, true) +
-      `<p class="sc-hero-title">${escHtml(issueHeadline(latest))}</p>` +
+      `<h2 class="sc-hero-title">${escHtml(issueHeadline(latest))}</h2>` +
       `<p class="sc-hero-sub">${escHtml(latest.subtitle || '')}</p>` +
       (latestLedeText ? `<p class="sc-hero-lede">${escHtml(latestLedeText)}</p>` : '') +
       `<a href="/scorecard/${escHtml(latest.slug)}/" class="sc-read-link">Read The Scorecard &#x2192;</a>` +
@@ -968,10 +985,10 @@ async function generateScorecard() {
   html = injectIntoId(html, 'sc-hero', heroHtml);
   html = injectIntoId(html, 'sc-archive-grid', archiveHtml);
 
-  /* Restore the archive heading text (a question, like every h2) */
+  /* Restore the "Previous Issues" heading text */
   html = html.replace(
     /(<h2[^>]+id="sc-archive-heading"[^>]*>)[^<]*/,
-    '$1What Did Earlier Scorecard Issues Cover?'
+    '$1Previous Issues'
   );
 
   /* Sidebar modules (Brands on the Move / Recently Updated Bags) — positioned at
@@ -1037,7 +1054,7 @@ async function generateRankings() {
       const h2re = /(<h2 id="rankings-heading"[^>]*>)[^<]*(<\/h2>)/;
       if (h2re.test(html)) {
         const before = html.match(h2re)[0];
-        const h2text = `What Are the Top Golf Brands in the DORMIED Index for ${label}?`;
+        const h2text = `DORMIED Index Rankings: ${label}`;
         html = html.replace(h2re, `$1${h2text}$2`);
         if (!before.includes(h2text)) console.log(`     rankings heading baked: ${h2text}`);
       }

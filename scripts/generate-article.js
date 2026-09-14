@@ -519,23 +519,17 @@ function shippedHero(slug) {
   return null;
 }
 
+const { createLinkContext, autoLinkEntities } = require('./lib/link-entities');
+
 function bodyToHtml(plainText, primarySlug, primaryName, secondaryBrands = []) {
   const paras = plainText.split(/\n\n+/).filter(p => p.trim());
 
-  // Build list of all brands to auto-link, sorted longest-name-first to avoid
-  // partial matches (e.g. "TaylorMade" before "Taylor").
-  const allBrands = [
-    { slug: primarySlug, name: primaryName },
-    ...secondaryBrands,
-  ].filter(b => b.slug && b.name);
-  allBrands.sort((a, b) => b.name.length - a.name.length);
+  // First mention of every tracked brand and WITB player links, the story's own
+  // brands first (lib/link-entities.js). This used to link only the wire
+  // matcher's brands, so most brands and every player went unlinked.
+  const storyBrands = [{ slug: primarySlug, name: primaryName }, ...secondaryBrands].filter(b => b.slug && b.name);
+  const linkCtx = createLinkContext({ primarySlugs: storyBrands.map(b => b.slug), extraBrands: storyBrands });
 
-  // Track which brands have already been linked (first-occurrence-only across whole body).
-  const linked = new Set();
-
-  // Join all paragraphs into one string for global first-occurrence matching,
-  // then split back into paragraphs after replacement.
-  // We do per-paragraph processing but pass `linked` across paragraphs.
   return paras.map(p => {
     // Section subheadings. A paragraph that is a single "## " or "### " line is a
     // heading, rendered with the same classes features use so the existing
@@ -547,18 +541,7 @@ function bodyToHtml(plainText, primarySlug, primaryName, secondaryBrands = []) {
       const cls = tag === 'h2' ? 'sc-main-heading' : 'sc-sub-heading';
       return `<${tag} class="${cls}">${escHtml(stripEmDashes(hm[2].trim()))}</${tag}>`;
     }
-    let out = p;
-    for (const { slug, name } of allBrands) {
-      if (linked.has(slug)) continue; // already linked in an earlier paragraph
-      const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      // Match brand name not preceded/followed by word chars or quote/slash
-      const re = new RegExp(`(?<![\\w/"])${escaped}(?![\\w"])`, '');
-      if (re.test(out)) {
-        out = out.replace(re, `<a href="/brands/${slug}/" class="da-brand-link">${name}</a>`);
-        linked.add(slug);
-      }
-    }
-    return `<p>${out}</p>`;
+    return `<p>${autoLinkEntities(p, linkCtx)}</p>`;
   }).join('\n');
 }
 
@@ -1301,7 +1284,7 @@ function generateArticleHtml(opts) {
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "${escHtml(title)}",
+    "headline": "${escHtml(title.length <= 110 ? title : (seoTitle || clipTitle(title, brandName)))}",
     "description": "${escHtml(metaDescription)}",
     "image": "${escHtml(ogImage)}",
     "datePublished": "${dateISO}",
@@ -1449,20 +1432,20 @@ ${faqHtml}
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">
               <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="article-latest-m-heading">
-                <h2 class="latest-feed-heading" id="article-latest-m-heading">What Is the Latest Golf Brand News?</h2>
+                <h2 class="latest-feed-heading" id="article-latest-m-heading">Latest</h2>
                 <div class="latest-feed-list">
                   ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
               <section class="home-stories-section latest-feed-section" aria-labelledby="article-stories-heading">
-                <h2 class="latest-feed-heading" id="article-stories-heading">What Are the Top Golf Stories Right Now?</h2>
+                <h2 class="latest-feed-heading" id="article-stories-heading">Trending</h2>
                 <div id="home-stories-list" class="latest-feed-list" data-limit="10">
                   ${TOP_STORIES_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="article-featured-heading">
-                <h2 class="latest-feed-heading" id="article-featured-heading">Which DORMIED Features Should You Read?</h2>
+                <h2 class="latest-feed-heading" id="article-featured-heading">Features</h2>
                 <div id="featured-list" class="latest-feed-list">
                   ${FEATURED_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
@@ -1475,7 +1458,7 @@ ${faqHtml}
           <!-- Sidebar: LATEST widget (5) (populated by feed.js, excludes current article via __DA_ARTICLE_SLUG__) -->
           <aside class="sidebar-ad-col">
             <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="article-latest-heading">
-              <h2 class="latest-feed-heading" id="article-latest-heading">What Is the Latest Golf Brand News?</h2>
+              <h2 class="latest-feed-heading" id="article-latest-heading">Latest</h2>
               <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
@@ -1840,7 +1823,7 @@ async function main() {
   for (const row of existing || []) {
     if (!row.slug || !row.body) continue;
     // Never regenerate suppressed articles — they were intentionally removed.
-    if (row.status === 'suppressed') continue;
+    if (row.status === 'suppressed' || row.status === 'archived') continue;
     const articlePath = path.join(SITE_ROOT, 'news', row.slug, 'index.html');
     if (fs.existsSync(articlePath)) continue;
 

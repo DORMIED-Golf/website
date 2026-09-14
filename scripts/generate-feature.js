@@ -668,27 +668,16 @@ function formatDate(iso) {
 function readTime(words) { return Math.max(1, Math.round(words / 200)) + ' min read'; }
 
 /** Inline Markdown: links [text](url), **strong**, *emphasis*. Escapes the rest. */
+// First mention of every tracked brand and WITB player links, the feature's own
+// brand first. Shared with generate-article.js (lib/link-entities.js).
+const { createLinkContext, autoLinkEntities } = require('./lib/link-entities');
+
 function autoLinkBrands(html, ctx) {
-  if (!ctx) return html;
-  for (const { name, slug } of ctx.brands) {
-    if (ctx.linked.has(slug)) continue;
-    const escapedName = escHtml(name);
-    const pat = escapedName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const re = new RegExp(`(?<![\\w/"\\-])${pat}(?![\\w"\\-])`);
-    if (re.test(html)) {
-      html = html.replace(re, `<a href="/brands/${slug}/" class="da-brand-link">${escapedName}</a>`);
-      ctx.linked.add(slug);
-    }
-  }
-  return html;
+  return ctx ? autoLinkEntities(html, ctx) : html;
 }
 
-function buildBrandCtx(dormiedData) {
-  const brands = ((dormiedData && dormiedData.brands) || [])
-    .filter(b => b.id && b.name)
-    .map(b => ({ name: b.name, slug: b.id }))
-    .sort((a, b) => b.name.length - a.name.length);
-  return { brands, linked: new Set() };
+function buildBrandCtx(dormiedData, F) {
+  return createLinkContext({ primarySlugs: [F && F.brandSlug], escaped: true });
 }
 
 function inlineMd(text, brandCtx) {
@@ -780,7 +769,7 @@ function parseMarkdown(md, F, dormiedData) {
   // that catches it regardless of where in the file the comment sits.
   const clean = md.replace(/\r\n/g, '\n').replace(/<!--[\s\S]*?-->/g, '');
   const blocks = clean.split(/\n\n+/).map(b => b.trim()).filter(Boolean);
-  const brandCtx = buildBrandCtx(dormiedData);  // auto-links brand names in prose
+  const brandCtx = buildBrandCtx(dormiedData, F);  // auto-links brand and player names in prose
   const out = [];
   const faqs = [];
   let lead = '';
@@ -871,7 +860,9 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   const { lead, bodyHtml, wordCount, faqs } = parsed;
   const publishedAt   = F.publishedAt;
   const dateISO       = new Date(publishedAt).toISOString();
-  const modISO        = F.dateModified || dateISO;
+  // Never earlier than the publish date: a rebuild keeps the row's published_at,
+  // which can be later than the config's dateModified.
+  const modISO        = (F.dateModified && F.dateModified > dateISO) ? F.dateModified : dateISO;
   const dateFormatted = formatDate(publishedAt);
   const canonicalUrl  = `https://dormied.com/news/${F.slug}/`;
   const titleTag      = F.titleTag || `${F.title} | DORMIED`;
@@ -1087,20 +1078,20 @@ ${BRAND_CARD_HTML}${SHOP_SECTION_HTML}
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">
               <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="article-latest-m-heading">
-                <h2 class="latest-feed-heading" id="article-latest-m-heading">What Is the Latest Golf Brand News?</h2>
+                <h2 class="latest-feed-heading" id="article-latest-m-heading">Latest</h2>
                 <div class="latest-feed-list">
                   ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
               <section class="home-stories-section latest-feed-section" aria-labelledby="article-stories-heading">
-                <h2 class="latest-feed-heading" id="article-stories-heading">What Are the Top Golf Stories Right Now?</h2>
+                <h2 class="latest-feed-heading" id="article-stories-heading">Trending</h2>
                 <div id="home-stories-list" class="latest-feed-list" data-limit="10">
                   ${TOP_STORIES_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="article-featured-heading">
-                <h2 class="latest-feed-heading" id="article-featured-heading">Which DORMIED Features Should You Read?</h2>
+                <h2 class="latest-feed-heading" id="article-featured-heading">Features</h2>
                 <div id="featured-list" class="latest-feed-list">
                   ${FEATURED_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
@@ -1112,7 +1103,7 @@ ${BRAND_CARD_HTML}${SHOP_SECTION_HTML}
 
           <aside class="sidebar-ad-col">
             <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="article-latest-heading">
-              <h2 class="latest-feed-heading" id="article-latest-heading">What Is the Latest Golf Brand News?</h2>
+              <h2 class="latest-feed-heading" id="article-latest-heading">Latest</h2>
               <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>

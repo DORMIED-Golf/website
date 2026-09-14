@@ -22,6 +22,26 @@
   },
   "redirects": [
     {
+      "source": "/news/graphite-design-2010-shaft",
+      "destination": "/brands/graphite-design/",
+      "permanent": true
+    },
+    {
+      "source": "/news/graphite-design-2010-shaft/",
+      "destination": "/brands/graphite-design/",
+      "permanent": true
+    },
+    {
+      "source": "/news/graphite-design-36-zero-putter-shafts",
+      "destination": "/brands/graphite-design/",
+      "permanent": true
+    },
+    {
+      "source": "/news/graphite-design-36-zero-putter-shafts/",
+      "destination": "/brands/graphite-design/",
+      "permanent": true
+    },
+    {
       "source": "/feed",
       "destination": "/news/",
       "permanent": true
@@ -63,22 +83,22 @@
     },
     {
       "source": "/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17",
-      "destination": "/news/travismathew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17",
+      "destination": "/news/reggie-bushs-third-travismathew-drop-signals-the-brands-long-2026-04-17",
       "permanent": true
     },
     {
       "source": "/news/travismatthew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/",
-      "destination": "/news/travismathew-goes-full-hypebeast-with-1759-pair-guinness-dr-2026-04-17/",
+      "destination": "/news/reggie-bushs-third-travismathew-drop-signals-the-brands-long-2026-04-17/",
       "permanent": true
     },
     {
       "source": "/news/travismatthew-is-betting-big-on-country-music-and-it-might-a-2026-04-17",
-      "destination": "/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17",
+      "destination": "/news/reggie-bushs-third-travismathew-drop-signals-the-brands-long-2026-04-17",
       "permanent": true
     },
     {
       "source": "/news/travismatthew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/",
-      "destination": "/news/travismathew-is-betting-big-on-country-music-and-it-might-a-2026-04-17/",
+      "destination": "/news/reggie-bushs-third-travismathew-drop-signals-the-brands-long-2026-04-17/",
       "permanent": true
     },
     {
