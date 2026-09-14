@@ -32,6 +32,19 @@ function loadVmFile(filePath, windowKey) {
   return windowKey ? ctx.window[windowKey] : ctx.window;
 }
 
+/**
+ * Decode HTML entities in text lifted out of a page. The search UI escapes what
+ * it renders, so anything left encoded here shows literally: "Mason Mount&#39;s"
+ * in the dropdown. Covers named, decimal and hex entities.
+ */
+const NAMED_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: "\u2019", lsquo: "\u2018", rdquo: "\u201d", ldquo: "\u201c", hellip: "\u2026", ndash: "\u2013", mdash: "\u2014" };
+function decodeEntities(str) {
+  return String(str || '')
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&([a-z]+);/gi, (m, n) => (n.toLowerCase() in NAMED_ENTITIES ? NAMED_ENTITIES[n.toLowerCase()] : m));
+}
+
 /** Extract content of a meta tag attribute from raw HTML. */
 function extractMeta(html, attr, attrVal, contentAttr) {
   contentAttr = contentAttr || 'content';
@@ -40,14 +53,14 @@ function extractMeta(html, attr, attrVal, contentAttr) {
     'i'
   );
   let m = html.match(re);
-  if (m) return m[1];
+  if (m) return decodeEntities(m[1]);
   // Try reversed attribute order
   const re2 = new RegExp(
     `<meta[^>]+${contentAttr}="([^"]*)"[^>]+${attr}="${attrVal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`,
     'i'
   );
   m = html.match(re2);
-  return m ? m[1] : null;
+  return m ? decodeEntities(m[1]) : null;
 }
 
 /** Extract text content from first matching tag. */
@@ -55,18 +68,11 @@ function extractTag(html, tag, cls) {
   const clsPart = cls ? `[^>]+class="[^"]*${cls}[^"]*"` : '';
   const re = new RegExp(`<${tag}${clsPart}[^>]*>([^<]+)</${tag}>`, 'i');
   const m  = html.match(re);
-  return m ? m[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#8217;/g, "'").replace(/&#8220;/g, '"').replace(/&#8221;/g, '"').trim() : null;
+  return m ? decodeEntities(m[1]).trim() : null;
 }
 
 function stripHtml(html) {
-  return (html || '')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#\d+;/g, ' ')
+  return decodeEntities((html || '').replace(/<[^>]+>/g, ' '))
     .replace(/\s+/g, ' ')
     .trim();
 }
