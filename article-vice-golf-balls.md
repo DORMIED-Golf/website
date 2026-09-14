@@ -8,7 +8,7 @@ Vice golf balls are tour-level urethane balls sold direct to consumers at roughl
 
 In one sentence: Vice Golf is a Munich-based direct-to-consumer brand whose cast-urethane golf balls, led by the Pro Plus, Pro, Pro Air, and Tour, deliver premium performance at roughly half the price of the major brands, and Vice currently ranks ninth in the world on the DORMIED Index.
 
-## What the data shows
+## How Is Vice Golf Trending on the DORMIED Index?
 
 DORMIED tracks brand interest across 10 global markets every month and scores it as the DORMIED Index (DI). Vice's numbers are the kind that usually belong to a brand three times its size.
 
@@ -24,7 +24,7 @@ DORMIED tracks brand interest across 10 global markets every month and scores it
 
 Ninth in the world is the headline. Vice now sits inside the top ten brands in golf by interest, ahead of equipment names with decades more history and many times the marketing budget. The three-month change is the part that explains how it got there: interest in Vice nearly doubled in a single quarter, a 95.4% climb that is among the steepest in the Index. A brand does not move like that on golf balls alone, and Vice's recent surge has been driven by aggressive expansion into clubs and putters. But the balls are the foundation, and the foundation is what the brand is still best known for.
 
-## Where Vice Golf came from
+## Where Did Vice Golf Come From?
 
 Vice was founded in Munich on December 12, 2012 (12-12-12), by Ingo Düllmann and Rainer Stöckl, two German lawyers who, by the brand's own telling, met surfing the Eisbach river wave in the middle of the city. They built it as the first direct-to-consumer golf ball brand: no pro-shop markup, no distributor margin, just the ball shipped from the manufacturer to the buyer. The pitch was simple and it has not changed. A premium cast-urethane ball, engineered in Germany, at roughly half the price of the established names, sold cheapest when you buy in volume.
 
@@ -32,7 +32,7 @@ The model worked because the value proposition was real. Independent reviewers h
 
 The part of the story most golfers miss is the data. Vice's broader expansion runs through a merger with HIO, continental Europe's largest brand-agnostic club fitter, which had spent more than a decade capturing launch-monitor data from every customer fitting it ran. That fitting database, built on everyday golfers rather than tour pros, is what Vice now uses to design products. It is the reason the brand can credibly claim its balls are tuned for the player who actually buys them.
 
-## The Vice golf ball lineup
+## Which Vice Golf Balls Are in the Lineup?
 
 Vice keeps the ball range deliberately focused. Five models do the core work, each mapped to a swing-speed or playing profile, plus two junior balls, with a wide rotation of colors and finishes layered on top.
 
@@ -60,13 +60,13 @@ The Drive is the two-piece, Surlyn-covered distance ball, the entry point to the
 
 Vice also makes two balls specifically for juniors. The Pro Junior is the cast-urethane Pro re-engineered for younger players for maximum carry, and the Tour Junior is a softer, confidence-inspiring ball built for fun. Both are a rarity in golf: genuine performance balls sized and tuned for kids rather than cut-down adult products.
 
-## Vice golf ball customization
+## Can You Customize Vice Golf Balls?
 
 Customization is not a side feature for Vice; it is central to how the brand sells. From a single dozen, golfers can personalize Vice balls with custom text, a logo, or an image of their choice, printed on the ball and shipped to the door within a few business days. It is the kind of thing the major brands gate behind high minimums or corporate-order channels, and Vice opened it to the individual buyer from the start.
 
 That has made Vice a default for a specific set of buyers: golfers who want their name or initials on the ball, groups ordering for a member-guest or a charity scramble, companies doing branded balls for outings, and anyone who wants a personal logo without a five-hundred-ball minimum. I have done it myself, a dozen with my dog's face printed on them, and I can report that they are now scattered across ponds and fescue on courses throughout the region, which is its own kind of testament to the format. The brand leans into it hard, frequently running promotions on personalization and club paint-fill, and the low base price means a personalized dozen still lands well under what a plain premium dozen costs elsewhere. If you have ever wanted your own logo on a tour-quality ball without a corporate budget, Vice is the brand that made that normal.
 
-## The colors, the Drip, and the special editions
+## What Colors and Special Editions Do Vice Golf Balls Come In?
 
 The other thing Vice is known for is refusing to make the golf ball boring. Where the major brands offer white and, grudgingly, yellow, Vice runs a full spectrum: balls in black, blue, gold, gray, green, orange, pink, purple, and red, alongside the standard white. The brand's Shade and Drip lines turn the ball itself into the design, with gradient fades and paint-splatter finishes that have become a recognizable part of Vice's identity on the course.
 
@@ -74,13 +74,13 @@ On top of the standard colorways sits a constant rotation of limited and special
 
 This is not just marketing decoration. The colors and the collabs are a real part of why Vice keeps gaining attention, and they show up in the search data. A white tour ball is a commodity. A limited Greg Mike drip ball with your initials on it is a thing people post, talk about, and come back to buy. Vice understood early that for a large slice of golfers, the ball is an expression of taste as much as a piece of equipment, and it built a business on the half of the market the incumbents ignored.
 
-## How Vice golf balls compare on price
+## How Do Vice Golf Balls Compare on Price?
 
 Price is the entire reason Vice exists, so it belongs in any honest look at the balls. The premium Vice models sell for meaningfully less than the equivalent balls from the major brands, and the gap widens further with Vice's volume discount, which rewards buying in larger quantities. The brand's whole bet, going back to 2012, is that a golfer who tries a Vice urethane ball will not find enough of a performance gap to justify paying nearly double for the name on the side. The independent test results suggest that bet largely holds for the Pro and Pro Plus in particular.
 
 For golfers who are skeptical about committing to a large order from a brand they have not played, Vice's answer is the sampler approach: a variety pack with several models so you can test the range before buying in volume. It is a direct-to-consumer solution to a direct-to-consumer problem, and it is part of why the brand's average order size skews toward the discount tier.
 
-## Why Vice is climbing the DORMIED Index
+## Why Is Vice Golf Climbing the DORMIED Index?
 
 The balls explain the brand. They do not, on their own, explain a 95.4% three-month surge in interest. That climb has been powered by Vice doing to other equipment categories exactly what it did to the ball: undercutting established players on price while matching them on performance claims.
 

@@ -8,7 +8,7 @@ Byrdie Golf Social Wear is a women's golf and lifestyle apparel brand founded in
 
 In one sentence: Byrdie Golf Social Wear is a Charlotte-based women's golf apparel brand founded in 2021 by Rachelle Wates and Hayden Hendrix, known for retro country club styling, collaborations with Cole Haan and Dolce Vita, and a deliberate blurring of the line between golf wear and going-out wear.
 
-## What the data shows
+## How Does Byrdie Golf Rank on the DORMIED Index?
 
 DORMIED tracks search interest across 215 golf brands in 10 global markets.
 
@@ -26,7 +26,7 @@ Byrdie is a small brand by the Index's measure and it would be dishonest to pres
 
 The more interesting number is one the Index cannot capture. For a brand this size, Byrdie has assembled a collaboration list and a retail footprint that belong to a much larger company.
 
-## The grandmothers
+## Who Founded Byrdie Golf?
 
 The origin story is unusually specific, and it is the reason the clothes look the way they do.
 
@@ -36,7 +36,7 @@ The idea arrived during the pandemic, when golf was one of the few things still 
 
 That is a different founding impulse from most of the brands we cover. Malbon came out of streetwear, Students came out of skate culture, Arnie McNair came out of a complaint about synthetic fabric. Byrdie came out of two women wanting to dress like their grandmothers, which turns out to be a considerably better commercial idea than it sounds.
 
-## What Byrdie actually sells
+## What Does Byrdie Golf Actually Sell?
 
 The catalogue runs across tops, bottoms, dresses and jumpsuits, a category the brand simply calls Social Wear, and accessories. Collections rotate by season, with recent ones including Harbour House, Coastal Capsule and Île De La Mer.
 
@@ -46,7 +46,7 @@ The founders have been direct that this is the entire point. The clothes are bui
 
 That has produced what the brand calls a very big 19th hole clientele. By the founders' estimate roughly half of Byrdie's customers are buying the pieces for riding in a cart, for the club, or for the parts of golf that happen away from the course entirely. For a golf apparel brand, having half your buyers not really playing golf in your product could be a problem. For Byrdie it is the business model.
 
-## The collaborations are the real signal
+## Why Do Byrdie Golf's Collaborations Matter?
 
 This is where a brand at rank 153 starts to look larger than its search volume.
 
@@ -58,7 +58,7 @@ The retail placement matters as much. Byrdie stocks through **Shopbop**, which i
 
 A brand that sells through Shopbop and collaborates with Cole Haan and Dolce Vita is not really competing with golf apparel companies. It is competing in fashion, using golf as the occasion.
 
-## Why it matters
+## Why Does Byrdie Golf Matter for Women's Golf Apparel?
 
 Women's golf apparel has been an underbuilt category for a long time, generally addressed by major brands as a smaller-sized version of the men's line in a narrower colour range. Byrdie is one of a small group of brands designed by women who play, for women who play, with no obligation to look like anything already on the rack.
 

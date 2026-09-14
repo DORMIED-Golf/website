@@ -8,7 +8,7 @@ Who owns Pins & Aces? Two brothers-in-law from Colorado who are married to Scott
 
 In one sentence: Pins & Aces is a golfer-owned Colorado apparel and accessories company founded in 2018 by brothers-in-law Nick Mertz and Jon Major, known as "the people's brand" for its irreverent designs and hard price ceilings, which has since expanded into serious golf bags and, through its acquisition of Edel Golf, actual clubs.
 
-## A note on how this brand got here
+## Why Is DORMIED Writing About Pins & Aces?
 
 A small confession first, because it is the reason this piece exists.
 
@@ -16,7 +16,7 @@ Pins & Aces was not in the DORMIED Index when we launched. We built the initial 
 
 Pins & Aces now sits at rank 29 globally, ahead of a long list of brands with far more heritage and far bigger marketing budgets. It is a useful reminder that a search-interest index measures what golfers actually care about rather than what the industry thinks they should, and that the people playing the game are frequently ahead of the people covering it.
 
-## What the data shows
+## How Does Pins & Aces Rank on the DORMIED Index?
 
 DORMIED tracks brand search interest across 10 global markets every month. Here is where Pins & Aces stands.
 
@@ -32,7 +32,7 @@ DORMIED tracks brand search interest across 10 global markets every month. Here 
 
 Rank 29 is the headline, and it is a genuinely high placement for an independent brand with no tour stable and no traditional advertising. For context, Pins & Aces sat at rank 44 when our tracked history begins in March 2023 and has held rank 29 for three consecutive months, with a 59.1 percent climb over the last quarter and a peak of 40,500 monthly searches in April. This is not a brand having a moment. It is a brand that has been compounding for three years.
 
-## It started with a headcover nobody wanted to make
+## How Did Pins & Aces Start?
 
 The pre-history is a series of failures, which is usually a good sign.
 
@@ -42,7 +42,7 @@ The pair had an unusual qualification for filling it. Mertz had worked with Alex
 
 The first hits were Colorado and Texas state flag covers, priced in the gap nobody was serving. They worked immediately. From there the catalog grew into the irreverent stuff the brand is still best known for: voodoo doll driver covers, Teenage Mutant Ninja Turtles polos, the LiquorStick, rope hats reading Mourning Wood Casket Company or Parlay Investment Group: Lose Your Money The Right Way. It was golf apparel for the golfer who is unmistakably there to enjoy himself.
 
-## The people's brand, and the price ceiling that defines it
+## Why Is Pins & Aces Called the People's Brand?
 
 The nickname stuck after the brand's appearances at the Waste Management Phoenix Open, golf's self-styled people's tournament, and it fits the operating philosophy more than the marketing.
 
@@ -52,7 +52,7 @@ That vertical integration exists to protect a specific promise: no polo on the s
 
 The business has been profitable every year since it started, and did $20 million in revenue in 2024. That is a rare combination in a category full of brands burning capital to buy attention.
 
-## Growing up: bags, polos, and the bunker-to-boardroom pivot
+## What Does Pins & Aces Sell Beyond Headcovers?
 
 The more interesting phase is the current one, because the brand that got famous for novelty has spent two years building products for golfers who care about their handicap.
 
@@ -60,7 +60,7 @@ The Player Preferred bags, both cart and stand, arrived in fall 2023 after a fir
 
 Mertz has been candid that the whacky-brand wave of 2020 and 2021 has crested and that the company is deliberately reaching a broader buyer. He has also been unusually honest about the early product, noting that when customers asked for tighter headcovers or looser polos, the internal reaction was "what do they know," and that in hindsight the products were not as good as they are now. Listening later became the strategy.
 
-## The Edel acquisition, and what the data says about it
+## Why Did Pins & Aces Acquire Edel Golf?
 
 The biggest move came in December 2024, when Pins & Aces announced it had acquired Edel Golf, the Denver-area maker of custom-fit irons, wedges, and putters (pronounced, for the record, like Adele). The deal was rolled out publicly in January 2025 and showcased at the PGA Show in Orlando. Former owner Doug Coors, of the Coors family, stayed on as chairman, Rocky Hansler continued as president, and terms were not disclosed. Edel was doing $5 million to $6 million in revenue against Pins & Aces' $20 million.
 
@@ -72,7 +72,7 @@ The acquisition announcement did move Edel: its DI jumped 52.6 percent in Januar
 
 That is not a failure so much as a description of the actual asset being combined. Edel brought engineering credibility and a fitting reputation; it did not bring an audience. Pins & Aces brought an audience and a distribution machine; it did not bring club-making. Notably, about half of Edel's business sits in Korea, a market where Mertz sees appetite for boutique American brands, and one of the ten markets DORMIED tracks. The interesting question over the next year is whether Pins & Aces can transfer any of its considerable attention onto the clubs, because right now the data says the two halves of the company live in completely different weather.
 
-## Rafael Campos and the accidental endorsement
+## How Did Rafael Campos Start Wearing Pins & Aces?
 
 The brand's best tour story is one it did not pay for. By the company's telling, PGA Tour player Rafael Campos simply started wearing Pins & Aces polos in 2021 with no sponsorship arrangement, because he liked them.
 
@@ -80,7 +80,7 @@ In November 2024, Campos won the Butterfield Bermuda Championship for his first 
 
 Golf's apparel economy is built on paying players to wear things. A first-time winner choosing a sub-$70 shirt from a Denver warehouse on his own is a better advertisement than most sponsorship budgets buy, and it is the single cleanest illustration of what the people's brand positioning actually means.
 
-## Why it matters
+## Why Does Pins & Aces Matter?
 
 DORMIED spends most of its time watching how attention moves between golf brands, and Pins & Aces is a case study in building it from the bottom rather than buying it from the top. No tour stable, no traditional advertising, no private equity. A price ceiling held on purpose, a warehouse the founders own, and a customer base that came for a joke headcover and stayed for a golf bag.
 

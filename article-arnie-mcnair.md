@@ -8,7 +8,7 @@ Who is Arnie McNair? Strictly speaking, nobody. Arnie McNair does not exist. The
 
 In one sentence: Arnie McNair is an American golf apparel brand launched in January 2026 by an anonymous Minnesota golfer, selling made-to-order, natural-fiber clothing produced almost entirely in the USA, positioned as a deliberate rejection of the synthetic, logo-heavy direction of modern golf wear.
 
-## What the data shows
+## How Is Arnie McNair Trending on the DORMIED Index?
 
 DORMIED tracks brand search interest across 10 global markets every month. Arnie McNair's line is what a fast early riser looks like in data form.
 
@@ -24,7 +24,7 @@ DORMIED tracks brand search interest across 10 global markets every month. Arnie
 
 Read those numbers honestly and two things are true at once. Arnie McNair is small: rank 119, a fraction of the search volume of a Malbon or a Random Golf Club. And Arnie McNair got big fast, then settled into a rhythm. It reached rank 108 back in April, one of the quickest standing starts in the Index, and the three-month line has since turned negative at 13.7 percent down. The month-over-month reading, up 24.1 percent, is the more useful number. The pattern is not a warning sign; it is the shape of the business. A made-to-order brand that sells in limited seasonal windows spikes when a drop opens and cools while the Army, as the brand calls its buyers, waits for the next one. Read the monthly line for the pulse and the three-month line for the season.
 
-## The Burnerverse origin story
+## How Did Arnie McNair Start in the Burnerverse?
 
 Every good golf brand has an origin story. Arnie McNair's begins in the strangest corner of golf media: the anonymous account ecosystem on X that regulars call the Burnerverse, where pseudonymous country club members trade takes, gossip, and inside jokes about the private-club world.
 
@@ -34,7 +34,7 @@ Then the account did something about it. What started as commentary turned into 
 
 The reach compounded fast. Chad Mumm, the executive producer of Netflix's Full Swing and co-founder of Pro Shop, posted publicly about pre-ordering The Polo and having dinner with Arnie in Los Angeles. The brand has since welcomed PGA Tour veteran Tim Herron, a fellow Minnesotan, into what it calls the family. For a five-month-old company with no visible paid marketing and no visible founder, that is a remarkable roster of believers.
 
-## What the clothes actually are
+## Where Is Arnie McNair Clothing Made?
 
 Strip away the mystique and the product is deliberately old-fashioned, which is precisely the pitch. Unlike most modern golf apparel brands, nearly every Arnie McNair garment is manufactured in the United States using American-grown cotton wherever possible.
 
@@ -46,7 +46,7 @@ That model is the opposite of everything modern DTC apparel is built on, and it 
 
 One more detail matters, and it is the most personal one. Pieces marked AM are dedicated to Arnie's brother, a United States Marine who passed away in 2004, and proceeds from those items go to Stop Soldier Suicide. The brand says plainly that this is not marketing, and there is no reason to doubt it. It is the one place where the anonymous founder's real life shows through the pseudonym.
 
-## Why the anonymity works
+## Why Does Arnie McNair Stay Anonymous?
 
 The obvious question is why a founder with a growing brand would stay hidden, and the obvious answer, publicity stunt, is the wrong one.
 
@@ -56,7 +56,7 @@ There is precedent for this working in golf. Country Club Confidential built a r
 
 The bet has costs. Anonymous founders cannot do trunk shows, cannot glad-hand pro shop buyers, cannot sit on industry panels. Every conventional growth channel that runs through a founder's face is closed. What is left is the product and the voice, and five months in, those two things built a following fast and put its polo on the backs of golfers who talk about it unprompted. When the Georgia Cotton Commission sent the brand a letter of appreciation for championing American cotton during a difficult period for the industry, Arnie posted that he did not care if he ever made a dime because moments like that made it worth it. Whether that stays true as the Army grows is the interesting question.
 
-## The bigger picture
+## What Does Arnie McNair Show About Golf Brands?
 
 DORMIED exists to read brand momentum, and Arnie McNair is a nearly pure case study in how attention converts to commerce in golf now. No retail presence, no tour validation in the traditional sense, no paid acquisition anyone can detect. Just a voice, a villain, a product that matches the argument, and a distribution model that turns patience into loyalty. The search data says the formula worked fast: a standing start in January, a peak at rank 108 by April, and monthly interest up 24.1 percent again in July after a spring cool-down.
 

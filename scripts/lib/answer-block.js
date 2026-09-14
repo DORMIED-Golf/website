@@ -20,9 +20,9 @@
  * the author routing did before scripts/lib/article-authors.js existed.
  */
 
-const LABEL_KEY_TAKEAWAYS = 'Key Takeaways';
-const LABEL_QUICK_ANSWER  = 'Quick Answer';
-const LABEL_WHAT_HAPPENED = 'What Happened';
+const LABEL_KEY_TAKEAWAYS = 'What Are the Key Takeaways?';
+const LABEL_QUICK_ANSWER  = 'What Is the Short Answer?';
+const LABEL_WHAT_HAPPENED = 'What Happened?';
 
 // Interrogative openers. A title starting with one of these, or ending in a
 // question mark, is question-intent and gets "Quick Answer".
@@ -37,13 +37,15 @@ const QUESTION_OPENERS = /^(who|what|where|why|when|which|how|is|are|does|do|did
  * @param {string} opts.category Article category ('Feature' is special)
  * @returns {string} one of the three labels
  */
-function answerLabel({ title = '', slug = '', category = '' } = {}) {
-  if (String(category).toLowerCase() === 'feature') return LABEL_KEY_TAKEAWAYS;
+// Every label is a question (site-wide heading rule). `subject` is the brand or
+// topic name when the caller has one, so the heading carries a keyword.
+function answerLabel({ title = '', slug = '', category = '', subject = '' } = {}) {
+  if (String(category).toLowerCase() === 'feature') return subject ? `What Should You Know About ${subject}?` : LABEL_KEY_TAKEAWAYS;
   const t = String(title).trim();
   if (t.endsWith('?'))            return LABEL_QUICK_ANSWER;
   if (QUESTION_OPENERS.test(t))   return LABEL_QUICK_ANSWER;
   if (QUESTION_OPENERS.test(String(slug).replace(/-/g, ' '))) return LABEL_QUICK_ANSWER;
-  return LABEL_WHAT_HAPPENED;
+  return subject ? `What Happened With ${subject}?` : LABEL_WHAT_HAPPENED;
 }
 
 /** Word count used by the 40-60 target. Counts bullet text too. */

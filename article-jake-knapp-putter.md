@@ -6,7 +6,7 @@
 
 Jake Knapp's most recent start had a Scotty Cameron Phantom 9.2R Tour Prototype in the bag, and if you are reading this a month from now that may already be wrong. Knapp has cycled through more putters in 2026 than almost anyone on the PGA Tour: a Phantom 11.2R when he shot a course-record 62 to close out the Houston Open in March, a Phantom 9.2 Circle T at points during the summer, a Phantom T9.5 spotted at one event, a Phantom 9.2 Tour Prototype before that, and a TaylorMade Spider Tour and a PXG prototype before Scotty Cameron took the slot over entirely. The honest answer to what putter Jake Knapp uses is that it is a Scotty Cameron Phantom, and the model is a moving target.
 
-## The interesting part: he is a PXG staffer putting with a Titleist brand
+## Why Is PXG Staffer Jake Knapp Using a Titleist Putter?
 
 This is the detail that makes the churn worth writing about rather than just cataloguing.
 
@@ -16,7 +16,7 @@ He putts with a [Scotty Cameron](https://dormied.com/brands/scotty-cameron/).
 
 Staff deals almost always leave the putter open, because the putter is the club players are least willing to compromise on, and manufacturers know that forcing the issue is how you lose a player entirely. But it is still striking to see it laid out: the most visible club in a player's hands over the final three feet of a tournament belongs to a competitor. Knapp has also drifted at the top of the bag, moving from a PXG Lightning Tour Max driver to a PING G440 LST during the FedEx Cup Playoffs, which makes his setup less a PXG bag than a PXG core with the two most scrutinised clubs sourced elsewhere.
 
-## What the search data shows
+## How Much Search Demand Does the Jake Knapp Putter Get?
 
 DORMIED tracks brand search demand, and Knapp's putter has become a genuine demand event in its own right.
 
@@ -33,13 +33,13 @@ That is roughly an eleven-fold increase in seven days, and the putter queries ar
 
 That second number is the one worth dwelling on. A single player's putter, in a single week, produced a measurable lift in brand-level search interest for the manufacturer. This is what equipment brands are actually buying when they chase tour validation, and it is usually invisible. Here it shows up cleanly in the data, and it went to the brand that is not paying for the rest of the bag.
 
-## Why the model keeps changing
+## Why Does Jake Knapp Keep Changing Putters?
 
 Putter churn at this level is not indecision so much as access. A tour player with a Scotty Cameron relationship can request a prototype head, get it built, try it for a week, and hand it back. The models Knapp has been through are almost all Tour Prototype or Circle T stamped, meaning they are tour-department builds rather than retail products.
 
 That is also why this question gets searched so heavily and answered so badly. Someone watches Knapp hole a putt, looks up the model, and finds either a retail Phantom that is not quite what he is using or a specification from six months ago. The Phantom 9.2R does exist at retail in the 2026 line at around $499, but the version in his bag is a tour build, and the R designation, denoting the more rounded head shape first played on tour by Justin Thomas and used by Cameron Young to win his first PGA Tour title, is the closest retail equivalent rather than the same club.
 
-## A note on our own data
+## Why Did DORMIED Update Jake Knapp's WITB Page?
 
 DORMIED's [Jake Knapp WITB page](https://dormied.com/witb/players/jake-knapp/) recorded a Scotty Cameron Phantom 9.2 Tour Prototype from a March 2025 bag snapshot until we refreshed it alongside this article. That was accurate when captured and had fallen a long way behind the player. It is a good illustration of the limits of snapshot-based bag tracking against a player who treats the putter slot as a rotating door.
 

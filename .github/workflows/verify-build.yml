@@ -40,6 +40,15 @@ jobs:
       - name: Interactive markup has its handler
         run: npm run verify:page-scripts --silent
 
+      # Every h2 in article bodies, features and the shared template blocks is
+      # phrased as a question. The rule lives in six places (prompt, backfill,
+      # feature markdown, template labels, the newsletter library, hand-maintained
+      # pages), and a stale label in a hand-maintained page survives every re-bake.
+      # Kept out of the publish pipeline on purpose: generate-article.js strips a
+      # statement subheading itself, so publishing never stalls on a heading.
+      - name: Headings are questions
+        run: npm run verify:headings --silent
+
       # Every sitemap URL must resolve to a file that exists.
       - name: Sitemap resolves
         run: npm run verify:sitemap --silent

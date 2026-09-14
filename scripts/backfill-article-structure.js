@@ -60,12 +60,38 @@ const AB               = require('./lib/answer-block');
 const MODEL = 'claude-opus-5';
 const args  = process.argv.slice(2);
 const DRY   = args.includes('--dry-run');
+// Replace headings this script inserted earlier (statement-style) with question
+// headings. Only exact "## ..." lines followed by a blank line are removed, which
+// is precisely what insertHeadings() adds, so the prose round-trip still holds.
+const REDO  = args.includes('--redo-headings');
 const SLUGS = (args.find(a => a.startsWith('--slug=')) || '').replace('--slug=', '')
                 .split(',').map(s => s.trim()).filter(Boolean);
 const LIMIT = parseInt((args.find(a => a.startsWith('--limit=')) || '').replace('--limit=', ''), 10) || null;
 
 const GENERIC_HEADING = /^(background|context|overview|introduction|analysis|summary|conclusion|final thoughts|the takeaway|takeaways?|the bottom line|bottom line|why it matters|what it means|what's next|whats next|looking ahead)$/i;
 const HAS_HEADING     = /^#{2,3}\s+\S/m;
+
+// Every section heading is a question the section answers, and carries one of
+// the article's keywords. Questions match how people search, and a keyword in
+// the outline tells a crawler what each section is about.
+const QUESTION_START = /^(why|what|how|who|where|when|which|is|are|does|do|did|can|could|will|would|should|has|have|was|were)\b/i;
+const isQuestion = t => QUESTION_START.test(String(t).trim()) && /\?$/.test(String(t).trim());
+const GENERIC_TOKEN = new Set(['golf','golfs','golfer','golfers','club','clubs','brand','brands','best','review','reviews','test','tests','testing','price','prices','pricing','deal','deals','sale','sales','news','2024','2025','2026','with','from','that','this','your','their','what','why','how']);
+const stem = w => w.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 4);
+/** Brand name, a full keyword phrase, or a distinctive keyword word (stemmed). */
+function keywordHit(text, keywords, brandName) {
+  const t = String(text).toLowerCase();
+  if (brandName && t.includes(brandName.toLowerCase())) return brandName;
+  for (const k of keywords || []) if (k && t.includes(String(k).toLowerCase())) return k;
+  const headStems = new Set(t.split(/[^a-z0-9$]+/).filter(w => w.length >= 4).map(stem));
+  for (const k of keywords || []) {
+    for (const w of String(k).split(/[^A-Za-z0-9]+/)) {
+      if (w.length >= 5 && !GENERIC_TOKEN.has(w.toLowerCase()) && headStems.has(stem(w))) return w;
+    }
+  }
+  return null;
+}
+function stripOurHeadings(body) { return body.replace(/^## [^\n]*\n\n/gm, ''); }
 // A heading must not freeze a monthly-changing Index figure: the article's brand
 // card re-renders with the CURRENT rank, so "Callaway Sits Fourth Among 169
 // Brands" ended up directly beside a card reading #2.
@@ -96,13 +122,14 @@ function paragraphBlocks(body) {
   return out;
 }
 
-function buildPrompt(title, brandName, blocks, words) {
+function buildPrompt(title, brandName, blocks, words, keywords) {
   const want = words >= 400 ? '2 to 4' : '0 to 2';
   const numbered = blocks.map((b, i) => `[${i + 1}] ${b.text}`).join('\n\n');
   return `You are adding section subheadings and a search title to an article that is ALREADY PUBLISHED on DORMIED, a golf brand and business publication. You must not change, rewrite, summarise or quote the article. You only choose where headings go and what they say.
 
 HEADLINE: ${title}
 BRAND: ${brandName || '(none)'}
+KEYWORDS: ${(keywords || []).join(' | ') || '(none, use the brand name)'}
 LENGTH: ${words} words in ${blocks.length} paragraphs
 
 ARTICLE (paragraphs are numbered):
@@ -113,7 +140,9 @@ Return JSON only, no markdown fences, exactly:
 
 HEADINGS: ${want} of them.
 - "before" is the number of the paragraph the heading sits directly above. Never 1: the lead paragraph always comes first, and the first heading may sit directly after it (before 2). Between one heading and the next, leave at least 2 paragraphs, so every section has substance.
-- Each heading says specifically what its section establishes, the way a reader scanning or a search engine reading the outline would want: "Why Tour Players Are Dropping the 3-Wood", "A $375 Iron Priced Against Mizuno". 3 to 9 words, title case.
+- Every heading is a QUESTION that the section beneath it answers, phrased the way someone would search for it. It starts with a question word (Why, What, How, Who, Which, Is, Does, Can...) and ends with a question mark.
+- Every heading includes at least one of the KEYWORDS above, or the brand name, worked in naturally: "Why Did McLaren Golf Choose Metal Injection Molding?", "How Does the Kalea Gold Compare to Other Complete Sets?". 4 to 12 words, title case.
+- The section below must genuinely answer the question. Never ask something the article leaves open.
 - Never a generic label: not "Background", "Context", "Overview", "Analysis", "Why It Matters", "What It Means", "The Bottom Line", "What's Next", "Looking Ahead", "Conclusion", "Final Thoughts", "The Takeaway".
 - Only claims the article makes. No number that does not appear in the article. No em dashes. No clickbait, no questions the article does not answer.
 - Never put a DORMIED Index rank, position, score or brand count in a heading ("Ranked 47th", "Sits Fourth Among 169 Brands", "93rd of 175"). Those figures change every month, and the page shows the brand's CURRENT rank right beside the article, so a heading repeating an old one contradicts it on the same screen.
@@ -130,7 +159,7 @@ function parseJson(text) {
   try { return JSON.parse(m[0]); } catch { return null; }
 }
 
-function validateHeadings(raw, blocks, body, words) {
+function validateHeadings(raw, blocks, body, words, keywords = [], brandName = null) {
   if (!Array.isArray(raw)) return { ok: false, why: 'no headings array' };
   if (!raw.length) return { ok: true, list: [] };
   const max = words >= 400 ? 4 : 2;
@@ -145,8 +174,10 @@ function validateHeadings(raw, blocks, body, words) {
     const text   = stripEmDashes(h && h.text).replace(/[.:;,]+$/, '').trim();
     if (!Number.isInteger(before) || before < 2 || before > blocks.length) return { ok: false, why: `bad position ${h && h.before}` };
     if (prev !== null && before - prev < 2) return { ok: false, why: `heading at ${before} leaves a section under 2 paragraphs` };
-    if (text.length < 3 || text.length > 70) return { ok: false, why: `heading length ${text.length}: "${text}"` };
-    if (text.split(/\s+/).length > 10)       return { ok: false, why: `heading over 10 words: "${text}"` };
+    if (text.length < 8 || text.length > 90) return { ok: false, why: `heading length ${text.length}: "${text}"` };
+    if (text.split(/\s+/).length > 14)       return { ok: false, why: `heading over 14 words: "${text}"` };
+    if (!isQuestion(text))                   return { ok: false, why: `not a question: "${text}"` };
+    if (!keywordHit(text, keywords, brandName)) return { ok: false, why: `no keyword or brand in "${text}"` };
     if (GENERIC_HEADING.test(text))          return { ok: false, why: `generic heading "${text}"` };
     if (DATED_INDEX.test(text))              return { ok: false, why: `heading freezes an Index figure: "${text}"` };
     if (/^#/.test(text) || /\n/.test(text))  return { ok: false, why: 'malformed heading' };
@@ -209,7 +240,7 @@ async function main() {
   let rows = [];
   for (let from = 0; ; from += 1000) {
     let q = sb.from('dormied_articles')
-      .select('slug, title, body, brand_slug, category, seo_title')
+      .select('slug, title, body, brand_slug, category, seo_title, seo_keywords')
       .eq('status', 'published')
       .neq('category', 'Feature')
       .order('published_at', { ascending: false })
@@ -223,7 +254,10 @@ async function main() {
 
   rows = rows.filter(r => !PROTECTED.has(r.slug)
     && r.body && r.body.length >= 200
-    && (!HAS_HEADING.test(r.body) || !r.seo_title));
+    && (REDO
+          ? (!r.seo_title || ![...r.body.matchAll(/^## (.+)$/gm)].length
+             || ![...r.body.matchAll(/^## (.+)$/gm)].every(m => isQuestion(m[1])))
+          : (!HAS_HEADING.test(r.body) || !r.seo_title)));
   if (LIMIT) rows = rows.slice(0, LIMIT);
 
   console.log(`[structure] ${rows.length} article(s) to treat${DRY ? ' (DRY RUN)' : ''}\n`);
@@ -231,17 +265,23 @@ async function main() {
   const changed = [], skipped = [];
   for (const r of rows) {
     const brandName = r.brand_slug ? (names.get(r.brand_slug) || null) : null;
-    const blocks    = paragraphBlocks(r.body);
-    const words     = AB.wordCount(r.body);
-    const needHead  = !HAS_HEADING.test(r.body);
+    const base      = REDO ? stripOurHeadings(r.body) : r.body;
+    const keywords  = Array.isArray(r.seo_keywords) ? r.seo_keywords : [];
+    if (REDO && HAS_HEADING.test(base)) {
+      console.log(`  ${r.slug.slice(0, 58).padEnd(58)} SKIP (headings not inserted by this script)`);
+      skipped.push([r.slug, 'foreign headings']); continue;
+    }
+    const blocks    = paragraphBlocks(base);
+    const words     = AB.wordCount(base);
+    const needHead  = !HAS_HEADING.test(base);
     process.stdout.write(`  ${r.slug.slice(0, 58).padEnd(58)} `);
 
     let parsed, rawText = '';
     try {
-      rawText = await callModel(anthropic, buildPrompt(r.title, brandName, blocks, words));
+      rawText = await callModel(anthropic, buildPrompt(r.title, brandName, blocks, words, keywords));
       parsed  = parseJson(rawText);
       if (!parsed) {           // one retry: a malformed response is usually transient
-        rawText = await callModel(anthropic, buildPrompt(r.title, brandName, blocks, words)
+        rawText = await callModel(anthropic, buildPrompt(r.title, brandName, blocks, words, keywords)
           + '\n\nReturn ONLY the JSON object. Escape any double quote inside a string value.');
         parsed = parseJson(rawText);
       }
@@ -257,19 +297,23 @@ async function main() {
     const notes = [];
 
     if (needHead) {
-      const h = validateHeadings(parsed.headings, blocks, r.body, words);
+      // Heading numbers are grounded against the body AND the headline, the same
+      // as the SEO title: the headline is published text, and a question like
+      // "Why a 7-Degree Iron?" often takes its figure from it.
+      const h = validateHeadings(parsed.headings, blocks, `${base}\n\n${r.title}`, words, keywords, brandName);
       if (!h.ok) notes.push(`headings refused: ${h.why}`);
       else if (h.list.length) {
         try {
-          patch.body = insertHeadings(r.body, blocks, h.list);
-          patch.date_modified = new Date().toISOString();
+          const next = insertHeadings(base, blocks, h.list);
+          if (next !== r.body) patch.body = next;
+          if (patch.body) patch.date_modified = new Date().toISOString();
           notes.push(`${h.list.length} headings: ${h.list.map(x => `[${x.before}] ${x.text}`).join(' | ')}`);
         } catch (e) { notes.push(`headings aborted: ${e.message}`); }
       } else notes.push('no headings (too short to divide)');
     }
 
     if (!r.seo_title) {
-      const t = validateSeoTitle(parsed.seo_title, brandName, r.body, r.title);
+      const t = validateSeoTitle(parsed.seo_title, brandName, base, r.title);
       if (t.ok) { patch.seo_title = t.value; notes.push(`seo_title (${t.value.length}): ${t.value}`); }
       else notes.push(`seo_title refused: ${t.why}`);
     }

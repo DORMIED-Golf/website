@@ -8,7 +8,7 @@ Khalhon is a Seoul golf apparel brand that grew out of the city's golf scene in 
 
 In one sentence: Khalhon is a Seoul-based golf apparel brand blending American casual with golf tradition, known for a Sean Wotherspoon capsule and a footwear collaboration with Payntr Golf launched at Hypegolf's SoHo pop-up.
 
-## Why the Wotherspoon capsule matters
+## Why Does the Khalhon Sean Wotherspoon Capsule Matter?
 
 It would be easy to file this as another celebrity collaboration. It is not, and the distinction is worth spelling out.
 
@@ -18,7 +18,7 @@ Golf was a category he had never touched. Speaking about the Khalhon project, he
 
 That last part is the tell. Someone parachuting into golf because the category became fashionable does not lead with their own incompetence at it. Wotherspoon's interest reads as curiosity about what Korea might do with golf next, which is a different thing from a licensing deal. He is a collaborator on a capsule, not an owner.
 
-## Seoul as the starting point
+## Why Did Khalhon Start in Seoul?
 
 Korean golf fashion has been quietly ahead of the rest of the world for years, and Khalhon is one of the brands making that visible outside Korea.
 
@@ -28,7 +28,7 @@ That is a more considered position than most brands bother to articulate. The cl
 
 Retail-wise, Khalhon has been deliberate rather than aggressive. Rather than simply supplying stock, the brand offers partners flexible exclusive options, adjusting colours, graphics and embroidery so a collection sits in harmony with each store's identity.
 
-## The Payntr collaboration
+## What Is the Khalhon Payntr Collaboration?
 
 Alongside Wotherspoon, Khalhon has moved into footwear through a partnership with Payntr Golf, the performance brand built around the biomechanics of the golf swing.
 
@@ -36,7 +36,7 @@ The two debuted an exclusive footwear and apparel collaboration at the Hypegolf 
 
 The pairing makes sense. Payntr brings the technical credibility Khalhon does not claim, and Khalhon brings the cultural positioning Payntr does not have. The stated idea is golfers who move between the course and the city, which is the same customer the brand describes on its own site.
 
-## Why it matters
+## Why Does Khalhon Matter Outside Korea?
 
 Golf's culture-brand wave has so far been mostly American, running through Malbon, Students, Metalwood and the rest. Khalhon is a reminder that Korea has its own version, arguably further along, and that the traffic is starting to run in both directions.
 

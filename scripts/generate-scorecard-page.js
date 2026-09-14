@@ -807,7 +807,7 @@ async function main() {
     let aside = '';
     if (latest.length) {
       aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-latest-heading">
-              <h2 class="latest-feed-heading" id="sc-issue-latest-heading">Latest</h2>
+              <h2 class="latest-feed-heading" id="sc-issue-latest-heading">What Is the Latest Golf Brand News?</h2>
               <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(latest, dormiedData)}</div>
             </section>\n`;
     }
@@ -815,7 +815,7 @@ async function main() {
     aside += `            ${SC_MODS_TOKEN}\n`;
     if (topStories.length) {
       aside += `            <section class="home-stories-section latest-feed-section" aria-labelledby="sc-issue-stories-heading">
-              <h2 class="latest-feed-heading" id="sc-issue-stories-heading">Top Stories</h2>
+              <h2 class="latest-feed-heading" id="sc-issue-stories-heading">What Are the Top Golf Stories Right Now?</h2>
               <div class="latest-feed-list">${feedBake.renderLatestFeedHtml(topStories, dormiedData)}</div>
             </section>\n`;
     }

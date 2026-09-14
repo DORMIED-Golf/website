@@ -647,7 +647,7 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
 
   const brandAnswerHtml = brandAnswerBlock ? `
           <section class="da-answer-block" aria-labelledby="bp-answer-heading">
-            <h2 class="da-answer-label" id="bp-answer-heading">Key Takeaways</h2>
+            <h2 class="da-answer-label" id="bp-answer-heading">What Should You Know About ${escHtml(brand.name)}?</h2>
             <p class="da-answer-text">${escHtml(brandAnswerBlock)}</p>
           </section>` : '';
 
@@ -733,7 +733,7 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
                  the question as a plain bold paragraph and the heading in a
                  different weight, which is what made the four page types diverge. -->
             <section class="da-bottom-section da-faq-section" aria-labelledby="bp-faq-heading">
-              <h2 class="da-bottom-heading" id="bp-faq-heading">Frequently Asked Questions</h2>
+              <h2 class="da-bottom-heading" id="bp-faq-heading">What Do Golfers Ask About ${escHtml(brand.name)}?</h2>
 ${faqItems.map(it => `              <div class="da-faq-item">
                 <h3 class="da-faq-q">${escHtml(it.q)}</h3>
                 <p class="da-faq-a">${it.aHtml}</p>
@@ -1104,20 +1104,20 @@ ${scSignupHtml}
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">
               <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="bp-latest-m-heading">
-                <h2 class="latest-feed-heading" id="bp-latest-m-heading">Latest</h2>
+                <h2 class="latest-feed-heading" id="bp-latest-m-heading">What Is the Latest Golf Brand News?</h2>
                 <div class="latest-feed-list">
                   ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
               <section class="home-stories-section latest-feed-section" aria-labelledby="bp-stories-heading">
-                <h2 class="latest-feed-heading" id="bp-stories-heading">Top Stories</h2>
+                <h2 class="latest-feed-heading" id="bp-stories-heading">What Are the Top Golf Stories Right Now?</h2>
                 <div id="home-stories-list" class="latest-feed-list" data-limit="10">
                   ${topStoriesHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="bp-featured-heading">
-                <h2 class="latest-feed-heading" id="bp-featured-heading">Featured</h2>
+                <h2 class="latest-feed-heading" id="bp-featured-heading">Which DORMIED Features Should You Read?</h2>
                 <div id="featured-list" class="latest-feed-list">
                   ${featuredFeedHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
@@ -1130,7 +1130,7 @@ ${scSignupHtml}
           <!-- Sidebar: LATEST widget (5), then Brands on the Move + Recently Updated Bags -->
           <aside class="sidebar-ad-col">
             <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="bp-dormied-latest-heading">
-              <h2 class="latest-feed-heading" id="bp-dormied-latest-heading">Latest</h2>
+              <h2 class="latest-feed-heading" id="bp-dormied-latest-heading">What Is the Latest Golf Brand News?</h2>
               <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>

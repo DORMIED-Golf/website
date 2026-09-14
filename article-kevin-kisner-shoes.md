@@ -6,13 +6,13 @@
 
 Kevin Kisner wears FootJoy golf shoes, most often the Tour X, the model FootJoy built a marketing campaign around him wearing. He pairs them with Peter Millar apparel. Neither brand makes a golf club, and that is the interesting part: Kisner is not a staff player for anybody, and his bag is one of the most brand-scattered on tour. By DORMIED's WITB tracking he carries clubs from five different manufacturers at once. The shoes are not an exception to his equipment philosophy. They are the clearest expression of it.
 
-## The short answer, and the confusion around it
+## What Golf Shoes Does Kevin Kisner Wear?
 
 FootJoy is the answer, and the evidence is direct rather than inferred. FootJoy has featured Kisner in its own Tour X marketing, quoting him saying a stable base starts with the shoe. Golf Monthly listed him in the Tour X, National Club Golfer has had him in the Tour Alpha, and a custom pair of American-flag FootJoys made for him as part of a United States Presidents Cup team has turned up at auction. The specific model has moved between the Tour X and the Tour Alpha over the years, which is normal for a player who is not contractually locked to one silhouette.
 
 Worth addressing directly, because it is probably why this question gets searched so often: several websites claim Kisner wears Nike. Those claims trace back to low-quality aggregator pages, including at least one sneaker marketplace using his name to sell Jordan golf shoes, and they contradict both FootJoy's own campaign featuring him and the established golf press. If you have read that Kisner is a Nike guy, that is where it came from, and it does not hold up.
 
-## What the data shows
+## What Does Kevin Kisner's WITB Show?
 
 DORMIED tracks every club in current tour bags. Kisner's is a genuinely unusual document.
 
@@ -33,7 +33,7 @@ Five club brands. Two grip brands. A Callaway driver, a TaylorMade fairway wood,
 
 Most tour bags do not look like this. The economics of professional golf push players toward full-bag deals, where one manufacturer pays for the driver through the wedges and the player accepts the compromises that come with it. Kisner's bag is what happens when a player either cannot or will not take that deal, and picks each club on its own merits.
 
-## How he got here
+## Why Is Kevin Kisner's Bag So Mixed?
 
 The scatter is not random. It is the residue of a career of switching.
 
@@ -41,7 +41,7 @@ Kisner played Callaway equipment for years and was widely identified as a Callaw
 
 That pattern tells you something the endorsement pages will not. A player who moves through Callaway, Wilson, PING, TaylorMade, Titleist, and Srixon inside a few seasons is optimising for performance rather than for a contract, and the shoes fit the same logic. FootJoy and Peter Millar are apparel and footwear companies with no club business and nothing to gain from what he tees off with. They are the two categories where a mixed-bag player can sign a clean deal without constraining anything else.
 
-## Why people are searching this now
+## Why Are People Searching Kevin Kisner Shoes Now?
 
 Kisner is 42 and no longer a full-time tour player. His world ranking sits at 1058, which reflects a schedule of select events rather than a decline in ability. He has moved into broadcasting with NBC and plays in TGL for Jupiter Links GC, which puts him in front of a large audience on a regular basis without a leaderboard next to his name.
 
@@ -49,7 +49,7 @@ That is almost certainly what drives the search volume. People watch him on tele
 
 For a brand like [FootJoy](https://dormied.com/brands/footjoy/), that is quietly valuable. A player who has stopped competing full time but appears on national broadcasts most weeks is a persistent, low-cost billboard, and the search data suggests it is working.
 
-## What it means
+## What Does Kevin Kisner Show About Equipment Brands?
 
 DORMIED spends its time watching how equipment brands convert money into attention, and Kisner is a useful counter-example. He is one of the most recognisable everyman figures in American golf, a four-time PGA Tour winner who finished second at an Open Championship, and he is not carrying anybody's full bag. The companies that get him are the ones selling things a mixed-bag player can wear without compromise.
 

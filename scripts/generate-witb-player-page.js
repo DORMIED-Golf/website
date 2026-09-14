@@ -1060,7 +1060,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   const witbAnswerHtml = witbAnswer ? `
           <!-- ANSWER BLOCK -->
           <section class="da-answer-block" aria-labelledby="da-answer-heading">
-            <h2 class="da-answer-label" id="da-answer-heading">Quick Answer</h2>
+            <h2 class="da-answer-label" id="da-answer-heading">What Is in ${esc(name)}'s Bag?</h2>
             <p class="da-answer-text">${esc(witbAnswer)}</p>${disambigHtml}
           </section>` : '';
 
@@ -1081,7 +1081,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   const witbFaqHtml = witbFaq.length ? `
           <!-- FAQ -->
           <section class="da-bottom-section da-faq-section" aria-labelledby="witb-faq-heading">
-            <h2 class="da-bottom-heading" id="witb-faq-heading">Frequently Asked Questions</h2>
+            <h2 class="da-bottom-heading" id="witb-faq-heading">What Do Golfers Ask About ${esc(name)}'s Bag?</h2>
             ${witbFaq.map(x => `<div class="da-faq-item"><h3 class="da-faq-q">${esc(x.q)}</h3><p class="da-faq-a">${esc(x.a)}</p></div>`).join('\n            ')}
           </section>` : '';
 
@@ -1656,20 +1656,20 @@ ${witbFaqHtml}
           <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
           <div class="tail-feeds">
             <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="player-latest-m-heading">
-              <h2 class="latest-feed-heading" id="player-latest-m-heading">Latest</h2>
+              <h2 class="latest-feed-heading" id="player-latest-m-heading">What Is the Latest Golf Brand News?</h2>
               <div class="latest-feed-list">
                 ${latestFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
               </div>
             </section>
             <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
             <section class="home-stories-section latest-feed-section" aria-labelledby="player-stories-heading">
-              <h2 class="latest-feed-heading" id="player-stories-heading">Top Stories</h2>
+              <h2 class="latest-feed-heading" id="player-stories-heading">What Are the Top Golf Stories Right Now?</h2>
               <div id="home-stories-list" class="latest-feed-list" data-limit="10">
                 ${topStoriesHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
               </div>
             </section>
             <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="player-featured-heading">
-              <h2 class="latest-feed-heading" id="player-featured-heading">Featured</h2>
+              <h2 class="latest-feed-heading" id="player-featured-heading">Which DORMIED Features Should You Read?</h2>
               <div id="featured-list" class="latest-feed-list">
                 ${featuredFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
               </div>
@@ -1682,7 +1682,7 @@ ${witbFaqHtml}
         <!-- SIDEBAR: Latest (5), then Brands on the Move + Recently Updated Bags -->
         <aside class="sidebar-ad-col">
           <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="player-latest-heading">
-            <h2 class="latest-feed-heading" id="player-latest-heading">Latest</h2>
+            <h2 class="latest-feed-heading" id="player-latest-heading">What Is the Latest Golf Brand News?</h2>
             <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
               ${latestFeedHtml || '<p class="latest-feed-loading">Loading&hellip;</p>'}
             </div>

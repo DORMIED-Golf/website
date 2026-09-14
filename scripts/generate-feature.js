@@ -88,6 +88,7 @@ const FEATURES = {
     quickAnswer: 'Byrdie Golf Social Wear is a Charlotte-based women\'s golf apparel brand founded in 2021 by Rachelle Wates and Hayden Hendrix, known for retro country club styling, collaborations with Cole Haan and Dolce Vita, and a deliberate blurring of the line between golf wear and going-out wear.',
     metaDescription: 'Byrdie Golf Social Wear is a women\'s golf apparel brand founded in 2021 in Charlotte, North Carolina by Rachelle Wates and Hayden Hendrix. Pieces run roughly $40 to $215.',
     seoKeywords: ['byrdie golf', 'what is byrdie golf', 'byrdie golf social wear', 'byrdie golf founders', 'byrdie golf clothing', 'byrdie golf charlotte', 'womens golf apparel brand'],
+    subject: "Byrdie Golf",
     mdPath: path.join(ROOT, 'article-byrdie-golf.md'),
     imgBase: '/images/features/byrdie-golf',
     // 1900x1200 (1.58), comfortably landscape and well over the 1200px floor
@@ -116,14 +117,15 @@ const FEATURES = {
     quickAnswer: 'Khalhon is a Seoul-based golf apparel brand founded in the mid-2020s that sits between sport, streetwear and quiet luxury. It is best known for a capsule with Round Two co-founder Sean Wotherspoon, his first work in golf, and a footwear collaboration with Payntr Golf that launched at the Hypegolf Clubhouse pop-up in SoHo.',
     metaDescription: 'Khalhon is a Seoul golf apparel brand known for its Sean Wotherspoon capsule and a Payntr Golf footwear collaboration launched at Hypegolf Clubhouse in SoHo.',
     seoKeywords: ['khalhon', 'what is khalhon', 'khalon', 'khalhon golf', 'khalhon sean wotherspoon', 'khalhon payntr', 'korean golf brand', 'seoul golf apparel'],
+    subject: "Khalhon",
     mdPath: path.join(ROOT, 'article-khalhon.md'),
     imgBase: '/images/features/khalhon',
     hero: { file: 'hero.webp', w: 1920, h: 720, alt: 'Khalhon Fall Winter 2026 campaign imagery from the Sean Wotherspoon capsule.', caption: 'The Sean Wotherspoon capsule, Fall/Winter 2026. Photo by Khalhon.' },
     sectionImages: {
-      'Why the Wotherspoon capsule matters': { layout: 'single', images: [
+      "Why Does the Khalhon Sean Wotherspoon Capsule Matter?": { layout: 'single', images: [
         { file: 'wotherspoon.webp', w: 1000, h: 1246, alt: 'Sean Wotherspoon photographed for the Khalhon capsule collection.', caption: 'Wotherspoon, the Round Two co-founder behind the Nike Air Max 1/97 corduroy, in his first golf collaboration. Photo by Khalhon.' },
       ]},
-      'Seoul as the starting point': { layout: 'two-up', images: [
+      "Why Did Khalhon Start in Seoul?": { layout: 'two-up', images: [
         { file: 'capsule-1.webp', w: 408, h: 490, alt: 'Khalhon golf apparel worn on course.', caption: 'Photo by Khalhon.' },
         { file: 'capsule-2.webp', w: 408, h: 490, alt: 'Khalhon golf apparel detail.', caption: 'Photo by Khalhon.' },
       ]},
@@ -145,14 +147,15 @@ const FEATURES = {
     quickAnswer: 'Monzee is a Japanese golf brand making headcovers, bags and accessories. Its name comes from an imaginary creature the brand describes as a mix of monkey and chimpanzee, and its designer, Yuki, grew up in Carlsbad, California. It has collaborated with Engineered Garments on a capsule built by upcycling unused apparel and fabric.',
     metaDescription: 'Monzee is a Japanese golf brand making headcovers and bags, named after an imaginary monkey-chimpanzee hybrid, with a designer raised in Carlsbad, California.',
     seoKeywords: ['monzee', 'what is monzee', 'monzee golf', 'monzee headcover', 'monzee engineered garments', 'japanese golf brand', 'golf headcovers japan'],
+    subject: "Monzee",
     mdPath: path.join(ROOT, 'article-monzee.md'),
     imgBase: '/images/features/monzee',
     hero: { file: 'hero.webp', w: 1454, h: 793, alt: 'Monzee golf headcovers and accessories.', caption: 'Photo by Monzee.' },
     sectionImages: {
-      'A Japanese brand with a Southern California childhood': { layout: 'single', images: [
+      "Why Does Japanese Brand Monzee Feel So Californian?": { layout: 'single', images: [
         { file: 'headcover.webp', w: 1200, h: 1200, alt: 'A Monzee golf club headcover.', caption: 'Photo by Monzee.' },
       ]},
-      'The Engineered Garments collaboration': { layout: 'two-up', images: [
+      "What Was the Monzee Engineered Garments Collaboration?": { layout: 'two-up', images: [
         { file: 'bag.webp', w: 1200, h: 1200, alt: 'A Monzee golf bag.', caption: 'Photo by Monzee.' },
         { file: 'powerpuff.webp', w: 1200, h: 1200, alt: 'A Monzee headcover with a Powerpuff Girls motif.', caption: 'Photo by Monzee.' },
       ]},
@@ -174,14 +177,15 @@ const FEATURES = {
     quickAnswer: 'Fantl Sport is a golf apparel brand founded in New Zealand in 2021, making a deliberately small range of technical, minimalist pieces designed to work on the course and off it. Its line is "Tools to keep you on course", and it sits at the premium end of golf apparel.',
     metaDescription: 'Fantl Sport is a New Zealand golf apparel brand founded in 2021, making minimalist technical clothing built for longevity. Premium priced, deliberately small range.',
     seoKeywords: ['fantl sport', 'what is fantl sport', 'fantl golf', 'fantl sport nz', 'new zealand golf apparel', 'fantl sport review', 'one shot at life fantl'],
+    subject: "Fantl Sport",
     mdPath: path.join(ROOT, 'article-fantl-sport.md'),
     imgBase: '/images/features/fantl-sport',
     hero: { file: 'hero.webp', w: 1600, h: 772, alt: 'Fantl Sport golf apparel photographed on course.', caption: 'Photo by Fantl Sport.' },
     sectionImages: {
-      'A golf brand from the wrong country': { layout: 'single', images: [
+      "Why Is Fantl Sport Making Golf Apparel in New Zealand?": { layout: 'single', images: [
         { file: 'range.webp', w: 1600, h: 772, alt: 'Fantl Sport apparel from the brand range.', caption: 'Photo by Fantl Sport.' },
       ]},
-      'Built to last, which is a harder sell than it sounds': { layout: 'two-up', images: [
+      "Why Does Fantl Sport Sell Durability Instead of Newness?": { layout: 'two-up', images: [
         { file: 'look-1.webp', w: 1080, h: 1350, alt: 'A Fantl Sport polo worn on course.', caption: 'Photo by Fantl Sport.' },
         { file: 'look-2.webp', w: 1080, h: 1350, alt: 'Fantl Sport outerwear worn on course.', caption: 'Photo by Fantl Sport.' },
       ]},
@@ -203,6 +207,7 @@ const FEATURES = {
     quickAnswer: 'Arnie McNair\'s collection consists of the Arnie Polo and McNair Polo, Washington Shorts, the Vincenzo Cashmere sweater, the AM and George visors, and the Eisenhower belt and wallet, all produced in limited seasonal runs from natural fibres.',
     metaDescription: 'Arnie McNair sells two polos, Washington Shorts, a cashmere sweater, two visors and Eisenhower leather goods. The Arnie Polo is $105.',
     seoKeywords: ['arnie mcnair clothing', 'arnie mcnair polo', 'arnie mcnair visor', 'arnie mcnair price', 'arnie mcnair shop', 'arnie mcnair sold out', 'arnie mcnair american made'],
+    subject: "Arnie McNair",
     mdPath: path.join(ROOT, 'article-arnie-mcnair-clothing.md'),
     imgBase: '/images/features/arnie-mcnair-clothing',
     hero: { file: 'hero.webp', w: 1320, h: 876, alt: 'The Arnie McNair building at sunset, a brick warehouse with a painted sign reading Arnie McNair, American Made, Est. 2026 above a hound carrying a rose.', caption: 'Photo by Arnie McNair.' },
@@ -210,7 +215,7 @@ const FEATURES = {
     // keeps the sign, which is the whole point of the frame.
     ogImage: { file: 'og.webp', w: 1200, h: 630 },
     sectionImages: {
-      'The polos': { layout: 'two-up', images: [
+      "How Much Is the Arnie McNair Polo?": { layout: 'two-up', images: [
         { file: 'polo-blue.webp', w: 1086, h: 1448, alt: 'An Arnie McNair pocket polo in slate blue on a wooden hanger, showing the two-button placket and woven neck label.', caption: 'The pocket polo silhouette, with a two-button placket and a chest pocket. Photo by Arnie McNair.' },
         { file: 'polo-butter.webp', w: 1320, h: 1834, alt: 'An Arnie McNair pocket polo in butter yellow on a wooden hanger, showing the spread collar and chest pocket.', caption: 'Butter Yellow, one of the three colourways the Arnie Polo runs in at $105. Photo by Arnie McNair.' },
       ]},
@@ -232,6 +237,7 @@ const FEATURES = {
     quickAnswer: 'Kevin Kisner wears FootJoy shoes, most commonly the Tour X, with Peter Millar apparel, and plays a mixed bag containing Callaway, TaylorMade, Srixon, Titleist, and Odyssey equipment rather than a single manufacturer\'s staff setup.',
     metaDescription: 'Kevin Kisner wears FootJoy golf shoes, most often the Tour X, with Peter Millar apparel. His clubs come from five different brands.',
     seoKeywords: ['kevin kisner shoes', 'kevin kisner golf shoes', 'what golf shoes does kevin kisner wear', 'kevin kisner footjoy', 'kevin kisner witb', 'kevin kisner peter millar', 'kevin kisner nike'],
+    subject: "Kevin Kisner",
     mdPath: path.join(ROOT, 'article-kevin-kisner-shoes.md'),
     imgBase: '/images/features/kevin-kisner-golf-shoes',
     hero: { file: 'hero.webp', w: 1200, h: 641, alt: 'Kevin Kisner, centre, laughing alongside two teammates in red team kit during a TGL match.' },
@@ -259,6 +265,7 @@ const FEATURES = {
     quickAnswer: 'Jake Knapp putts with Scotty Cameron Phantom models, most recently a Phantom 9.2R Tour Prototype, despite being a PXG staff player, and he has changed putters repeatedly through 2026.',
     metaDescription: 'Jake Knapp putts with Scotty Cameron Phantom models, most recently a 9.2R Tour Prototype, despite being a PXG staff player. He has changed putters repeatedly in 2026.',
     seoKeywords: ['jake knapp putter', 'what putter does jake knapp use', 'jake knapp putter 2026', 'jake knapp scotty cameron', 'jake knapp witb', 'scotty cameron phantom 9.2r', 'jake knapp pxg'],
+    subject: "Jake Knapp",
     mdPath: path.join(ROOT, 'article-jake-knapp-putter.md'),
     imgBase: '/images/features/jake-knapp-putter',
     hero: { file: 'hero.webp', w: 876, h: 584, alt: 'Jake Knapp in a PXG cap and striped polo, holding his Scotty Cameron Phantom mallet putter.' },
@@ -292,6 +299,7 @@ const FEATURES = {
     ],
     metaDescription: 'MANORS is the 4th most in-demand golf brand in Britain and the 52nd in America. Its second Reebok collaboration is a very British campaign built for a very American problem.',
     seoKeywords: ['reebok x manors', 'reebok manors ii', 'the united kingdom of golf', 'manors golf', 'club c revenge golf', 'sam torrance', 'manors reebok collaboration'],
+    subject: "Reebok x MANORS",
     mdPath: path.join(ROOT, 'article-reebok-manors-ii.md'),
     imgBase: '/images/features/reebok-manors-ii',
     // The hero is 5:4 with the title lockup at the top and the crests at the
@@ -316,7 +324,7 @@ const FEATURES = {
       { file: 'reebok-manors-ii-closing.webp', file2x: 'reebok-manors-ii-closing@2x.webp', w: 1600, h: 1067, alt: 'Closing campaign image from Reebok x MANORS The United Kingdom of Golf.', caption: 'Early access opens at manorsgolf.com on 12 August. Reebok goes global on 30 September.' },
     ],
     sectionImages: {
-      'What is Reebok x MANORS II?': { layout: 'two-up', images: [
+      "What Is Reebok x MANORS II?": { layout: 'two-up', images: [
         { file: 'reebok-manors-ii-polo-detail.webp', file2x: 'reebok-manors-ii-polo-detail@2x.webp', w: 1067, h: 1600, alt: 'Detail view of the Reebok x MANORS mock neck polo showing the all-over print and collar construction.', caption: 'Mesh panelling under the arms, and a mock neck silhouette borrowed from the game\'s biggest stages.' },
         { file: 'reebok-manors-ii-harrington-back.webp', file2x: 'reebok-manors-ii-harrington-back@2x.webp', w: 1067, h: 1600, alt: 'Back view of the Reebok x MANORS Harrington Jacket showing a crest with two lions and a crown above United Kingdom of Golf lettering.', caption: 'A United Kingdom of Golf embroidery runs across the centre back of the Harrington Jacket.' },
       ]},
@@ -342,26 +350,27 @@ const FEATURES = {
     ],
     metaDescription: 'Who owns Pins & Aces? The two brothers-in-law who founded it in 2018, how a headcover complaint became a $20 million brand, the Edel Golf acquisition, and what the data shows.',
     seoKeywords: ['who owns pins and aces', 'pins and aces', 'pins and aces golf', 'pins and aces founders', 'pins and aces edel golf', 'nick mertz jon major'],
+    subject: "Pins & Aces",
     mdPath: path.join(ROOT, 'article-pins-and-aces.md'),
     imgBase: '/images/features/pins-and-aces',
     // Every caption carries the supplied photo credit ("Photo by ...").
     hero: { file: 'hero.webp', w: 1400, h: 1549, alt: 'The Pins & Aces team outside the company storefront at 5280 Ward Drive in Arvada, Colorado', caption: 'The Pins & Aces team outside the Arvada, Colorado headquarters at 5280 Ward Drive, an address the founders treat as a good omen in the Mile High City. Photo by Christian Marcy-Vega.' },
     sectionImages: {
-      'It started with a headcover nobody wanted to make': { layout: 'two-up', images: [
+      "How Did Pins & Aces Start?": { layout: 'two-up', images: [
         { file: 'headcover-ace.webp', w: 637, h: 637, alt: 'Pins & Aces Ace of Spades blade putter headcover', caption: 'The ace of spades, the mark the whole company is named for. Headcovers top out around $65. Photo by Pins & Aces.' },
         { file: 'headcover-towelie.webp', w: 600, h: 750, alt: 'Pins & Aces South Park Towelie blade putter cover', caption: 'The irreverent catalog that built the audience, from South Park covers to voodoo dolls and the LiquorStick. Photo by Pins & Aces.' },
       ]},
-      'The people\'s brand, and the price ceiling that defines it': { layout: 'two-up', images: [
+      "Why Is Pins & Aces Called the People's Brand?": { layout: 'two-up', images: [
         { file: 'apparel-rack.webp', w: 1400, h: 933, alt: 'Pins & Aces polos and headcovers on a rack at the Arvada facility', caption: 'No polo on the site costs more than $70. Packing, shipping, photography, and embroidery are all handled in house. Photo by Brendan O\'Keeffe.' },
         { file: 'podcast-room.webp', w: 1400, h: 991, alt: 'The podcast room inside the Pins & Aces facility in Arvada, Colorado', caption: 'Inside the 14,000-square-foot Arvada facility the company bought in 2022, where 34 employees run a business that is roughly 80 percent direct to consumer. Photo by Christian Marcy-Vega.' },
       ]},
-      'Growing up: bags, polos, and the bunker-to-boardroom pivot': { layout: 'single', images: [
+      "What Does Pins & Aces Sell Beyond Headcovers?": { layout: 'single', images: [
         { file: 'player-preferred-bags.webp', w: 1200, h: 1500, alt: 'Two Pins & Aces Player Preferred stand bags on a golf course', caption: 'The Player Preferred stand bag sells at $330 against competitors clustered around $450, and became one of the company\'s best sellers. R&D ran through caddies at Turnberry. Photo by Pins & Aces.' },
       ]},
-      'The Edel acquisition, and what the data says about it': { layout: 'single', images: [
+      "Why Did Pins & Aces Acquire Edel Golf?": { layout: 'single', images: [
         { file: 'edel-irons.webp', w: 900, h: 600, alt: 'Edel Golf SMS irons, the custom-fit clubs Pins & Aces acquired', caption: 'Edel Golf SMS irons. Pins & Aces announced the acquisition in December 2024 and cut Edel\'s prices after taking over. Photo by Lucas Botz, courtesy Edel Golf.' },
       ]},
-      'Rafael Campos and the accidental endorsement': { layout: 'single', images: [
+      "How Did Rafael Campos Start Wearing Pins & Aces?": { layout: 'single', images: [
         { file: 'campos-win.webp', w: 1400, h: 933, alt: 'Rafael Campos winning the 2024 Butterfield Bermuda Championship', caption: 'Rafael Campos won the 2024 Butterfield Bermuda Championship in his 80th start, six days after his daughter was born, wearing a $70 polo he was not paid to wear. Photo by PGA Tour.' },
       ]},
     },
@@ -386,23 +395,24 @@ const FEATURES = {
     ],
     metaDescription: 'Who owns Primo Golf? The four cousins who founded it, how Grant Horvat bought in, why Phil Mickelson put his LIV team in Primo joggers, and what the data shows.',
     seoKeywords: ['who owns primo golf', 'primo golf', 'primo golf apparel', 'grant horvat primo', 'primo golf joggers', 'phil mickelson primo'],
+    subject: "Primo Golf",
     mdPath: path.join(ROOT, 'article-primo-golf.md'),
     imgBase: '/images/features/primo-golf',
     // Every caption carries the supplied photo credit ("Photo by ...").
     hero: { file: 'hero.webp', w: 1200, h: 800, alt: 'Primo Golf Apparel lookbook, golf joggers and apparel', caption: 'The Primo Golf Apparel lookbook. The brand launched around a single product, the golf jogger. Photo by Primo Golf Apparel.' },
     sectionImages: {
-      'Four cousins and a jogger': { layout: 'single', images: [
+      "Who Owns Primo Golf?": { layout: 'single', images: [
         { file: 'founders.webp', w: 1000, h: 1000, alt: 'The four founding cousins of Primo Golf Apparel', caption: 'The four cousins behind Primo: Matty Gay and Jason, Jordan, and Kirk Williamson. Photo by Primo Golf Apparel.' },
       ]},
-      'The DM that changed the company': { layout: 'single', images: [
+      "How Did Grant Horvat Start Wearing Primo Golf?": { layout: 'single', images: [
         { file: 'horvat-signing.webp', w: 399, h: 501, alt: 'Grant Horvat signing his ownership deal with Primo Golf', caption: 'Grant Horvat became Primo\'s first owner from outside the founding family in March 2024, three years after the brand DMed him. Photo by Primo Golf Apparel.' },
         { file: 'horvat-website.webp', w: 1100, h: 817, alt: 'Grant Horvat modeling Primo Golf apparel on the brand\'s website', caption: 'Now an owner and the brand\'s most visible face, Horvat models Primo across its own storefront. Photo by Primo Golf Apparel.' },
       ]},
-      'Phil Mickelson, a lost bet, and LIV': { layout: 'two-up', images: [
+      "Why Did Phil Mickelson Wear Primo Golf Joggers?": { layout: 'two-up', images: [
         { file: 'mickelson-joggers.webp', w: 966, h: 544, alt: 'Phil Mickelson wearing Primo golf joggers', caption: 'Phil Mickelson wore Primo joggers at the Open Championship after losing a bet to Grant Horvat. Photo by Rob Casey / SNS Group.' },
         { file: 'liv-hyflyers.webp', w: 1000, h: 667, alt: 'Phil Mickelson\'s HyFlyers GC team in Primo apparel at LIV Golf', caption: 'Primo became the official apparel sponsor of Mickelson\'s HyFlyers GC, debuting at LIV Golf in February 2025. Photo by Utah Golf Association.' },
       ]},
-      'Where Primo fits': { layout: 'single', images: [
+      "Where Does Primo Golf Fit Among Culture Brands?": { layout: 'single', images: [
         { file: 'si-woo-kim.webp', w: 1000, h: 667, alt: 'PGA Tour winner Si Woo Kim wearing Primo Golf apparel', caption: 'Primo has begun appearing on individual tour pros beyond the HyFlyers deal, including PGA Tour winner Si Woo Kim. Photo by Irish Star.' },
       ]},
     },
@@ -427,19 +437,20 @@ const FEATURES = {
     ],
     metaDescription: "What is Maejer Golf? Mason Mount's British luxury golf brand launched in July 2026 and enters the DORMIED Index at 215 of 215 with zero recorded searches. Who owns it, what it costs, and what happens next.",
     seoKeywords: ['maejer golf', 'what is maejer golf', 'who owns maejer golf', 'mason mount golf brand', 'maejer', 'mason mount handicap', 'owen farrell golf brand'],
+    subject: "Maejer Golf",
     mdPath: path.join(ROOT, 'article-maejer-golf.md'),
     imgBase: '/images/features/maejer-golf',
     // Every image is the brand's own campaign photography, credited as supplied.
     hero: { file: 'hero.webp', w: 1200, h: 1500, alt: 'Maejer Golf Chapter 1 campaign, shot in Scotland', caption: 'Maejer Golf shot its launch campaign for Chapter 1 in Scotland. Photo by Maejer Golf.' },
     sectionImages: {
-      'Who is actually behind Maejer': { layout: 'two-up', images: [
+      "Who Is Behind Maejer Golf?": { layout: 'two-up', images: [
         { file: 'mason-mount.webp', w: 1000, h: 1333, alt: 'Mason Mount wearing Maejer Golf apparel', caption: 'Mason Mount, the most visible of the founders, says he was creatively involved from day one. Photo by Maejer Golf.' },
         { file: 'owen-farrell.webp', w: 1000, h: 1332, alt: 'Owen Farrell wearing Maejer Golf apparel', caption: 'Owen Farrell, the former England rugby captain, describes himself as a partner of the brand. Photo by Maejer Golf.' },
       ]},
-      'What Maejer is actually selling': { layout: 'single', images: [
+      "What Does Maejer Golf Sell?": { layout: 'single', images: [
         { file: 'chapter-1.webp', w: 1000, h: 1250, alt: 'Maejer Golf Chapter 1 collection lookbook', caption: 'Chapter 1 runs to two polos at $95 and outerwear from $140 to $200. Photo by Maejer Golf.' },
       ]},
-      'The gap they say they saw': { layout: 'single', images: [
+      "What Gap Did Maejer Golf Set Out to Fill?": { layout: 'single', images: [
         { file: 'scotland.webp', w: 1000, h: 1335, alt: 'Maejer Golf campaign imagery shot on a Scottish links course', caption: 'The founders describe the launch shoot as the same round that started the brand, a few years on. Photo by Maejer Golf.' },
       ]},
     },
@@ -464,18 +475,19 @@ const FEATURES = {
     ],
     metaDescription: 'What is Students Golf? The LA golf brand from jogger inventor Michael Huynh, the health scare that started it, and what the DORMIED Index says about its rise.',
     seoKeywords: ['students golf', 'what is students golf', 'michael huynh', 'students golf brand', 'jogger inventor', 'students sugarloaf social club'],
+    subject: "Students Golf",
     mdPath: path.join(ROOT, 'article-students-golf.md'),
     imgBase: '/images/features/students-golf',
     // Every caption carries the supplied photo credit ("Photo by ...").
     hero: { file: 'hero.webp', w: 1200, h: 960, alt: 'Students Golf Summer 2026 apparel lookbook grid', caption: 'The Students Golf Summer 2026 lookbook. Photo by Students Golf.' },
     sectionImages: {
-      'The health scare that started it': { layout: 'single', images: [
+      "How Did a Health Scare Start Students Golf?": { layout: 'single', images: [
         { file: 'huynh-portrait.webp', w: 540, h: 304, alt: 'Michael Huynh, founder of Students Golf and the streetwear label Publish', caption: 'Michael Huynh, the Publish founder and jogger inventor who started Students after a health scare pushed him toward golf. Photo by The Hundreds.' },
       ]},
-      'What Students actually makes': { layout: 'single', images: [
+      "What Does Students Golf Make?": { layout: 'single', images: [
         { file: 'students-hoodies.webp', w: 1000, h: 1300, alt: 'Students Golf hoodies and graphic apparel', caption: 'Students built its early identity off the course with graphic tees, hoodies, and pullovers. Photo by HBX.' },
       ]},
-      'The Sugarloaf collab and the company Students keeps': { layout: 'single', images: [
+      "What Is the Students Golf Sugarloaf Collaboration?": { layout: 'single', images: [
         { file: 'sugarloaf-collab.webp', w: 1000, h: 667, alt: 'Students of Sugarloaf Social Club collaboration apparel', caption: 'Students of Sugarloaf Social Club, the March 2026 collaboration Boardroom called one of the coolest golf collabs of the year. Photo by Students Golf.' },
       ]},
     },
@@ -498,6 +510,7 @@ const FEATURES = {
     ],
     metaDescription: 'A Country Club Confidential story, running in full on DORMIED: an assistant pro, a tyrant boss, and the most elaborate resignation in golf. Plus the behind-the-scenes from the anonymous founders.',
     seoKeywords: ['Country Club Confidential', 'golf pro shop story', 'take this job and shove it', 'assistant pro resignation', 'golf newsletter', 'DORMIED'],
+    subject: "Country Club Confidential",
     mdPath: path.join(ROOT, 'article-ccc-take-this-job.md'),
     imgBase: '/images/features/take-this-job-and-shove-it',
     // Single hero image; no in-body figures.
@@ -519,6 +532,7 @@ const FEATURES = {
     ],
     metaDescription: 'How Country Club Confidential turned the stories that circulate inside private golf into a real media business. The anonymous founders explain how.',
     seoKeywords: ['Country Club Confidential', 'golf newsletter', 'private golf', 'golf media', 'DORMIED'],
+    subject: "Country Club Confidential",
     mdPath: path.join(ROOT, 'article-ccc-confidential-sources.md'),
     imgBase: '/images/features/confidential-sources',
     // CCC images are inline (md ![] by order); index 0 is the hero.
@@ -551,6 +565,7 @@ const FEATURES = {
     ],
     metaDescription: 'Every Vice golf ball explained: Pro Plus, Pro, Pro Air, Tour, and Drive, plus customization, colors, and why Vice is golf\'s fastest-rising ball brand.',
     seoKeywords: ['vice golf balls', 'vice pro plus', 'vice pro', 'vice golf ball customization', 'best vice golf ball'],
+    subject: "Vice Golf",
     mdPath: path.join(ROOT, 'article-vice-golf-balls.md'),
     imgBase: '/images/features/vice-golf-balls',
     hero: { file: 'hero.webp', w: 1200, h: 859, alt: 'Vice Golf balls, the full lineup' },
@@ -572,16 +587,16 @@ const FEATURES = {
       'Vice Drive: the two-piece distance ball': { layout: 'single', images: [
         { file: 'drive.webp', w: 800, h: 800, alt: 'Vice Drive golf ball', caption: 'The Vice Drive, the two-piece Surlyn distance ball and the entry point to the range.' },
       ]},
-      'Vice golf ball customization': { layout: 'single', images: [
+      "Can You Customize Vice Golf Balls?": { layout: 'single', images: [
         { file: 'custom-dog.webp', w: 1000, h: 1333, alt: "Custom Vice golf ball printed with a dog's face next to a standard Vice ball", caption: "A real Vice customization job: the author's dog printed on a dozen, most of which now live in ponds and fescue." },
       ]},
-      'The colors, the Drip, and the special editions': { layout: 'gallery', images: [
+      "What Colors and Special Editions Do Vice Golf Balls Come In?": { layout: 'gallery', images: [
         { file: 'shade-galaxy.webp', w: 600, h: 600, alt: 'Vice Pro Shade Galaxy golf ball', caption: "The Vice Pro Shade Galaxy, part of the brand's gradient Shade line." },
         { file: 'cotton-candy.webp', w: 700, h: 700, alt: 'Vice Pro Air Cotton Candy golf ball', caption: "The Cotton Candy Pro Air, one of Vice's rotating special-edition colorways." },
         { file: 'greg-mike.webp', w: 800, h: 800, alt: 'Vice Greg Mike collaboration golf balls', caption: 'The Greg Mike collaboration, the kind of artist-driven drop that pulls buyers who never think about which ball they play.' },
         { file: 'special-tracer.webp', w: 700, h: 700, alt: 'Vice Pro Special Tracer golf ball', caption: "Vice's Tracer alignment system, a dual-color graphic that doubles as an aim line and a putting feedback tool." },
       ]},
-      'How Vice golf balls compare on price': { layout: 'single', images: [
+      "How Do Vice Golf Balls Compare on Price?": { layout: 'single', images: [
         { file: 'variety-pack.webp', w: 800, h: 800, alt: 'Vice Golf variety pack of golf balls', caption: 'The Vice variety pack lets golfers test the full range before committing to a volume order.' },
       ]},
     },
@@ -608,18 +623,19 @@ const FEATURES = {
     ],
     metaDescription: 'Who is Arnie McNair? The anonymous Minnesota golfer behind the cult American-made apparel brand, what the $105 Arnie Polo is, and what the DORMIED data shows.',
     seoKeywords: ['arnie mcnair', 'arnie mcnair clothing', 'arnie mcnair golf', 'arnie mcnair polo', 'who is arnie mcnair'],
+    subject: "Arnie McNair",
     mdPath: path.join(ROOT, 'article-arnie-mcnair.md'),
     imgBase: '/images/features/arnie-mcnair',
     hero: { file: 'hero.webp', w: 1200, h: 779, alt: 'Arnie McNair golf polos in navy, pink, and white' },
     // Images injected after the matching section heading.
     sectionImages: {
-      'The Burnerverse origin story': { layout: 'single', images: [
+      "How Did Arnie McNair Start in the Burnerverse?": { layout: 'single', images: [
         { file: 'x-profile.webp', w: 884, h: 512, alt: 'Arnie McNair verified profile on X, @therealmcnair', caption: 'The account that started it. Arnie McNair built a following posting as an anonymous country club traditionalist on golf X before the brand existed.' },
       ]},
-      'What the clothes actually are': { layout: 'single', images: [
+      "Where Is Arnie McNair Clothing Made?": { layout: 'single', images: [
         { file: 'polo-navy.webp', w: 1000, h: 1326, alt: 'Navy Arnie McNair McNair Polo on a hanger, with a Made in the USA flag label', caption: 'The McNair Polo. Made in the USA from Supima cotton, with no visible logo and the flag on the label rather than the chest.' },
       ]},
-      'Why the anonymity works': { layout: 'single', images: [
+      "Why Does Arnie McNair Stay Anonymous?": { layout: 'single', images: [
         { file: 'am-visor.webp', w: 1000, h: 1334, alt: 'White Arnie McNair AM visor with an American flag, beside classic leather golf shoes', caption: 'The look is deliberately traditional: natural fibers, an American flag, and no oversized branding.' },
       ]},
     },
@@ -810,7 +826,9 @@ function parseMarkdown(md, F, dormiedData) {
       const h = b.slice(3).trim();
       inFaq = (h.toLowerCase() === 'faq');
       words += h.split(/\s+/).length;
-      out.push(`<h2 class="sc-main-heading">${inlineMd(h)}</h2>`);
+      // FAQ keeps its "## FAQ" marker in markdown so detection works; the
+      // visible heading is a question like every other h2.
+      out.push(`<h2 class="sc-main-heading">${inlineMd(inFaq ? (F.subject ? `What Do People Ask About ${F.subject}?` : 'What Else Do People Ask?') : h)}</h2>`);
       pendingSection = sectionImages[h] || null;
       continue;
     }
@@ -883,11 +901,11 @@ function buildPage(F, parsed, dormiedLatestHtml) {
   const takeaways = Array.isArray(F.keyTakeaways) ? F.keyTakeaways.filter(Boolean) : [];
   const takeawaysHtml = F.quickAnswer ? `
       <section class="da-answer-block" aria-labelledby="ft-answer-heading">
-        <h2 class="da-answer-label" id="ft-answer-heading">Quick Answer</h2>
+        <h2 class="da-answer-label" id="ft-answer-heading">What Is the Short Answer?</h2>
         <p class="da-answer-text">${escHtml(F.quickAnswer)}</p>
       </section>` : (takeaways.length ? `
       <section class="da-answer-block" aria-labelledby="ft-takeaways-heading">
-        <h2 class="da-answer-label" id="ft-takeaways-heading">Key Takeaways</h2>
+        <h2 class="da-answer-label" id="ft-takeaways-heading">What Should You Know About ${escHtml(F.subject || 'This Brand')}?</h2>
         <ul class="da-answer-list">
           ${takeaways.map(t => `<li>${escHtml(t)}</li>`).join('\n          ')}
         </ul>
@@ -1069,20 +1087,20 @@ ${BRAND_CARD_HTML}${SHOP_SECTION_HTML}
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">
               <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="article-latest-m-heading">
-                <h2 class="latest-feed-heading" id="article-latest-m-heading">Latest</h2>
+                <h2 class="latest-feed-heading" id="article-latest-m-heading">What Is the Latest Golf Brand News?</h2>
                 <div class="latest-feed-list">
                   ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
               <section class="home-stories-section latest-feed-section" aria-labelledby="article-stories-heading">
-                <h2 class="latest-feed-heading" id="article-stories-heading">Top Stories</h2>
+                <h2 class="latest-feed-heading" id="article-stories-heading">What Are the Top Golf Stories Right Now?</h2>
                 <div id="home-stories-list" class="latest-feed-list" data-limit="10">
                   ${TOP_STORIES_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="article-featured-heading">
-                <h2 class="latest-feed-heading" id="article-featured-heading">Featured</h2>
+                <h2 class="latest-feed-heading" id="article-featured-heading">Which DORMIED Features Should You Read?</h2>
                 <div id="featured-list" class="latest-feed-list">
                   ${FEATURED_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
@@ -1094,7 +1112,7 @@ ${BRAND_CARD_HTML}${SHOP_SECTION_HTML}
 
           <aside class="sidebar-ad-col">
             <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="article-latest-heading">
-              <h2 class="latest-feed-heading" id="article-latest-heading">Latest</h2>
+              <h2 class="latest-feed-heading" id="article-latest-heading">What Is the Latest Golf Brand News?</h2>
               <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>

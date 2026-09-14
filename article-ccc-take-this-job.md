@@ -20,7 +20,7 @@ This story came to us from a longtime equipment sales rep who has spent decades 
 
 But first, a little inside baseball.
 
-## The TPS Reports of Golf
+## What Homework Do Assistant Golf Pros Have?
 
 Most people don't know this, but your local golf professional has homework.
 
@@ -34,7 +34,7 @@ Here's the kicker: the suspension notice used to get sent directly to your head 
 
 Well. That's how a bad situation becomes a great story.
 
-## Our Hero
+## Who Is the Assistant Pro in This Story?
 
 Let's call him Peter.
 
@@ -50,7 +50,7 @@ Peter never said a word back, but those around him noticed something boiling ins
 
 Day after day. In front of other staff. Over lunch. Between lessons. A sustained, humiliating campaign dressed up as mentorship. Lumbergh might have thought he was lighting a fire under Peter, and he was, just not the kind he intended.
 
-## The Grand Exit
+## How Did the Assistant Pro Quit?
 
 It was late fall. The clocks had already changed. By 7:00pm Initech was a ghost town. The parking lot still, the bag room locked, the last member long gone.
 
@@ -74,7 +74,7 @@ On it, in his handwriting, four words:
 
 He locked the door behind him and drove home.
 
-## The Morning After
+## What Did the Pro Shop Staff Find the Next Morning?
 
 The next morning, a fellow assistant we'll call Samir flipped on the lights and stopped.
 
@@ -90,13 +90,13 @@ Lumbergh, for once, had nothing to say.
 
 And despite all that gasoline soaking into the carpet, Peter never burned the building down. He didn't need to.
 
-## Epilogue
+## What Happened to Peter After the Pro Shop?
 
 Peter left the pro shop business for good. He took a job as an assistant superintendent at another club, where he spent the next decade working outside, fixing things with his hands and never filling out another portfolio page. By all accounts, he was happy.
 
 And so dear readers, the next time your assistant pro seems a little quiet, a little distant, maybe a little too concerned with finding his stapler, be sure to keep your distance. You won't want to be nearby when he finally blows!
 
-## Behind the Story
+## Where Did This Country Club Confidential Story Come From?
 
 This one arrived the way the best ones do.
 

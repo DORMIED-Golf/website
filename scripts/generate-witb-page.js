@@ -1719,20 +1719,20 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
         <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
         <div class="tail-feeds">
           <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="witb-stories-heading-m">
-            <h2 class="latest-feed-heading" id="witb-stories-heading-m">Top Stories</h2>
+            <h2 class="latest-feed-heading" id="witb-stories-heading-m">What Are the Top Golf Stories Right Now?</h2>
             <div class="latest-feed-list">
               ${topStoriesHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
             </div>
           </section>
           <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
           <section class="home-stories-section latest-feed-section" aria-labelledby="witb-latest-heading">
-            <h2 class="latest-feed-heading" id="witb-latest-heading">Latest</h2>
+            <h2 class="latest-feed-heading" id="witb-latest-heading">What Is the Latest Golf Brand News?</h2>
             <div id="dormied-latest-list" class="latest-feed-list">
               ${latestFeedHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
             </div>
           </section>
           <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="witb-featured-heading">
-            <h2 class="latest-feed-heading" id="witb-featured-heading">Featured</h2>
+            <h2 class="latest-feed-heading" id="witb-featured-heading">Which DORMIED Features Should You Read?</h2>
             <div id="featured-list" class="latest-feed-list">
               ${featuredFeedHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
             </div>
@@ -1745,7 +1745,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
       <!-- ── RIGHT SIDEBAR ──────────────────────────────────────────────── -->
       <aside class="witb-sidebar sidebar-ad-col">
         <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="witb-stories-heading">
-          <h2 class="latest-feed-heading" id="witb-stories-heading">Top Stories</h2>
+          <h2 class="latest-feed-heading" id="witb-stories-heading">What Are the Top Golf Stories Right Now?</h2>
           <div id="home-stories-list" class="latest-feed-list" data-limit="5">
             ${topStoriesHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
           </div>

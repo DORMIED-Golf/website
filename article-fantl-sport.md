@@ -8,7 +8,7 @@ Fantl Sport is a golf apparel brand founded in New Zealand in 2021, built on a d
 
 In one sentence: Fantl Sport is a New Zealand technical golf apparel brand founded in 2021, known for minimalist design, premium pricing, and a deliberately restrained range built around versatility and longevity rather than volume.
 
-## A golf brand from the wrong country
+## Why Is Fantl Sport Making Golf Apparel in New Zealand?
 
 The golf apparel industry is overwhelmingly American and British. That is where the money is, where the tours are, and where nearly every brand DORMIED tracks is headquartered. New Zealand is not on that map.
 
@@ -16,7 +16,7 @@ That is part of what makes Fantl interesting. It has built an international foll
 
 The brand does not lean on its origin as a marketing hook, which is notable in itself. There is no kiwi iconography, no All Blacks borrowing, none of the national shorthand a smaller-market brand usually reaches for. The clothes are the argument. What the brand does claim about its home is narrower and more useful: golf utility proven in New Zealand, built for the world.
 
-## Built to last, which is a harder sell than it sounds
+## Why Does Fantl Sport Sell Durability Instead of Newness?
 
 Fantl's design position is unusually explicit for an apparel company, and it has sharpened over time. The brand now frames the whole proposition around durability of use rather than newness: "It's not about how you play today; it's about still being out there tomorrow."
 
@@ -26,7 +26,7 @@ The pricing is not quiet. Fantl sits at the premium end, noticeably above better
 
 There is a sustainability thread running through the operation too, including biodegradable packaging, which fits the wider philosophy. A brand telling you to buy things that last has to mean it.
 
-## The advertising is the interesting part
+## How Does Fantl Sport Advertise?
 
 Most small apparel brands market through Instagram grids and influencer seeding. Fantl made a film.
 
@@ -34,7 +34,7 @@ In May 2025 the brand released a campaign called One Shot at Life, directed by R
 
 That is a genuinely unusual move. A brand at Fantl's scale spending on a directed film with a real production company, and pitching it as an idea rather than a product, is behaving like a much larger company. It also tells you what the brand thinks it is selling, which is not moisture-wicking fabric.
 
-## Why it matters
+## Why Does Fantl Sport Matter?
 
 DORMIED covers a lot of golf brands built on volume, on drops, on hype cycles and on saying more. Fantl is doing close to the opposite, from a country nobody watches for golf apparel, at prices that leave no room for error.
 

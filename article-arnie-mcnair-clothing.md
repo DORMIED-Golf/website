@@ -8,7 +8,7 @@ Arnie McNair sells a deliberately small collection: two polos, one short, one ca
 
 In one sentence: Arnie McNair's collection consists of the Arnie Polo and McNair Polo, Washington Shorts, the Vincenzo Cashmere sweater, the AM and George visors, and the Eisenhower belt and wallet, all produced in limited seasonal runs from natural fibres.
 
-## The full collection
+## What Does Arnie McNair Clothing Sell?
 
 | Piece | Category | Price |
 |---|---|---|
@@ -25,7 +25,7 @@ In one sentence: Arnie McNair's collection consists of the Arnie Polo and McNair
 
 Eight products across five categories. That is the entire catalogue, and the restraint is intentional rather than a sign of a young brand still building out a range.
 
-## The polos
+## How Much Is the Arnie McNair Polo?
 
 The **Arnie Polo** is the flagship and the piece most people are searching for. It sells at $105 in Stone, Sage Green and Butter Yellow, sized S through 2XL. At the time of writing every colour and every size shows as sold out, which is the normal end-state of an Arnie McNair release rather than an unusual event.
 
@@ -33,7 +33,7 @@ The **McNair Polo** is the three-button spread-collar version, a slightly more f
 
 Both sit at a price point worth putting in context. $105 is above the mass market and below the luxury houses. It is roughly what Malbon charges and more than Pins & Aces will allow anything on its site to cost. What you are paying for is American manufacturing and natural fibre rather than a logo, which is a harder sell and a narrower market by design.
 
-## Shorts, outerwear and accessories
+## What Else Is in the Arnie McNair Collection?
 
 **Washington Shorts** cover the bottom half of the range. The **Vincenzo Cashmere** sweater is the outerwear piece and the one place the brand openly breaks its American-manufacturing rule, sourcing cashmere from Italy and labelling it plainly rather than burying it.
 
@@ -43,7 +43,7 @@ The naming is not incidental. Washington, Eisenhower, George: the catalogue read
 
 The **AM** initials carry different weight. Pieces marked AM are dedicated to the founder's brother, a United States Marine who died in 2004, with proceeds going to Stop Soldier Suicide. It is the one part of the catalogue that is not really about clothing.
 
-## Why everything is sold out
+## Why Is Arnie McNair Clothing Always Sold Out?
 
 Arnie McNair produces in limited seasonal runs and does not restock. The brand's own description of the model is small-batch production that keeps it close to the process, making fewer garments more deliberately. Subscribers to the mailing list get notice of each release, which is functionally the only way to buy at launch.
 
@@ -51,7 +51,7 @@ That creates the pattern anyone searching the brand runs into: high interest, lo
 
 The scarcity is real rather than manufactured. It falls out of how the clothes are actually made, which is a different thing from a hype drop engineered to sell out in ninety seconds.
 
-## Where the brand sits
+## Where Does Arnie McNair Rank Among Golf Brands?
 
 DORMIED tracks search interest across 215 golf brands in 10 markets. Arnie McNair currently ranks 119th, up four places month over month with a DI score of 1.5 and roughly 3,600 monthly searches.
 

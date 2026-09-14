@@ -586,7 +586,7 @@ Structure:
 - Body (4-5 paragraphs): context, history, editorial analysis, and industry implications. Each paragraph should add something — new context, a different angle, a concrete detail. Do not pad with filler.
 - Closing paragraph: a forward-looking observation about this brand's trajectory. Required. Must appear as the final paragraph. It should feel like the article's last word on the subject — where this brand is heading, what this move implies, what to watch for.
 - Section subheadings (REQUIRED for any body of 500 words or more): 2 to 4 of them. Each goes on its own line beginning "## ", separated from the paragraphs around it by a blank line. Never before the lead paragraph and never after the closing paragraph. Each heading introduces the 2 or 3 paragraphs that follow it.
-  Subheadings are for readers scanning and for search engines reading the page outline, so they must say what the section establishes, specifically: "Why the 3-Wood Is Disappearing From Tour Bags", "A $375 Iron Priced Against Mizuno". 3 to 9 words, title case, no em dashes, no clickbait, no number that does not appear in the body.
+  Every subheading is a QUESTION that its section answers, phrased the way someone would search for it: it starts with a question word (Why, What, How, Who, Which, Is, Does, Can...) and ends with a question mark. Every subheading includes at least one of your seo_keywords or the brand name, worked in naturally: "Why Did McLaren Golf Choose Metal Injection Molding?", "How Does the Kalea Gold Compare to Other Complete Sets?". 4 to 12 words, title case, no em dashes, no clickbait, no number that does not appear in the body, and never a question the section does not answer.
   Never a generic label. BANNED as a heading: "Background", "Context", "Overview", "Analysis", "Why It Matters", "What It Means", "The Bottom Line", "What's Next", "Looking Ahead", "Conclusion", "Final Thoughts", "The Takeaway".
   Never a DORMIED Index rank, position, score or brand count in a heading ("Ranked 47th", "Sits Fourth Among 169 Brands"). The page shows the brand's current rank beside the article and it changes monthly; a heading that freezes one will contradict it.
 
@@ -1036,7 +1036,7 @@ function buildIntentClusterHtml(slug) {
   if (!items.length) return '';
   return `
             <section class="da-intent-cluster" aria-labelledby="da-cluster-heading">
-              <h2 class="da-cluster-heading" id="da-cluster-heading">More on this brand</h2>
+              <h2 class="da-cluster-heading" id="da-cluster-heading">What Else Should You Read on This Brand?</h2>
               <ul class="da-cluster-list">${items.join('')}</ul>
             </section>`;
 }
@@ -1082,7 +1082,7 @@ function generateArticleHtml(opts) {
   // one place and a re-bake picks up any change to it. Rendered between the
   // byline and the body: an extraction model should reach it before the prose.
   const answerText  = typeof answer_block === 'string' ? answer_block.trim() : '';
-  const answerLabel = AB.answerLabel({ title, slug, category });
+  const answerLabel = AB.answerLabel({ title, slug, category, subject: brandName });
   const answerHtml  = answerText ? `
             <section class="da-answer-block" aria-labelledby="da-answer-heading">
               <h2 class="da-answer-label" id="da-answer-heading">${escHtml(answerLabel)}</h2>
@@ -1095,7 +1095,7 @@ function generateArticleHtml(opts) {
   const faqHtml = faqList.length ? `
             <!-- FAQ -->
             <section class="da-bottom-section da-faq-section" aria-labelledby="da-faq-heading">
-              <h2 class="da-bottom-heading" id="da-faq-heading">Frequently Asked Questions</h2>
+              <h2 class="da-bottom-heading" id="da-faq-heading">What Else Do Golfers Ask About ${escHtml(brandName || 'This Story')}?</h2>
               ${faqList.map(x => `<div class="da-faq-item"><h3 class="da-faq-q">${escHtml(stripEmDashes(x.q))}</h3><p class="da-faq-a">${escHtml(stripEmDashes(x.a))}</p></div>`).join('\n              ')}
             </section>` : '';
   const faqLd = faqList.length ? `
@@ -1409,20 +1409,20 @@ ${faqHtml}
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">
               <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="article-latest-m-heading">
-                <h2 class="latest-feed-heading" id="article-latest-m-heading">Latest</h2>
+                <h2 class="latest-feed-heading" id="article-latest-m-heading">What Is the Latest Golf Brand News?</h2>
                 <div class="latest-feed-list">
                   ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <div class="bp-latest-see-all sf-mobile"><a href="/news/">See All News</a></div>
               <section class="home-stories-section latest-feed-section" aria-labelledby="article-stories-heading">
-                <h2 class="latest-feed-heading" id="article-stories-heading">Top Stories</h2>
+                <h2 class="latest-feed-heading" id="article-stories-heading">What Are the Top Golf Stories Right Now?</h2>
                 <div id="home-stories-list" class="latest-feed-list" data-limit="10">
                   ${TOP_STORIES_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
               </section>
               <section id="featured-widget" class="home-stories-section latest-feed-section" aria-labelledby="article-featured-heading">
-                <h2 class="latest-feed-heading" id="article-featured-heading">Featured</h2>
+                <h2 class="latest-feed-heading" id="article-featured-heading">Which DORMIED Features Should You Read?</h2>
                 <div id="featured-list" class="latest-feed-list">
                   ${FEATURED_HTML || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
                 </div>
@@ -1435,7 +1435,7 @@ ${faqHtml}
           <!-- Sidebar: LATEST widget (5) (populated by feed.js, excludes current article via __DA_ARTICLE_SLUG__) -->
           <aside class="sidebar-ad-col">
             <section class="home-stories-section latest-feed-section sf-desktop" aria-labelledby="article-latest-heading">
-              <h2 class="latest-feed-heading" id="article-latest-heading">Latest</h2>
+              <h2 class="latest-feed-heading" id="article-latest-heading">What Is the Latest Golf Brand News?</h2>
               <div id="dormied-latest-list" class="latest-feed-list" data-limit="5">
                 ${dormiedLatestHtml || '<p class="latest-feed-loading">Loading&#x2026;</p>'}
               </div>
@@ -2109,6 +2109,17 @@ async function main() {
     // rewritten body cannot leave a stale summary attached to it. Numbers are the
     // check: an invented figure is by far the most common fabrication, and the
     // same guard runs in backfill-article-faq.js via the shared lib.
+    // The question-heading rule is enforced, not just requested. A subheading the
+    // model wrote as a statement is removed and its paragraphs stay, so a slip can
+    // never put a statement h2 on the page or turn the verify:headings gate red,
+    // and a finished article is never discarded over its outline.
+    if (parsed.body) {
+      const dropped = [];
+      parsed.body = parsed.body.replace(/^##[ \t]+([^\n]+?)[ \t]*\n\n/gm, (m, h) => (/\?$/.test(h) ? m : (dropped.push(h), '')));
+      if (dropped.length) {
+        console.warn(`[generate] ⚠ Dropped ${dropped.length} non-question subheading(s) in "${raw.title}": ${dropped.join(' | ')}`);
+      }
+    }
     const bodyForGrounding = parsed.body || '';
 
     let answerBlock = typeof parsed.answer_block === 'string' ? parsed.answer_block.trim() : '';
@@ -2138,6 +2149,10 @@ async function main() {
     // Subheadings are advisory, not a gate: a finished article is never thrown
     // away over its outline. The warning is what surfaces a prompt regression.
     const subheads = (bodyForGrounding.match(/^##\s+\S/gm) || []).length;
+    const nonQuestions = (bodyForGrounding.match(/^##\s+.+$/gm) || []).filter(l => !/\?\s*$/.test(l)).length;
+    if (nonQuestions) {
+      console.warn(`[generate] ⚠ ${nonQuestions} subheading(s) in "${raw.title}" are not phrased as questions`);
+    }
     if (wordCount(bodyForGrounding) >= 500 && subheads < 2) {
       console.warn(`[generate] ⚠ Only ${subheads} section subheading(s) in "${raw.title}" (${wordCount(bodyForGrounding)} words, want 2-4)`);
     }

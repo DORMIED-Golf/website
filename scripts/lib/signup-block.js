@@ -73,8 +73,8 @@ function nextMonthLabel(d = new Date()) {
 const COPY = {
   witb({ bagCount, changeCount, playerName, changeLabel } = {}) {
     const headline = bagCount
-      ? `We track every club in ${bagCount} tour bags.`
-      : 'We track every club on tour.';
+      ? `Want Every Change Across ${bagCount} Tour Bags?`
+      : 'Want Every Tour Bag Change?';
     let proofLine = '';
     if (changeCount > 0 && playerName && changeLabel) {
       proofLine = `${changeCount} bag changes logged in the last 30 days, including ${playerName}'s ${changeLabel}.`;
@@ -85,7 +85,7 @@ const COPY = {
   },
 
   brand({ brandName, rank, momChange } = {}) {
-    const headline = brandName ? `Where does ${brandName} go next month?` : 'Which brands move next month?';
+    const headline = brandName ? `Where Does ${brandName} Go Next Month?` : 'Which Brands Move Next Month?';
     const change = fmtChange(momChange);
     let proofLine = '';
     if (brandName && rank && change) {
@@ -98,7 +98,7 @@ const COPY = {
 
   article({ brandName } = {}) {
     return {
-      headline: "Golf's brand desk, monthly.",
+      headline: "Want Golf's Brand Desk in Your Inbox?",
       proofLine: brandName
         ? `${brandName} is one of 215 brands we track across 10 markets. The Scorecard covers the month's biggest moves and why they happened.`
         : "We track 215 brands across 10 global markets. The Scorecard is the month's biggest moves and what drove them.",
@@ -107,7 +107,7 @@ const COPY = {
 
   feature() {
     return {
-      headline: 'You read the whole thing. Get the next one.',
+      headline: 'Want the Next DORMIED Feature First?',
       proofLine: 'Long-form brand stories plus the monthly Index rundown. 215 brands, 10 markets, one email.',
     };
   },
@@ -115,15 +115,15 @@ const COPY = {
   scorecard({ monthLabel } = {}) {
     return {
       headline: monthLabel
-        ? `You are reading the ${monthLabel} issue. Get the next one first.`
-        : 'Get the next issue first.',
+        ? 'Want the Next Scorecard Before Anyone Else?'
+        : 'Want the Next Scorecard Before Anyone Else?',
       proofLine: 'The Scorecard lands monthly, sometimes more when there is something worth sharing.',
     };
   },
 
   home() {
     return {
-      headline: "Golf's brand desk, monthly.",
+      headline: "Want Golf's Brand Desk in Your Inbox?",
       proofLine: '215 brands. 10 markets. One email. The moves that mattered and what drove them.',
     };
   },

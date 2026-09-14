@@ -14,7 +14,7 @@ Forty-eight places apart on identical demand. That gap is the entire strategic p
 
 Which makes the timing of *The United Kingdom of Golf* worth examining closely. MANORS and Reebok return today with their second collaboration, and rather than sand down the Britishness for an American audience, they have turned it up to the point of parody, hired a Scottish Ryder Cup captain to narrate it, and handed the distribution to a brand that can put the product in stores on four continents.
 
-## What is Reebok x MANORS II?
+## What Is Reebok x MANORS II?
 
 *The United Kingdom of Golf* is the second collaboration between Reebok and the London golf brand MANORS, pairing two new limited-edition colourways of the Reebok x MANORS Club C Revenge with a co-branded apparel range, launched under a campaign narrated by European Ryder Cup winning captain Sam Torrance.
 
@@ -32,7 +32,7 @@ Three pieces anchor the range:
 
 **Reebok x MANORS Harrington Jacket.** Vintage texture with stretch and a water repellent finish, and a United Kingdom of Golf embroidery running across the centre back.
 
-## The Torrance casting is not a celebrity booking
+## Why Did Reebok x MANORS Cast Sam Torrance?
 
 ![campaign-wide](/images/features/reebok-manors-ii/reebok-manors-ii-campaign-wide.webp)
 
@@ -48,7 +48,7 @@ The film was made by Stink Studios and directed by Dan French, built largely on 
 
 > Golf is often painted with glitz and glamour. But there's an underbelly to the game which requires grit and perseverance even to get on a course. We like to poke fun at golfers in our campaigns, because we know they love it and they're proud at heart.
 
-## The idea is five years old, and that is the point
+## Why Does the Reebok x MANORS Idea Go Back Five Years?
 
 Golf fans with long memories will recognise the shape of this.
 
@@ -60,7 +60,7 @@ In 2021, MANORS collaborated with adidas on a collection built around a conceit 
 
 MANORS has been open about the limits of where it started. Regan has said plainly that the company could not build a global golf brand selling knitted cardigans, and the pivot toward performance product followed. Watching the brand return to its sharpest early idea and execute it at a scale it could not reach the first time is the clearest sign yet that the two things are compatible.
 
-## What the Index actually says
+## How Does MANORS Golf Rank on the DORMIED Index?
 
 Here is where MANORS sits in the June 2026 DORMIED Index, our latest confirmed snapshot. The Index tracks search demand for 215 golf brands across 10 markets and refreshes monthly.
 
@@ -74,7 +74,7 @@ Globally MANORS sits 36th. Three things stand out.
 
 **The brand is off its peak.** MANORS hit a best-ever global rank of 26 in February 2026 with a DI score of 13.5. In June it sat at 36, with demand down 32.9 percent month over month and sitting 32.9 percent below its 52-week high. The longer arc is still strongly up, from 55th in May 2025 to 36th now, with year-over-year demand up 22.7 percent. But the last quarter has cooled, and this collaboration arrives at a moment when the brand could use a catalyst.
 
-## Read the outsole, and read the calendar
+## What Do the Club C Revenge Outsole and Launch Date Reveal?
 
 Two details in this launch tell you more about the partnership's direction than the campaign film does.
 
@@ -86,7 +86,7 @@ The second is the release schedule. Early access launches exclusively at [manors
 
 For a brand where the United States now accounts for a substantial share of direct sales and where the stated goal is American breakthrough, a partner with global in-store distribution is not a nice-to-have. It is the mechanism.
 
-## What to watch
+## Can Reebok x MANORS Win the Market MANORS Needs Most?
 
 The honest question is whether a campaign this proudly British moves the needle in the market MANORS most needs.
 
