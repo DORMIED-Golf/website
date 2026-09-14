@@ -256,24 +256,6 @@ function buildImageHtml(issue) {
   return heroHtml;
 }
 
-function buildImageHtmlLegacy(issue) {
-  const strip = issue.images.strip || [];
-  const heroHtml = '';
-  if (strip.length > 0) {
-    // Wrap each image in <figure><figcaption> for proper caption semantics (Bug 1).
-    const items = strip.map(img =>
-      `<figure class="sc-strip-figure">` +
-        `<img class="sc-strip-img" src="${escHtml(img.src)}" alt="${escHtml(img.label || '')}" loading="lazy">` +
-        (img.label ? `<figcaption class="sc-strip-figcaption">${escHtml(img.label)}</figcaption>` : '') +
-      `</figure>`
-    ).join('');
-    // Wrap triptych in a constrained-width div; mobile stacking handled via CSS (Bug 1, Bug 2).
-    return heroHtml + `<div class="sc-image-triptych"><div class="sc-image-strip sc-image-strip--article">${items}</div></div>`;
-  }
-
-  return heroHtml;
-}
-
 // ── Table of contents ─────────────────────────────────────────────────────────
 
 function buildTocHtml(issue) {
