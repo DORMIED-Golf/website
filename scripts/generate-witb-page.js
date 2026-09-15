@@ -166,14 +166,20 @@ async function fetchAllData() {
   // stopped describing the same period, which is the one thing that chart
   // claims. Follow the data instead, and carry the month through to the copy so
   // the page can never again state a month it is not plotting.
-  const { data: latestSnap } = await sb.from('dormied_monthly_brand_summary')
+  const { data: latestSnap, error: snapErr } = await sb.from('dormied_monthly_brand_summary')
     .select('snapshot_month').order('snapshot_month', { ascending: false }).limit(1);
+  if (snapErr) throw new Error(`DI snapshot month fetch failed: ${snapErr.message}`);
   const snapshotMonth = latestSnap?.[0]?.snapshot_month;
   if (!snapshotMonth) throw new Error('no dormied_monthly_brand_summary rows — cannot date the DI axis');
 
-  const { data: diRows } = await sb.from('dormied_monthly_brand_summary')
+  const { data: diRows, error: diErr } = await sb.from('dormied_monthly_brand_summary')
     .select('brand_slug, global_rank, di_score, global_searches')
     .eq('snapshot_month', snapshotMonth);
+  // A failed or empty read here used to pass silently: on Sep 14, 2026 the page
+  // shipped with a blank Tour Usage vs. Amateur Attention chart, and because the
+  // publish pipeline never rebuilds this page it stayed blank. Stop the build.
+  if (diErr) throw new Error(`DI scores fetch failed: ${diErr.message}`);
+  if (!diRows || !diRows.length) throw new Error(`no DI scores for ${snapshotMonth}: refusing to publish an empty scatter chart`);
   const diBySlug = new Map((diRows || []).map(d => [d.brand_slug, d]));
   const snapshotLabel = new Date(snapshotMonth + 'T00:00:00Z')
     .toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -469,6 +475,10 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
 // ── SVG Scatter Plot ───────────────────────────────────────────────────────
 
 function buildScatterSVG(scatterData) {
+  // Math.max over an empty list is -Infinity, which turned the axis and the
+  // diagonal into NaN coordinates. main() refuses to build with no data; this
+  // keeps the function itself safe if it is ever called that way.
+  if (!scatterData || !scatterData.length) return '';
   const W = 680, H = 420;
   const PAD = { top: 20, right: 20, bottom: 48, left: 52 };
   const plotW = W - PAD.left - PAD.right;
@@ -1114,6 +1124,9 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
     scatterData, leaderboards, topModels, treemapClub, treemapBall, treemapGrip, treemapShaft,
     dyk, gainLoss, topShaftModel, topClubBrands
   } = computeWidgetData({ currentItems: rankedCurrentItems, playerMap, brands, diBySlug, shaftItems: rankedShaftItems, totalPlayers });
+  if (!scatterData.length) {
+    throw new Error('Tour Usage vs. Amateur Attention has no brands: refusing to publish an empty chart');
+  }
 
   const scatterSVG     = buildScatterSVG(scatterData);
   const freshestPlayer = pickFreshestPlayer({ rankedPlayers, bagDateMap, changes });
