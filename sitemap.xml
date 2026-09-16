@@ -35,7 +35,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -2680,7 +2680,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (647) ── -->
+  <!-- ── News articles (649) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -6438,6 +6438,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/shot-scope-broke-launch-monitor-price/</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/shot-scope-broke-launch-monitor-price-hero.jpg</image:loc>
+      <image:title>A $200 Radar Unit Broke the Launch Monitor Price Floor. Shot Scope Just Restocked It.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/shot-scope-built-149-app-watches/</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -7085,6 +7095,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/features/take-this-job-and-shove-it/hero.webp</image:loc>
       <image:title>Take This Job and Shove It</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/takomo-golf-accurate-game-improvement-iron/</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/takomo-golf-accurate-game-improvement-iron-hero.jpg</image:loc>
+      <image:title>The Most Accurate Game Improvement Iron of 2026 Has No Tour Staff. Takomo Built It.</image:title>
     </image:image>
   </url>
   <url>
@@ -9157,19 +9177,19 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/11/</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/12/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/13/</loc>
-    <lastmod>2026-06-29</lastmod>
+    <lastmod>2026-06-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9199,7 +9219,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/18/</loc>
-    <lastmod>2026-05-29</lastmod>
+    <lastmod>2026-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9223,7 +9243,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/21/</loc>
-    <lastmod>2026-05-15</lastmod>
+    <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9241,7 +9261,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/24/</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9253,7 +9273,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/26/</loc>
-    <lastmod>2026-04-17</lastmod>
+    <lastmod>2026-04-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9265,7 +9285,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9295,7 +9315,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/9/</loc>
-    <lastmod>2026-07-27</lastmod>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
