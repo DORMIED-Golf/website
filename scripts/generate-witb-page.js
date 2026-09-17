@@ -282,10 +282,26 @@ function computeWidgetData({ currentItems, playerMap, brands, diBySlug, shaftIte
       tourPct:  players.size / totalPlayers * 100,
       diScore:  parseFloat(di.di_score),
       diRank:   di.global_rank,
+      searches: Number(di.global_searches) || 0,
       playerCount: players.size,
     });
   }
   scatterData.sort((a, b) => b.tourPct - a.tourPct);
+  // The DI score is relative to the top brand in the WHOLE Index. In August
+  // 2026 Good Good, which no tracked player carries, took #1 with 550K searches
+  // and halved every equipment brand's score (Titleist 100 -> 44.7), sliding the
+  // tour leaders below the reference line with no change in their own interest.
+  // Rescale attention within the brands actually plotted, so only brands in
+  // tour bags set the top of the Y axis.
+  const maxSearches = Math.max(0, ...scatterData.map(d => d.searches));
+  if (!maxSearches) throw new Error('scatter brands have no global_searches: cannot scale amateur attention');
+  const maxTourPct = Math.max(...scatterData.map(d => d.tourPct));
+  for (const d of scatterData) {
+    d.attention = d.searches / maxSearches * 100;
+    // Attention the brand would draw if it tracked tour usage exactly: the
+    // dashed line, which runs from the origin to (tour leader, 100).
+    d.expected = d.tourPct / maxTourPct * 100;
+  }
 
   // --- Brand leaderboards per category ---
   const LEADERBOARD_CATS = [
@@ -486,7 +502,9 @@ function buildScatterSVG(scatterData) {
 
   // Scale
   const maxX = Math.ceil(Math.max(...scatterData.map(d => d.tourPct)) / 5) * 5 + 5;
-  const maxY = Math.ceil(Math.max(...scatterData.map(d => d.diScore)) / 10) * 10 + 5;
+  // Attention is scaled so the most-searched plotted brand is exactly 100.
+  const maxY = 105;
+  const maxTourPct = Math.max(...scatterData.map(d => d.tourPct));
 
   function xPx(v) { return PAD.left + (v / maxX) * plotW; }
   function yPx(v) { return PAD.top + plotH - (v / maxY) * plotH; }
@@ -507,35 +525,38 @@ function buildScatterSVG(scatterData) {
     gridLines += `<text class="witb-scatter-axis-label" x="${PAD.left - 6}" y="${y + 4}" text-anchor="end">${v}</text>`;
   });
 
-  // Diagonal reference line (equal-proportion line)
+  // Reference line: attention in proportion to tour usage, from the origin
+  // through (tour leader, 100), clipped to the plot.
   const diagX1 = xPx(0), diagY1 = yPx(0);
-  const diagX2 = xPx(Math.min(maxX, maxY)), diagY2 = yPx(Math.min(maxX, maxY));
+  const diagEndX = Math.min(maxX, maxTourPct * maxY / 100);
+  const diagX2 = xPx(diagEndX), diagY2 = yPx(diagEndX / maxTourPct * 100);
   const diagonal = `<line class="witb-scatter-diagonal" x1="${diagX1}" y1="${diagY1}" x2="${diagX2}" y2="${diagY2}"/>`;
 
   // Axis labels
   const axisLabels = `
     <text class="witb-scatter-axis-label" x="${PAD.left + plotW / 2}" y="${H - 4}" text-anchor="middle">Tour Usage (%)</text>
-    <text class="witb-scatter-axis-label" x="10" y="${PAD.top + plotH / 2}" text-anchor="middle" transform="rotate(-90,10,${PAD.top + plotH / 2})">DI Score</text>
+    <text class="witb-scatter-axis-label" x="10" y="${PAD.top + plotH / 2}" text-anchor="middle" transform="rotate(-90,10,${PAD.top + plotH / 2})">Search Interest</text>
   `;
 
   // Dots + labels (encode data for JS tooltip)
   let dots = '';
   for (const d of scatterData) {
     const cx = xPx(d.tourPct);
-    const cy = yPx(d.diScore);
+    const cy = yPx(d.attention);
     const r  = 5 + Math.sqrt(d.playerCount) * 0.8;
     dots += `<circle class="witb-scatter-dot" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}"
       data-slug="${esc(d.slug)}" data-name="${esc(d.name)}"
-      data-tour="${d.tourPct.toFixed(1)}" data-di="${d.diScore.toFixed(1)}"
+      data-tour="${d.tourPct.toFixed(1)}" data-attn="${d.attention.toFixed(1)}"
+      data-gap="${(d.attention - d.expected).toFixed(1)}" data-di="${d.diScore.toFixed(1)}"
       data-rank="${d.diRank}" data-players="${d.playerCount}"
-      aria-label="${esc(d.name)}: ${d.tourPct.toFixed(1)}% tour, DI ${d.diScore.toFixed(1)}"></circle>`;
+      aria-label="${esc(d.name)}: ${d.tourPct.toFixed(1)}% tour, search interest ${d.attention.toFixed(1)}"></circle>`;
     // Label all dots — data-slug binds each label to its dot for reliable show/hide
     const labelY = cy < PAD.top + 20 ? cy + 14 : cy - 8;
     dots += `<text class="witb-scatter-label" data-slug="${esc(d.slug)}" x="${cx.toFixed(1)}" y="${labelY.toFixed(1)}" text-anchor="middle">${esc(d.name)}</text>`;
   }
 
   return `<svg class="witb-scatter-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg"
-    role="img" aria-label="Scatter plot: tour usage vs DORMIED Index score per brand">
+    role="img" aria-label="Scatter plot: tour usage vs amateur search interest per brand">
     ${gridLines}${diagonal}${dots}${axisLabels}
   </svg>`;
 }
@@ -1223,6 +1244,7 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
   const scatterJSON = JSON.stringify(scatterData.map(d => ({
     slug: d.slug, name: d.name,
     tourPct: parseFloat(d.tourPct.toFixed(1)),
+    attention: parseFloat(d.attention.toFixed(1)),
     diScore: parseFloat(d.diScore.toFixed(1)),
     diRank: d.diRank, playerCount: d.playerCount,
   })));
@@ -1699,13 +1721,13 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
             </div>
             <div class="witb-scatter-wrap">
               <div class="witb-scatter-frame">
-                <div class="witb-scatter-ytitle" aria-hidden="true">DI Score</div>
+                <div class="witb-scatter-ytitle" aria-hidden="true">Search Interest</div>
                 <div class="witb-scatter-inner">${scatterSVG}</div>
               </div>
             </div>
           </div>
           <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:8px;text-transform:uppercase;letter-spacing:.05em">
-            Brands above the dashed line are pro favorites the amateur game underrates. Below: more attention than tour usage. Dot size = player count. Click any dot to view brand page.
+            Brands above the dashed line draw more amateur attention than their tour usage. Below: pro favorites the amateur game underrates. Dot size = player count. Click any dot to view brand page.
           </p>
         </section>
 
@@ -1718,9 +1740,9 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
             <p class="scorecard-intro-p">This is equipment in play, not equipment sold. A brand here means a tour professional chose it in competition, which is a different signal from market share or endorsement spend. Some of the most tour-popular brands barely register with amateurs, and that gap is what this page exists to show.</p>
 
             <h2 class="scorecard-intro-h2">Reading the Tour Usage vs. Amateur Attention Chart</h2>
-            <p class="scorecard-intro-p">Two independent signals, plotted against each other. X is tour usage: the share of tracked players carrying at least one product from that brand. Y is the brand's <a href="/rankings/">DORMIED Index</a> score for ${esc(snapshotLabel)}, which measures global search interest relative to the month's top brand.</p>
+            <p class="scorecard-intro-p">Two independent signals, plotted against each other. X is tour usage: the share of tracked players carrying at least one product from that brand. Y is amateur attention: global search interest for ${esc(snapshotLabel)} from the <a href="/rankings/">DORMIED Index</a>, scaled so the most-searched brand on this chart scores 100. The scale is set only by brands found in tour bags, so a lifestyle or content brand topping the full Index cannot compress every equipment brand's position. Hover a dot for its full Index score and rank.</p>
 
-            <p class="scorecard-intro-p">The dashed diagonal is a reference line, not a regression. Above it are pro favorites the amateur game has not caught up with. Below it are brands commanding more attention than their tour presence suggests, usually heritage names with strong retail reach.</p>
+            <p class="scorecard-intro-p">The dashed line is a reference, not a regression. It runs from zero to the most-used brand on tour at 100, marking where attention would sit if it tracked tour usage exactly. Above it are brands commanding more attention than their tour presence suggests, usually names with strong retail reach. Below it are pro favorites the amateur game has not caught up with.</p>
 
             <h2 class="scorecard-intro-h2">How the Tour-Usage-to-DI Join Works</h2>
             <p class="scorecard-intro-p">Each equipment brand is mapped to its <a href="/rankings/">DORMIED Index</a> entry. Not all have one, particularly grip and shaft makers that do not compete in the retail categories the Index tracks. Those brands still appear in the leaderboards but are excluded from the chart, which needs both figures to plot: ${brandsNoDI} of ${totalBrands} brands in ranked bags currently lack a mapping and render as plain text rather than links.</p>
@@ -1873,11 +1895,16 @@ function buildPage({ allItems, currentItems, players, playerMap, brands, diBySlu
       var di       = dot.dataset.di;
       var rank     = dot.dataset.rank;
       var players  = dot.dataset.players;
-      var gap      = (parseFloat(di) - parseFloat(tour)).toFixed(1);
-      var gapLabel = gap > 0 ? 'Underrated by amateurs (+' + gap + ')' : gap < 0 ? 'Over-indexed (' + gap + ')' : 'Balanced';
+      var attn     = dot.dataset.attn;
+      // Distance from the dashed line. Above it (positive) the brand draws more
+      // amateur attention than its tour usage predicts; below it, less.
+      var gap      = parseFloat(dot.dataset.gap);
+      var gapLabel = gap >= 5 ? 'More amateur attention than tour use (+' + gap.toFixed(1) + ')'
+        : gap <= -5 ? 'Tour favorite amateurs underrate (' + gap.toFixed(1) + ')' : 'In line with tour use';
       var html =
         '<strong>' + name + '</strong><br>' +
         'Tour: ' + tour + '% (' + players + ' players)<br>' +
+        'Search interest: ' + attn + '<br>' +
         'DI score: ' + di + ' (#' + rank + ')<br>' +
         '<span style="color:var(--text-muted)">' + gapLabel + '</span>';
       if (withLink) {
