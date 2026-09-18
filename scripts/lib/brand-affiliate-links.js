@@ -31,6 +31,11 @@ const BRAND_AFFILIATE_LINKS = {
   // domain Impact issues vanity links on. Storefront link only for now: there
   // is no MacGregor catalogue, so no affiliate_programs row and no carousel.
   'macgregor':     'https://macgregor.pxf.io/rEWEGG',
+  // Impact, joined Sep 2026. Storefront link only: the partnership exposes no
+  // product catalog to /Catalogs yet, so there is no affiliate_programs row and
+  // no carousel. Add the row (and map dormied_brand_slug) once a catalog shows
+  // up in the nightly sync's discovery warning.
+  'bushnell-golf': 'https://bushnell.pxf.io/ZVzo00',
 
   // Cobra and Puma Golf are CJ advertisers (affiliate_programs ids 4 and 5,
   // advertiser 6530791), not Impact, so these are CJ click links rather than

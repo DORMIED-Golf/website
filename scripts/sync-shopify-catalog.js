@@ -85,18 +85,28 @@ async function assertTrackingWorks(program, sampleProductUrl) {
   }
   const finalUrl   = new URL(res.url);
   const expectHost = new URL(sampleProductUrl).host;
-  const hasClickId = finalUrl.searchParams.has('irclickid');
+  // Impact stamps the click under one of two parameter names, depending on the
+  // advertiser's integration: the classic `irclickid`, or `im_ref` alongside
+  // `irgwc=1` and `irpid=<our media partner id>` (Bushnell, Sep 2026). Requiring
+  // irclickid alone rejected a link that was attributing correctly. The im_ref
+  // form still has to carry BOTH companion markers, so a bare im_ref on some
+  // unrelated URL cannot pass this.
+  const clickIdParam =
+    finalUrl.searchParams.get('irclickid') ? 'irclickid'
+    : (finalUrl.searchParams.get('im_ref') && finalUrl.searchParams.get('irgwc') === '1'
+       && finalUrl.searchParams.get('irpid')) ? 'im_ref'
+    : null;
   const rightHost  = finalUrl.host === expectHost;
   const rightPath  = finalUrl.pathname === new URL(sampleProductUrl).pathname;
 
-  if (!rightHost || !hasClickId || !rightPath) {
+  if (!rightHost || !clickIdParam || !rightPath) {
     throw new Error(
       `tracking check FAILED for ${program.dormied_brand_slug} — refusing to write untracked links.\n` +
       `        expected host=${expectHost} path=${new URL(sampleProductUrl).pathname}\n` +
-      `        got      host=${finalUrl.host} path=${finalUrl.pathname} irclickid=${hasClickId}`
+      `        got      host=${finalUrl.host} path=${finalUrl.pathname} click id=${clickIdParam || 'none'}`
     );
   }
-  console.log(`[shopify-sync]   tracking verified: deep link lands on ${finalUrl.host}${finalUrl.pathname} with irclickid`);
+  console.log(`[shopify-sync]   tracking verified: deep link lands on ${finalUrl.host}${finalUrl.pathname} with ${clickIdParam}`);
 }
 
 /**
@@ -177,6 +187,15 @@ async function fetchAllProducts(feedUrl, currency) {
  * variant so the shown price is one a buyer can actually transact at.
  */
 function mapProduct(p, program, origin, currency) {
+  // Shopify product types that are not products: a warranty contract or a gift
+  // card is nothing DORMIED can rank, review or photograph, and Bushnell's feed
+  // prices one Extend plan at $5,499, which would headline the carousel. The
+  // per-program price floor cannot separate these from real accessories (a
+  // $54.99 plan sits between a $14.99 carrying case and a $129.99 GPS), so this
+  // is the one place a type match is warranted.
+  const type = String(p.product_type || '').trim().toLowerCase();
+  if (type === 'extend protection plan' || type === 'gift card') return null;
+
   const variants  = Array.isArray(p.variants) ? p.variants : [];
   const available = variants.filter(v => v.available);
   const v         = available[0] || variants[0];

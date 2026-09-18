@@ -485,6 +485,7 @@ const {
 // the WITB / brand / feature generators so the rules cannot diverge.
 const AB = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
+const { pinnedProductAttr } = require('./lib/brand-pinned-products');
 
 function formatDate(isoDate) {
   const d = new Date(isoDate);
@@ -1086,7 +1087,7 @@ function generateArticleHtml(opts) {
   const hasShop = !!(affiliateBrandSlugs && brandSlug && affiliateBrandSlugs.has(brandSlug));
   const shopSectionHtml = hasShop ? `
             <!-- ── Shop ${escHtml(brandName)} (affiliate) ── -->
-            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(brandSlug)}" data-brand-name="${escHtml(brandName)}">
+            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(brandSlug)}" data-brand-name="${escHtml(brandName)}"${pinnedProductAttr(brandSlug, escHtml)}>
               <p class="bp-chart-heading">Shop ${escHtml(brandName)}</p>
               <div class="bp-shop-viewport">
                 <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>

@@ -27,6 +27,7 @@ const feedBake         = require('./feed-bake');
 
 const { dataVersion } = require('./lib/data-version');
 const { brandAffiliateLink } = require('./lib/brand-affiliate-links');
+const { pinnedProductAttr } = require('./lib/brand-pinned-products');
 const AB = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
 const { signupBlockHtml } = require('./lib/signup-block.js');
@@ -794,7 +795,7 @@ ${faqItems.map(it => `              <div class="da-faq-item">
   // If the fetch is empty or fails, the script removes the whole section.
   const shopSectionHtml = hasShop ? `
             <!-- ── Shop ${escHtml(brand.name)} (affiliate) ── -->
-            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(slug)}" data-brand-name="${escHtml(brand.name)}">
+            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(slug)}" data-brand-name="${escHtml(brand.name)}"${pinnedProductAttr(slug, escHtml)}>
               <p class="bp-chart-heading">Shop ${escHtml(brand.name)}</p>
               <div class="bp-shop-viewport">
                 <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>

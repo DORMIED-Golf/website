@@ -32,6 +32,7 @@ const feedBake         = require('./feed-bake');
 const { matchBagToProducts } = require('./lib/witb-shop-match');
 const AB               = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
+const { pinnedProductAttr } = require('./lib/brand-pinned-products');
 const { regenerateSitemap } = require('./generate-sitemap');
 // Bulk runs regenerate the sitemap once at the end instead of per page.
 const SKIP_SITEMAP = process.argv.includes('--skip-sitemap');
@@ -1680,7 +1681,7 @@ ${shopBag ? `
 
 ${(shopBrand && !shopBag) ? `
           <!-- ── Shop ${esc(shopBrand.name)} (affiliate) ── -->
-          <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBrand.slug)}" data-brand-name="${esc(shopBrand.name)}">
+          <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBrand.slug)}" data-brand-name="${esc(shopBrand.name)}"${pinnedProductAttr(shopBrand.slug, esc)}>
             <p class="bp-chart-heading">Shop ${esc(shopBrand.name)}</p>
             <div class="bp-shop-viewport">
               <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>

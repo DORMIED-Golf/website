@@ -34,6 +34,7 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 const fs   = require('fs');
+const { pinnedProductAttr } = require('./lib/brand-pinned-products');
 const path = require('path');
 const vm   = require('vm');
 const { createClient } = require('@supabase/supabase-js');
@@ -1294,7 +1295,7 @@ async function main() {
       if (prog) {
         SHOP_SECTION_HTML = `
             <!-- Shop ${escHtml(bName)} (affiliate) -->
-            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(F.brandSlug)}" data-brand-name="${escHtml(bName)}">
+            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(F.brandSlug)}" data-brand-name="${escHtml(bName)}"${pinnedProductAttr(F.brandSlug, escHtml)}>
               <p class="bp-chart-heading">Shop ${escHtml(bName)}</p>
               <div class="bp-shop-viewport">
                 <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>

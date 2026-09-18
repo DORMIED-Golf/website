@@ -30,6 +30,11 @@
   // brand to page through: the page already decided which products (the ones in
   // the player's bag), so there is nothing to paginate.
   var fixedIds = (section.getAttribute('data-product-ids') || '').trim();
+  // Exact product name to lead the carousel, baked from
+  // scripts/lib/brand-pinned-products.js. /api/shop pins it on the first page
+  // only and drops it from the remainder, so it is never shown twice. A name
+  // that no longer matches is ignored by the API and the order is unchanged.
+  var pinName = (section.getAttribute('data-pin') || '').trim();
 
   var loaded = [], offset = 0, total = null, fetching = false, exhausted = false;
 
@@ -150,7 +155,8 @@
     var url = fixedIds
       ? '/api/shop?ids=' + encodeURIComponent(fixedIds)
       : '/api/shop?brand=' + encodeURIComponent(slug) +
-        '&limit=' + PAGE_SIZE + '&offset=' + offset;
+        '&limit=' + PAGE_SIZE + '&offset=' + offset +
+        (pinName ? '&pin=' + encodeURIComponent(pinName) : '');
 
     return fetch(url, ctrl ? { signal: ctrl.signal } : undefined)
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
