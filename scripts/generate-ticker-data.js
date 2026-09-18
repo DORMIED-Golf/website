@@ -32,6 +32,11 @@
 'use strict';
 
 const fs   = require('fs');
+// Static thumbnails instead of /_vercel/image: the optimizer bills per
+// transformation and the free tier's 5,000 a month runs out mid-cycle, after
+// which every new one returns 402. See scripts/lib/thumbs.js. A width with no
+// thumbnail falls back to the full image, so nothing breaks.
+const { thumbUrl: _thumbUrl, thumbExists: _thumbExists } = require('./lib/thumbs');
 const path = require('path');
 const vm   = require('vm');
 
@@ -210,8 +215,9 @@ const LOGO_OPTIMIZER_WIDTH = 80;
 function logoHtml(brand, size) {
   const ini = esc(initials(brand.name));
   if (!brand.logo) return '<span class="dt-logo dt-logo--ini">' + ini + '</span>';
-  const src = '/_vercel/image?url=' + encodeURIComponent(brand.logo)
-            + '&w=' + LOGO_OPTIMIZER_WIDTH + '&q=75';
+  const src = _thumbExists(brand.logo, LOGO_OPTIMIZER_WIDTH)
+            ? _thumbUrl(brand.logo, LOGO_OPTIMIZER_WIDTH)
+            : brand.logo;
   return '<img class="dt-logo" src="' + esc(src) + '" alt="" width="' + size + '" height="' + size
        + '" loading="lazy" decoding="async"'
        + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'

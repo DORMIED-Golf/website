@@ -102,9 +102,14 @@ function buildFlagHtml(countryCode, nation) {
 
 /** Vercel's image optimizer. 80 and 160 are both in vercel.json images.sizes;
  *  a width that is not on that list returns a 400, not a resized image. */
+// Static thumbnails instead of /_vercel/image: the optimizer bills per
+// transformation and the free tier's 5,000 a month runs out mid-cycle, after
+// which every new one returns 402. See scripts/lib/thumbs.js. A width with no
+// thumbnail falls back to the full image, so nothing breaks.
+const { thumbUrl: _thumbUrl, thumbExists: _thumbExists } = require('./lib/thumbs');
 function vitUrl(src, w) {
   if (!src) return src;
-  return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+  return _thumbExists(src, w) ? _thumbUrl(src, w) : src;
 }
 
 /**

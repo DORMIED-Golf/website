@@ -650,9 +650,14 @@ function buildLeaderboard(cat) {
 /* Vercel image proxy. Widths must be one of vercel.json images.sizes — anything
    else 404s, which is how the homepage ticker logos briefly shipped broken. 80
    covers a 40px avatar at DPR 2. */
+// Static thumbnails instead of /_vercel/image: the optimizer bills per
+// transformation and the free tier's 5,000 a month runs out mid-cycle, after
+// which every new one returns 402. See scripts/lib/thumbs.js. A width with no
+// thumbnail falls back to the full image, so nothing breaks.
+const { thumbUrl: _thumbUrl, thumbExists: _thumbExists } = require('./lib/thumbs');
 function vitUrl(src, w) {
   if (!src) return src;
-  return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+  return _thumbExists(src, w) ? _thumbUrl(src, w) : src;
 }
 
 /* Player slugs that have a generated WITB page, so nothing links to a 404.

@@ -992,6 +992,19 @@ async function uploadImageToSupabase(supabase, imageUrl, slug) {
       .from('dormied-articles')
       .getPublicUrl(storagePath);
 
+    // Feed thumbnails, resized from the bytes already in hand and named for the
+    // URL the cards will reference. Without them every feed on the site falls
+    // back to the full hero for this article. See scripts/lib/thumbs.js.
+    if (data?.publicUrl) {
+      try {
+        const { writeThumbsFromBuffer } = require('./lib/thumbs');
+        const widths = await writeThumbsFromBuffer(data.publicUrl, buffer, [80, 160, 400, 600, 800, 1200]);
+        console.log(`[generate] Thumbnails written: ${widths.join('/')}`);
+      } catch (thumbErr) {
+        console.warn('[generate] thumbnail generation failed (the next bake retries):', thumbErr.message);
+      }
+    }
+
     return { supabaseUrl: data?.publicUrl || null, localUrl };
   } catch (err) {
     console.warn(`[generate] Image fetch failed:`, err.message);

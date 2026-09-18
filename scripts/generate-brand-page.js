@@ -20,6 +20,11 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 const fs               = require('fs');
+// Static thumbnails instead of /_vercel/image: the optimizer bills per
+// transformation and the free tier's 5,000 a month runs out mid-cycle, after
+// which every new one returns 402. See scripts/lib/thumbs.js. A width with no
+// thumbnail falls back to the full image, so nothing breaks.
+const { thumbUrl: _thumbUrl, thumbExists: _thumbExists } = require('./lib/thumbs');
 const path             = require('path');
 const vm               = require('vm');
 const { createClient } = require('@supabase/supabase-js');
@@ -1250,7 +1255,7 @@ function tourFaceHtml(p) {
   const parts = String(p.name || '').trim().split(/\s+/);
   const ini = escHtml((parts.length >= 2 ? parts[0][0] + parts[parts.length - 1][0] : String(p.name || '').slice(0, 2)).toUpperCase());
   if (!p.headshot_url) return `<span class="bp-tour-face bp-tour-face--ini" aria-hidden="true">${ini}</span>`;
-  const u = w => escHtml('/_vercel/image?url=' + encodeURIComponent(p.headshot_url) + '&w=' + w + '&q=75');
+  const u = w => escHtml(_thumbExists(p.headshot_url, w) ? _thumbUrl(p.headshot_url, w) : p.headshot_url);
   return `<img class="bp-tour-face" src="${u(40)}" srcset="${u(40)} 1x, ${u(80)} 2x" width="20" height="20" loading="lazy" decoding="async" alt="">`;
 }
 

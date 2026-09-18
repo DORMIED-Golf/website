@@ -889,8 +889,14 @@ function disambiguationHtml(player, peers) {
 const { STATS_WINDOW_MONTHS, statsCutoff, isActiveBagDate } = require('./lib/witb-tour-set');
 
 /** Vercel's image optimizer; the width must be one of vercel.json images.sizes. */
+// Static thumbnails instead of /_vercel/image: the optimizer bills per
+// transformation and the free tier's 5,000 a month runs out mid-cycle, after
+// which every new one returns 402. See scripts/lib/thumbs.js. A width with no
+// thumbnail falls back to the full image, so nothing breaks.
+const { thumbUrl: _thumbUrl, thumbExists: _thumbExists } = require('./lib/thumbs');
 function vitUrl(src, w) {
-  return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+  if (!src) return src;
+  return _thumbExists(src, w) ? _thumbUrl(src, w) : src;
 }
 
 /**

@@ -34,10 +34,22 @@
       : (name || '').slice(0, 2).toUpperCase();
   }
 
-  /* ── Vercel Image Optimization proxy URL — returns WebP/AVIF at width w. ── */
+  /* ── Static thumbnails (see scripts/lib/thumbs.js) ────────────────────────
+     /_vercel/image bills per transformation and the free tier runs out mid
+     cycle, after which new ones return 402 and every fresh card loses its
+     thumbnail. These are plain static files, generated at bake time. The path
+     rule MUST match scripts/lib/thumbs.js exactly. An unmapped source, or a
+     thumbnail that was never generated, falls back to the full image via the
+     img onerror below. */
   function vitUrl(src, w) {
     if (!src) return src;
-    return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+    var m = String(src).match(/\/storage\/v1\/object\/public\/dormied-articles\/([^/?]+)\/([^/?]+)/)
+         || String(src).match(/^\/images\/(logos|articles|players|scorecard)\/([^/?]+)/);
+    if (!m) return src;
+    var ver = String(src).match(/[?&]v=(\d{1,4})\b/);
+    var base = m[2].replace(/\.[a-z0-9]+$/i, '') + (ver ? '-v' + ver[1] : '');
+    if (!/^[A-Za-z0-9._-]+$/.test(base)) return src;
+    return '/images/thumbs/' + m[1] + '/' + base + '-' + w + '.webp';
   }
 
   /* ── Logo img HTML (with initials fallback) ───────────────────────────── */

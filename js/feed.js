@@ -52,7 +52,8 @@
      element and its reserved box) instead of removing it. Mirrors
      THUMB_FALLBACK in scripts/feed-bake.js so client and baked markup match. */
   var THUMB_FALLBACK = "this.onerror=null;this.removeAttribute('srcset');"
-    + "this.src='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2730%27%3E%3Crect%20width%3D%2740%27%20height%3D%2730%27%20fill%3D%27%23e8eaed%27%2F%3E%3C%2Fsvg%3E'";
+  + "if(this.dataset.full){this.src=this.dataset.full;return;}"
+  + "this.src='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2730%27%3E%3Crect%20width%3D%2740%27%20height%3D%2730%27%20fill%3D%27%23e8eaed%27%2F%3E%3C%2Fsvg%3E'"
 
   /* ── Refresh baked timestamps on prerendered cards ─────────────────────────
      Prerendered feed cards (e.g. home-dormied-list) keep their build-time
@@ -90,10 +91,22 @@
     return id;
   }
 
-  /* ── Vercel Image Optimization proxy ────────────────────────────────────── */
+  /* ── Static thumbnails (see scripts/lib/thumbs.js) ────────────────────────
+     /_vercel/image bills per transformation and the free tier runs out mid
+     cycle, after which new ones return 402 and every fresh card loses its
+     thumbnail. These are plain static files, generated at bake time. The path
+     rule MUST match scripts/lib/thumbs.js exactly. An unmapped source, or a
+     thumbnail that was never generated, falls back to the full image via the
+     img onerror below. */
   function vitUrl(src, w) {
     if (!src) return src;
-    return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+    var m = String(src).match(/\/storage\/v1\/object\/public\/dormied-articles\/([^/?]+)\/([^/?]+)/)
+         || String(src).match(/^\/images\/(logos|articles|players|scorecard)\/([^/?]+)/);
+    if (!m) return src;
+    var ver = String(src).match(/[?&]v=(\d{1,4})\b/);
+    var base = m[2].replace(/\.[a-z0-9]+$/i, '') + (ver ? '-v' + ver[1] : '');
+    if (!/^[A-Za-z0-9._-]+$/.test(base)) return src;
+    return '/images/thumbs/' + m[1] + '/' + base + '-' + w + '.webp';
   }
 
   /* ── Brand month-over-month change from DORMIED_DATA ───────────────────── */
@@ -152,7 +165,7 @@
                           + escHtml(vitUrl(article.imageUrl, 600)) + ' 600w,'
                           + escHtml(vitUrl(article.imageUrl, 800)) + ' 800w"'
             + ' sizes="' + escHtml(sizes || CARD_SIZES_DEFAULT) + '"'
-            + ' width="80" height="60" loading="lazy" alt="" onerror="' + THUMB_FALLBACK + '">';
+            + ' width="80" height="60" loading="lazy" alt="" onerror="' + THUMB_FALLBACK + '" data-full="' + escHtml(article.imageUrl) + '">';
     }
 
     var tags = '';
@@ -214,7 +227,7 @@
                           + escHtml(vitUrl(article.imageUrl,  800)) + ' 800w,'
                           + escHtml(vitUrl(article.imageUrl, 1200)) + ' 1200w"'
             + ' sizes="(min-width: 1200px) 76vw, 100vw"'
-            + ' width="600" height="375" ' + imgAttrs + ' alt="" onerror="' + THUMB_FALLBACK + '">';
+            + ' width="600" height="375" ' + imgAttrs + ' alt="" onerror="' + THUMB_FALLBACK + '" data-full="' + escHtml(article.imageUrl) + '">';
     }
 
     var excerpt = '';

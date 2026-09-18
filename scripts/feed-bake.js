@@ -14,7 +14,8 @@ var scorecardIssue = require('./lib/scorecard-issue.js');
 // to whatever CSS box the thumb has via object-fit:cover, so one placeholder
 // serves both the 80x60 and larger thumb variants. Self-clears to avoid loops.
 var THUMB_FALLBACK = "this.onerror=null;this.removeAttribute('srcset');"
-  + "this.src='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2730%27%3E%3Crect%20width%3D%2740%27%20height%3D%2730%27%20fill%3D%27%23e8eaed%27%2F%3E%3C%2Fsvg%3E'";
+  + "if(this.dataset.full){this.src=this.dataset.full;return;}"
+  + "this.src='data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2730%27%3E%3Crect%20width%3D%2740%27%20height%3D%2730%27%20fill%3D%27%23e8eaed%27%2F%3E%3C%2Fsvg%3E'"
 
 function timeAgo(dateStr) {
   if (!dateStr) return '';
@@ -32,9 +33,26 @@ function timeAgo(dateStr) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
+// Static thumbnails, not /_vercel/image: the optimizer bills per transformation
+// and the free allowance is spent long before the month is. See lib/thumbs.js.
+// A width with no thumbnail on disk falls back to the full image, so a card is
+// never broken, only heavier.
+const { thumbUrl, thumbExists, ensureThumbs } = require('./lib/thumbs');
+const CARD_WIDTHS = [80, 160, 400, 600, 800, 1200];
+const FACE_WIDTHS = [40, 80, 160];
+
 function vitUrl(src, w) {
   if (!src) return src;
-  return '/_vercel/image?url=' + encodeURIComponent(src) + '&w=' + w + '&q=75';
+  return thumbExists(src, w) ? thumbUrl(src, w) : src;
+}
+
+/** Build any missing thumbnails for a batch of rows before they are rendered. */
+async function ensureRowThumbs(rows, key, widths) {
+  for (const r of rows || []) {
+    const src = r && r[key];
+    if (src) { try { await ensureThumbs(src, widths); } catch { /* falls back to source */ } }
+  }
+  return rows;
 }
 
 function escHtml(str) {
@@ -127,7 +145,7 @@ function renderArticleCard(article, dormiedData, sizes) {
                         + escHtml(vitUrl(article.imageUrl, 600)) + ' 600w,'
                         + escHtml(vitUrl(article.imageUrl, 800)) + ' 800w"'
           + ' sizes="' + escHtml(sizes || CARD_SIZES_DEFAULT) + '"'
-          + ' width="80" height="60" loading="lazy" alt="" onerror="' + THUMB_FALLBACK + '">';
+          + ' width="80" height="60" loading="lazy" alt="" onerror="' + THUMB_FALLBACK + '" data-full="' + escHtml(article.imageUrl) + '">';
   }
 
   var tags = '';
@@ -191,7 +209,7 @@ function renderFeedPageCard(article, dormiedData, isLCP) {
                         + escHtml(vitUrl(article.imageUrl,  800)) + ' 800w,'
                         + escHtml(vitUrl(article.imageUrl, 1200)) + ' 1200w"'
           + ' sizes="(min-width: 1200px) 76vw, 100vw"'
-          + ' width="600" height="375" ' + imgAttrs + ' alt="" onerror="' + THUMB_FALLBACK + '">';
+          + ' width="600" height="375" ' + imgAttrs + ' alt="" onerror="' + THUMB_FALLBACK + '" data-full="' + escHtml(article.imageUrl) + '">';
   }
 
   var excerpt = '';
@@ -327,7 +345,7 @@ async function fetchLatestArticles(supabase, limit, excludeSlug) {
   if (excludeSlug) {
     articles = articles.filter(function (a) { return a.slug !== excludeSlug; });
   }
-  return articles.slice(0, limit);
+  return ensureRowThumbs(articles.slice(0, limit), 'imageUrl', CARD_WIDTHS);
 }
 
 // Curated Featured articles (featured column set, ascending). Mirrors the
@@ -344,7 +362,7 @@ async function fetchFeaturedArticles(supabase, limit) {
     console.warn('[feed-bake] featured fetch error:', error.message);
     return [];
   }
-  return (data || []).map(normalizeDormiedRow);
+  return ensureRowThumbs((data || []).map(normalizeDormiedRow), 'imageUrl', CARD_WIDTHS);
 }
 
 async function fetchTopStoriesArticles(supabase, dormiedData, limit) {
@@ -430,7 +448,7 @@ async function fetchTopStoriesArticles(supabase, dormiedData, limit) {
       if (picked.length < 3) return fetchLatestArticles(supabase, limit, null);
       picked = picked.slice(0, limit);
 
-      return picked.map(function (row) {
+      return ensureRowThumbs(picked.map(function (row) {
         var slug = (row.url.match(/^\/news\/([^/]+)\/?$/) || [])[1];
         var firstBrandId = (row.brand_ids && row.brand_ids[0]) || '';
         return {
@@ -441,7 +459,7 @@ async function fetchTopStoriesArticles(supabase, dormiedData, limit) {
           imageUrl: row.image_url || null,
           brandIds: row.brand_ids || [],
         };
-      });
+      }), 'imageUrl', CARD_WIDTHS);
     }
   } catch (e) {
     console.warn('[feed-bake] article_clicks fetch error:', e.message);
@@ -504,7 +522,7 @@ function latestScorecardSectionHtml(currentSlug) {
                         + escHtml(vitUrl(thumbSrc, 800)) + ' 800w"'
           + ' sizes="' + CARD_SIZES_DEFAULT + '"'
           + ' width="80" height="60" loading="lazy" alt=""'
-          + ' onerror="' + THUMB_FALLBACK + '">';
+          + ' onerror="' + THUMB_FALLBACK + '" data-full="' + escHtml(thumbSrc) + '">';
   }
 
   return '<section class="sidebar-scorecard" aria-labelledby="sidebar-scorecard-heading">'
@@ -593,6 +611,14 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
     bagRows = bagRows.slice(0, 5);
 
     if (!moverRows.length && !bagRows.length) return '';
+
+    // Faces and logos ride in the sidebar of ~1,100 pages, so their thumbnails
+    // matter more than any single card's.
+    await ensureRowThumbs(bagRows, 'headshot', FACE_WIDTHS);
+    for (const r of moverRows) {
+      const logo = brandLogoFromData(dormiedData, r.brand_slug);
+      if (logo) { try { await ensureThumbs(logo, FACE_WIDTHS); } catch { /* falls back */ } }
+    }
 
     const nameOf = function (slug) { return brandNameFromData(dormiedData, slug) || slug; };
     // Two initials, matching the brand-directory monogram (Titleist -> TI).

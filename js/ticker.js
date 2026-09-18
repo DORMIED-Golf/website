@@ -99,16 +99,25 @@
 
   // Hide-and-reveal rather than outerHTML replacement — see the note on the
   // same function in scripts/generate-ticker-data.js.
-  // NOT size*2: /_vercel/image only serves the widths listed in vercel.json
-  // images.sizes and 400s on anything else. See the note in
-  // scripts/generate-ticker-data.js.
+  // NOT size*2: thumbnails are generated at these widths only (40/80/160), and
+  // 80 covers the 22px mobile tile at DPR 2. See scripts/lib/thumbs.js.
   var LOGO_OPTIMIZER_WIDTH = 80;
+
+  /* Static thumbnail path; must match scripts/lib/thumbs.js. Falls back to the
+     full logo, which the onerror below then swaps for initials if it fails. */
+  function thumbUrl(src, w) {
+    if (!src) return src;
+    var m = String(src).match(/^\/images\/(logos|articles|players|scorecard)\/([^/?]+)/);
+    if (!m) return src;
+    var base = m[2].replace(/\.[a-z0-9]+$/i, '');
+    if (!/^[A-Za-z0-9._-]+$/.test(base)) return src;
+    return '/images/thumbs/' + m[1] + '/' + base + '-' + w + '.webp';
+  }
 
   function logoHtml(brand, size) {
     var ini = esc(initials(brand.name));
     if (!brand.logo) return '<span class="dt-logo dt-logo--ini">' + ini + '</span>';
-    var src = '/_vercel/image?url=' + encodeURIComponent(brand.logo)
-            + '&w=' + LOGO_OPTIMIZER_WIDTH + '&q=75';
+    var src = thumbUrl(brand.logo, LOGO_OPTIMIZER_WIDTH);
     return '<img class="dt-logo" src="' + esc(src) + '" alt="" width="' + size + '" height="' + size
          + '" loading="lazy" decoding="async"'
          + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
