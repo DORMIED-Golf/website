@@ -2722,7 +2722,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (654) ── -->
+  <!-- ── News articles (655) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -5301,6 +5301,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/livpur-buys-into-the-callaway-junior-pipeline-the-real-story-is-the-2026-06-23-hero.jpg</image:loc>
       <image:title>LIVPUR Buys Into the Callaway Junior Pipeline. The Real Story Is the Pipeline Itself.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/lululemon-golf-design/</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/lululemon-golf-design-hero.jpg</image:loc>
+      <image:title>Design Filter Number One Is a Golf Swing. Lululemon Golf Never Had One.</image:title>
     </image:image>
   </url>
   <url>
@@ -9263,7 +9273,7 @@
   <!-- ── News pagination ── -->
   <url>
     <loc>https://dormied.com/news/page/10/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9281,7 +9291,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/13/</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9359,7 +9369,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/25/</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9371,7 +9381,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/27/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9401,7 +9411,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/7/</loc>
-    <lastmod>2026-08-08</lastmod>
+    <lastmod>2026-08-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
