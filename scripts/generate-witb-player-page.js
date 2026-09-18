@@ -1097,10 +1097,11 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
           </section>` : '';
 
   // ── Inline Scorecard signup block ─────────────────────────────────────────
-  // ONE block, right after the Quick Answer: peak intent and peak abandonment in
-  // the same moment, because the reader just got the answer they searched for
-  // and has no remaining reason to scroll. It also has real clearance, measuring
-  // 290px from the nearest Mediavine unit.
+  // ONE block, directly below the Current Bag (after Shop This Bag when the page
+  // has one, so the bag and its retail links stay together). Moved there on Sep
+  // 18 2026 at the editor's request: it used to sit right after the Quick
+  // Answer, which put a newsletter pitch between the reader and the bag they
+  // came for. Below the table it lands once the reader has what they wanted.
   //
   // There was a second block after the FAQ. It was dropped: Mediavine reliably
   // places an in-content unit there, so it sat ~40px under an ad on the site's
@@ -1615,7 +1616,6 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
                stamping data-slot-rendered-content on it when it sat there. -->
           <section class="witb-section" style="padding-top:24px;border-bottom:none" aria-label="Equipment overview">
 ${witbAnswerHtml}
-${scSignupPrimary}
             <p class="witb-player-lede">${esc(ledes.lede)}</p>${buildRelatedCoverageHtml(slug)}
           </section>
 
@@ -1666,6 +1666,8 @@ ${shopBag ? `
             <div class="bp-shop-dots" id="bp-shop-dots" role="tablist" aria-label="Product pages"></div>
             <p class="bp-shop-disclosure">Only the clubs we could match to a current retail listing are shown, so this may be part of the bag rather than all of it. Some links are affiliate links; DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
           </section>` : ''}
+
+${scSignupPrimary}
 
           <!-- 3. HOW THIS BAG COMPARES -->
           <section class="witb-section" aria-labelledby="compare-heading">
