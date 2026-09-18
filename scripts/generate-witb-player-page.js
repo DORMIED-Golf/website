@@ -778,6 +778,14 @@ async function fetchPlayerData(sb, slug) {
     .eq('slug', slug)
     .single();
   if (error) throw new Error(`Player not found (slug="${slug}"): ${error.message}`);
+  // The header portrait uses the 200/400 thumbnails, which no other bake asks
+  // for, so a new player would otherwise ship with the full-size headshot.
+  if (player.headshot_url) {
+    try {
+      const { ensureThumbs } = require('./lib/thumbs');
+      await ensureThumbs(player.headshot_url, [40, 80, 160, 200, 400]);
+    } catch { /* vitUrl falls back to the full image */ }
+  }
   return player;
 }
 

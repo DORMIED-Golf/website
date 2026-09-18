@@ -64,6 +64,9 @@ const DB_TO_OWGR_ALIAS = {
   // player id 17212, Venezuela, born 1996-02-03. He is the only Jorge Garcia
   // from Venezuela in the ranking, and WITB sources list him as Jorge Garcia.
   'jorge garcia':       'jorge pichu garcia',
+  // OWGR uses the full first name. The only Benjamin James in the ranking:
+  // United States, born 2003-05-30.
+  'ben james':          'benjamin james',
 };
 
 // ── Name Normalisation ────────────────────────────────────────────────────────
