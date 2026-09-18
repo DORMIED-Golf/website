@@ -1291,7 +1291,7 @@ function generateArticleHtml(opts) {
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=${cssVersion()}">
+  <link rel="stylesheet" href="/css/styles.min.css?v=${cssVersion()}">
 
   <!-- ── Structured Data ── -->
   <script type="application/ld+json">

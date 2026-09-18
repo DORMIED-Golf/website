@@ -861,7 +861,7 @@ ${faqItems.map(it => `              <div class="da-faq-item">
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=${cssVersion()}">
+  <link rel="stylesheet" href="/css/styles.min.css?v=${cssVersion()}">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json" id="brand-jsonld">${jsonld}</script>${faqJsonLdTag}

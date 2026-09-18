@@ -565,7 +565,7 @@ function generateIssuePage(issue, allIssues, brandNameMap) {
   <link rel="stylesheet" href="/css/fonts.css">
 
   <!-- ── Styles ── -->
-  <link rel="stylesheet" href="/css/styles.css?v=${cssVersion()}">
+  <link rel="stylesheet" href="/css/styles.min.css?v=${cssVersion()}">
 
   <!-- ── JSON-LD ── -->
   <script type="application/ld+json">${newsLd}</script>
