@@ -35,7 +35,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -2728,7 +2728,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (655) ── -->
+  <!-- ── News articles (656) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -6746,6 +6746,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/stitch-golf-label-tacked-sneaker-tongue/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/stitch-golf-label-tacked-sneaker-tongue-hero.png</image:loc>
+      <image:title>A Label Tacked Down Like a Sneaker Tongue: Ahead Moves on Stitch Golf&apos;s Craft Lane</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/students-golf/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
@@ -9315,7 +9325,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/16/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9333,7 +9343,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/19/</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9357,7 +9367,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/22/</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9399,7 +9409,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9411,7 +9421,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/6/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
