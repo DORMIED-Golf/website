@@ -31,6 +31,8 @@
  *       ...
  *     ]
  *   }
+ * "new_player": true  (optional) confirms a new golfer when the duplicate guard
+ * flags a near match by name (nickname, typo, name order, hyphenated surname).
  * club_type is one of: driver, 3-wood, 5-wood, 7-wood, hybrid, iron, wedge,
  * putter, grip, ball (free text; it is slugified). loft_or_number / raw_shaft
  * may be omitted for putter/grip/ball.
@@ -58,7 +60,72 @@ function inferShaftSlug(rawShaft) {
 }
 
 // Normalized key for tolerant name/slug matching ("Si Woo Kim" == "Siwoo Kim").
-const normKey = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+// Accents are stripped first: without that, "Sami Välimäki" and "Sami Valimaki"
+// normalise to different keys and the same player is created twice.
+const normKey = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase().replace(/[^a-z0-9]/g, '');
+
+// ── Duplicate guard ──────────────────────────────────────────────────────────
+// Exact slug/name matching misses the variants WITB sources actually use:
+// "Bob MacIntyre" (our Robert MacIntyre), "Cam Young", "Zachary Bauchou",
+// "Eugenio Lopez-Chacarra" vs "Eugenio Chacarra", surname-first "Lee Junghwan",
+// and typos like "Miyua Yamashita". Any of those would have created a second
+// player with a split bag history. So before CREATING, look for a near match
+// and refuse unless the bag says "new_player": true. A false alarm costs one
+// confirmation; a missed duplicate costs a merge.
+const NICKNAMES = {
+  bob: 'robert', rob: 'robert', bobby: 'robert', matt: 'matthew', matty: 'matthew',
+  nico: 'nicolas', zach: 'zachary', zack: 'zachary', cam: 'cameron', dan: 'daniel',
+  danny: 'daniel', chris: 'christopher', mike: 'michael', tom: 'thomas', tommy: 'thomas',
+  nick: 'nicholas', ben: 'benjamin', sam: 'samuel', will: 'william', bill: 'william',
+  billy: 'william', jim: 'james', jimmy: 'james', alex: 'alexander', andy: 'andrew',
+  drew: 'andrew', joe: 'joseph', jon: 'jonathan', steve: 'steven', stephen: 'steven',
+  pat: 'patrick', rick: 'richard', ricky: 'richard', dave: 'david', freddy: 'frederick',
+  freddie: 'frederick', fred: 'frederick', ed: 'edward', eddie: 'edward', tony: 'anthony',
+  greg: 'gregory', jeff: 'jeffrey', josh: 'joshua', abe: 'abraham', seb: 'sebastian',
+  jeeno: 'atthaya',
+};
+function nameTokens(name) {
+  return String(name || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/\(.*?\)/g, '').replace(/[.']/g, '').split(/\s+/).filter(Boolean);
+}
+// Initials only count when WRITTEN as initials ("S.H.", "JT", "K.H."). A real
+// two-letter name such as "Si" is not an initial, which is what flagged
+// Seonghyeon Kim as a possible Si Woo Kim.
+function writtenInitials(name) {
+  const first = String(name || '').trim().split(/\s+/)[0] || '';
+  if (/^([A-Za-z]\.){1,3}$/.test(first) || /^[A-Z]{2,3}$/.test(first)) return first.replace(/\./g, '').toLowerCase();
+  return null;
+}
+function editDistance(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+/** Why `a` might be the same golfer as `b`, or null. */
+function nearMatchReason(a, b) {
+  const ta = nameTokens(a), tb = nameTokens(b);
+  if (ta.length < 2 || tb.length < 2) return null;
+  const lastA = ta[ta.length - 1], lastB = tb[tb.length - 1];
+  const sharedSurname = lastA === lastB || lastA.split('-').some(x => lastB.split('-').includes(x));
+  if (!sharedSurname) {
+    return [...ta].sort().join(' ') === [...tb].sort().join(' ') ? 'same names in a different order' : null;
+  }
+  // Compare the WHOLE given name ("sei young" vs "si woo"), nickname-mapped.
+  const givenA = [NICKNAMES[ta[0]] || ta[0], ...ta.slice(1, -1)].join('');
+  const givenB = [NICKNAMES[tb[0]] || tb[0], ...tb.slice(1, -1)].join('');
+  if (givenA === givenB) return 'same first name (nicknames resolved)';
+  const initialsOf = toks => toks.slice(0, -1).flatMap(t => t.split('-')).map(t => t[0]).join('');
+  const ia = writtenInitials(a), ib = writtenInitials(b);
+  if ((ia && ia === initialsOf(tb)) || (ib && ib === initialsOf(ta))) return 'initials match';
+  if (Math.min(givenA.length, givenB.length) >= 4 && editDistance(givenA, givenB) <= 1) return 'first name one letter apart';
+  return null;
+}
+function nearMatches(name, players) {
+  return players.map(p => ({ p, why: nearMatchReason(name, p.name) })).filter(x => x.why);
+}
 
 // Sub-brand handling is shared with the crawler so both write paths store a
 // club identically. See scripts/lib/witb-brand-normalize.js.
@@ -160,7 +227,18 @@ async function applyBag(supabase, bag, players) {
   let created = false;
   if (!player) {
     if (!player_name) return { status: 'error', slug: player_slug, detail: 'new player needs player_name to create' };
-    if (DRY) return { status: 'created', slug: player_slug, detail: `would CREATE ${player_name}, ${items.length} items` };
+    const near = nearMatches(player_name, players);
+    if (near.length && bag.new_player !== true) {
+      return { status: 'error', slug: player_slug,
+        detail: `possible duplicate of ${near.map(x => `${x.p.name} (${x.p.slug}; ${x.why})`).join(', ')}. `
+              + `Use that player's slug to update them, or set "new_player": true if this is a different golfer.` };
+    }
+    if (DRY) {
+      // Remember the would-be player so a second spelling of the same golfer
+      // later in this batch is caught by the guard, exactly as a real run is.
+      players.push({ name: player_name, slug: player_slug, current_bag_id: null });
+      return { status: 'created', slug: player_slug, detail: `would CREATE ${player_name}, ${items.length} items` };
+    }
     const { data: np, error: npErr } = await supabase.from('witb_players')
       .insert({ slug: player_slug, name: player_name, source_url: source_url || 'manual' })
       .select('id, name, slug, current_bag_id, source_url').single();
