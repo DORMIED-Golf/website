@@ -69,9 +69,10 @@ function initials(name) {
 function logoImg(brand, cls, size) {
   size = size || 20;
   const ini      = esc(initials(brand.name));
-  const fallback = "this.style.display='none';this.nextElementSibling.style.display='flex'";
+  // Mirrors js/home.js: retry the full logo once before falling back to initials.
+  const fallback = "if(this.dataset.full&&this.src.indexOf(this.dataset.full)<0){this.src=this.dataset.full;return;}this.style.display='none';this.nextElementSibling.style.display='flex'";
   if (brand.logo) {
-    return `<img class="${cls}" src="${esc(vitUrl(brand.logo, size * 2))}" alt="" width="${size}" height="${size}" loading="lazy" onerror="${fallback}"><span class="brand-initials-fallback ${cls}-fallback" style="display:none">${ini}</span>`;
+    return `<img class="${cls}" src="${esc(vitUrl(brand.logo, size * 2))}" alt="" width="${size}" height="${size}" loading="lazy" data-full="${esc(brand.logo)}" onerror="${fallback}"><span class="brand-initials-fallback ${cls}-fallback" style="display:none">${ini}</span>`;
   }
   return `<span class="brand-initials-fallback ${cls}-fallback">${ini}</span>`;
 }

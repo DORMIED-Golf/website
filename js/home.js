@@ -56,11 +56,14 @@
   function logoImg(brand, cls, size) {
     size = size || 20;
     var ini      = esc(initials(brand.name));
-    var fallback = 'this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'';
+    // A missing thumbnail width retries the full logo once before giving up to
+    // initials: a thumbnail gap should cost bytes, never the logo itself.
+    var fallback = 'if(this.dataset.full&&this.src.indexOf(this.dataset.full)<0){this.src=this.dataset.full;return;}'
+                 + 'this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'';
     if (brand.logo) {
       return '<img class="' + cls + '" src="' + esc(vitUrl(brand.logo, size * 2)) + '" alt="" '
            + 'width="' + size + '" height="' + size + '" loading="lazy" '
-           + 'onerror="' + fallback + '">'
+           + 'data-full="' + esc(brand.logo) + '" onerror="' + fallback + '">'
            + '<span class="brand-initials-fallback ' + cls + '-fallback" style="display:none">' + ini + '</span>';
     }
     return '<span class="brand-initials-fallback ' + cls + '-fallback">' + ini + '</span>';

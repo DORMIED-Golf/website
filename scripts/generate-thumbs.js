@@ -32,7 +32,9 @@ const ARTICLE_LIMIT = parseInt((process.argv.find(a => a.startsWith('--articles=
 const ARTICLE_WIDTHS = [80, 160, 400, 600, 800, 1200];
 // 200 and 400 serve the player-page portrait and the Freshest Bag avatar.
 const PLAYER_WIDTHS  = [40, 80, 160, 200, 400];
-const LOGO_WIDTHS    = [40, 80, 160];
+// 200 is the homepage Most Viewed card (a 100px logo at DPR 2). Every width a
+// client script asks for must be listed here, or that card falls back.
+const LOGO_WIDTHS    = [40, 80, 160, 200];
 
 const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) { console.error('[thumbs] Missing SUPABASE env vars'); process.exit(1); }
