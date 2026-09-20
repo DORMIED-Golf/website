@@ -35,7 +35,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -2728,7 +2728,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (657) ── -->
+  <!-- ── News articles (659) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -4370,6 +4370,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/foresight-sports-hotel-rate-put-streamsong/</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/foresight-sports-hotel-rate-put-streamsong-hero.jpg</image:loc>
+      <image:title>An $89 Hotel Rate Put Streamsong Above Pebble Beach. Foresight Sports Built the Index.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/foresight-sports-important-club-mygolfspys-slow/</loc>
     <lastmod>2026-09-14</lastmod>
     <changefreq>weekly</changefreq>
@@ -5417,6 +5427,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/malbon-35-pieces-sports-mall-anchor-hero.jpg</image:loc>
       <image:title>35 Pieces, Two Sports and a Mall Anchor: Gap Runs It Back With Malbon</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/malbon-distillerys-website-apparel/</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/malbon-distillerys-website-apparel-hero.jpg</image:loc>
+      <image:title>A Distillery&apos;s Website Is Now an Apparel Channel: Malbon and Bushmills Found the Angle</image:title>
     </image:image>
   </url>
   <url>
@@ -9305,7 +9325,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/11/</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9335,7 +9355,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/16/</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9347,7 +9367,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/18/</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9365,13 +9385,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/20/</loc>
-    <lastmod>2026-05-20</lastmod>
+    <lastmod>2026-05-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/21/</loc>
-    <lastmod>2026-05-17</lastmod>
+    <lastmod>2026-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9395,19 +9415,19 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/25/</loc>
-    <lastmod>2026-04-24</lastmod>
+    <lastmod>2026-04-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/26/</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/27/</loc>
-    <lastmod>2026-04-13</lastmod>
+    <lastmod>2026-04-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9431,7 +9451,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/6/</loc>
-    <lastmod>2026-08-14</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9449,7 +9469,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/9/</loc>
-    <lastmod>2026-07-29</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
