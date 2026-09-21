@@ -6676,6 +6676,27 @@ details[open] .faq-question::after { content: '−'; }
   font-weight: 700;
   font-family: var(--font-mono);
 }
+/* Recent-searches header: the section label with a Clear control on the right.
+   The label keeps its own styling so Recent matches Brands / WITB / News. */
+.search-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.search-recent-clear {
+  background: none;
+  border: 0;
+  padding: 0.45rem 0.75rem 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.search-recent-clear:hover { color: var(--green); }
+
 
 .search-result {
   display: flex;
