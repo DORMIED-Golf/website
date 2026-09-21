@@ -1991,13 +1991,21 @@ function updateSearchIndex(player, bags, html, noindex) {
   const metaM    = html.match(/<meta\s+name="description"\s+content="([^"]*)"/i);
   const searchText = [player.name, metaM ? metaM[1] : ''].join(' ').toLowerCase();
 
+  // Thumbnail, read from the hero <img class="witb-player-face"> in the page we
+  // just wrote, exactly as buildWitbPlayerEntries does. This was hardcoded null,
+  // which meant every single-page re-bake silently dropped that player's face
+  // from site search -- and a full re-bake dropped all 276 at once, while the
+  // bulk generator would have filled every one of them in.
+  const faceM    = html.match(/<img[^>]+class="witb-player-face"[^>]+src="([^"]+)"/i);
+  const thumbnail = faceM ? faceM[1].replace(/-\d+\.webp$/, '-80.webp') : null;
+
   si.entries.push({
     type:        'witb-player',
     slug:        player.slug,
     title:       player.name,
     subtitle,
     url,
-    thumbnail:   null,
+    thumbnail,
     search_text: searchText,
   });
 
