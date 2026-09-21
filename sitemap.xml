@@ -70,7 +70,7 @@
     <priority>0.5</priority>
   </url>
 
-  <!-- ── WITB player pages (268) ── -->
+  <!-- ── WITB player pages (276) ── -->
   <url>
     <loc>https://dormied.com/witb/players/aaron-rai/</loc>
     <lastmod>2026-08-09</lastmod>
@@ -170,6 +170,12 @@
   <url>
     <loc>https://dormied.com/witb/players/andy-sullivan/</loc>
     <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/anirban-lahiri/</loc>
+    <lastmod>2022-02-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -302,6 +308,12 @@
   <url>
     <loc>https://dormied.com/witb/players/brianna-do/</loc>
     <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/brooke-henderson/</loc>
+    <lastmod>2023-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -636,6 +648,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://dormied.com/witb/players/harrison-endycott/</loc>
+    <lastmod>2022-10-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/witb/players/harry-hall/</loc>
     <lastmod>2026-08-12</lastmod>
     <changefreq>weekly</changefreq>
@@ -762,6 +780,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://dormied.com/witb/players/jim-furyk/</loc>
+    <lastmod>2022-04-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/witb/players/joaquin-niemann/</loc>
     <lastmod>2025-05-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -800,6 +824,12 @@
   <url>
     <loc>https://dormied.com/witb/players/john-daly-ii/</loc>
     <lastmod>2022-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/john-peterson/</loc>
+    <lastmod>2016-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -968,6 +998,12 @@
   <url>
     <loc>https://dormied.com/witb/players/louis-oosthuizen/</loc>
     <lastmod>2022-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/louise-ridderstrom/</loc>
+    <lastmod>2023-11-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1332,6 +1368,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://dormied.com/witb/players/richard-bland/</loc>
+    <lastmod>2022-06-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/witb/players/rickie-fowler/</loc>
     <lastmod>2026-07-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -1412,6 +1454,12 @@
   <url>
     <loc>https://dormied.com/witb/players/sam-burns/</loc>
     <lastmod>2026-07-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/sam-horsfield/</loc>
+    <lastmod>2022-04-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

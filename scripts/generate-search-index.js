@@ -219,25 +219,14 @@ function buildWitbPlayerEntries() {
     return entries;
   }
 
-  /* Headshots come from js/witb-leaders.js, which the WITB generator already
-     writes and which carries slug -> headshot for every ranked player. Read
-     from there rather than from Supabase so this script keeps its useful
-     property of being entirely offline and secret-free, and rather than
-     deriving the storage URL by convention, which would silently 404 the day
-     the naming changes. Unranked players are absent from that file and fall
-     back to the club icon in the search UI. */
-  const headshotBySlug = (() => {
-    try {
-      const src = fs.readFileSync(path.join(SITE_ROOT, 'js', 'witb-leaders.js'), 'utf8');
-      const m = src.match(/window\.DORMIED_WITB_LEADERS\s*=\s*(\{[\s\S]*\})\s*;?\s*$/);
-      if (!m) return new Map();
-      const data = JSON.parse(m[1]);
-      return new Map((data.allPlayers || []).filter(p => p.headshot).map(p => [p.slug, p.headshot]));
-    } catch {
-      return new Map();
-    }
-  })();
-  console.log(`  Player headshots available: ${headshotBySlug.size}`);
+  /* Headshots are read from each player's own page, below, rather than from
+     js/witb-leaders.js. That file only carries the RANKED players the leaders
+     chart plots -- 233 of 277 -- so every unranked player came out of here
+     with a null thumbnail and rendered the club icon even when a perfectly
+     good headshot existed. The page is also the authoritative record of which
+     thumbnail was actually baked for that player, so this cannot drift from
+     what the page itself serves, and reading it keeps the script offline and
+     secret-free. Players with no headshot at all still fall back to the icon. */
 
   for (const slug of slugs) {
     const htmlPath = path.join(playersDir, slug, 'index.html');
@@ -267,6 +256,11 @@ function buildWitbPlayerEntries() {
     // Subtitle: "OWGR #N · bag date"
     const subtitle = [rank, subStr].filter(Boolean).join(' · ');
 
+    // The hero <img class="witb-player-face"> is baked at 200px; the search
+    // dropdown draws it at 28px, so ask for the 80px file from the same set.
+    const faceM = html.match(/<img[^>]+class="witb-player-face"[^>]+src="([^"]+)"/i);
+    const headshot = faceM ? faceM[1].replace(/-\d+\.webp$/, '-80.webp') : null;
+
     const searchText = [name, metaDesc].join(' ').toLowerCase();
 
     entries.push({
@@ -275,7 +269,7 @@ function buildWitbPlayerEntries() {
       title:       name,
       subtitle,
       url:         `/witb/players/${slug}/`,
-      thumbnail:   headshotBySlug.get(slug) || null,
+      thumbnail:   headshot,
       search_text: searchText,
     });
   }

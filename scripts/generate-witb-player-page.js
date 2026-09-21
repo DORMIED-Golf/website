@@ -1682,7 +1682,7 @@ ${scSignupPrimary}
           <!-- 4. BAG HISTORY -->
           <section class="witb-section" aria-labelledby="history-heading">
             <h2 class="witb-section-title" id="history-heading">Bag History</h2>
-            <p class="witb-section-sub">${bags.length} snapshots tracked, ${yearRange}</p>
+            <p class="witb-section-sub">${bags.length} ${bags.length === 1 ? 'snapshot' : 'snapshots'} tracked, ${yearRange}</p>
 
             ${ledes.history_narrative ? `<div class="witb-hist-narrative">
               <p>${esc(ledes.history_narrative)}</p>
@@ -1974,7 +1974,7 @@ function updateSearchIndex(player, bags, html, noindex) {
 
   si.entries = si.entries.filter(e => !(e.type === 'witb-player' && e.url === url));
 
-  // Subtitle: "#N · M snapshots tracked, YYYY[-YYYY]"  (or "Unranked · ...").
+  // Subtitle: "#N · M snapshot(s) tracked, YYYY[-YYYY]"  (or "Unranked · ...").
   // Falls back to the Rolex ranking the same way the page header does. Without
   // this a women's player is "Unranked" in site search while her own page reads
   // "#8 ROLEX RANKING", which is how Asterisk Talley has been listed.
@@ -1985,7 +1985,7 @@ function updateSearchIndex(player, bags, html, noindex) {
   const minY     = bagYears.length ? Math.min(...bagYears) : new Date().getFullYear();
   const maxY     = bagYears.length ? Math.max(...bagYears) : new Date().getFullYear();
   const yearRange = minY === maxY ? String(minY) : `${minY}-${maxY}`;
-  const subtitle  = [rank, `${bags.length} snapshots tracked, ${yearRange}`].filter(Boolean).join(' · ');
+  const subtitle  = [rank, `${bags.length} ${bags.length === 1 ? 'snapshot' : 'snapshots'} tracked, ${yearRange}`].filter(Boolean).join(' · ');
 
   // search_text mirrors the bulk generator: name + meta description (extracted
   // from the page we just wrote, so both code paths use the identical corpus).
