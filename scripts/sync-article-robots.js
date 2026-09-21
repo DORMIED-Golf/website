@@ -16,6 +16,10 @@
  * Two were live in exactly that state when this was written:
  *   ben-hogan-golf-900-000-copies    image 395x287 (5px under the width floor)
  *   taylormade-1-21-mph-gap-becomes  image 338x107
+ * Both were subsequently deleted rather than re-imaged, so neither is on the
+ * site any more. The script is kept because the gap it closes is structural:
+ * any future draft held on the image gate would otherwise be crawlable while
+ * the sitemap deliberately omits it.
  *
  * WHAT IT DOES
  * Reads status from dormied_articles and rewrites the robots meta to match:
