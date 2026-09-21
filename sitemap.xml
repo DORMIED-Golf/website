@@ -35,7 +35,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -3064,7 +3064,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (659) ── -->
+  <!-- ── News articles (660) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -7432,6 +7432,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/superstroke-8-1-gained-grip-retail/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/superstroke-8-1-gained-grip-retail-hero.jpg</image:loc>
+      <image:title>8.1 Strokes Gained Putting With a Grip Retail Never Stocked. SuperStroke Is Selling It Direct.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/superstroke-grip-amateurs-dtc-test/</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -9697,7 +9707,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/17/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9709,7 +9719,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/19/</loc>
-    <lastmod>2026-05-26</lastmod>
+    <lastmod>2026-05-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
