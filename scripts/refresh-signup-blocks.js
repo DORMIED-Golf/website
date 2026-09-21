@@ -25,6 +25,18 @@
  * (which issue the success state links to, the brand slug) is read off the
  * existing block and passed back in.
  *
+ * ONE EXCEPTION: the WITB headline's bag count. "We track every club in N tour
+ * bags" is a claim about the site, not a sentence the page owns, and because
+ * the copy above is passed back in verbatim this script reported "0 stale" on
+ * 273 pages that all quoted a count no longer true -- the number is baked per
+ * page, so deleting a single player silently invalidated every one of them and
+ * no gate noticed. The count is now derived here and rewritten when it drifts,
+ * which is what makes `--check` able to fail on it.
+ *
+ * Truth is the number of player pages on disk. That is the same set
+ * lib/signup-data.js counts (players with a current bag that pass the page
+ * eligibility rule), and reading it from disk keeps this script offline.
+ *
  * Usage:
  *   node scripts/refresh-signup-blocks.js            # rewrite stale blocks
  *   node scripts/refresh-signup-blocks.js --check    # exit 1 if any are stale
@@ -43,6 +55,25 @@ const SCAN_ROOT_FILES = ['index.html'];
 // Global: scorecard issues carry two blocks (primary and secondary), so a
 // single-match regex would have quietly left every second one behind.
 const BLOCK_RE = /<section class="scb"[\s\S]*?<\/section>/g;
+
+/* The live number of WITB player pages: one directory per page, excluding the
+   /witb/players/ directory listing itself. */
+function playerPageCount() {
+  const dir = path.join(ROOT, 'witb', 'players');
+  if (!fs.existsSync(dir)) return null;
+  return fs.readdirSync(dir, { withFileTypes: true })
+    .filter(d => d.isDirectory() && fs.existsSync(path.join(dir, d.name, 'index.html')))
+    .length;
+}
+
+/* Rewrite the bag count inside a WITB headline. Returns the headline unchanged
+   when it carries no count, so brand/news/scorecard copy is never touched. */
+const BAG_COUNT_RE = /\b(We track every club in )(\d[\d,]*)( tour bags)/;
+function withBagCount(headline, count) {
+  if (!count || !headline) return headline;
+  return headline.replace(BAG_COUNT_RE, (_m, a, _n, b) => `${a}${count}${b}`);
+}
+
 
 /** Undo the escaping signupBlockHtml applied, so the copy round-trips exactly. */
 function unesc(s) {
@@ -82,6 +113,9 @@ function main() {
     .filter(f => fs.existsSync(f))
     .concat(...SCAN_DIRS.map(d => walkHtml(path.join(ROOT, d))));
 
+  const BAG_COUNT = playerPageCount();
+  if (BAG_COUNT) console.log(`[signup-blocks] WITB bag count on disk: ${BAG_COUNT}`);
+
   let scanned = 0, stale = 0, fixed = 0;
 
   for (const file of files) {
@@ -108,7 +142,7 @@ function main() {
         brandSlug:      attr(block, 'data-brand-slug') || undefined,
         latestIssueUrl: attr(block, 'data-latest-issue') || undefined,
         copy: {
-          headline:  inner(block, 'scb-headline'),
+          headline:  withBagCount(inner(block, 'scb-headline'), BAG_COUNT),
           proofLine: inner(block, 'scb-proof'),
         },
       });

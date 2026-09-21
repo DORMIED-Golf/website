@@ -155,6 +155,12 @@ jobs:
           # The sitemap lists published articles only, and the articles promoted
           # above were still drafts when generate-article.js last wrote it.
           node scripts/generate-sitemap.js
+          # A page committed before its row was promoted still said "index,
+          # follow" while the sitemap deliberately left it out, so an article
+          # held on the image gate was crawlable but unlisted. This syncs the
+          # robots meta to the publish status BOTH ways, so anything promoted
+          # in this run regains "index" in this same commit.
+          node scripts/sync-article-robots.js
 
           git add -A
 

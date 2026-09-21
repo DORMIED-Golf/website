@@ -658,11 +658,55 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
     return AB.wordCount(long) <= AB.MAX_WORDS ? long : short;
   })();
 
+/**
+ * Curated link from a brand page to the article that actually wins the brand's
+ * own query, mirroring PLAYER_RELATED in generate-witb-player-page.js.
+ *
+ * WHY: for some brands an explainer outranks and out-converts the brand page,
+ * and the only link between them sits in the LATEST feed -- a module that
+ * rotates as new stories publish, so the internal link pointing at the winner
+ * disappears the moment the brand gets fresh coverage. That is not a signal
+ * Google can rely on and not a path a reader can count on.
+ *
+ * Search Console, 2026-07-21 to 2026-09-16, queries containing the brand name:
+ *   malbon   /news/who-owns-malbon-golf/  7,917 impressions, 75 clicks, pos 7.9
+ *            /brands/malbon/                399 impressions,  0 clicks, pos 19.8
+ *   byrdie   /brands/byrdie-golf/         2,700 impressions,  0 clicks, pos 9.9
+ *            /news/what-is-byrdie-golf/   1,586 impressions,  0 clicks, pos 7.9
+ *
+ * Byrdie's brand page takes more impressions but sits worse and converts none,
+ * so the article is the page to consolidate on in both cases.
+ *
+ * Renders only for brands with an entry; every other brand page is unchanged.
+ */
+const BRAND_RELATED = {
+  'malbon': {
+    href: '/news/who-owns-malbon-golf/',
+    note: 'Malbon Golf is family-owned and independent, which is the detail most people are actually looking for when they search the brand.',
+    linkText: 'Who owns Malbon Golf?',
+  },
+  'byrdie-golf': {
+    href: '/news/what-is-byrdie-golf/',
+    note: 'Byrdie Golf sells through drops rather than a standing catalogue, so what the brand is changes more often than most.',
+    linkText: 'What is Byrdie Golf?',
+  },
+};
+
+function buildBrandRelatedHtml(slug) {
+  const r = BRAND_RELATED[slug];
+  if (!r) return '';
+  return `
+          <aside class="witb-related-note">
+            <p class="witb-related-text">${escHtml(r.note)}</p>
+            <a class="witb-related-link" href="${escHtml(r.href)}">${escHtml(r.linkText)}</a>
+          </aside>`;
+}
+
   const brandAnswerHtml = brandAnswerBlock ? `
           <section class="da-answer-block" aria-labelledby="bp-answer-heading">
             <h2 class="da-answer-label" id="bp-answer-heading">What Should You Know About ${escHtml(brand.name)}?</h2>
             <p class="da-answer-text">${escHtml(brandAnswerBlock)}</p>
-          </section>` : '';
+          </section>${buildBrandRelatedHtml(slug)}` : '';
 
   // Meta line: Founded YYYY · Headquarters (category already shown as badge)
   const metaParts = [];
