@@ -1692,7 +1692,6 @@ ${scSignupPrimary}
               ${historySnapshotsHtml}
             </div>
 
-            <p class="witb-footnote">Data from <a href="https://www.pgaclubtracker.com" rel="noopener noreferrer" target="_blank">PGAClubTracker</a> and <a href="https://golfwrx.com/" rel="noopener noreferrer" target="_blank">GolfWRX</a>. OWGR from <a href="https://www.owgr.com" rel="noopener noreferrer" target="_blank">owgr.com</a>, updated weekly. All data is DORMIED's independent editorial compilation.</p>
           </section>
 
 ${(shopBrand && !shopBag) ? `
