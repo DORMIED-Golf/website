@@ -17,13 +17,13 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/</loc>
-    <lastmod>2026-09-21</lastmod>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://dormied.com/witb/players/</loc>
-    <lastmod>2026-09-21</lastmod>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -70,7 +70,7 @@
     <priority>0.5</priority>
   </url>
 
-  <!-- ── WITB player pages (276) ── -->
+  <!-- ── WITB player pages (277) ── -->
   <url>
     <loc>https://dormied.com/witb/players/aaron-rai/</loc>
     <lastmod>2026-08-09</lastmod>
@@ -661,7 +661,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/harry-higgs/</loc>
-    <lastmod>2023-12-21</lastmod>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -979,7 +979,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/lee-hodges/</loc>
-    <lastmod>2023-07-30</lastmod>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1376,6 +1376,12 @@
   <url>
     <loc>https://dormied.com/witb/players/rickie-fowler/</loc>
     <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/rico-hoey/</loc>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

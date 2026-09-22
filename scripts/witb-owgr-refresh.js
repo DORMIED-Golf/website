@@ -67,6 +67,7 @@ const DB_TO_OWGR_ALIAS = {
   // OWGR uses the full first name. The only Benjamin James in the ranking:
   // United States, born 2003-05-30.
   'ben james':          'benjamin james',
+  'rico hoey':          'richard hoey',   // OWGR uses his legal name: owgr.com/playerprofile/richard-hoey-23504
 };
 
 // ── Name Normalisation ────────────────────────────────────────────────────────
