@@ -1,0 +1,5 @@
+# Markdown is source material only (feature sources read by
+# scripts/generate-feature.js, repo docs, prompts). Nothing on the live site
+# is a .md file, so keep them out of the deployment entirely: serving them
+# exposed duplicate copies of indexed feature pages and internal notes.
+*.md
