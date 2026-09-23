@@ -3070,7 +3070,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (663) ── -->
+  <!-- ── News articles (664) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -5399,6 +5399,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/jumbomax-agencies-grip-brand-hero.png</image:loc>
       <image:title>Two Agencies for a Grip Brand. JumboMax Is Buying Its Way Out of the Bryson Box.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/jumbomax-player-brand/</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/jumbomax-player-brand-hero.png</image:loc>
+      <image:title>One Player Built JumboMax&apos;s Entire Brand. He Doesn&apos;t Play the PGA Tour Anymore.</image:title>
     </image:image>
   </url>
   <url>
@@ -9725,13 +9735,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/14/</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/15/</loc>
-    <lastmod>2026-06-19</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9833,7 +9843,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/6/</loc>
-    <lastmod>2026-08-17</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
