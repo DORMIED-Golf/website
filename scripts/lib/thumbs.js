@@ -176,4 +176,5 @@ module.exports = {
   WIDTHS, THUMB_DIR, THUMB_BASE,
   parseSource, thumbUrl, thumbFile, thumbExists,
   ensureThumbs, writeThumbsFromBuffer, thumbSrcset, thumbSrcOr,
+  loadSource,
 };

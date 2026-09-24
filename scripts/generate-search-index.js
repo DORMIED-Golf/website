@@ -124,6 +124,15 @@ function buildNewsEntries() {
 
     const html = fs.readFileSync(htmlPath, 'utf8');
 
+    // A page marked noindex is not public content: in practice it is a draft
+    // held on the image gate, which sync-article-robots.js has flagged. The
+    // sitemap already leaves those out; without this, site search still
+    // offered them, so a story judged not ready was one search away. Reading
+    // the page's own robots meta keeps this script offline, and it agrees with
+    // whatever the robots sync last decided.
+    const robots = extractMeta(html, 'name', 'robots') || '';
+    if (/\bnoindex\b/i.test(robots)) continue;
+
     // Title: from <h1 class="sc-article-title">
     const title = extractTag(html, 'h1', 'sc-article-title') ||
       extractMeta(html, 'property', 'og:title');

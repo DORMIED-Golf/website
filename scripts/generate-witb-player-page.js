@@ -902,6 +902,7 @@ const { STATS_WINDOW_MONTHS, statsCutoff, isActiveBagDate } = require('./lib/wit
 // which every new one returns 402. See scripts/lib/thumbs.js. A width with no
 // thumbnail falls back to the full image, so nothing breaks.
 const { thumbUrl: _thumbUrl, thumbExists: _thumbExists } = require('./lib/thumbs');
+const { imageObjects } = require('./lib/share-images');
 function vitUrl(src, w) {
   if (!src) return src;
   return _thumbExists(src, w) ? _thumbUrl(src, w) : src;
@@ -1075,6 +1076,7 @@ function buildRelatedCoverageHtml(slug) {
 
 function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCount, ledes, today, latestFeedHtml, topStoriesHtml, featuredFeedHtml, modsHtml, shopBrand, shopBag, signupData, latestIssueUrl, surnamePeers }) {
   const { name, slug, owgr_rank, rolex_rank, owgr_rank_updated_at, data_golf_rank, country_code, nation } = player;
+  const share = player._share || null;
   const owgrDate    = fmtOwgrDate(owgr_rank_updated_at);
   const currentDate = fmtDate(currentBag.bag_date);
 
@@ -1376,6 +1378,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
         name:    name,
         url:     canonicalUrl,
         description: `${name} tour equipment bag, tracked across ${bags.length} snapshots by DORMIED.`,
+        ...(share && { image: share.square.url }),
       },
       {
         '@type':         'ItemList',
@@ -1389,7 +1392,7 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
         '@type':            'Article',
         headline:           `${name}: What's In The Bag`,
         description:        `${name} tour equipment bag, tracked across ${bags.length} snapshots by DORMIED.`,
-        image:              'https://dormied.com/images/og-image.jpg',
+        image:              share ? imageObjects(share) : 'https://dormied.com/images/og-image.jpg',
         datePublished:      firstPublished,
         dateModified:       currentBag.bag_date,
         author:             { '@type': 'Organization', name: 'DORMIED', url: 'https://dormied.com' },
@@ -1444,14 +1447,17 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:title" content="${esc(pageTitle)}">
   <meta property="og:description" content="${esc(metaDesc)}">
-  <meta property="og:image" content="https://dormied.com/images/og-image.jpg">
+  <meta property="og:image" content="${share ? share.wide.url : 'https://dormied.com/images/og-image.jpg'}">
+  <meta property="og:image:width" content="${share ? share.wide.width : 1200}">
+  <meta property="og:image:height" content="${share ? share.wide.height : 630}">
+  <meta property="og:image:alt" content="${esc(name)}">
   <meta property="og:site_name" content="DORMIED">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@DORMIED_GOLF">
   <meta name="twitter:title" content="${esc(pageTitle)}">
   <meta name="twitter:description" content="${esc(metaDesc)}">
-  <meta name="twitter:image" content="https://dormied.com/images/og-image.jpg">
+  <meta name="twitter:image" content="${share ? share.wide.url : 'https://dormied.com/images/og-image.jpg'}">
 
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
@@ -2041,6 +2047,18 @@ async function main() {
   if (!pageEligible(player.owgr_rank, PLAYER_SLUG, currentBag.bag_date)) {
     warn(`Skipping ${player.name} (${PLAYER_SLUG}) — unranked, not recent, not allowlisted. Delete witb/players/${PLAYER_SLUG}/ if a stale page exists.`);
     process.exit(0);
+  }
+
+  // Square + 16:9 images of the headshot for og:image and the structured data
+  // (lib/share-images.js). Without them the page declared the generic site
+  // card and Google showed a driver from a news card instead. Built only after
+  // the eligibility check, so a player kept off the site gets no images either.
+  player._share = null;
+  if (player.headshot_url) {
+    try {
+      const { ensureShareImages } = require('./lib/share-images');
+      player._share = await ensureShareImages('player', player.headshot_url);
+    } catch { /* the page falls back to the site card */ }
   }
 
   const currentItems = currentBag._items;

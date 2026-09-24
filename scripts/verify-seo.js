@@ -9,6 +9,8 @@
  *   - exactly one non-empty h1, and it is the first heading on the page
  *   - no h3 before the first h2, and no skipped heading level (h2 -> h4)
  *   - a canonical, and og:url equal to it; og:title, og:description, og:image
+ *   - WITB player and brand pages declare their own square and 16:9 share
+ *     images (headshot or logo), and those files exist
  *   - no em dash in the title, description, h1 or any h2
  *   - every indexable page is in sitemap.xml, and every sitemap URL is an
  *     indexable page
@@ -75,6 +77,24 @@ function main() {
     }
     for (const prop of ['og:title', 'og:description', 'og:image']) {
       if (!new RegExp(`property=["']${prop}["']`, 'i').test(head)) fail(`missing ${prop}`, page);
+    }
+
+    // WITB player and brand pages must declare their own headshot or logo
+    // (lib/share-images.js), in both og:image and the structured data, and the
+    // files must exist. When they declared the generic site card instead,
+    // Google skipped past it and showed a driver from a news card beside
+    // "zach johnson witb"; 88 brand logos were too small for Google to use.
+    if (/^(witb\/players|brands)\/[^/]+\/index\.html$/.test(page.rel)) {
+      const ogImg = attr((head.match(/<meta[^>]+property=["']og:image["'][^>]*>/i) || [''])[0], 'content') || '';
+      const local = u => path.join(ROOT, u.replace(/^https:\/\/dormied\.com\//, ''));
+      if (!/^https:\/\/dormied\.com\/images\/share\//.test(ogImg)) {
+        fail('player/brand og:image is not its own share image', page, ogImg || '(none)');
+      } else if (!fs.existsSync(local(ogImg))) {
+        fail('player/brand og:image file does not exist', page, ogImg);
+      }
+      const sq = (page.html.match(/https:\/\/dormied\.com\/images\/share\/[^"]+-1x1\.jpg/) || [])[0];
+      if (!sq) fail('player/brand structured data has no square image', page);
+      else if (!fs.existsSync(local(sq))) fail('player/brand square image file does not exist', page, sq);
     }
 
     const hs = headings(page.html);

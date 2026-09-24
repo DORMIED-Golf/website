@@ -161,6 +161,9 @@ jobs:
           # robots meta to the publish status BOTH ways, so anything promoted
           # in this run regains "index" in this same commit.
           node scripts/sync-article-robots.js
+          # Site search reads each page's robots meta, so it is rebuilt after the
+          # sync: a draft held in this run drops out, a promoted one comes in.
+          node scripts/generate-search-index.js
 
           git add -A
 

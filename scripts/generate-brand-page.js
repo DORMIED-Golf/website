@@ -32,6 +32,7 @@ const feedBake         = require('./feed-bake');
 
 const { dataVersion } = require('./lib/data-version');
 const { brandAffiliateLink } = require('./lib/brand-affiliate-links');
+const { ensureShareImages, imageObjects } = require('./lib/share-images');
 const { pinnedProductAttr } = require('./lib/brand-pinned-products');
 const AB = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
@@ -569,7 +570,7 @@ function latestScorecardUrl() {
   } catch (e) { return '/scorecard/'; }
 }
 
-function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '', hasShop = false }) {
+function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, dormiedData, onTourHtml = '', onTourData = [], facts = null, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml = '', hasShop = false, share = null }) {
   const { rank, di, momPct, t3m, t12m } = stats;
 
   // Inline Scorecard signup. The proof line is this brand's own live rank and
@@ -605,7 +606,16 @@ function generateBrandPageHtml({ brand, slug, stats, articles, relatedBrands, do
   pageTitle = escHtml(pageTitle);
   const metaDesc     = escHtml(buildMetaDesc(brand, stats, (dormiedData.brands || []).length));
   const canonicalUrl = `https://dormied.com/brands/${escHtml(slug)}/`;
-  const ogImage      = escHtml(brand.logo ? (brand.logo.startsWith('/') ? `https://dormied.com${brand.logo}` : brand.logo) : 'https://dormied.com/images/og-image.jpg');
+  // Absolute logo URL for schema.org Organization.logo, which Google reads for
+  // the brand's knowledge panel and wants as a full URL.
+  const logoAbs      = brand.logo ? (brand.logo.startsWith('/') ? `https://dormied.com${brand.logo}` : brand.logo) : null;
+  // og:image is the 16:9 logo card from lib/share-images.js. The raw logo used
+  // to go here while the tags claimed 1200x630: logos run a median 350x350,
+  // and 88 of 217 are under the 50,000 pixels Google needs to show one at all.
+  const ogImage      = escHtml(share ? share.wide.url : (logoAbs || 'https://dormied.com/images/og-image.jpg'));
+  // Declare dimensions only when they are known to be true.
+  const ogDims       = share ? { w: share.wide.width, h: share.wide.height }
+                     : (logoAbs ? null : { w: 1200, h: 630 });
 
   const momStr = fmtPct(momPct);
   const t3mStr = fmtPct(t3m);
@@ -754,7 +764,8 @@ function buildBrandRelatedHtml(slug) {
         '@type': 'Organization',
         name: brand.name,
         ...(brand.website     && { url: brand.website }),
-        ...(brand.logo        && { logo: brand.logo }),
+        ...(logoAbs           && { logo: logoAbs }),
+        ...(share             && { image: share.square.url }),
         ...(brand.founded     && { foundingDate: String(brand.founded) }),
         ...(brand.description && { description: stripEmDashes(brand.description) }),
       },
@@ -762,7 +773,7 @@ function buildBrandRelatedHtml(slug) {
         '@type': 'Article',
         headline: `${brand.name}: Golf Brand Profile, Rankings & News`,
         description: stripEmDashes(brand.description || `${brand.name} on the DORMIED Index.`),
-        image: brand.logo || 'https://dormied.com/images/og-image.jpg',
+        image: share ? imageObjects(share) : (logoAbs || 'https://dormied.com/images/og-image.jpg'),
         ...(brandDatePublished && {
           datePublished: brandDatePublished,
           dateModified:  brandDateModified,
@@ -888,9 +899,10 @@ ${faqItems.map(it => `              <div class="da-faq-item">
   <meta id="og-url"   property="og:url"         content="${canonicalUrl}">
   <meta id="og-title" property="og:title"        content="${pageTitle}">
   <meta id="og-desc"  property="og:description"  content="${metaDesc}">
-  <meta id="og-img"   property="og:image"        content="${ogImage}">
-  <meta property="og:image:width"  content="1200">
-  <meta property="og:image:height" content="630">
+  <meta id="og-img"   property="og:image"        content="${ogImage}">${ogDims ? `
+  <meta property="og:image:width"  content="${ogDims.w}">
+  <meta property="og:image:height" content="${ogDims.h}">` : ''}
+  <meta property="og:image:alt"    content="${escHtml(brand.name)} logo">
 
   <!-- ── Twitter Card ── -->
   <meta name="twitter:card"        content="summary_large_image">
@@ -1628,7 +1640,14 @@ async function processOneBrand(dormiedData, supabase, brandSlug, force, witbTour
 
   const facts = (factsBySlug && factsBySlug.get(brandSlug)) || null;
 
-  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml, hasShop: affiliateSlugs.has(brandSlug) });
+  // Square + 16:9 logo cards for og:image and the structured data. null when
+  // the logo cannot be loaded, and the page falls back to what it used before.
+  let share = null;
+  if (brand.logo) {
+    try { share = await ensureShareImages('logo', brand.logo); } catch { share = null; }
+  }
+
+  const html = generateBrandPageHtml({ brand, slug: brandSlug, stats, articles, relatedBrands, dormiedData, onTourHtml, onTourData, facts, dormiedLatestHtml, topStoriesHtml, featuredFeedHtml, modsHtml, hasShop: affiliateSlugs.has(brandSlug), share });
 
   // Write file
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
