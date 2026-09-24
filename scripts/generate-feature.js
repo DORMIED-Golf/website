@@ -641,6 +641,105 @@ const FEATURES = {
       ]},
     },
   },
+  // Written from the 2026-09 brand explainer brief (Search Console showed the
+  // brand ranking only for product searches at positions 40-80, never for the
+  // question itself). Images: Sun Day Red / TaylorMade press imagery except
+  // the launch photo, credited to Golf Monthly as supplied.
+  'what-is-sun-day-red': {
+    slug: 'what-is-sun-day-red',
+    title: "What Is Sun Day Red? Tiger Woods' First Brand After 27 Years at Nike",
+    titleTag: "What Is Sun Day Red? Tiger Woods' Brand | DORMIED",
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'sun-day-red',
+    leadRole: 'bio',
+    lastUpdated: 'September 24, 2026',
+    dateModified: '2026-09-24T12:00:00.000Z',
+    publishedAt: '2026-09-24T12:00:00.000Z',
+    quickAnswer: "Sun Day Red is Tiger Woods' apparel and footwear brand, built with TaylorMade and launched in 2024, named for his Sunday red shirt and run as a separate business unit rather than a sponsorship.",
+    keyTakeaways: [
+      "Sun Day Red is Tiger Woods' apparel and footwear brand, created with TaylorMade and announced on 12 February 2024, five weeks after he left Nike.",
+      'TaylorMade owns and runs it as a separate business unit, with Woods as a partner; the ownership split has never been disclosed.',
+      'The tiger logo carries 15 stripes for his 15 majors, and it has drawn trademark challenges from Tigeraire and Puma.',
+    ],
+    metaDescription: "Sun Day Red is Tiger Woods' apparel and footwear brand, built with TaylorMade in 2024. Who owns it, what the logo means and what it costs.",
+    seoKeywords: ['what is sun day red', 'sun day red', 'tiger woods clothing brand', 'who owns sun day red', 'sun day red logo meaning', 'is sun day red owned by taylormade', 'sun day red polo price'],
+    subject: 'Sun Day Red',
+    mdPath: path.join(ROOT, 'article-what-is-sun-day-red.md'),
+    imgBase: '/images/features/what-is-sun-day-red',
+    hero: { file: 'hero.webp', w: 1920, h: 1000, alt: 'Tiger Woods walking a fairway in a blue Sun Day Red polo and a white cap.', caption: 'Woods in the Sun Day Red polo range. Photo by Sun Day Red.' },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    sectionImages: {
+      'What Is Sun Day Red?': { layout: 'single', images: [
+        { file: 'launch.webp', w: 1600, h: 900, alt: 'Tiger Woods speaking on stage in front of a red Sun Day Red backdrop showing the tiger logo.', caption: 'Woods presenting Sun Day Red at its launch. Photo by Golf Monthly.' },
+      ]},
+      'Why Is It Called Sun Day Red?': { layout: 'single', images: [
+        { file: 'red-polo.webp', w: 1600, h: 833, alt: 'A red Sun Day Red polo laid flat beside a black cap, a white glove and a black T-shirt.', caption: 'The red polo the brand takes its name from. Photo by Sun Day Red.' },
+      ]},
+      'Who Owns Sun Day Red, Tiger Woods or TaylorMade?': { layout: 'single', images: [
+        { file: 'campaign.webp', w: 1600, h: 833, alt: 'Three golfers dressed in black swinging on a practice range.', caption: "From Sun Day Red's launch campaign. Photo by Sun Day Red." },
+      ]},
+      'What Does the Sun Day Red Logo Mean?': { layout: 'single', images: [
+        { file: 'logo-polos.webp', w: 1600, h: 833, alt: 'Four striped Sun Day Red polos side by side, each carrying the tiger logo on the chest.', caption: 'The tiger mark across the polo range. Photo by Sun Day Red.' },
+      ]},
+      'What Does Sun Day Red Sell and What Does It Cost?': { layout: 'two-up', images: [
+        { file: 'footwear.webp', w: 1600, h: 833, alt: 'Close view of a golfer in Sun Day Red golf shoes standing over a driver.', caption: 'Footwear is the deepest part of the range. Photo by Sun Day Red.' },
+        { file: 'polos-lifestyle.webp', w: 1600, h: 833, alt: 'Two golfers in Sun Day Red polos walking beside a pond on a golf course.', caption: 'Polos run $115 to $135 as of September 2026. Photo by Sun Day Red.' },
+      ]},
+      'Is Sun Day Red Working?': { layout: 'single', images: [
+        { file: 'royal-troon.webp', w: 1600, h: 833, alt: 'Tiger Woods in a blue Sun Day Red top hitting a chip shot beside tall rough.', caption: 'Woods in Sun Day Red at The Open at Royal Troon in 2024. Photo by TaylorMade.' },
+      ]},
+    },
+  },
+  // Written from the 2026-09 brand explainer brief ("is j lindeberg a good
+  // brand" was landing on the brand page at ~position 9 with no clicks).
+  // Campaign and event images are J.Lindeberg's own; Hovland and Villegas are
+  // credited to the PGA Tour and Golf Digest as supplied.
+  'is-j-lindeberg-a-good-golf-brand': {
+    slug: 'is-j-lindeberg-a-good-golf-brand',
+    title: 'Is J.Lindeberg a Good Golf Brand? Yes, If You Fit the Cut',
+    titleTag: 'Is J.Lindeberg a Good Golf Brand? | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'j-lindeberg',
+    leadRole: 'bio',
+    lastUpdated: 'September 24, 2026',
+    dateModified: '2026-09-24T12:00:00.000Z',
+    publishedAt: '2026-09-24T12:00:00.000Z',
+    quickAnswer: 'J.Lindeberg makes genuinely premium golf apparel with excellent fabric and design, and it suits lean, athletic builds far better than broad ones.',
+    keyTakeaways: [
+      "J.Lindeberg's fabric and construction sit in the premium tier alongside Peter Millar, Galvin Green and G/Fore.",
+      'The slim Scandinavian cut decides it: size up if you are between sizes, and look elsewhere if you are broad through the shoulders.',
+      'Polos run about $90 to $125 as of September 2026; outerwear climbs to $230 and is worth buying on markdown.',
+    ],
+    metaDescription: 'J.Lindeberg is a good golf brand with premium fabric and design, but its slim Scandinavian cut decides it. What it costs, how it fits, who wears it.',
+    seoKeywords: ['is j lindeberg a good brand', 'is j lindeberg a good golf brand', 'j lindeberg golf', 'does j lindeberg run small', 'who owns j lindeberg', 'j lindeberg polo price', 'j.lindeberg golf outfit'],
+    subject: 'J.Lindeberg',
+    mdPath: path.join(ROOT, 'article-is-j-lindeberg-a-good-golf-brand.md'),
+    imgBase: '/images/features/is-j-lindeberg-a-good-golf-brand',
+    hero: { file: 'hero.webp', w: 1920, h: 1280, alt: 'Two golfers in J.Lindeberg autumn layers walking a tree-lined fairway carrying their bags.', caption: "From J.Lindeberg's Fall/Winter 2026 golf collection. Photo by J.Lindeberg." },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    sectionImages: {
+      'Is J.Lindeberg a Good Golf Brand?': { layout: 'two-up', images: [
+        { file: 'fw26-putting.webp', w: 400, h: 600, alt: 'A golfer in a light grey J.Lindeberg outfit putting on a green lined with pine trees.', caption: 'Fall/Winter 2026. Photo by J.Lindeberg.' },
+        { file: 'fw26-swing.webp', w: 400, h: 600, alt: 'A golfer in a pale green J.Lindeberg top and pleated skirt holding her finish.', caption: 'Fall/Winter 2026. Photo by J.Lindeberg.' },
+      ]},
+      'What Does J.Lindeberg Golf Clothing Cost?': { layout: 'two-up', images: [
+        { file: 'bmw-cart.webp', w: 400, h: 600, alt: 'A woman in a pink J.Lindeberg polo sitting in a golf cart.', caption: 'At the 2026 BMW Championship. Photo by J.Lindeberg.' },
+        { file: 'bmw-tee.webp', w: 400, h: 600, alt: 'A man seen from behind wearing a white J.Lindeberg T-shirt printed Crafted for the Course.', caption: 'At the 2026 BMW Championship. Photo by J.Lindeberg.' },
+      ]},
+      'How Does J.Lindeberg Fit Compared With Other Golf Brands?': { layout: 'two-up', images: [
+        { file: 'matt-wallace.webp', w: 1000, h: 1500, alt: 'Matt Wallace in a navy J.Lindeberg polo with white trim and navy trousers.', caption: 'Matt Wallace in J.Lindeberg at the 2026 Genesis Scottish Open. Photo by J.Lindeberg.' },
+        { file: 'bmw-family.webp', w: 1000, h: 1500, alt: 'A couple in relaxed J.Lindeberg layers standing on a golf course, the woman holding a baby.', caption: 'At the 2026 BMW Championship. Photo by J.Lindeberg.' },
+      ]},
+      'Which Tour Pros Wear J.Lindeberg?': { layout: 'two-up', images: [
+        { file: 'hovland.webp', w: 1600, h: 1067, alt: 'Viktor Hovland in a mint green polo holding a club on a golf course.', caption: "Viktor Hovland, the brand's headline ambassador. Photo by PGA Tour." },
+        { file: 'villegas.webp', w: 1600, h: 1066, alt: 'Camilo Villegas in white standing on a green watching a putt, with a gallery behind him.', caption: 'Camilo Villegas. Photo by Golf Digest.' },
+      ]},
+    },
+  },
 };
 
 // ── Helpers ─────────────────────────────────────────────────────────────────────
