@@ -3094,7 +3094,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (668) ── -->
+  <!-- ── News articles (669) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -7062,6 +7062,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/srixon-13-5-degree-3-wood/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/srixon-13-5-degree-3-wood-hero.jpg</image:loc>
+      <image:title>A 13.5-Degree 3-Wood That Bends to 12. Srixon Skipped the Mini Driver Entirely.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/srixon-bets-its-iron-reputation-on-a-factory-floor-campaign-2026-04-21/</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -9781,7 +9791,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/11/</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9835,7 +9845,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9871,7 +9881,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/25/</loc>
-    <lastmod>2026-04-27</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9889,13 +9899,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/3/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
