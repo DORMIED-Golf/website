@@ -589,12 +589,32 @@ async function fetchSidebarModulesCore(supabase, dormiedData) {
       .select('player_id, club_type, change_type, detected_at, old_bag_date, witb_players!player_id(name, slug, headshot_url)')
       .order('detected_at', { ascending: false })
       .limit(60);
+    // One label per player, from the most notable row of their latest update.
+    // Rows of one update share a detected_at, so "first row" was whatever the
+    // database returned: Ryo Hisatsune's new putter read "DROPPED PUTTER" and
+    // Nick Taylor's "ADDED IRON". Clubs outrank accessories, and a club that
+    // arrived outranks one that left.
+    const SLOT_RANK = ['putter', 'driver', 'mini-driver', '3-wood', '4-wood', '5-wood', '7-wood', '9-wood',
+      'hybrid', 'utility-iron', 'utility', 'iron', 'wedge', 'ball', 'grip'];
+    const rank = function (c) {
+      const s = SLOT_RANK.indexOf(c.club_type);
+      return (s === -1 ? SLOT_RANK.length : s) * 3 + (c.change_type === 'swapped' ? 0 : c.change_type === 'added' ? 1 : 2);
+    };
+    const best = new Map();
+    for (const c of (changes || [])) {
+      const slug = c.witb_players && c.witb_players.slug;
+      if (!slug) continue;
+      const cur = best.get(slug);
+      if (!cur) { best.set(slug, c); continue; }
+      if (c.detected_at === cur.detected_at && rank(c) < rank(cur)) best.set(slug, c);
+    }
     const seen = new Set();
     let bagRows = [];
-    for (const c of (changes || [])) {
-      const p = c.witb_players;
+    for (const row of (changes || [])) {
+      const p = row.witb_players;
       if (!p || !p.slug || seen.has(p.slug)) continue;
       seen.add(p.slug);
+      const c = best.get(p.slug);
       // A null old_bag_date means this row came from a debut: the player's first
       // bag, diffed against nothing. "ADDED GRIP" would be a strange way to
       // announce someone joining the dataset, so say what actually happened.
