@@ -740,6 +740,54 @@ const FEATURES = {
       ]},
     },
   },
+  // Written from the 2026-09 brand explainer brief. Ball and teardown photos
+  // are MyGolfSpy's and Today's Golfer's, box shots Costco's, as supplied.
+  'who-makes-kirkland-golf-balls': {
+    slug: 'who-makes-kirkland-golf-balls',
+    title: 'Who Makes Kirkland Golf Balls? It Depends Which Colour You Buy',
+    titleTag: 'Who Makes Kirkland Golf Balls? | DORMIED',
+    byline: 'Travis R.',
+    authors: ['Travis R.'],
+    category: 'Feature',
+    brandSlug: 'kirkland-golf',
+    leadRole: 'bio',
+    lastUpdated: 'September 25, 2026',
+    dateModified: '2026-09-25T12:00:00.000Z',
+    publishedAt: '2026-09-25T12:00:00.000Z',
+    quickAnswer: 'Kirkland golf balls are made for Costco by contract factories, and the maker has changed. Nassau Golf of South Korea made the 2016 original; the current Performance+ V3.0 comes from factories tied to SM Global and SM Parker, with the white ball made in Vietnam and the yellow reportedly in China.',
+    keyTakeaways: [
+      'The original 2016 four-piece ball was made by Nassau Golf in South Korea.',
+      'The current Performance+ V3.0 comes from factories tied to SM Global and SM Parker, and the white and yellow balls are made in different plants.',
+      'Costco sued Acushnet first, in March 2017. Acushnet countersued that August and the case settled out of court in 2018.',
+      'MyGolfSpy rates the current ball a B, 85 out of 100: good value, not a Pro V1 equivalent. Buy the yellow.',
+      'About $40 for two dozen as of September 2026, a third more than the 2016 launch price.',
+    ],
+    metaDescription: 'Nassau Golf of South Korea made the original Kirkland ball in 2016. Today the white and yellow balls come from different factories in Vietnam and China.',
+    seoKeywords: ['who makes kirkland golf balls', 'kirkland golf balls', 'kirkland signature golf ball manufacturer', 'are kirkland golf balls good', 'kirkland golf', 'are kirkland golf balls made in korea', 'does titleist make kirkland golf balls', 'why did acushnet sue costco'],
+    subject: 'Kirkland Signature golf balls',
+    mdPath: path.join(ROOT, 'article-who-makes-kirkland-golf-balls.md'),
+    imgBase: '/images/features/who-makes-kirkland-golf-balls',
+    hero: { file: 'hero.webp', w: 1536, h: 800, alt: 'Two white Kirkland Signature golf balls on turf in front of a Kirkland three-ball sleeve and a dozen box.', caption: 'The Kirkland Signature Performance+ V3.0. Photo by MyGolfSpy.' },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    sectionImages: {
+      'Who Makes Kirkland Golf Balls?': { layout: 'single', images: [
+        { file: 'teardown.webp', w: 1536, h: 1024, alt: 'A yellow Kirkland golf ball cut in half beside two whole yellow balls and a Kirkland box.', caption: 'A yellow V3.0 cut open for a teardown. Photo by MyGolfSpy.' },
+      ]},
+      'Why Did Acushnet Sue Costco Over Kirkland Golf Balls?': { layout: 'single', images: [
+        { file: 'ball-in-hand.webp', w: 1536, h: 1075, alt: 'A gloved hand taking a white Kirkland Signature ball out of its sleeve.', caption: 'A white Kirkland Signature ball out of the sleeve. Photo by MyGolfSpy.' },
+      ]},
+      'Who Makes the Current Kirkland Golf Ball?': { layout: 'two-up', images: [
+        { file: 'box-white.webp', w: 1024, h: 1024, alt: 'A two-dozen box of white Kirkland Signature V3.0 golf balls.', caption: 'The white V3.0, made in Vietnam. Photo by Costco.' },
+        { file: 'box-yellow.webp', w: 1024, h: 1024, alt: 'A two-dozen box of yellow Kirkland Signature V3.0 golf balls.', caption: 'The yellow V3.0, from a different factory. Photo by Costco.' },
+      ]},
+      'Is a Kirkland Golf Ball as Good as a Pro V1?': { layout: 'single', images: [
+        { file: 'durability.webp', w: 951, h: 634, alt: 'Two views of a gloved hand holding a white Kirkland Signature ball on a golf course.', caption: 'Testing the V3.0 cover for durability. Photo by Today\'s Golfer.' },
+      ]},
+      'How Is Kirkland Golf Trending on the DORMIED Index?': { layout: 'single', images: [
+        { file: 'sleeve.webp', w: 951, h: 634, alt: 'A three-ball sleeve of Kirkland Signature golf balls standing on a fairway.', caption: 'The three-ball sleeve. Photo by Today\'s Golfer.' },
+      ]},
+    },
+  },
 };
 
 // ── Helpers ─────────────────────────────────────────────────────────────────────

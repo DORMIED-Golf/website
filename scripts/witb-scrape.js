@@ -23,6 +23,7 @@ const cheerio          = require('cheerio');
 const { createClient } = require('@supabase/supabase-js');
 const { submitUrls }   = require('../lib/indexnow');
 const { normalizeBrandModel } = require('./lib/witb-brand-normalize');
+const { diffBags }     = require('./lib/witb-diff');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -583,8 +584,8 @@ async function fetchAllPlayers() {
  * the empty bag so every club records as 'added' with a null old_bag_date.
  * Debuts used to be skipped, which meant a player arriving with a full bag --
  * the most newsworthy update there is -- was the one event that never reached
- * Freshest Bag, Recent Bag Updates or the sidebar module. Kept identical to the
- * manual updater's copy of this function; if you change one, change both.
+ * Freshest Bag, Recent Bag Updates or the sidebar module. The diff itself lives
+ * in lib/witb-diff.js, shared with the manual updater.
  */
 async function detectChanges(supabase, player_id, oldBagId, newBagId, oldBagDate, newBagDate) {
   const [{ data: oldItems }, { data: newItems }] = await Promise.all([
@@ -593,35 +594,7 @@ async function detectChanges(supabase, player_id, oldBagId, newBagId, oldBagDate
       : Promise.resolve({ data: [] }),
     supabase.from('witb_bag_items').select('club_type, raw_brand, raw_model').eq('bag_id', newBagId),
   ]);
-  // The null old_bag_date is what the renderers read to say "new bag" rather
-  // than "11 changes", so never let a stale date reach a debut row.
-  if (!oldBagId) oldBagDate = null;
-
-  const oldMap = {};
-  for (const i of (oldItems || [])) {
-    const key = i.club_type;
-    oldMap[key] = `${i.raw_brand || ''} ${i.raw_model || ''}`.trim();
-  }
-  const newMap = {};
-  for (const i of (newItems || [])) {
-    const key = i.club_type;
-    newMap[key] = `${i.raw_brand || ''} ${i.raw_model || ''}`.trim();
-  }
-
-  const changes = [];
-  const allTypes = new Set([...Object.keys(oldMap), ...Object.keys(newMap)]);
-
-  for (const club_type of allTypes) {
-    const oldVal = oldMap[club_type];
-    const newVal = newMap[club_type];
-    if (!oldVal && newVal) {
-      changes.push({ player_id, club_type, change_type: 'added', old_value: null, new_value: newVal, old_bag_date: oldBagDate, new_bag_date: newBagDate });
-    } else if (oldVal && !newVal) {
-      changes.push({ player_id, club_type, change_type: 'removed', old_value: oldVal, new_value: null, old_bag_date: oldBagDate, new_bag_date: newBagDate });
-    } else if (oldVal && newVal && oldVal !== newVal) {
-      changes.push({ player_id, club_type, change_type: 'swapped', old_value: oldVal, new_value: newVal, old_bag_date: oldBagDate, new_bag_date: newBagDate });
-    }
-  }
+  const changes = diffBags(oldItems, newItems, { player_id, oldBagDate, newBagDate, debut: !oldBagId });
 
   if (changes.length) {
     const { error } = await supabase.from('witb_changes').insert(changes);

@@ -44,6 +44,7 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../.env'), 
 const fs               = require('fs');
 const path             = require('path');
 const { createClient } = require('@supabase/supabase-js');
+const { diffBags }     = require('./lib/witb-diff');
 
 const DRY = process.argv.includes('--dry-run');
 
@@ -187,21 +188,7 @@ async function detectChanges(supabase, player_id, oldBagId, newBagId, oldBagDate
       : Promise.resolve({ data: [] }),
     supabase.from('witb_bag_items').select('club_type, raw_brand, raw_model').eq('bag_id', newBagId),
   ]);
-  // Never carry a stale date into a debut row; the discriminator depends on it.
-  if (!oldBagId) oldBagDate = null;
-  const toMap = rows => {
-    const m = {};
-    for (const i of (rows || [])) m[i.club_type] = `${i.raw_brand || ''} ${i.raw_model || ''}`.trim();
-    return m;
-  };
-  const oldMap = toMap(oldItems), newMap = toMap(newItems);
-  const changes = [];
-  for (const club_type of new Set([...Object.keys(oldMap), ...Object.keys(newMap)])) {
-    const o = oldMap[club_type], n = newMap[club_type];
-    if (!o && n)       changes.push({ player_id, club_type, change_type: 'added',   old_value: null, new_value: n,    old_bag_date: oldBagDate, new_bag_date: newBagDate });
-    else if (o && !n)  changes.push({ player_id, club_type, change_type: 'removed', old_value: o,    new_value: null, old_bag_date: oldBagDate, new_bag_date: newBagDate });
-    else if (o && n && o !== n) changes.push({ player_id, club_type, change_type: 'swapped', old_value: o, new_value: n, old_bag_date: oldBagDate, new_bag_date: newBagDate });
-  }
+  const changes = diffBags(oldItems, newItems, { player_id, oldBagDate, newBagDate, debut: !oldBagId });
   if (changes.length && !DRY) {
     const { error } = await supabase.from('witb_changes').insert(changes);
     if (error) console.warn(`  witb_changes insert: ${error.message}`);

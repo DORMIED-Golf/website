@@ -268,9 +268,13 @@ function buildInventory(data) {
   });
 
   const news = sectionPages('news');
-  const featureSlugs = new Set(['who-owns-pins-and-aces', 'primo-golf', 'what-is-maejer-golf',
-    'students-golf', 'take-this-job-and-shove-it', 'confidential-sources',
-    'vice-golf-balls', 'who-is-arnie-mcnair']);
+  // Every page generate-feature.js builds, read from its FEATURES config. This
+  // was a hand-kept list of eight and silently missed each feature published
+  // after it (Sun Day Red, J.Lindeberg, Kirkland among them). The text is
+  // parsed rather than required so this script does not load the feature
+  // builder's Supabase and feed dependencies.
+  const featureSrc = fs.readFileSync(path.join(__dirname, 'generate-feature.js'), 'utf8');
+  const featureSlugs = new Set([...featureSrc.matchAll(/^ {4}slug: '([a-z0-9-]+)',/gm)].map(m => m[1]));
 
   const core = ['', 'rankings', 'brands', 'news', 'witb', 'witb/players', 'scorecard', 'about', 'contact', 'privacy', 'terms']
     .map(s => {

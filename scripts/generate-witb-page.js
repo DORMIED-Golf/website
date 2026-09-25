@@ -909,10 +909,16 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
      nothing the intro does not already say more clearly, so the tags are
      suppressed and the section reads as what it is -- a bag, listed. */
   const isDebut = mine.length > 0 && mine.every(c => c.old_bag_date == null);
-  const statusByType = new Map();
+  /* Tag the club a change names, not every club in its slot. Keyed on club
+     type alone, one new wedge marked all three wedges "Added". A change row's
+     new_value is the club's "brand model" (lib/witb-diff.js), so match on that.
+     Removals have no current item; they are synthesised below. */
+  const clubKey = (type, label) => `${type}|${String(label || '').toLowerCase().replace(/\s+/g, ' ').trim()}`;
+  const statusByClub = new Map();
   for (const c of mine) {
-    const t = c.change_type === 'added' ? 'Added' : c.change_type === 'removed' ? 'Removed' : 'Swapped';
-    if (!statusByType.has(c.club_type)) statusByType.set(c.club_type, t);
+    if (c.change_type === 'removed' || !c.new_value) continue;
+    const k = clubKey(c.club_type, c.new_value);
+    if (!statusByClub.has(k)) statusByClub.set(k, c.change_type === 'added' ? 'Added' : 'Swapped');
   }
 
   /* Removed clubs are gone from the current bag, so there is no item row for
@@ -950,7 +956,7 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
           : esc([brand, model].filter(Boolean).join(' ')))
       : (esc(model) || 'Unspecified');
     const spec  = [i.loft_or_number, i.raw_shaft].filter(Boolean).join(' \u00b7 ');
-    const st    = isDebut ? '' : (i._removed ? 'Removed' : (statusByType.get(i.club_type) === 'Removed' ? '' : (statusByType.get(i.club_type) || '')));
+    const st    = isDebut ? '' : (i._removed ? 'Removed' : (statusByClub.get(clubKey(i.club_type, `${i.raw_brand || ''} ${i.raw_model || ''}`)) || ''));
     const cls   = st === 'Removed' ? ' witb-fb-model--out' : '';
     const tag   = st
       ? `<span class="witb-move-tag witb-move-tag--${st === 'Removed' ? 'removed' : 'added'}">${st}</span>`
@@ -965,8 +971,10 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
     </div>`;
   }).join('');
 
+  // One count per change row: a bag that gained two wedges says "2 added".
   const counts = { Added: 0, Removed: 0, Swapped: 0 };
-  for (const t of statusByType.values()) counts[t]++;
+  for (const c of mine) counts[c.change_type === 'added' ? 'Added' : c.change_type === 'removed' ? 'Removed' : 'Swapped']++;
+  const slotCount = new Set(mine.map(c => c.club_type)).size;
   const parts = Object.entries(counts).filter(([, n]) => n > 0).map(([k, n]) => `${n} ${k.toLowerCase()}`);
   // Title case for prose; fmtBagDateShort returns "SEP 2026", which is correct
   // in a table cell and shouty in a sentence.
@@ -975,9 +983,9 @@ function buildFreshestBagHtml({ rankedPlayers, bagDateMap, currentItems, changes
   // A debut has no previous snapshot to compare against, so "10 added across 10
   // slots" would describe a total rebuild rather than a first appearance.
   const intro = isDebut
-    ? `${esc(player.name)} enters the dataset with a bag recorded ${esc(when)}. All ${statusByType.size} slot${statusByType.size === 1 ? '' : 's'} are on record for the first time, so there is nothing yet to compare them against.`
+    ? `${esc(player.name)} enters the dataset with a bag recorded ${esc(when)}. All ${slotCount} slot${slotCount === 1 ? '' : 's'} are on record for the first time, so there is nothing yet to compare them against.`
     : parts.length
-      ? `${esc(player.name)}'s bag was last recorded ${esc(when)} with ${esc(parts.join(', '))} across ${statusByType.size} slot${statusByType.size === 1 ? '' : 's'}.`
+      ? `${esc(player.name)}'s bag was last recorded ${esc(when)} with ${esc(parts.join(', '))} across ${slotCount} slot${slotCount === 1 ? '' : 's'}.`
       : `${esc(player.name)}'s bag was last recorded ${esc(when)}. Every slot is unchanged since the previous snapshot.`;
 
   const ini = (() => {
