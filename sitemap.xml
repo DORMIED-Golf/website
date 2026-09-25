@@ -3106,7 +3106,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (670) ── -->
+  <!-- ── News articles (671) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -6538,6 +6538,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/ping-top-score-seller-glove/</loc>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/ping-top-score-seller-glove-hero.jpg</image:loc>
+      <image:title>Top Score, Top Seller, $32 a Glove: PING Just Won the Least Glamorous Category in Golf</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/pings-pld-fitting-just-turned-a-13-handicap-putter-into-a-1-thats-not-a-2026-07-23/</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -9819,7 +9829,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/12/</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9951,13 +9961,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/8/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/9/</loc>
-    <lastmod>2026-08-01</lastmod>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
