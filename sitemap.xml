@@ -3106,7 +3106,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (673) ── -->
+  <!-- ── News articles (674) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -7134,6 +7134,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/srixon-unreleased-clubs/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/srixon-unreleased-clubs-hero.jpg</image:loc>
+      <image:title>Three Unreleased Clubs Won The Open in July. Srixon Puts Them on Shelves October 16.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/srixon-years-p790-players-distance-iron/</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -9837,7 +9847,7 @@
   <!-- ── News pagination ── -->
   <url>
     <loc>https://dormied.com/news/page/10/</loc>
-    <lastmod>2026-07-27</lastmod>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9861,7 +9871,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/14/</loc>
-    <lastmod>2026-06-29</lastmod>
+    <lastmod>2026-06-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9891,7 +9901,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/19/</loc>
-    <lastmod>2026-05-29</lastmod>
+    <lastmod>2026-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9915,7 +9925,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/22/</loc>
-    <lastmod>2026-05-15</lastmod>
+    <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9933,7 +9943,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/25/</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9945,7 +9955,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/27/</loc>
-    <lastmod>2026-04-17</lastmod>
+    <lastmod>2026-04-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
