@@ -35,7 +35,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -3106,7 +3106,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (671) ── -->
+  <!-- ── News articles (673) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -5605,6 +5605,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/kirklands-40-two-dozen-golf-ball-just-got-a-b-from-ball-lab-thats-the-2026-07-09-hero.jpg</image:loc>
       <image:title>Kirkland&apos;s $40 Two-Dozen Golf Ball Just Got a B From Ball Lab. That&apos;s the Whole Story.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/l-a-b-golf-putter/</loc>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/l-a-b-golf-putter-hero.jpg</image:loc>
+      <image:title>A $1,750 Putter Funding Free Junior Golf, and What L.A.B. Golf Gets Back</image:title>
     </image:image>
   </url>
   <url>
@@ -8714,6 +8724,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/toulon-golf-steel-watch-cases-putter/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/toulon-golf-steel-watch-cases-putter-hero.jpg</image:loc>
+      <image:title>The Steel Rolex Uses for Watch Cases Is Now a Toulon Putter. There Are Two.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/tour-edge-40-starts-practice-range/</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -9829,13 +9849,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/12/</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/13/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9859,25 +9879,25 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/17/</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/18/</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/19/</loc>
-    <lastmod>2026-05-28</lastmod>
+    <lastmod>2026-05-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9913,7 +9933,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/25/</loc>
-    <lastmod>2026-04-28</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9943,13 +9963,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/5/</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/6/</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
