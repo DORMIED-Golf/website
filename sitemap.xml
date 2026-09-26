@@ -3106,7 +3106,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (674) ── -->
+  <!-- ── News articles (675) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -7124,6 +7124,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/srixon-highest-spinning-ball/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/srixon-highest-spinning-ball-hero.png</image:loc>
+      <image:title>Highest-Spinning Ball in the Field, 47th of 48 for Distance. Srixon Built It That Way.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/srixon-models-price-combo-set-iron/</loc>
     <lastmod>2026-09-14</lastmod>
     <changefreq>weekly</changefreq>
@@ -9853,7 +9863,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/11/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9901,7 +9911,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/19/</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9937,7 +9947,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/24/</loc>
-    <lastmod>2026-05-05</lastmod>
+    <lastmod>2026-05-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9955,7 +9965,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/27/</loc>
-    <lastmod>2026-04-19</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9979,7 +9989,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/6/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9991,7 +10001,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/8/</loc>
-    <lastmod>2026-08-06</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
