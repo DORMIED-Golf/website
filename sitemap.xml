@@ -3106,7 +3106,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (676) ── -->
+  <!-- ── News articles (677) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -3905,6 +3905,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/bushnell-golf-banned-tour-working-well-hero.jpg</image:loc>
       <image:title>Banned On Tour For Working Too Well, Green Books Are Now A $49 Bushnell Product</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/bushnell-golf-coupon-applies/</loc>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/bushnell-golf-coupon-applies-hero.jpg</image:loc>
+      <image:title>A $50 Coupon Applies Equally to First and Second. Bushnell Is the Second.</image:title>
     </image:image>
   </url>
   <url>
@@ -9879,7 +9889,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/12/</loc>
-    <lastmod>2026-07-13</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9897,7 +9907,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/15/</loc>
-    <lastmod>2026-06-24</lastmod>
+    <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9927,13 +9937,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/20/</loc>
-    <lastmod>2026-05-23</lastmod>
+    <lastmod>2026-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9981,7 +9991,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/28/</loc>
-    <lastmod>2026-04-05</lastmod>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9993,7 +10003,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10011,7 +10021,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/7/</loc>
-    <lastmod>2026-08-12</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10023,7 +10033,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/9/</loc>
-    <lastmod>2026-08-03</lastmod>
+    <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
