@@ -799,6 +799,7 @@ const FEATURES = {
     category: 'Feature',
     brandSlug: 'macgregor',
     leadRole: 'bio',
+    inlineCommerce: true,   // DORMIED Index card + Shop carousel after the body
     lastUpdated: 'September 28, 2026',
     dateModified: '2026-09-28T12:00:00.000Z',
     publishedAt: '2026-09-28T12:00:00.000Z',
