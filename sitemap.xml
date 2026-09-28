@@ -17,13 +17,13 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://dormied.com/witb/players/</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -70,7 +70,7 @@
     <priority>0.5</priority>
   </url>
 
-  <!-- ── WITB player pages (283) ── -->
+  <!-- ── WITB player pages (285) ── -->
   <url>
     <loc>https://dormied.com/witb/players/aaron-rai/</loc>
     <lastmod>2026-08-09</lastmod>
@@ -522,6 +522,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://dormied.com/witb/players/david-ford/</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dormied.com/witb/players/david-puig/</loc>
     <lastmod>2026-06-23</lastmod>
     <changefreq>weekly</changefreq>
@@ -727,7 +733,7 @@
   </url>
   <url>
     <loc>https://dormied.com/witb/players/jackson-koivun/</loc>
-    <lastmod>2026-09-24</lastmod>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1682,6 +1688,12 @@
   <url>
     <loc>https://dormied.com/witb/players/travis-trace/</loc>
     <lastmod>2026-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/witb/players/tyler-watts/</loc>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -5298,6 +5310,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/is-honma-a-good-golf-brand/</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/features/is-honma-a-good-golf-brand/og.webp</image:loc>
+      <image:title>Is Honma a Good Golf Brand? Yes, but There Are Two Honmas</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/is-j-lindeberg-a-good-golf-brand/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
@@ -5305,6 +5327,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/features/is-j-lindeberg-a-good-golf-brand/og.webp</image:loc>
       <image:title>Is J.Lindeberg a Good Golf Brand? Yes, If You Fit the Cut</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/is-macgregor-a-good-golf-brand/</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/features/is-macgregor-a-good-golf-brand/og.webp</image:loc>
+      <image:title>Is MacGregor a Good Golf Brand? Yes, but Not the MacGregor Nicklaus Played</image:title>
     </image:image>
   </url>
   <url>
@@ -8745,7 +8777,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/toulon-golf-300-units-zero-retail/</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -8761,36 +8793,6 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/toulon-golf-316l-marine-steel-putter-hero.jpg</image:loc>
       <image:title>316L Is a Marine Steel, Not a Putter Steel. Toulon Golf Used It Anyway.</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/toulon-golf-etched-flat-molded-sole/</loc>
-    <lastmod>2026-09-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/toulon-golf-etched-flat-molded-sole-hero.jpg</image:loc>
-      <image:title>Etched Flat, Then Molded: The Toulon Sole Plate That May Never Ship Again</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/toulon-golf-plumbers-neck-barely-hangs/</loc>
-    <lastmod>2026-09-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/toulon-golf-plumbers-neck-barely-hangs-hero.jpg</image:loc>
-      <image:title>A Plumber&apos;s Neck That Barely Hangs. Toulon Golf Built It That Way on Purpose.</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://dormied.com/news/toulon-golf-steel-watch-cases-putter/</loc>
-    <lastmod>2026-09-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://dormied.com/images/articles/toulon-golf-steel-watch-cases-putter-hero.jpg</image:loc>
-      <image:title>The Steel Rolex Uses for Watch Cases Is Now a Toulon Putter. There Are Two.</image:title>
     </image:image>
   </url>
   <url>
@@ -9957,7 +9959,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10029,7 +10031,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/5/</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>

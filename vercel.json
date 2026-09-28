@@ -320,6 +320,26 @@
       "source": "/news/oakley-golf-nothing-fall-collection/",
       "destination": "/news/turtleson-fall-collection/",
       "permanent": true
+    },
+    {
+      "source": "/news/toulon-golf-etched-flat-molded-sole",
+      "destination": "/news/toulon-golf-300-units-zero-retail",
+      "permanent": true
+    },
+    {
+      "source": "/news/toulon-golf-etched-flat-molded-sole/",
+      "destination": "/news/toulon-golf-300-units-zero-retail/",
+      "permanent": true
+    },
+    {
+      "source": "/news/toulon-golf-plumbers-neck-barely-hangs",
+      "destination": "/news/toulon-golf-300-units-zero-retail",
+      "permanent": true
+    },
+    {
+      "source": "/news/toulon-golf-plumbers-neck-barely-hangs/",
+      "destination": "/news/toulon-golf-300-units-zero-retail/",
+      "permanent": true
     }
   ],
   "rewrites": [

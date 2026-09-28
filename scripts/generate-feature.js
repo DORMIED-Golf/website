@@ -788,6 +788,95 @@ const FEATURES = {
       ]},
     },
   },
+  // Written from the 2026-09 brand explainer brief. Product and campaign images
+  // are MacGregor's; the Nicklaus photo is Getty Images, as supplied.
+  'is-macgregor-a-good-golf-brand': {
+    slug: 'is-macgregor-a-good-golf-brand',
+    title: 'Is MacGregor a Good Golf Brand? Yes, but Not the MacGregor Nicklaus Played',
+    titleTag: 'Is MacGregor a Good Golf Brand? | DORMIED',
+    byline: 'Travis R.',
+    authors: ['Travis R.'],
+    category: 'Feature',
+    brandSlug: 'macgregor',
+    leadRole: 'bio',
+    lastUpdated: 'September 28, 2026',
+    dateModified: '2026-09-28T12:00:00.000Z',
+    publishedAt: '2026-09-28T12:00:00.000Z',
+    quickAnswer: 'Yes, as value equipment rather than a tour brand. Today\'s MacGregor is a direct-to-consumer revival owned since 2020 by Golf Brands Inc. of Henderson, Nevada, selling well-tested drivers, wedges and irons well below major-brand prices. The Nicklaus-era history is real, but it belongs to a different company.',
+    keyTakeaways: [
+      'Good value for the right golfer, not a tour brand: none of the 285 bags in DORMIED\'s WITB database carries a MacGregor club.',
+      'Owned in the US since 2020 by Simon Millington\'s Golf Brands Inc. of Henderson, Nevada, which also owns Ram, Zebra and Teardrop and licenses Ben Hogan.',
+      'Sold direct to consumer: Tourney MAX driver $249.99, MT Tourney three-wedge set $179.99, forged Toney Penna Tour MB irons $699.99.',
+      'Nicklaus played MacGregor from 1962 and won the 1986 Masters with its Response ZT putter, though most of his earlier majors came with a George Low putter.',
+      'Made in China, with heads from the same foundry that forges Ben Hogan\'s.',
+    ],
+    metaDescription: 'MacGregor is good value, not a tour brand: a $249.99 driver and a $179.99 wedge set from a revival owned since 2020 by Golf Brands Inc. in Nevada.',
+    seoKeywords: ['is macgregor a good golf brand', 'macgregor golf', 'macgregor golf clubs', 'who owns macgregor golf', 'macgregor toney penna', 'did jack nicklaus use macgregor clubs', 'where are macgregor clubs made', 'is macgregor still in business'],
+    subject: 'MacGregor',
+    mdPath: path.join(ROOT, 'article-is-macgregor-a-good-golf-brand.md'),
+    imgBase: '/images/features/is-macgregor-a-good-golf-brand',
+    hero: { file: 'hero.webp', w: 1280, h: 720, alt: 'Two MacGregor irons, one showing its face and one its cavity back, on a black background.', caption: 'MacGregor irons. Photo by MacGregor.' },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    sectionImages: {
+      'Is MacGregor a Good Golf Brand?': { layout: 'single', images: [
+        { file: 'golfer.webp', w: 1280, h: 851, alt: 'A golfer in a light blue polo and white cap holding his finish on a range lined with palm trees.', caption: 'From MacGregor\'s campaign imagery. Photo by MacGregor.' },
+      ]},
+      'Why Did Jack Nicklaus Play MacGregor?': { layout: 'single', images: [
+        { file: 'nicklaus-response.webp', w: 1154, h: 687, alt: 'Jack Nicklaus in a striped shirt and red trousers holding an oversized MacGregor Response putter.', caption: 'Nicklaus with the MacGregor Response putter. Photo by Getty Images.' },
+      ]},
+      'What Does MacGregor Sell and What Does It Cost?': { layout: 'single', images: [
+        { file: 'tourney-max.webp', w: 1280, h: 640, alt: 'The sole of a black MacGregor Tourney MAX driver lit green against a dark background.', caption: 'The $249.99 Tourney MAX driver. Photo by MacGregor.' },
+      ]},
+    },
+  },
+  // Written from the 2026-09 brand explainer brief. Workshop, BERES and
+  // lifestyle images are Honma's own; Rose is MyGolfSpy's, as supplied.
+  'is-honma-a-good-golf-brand': {
+    slug: 'is-honma-a-good-golf-brand',
+    title: 'Is Honma a Good Golf Brand? Yes, but There Are Two Honmas',
+    titleTag: 'Is Honma a Good Golf Brand? | DORMIED',
+    byline: 'Travis R.',
+    authors: ['Travis R.'],
+    category: 'Feature',
+    brandSlug: 'honma',
+    leadRole: 'bio',
+    lastUpdated: 'September 28, 2026',
+    dateModified: '2026-09-28T12:00:00.000Z',
+    publishedAt: '2026-09-28T12:00:00.000Z',
+    quickAnswer: 'Yes, but there are two Honmas. BERES is a star-graded luxury line where the shafts and hand-building justify much of the price and the gold is prestige. Tour World is the performance line for better players, which Justin Rose won with in 2019 before the deal ended in 2020.',
+    keyTakeaways: [
+      'Two Honmas: BERES, the star-graded luxury line, and Tour World, the performance line for better players.',
+      'The stars grade cosmetics, shaft quality and precious metal, and the biggest playing difference is the shaft. BERES 10 drivers run $1,440 to $6,000; a TW777 driver is $650.',
+      'Founded in Yokohama in 1959 and made in Sakata since 1981. Liu Jianguo, who acquired it in 2010, controls about 39 percent; Thailand\'s Charoen Pokphand Group holds about 30 percent.',
+      'Justin Rose won in his second event with Honma clubs in 2019, but the multi-year deal ended in May 2020, less than 18 months in.',
+      'Down 18.2 percent on the year in the DORMIED Index despite a June Bugatti collaboration.',
+    ],
+    metaDescription: 'Honma sells two different clubs: star-graded BERES luxury sets and the Tour World line for better players. What each is worth, and why BERES costs so much.',
+    seoKeywords: ['is honma a good golf brand', 'honma golf', 'why are honma clubs so expensive', 'honma beres', 'what do the stars on honma clubs mean', 'who owns honma', 'where are honma clubs made', 'honma justin rose'],
+    subject: 'Honma',
+    mdPath: path.join(ROOT, 'article-is-honma-a-good-golf-brand.md'),
+    imgBase: '/images/features/is-honma-a-good-golf-brand',
+    hero: { file: 'hero.webp', w: 1920, h: 1000, alt: 'Black and gold Honma BERES woods and iron covers in a white Honma staff bag.', caption: 'A BERES set in a Honma staff bag. Photo by Honma.' },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    sectionImages: {
+      'Is Honma a Good Golf Brand?': { layout: 'single', images: [
+        { file: 'lifestyle.webp', w: 1400, h: 933, alt: 'Four young golfers with Honma bags standing beside a black SUV outside a Spanish-style house.', caption: 'From Honma\'s lifestyle campaign. Photo by Honma.' },
+      ]},
+      'Why Are Honma Golf Clubs So Expensive?': { layout: 'two-up', images: [
+        { file: 'driver-craft.webp', w: 1400, h: 933, alt: 'Black and white close-up of a craftsman\'s hands shaping a wooden driver head.', caption: 'Shaping a wooden driver head by hand. Photo by Honma.' },
+        { file: 'iron-craft.webp', w: 1400, h: 933, alt: 'Black and white close-up of a gloved hand filing an iron head.', caption: 'Finishing an iron head. Photo by Honma.' },
+      ]},
+      'What Is the Difference Between Honma BERES and Its Performance Line?': { layout: 'single', images: [
+        { file: 'beres-gift.webp', w: 1600, h: 1067, alt: 'A couple embracing beside a private plane, one holding a Honma driver tied with a red bow.', caption: 'BERES is sold as a luxury gift as much as a golf club. Photo by Honma.' },
+      ]},
+      'Who Owns Honma Golf?': { layout: 'single', images: [
+        { file: 'persimmons.webp', w: 1400, h: 933, alt: 'Vintage Honma persimmon woods with red and white face inserts in a wooden tray.', caption: 'Vintage Honma persimmon woods. Photo by Honma.' },
+      ]},
+      'What Happened Between Justin Rose and Honma?': { layout: 'single', images: [
+        { file: 'rose.webp', w: 1200, h: 800, alt: 'Justin Rose in a black polo standing beside a white Honma tour bag on a golf course.', caption: 'Justin Rose with a Honma staff bag during his deal with the brand. Photo by MyGolfSpy.' },
+      ]},
+    },
+  },
 };
 
 // ── Helpers ─────────────────────────────────────────────────────────────────────
