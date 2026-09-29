@@ -35,7 +35,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -3118,7 +3118,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (680) ── -->
+  <!-- ── News articles (682) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -4437,6 +4437,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/ecco-quietly-builds-a-danish-pipeline-with-smilla-snderby-signing-2026-06-25-hero.jpg</image:loc>
       <image:title>Ecco Quietly Builds a Danish Pipeline With Smilla Sønderby Signing</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/ecco-tanneries-lasts-biom-h6-fit/</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/ecco-tanneries-lasts-biom-h6-fit-hero.png</image:loc>
+      <image:title>Its Own Tanneries, Its Own Lasts: Ecco&apos;s $230 BIOM H6 Sells Fit, Not Hype</image:title>
     </image:image>
   </url>
   <url>
@@ -6567,6 +6577,16 @@
     <image:image>
       <image:loc>https://dormied.com/images/articles/ping-30-yard-miss-both-him-hero.jpg</image:loc>
       <image:title>A 30-Yard Miss Both Ways, and Nobody Would Sell Him Out of His PING G430</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/ping-cups/</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/ping-cups-hero.jpg</image:loc>
+      <image:title>Two Cups, One Course, 80,000 Spectators: The PING Asset No Rival Can Outbid</image:title>
     </image:image>
   </url>
   <url>
@@ -9925,7 +9945,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/11/</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-07-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9955,13 +9975,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/16/</loc>
-    <lastmod>2026-06-17</lastmod>
+    <lastmod>2026-06-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/17/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -9979,13 +9999,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/20/</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10003,7 +10023,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/23/</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10057,13 +10077,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/6/</loc>
-    <lastmod>2026-08-20</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/7/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
