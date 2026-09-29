@@ -1,4 +1,5 @@
 'use strict';
+const { isPreOwned } = require('../../lib/affiliate-retailers');
 /**
  * scripts/lib/witb-shop-match.js
  *
@@ -209,7 +210,8 @@ function matchBagToProducts(bagItems, products, overrides = {}) {
     for (const p of pool) {
       const s = scoreCandidate(item, p);
       if (s === null) continue;
-      if (s < bestScore) { best = p; bestScore = s; }
+      // Equal match: new beats pre-owned (a retailer may list both).
+      if (s < bestScore || (s === bestScore && best && isPreOwned(best.condition) && !isPreOwned(p.condition))) { best = p; bestScore = s; }
     }
     if (best) {
       // A combo set ("KING CB/MB Irons") legitimately answers two bag items.

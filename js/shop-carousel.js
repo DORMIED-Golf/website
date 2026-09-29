@@ -94,16 +94,23 @@
     // drop the empty row and say plainly that the price lives on the merchant's
     // site. MacGregor hit this because their Impact feed's DateLastUpdated is
     // months old, so every one of their prices is correctly withheld.
+    // A multi-brand retailer (Global Golf) sells the product, not the brand,
+    // so its cards name the retailer: "Check price at TaylorMade" on a Global
+    // Golf listing would send the reader somewhere that does not say that.
+    var seller = p.retailer || brandName;
     var cta = isAmazon ? 'Check price on Amazon'
             : showPrice ? 'BUY NOW'
-            : (brandName ? 'Check price at ' + brandName : 'Check price');
+            : (seller ? 'Check price at ' + seller : 'Check price');
+    // Pre-owned stock only ever arrives in Shop This Bag (api/shop keeps it out
+    // of brand carousels); it is labelled so nobody mistakes it for new.
+    var usedTag = p.pre_owned ? '<span class="bp-shop-used">Pre-owned</span>' : '';
 
     // rel="sponsored nofollow" is mandatory on every affiliate link.
     return '' +
       '<article class="bp-shop-card' + (isAmazon ? ' bp-shop-card--amazon' : '') + '">' +
         '<div class="bp-shop-thumb-wrap">' + img + '</div>' +
         '<div class="bp-shop-body">' +
-          '<p class="bp-shop-name">' + esc(p.name) + '</p>' +
+          '<p class="bp-shop-name">' + esc(p.name) + '</p>' + usedTag +
           (priceHtml ? '<div class="bp-shop-price-row">' + priceHtml + '</div>' : '') +
           '<a class="bp-shop-buy" href="' + href + '"' +
              ' rel="sponsored nofollow" target="_blank">' + esc(cta) + '</a>' +

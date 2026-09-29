@@ -18,13 +18,16 @@
  *
  *   A. programs with their own brand slug   (the direct deals, unchanged)
  *   B. brands with at least one active Amazon product  (small, hand-curated)
+ *   C. brands a multi-brand retailer (Global Golf) holds active products for,
+ *      via the retailer_brand_slugs() SQL function (a DISTINCT server-side,
+ *      so the ~35k retailer rows are never paged through here)
  */
 
 /**
  * @param {object} supabase Supabase client
  * @returns {Promise<Set<string>>} brand slugs eligible for a shop carousel
  */
-async function fetchSellableBrandSlugs(supabase) {
+async function fetchOnce(supabase) {
   const slugs = new Set();
 
   const { data: progRows, error: progErr } = await supabase
@@ -50,7 +53,28 @@ async function fetchSellableBrandSlugs(supabase) {
     if (data.length < 1000) break;
   }
 
+  const { data: retailerSlugs, error: rErr } = await supabase.rpc('retailer_brand_slugs');
+  if (rErr) throw new Error(`retailer_brand_slugs: ${rErr.message}`);
+  for (const s of retailerSlugs || []) {
+    const slug = typeof s === 'string' ? s : s && s.retailer_brand_slugs;
+    if (slug) slugs.add(slug);
+  }
+
   return slugs;
+}
+
+/**
+ * Retried, because every caller treats a failure as "no brand is sellable": a
+ * single transient error during a --force brand rebuild wrote all 215 pages
+ * without a carousel (Sep 2026).
+ */
+async function fetchSellableBrandSlugs(supabase, attempts = 3) {
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    try { return await fetchOnce(supabase); }
+    catch (e) { lastErr = e; await new Promise(r => setTimeout(r, 1000 * (i + 1))); }
+  }
+  throw lastErr;
 }
 
 module.exports = { fetchSellableBrandSlugs };

@@ -30,6 +30,7 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const { retailerForAdvertiser, isPreOwned } = require('../lib/affiliate-retailers');
 
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT     = 24;
@@ -45,9 +46,12 @@ const SELECT_COLS = [
   // tracking_url is selected ONLY so the Amazon branch of shape() can emit it;
   // it is never returned for any other source. See the note in shape().
   'source', 'tracking_url',
+  // program_id resolves a multi-brand retailer's name for the card label;
+  // condition keeps pre-owned retailer stock out of brand carousels.
+  'program_id', 'condition',
 ].join(',');
 
-function shape(row) {
+function shape(row, retailerNames) {
   const isAmazon = row.source === 'amazon';
   return {
     id:                  row.id,
@@ -66,6 +70,10 @@ function shape(row) {
     promo_title:         row.promo_title,
     feed_updated_at:     row.feed_updated_at,
     source:              row.source,
+    // Set only for a multi-brand retailer (Global Golf): the card then reads
+    // "Check price at Global Golf", not at the brand, which does not sell it.
+    retailer:            (retailerNames && retailerNames.get(row.program_id)) || null,
+    pre_owned:           isPreOwned(row.condition),
     // Every other network's tracking_url stays server-side and is only ever
     // reachable through /api/go/{id}. Amazon is the deliberate exception: the
     // value is a public amzn.to share link carrying the tag, so there is
@@ -75,6 +83,16 @@ function shape(row) {
     // Associates support confirms the redirect is acceptable.
     go_url:              isAmazon ? row.tracking_url : `/api/go/${row.id}`,
   };
+}
+
+// program_id -> retailer display name, for multi-brand retailer programs only
+// (no dormied_brand_slug, advertiser listed in lib/affiliate-retailers.js).
+async function loadRetailerNames(sb) {
+  const { data } = await sb.from('affiliate_programs')
+    .select('id, advertiser_name').is('dormied_brand_slug', null);
+  const m = new Map();
+  for (const r of data || []) { const ret = retailerForAdvertiser(r.advertiser_name); if (ret) m.set(r.id, ret.name); }
+  return m;
 }
 
 // Deterministic winner within one item_group_id.
@@ -96,6 +114,12 @@ module.exports = async (req, res) => {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Catalogs sync nightly, so a 15-minute edge cache loses nothing, and it
+  // matters once a retailer feed puts thousands of rows behind one brand
+  // (every request reads a brand's whole in-stock set before collapsing).
+  // Errors are sent with no-store below so a failure is never cached.
+  res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=3600');
 
   const q      = req.query || {};
   const brand  = typeof q.brand === 'string' ? q.brand.trim() : '';
@@ -120,6 +144,7 @@ module.exports = async (req, res) => {
     if (!U || !K) return res.status(500).json({ error: 'DB not configured' });
     const sb = createClient(U, K);
     try {
+      const retailerNames = await loadRetailerNames(sb);
       const { data, error } = await sb.from('affiliate_products')
         .select(SELECT_COLS).in('id', ids).eq('is_active', true);
       if (error) throw new Error(error.message);
@@ -128,9 +153,10 @@ module.exports = async (req, res) => {
       const ordered = ids.map(i => byId.get(i)).filter(Boolean);
       return res.status(200).json({
         ids: ids.length, count: ordered.length, limit: ordered.length, offset: 0,
-        products: ordered.map(shape),
+        products: ordered.map(r => shape(r, retailerNames)),
       });
     } catch (e) {
+      res.setHeader('Cache-Control', 'no-store');
       return res.status(500).json({ error: 'lookup failed' });
     }
   }
@@ -142,6 +168,7 @@ module.exports = async (req, res) => {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   try {
+    const retailerNames = await loadRetailerNames(supabase);
     // Per-program price floor. Excludes add-on service SKUs (e.g. "Item
     // Personalization" at $0.01) without any name/keyword/category matching.
     // Unmapped brand -> no program row -> fall back to the column default.
@@ -160,32 +187,30 @@ module.exports = async (req, res) => {
     // actually held rather than on affiliate_programs rows, so it stays correct
     // if a program exists but its catalogue is empty, and it needs no upkeep
     // when a new direct deal is signed.
-    const { count: directCount } = await supabase
+    // Existence, not a count: an exact count over a retailer-sized brand
+    // (TaylorMade ~7.5k rows) cost seconds for a yes/no answer.
+    const { data: directAny } = await supabase
       .from('affiliate_products')
-      .select('*', { count: 'exact', head: true })
+      .select('id')
       .eq('dormied_brand_slug', brand)
       .eq('is_active', true)
-      .neq('source', 'amazon');
-    const amazonOnly = !directCount;
+      .neq('source', 'amazon')
+      .limit(1);
+    const amazonOnly = !(directAny && directAny.length);
 
     // Pull every in-stock, active row for the brand, then collapse in code.
     // Paginating in SQL before collapsing would give wrong page sizes, since a
     // page of rows can contain many variants of the same product.
+    // One row per product, already collapsed and filtered in SQL
+    // (shop_brand_products: in stock, active, new-only, price floor, direct vs
+    // Amazon precedence, variant winner). Reading every variant row and
+    // collapsing here took ~7-11s once Global Golf's feed sat behind a brand.
+    // Paged, since a large brand can still exceed PostgREST's 1,000-row cap.
     const rows = [];
     for (let from = 0; ; from += 1000) {
-      let q = supabase
-        .from('affiliate_products')
-        .select(SELECT_COLS)
-        .eq('dormied_brand_slug', brand)
-        .eq('is_active', true)
-        .eq('stock_availability', 'InStock');
-      // The price floor exists to strip $0.01 add-on SKUs out of a real feed.
-      // Amazon rows are hand-curated and deliberately carry a NULL price, and
-      // `NULL >= 1.00` is NULL in Postgres, so applying the floor to them would
-      // silently drop every one.
-      q = amazonOnly ? q.eq('source', 'amazon')
-                     : q.neq('source', 'amazon').gte('current_price', minPrice);
-      const { data, error } = await q.range(from, from + 999);
+      const { data, error } = await supabase
+        .rpc('shop_brand_products', { p_brand: brand, p_min_price: minPrice, p_amazon_only: amazonOnly })
+        .range(from, from + 999);
       if (error) throw new Error(error.message);
       if (!data || !data.length) break;
       rows.push(...data);
@@ -201,8 +226,11 @@ module.exports = async (req, res) => {
     // sources at once. Explicit ids= requests are unaffected: a gift card can
     // only get into that list if someone put it there deliberately.
     const GIFT_CARD = /(gift\s*card|e-?gift|giftcard)/i;
+    // Pre-owned retailer stock is for Shop This Bag only (ids= above), never a
+    // brand or article carousel.
     const productRows = rows.filter(r =>
-      !(GIFT_CARD.test(r.name || '') || /gift\s*cards?/i.test(r.category || '')));
+      !(GIFT_CARD.test(r.name || '') || /gift\s*cards?/i.test(r.category || '')) &&
+      !isPreOwned(r.condition));
 
     if (!productRows.length) return res.status(200).json({ brand, count: 0, limit, offset, products: [] });
 
@@ -210,7 +238,8 @@ module.exports = async (req, res) => {
     // (defensive — item_group_id is populated on 100% of current rows).
     const winners = new Map();
     for (const row of productRows) {
-      const key = row.item_group_id ? `g:${row.item_group_id}` : `i:${row.id}`;
+      // Group ids are only unique within a program, so the key carries it.
+      const key = row.item_group_id ? `g:${row.program_id}:${row.item_group_id}` : `i:${row.id}`;
       winners.set(key, betterOf(winners.get(key), row));
     }
 
@@ -222,11 +251,33 @@ module.exports = async (req, res) => {
     // sorting on it alone would collapse to insertion order. Impact rows have
     // no source_published_at and fall back to first_seen_at exactly as before.
     const recencyOf = r => r.source_published_at || r.first_seen_at;
-    const ordered = [...winners.values()].sort((a, b) => {
+    const byRecency = (a, b) => {
       const ra = recencyOf(a), rb = recencyOf(b);
       if (ra !== rb) return ra < rb ? 1 : -1;
       return b.id - a.id;
-    });
+    };
+    // A brand sold both direct and through a retailer (Cobra direct plus Global
+    // Golf) is interleaved one-for-one, each program in its own recency order.
+    // Sorting the union by recency would let a retailer catalog ingested
+    // yesterday bury every direct product. Deterministic, so paging is stable.
+    const byProgram = new Map();
+    for (const r of winners.values()) {
+      if (!byProgram.has(r.program_id)) byProgram.set(r.program_id, []);
+      byProgram.get(r.program_id).push(r);
+    }
+    const lanes = [...byProgram.entries()]
+      .sort((a, b) => (retailerNames.has(a[0]) - retailerNames.has(b[0])) || (a[0] - b[0]))
+      .map(([, list]) => list.sort(byRecency));
+    // A retailer imports its whole catalogue at once, so recency cannot order
+    // it and a left-handed wedge could lead the carousel. Left-handed items go
+    // to the back of their own lane (stable, so paging stays deterministic).
+    const LEFT = /\bleft[-\s]?hand(ed)?\b|\blh\b/i;
+    for (const l of lanes) {
+      const right = l.filter(r => !LEFT.test(r.name || '')), left = l.filter(r => LEFT.test(r.name || ''));
+      l.splice(0, l.length, ...right, ...left);
+    }
+    const ordered = [];
+    for (let i = 0; lanes.some(l => i < l.length); i++) for (const l of lanes) if (i < l.length) ordered.push(l[i]);
 
     const total = ordered.length;
 
@@ -253,10 +304,11 @@ module.exports = async (req, res) => {
       limit,
       offset,
       pinned: pinned ? pinned.id : null,
-      products: page.map(shape),
+      products: page.map(r => shape(r, retailerNames)),
     });
   } catch (err) {
     console.error('[shop] Error:', err.message);
+    res.setHeader('Cache-Control', 'no-store');
     return res.status(500).json({ error: err.message });
   }
 };

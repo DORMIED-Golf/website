@@ -1711,7 +1711,9 @@ async function main() {
     affiliateSlugs = await fetchSellableBrandSlugs(supabase);
     console.log(`[brand-page] Sellable brands: ${affiliateSlugs.size} brand(s) get a shop carousel`);
   } catch (e) {
-    console.warn('[brand-page] affiliate programs fetch failed:', e.message);
+    // Fatal: carrying on would rewrite every brand page without its carousel.
+    console.error('[brand-page] sellable brands fetch failed after retries:', e.message);
+    process.exit(1);
   }
 
   // Baked sidebar modules (Brands on the Move / Recently Updated Bags) + shared

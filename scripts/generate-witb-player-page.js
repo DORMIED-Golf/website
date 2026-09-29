@@ -2150,7 +2150,7 @@ async function main() {
       const products = [];
       for (let from = 0; ; from += 1000) {
         const { data, error } = await sb.from('affiliate_products')
-          .select('id, name, dormied_brand_slug')
+          .select('id, name, dormied_brand_slug, condition')
           .eq('is_active', true).eq('stock_availability', 'InStock')
           .in('dormied_brand_slug', slugs).range(from, from + 999);
         if (error) throw new Error(error.message);

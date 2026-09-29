@@ -442,6 +442,9 @@
     },
     "api/post-to-x.js": {
       "maxDuration": 30
+    },
+    "api/shop.js": {
+      "maxDuration": 30
     }
   },
   "headers": [

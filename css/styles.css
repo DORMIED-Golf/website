@@ -7588,6 +7588,15 @@ details[open] .faq-question::after { content: '−'; }
   color: var(--green); border: 1px solid var(--green-dim);
   border-radius: var(--radius-sm); padding: 1px 5px;
 }
+/* Pre-owned retailer stock (Shop This Bag only). Muted, so it reads as a
+   condition note rather than a promotion like the discount badge. */
+.bp-shop-used {
+  align-self: flex-start;
+  font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--text-muted); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 1px 5px; margin-top: 4px;
+}
 /* Derived from the "Visit [Brand]" CTA rendered by js/brand.js at the end of the
    stat-card row: .bp-metric-card.bp-metric-link (background --green-dark,
    border --green-dim, --radius) + .bp-visit-link (color --green, weight 600,

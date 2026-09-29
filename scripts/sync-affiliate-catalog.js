@@ -28,12 +28,18 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env'), override: true });
 
 const { createClient } = require('@supabase/supabase-js');
+const { retailerForAdvertiser } = require('../lib/affiliate-retailers');
+const { brandSlugForProduct }   = require('./lib/retailer-brand-map');
 
 const DRY = process.argv.includes('--dry-run');
 // Deactivation ceiling override. Never set in the cron invocation — a run that
 // wants to deactivate >20% of a program's active rows must be launched by hand.
 const ALLOW_LARGE = process.argv.includes('--allow-large-deactivation');
 const FAIL_ON_PAGE = parseInt(process.env.AFFILIATE_SYNC_FAIL_ON_PAGE || '0', 10) || 0;
+// TEST HOOK (off unless set): AFFILIATE_SYNC_AS_RETAILER=<catalog_id> runs that
+// catalog through the multi-brand retailer path in report-only mode, to check
+// the brand mapping without a retailer catalog. Never writes.
+const AS_RETAILER = String(process.env.AFFILIATE_SYNC_AS_RETAILER || '');
 
 const SID   = process.env.IMPACT_SID;
 const TOKEN = process.env.IMPACT_TOKEN;
@@ -165,11 +171,12 @@ async function syncCatalogsToPrograms() {
   return byCatalogId;
 }
 
-function mapItem(item, program, feedUpdatedAt) {
+function mapItem(item, program, feedUpdatedAt, brandSlug) {
   const promo = mapPromo(item.Promotions);
   return {
     program_id:          program.id,
-    dormied_brand_slug:  program.dormied_brand_slug,
+    // A retailer program has no brand of its own; the caller assigns one per item.
+    dormied_brand_slug:  brandSlug !== undefined ? brandSlug : program.dormied_brand_slug,
     impact_item_id:      item.Id,
     catalog_item_id:     strOrNull(item.CatalogItemId),
     item_group_id:       strOrNull(item.ItemGroupId),
@@ -189,6 +196,7 @@ function mapItem(item, program, feedUpdatedAt) {
     gtin:                strOrNull(item.Gtin),
     mpn:                 strOrNull(item.Mpn),
     labels:              (Array.isArray(item.Labels) && item.Labels.length) ? item.Labels : null,
+    condition:           strOrNull(item.Condition),
     promo_title:         promo.promo_title,
     promo_code:          promo.promo_code,
     promo_expires_at:    promo.promo_expires_at,
@@ -205,7 +213,15 @@ async function chunked(rows, size, fn) {
 
 // ── Sync one mapped program ───────────────────────────────────────────────────
 async function syncProgram(program, catalog) {
-  const label = `${program.dormied_brand_slug} (catalog ${program.catalog_id})`;
+  // A multi-brand retailer (lib/affiliate-retailers.js) has no program brand:
+  // each item is assigned to a brand page from its Manufacturer, and items that
+  // match no tracked brand are skipped and reported. Until the retailer is
+  // `enabled`, the program runs fetch + mapping report only and writes nothing.
+  const asRetailerTest = AS_RETAILER && String(program.catalog_id) === AS_RETAILER;
+  const retailer = asRetailerTest ? { name: `TEST ${program.advertiser_name}`, enabled: false }
+    : program.dormied_brand_slug ? null : retailerForAdvertiser(program.advertiser_name);
+  const reportOnly = !!(retailer && !retailer.enabled);
+  const label = `${program.dormied_brand_slug || (retailer && retailer.name) || program.advertiser_name} (catalog ${program.catalog_id})${reportOnly ? ' [report only]' : ''}`;
   console.log(`\n[sync] === ${label} ===`);
 
   const numberOfItems = catalog ? numOrNull(catalog.NumberOfItems) : null;   // string in the feed
@@ -233,6 +249,7 @@ async function syncProgram(program, catalog) {
     program: label, pagesFetched, numpages, itemsCollected: items.length, total, numberOfItems,
     fetchComplete, stopReason, inserted: 0, updated: 0, deactivated: 0, inherited: 0, skipped: [],
     activeBefore: 0, wouldDeactivate: 0, sweepPct: 0, sweepBlocked: false, nullPrice: 0,
+    retailer: retailer ? retailer.name : null, brandCounts: null, unmappedMakers: null, conditions: null,
   };
 
   if (!fetchComplete) {
@@ -251,8 +268,25 @@ async function syncProgram(program, catalog) {
     if (!it.Url)  missing.push('Url');
     if (missing.length) { summary.skipped.push({ id: it.Id || '(no id)', name: it.Name || '(no name)', missing }); continue; }
     if (seenIds.has(it.Id)) continue;             // guard against a duplicate Id inside one feed
+    let brandSlug;
+    if (retailer) {
+      brandSlug = brandSlugForProduct(it.Manufacturer, it.Name);
+      const cond = strOrNull(it.Condition) || '(none)';
+      summary.conditions = summary.conditions || {};
+      summary.conditions[cond] = (summary.conditions[cond] || 0) + 1;
+      if (!brandSlug) {
+        const m = strOrNull(it.Manufacturer) || '(no manufacturer)';
+        summary.unmappedMakers = summary.unmappedMakers || {};
+        summary.unmappedMakers[m] = (summary.unmappedMakers[m] || 0) + 1;
+        continue;                                 // never guess a brand page
+      }
+      summary.brandCounts = summary.brandCounts || {};
+      summary.brandCounts[brandSlug] = (summary.brandCounts[brandSlug] || 0) + 1;
+    }
+    // Only items actually written count as seen, so an item that stops mapping
+    // to a brand is swept rather than left active on its old page.
     seenIds.add(it.Id);
-    const mapped = mapItem(it, program, feedUpdatedAt);
+    const mapped = mapItem(it, program, feedUpdatedAt, brandSlug);
     // Visibility guard: api/shop filters with .gte('current_price', ...), which in
     // Postgres also excludes NULLs. Zero today; if a feed ever introduces NULL
     // prices the catalog would silently shrink, so count them here.
@@ -260,7 +294,7 @@ async function syncProgram(program, catalog) {
     rows.push(mapped);
   }
 
-  if (DRY) { console.log(`[sync] (dry-run) would write ${rows.length} rows for ${label}`); return summary; }
+  if (DRY || reportOnly) { console.log(`[sync] (${DRY ? 'dry-run' : 'report only'}) would write ${rows.length} rows for ${label}`); return summary; }
 
   // Existing rows for this program: for update vs insert, first_seen_at
   // inheritance, and the deactivation ceiling (which counts currently-active rows).
@@ -372,10 +406,31 @@ async function main() {
   // advertiser) but source='shopify', because its catalog comes from the
   // merchant feed. source is the same column that scopes each sweep in
   // affiliate_products, so the two stay consistent by construction.
-  const { data: programs, error } = await supabase.from('affiliate_programs')
+  const { data: mappedPrograms, error } = await supabase.from('affiliate_programs')
     .select('*').eq('status', 'active').eq('source', 'impact')
     .not('dormied_brand_slug', 'is', null).not('catalog_id', 'is', null);
   if (error) throw new Error(`load programs: ${error.message}`);
+  // Multi-brand retailers: no brand slug, recognised by advertiser name in
+  // lib/affiliate-retailers.js. Any other unmapped catalog stays skipped.
+  const { data: openPrograms, error: openErr } = await supabase.from('affiliate_programs')
+    .select('*').eq('status', 'active').eq('source', 'impact')
+    .is('dormied_brand_slug', null).not('catalog_id', 'is', null);
+  if (openErr) throw new Error(`load retailer programs: ${openErr.message}`);
+  const programs = [...mappedPrograms, ...openPrograms.filter(p => retailerForAdvertiser(p.advertiser_name))];
+
+  // The unfiltered /Catalogs list does not return every catalog we can read:
+  // Global Golf's (9474) appears only under ?CampaignId=15291. Without its
+  // entry the run has no DateLastUpdated, feed_updated_at is written NULL, and
+  // the carousel's freshness rule then hides every price. Fetch any missing
+  // catalog by its campaign.
+  for (const p of programs) {
+    if (catalogsById.has(String(p.catalog_id)) || !p.campaign_id) continue;
+    const { res, body } = await apiGet(`/Mediapartners/${SID}/Catalogs?CampaignId=${encodeURIComponent(p.campaign_id)}`);
+    if (res.status !== 200) { console.warn(`[sync] !! /Catalogs?CampaignId=${p.campaign_id} HTTP ${res.status}`); continue; }
+    const hit = extractArray(body, 'Catalogs').find(c => String(c.Id) === String(p.catalog_id));
+    if (hit) { catalogsById.set(String(hit.Id), hit); console.log(`[sync] catalog ${hit.Id} "${hit.Name}" found via CampaignId=${p.campaign_id}.`); }
+    else console.warn(`[sync] !! catalog ${p.catalog_id} not found under CampaignId=${p.campaign_id}.`);
+  }
   // A filter that matches nothing would otherwise sync zero programs and exit 0
   // — a silent no-op, the exact failure mode this script exists to make loud.
   if (!programs.length) throw new Error('no active mapped Impact programs with a catalog_id — refusing to report success on an empty sync');
@@ -402,6 +457,14 @@ async function main() {
       console.log(`  skipped ${s.skipped.length} item(s) for missing required fields:`);
       for (const sk of s.skipped.slice(0, 20)) console.log(`    - ${sk.id} "${sk.name}" missing: ${sk.missing.join(', ')}`);
     } else console.log('  skipped: 0');
+    if (s.retailer) {
+      const top = o => Object.entries(o || {}).sort((a, b) => b[1] - a[1]);
+      console.log(`  retailer ${s.retailer}: conditions ${JSON.stringify(s.conditions || {})}`);
+      console.log(`  mapped to ${top(s.brandCounts).length} brand page(s): ${top(s.brandCounts).map(([k, n]) => `${k}=${n}`).join(', ')}`);
+      const um = top(s.unmappedMakers);
+      console.log(`  NOT mapped (skipped), ${um.reduce((a, [, n]) => a + n, 0)} item(s) across ${um.length} manufacturer(s):`);
+      for (const [m, n] of um.slice(0, 80)) console.log(`    ${String(n).padStart(6)}  ${m}`);
+    }
   }
 
   // ── Inventory report (per mapped program) ────────────────────────────────────
@@ -409,7 +472,7 @@ async function main() {
     console.log('\n========== INVENTORY REPORT ==========');
     for (const program of programs) {
       const inv = await inventoryReport(program);
-      console.log(`${program.dormied_brand_slug}: total=${inv.total}, in-stock=${inv.inStock}, DISTINCT in-stock item_group_id=${inv.distinctInStockGroups}  <- real displayable count after variant collapse`);
+      console.log(`${program.dormied_brand_slug || program.advertiser_name}: total=${inv.total}, in-stock=${inv.inStock}, DISTINCT in-stock item_group_id=${inv.distinctInStockGroups}  <- real displayable count after variant collapse`);
     }
   }
 

@@ -486,6 +486,7 @@ const {
 const AB = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
 const { pinnedProductAttr } = require('./lib/brand-pinned-products');
+const { articleShopSectionHtml } = require('./lib/shop-section');
 
 function formatDate(isoDate) {
   const d = new Date(isoDate);
@@ -1098,19 +1099,7 @@ function generateArticleHtml(opts) {
   // removes the whole section if that brand returns no products, so a partner
   // whose catalog is not flowing yet leaves no empty shell behind.
   const hasShop = !!(affiliateBrandSlugs && brandSlug && affiliateBrandSlugs.has(brandSlug));
-  const shopSectionHtml = hasShop ? `
-            <!-- ── Shop ${escHtml(brandName)} (affiliate) ── -->
-            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(brandSlug)}" data-brand-name="${escHtml(brandName)}"${pinnedProductAttr(brandSlug, escHtml)}>
-              <p class="bp-chart-heading">Shop ${escHtml(brandName)}</p>
-              <div class="bp-shop-viewport">
-                <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>
-                <div class="bp-shop-track" id="bp-shop-track" role="region" aria-label="Shop ${escHtml(brandName)} products" tabindex="0"></div>
-                <button type="button" class="bp-shop-arrow bp-shop-arrow--next" id="bp-shop-next" aria-label="Scroll to next products" hidden>&#8250;</button>
-              </div>
-              <div class="bp-shop-dots" id="bp-shop-dots" role="tablist" aria-label="Product pages"></div>
-              <p class="bp-shop-disclosure">Some links on this page are affiliate links. DORMIED may earn a commission on purchases made through them. This does not influence the DORMIED Index or our editorial coverage.</p>
-            </section>
-` : '';
+  const shopSectionHtml = hasShop ? articleShopSectionHtml(brandSlug, brandName, escHtml) : '';
 
   // Answer block. Label is derived, never stored, so the rule lives in exactly
   // one place and a re-bake picks up any change to it. Rendered between the
