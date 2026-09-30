@@ -63,7 +63,20 @@ function endOfDiv(html, start) {
     stats.scanned++;
     if (features.has(slug)) { stats.feature++; continue; }
     let html = fs.readFileSync(f, 'utf8');
-    if (html.includes('id="bp-shop-section"')) { stats.already++; continue; }
+    if (html.includes('id="bp-shop-section"')) {
+      // Prune: a mount whose brand is no longer sellable (e.g. its retailer
+      // stock is all pre-owned) would render an empty "Shop X" heading and
+      // disclosure until the script removed it. Exactly the inserted block.
+      const mount = html.match(/\n\s*<!-- ── Shop [^\n]*\(affiliate\) ── -->\n\s*<section class="bp-shop-section" id="bp-shop-section" data-brand-slug="([^"]+)"[\s\S]*?<\/section>\n/);
+      if (mount && !sellable.has(mount[1])) {
+        html = html.replace(mount[0], '\n').replace(/\n\s*<script defer src="\/js\/shop-carousel\.min\.js\?v=[^"]*"><\/script>/, '');
+        if (!DRY) fs.writeFileSync(f, html);
+        stats.pruned = (stats.pruned || 0) + 1;
+        byBrand['-' + mount[1]] = (byBrand['-' + mount[1]] || 0) + 1;
+        continue;
+      }
+      stats.already++; continue;
+    }
 
     const cardStart = html.indexOf('<div class="da-brand-card">');
     if (cardStart === -1) { stats.noCard++; continue; }

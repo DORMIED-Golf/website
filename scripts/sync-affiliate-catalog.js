@@ -410,7 +410,16 @@ async function syncProgram(program, catalog) {
   // A retailer's brand list is stored on its program so retailer_brand_slugs()
   // (every page build asks it) reads one row instead of ~47k products.
   const programUpdate = { last_synced_at: new Date().toISOString(), feed_updated_at: feedUpdatedAt };
-  if (retailer && summary.brandCounts) programUpdate.brand_slugs = Object.keys(summary.brandCounts).sort();
+  // Two lists: brands with NEW in-stock products (brand and article
+  // carousels, which never show pre-owned) and brands with ANY in-stock
+  // product (Shop This Bag, which may). A used-only brand in the first list
+  // got an empty carousel mount that flashed its heading before removal.
+  if (retailer && !reportOnly) {
+    const inStock = rows.filter(r => r.stock_availability === 'InStock' && r.dormied_brand_slug);
+    const uniq = xs => [...new Set(xs)].sort();
+    programUpdate.brand_slugs = uniq(inStock.filter(r => !r.condition || r.condition === 'New').map(r => r.dormied_brand_slug));
+    programUpdate.bag_brand_slugs = uniq(inStock.map(r => r.dormied_brand_slug));
+  }
   if (!DRY) await supabase.from('affiliate_programs').update(programUpdate).eq('id', program.id);
   return summary;
 }

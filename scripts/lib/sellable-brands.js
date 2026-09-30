@@ -27,7 +27,7 @@
  * @param {object} supabase Supabase client
  * @returns {Promise<Set<string>>} brand slugs eligible for a shop carousel
  */
-async function fetchOnce(supabase) {
+async function fetchOnce(supabase, includeUsed) {
   const slugs = new Set();
 
   const { data: progRows, error: progErr } = await supabase
@@ -54,7 +54,9 @@ async function fetchOnce(supabase) {
     if (data.length < 1000) break;
   }
 
-  const { data: retailerSlugs, error: rErr } = await supabase.rpc('retailer_brand_slugs');
+  // includeUsed: Shop This Bag may show pre-owned retailer stock, so it also
+  // counts brands whose retailer stock is all used; carousels do not.
+  const { data: retailerSlugs, error: rErr } = await supabase.rpc('retailer_brand_slugs', { p_include_used: !!includeUsed });
   if (rErr) throw new Error(`retailer_brand_slugs: ${rErr.message}`);
   for (const s of retailerSlugs || []) {
     const slug = typeof s === 'string' ? s : s && s.retailer_brand_slugs;
@@ -69,10 +71,10 @@ async function fetchOnce(supabase) {
  * single transient error during a --force brand rebuild wrote all 215 pages
  * without a carousel (Sep 2026).
  */
-async function fetchSellableBrandSlugs(supabase, attempts = 3) {
+async function fetchSellableBrandSlugs(supabase, { includeUsed = false, attempts = 3 } = {}) {
   let lastErr;
   for (let i = 0; i < attempts; i++) {
-    try { return await fetchOnce(supabase); }
+    try { return await fetchOnce(supabase, includeUsed); }
     catch (e) { lastErr = e; await new Promise(r => setTimeout(r, 1000 * (i + 1))); }
   }
   throw lastErr;

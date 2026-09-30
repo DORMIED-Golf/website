@@ -99,6 +99,8 @@ const VARIANT_TERMS = new Set([
   'tour', 'pro', 'draw', 'fast', 'hd', 'mini', 'ti', 'tr', 'k', 'x', 'lx',
   // Callaway line names: a Paradym is not a Paradym Super, Ai Smoke or Triple Diamond.
   'super', 'ai', 'smoke', 'triple', 'diamond', 'td',
+  // An Opus is not an Opus SP or an Opus Platinum.
+  'sp', 'platinum',
   // Putter lines: an Ai-One is not an Ai-One Milled, a 2-Ball is not a Stroke Lab.
   'milled', 'stroke',
   // Iron families: an X Forged is not an X Forged CB, a P7 set is not its MB.

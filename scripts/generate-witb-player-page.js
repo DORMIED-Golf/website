@@ -2135,7 +2135,7 @@ async function main() {
   // the disclosure says so rather than implying it is the whole bag.
   let shopBag = null;
   try {
-    const sellable = await fetchSellableBrandSlugs(sb);
+    const sellable = await fetchSellableBrandSlugs(sb, { includeUsed: true });
 
     const bagItems = currentItems
       .map(i => ({
