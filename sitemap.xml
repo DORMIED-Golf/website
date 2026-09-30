@@ -35,7 +35,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-09-29</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -3118,7 +3118,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (683) ── -->
+  <!-- ── News articles (685) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -7076,6 +7076,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/shot-scope-miss-short-practice-driver/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/shot-scope-miss-short-practice-driver-hero.png</image:loc>
+      <image:title>Amateurs Miss Short, Then Practice Driver. Shot Scope Holds Both Data Sets.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/shot-scope-sold-software-device-killing/</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -7633,6 +7643,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/sun-mountains-stand-vs-cart-bag-guide-is-the-kind-of-content-that-keeps-2026-05-06-hero.png</image:loc>
       <image:title>Sun Mountain&apos;s Stand vs. Cart Bag Guide Is the Kind of Content That Keeps Mid-Tier Brands Stuck</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/sunday-golf-5-6-ounce-bag/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/sunday-golf-5-6-ounce-bag-hero.png</image:loc>
+      <image:title>A 5.6-Ounce Golf Bag That Holds Pens. Sunday Golf Knows Exactly What It&apos;s Doing.</image:title>
     </image:image>
   </url>
   <url>
@@ -9991,13 +10011,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/17/</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/18/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10009,13 +10029,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-09-21</lastmod>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/20/</loc>
-    <lastmod>2026-05-26</lastmod>
+    <lastmod>2026-05-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10027,7 +10047,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/22/</loc>
-    <lastmod>2026-05-17</lastmod>
+    <lastmod>2026-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10051,19 +10071,19 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/26/</loc>
-    <lastmod>2026-04-26</lastmod>
+    <lastmod>2026-04-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/27/</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/28/</loc>
-    <lastmod>2026-04-13</lastmod>
+    <lastmod>2026-04-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10081,7 +10101,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/5/</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10093,7 +10113,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/7/</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
