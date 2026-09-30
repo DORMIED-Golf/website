@@ -90,7 +90,7 @@ function endOfDiv(html, start) {
     const daScript = html.match(/<script src="\/js\/da-article\.min\.js\?v=[^"]*"><\/script>/);
     if (!daScript) { stats.noAnchor++; continue; }
 
-    html = html.slice(0, cardEnd) + articleShopSectionHtml(brandSlug, unesc(brandName), esc) + html.slice(cardEnd);
+    html = html.slice(0, cardEnd) + articleShopSectionHtml(brandSlug, unesc(brandName), esc, slug) + html.slice(cardEnd);
     html = html.replace(daScript[0], `${daScript[0]}\n  ${script}`);
     if (!DRY) fs.writeFileSync(f, html);
     stats.injected++;

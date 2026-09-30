@@ -1099,7 +1099,7 @@ function generateArticleHtml(opts) {
   // removes the whole section if that brand returns no products, so a partner
   // whose catalog is not flowing yet leaves no empty shell behind.
   const hasShop = !!(affiliateBrandSlugs && brandSlug && affiliateBrandSlugs.has(brandSlug));
-  const shopSectionHtml = hasShop ? articleShopSectionHtml(brandSlug, brandName, escHtml) : '';
+  const shopSectionHtml = hasShop ? articleShopSectionHtml(brandSlug, brandName, escHtml, slug) : '';
 
   // Answer block. Label is derived, never stored, so the rule lives in exactly
   // one place and a re-bake picks up any change to it. Rendered between the

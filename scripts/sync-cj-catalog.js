@@ -48,6 +48,7 @@
  *   node scripts/sync-cj-catalog.js --brand=cobra
  */
 'use strict';
+const crypto = require('crypto');
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env'), override: true });
 
 const { createClient } = require('@supabase/supabase-js');
@@ -415,15 +416,17 @@ async function syncProgram(supabase, program) {
 
   const existingActive = new Set();
   const firstSeenById  = new Map();
+  const hashById       = new Map();
   for (let from = 0; ; from += 1000) {
     const { data, error } = await supabase.from('affiliate_products')
-      .select('source_item_id, first_seen_at, is_active')
+      .select('source_item_id, first_seen_at, is_active, content_hash')
       .eq('program_id', program.id).eq('source', 'cj').order('id').range(from, from + 999);
     if (error) throw new Error(`load existing: ${error.message}`);
     if (!data || !data.length) break;
     for (const r of data) {
       if (r.is_active) existingActive.add(r.source_item_id);
       if (r.first_seen_at) firstSeenById.set(r.source_item_id, r.first_seen_at);
+      if (r.is_active && r.content_hash) hashById.set(r.source_item_id, r.content_hash);
     }
     if (data.length < 1000) break;
   }
@@ -431,15 +434,40 @@ async function syncProgram(supabase, program) {
   const now = new Date().toISOString();
   for (const r of rows) r.first_seen_at = firstSeenById.get(r.source_item_id) || now;
 
+  // Write only what changed. Every row carried this run's syncedAt as
+  // feed_updated_at, so all ~8k were rewritten nightly; the fingerprint leaves
+  // out the timestamps, and freshness for unchanged rows comes from
+  // affiliate_programs.feed_updated_at (set below), which /api/shop reads.
+  for (const r of rows) {
+    const { feed_updated_at, first_seen_at, ...content } = r;
+    // CJ rotates the click domain on every request (dpbolvw.net, kqzyfj.com,
+    // jdoqocy.com, anrdoezrs.net, tkqlhce.com: all CJ, interchangeable), so the
+    // host is left out of the fingerprint; path and query must still match.
+    if (content.tracking_url) content.tracking_url = content.tracking_url.replace(/^https?:\/\/[^/]+/, '');
+    r.content_hash = crypto.createHash('md5').update(JSON.stringify(content)).digest('hex');
+  }
+  const changed = rows.filter(r => hashById.get(r.source_item_id) !== r.content_hash);
+  console.log(`[cj-sync]   ${changed.length} new or changed, ${rows.length - changed.length} unchanged (not rewritten)`);
+  if (process.env.CJ_DEBUG_DIFF && changed.length) {
+    const sample = changed.filter(r => hashById.has(r.source_item_id)).slice(0, 3);
+    const { data: olds } = await supabase.from('affiliate_products').select('*')
+      .eq('program_id', program.id).in('source_item_id', sample.map(r => r.source_item_id));
+    for (const r of sample) {
+      const o = (olds || []).find(x => x.source_item_id === r.source_item_id) || {};
+      const diffs = Object.keys(r).filter(k => !['feed_updated_at', 'first_seen_at', 'content_hash'].includes(k) && JSON.stringify(o[k] ?? null) !== JSON.stringify(r[k] ?? null));
+      console.log(`[cj-sync]   DIFF ${r.source_item_id}: ${diffs.map(k => `${k}: ${JSON.stringify(o[k]).slice(0, 90)} -> ${JSON.stringify(r[k]).slice(0, 90)}`).join(' | ')}`);
+    }
+  }
+
   if (DRY) {
-    console.log(`[cj-sync]   (dry-run) would upsert ${rows.length} row(s)`);
+    console.log(`[cj-sync]   (dry-run) would upsert ${changed.length} row(s)`);
   } else {
-    await chunked(rows, 200, async batch => {
+    await chunked(changed, 200, async batch => {
       const { error } = await supabase.from('affiliate_products')
         .upsert(batch, { onConflict: 'program_id,source_item_id' });
       if (error) throw new Error(`upsert batch: ${error.message}`);
     });
-    console.log(`[cj-sync]   upserted ${rows.length} row(s)`);
+    console.log(`[cj-sync]   upserted ${changed.length} row(s)`);
   }
 
   const seen = new Set(rows.map(r => r.source_item_id));
@@ -459,7 +487,7 @@ async function syncProgram(supabase, program) {
     console.log(`[cj-sync]   deactivated ${gone.length} row(s) no longer in the feed`);
   }
 
-  if (!DRY) await supabase.from('affiliate_programs').update({ last_synced_at: new Date().toISOString() }).eq('id', program.id);
+  if (!DRY) await supabase.from('affiliate_programs').update({ last_synced_at: new Date().toISOString(), feed_updated_at: syncedAt }).eq('id', program.id);
   const inStock = rows.filter(r => r.stock_availability === 'InStock').length;
   console.log(`[cj-sync]   summary: ${rows.length} products, ${inStock} in stock, ${gone.length} deactivated`);
   return { ok: true };

@@ -14,10 +14,12 @@
 
 const { pinnedProductAttr } = require('./brand-pinned-products');
 
-function articleShopSectionHtml(brandSlug, brandName, esc) {
+function articleShopSectionHtml(brandSlug, brandName, esc, articleSlug) {
+  // data-click-src/slug: clicks log as coming from this article, not the brand page.
+  const click = articleSlug ? ` data-click-src="article" data-click-slug="${esc(articleSlug)}"` : '';
   return `
             <!-- ── Shop ${esc(brandName)} (affiliate) ── -->
-            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(brandSlug)}" data-brand-name="${esc(brandName)}"${pinnedProductAttr(brandSlug, esc)}>
+            <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(brandSlug)}" data-brand-name="${esc(brandName)}"${click}${pinnedProductAttr(brandSlug, esc)}>
               <p class="bp-chart-heading">Shop ${esc(brandName)}</p>
               <div class="bp-shop-viewport">
                 <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>

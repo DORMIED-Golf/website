@@ -1663,7 +1663,7 @@ ${witbAnswerHtml}
           </section>
 ${shopBag ? `
           <!-- ── Shop This Bag (affiliate) ── -->
-          <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBag.slug)}" data-brand-name="${esc(shopBag.name)}" data-product-ids="${esc(shopBag.ids.join(','))}">
+          <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBag.slug)}" data-brand-name="${esc(shopBag.name)}" data-click-src="witb-bag" data-click-slug="${esc(player.slug)}" data-product-ids="${esc(shopBag.ids.join(','))}">
             <p class="bp-chart-heading">Shop This Bag</p>
             <div class="bp-shop-viewport">
               <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>
@@ -1703,7 +1703,7 @@ ${scSignupPrimary}
 
 ${(shopBrand && !shopBag) ? `
           <!-- ── Shop ${esc(shopBrand.name)} (affiliate) ── -->
-          <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBrand.slug)}" data-brand-name="${esc(shopBrand.name)}"${pinnedProductAttr(shopBrand.slug, esc)}>
+          <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBrand.slug)}" data-brand-name="${esc(shopBrand.name)}" data-click-src="witb" data-click-slug="${esc(player.slug)}"${pinnedProductAttr(shopBrand.slug, esc)}>
             <p class="bp-chart-heading">Shop ${esc(shopBrand.name)}</p>
             <div class="bp-shop-viewport">
               <button type="button" class="bp-shop-arrow bp-shop-arrow--prev" id="bp-shop-prev" aria-label="Scroll to previous products" hidden>&#8249;</button>

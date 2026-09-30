@@ -25,6 +25,12 @@
   var next  = document.getElementById('bp-shop-next');
   var dots  = document.getElementById('bp-shop-dots');
   var slug  = section.getAttribute('data-brand-slug') || '';
+  // Click attribution for /api/go: which kind of page the click came from and
+  // its slug. Every card used to be logged as src=brand with the brand's slug,
+  // so Shop This Bag and article clicks were indistinguishable from brand-page
+  // clicks. Pages that are not brand pages set these on the section.
+  var clickSrc  = section.getAttribute('data-click-src') || 'brand';
+  var clickSlug = section.getAttribute('data-click-slug') || slug;
   var brandName = section.getAttribute('data-brand-name') || '';
   // "Shop This Bag" supplies an explicit, ordered product list instead of a
   // brand to page through: the page already decided which products (the ones in
@@ -87,7 +93,7 @@
     // logged and the network's tracking_url stays server-side.
     var href = isAmazon
       ? esc(p.go_url)
-      : '/api/go/' + encodeURIComponent(p.id) + '?src=brand&amp;slug=' + encodeURIComponent(slug);
+      : '/api/go/' + encodeURIComponent(p.id) + '?src=' + encodeURIComponent(clickSrc) + '&amp;slug=' + encodeURIComponent(clickSlug);
     // A suppressed price used to leave an empty .bp-shop-price-row holding 22px
     // of blank space under the name, next to a "BUY NOW" that showed no number.
     // That reads as broken rather than deliberate. Same treatment as Amazon:
