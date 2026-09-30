@@ -62,6 +62,12 @@ function looksLikeLogo(url) {
   // Explicit logo/icon/favicon signals in path or filename
   if (/\/(logo|favicon|icon|brand-mark|wordmark|badge)[^/]*\.(png|svg|jpg|jpeg|webp)/i.test(lower)) return true;
   if (lower.endsWith('.svg')) return true;
+  // Text summary cards, not photos: MyGolfSpy leads article bodies with a
+  // "TL;DR" card (…/mygolfspy-tldr-card-13.png: a stat, bullets and their
+  // badge on a dark slab). Taken as the first body image, it became the hero of
+  // shot-scope-miss-short-practice-driver (Sep 2026). Skipping it lets the next
+  // real image, or the page's og:image, win.
+  if (/tl-?dr|summary-card|key-takeaways/i.test(lower)) return true;
   // WordPress emoji images (s.w.org or any path containing /emoji/)
   if (lower.includes('s.w.org') || lower.includes('/emoji/')) return true;
   // WordPress thumbnail-size suffixes: -150x150.jpg, -300x200.png, etc.
