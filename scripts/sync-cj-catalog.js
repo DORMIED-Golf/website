@@ -418,7 +418,7 @@ async function syncProgram(supabase, program) {
   for (let from = 0; ; from += 1000) {
     const { data, error } = await supabase.from('affiliate_products')
       .select('source_item_id, first_seen_at, is_active')
-      .eq('program_id', program.id).eq('source', 'cj').range(from, from + 999);
+      .eq('program_id', program.id).eq('source', 'cj').order('id').range(from, from + 999);
     if (error) throw new Error(`load existing: ${error.message}`);
     if (!data || !data.length) break;
     for (const r of data) {

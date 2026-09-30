@@ -953,6 +953,7 @@ async function fetchTourComparison(sb, rankedPlayerIds) {
         .from('witb_bag_items')
         .select('raw_brand, witb_brands!brand_id(name, dormied_brand_slug), witb_bags!bag_id(is_current, player_id)')
         .in('club_type', types)
+        .order('id')
         .range(from, from + 999);
       items = items.concat(page || []);
       if (!page || page.length < 1000) break;
@@ -2141,22 +2142,35 @@ async function main() {
         club_type: i.club_type,
         raw_brand: i.raw_brand,
         raw_model: i.raw_model,
+        loft_or_number: i.loft_or_number,   // a single-iron listing must match the exact number
         dormied_brand_slug: i.witb_brands?.dormied_brand_slug || null,
       }))
       .filter(i => i.dormied_brand_slug && sellable.has(i.dormied_brand_slug));
 
     if (bagItems.length) {
       const slugs = [...new Set(bagItems.map(i => i.dormied_brand_slug))];
+      // Per brand, in id order, so each read is one ordered index range
+      // (affiliate_products_brand_id_instock_idx) and range() paging is stable.
+      // One combined ORDER BY id over ~60k rows timed out under parallel
+      // builds and silently dropped the section. Retried per brand.
       const products = [];
-      for (let from = 0; ; from += 1000) {
-        const { data, error } = await sb.from('affiliate_products')
-          .select('id, name, dormied_brand_slug, condition')
-          .eq('is_active', true).eq('stock_availability', 'InStock')
-          .in('dormied_brand_slug', slugs).range(from, from + 999);
-        if (error) throw new Error(error.message);
-        if (!data || !data.length) break;
-        products.push(...data);
-        if (data.length < 1000) break;
+      for (const slug of slugs) {
+        for (let from = 0; ; from += 1000) {
+          let data, error;
+          for (let attempt = 0; attempt < 3; attempt++) {
+            ({ data, error } = await sb.from('affiliate_products')
+              .select('id, name, dormied_brand_slug, condition')
+              .eq('dormied_brand_slug', slug)
+              .eq('is_active', true).eq('stock_availability', 'InStock')
+              .order('id').range(from, from + 999));
+            if (!error) break;
+            await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
+          }
+          if (error) throw new Error(error.message);
+          if (!data || !data.length) break;
+          products.push(...data);
+          if (data.length < 1000) break;
+        }
       }
       const { matches, unmatched } = matchBagToProducts(bagItems, products, SHOP_BAG_OVERRIDES);
       if (matches.length) {

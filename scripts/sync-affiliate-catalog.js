@@ -28,6 +28,7 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env'), override: true });
 
 const { createClient } = require('@supabase/supabase-js');
+const crypto = require('crypto');
 const { retailerForAdvertiser } = require('../lib/affiliate-retailers');
 const { brandSlugForProduct }   = require('./lib/retailer-brand-map');
 
@@ -36,6 +37,11 @@ const DRY = process.argv.includes('--dry-run');
 // wants to deactivate >20% of a program's active rows must be launched by hand.
 const ALLOW_LARGE = process.argv.includes('--allow-large-deactivation');
 const FAIL_ON_PAGE = parseInt(process.env.AFFILIATE_SYNC_FAIL_ON_PAGE || '0', 10) || 0;
+// --pace-ms=N: sleep N ms between write batches (and use 250-row batches), for
+// a large one-off rewrite by hand, e.g. the first run after content_hash was
+// added. The nightly cron never sets it; with change detection it writes little.
+const PACE_MS = parseInt((process.argv.find(a => a.startsWith('--pace-ms=')) || '').split('=')[1] || '0', 10) || 0;
+const WRITE_BATCH = parseInt((process.argv.find(a => a.startsWith('--batch=')) || '').split('=')[1] || '0', 10) || (PACE_MS ? 250 : 500);
 // TEST HOOK (off unless set): AFFILIATE_SYNC_AS_RETAILER=<catalog_id> runs that
 // catalog through the multi-brand retailer path in report-only mode, to check
 // the brand mapping without a retailer catalog. Never writes.
@@ -207,7 +213,21 @@ function mapItem(item, program, feedUpdatedAt, brandSlug) {
 
 async function chunked(rows, size, fn) {
   let done = 0;
-  for (let i = 0; i < rows.length; i += size) { await fn(rows.slice(i, i + size)); done += Math.min(size, rows.length - i); }
+  for (let i = 0; i < rows.length; i += size) {
+    // In a paced hand run, a statement timeout is retried after a pause rather
+    // than aborting (it happened intermittently mid-rewrite while autovacuum
+    // was working the same table). The cron is unaffected: no retry, no pace.
+    for (let attempt = 0; ; attempt++) {
+      try { await fn(rows.slice(i, i + size)); break; }
+      catch (e) {
+        if (!PACE_MS || attempt >= 4 || !/statement timeout/i.test(e.message)) throw e;
+        console.warn(`[sync]    batch at ${i} timed out, retry ${attempt + 1} in ${10 * (attempt + 1)}s`);
+        await sleep(10000 * (attempt + 1));
+      }
+    }
+    done += Math.min(size, rows.length - i);
+    if (PACE_MS && i + size < rows.length) await sleep(PACE_MS);
+  }
   return done;
 }
 
@@ -247,7 +267,7 @@ async function syncProgram(program, catalog) {
 
   const summary = {
     program: label, pagesFetched, numpages, itemsCollected: items.length, total, numberOfItems,
-    fetchComplete, stopReason, inserted: 0, updated: 0, deactivated: 0, inherited: 0, skipped: [],
+    fetchComplete, stopReason, inserted: 0, updated: 0, unchanged: 0, deactivated: 0, inherited: 0, skipped: [],
     activeBefore: 0, wouldDeactivate: 0, sweepPct: 0, sweepBlocked: false, nullPrice: 0,
     retailer: retailer ? retailer.name : null, brandCounts: null, unmappedMakers: null, conditions: null,
   };
@@ -291,6 +311,10 @@ async function syncProgram(program, catalog) {
     // Postgres also excludes NULLs. Zero today; if a feed ever introduces NULL
     // prices the catalog would silently shrink, so count them here.
     if (mapped.current_price === null) summary.nullPrice++;
+    // Fingerprint of everything the feed says about the item, minus the run's
+    // own timestamp. An unchanged row is not rewritten (see the update loop).
+    const { feed_updated_at, ...content } = mapped;
+    mapped.content_hash = crypto.createHash('md5').update(JSON.stringify(content)).digest('hex');
     rows.push(mapped);
   }
 
@@ -299,6 +323,7 @@ async function syncProgram(program, catalog) {
   // Existing rows for this program: for update vs insert, first_seen_at
   // inheritance, and the deactivation ceiling (which counts currently-active rows).
   const existingByItemId = new Map();             // impact_item_id -> id
+  const existingState = new Map();                // impact_item_id -> { hash, active }
   const existingActiveIds = new Set();            // impact_item_id where is_active=true
   const firstSeenByCatalogItem = new Map();       // catalog_item_id -> earliest first_seen_at (for migration inheritance)
   for (let from = 0; ; from += 1000) {
@@ -306,12 +331,17 @@ async function syncProgram(program, catalog) {
       // source='impact' only: a program may ALSO carry rows from a merchant-feed
       // sync (source='shopify'). Those are invisible to Impact's /Items response,
       // so including them here would make the sweep deactivate every one of them.
-      .select('id, impact_item_id, catalog_item_id, first_seen_at, is_active')
-      .eq('program_id', program.id).eq('source', 'impact').range(from, from + 999);
+      .select('id, impact_item_id, catalog_item_id, first_seen_at, is_active, content_hash')
+      .eq('program_id', program.id).eq('source', 'impact')
+      // Stable order: unordered range() pages can overlap or skip, and at Global
+      // Golf's ~47k rows a skipped row would be re-INSERTed (unique violation)
+      // or wrongly swept.
+      .order('id').range(from, from + 999);
     if (error) throw new Error(`load existing: ${error.message}`);
     if (!data || !data.length) break;
     for (const r of data) {
       existingByItemId.set(r.impact_item_id, r.id);
+      existingState.set(r.impact_item_id, { hash: r.content_hash, active: r.is_active });
       if (r.is_active) existingActiveIds.add(r.impact_item_id);
       if (r.catalog_item_id) {
         const cur = firstSeenByCatalogItem.get(r.catalog_item_id);
@@ -324,6 +354,11 @@ async function syncProgram(program, catalog) {
   const inserts = [], updates = [];
   for (const row of rows) {
     if (existingByItemId.has(row.impact_item_id)) {
+      // Write only what changed. Rewriting every row nightly (Global Golf is
+      // ~47k) exhausted the database's Disk IO budget in Sep 2026. Freshness
+      // for unchanged rows comes from affiliate_programs.feed_updated_at.
+      const st = existingState.get(row.impact_item_id);
+      if (st && st.active && st.hash === row.content_hash) { summary.unchanged++; continue; }
       updates.push(row);                          // first_seen_at intentionally NOT in payload -> preserved
     } else {
       const inherited = row.catalog_item_id ? firstSeenByCatalogItem.get(row.catalog_item_id) : null;
@@ -336,11 +371,11 @@ async function syncProgram(program, catalog) {
     }
   }
 
-  if (inserts.length) summary.inserted = await chunked(inserts, 500, async batch => {
+  if (inserts.length) summary.inserted = await chunked(inserts, WRITE_BATCH, async batch => {
     const { error } = await supabase.from('affiliate_products').insert(batch);
     if (error) throw new Error(`insert batch: ${error.message}`);
   });
-  if (updates.length) summary.updated = await chunked(updates, 500, async batch => {
+  if (updates.length) summary.updated = await chunked(updates, WRITE_BATCH, async batch => {
     const { error } = await supabase.from('affiliate_products').upsert(batch, { onConflict: 'impact_item_id' });
     if (error) throw new Error(`update batch: ${error.message}`);
   });
@@ -372,7 +407,11 @@ async function syncProgram(program, catalog) {
     });
   }
 
-  if (!DRY) await supabase.from('affiliate_programs').update({ last_synced_at: new Date().toISOString() }).eq('id', program.id);
+  // A retailer's brand list is stored on its program so retailer_brand_slugs()
+  // (every page build asks it) reads one row instead of ~47k products.
+  const programUpdate = { last_synced_at: new Date().toISOString(), feed_updated_at: feedUpdatedAt };
+  if (retailer && summary.brandCounts) programUpdate.brand_slugs = Object.keys(summary.brandCounts).sort();
+  if (!DRY) await supabase.from('affiliate_programs').update(programUpdate).eq('id', program.id);
   return summary;
 }
 
@@ -384,7 +423,7 @@ async function inventoryReport(program) {
   const groups = new Set();
   for (let from = 0; ; from += 1000) {
     const { data } = await supabase.from('affiliate_products').select('item_group_id')
-      .eq('program_id', program.id).eq('is_active', true).eq('stock_availability', 'InStock').range(from, from + 999);
+      .eq('program_id', program.id).eq('is_active', true).eq('stock_availability', 'InStock').order('id').range(from, from + 999);
     if (!data || !data.length) break;
     for (const r of data) groups.add(r.item_group_id ?? `__null_${groups.size}`);
     if (data.length < 1000) break;
@@ -450,7 +489,7 @@ async function main() {
   for (const s of summaries) {
     console.log(`\n${s.program}`);
     console.log(`  fetch: pages ${s.pagesFetched}/${s.numpages} (trailing empty page expected), items ${s.itemsCollected}/${s.total}, NumberOfItems=${s.numberOfItems}, fetchComplete=${s.fetchComplete}${s.stopReason ? ` (stop: ${s.stopReason})` : ''}`);
-    console.log(`  writes: inserted=${s.inserted}, updated=${s.updated}, deactivated=${s.deactivated}, first_seen_at inherited=${s.inherited}`);
+    console.log(`  writes: inserted=${s.inserted}, updated=${s.updated}, unchanged (not rewritten)=${s.unchanged}, deactivated=${s.deactivated}, first_seen_at inherited=${s.inherited}`);
     console.log(`  sweep: activeBefore=${s.activeBefore}, wouldDeactivate=${s.wouldDeactivate} (${s.sweepPct.toFixed(1)}%), ceiling=20%, blocked=${s.sweepBlocked}`);
     console.log(`  NULL current_price: ${s.nullPrice}${s.nullPrice ? '  <- these are EXCLUDED from /api/shop by the price floor' : ''}`);
     if (s.skipped.length) {

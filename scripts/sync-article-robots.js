@@ -76,6 +76,7 @@ function main() {
       const { data, error } = await supabase
         .from('dormied_articles')
         .select('slug, status')
+        .order('slug')
         .range(from, from + 999);
       if (error) {
         console.error('[robots] Failed to read dormied_articles:', error.message);

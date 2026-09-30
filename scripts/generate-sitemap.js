@@ -230,6 +230,7 @@ async function fetchBrandDates(sb) {
     const { data, error } = await sb
       .from('dormied_monthly_brand_summary')
       .select('brand_slug, snapshot_month, refreshed_at')
+      .order('brand_slug').order('snapshot_month')
       .range(from, from + 999);
     if (error) throw new Error(`brand summary fetch failed: ${error.message}`);
     if (!data || !data.length) break;

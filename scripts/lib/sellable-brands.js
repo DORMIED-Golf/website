@@ -46,6 +46,7 @@ async function fetchOnce(supabase) {
       .select('dormied_brand_slug')
       .eq('source', 'amazon')
       .eq('is_active', true)
+      .order('id')
       .range(from, from + 999);
     if (error) throw new Error(`affiliate_products: ${error.message}`);
     if (!data || !data.length) break;

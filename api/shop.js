@@ -68,7 +68,7 @@ function shape(row, retailerNames) {
     currency:            row.currency,
     promo_code:          row.promo_code,
     promo_title:         row.promo_title,
-    feed_updated_at:     row.feed_updated_at,
+    feed_updated_at:     laterOf(row.feed_updated_at, retailerNames && retailerNames.programFeed && retailerNames.programFeed.get(row.program_id)),
     source:              row.source,
     // Set only for a multi-brand retailer (Global Golf): the card then reads
     // "Check price at Global Golf", not at the brand, which does not sell it.
@@ -87,13 +87,22 @@ function shape(row, retailerNames) {
 
 // program_id -> retailer display name, for multi-brand retailer programs only
 // (no dormied_brand_slug, advertiser listed in lib/affiliate-retailers.js).
+// Also carries each program's feed_updated_at (programFeed): the catalog sync
+// writes only changed product rows, so an unchanged row keeps its old date,
+// and freshness is the later of the row's and its program's.
 async function loadRetailerNames(sb) {
   const { data } = await sb.from('affiliate_programs')
-    .select('id, advertiser_name').is('dormied_brand_slug', null);
+    .select('id, advertiser_name, dormied_brand_slug, feed_updated_at');
   const m = new Map();
-  for (const r of data || []) { const ret = retailerForAdvertiser(r.advertiser_name); if (ret) m.set(r.id, ret.name); }
+  m.programFeed = new Map();
+  for (const r of data || []) {
+    if (r.feed_updated_at) m.programFeed.set(r.id, r.feed_updated_at);
+    if (r.dormied_brand_slug) continue;
+    const ret = retailerForAdvertiser(r.advertiser_name); if (ret) m.set(r.id, ret.name);
+  }
   return m;
 }
+const laterOf = (a, b) => (!a ? b || null : !b ? a : (Date.parse(a) >= Date.parse(b) ? a : b));
 
 // Deterministic winner within one item_group_id.
 function betterOf(a, b) {
