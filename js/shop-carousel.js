@@ -56,7 +56,10 @@
     var n = Number(v);
     if (!isFinite(n)) return '';
     var sym = cur === 'USD' ? '$' : '';
-    return sym + (n % 1 === 0 ? n.toFixed(0) : n.toFixed(2));
+    // Always two decimals with thousands separators ("$1,499.00", "$89.99"):
+    // whole-dollar prices used to drop the cents and the comma ("$1499"),
+    // which read inconsistently beside cents-priced cards in the same row.
+    return sym + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   // Prices are synced nightly; hide them rather than show a stale number. The
