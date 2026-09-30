@@ -163,8 +163,9 @@
     "@type": "Organization",
     "@id": "https://dormied.com/#organization",
     "name": "DORMIED",
-    "alternateName": "Golf's Brand Desk",
-    "url": "https://dormied.com",
+    "alternateName": "DORMIED.COM",
+    "slogan": "Golf's Brand Desk",
+    "url": "https://dormied.com/",
     "logo": "https://dormied.com/images/dormied-logo-colour.png",
     "description": "Golf's brand desk. Independent monthly rankings of 215 golf brands across 10 global markets, with editorial analysis of what is moving the game.",
     "sameAs": ["https://x.com/DORMIED_GOLF"],
@@ -176,14 +177,19 @@
   }
   </script>
 
-  <!-- ── Structured Data: WebSite ── -->
+  <!-- ── Structured Data: WebSite ──
+       Google takes the site name shown in results from this entity on the
+       homepage. name must be the brand exactly as written (DORMIED), url must
+       equal the canonical (with the trailing slash), and alternateName is an
+       alternative NAME, not a tagline: the tagline lives in Organization.slogan. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": "https://dormied.com/#website",
     "name": "DORMIED",
-    "alternateName": "Golf's Brand Desk",
-    "url": "https://dormied.com",
+    "alternateName": "DORMIED.COM",
+    "url": "https://dormied.com/",
     "description": "Golf's brand desk. Monthly rankings, analysis, and the stories behind the moves.",
     "publisher": { "@id": "https://dormied.com/#organization" }
   }

@@ -22,6 +22,11 @@
   },
   "redirects": [
     {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/news/graphite-design-2010-shaft",
       "destination": "/brands/graphite-design/",
       "permanent": true
