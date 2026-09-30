@@ -3118,7 +3118,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (685) ── -->
+  <!-- ── News articles (686) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -8986,6 +8986,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/trackman-bays-staff-site-iron/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/trackman-bays-staff-site-iron-hero.jpg</image:loc>
+      <image:title>Three to Five Bays, No Staff on Site: Trackman Gets the Five Iron Studio Spec</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/trackman-callaway-money-funded-venue/</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -10005,7 +10015,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/16/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10017,7 +10027,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/18/</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10029,7 +10039,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-09-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10065,7 +10075,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/25/</loc>
-    <lastmod>2026-05-01</lastmod>
+    <lastmod>2026-05-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10089,25 +10099,25 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/3/</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-09-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/5/</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/6/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
