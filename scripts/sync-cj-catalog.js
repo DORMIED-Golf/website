@@ -417,12 +417,15 @@ async function syncProgram(supabase, program) {
   const existingActive = new Set();
   const firstSeenById  = new Map();
   const hashById       = new Map();
-  for (let from = 0; ; from += 1000) {
+  // Keyset paging (id > last seen): offset pages deep in a large program walk
+  // every earlier row and can hit the statement timeout (Impact sync, Oct 2026).
+  for (let lastId = 0; ; ) {
     const { data, error } = await supabase.from('affiliate_products')
-      .select('source_item_id, first_seen_at, is_active, content_hash')
-      .eq('program_id', program.id).eq('source', 'cj').order('id').range(from, from + 999);
+      .select('id, source_item_id, first_seen_at, is_active, content_hash')
+      .eq('program_id', program.id).eq('source', 'cj').gt('id', lastId).order('id').limit(1000);
     if (error) throw new Error(`load existing: ${error.message}`);
     if (!data || !data.length) break;
+    lastId = data[data.length - 1].id;
     for (const r of data) {
       if (r.is_active) existingActive.add(r.source_item_id);
       if (r.first_seen_at) firstSeenById.set(r.source_item_id, r.first_seen_at);

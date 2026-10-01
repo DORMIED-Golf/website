@@ -214,13 +214,14 @@ function mapItem(item, program, feedUpdatedAt, brandSlug) {
 async function chunked(rows, size, fn) {
   let done = 0;
   for (let i = 0; i < rows.length; i += size) {
-    // In a paced hand run, a statement timeout is retried after a pause rather
-    // than aborting (it happened intermittently mid-rewrite while autovacuum
-    // was working the same table). The cron is unaffected: no retry, no pace.
+    // A statement timeout is retried after a pause rather than aborting (it
+    // happened intermittently mid-rewrite while autovacuum worked the table).
     for (let attempt = 0; ; attempt++) {
       try { await fn(rows.slice(i, i + size)); break; }
       catch (e) {
-        if (!PACE_MS || attempt >= 4 || !/statement timeout/i.test(e.message)) throw e;
+        // Retried in every mode now (the cron too): a timeout on one batch should
+        // not fail the whole program's sync. Paced hand runs allow more attempts.
+        if (attempt >= (PACE_MS ? 4 : 2) || !/statement timeout/i.test(e.message)) throw e;
         console.warn(`[sync]    batch at ${i} timed out, retry ${attempt + 1} in ${10 * (attempt + 1)}s`);
         await sleep(10000 * (attempt + 1));
       }
@@ -326,7 +327,11 @@ async function syncProgram(program, catalog) {
   const existingState = new Map();                // impact_item_id -> { hash, active }
   const existingActiveIds = new Set();            // impact_item_id where is_active=true
   const firstSeenByCatalogItem = new Map();       // catalog_item_id -> earliest first_seen_at (for migration inheritance)
-  for (let from = 0; ; from += 1000) {
+  // Keyset paging (id > last seen), not offset: at Global Golf's ~47k rows an
+  // offset page deep in the table (offset=46000) walks every earlier row and
+  // hit the statement timeout in the Oct 1 2026 cron run. Same cost per page
+  // at any depth this way.
+  for (let lastId = 0; ; ) {
     const { data, error } = await supabase.from('affiliate_products')
       // source='impact' only: a program may ALSO carry rows from a merchant-feed
       // sync (source='shopify'). Those are invisible to Impact's /Items response,
@@ -336,9 +341,10 @@ async function syncProgram(program, catalog) {
       // Stable order: unordered range() pages can overlap or skip, and at Global
       // Golf's ~47k rows a skipped row would be re-INSERTed (unique violation)
       // or wrongly swept.
-      .order('id').range(from, from + 999);
+      .gt('id', lastId).order('id').limit(1000);
     if (error) throw new Error(`load existing: ${error.message}`);
     if (!data || !data.length) break;
+    lastId = data[data.length - 1].id;
     for (const r of data) {
       existingByItemId.set(r.impact_item_id, r.id);
       existingState.set(r.impact_item_id, { hash: r.content_hash, active: r.is_active });
@@ -430,10 +436,12 @@ async function inventoryReport(program) {
   const inStock = (await q().eq('is_active', true).eq('stock_availability', 'InStock')).count || 0;
   // Distinct in-stock item_group_id (the real displayable count after variant collapse).
   const groups = new Set();
-  for (let from = 0; ; from += 1000) {
-    const { data } = await supabase.from('affiliate_products').select('item_group_id')
-      .eq('program_id', program.id).eq('is_active', true).eq('stock_availability', 'InStock').order('id').range(from, from + 999);
+  for (let lastId = 0; ; ) {   // keyset, as above
+    const { data } = await supabase.from('affiliate_products').select('id, item_group_id')
+      .eq('program_id', program.id).eq('is_active', true).eq('stock_availability', 'InStock')
+      .gt('id', lastId).order('id').limit(1000);
     if (!data || !data.length) break;
+    lastId = data[data.length - 1].id;
     for (const r of data) groups.add(r.item_group_id ?? `__null_${groups.size}`);
     if (data.length < 1000) break;
   }
