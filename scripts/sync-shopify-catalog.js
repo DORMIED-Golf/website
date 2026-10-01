@@ -40,6 +40,7 @@
  *   node scripts/sync-shopify-catalog.js --brand=malbon
  */
 'use strict';
+const crypto = require('crypto');
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env'), override: true });
 
 const { createClient } = require('@supabase/supabase-js');
@@ -282,15 +283,19 @@ async function syncProgram(program) {
   // Existing rows for this program from THIS source only.
   const existingActive = new Set();
   const firstSeenById  = new Map();
-  for (let from = 0; ; from += 1000) {
+  const hashById       = new Map();
+  // Keyset paging (id > last seen), as in the Impact and CJ syncs.
+  for (let lastId = 0; ; ) {
     const { data, error } = await supabase.from('affiliate_products')
-      .select('source_item_id, first_seen_at, is_active')
-      .eq('program_id', program.id).eq('source', 'shopify').order('id').range(from, from + 999);
+      .select('id, source_item_id, first_seen_at, is_active, content_hash')
+      .eq('program_id', program.id).eq('source', 'shopify').gt('id', lastId).order('id').limit(1000);
     if (error) throw new Error(`load existing: ${error.message}`);
     if (!data || !data.length) break;
+    lastId = data[data.length - 1].id;
     for (const r of data) {
       if (r.is_active) existingActive.add(r.source_item_id);
       if (r.first_seen_at) firstSeenById.set(r.source_item_id, r.first_seen_at);
+      if (r.is_active && r.content_hash) hashById.set(r.source_item_id, r.content_hash);
     }
     if (data.length < 1000) break;
   }
@@ -298,15 +303,26 @@ async function syncProgram(program) {
   const now = new Date().toISOString();
   for (const r of rows) r.first_seen_at = firstSeenById.get(r.source_item_id) || now;
 
+  // Write only what changed, like the Impact and CJ syncs: every row used to be
+  // rewritten nightly. The fingerprint leaves out the timestamps (Shopify's
+  // updated_at moves on stock edits alone); freshness for unchanged rows comes
+  // from affiliate_programs.feed_updated_at, set below, which /api/shop reads.
+  for (const r of rows) {
+    const { feed_updated_at, first_seen_at, ...content } = r;
+    r.content_hash = crypto.createHash('md5').update(JSON.stringify(content)).digest('hex');
+  }
+  const changed = rows.filter(r => hashById.get(r.source_item_id) !== r.content_hash);
+  console.log(`[shopify-sync]   ${changed.length} new or changed, ${rows.length - changed.length} unchanged (not rewritten)`);
+
   if (DRY) {
-    console.log(`[shopify-sync]   (dry-run) would upsert ${rows.length} row(s)`);
+    console.log(`[shopify-sync]   (dry-run) would upsert ${changed.length} row(s)`);
   } else {
-    await chunked(rows, 200, async batch => {
+    await chunked(changed, 200, async batch => {
       const { error } = await supabase.from('affiliate_products')
         .upsert(batch, { onConflict: 'program_id,source_item_id' });
       if (error) throw new Error(`upsert batch: ${error.message}`);
     });
-    console.log(`[shopify-sync]   upserted ${rows.length} row(s)`);
+    console.log(`[shopify-sync]   upserted ${changed.length} row(s)`);
   }
 
   // Sweep: anything active we no longer saw in a COMPLETE feed.
@@ -331,7 +347,7 @@ async function syncProgram(program) {
 
   if (!DRY) {
     await supabase.from('affiliate_programs')
-      .update({ last_synced_at: new Date().toISOString() }).eq('id', program.id);
+      .update({ last_synced_at: new Date().toISOString(), feed_updated_at: now }).eq('id', program.id);
   }
   const inStock = rows.filter(r => r.stock_availability === 'InStock').length;
   console.log(`[shopify-sync]   summary: ${rows.length} products, ${inStock} in stock, ${gone.length} deactivated`);
