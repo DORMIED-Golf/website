@@ -3148,7 +3148,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (689) ── -->
+  <!-- ── News articles (690) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -3497,6 +3497,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/ava-golf-launches-on-the-back-of-arccos-and-garmin-data-the-instruction-2026-07-22-hero.jpg</image:loc>
       <image:title>AVA Golf Launches on the Back of Arccos and Garmin Data. The Instruction Layer Has a New Player.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/b-draddy-500-pro-shops-metro/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/b-draddy-500-pro-shops-metro-hero.png</image:loc>
+      <image:title>500 Pro Shops in One Metro Area, and B. Draddy Just Renewed the Key to All of Them</image:title>
     </image:image>
   </url>
   <url>
@@ -10051,7 +10061,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/12/</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10069,13 +10079,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/15/</loc>
-    <lastmod>2026-06-27</lastmod>
+    <lastmod>2026-06-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/16/</loc>
-    <lastmod>2026-06-20</lastmod>
+    <lastmod>2026-06-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10087,7 +10097,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/18/</loc>
-    <lastmod>2026-06-09</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10105,7 +10115,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/20/</loc>
-    <lastmod>2026-05-27</lastmod>
+    <lastmod>2026-05-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10165,7 +10175,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10195,7 +10205,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/9/</loc>
-    <lastmod>2026-08-04</lastmod>
+    <lastmod>2026-08-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
