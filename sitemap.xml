@@ -3118,7 +3118,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (688) ── -->
+  <!-- ── News articles (689) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -9136,6 +9136,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/true-linkswear-golf-shoe/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/true-linkswear-golf-shoe-hero.jpg</image:loc>
+      <image:title>The One Thing a Golf Shoe Does That a Sneaker Can&apos;t, and TRUE Linkswear Keeps Missing It</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/true-linkswear-is-banking-on-nhl-personality-over-golf-perfo-2026-04-22/</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -10029,13 +10039,13 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/15/</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/16/</loc>
-    <lastmod>2026-06-19</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10143,7 +10153,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/7/</loc>
-    <lastmod>2026-08-17</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
