@@ -101,6 +101,8 @@ const VARIANT_TERMS = new Set([
   'super', 'ai', 'smoke', 'triple', 'diamond', 'td',
   // An Opus is not an Opus SP or an Opus Platinum.
   'sp', 'platinum',
+  // Mizuno's JPX 925 is three heads: Forged, Hot Metal and Tour.
+  'forged', 'metal',
   // Putter lines: an Ai-One is not an Ai-One Milled, a 2-Ball is not a Stroke Lab.
   'milled', 'stroke',
   // Iron families: an X Forged is not an X Forged CB, a P7 set is not its MB.

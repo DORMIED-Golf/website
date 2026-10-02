@@ -60,6 +60,8 @@ function warn(msg) {
 const DB_TO_OWGR_ALIAS = {
   // DB name            -> OWGR name
   'siwoo kim':          'si woo kim',     // OWGR uses space: "Si Woo Kim"
+  'johnny keefer':      'john keefer',    // OWGR uses his given name
+  'vince whaley':       'vincent whaley', // OWGR uses his given name
   // OWGR carries the Venezuelan's nickname in the middle: "Jorge Pichu Garcia",
   // player id 17212, Venezuela, born 1996-02-03. He is the only Jorge Garcia
   // from Venezuela in the ranking, and WITB sources list him as Jorge Garcia.

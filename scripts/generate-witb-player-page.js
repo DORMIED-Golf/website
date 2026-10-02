@@ -2155,19 +2155,22 @@ async function main() {
       // builds and silently dropped the section. Retried per brand.
       const products = [];
       for (const slug of slugs) {
-        for (let from = 0; ; from += 1000) {
+        // Keyset paging (id > last seen): offset pages deep into a big brand
+        // (TaylorMade ~7.5k) walked every earlier row and timed out.
+        for (let lastId = 0; ; ) {
           let data, error;
           for (let attempt = 0; attempt < 3; attempt++) {
             ({ data, error } = await sb.from('affiliate_products')
               .select('id, name, dormied_brand_slug, condition')
               .eq('dormied_brand_slug', slug)
               .eq('is_active', true).eq('stock_availability', 'InStock')
-              .order('id').range(from, from + 999));
+              .gt('id', lastId).order('id').limit(1000));
             if (!error) break;
             await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
           }
           if (error) throw new Error(error.message);
           if (!data || !data.length) break;
+          lastId = data[data.length - 1].id;
           products.push(...data);
           if (data.length < 1000) break;
         }
