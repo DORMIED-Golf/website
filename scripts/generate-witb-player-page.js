@@ -30,6 +30,7 @@ const { witbSignupData }  = require('./lib/signup-data.js');
 const { pageEligible } = require('./witb-page-eligibility');
 const feedBake         = require('./feed-bake');
 const { matchBagToProducts } = require('./lib/witb-shop-match');
+const { resolveBagThumbs } = require('./lib/witb-product-thumbs');
 const AB               = require('./lib/answer-block');
 const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
 const { pinnedProductAttr } = require('./lib/brand-pinned-products');
@@ -288,6 +289,22 @@ function catIcon(clubType) {
   };
   const src = icons[clubType] || '/images/icons/golf_iron_icon_22px.svg';
   return `<img src="${src}" width="16" height="16" alt="" class="witb-cat-icon" style="filter:brightness(0)invert(1);opacity:.45;display:block;flex-shrink:0">`;
+}
+
+/**
+ * Current Bag tile: the matched retail product's image, or the club-type icon
+ * when there is none. The image links out only while its product is live.
+ */
+function productTile(item, playerSlug) {
+  const t = item._thumb;
+  if (!t) {
+    return `<span class="witb-thumb witb-thumb--icon" aria-hidden="true">${catIcon(item.club_type).replace('width="16" height="16"', 'width="22" height="22"')}</span>`;
+  }
+  const alt = `${itemName(item)} ${clubLabel(item.club_type).toLowerCase()} (retail model)`;
+  const img = `<img src="${esc(t.src)}" width="56" height="56" alt="${esc(alt)}" loading="lazy" decoding="async">`;
+  if (!t.productId) return `<span class="witb-thumb witb-thumb--img">${img}</span>`;
+  const href = `/api/go/${encodeURIComponent(t.productId)}?src=witb-thumb&amp;slug=${encodeURIComponent(playerSlug)}`;
+  return `<a class="witb-thumb witb-thumb--img" href="${href}" rel="sponsored nofollow" target="_blank">${img}</a>`;
 }
 
 /** Human-readable club type label */
@@ -562,7 +579,7 @@ function buildWitbFaq(name, items, currentDate) {
  * Build mobile card HTML for a list of bag items.
  * Shown below 641px; the desktop table is hidden at that breakpoint.
  */
-function buildBagCards(items) {
+function buildBagCards(items, playerSlug) {
   return items.map(item => {
     const dslug = item.witb_brands?.dormied_brand_slug || null;
     const loft  = item.loft_or_number || '';
@@ -570,13 +587,16 @@ function buildBagCards(items) {
     const model = item.raw_model || '';
 
     return `<div class="witb-mobile-card">
+  ${productTile(item, playerSlug)}
+  <div class="witb-mc-body">
   <div class="witb-mc-header">
-    ${catIcon(item.club_type)}<span class="witb-mc-type">${esc(clubLabel(item.club_type))}</span>
+    <span class="witb-mc-type">${esc(clubLabel(item.club_type))}</span>
   </div>
   <div class="witb-mc-brand witb-cell-flex">${brandCell(item.witb_brands?.name || item.raw_brand, dslug)}</div>
   <div class="witb-mc-model">${esc(model)}</div>
   ${loft ? `<div class="witb-mc-loft">${esc(loft)}</div>` : ''}
   ${sc !== '-' ? `<div class="witb-mc-shaft">${sc}</div>` : ''}
+  </div>
 </div>`;
   }).join('\n');
 }
@@ -1279,7 +1299,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
     const sc    = shaftCell(item);
 
     return `<tr>
-      <td class="witb-bag-type-cell"><div class="witb-cell-flex">${catIcon(item.club_type)}<span>${esc(clubLabel(item.club_type))}</span></div></td>
+      <td class="witb-bag-thumb-cell">${productTile(item, player.slug)}</td>
+      <td class="witb-bag-type-cell">${esc(clubLabel(item.club_type))}</td>
       <td class="witb-bag-brand-cell"><div class="witb-cell-flex">${brandCell(item.witb_brands?.name || item.raw_brand, dslug)}</div></td>
       <td class="witb-bag-model-cell">${esc(item.raw_model || '')}</td>
       <td class="witb-bag-loft-cell">${esc(loft)}</td>
@@ -1288,7 +1309,8 @@ function buildPage({ player, bags, currentBag, currentItems, tourComp, rankedCou
   }).join('\n');
 
   // ── Current bag: mobile cards ─────────────────────────────────────────────
-  const mobileCards = buildBagCards(currentItems);
+  const mobileCards = buildBagCards(currentItems, player.slug);
+  const anyThumb    = currentItems.some(i => i._thumb);
 
   // ── Tour comparison HTML ──────────────────────────────────────────────────
   const compHtml = compRows.map(row => {
@@ -1635,6 +1657,7 @@ ${witbAnswerHtml}
             <div class="witb-bag-table-wrap">
               <table class="witb-player-bag-table">
                 <colgroup>
+                  <col class="witb-col-thumb">
                   <col class="witb-col-club">
                   <col class="witb-col-brand">
                   <col class="witb-col-model">
@@ -1643,6 +1666,7 @@ ${witbAnswerHtml}
                 </colgroup>
                 <thead>
                   <tr class="witb-bag-thead-row">
+                    <th class="witb-bag-th" aria-label="Image"></th>
                     <th class="witb-bag-th">Club</th>
                     <th class="witb-bag-th">Brand</th>
                     <th class="witb-bag-th">Model</th>
@@ -1660,7 +1684,8 @@ ${witbAnswerHtml}
             <div class="witb-bag-mobile-cards">
               ${mobileCards}
             </div>
-          </section>
+${anyThumb ? `            <p class="witb-footnote">Images show the retail model, which can differ from the player's tour build in shaft, finish or setup. Some images link to a retailer; DORMIED may earn a commission on purchases made through them.</p>
+` : ''}          </section>
 ${shopBag ? `
           <!-- ── Shop This Bag (affiliate) ── -->
           <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${esc(shopBag.slug)}" data-brand-name="${esc(shopBag.name)}" data-click-src="witb-bag" data-click-slug="${esc(player.slug)}" data-product-ids="${esc(shopBag.ids.join(','))}">
@@ -1829,7 +1854,8 @@ ${witbFaqHtml}
     /* table-layout:fixed + overflow:hidden on every td is what keeps columns
        from bleeding into each other. Long shaft strings wrap within the cell. */
     .witb-bag-table-wrap{overflow-x:auto}
-    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:1000px;max-width:1120px}
+    .witb-player-bag-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:1080px;max-width:1200px}
+    .witb-col-thumb{width:80px}
     .witb-col-club {width:110px}
     /* Sized to the longest brand name in the dataset ("Bryson DeChambeau",
        191px incl. logo + gap + cell padding). At 145px "Scotty Cameron" was
@@ -1840,9 +1866,16 @@ ${witbFaqHtml}
     .witb-col-shaft{width:240px}
     .witb-bag-th{text-align:left;font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 12px 8px;white-space:nowrap}
     .witb-bag-thead-row{border-bottom:1px solid var(--border)}
-    .witb-player-bag-table td{padding:8px 12px;border-bottom:1px solid var(--border-lite);vertical-align:top;font-size:.875rem;line-height:1.5;overflow:hidden}
+    .witb-player-bag-table td{padding:8px 12px;border-bottom:1px solid var(--border-lite);vertical-align:middle;font-size:.875rem;line-height:1.5;overflow:hidden}
     .witb-player-bag-table tr:hover td{background:var(--bg-hover)}
     .witb-bag-type-cell{color:var(--text-dim);white-space:nowrap;vertical-align:middle}
+    .witb-bag-thumb-cell{vertical-align:middle;padding-right:0 !important}
+    .witb-thumb{display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:var(--radius);overflow:hidden;flex-shrink:0}
+    .witb-thumb img{display:block}
+    .witb-thumb--img{background:#fff}
+    a.witb-thumb--img{transition:box-shadow .15s}
+    a.witb-thumb--img:hover{box-shadow:0 0 0 2px var(--green)}
+    .witb-thumb--icon{background:var(--bg-raised);border:1px solid var(--border)}
     .witb-bag-brand-cell{white-space:nowrap;overflow:hidden;vertical-align:middle}
     .witb-bag-model-cell{overflow:hidden;word-break:break-word;vertical-align:middle}
     .witb-bag-loft-cell{color:var(--text-muted);font-size:.8125rem;word-break:break-word;font-family:var(--font-mono);padding-right:14px}
@@ -1856,7 +1889,8 @@ ${witbFaqHtml}
       .witb-bag-table-wrap{display:none}
       .witb-bag-mobile-cards{display:flex;flex-direction:column;gap:8px}
     }
-    .witb-mobile-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+    .witb-mobile-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+    .witb-mc-body{min-width:0;flex:1}
     .witb-mc-header{display:flex;align-items:center;gap:7px;margin-bottom:7px}
     .witb-mc-type{font-family:var(--font-mono);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim)}
     .witb-mc-brand{margin-bottom:4px}
@@ -2134,18 +2168,21 @@ async function main() {
   // anything it is not confident about, so a partial bag is expected and fine —
   // the disclosure says so rather than implying it is the whole bag.
   let shopBag = null;
+  // Every current row, carrying a reference back to its bag item so product
+  // thumbnails can be attached after matching.
+  const bagRows = currentItems.map(i => ({
+    _row: i,
+    club_type: i.club_type,
+    raw_brand: i.raw_brand,
+    raw_model: i.raw_model,
+    loft_or_number: i.loft_or_number,   // a single-iron listing must match the exact number
+    dormied_brand_slug: i.witb_brands?.dormied_brand_slug || null,
+  }));
+  let bagMatches = [];
   try {
     const sellable = await fetchSellableBrandSlugs(sb, { includeUsed: true });
 
-    const bagItems = currentItems
-      .map(i => ({
-        club_type: i.club_type,
-        raw_brand: i.raw_brand,
-        raw_model: i.raw_model,
-        loft_or_number: i.loft_or_number,   // a single-iron listing must match the exact number
-        dormied_brand_slug: i.witb_brands?.dormied_brand_slug || null,
-      }))
-      .filter(i => i.dormied_brand_slug && sellable.has(i.dormied_brand_slug));
+    const bagItems = bagRows.filter(i => i.dormied_brand_slug && sellable.has(i.dormied_brand_slug));
 
     if (bagItems.length) {
       const slugs = [...new Set(bagItems.map(i => i.dormied_brand_slug))];
@@ -2161,7 +2198,7 @@ async function main() {
           let data, error;
           for (let attempt = 0; attempt < 3; attempt++) {
             ({ data, error } = await sb.from('affiliate_products')
-              .select('id, name, dormied_brand_slug, condition')
+              .select('id, name, dormied_brand_slug, condition, image_url')
               .eq('dormied_brand_slug', slug)
               .eq('is_active', true).eq('stock_availability', 'InStock')
               .gt('id', lastId).order('id').limit(1000));
@@ -2176,6 +2213,7 @@ async function main() {
         }
       }
       const { matches, unmatched } = matchBagToProducts(bagItems, products, SHOP_BAG_OVERRIDES);
+      bagMatches = matches;
       if (matches.length) {
         // Bag order is meaningful (driver first), and the API preserves the
         // order these ids are sent in.
@@ -2191,6 +2229,16 @@ async function main() {
     }
   } catch (e) {
     log(`WARN: Shop This Bag matching failed: ${e.message} — no section`);
+  }
+
+  // Product thumbnails for the Current Bag rows. A failure here costs the
+  // images (rows fall back to the club-type icon), never the page.
+  try {
+    const thumbs = await resolveBagThumbs(bagRows, bagMatches, log);
+    for (const [row, t] of thumbs) row._row._thumb = t;
+    log(`Product thumbnails: ${thumbs.size} of ${bagRows.length} row(s)`);
+  } catch (e) {
+    log(`WARN: product thumbnails failed: ${e.message}`);
   }
 
   const signupData     = await witbSignupData(sb);

@@ -107,6 +107,11 @@ const VARIANT_TERMS = new Set([
   'milled', 'stroke',
   // Iron families: an X Forged is not an X Forged CB, a P7 set is not its MB.
   'cb', 'mb', 'mc',
+  // An Apex is not an Apex TCB; a 2-Ball is not a 2-Ball Jailbird.
+  'tcb', 'jailbird',
+  // Long and arm-lock builds of a putter are a different club (Inovai 9.0
+  // matched an "Inovai 9.0 Spud Neck Long Putter").
+  'long', 'broomstick', 'belly', 'armlock', 'spud',
 ]);
 
 const norm = s => String(s || '')
@@ -187,6 +192,9 @@ function scoreCandidate(item, product) {
   // variant of the other side, so they are exempt here.
   const slashWords = new Set(((head.match(/\S+\/\S+/g) || []).join(' ').toLowerCase().split(/[\/\s]+/)));
   for (const t of have) if (VARIANT_TERMS.has(t) && !want.includes(t) && !slashWords.has(t)) return null;  // a different head
+  // Retailers file utility irons under hybrids ("Callaway Apex UT 3H Hybrid"),
+  // but a bag's Apex hybrid is the wood-style head, not the Apex UT iron.
+  if (item.club_type === 'hybrid' && ['ut', 'utility'].some(t => have.has(t) && !want.includes(t))) return null;
 
   // The model must appear as one run in the title, not as scattered tokens:
   // "Pro S-3" was satisfied by "Pro S-4 3-PW Iron Set" once hyphens split it.
