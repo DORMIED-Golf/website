@@ -3148,7 +3148,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (693) ── -->
+  <!-- ── News articles (694) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -6077,6 +6077,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/mitsubishi-electrics-title-sponsorship-strategy-is-the-quiet-2026-04-22-hero.png</image:loc>
       <image:title>Mitsubishi Electric&apos;s Title Sponsorship Strategy Is the Quietest Play in Golf</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/mitsubishi-golf-36-38-driver-shafts/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/mitsubishi-golf-36-38-driver-shafts-hero.jpg</image:loc>
+      <image:title>Three Companies Supplied 36 of 38 Winning Driver Shafts. Mitsubishi Got 11.</image:title>
     </image:image>
   </url>
   <url>
@@ -10091,7 +10101,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/12/</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10181,7 +10191,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/26/</loc>
-    <lastmod>2026-04-27</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
