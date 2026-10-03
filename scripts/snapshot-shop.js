@@ -48,7 +48,7 @@ function findMounts() {
   const skip = new Set(['node_modules', '.git', 'shop-snapshot', 'data', 'scripts', 'api', 'images', 'js', 'css']);
   const walk = dir => {
     for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-      if (e.isDirectory()) { if (!skip.has(e.name)) walk(path.join(dir, e.name)); continue; }
+      if (e.isDirectory()) { if (!skip.has(e.name) && !e.name.startsWith('.')) walk(path.join(dir, e.name)); continue; }
       if (!e.name.endsWith('.html')) continue;
       const html = fs.readFileSync(path.join(dir, e.name), 'utf8');
       for (const m of html.matchAll(/<section[^>]*id="bp-shop-section"[^>]*>/g)) {
