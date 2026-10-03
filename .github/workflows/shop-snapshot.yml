@@ -1,0 +1,69 @@
+name: Shop Snapshot
+
+# Writes the static fallback every shop carousel loads when /api/shop fails
+# (scripts/snapshot-shop.js -> shop-snapshot/). On 3 Oct 2026 the database ran
+# out of disk IO and every carousel on the site disappeared for most of a day;
+# with this snapshot deployed they keep rendering from the CDN instead.
+#
+# Runs right after the nightly catalog sync, whatever its outcome (a failed
+# sync still leaves yesterday's catalog, which is what the API would serve),
+# plus a later backstop and a manual trigger. Unchanged files make no commit.
+on:
+  workflow_run:
+    workflows: ['Affiliate Catalog Sync']
+    types: [completed]
+  schedule:
+    - cron: '30 11 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: shop-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    name: Snapshot carousels -> shop-snapshot/
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The script writes every carousel it could read, keeps the previous file
+      # for any it could not, and exits non-zero if anything failed. The
+      # successes are committed first and the job then fails on that exit code:
+      # nothing is swallowed, and one bad brand does not throw away the rest.
+      - name: Write snapshot and commit
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          set +e
+          node scripts/snapshot-shop.js
+          SNAPSHOT_EXIT=$?
+          set -e
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add shop-snapshot/
+          if git diff --cached --quiet; then
+            echo "Snapshot unchanged, nothing to commit."
+          else
+            git commit -m "chore: refresh shop snapshot [skip ci]"
+            git pull --rebase -X theirs origin main
+            git push
+          fi
+
+          exit $SNAPSHOT_EXIT

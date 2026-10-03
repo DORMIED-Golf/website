@@ -35,6 +35,26 @@ const { retailerForAdvertiser, isPreOwned } = require('../lib/affiliate-retailer
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT     = 24;
 
+// Every database call in one request shares this deadline. The carousel gives
+// up after 8s, so waiting longer only holds a function and a database
+// connection open for a reader who has already gone. On 3 Oct 2026 the
+// database ran out of disk IO and every request sat for the full 30s
+// maxDuration, adding load to a database that was already starved. Failing
+// fast lets the carousel fall back to its static snapshot (shop-snapshot/).
+const DB_DEADLINE_MS = 6000;
+
+function deadlineClient(url, key, ms = DB_DEADLINE_MS) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  if (timer.unref) timer.unref();
+  const sb = createClient(url, key, {
+    auth: { persistSession: false },
+    global: { fetch: (input, init = {}) => fetch(input, { ...init, signal: ctrl.signal }) },
+  });
+  sb.done = () => clearTimeout(timer);
+  return sb;
+}
+
 // Columns needed to collapse + render. Deliberately excludes description,
 // tracking_url, mobile_tracking_url, category, sub_category.
 const SELECT_COLS = [
@@ -148,145 +168,28 @@ module.exports = async (req, res) => {
 
   if (!brand && !ids.length) return res.status(400).json({ error: 'brand or ids required' });
 
-  if (ids.length) {
-    const { SUPABASE_URL: U, SUPABASE_SERVICE_KEY: K } = process.env;
-    if (!U || !K) return res.status(500).json({ error: 'DB not configured' });
-    const sb = createClient(U, K);
-    try {
-      const retailerNames = await loadRetailerNames(sb);
-      const { data, error } = await sb.from('affiliate_products')
-        .select(SELECT_COLS).in('id', ids).eq('is_active', true);
-      if (error) throw new Error(error.message);
-      // Preserve the caller's order — bag order is meaningful (driver first).
-      const byId = new Map((data || []).map(r => [r.id, r]));
-      const ordered = ids.map(i => byId.get(i)).filter(Boolean);
-      return res.status(200).json({
-        ids: ids.length, count: ordered.length, limit: ordered.length, offset: 0,
-        products: ordered.map(r => shape(r, retailerNames)),
-      });
-    } catch (e) {
-      res.setHeader('Cache-Control', 'no-store');
-      return res.status(500).json({ error: 'lookup failed' });
-    }
-  }
-
   const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     return res.status(500).json({ error: 'DB not configured' });
   }
-  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  const supabase = deadlineClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+  if (ids.length) {
+    try {
+      const { products } = await idsFeed(supabase, ids);
+      return res.status(200).json({
+        ids: ids.length, count: products.length, limit: products.length, offset: 0, products,
+      });
+    } catch (e) {
+      console.error('[shop] ids lookup failed:', e.message);
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(503).json({ error: 'lookup failed' });
+    } finally { supabase.done(); }
+  }
 
   try {
-    const retailerNames = await loadRetailerNames(supabase);
-    // Per-program price floor. Excludes add-on service SKUs (e.g. "Item
-    // Personalization" at $0.01) without any name/keyword/category matching.
-    // Unmapped brand -> no program row -> fall back to the column default.
-    const { data: programRow } = await supabase
-      .from('affiliate_programs')
-      .select('min_display_price')
-      .eq('dormied_brand_slug', brand)
-      .maybeSingle();
-    const minPrice = programRow && programRow.min_display_price !== null
-      ? Number(programRow.min_display_price) : 1.00;
-
-    // ── Direct-deal precedence ────────────────────────────────────────────
-    // Where DORMIED has its own affiliate relationship (Cobra, Puma, Malbon,
-    // Pins & Aces today) the commission is materially better than Amazon's, so
-    // those brands must never surface an Amazon link. Decided on the products
-    // actually held rather than on affiliate_programs rows, so it stays correct
-    // if a program exists but its catalogue is empty, and it needs no upkeep
-    // when a new direct deal is signed.
-    // Existence, not a count: an exact count over a retailer-sized brand
-    // (TaylorMade ~7.5k rows) cost seconds for a yes/no answer.
-    const { data: directAny } = await supabase
-      .from('affiliate_products')
-      .select('id')
-      .eq('dormied_brand_slug', brand)
-      .eq('is_active', true)
-      .neq('source', 'amazon')
-      .limit(1);
-    const amazonOnly = !(directAny && directAny.length);
-
-    // Pull every in-stock, active row for the brand, then collapse in code.
-    // Paginating in SQL before collapsing would give wrong page sizes, since a
-    // page of rows can contain many variants of the same product.
-    // One row per product, already collapsed and filtered in SQL
-    // (shop_brand_products: in stock, active, new-only, price floor, direct vs
-    // Amazon precedence, variant winner). Reading every variant row and
-    // collapsing here took ~7-11s once Global Golf's feed sat behind a brand.
-    // Paged, since a large brand can still exceed PostgREST's 1,000-row cap.
-    const rows = [];
-    for (let from = 0; ; from += 1000) {
-      const { data, error } = await supabase
-        .rpc('shop_brand_products', { p_brand: brand, p_min_price: minPrice, p_amazon_only: amazonOnly })
-        .range(from, from + 999);
-      if (error) throw new Error(error.message);
-      if (!data || !data.length) break;
-      rows.push(...data);
-      if (data.length < 1000) break;
-    }
-
-    // Gift cards are catalogue items but never a product we want to feature.
-    // Arccos ships 10 of them (up to $500), Pins & Aces 4 and Malbon 1, and a
-    // "Digital Gift Card - $500.00" card in a Shop Arccos carousel reads as a
-    // filler listing. Filtered here rather than in a sync because the syncs set
-    // is_active:true on every upsert, so a hand deactivation is undone nightly,
-    // and because this one place covers the Impact, Shopify, CJ and Amazon
-    // sources at once. Explicit ids= requests are unaffected: a gift card can
-    // only get into that list if someone put it there deliberately.
-    const GIFT_CARD = /(gift\s*card|e-?gift|giftcard)/i;
-    // Pre-owned retailer stock is for Shop This Bag only (ids= above), never a
-    // brand or article carousel.
-    const productRows = rows.filter(r =>
-      !(GIFT_CARD.test(r.name || '') || /gift\s*cards?/i.test(r.category || '')) &&
-      !isPreOwned(r.condition));
-
-    if (!productRows.length) return res.status(200).json({ brand, count: 0, limit, offset, products: [] });
-
-    // Collapse: one winner per item_group_id. A null group is its own group
-    // (defensive — item_group_id is populated on 100% of current rows).
-    const winners = new Map();
-    for (const row of productRows) {
-      // Group ids are only unique within a program, so the key carries it.
-      const key = row.item_group_id ? `g:${row.program_id}:${row.item_group_id}` : `i:${row.id}`;
-      winners.set(key, betterOf(winners.get(key), row));
-    }
-
-    // Total order: newest first, id DESC (id makes the sort unique, so
-    // LIMIT/OFFSET is stable across pages).
-    //
-    // Prefer the MERCHANT's publish date where we have it. A feed-sourced
-    // catalog is ingested in one pass, so every row shares a first_seen_at and
-    // sorting on it alone would collapse to insertion order. Impact rows have
-    // no source_published_at and fall back to first_seen_at exactly as before.
-    const recencyOf = r => r.source_published_at || r.first_seen_at;
-    const byRecency = (a, b) => {
-      const ra = recencyOf(a), rb = recencyOf(b);
-      if (ra !== rb) return ra < rb ? 1 : -1;
-      return b.id - a.id;
-    };
-    // A brand sold both direct and through a retailer (Cobra direct plus Global
-    // Golf) is interleaved one-for-one, each program in its own recency order.
-    // Sorting the union by recency would let a retailer catalog ingested
-    // yesterday bury every direct product. Deterministic, so paging is stable.
-    const byProgram = new Map();
-    for (const r of winners.values()) {
-      if (!byProgram.has(r.program_id)) byProgram.set(r.program_id, []);
-      byProgram.get(r.program_id).push(r);
-    }
-    const lanes = [...byProgram.entries()]
-      .sort((a, b) => (retailerNames.has(a[0]) - retailerNames.has(b[0])) || (a[0] - b[0]))
-      .map(([, list]) => list.sort(byRecency));
-    // A retailer imports its whole catalogue at once, so recency cannot order
-    // it and a left-handed wedge could lead the carousel. Left-handed items go
-    // to the back of their own lane (stable, so paging stays deterministic).
-    const LEFT = /\bleft[-\s]?hand(ed)?\b|\blh\b/i;
-    for (const l of lanes) {
-      const right = l.filter(r => !LEFT.test(r.name || '')), left = l.filter(r => LEFT.test(r.name || ''));
-      l.splice(0, l.length, ...right, ...left);
-    }
-    const ordered = [];
-    for (let i = 0; lanes.some(l => i < l.length); i++) for (const l of lanes) if (i < l.length) ordered.push(l[i]);
+    const { ordered, retailerNames } = await brandFeed(supabase, brand);
+    if (!ordered.length) return res.status(200).json({ brand, count: 0, limit, offset, products: [] });
 
     const total = ordered.length;
 
@@ -318,6 +221,146 @@ module.exports = async (req, res) => {
   } catch (err) {
     console.error('[shop] Error:', err.message);
     res.setHeader('Cache-Control', 'no-store');
-    return res.status(500).json({ error: err.message });
-  }
+    return res.status(503).json({ error: 'lookup failed' });
+  } finally { supabase.done(); }
 };
+
+/**
+ * Explicit, ordered product list (Shop This Bag). Returns shaped products in
+ * the caller's order; inactive ids drop out. Shared with
+ * scripts/snapshot-shop.js so the static fallback is byte-for-byte the API.
+ */
+async function idsFeed(supabase, ids) {
+  const retailerNames = await loadRetailerNames(supabase);
+  const { data, error } = await supabase.from('affiliate_products')
+    .select(SELECT_COLS).in('id', ids).eq('is_active', true);
+  if (error) throw new Error(error.message);
+  // Preserve the caller's order — bag order is meaningful (driver first).
+  const byId = new Map((data || []).map(r => [r.id, r]));
+  const ordered = ids.map(i => byId.get(i)).filter(Boolean);
+  return { products: ordered.map(r => shape(r, retailerNames)) };
+}
+
+/**
+ * A brand's full carousel order (unshaped rows, pin not applied) plus the
+ * retailer names needed to shape them. Shared with scripts/snapshot-shop.js.
+ */
+async function brandFeed(supabase, brand) {
+  const retailerNames = await loadRetailerNames(supabase);
+  // Per-program price floor. Excludes add-on service SKUs (e.g. "Item
+  // Personalization" at $0.01) without any name/keyword/category matching.
+  // Unmapped brand -> no program row -> fall back to the column default.
+  const { data: programRow } = await supabase
+    .from('affiliate_programs')
+    .select('min_display_price')
+    .eq('dormied_brand_slug', brand)
+    .maybeSingle();
+  const minPrice = programRow && programRow.min_display_price !== null
+    ? Number(programRow.min_display_price) : 1.00;
+
+  // ── Direct-deal precedence ────────────────────────────────────────────
+  // Where DORMIED has its own affiliate relationship (Cobra, Puma, Malbon,
+  // Pins & Aces today) the commission is materially better than Amazon's, so
+  // those brands must never surface an Amazon link. Decided on the products
+  // actually held rather than on affiliate_programs rows, so it stays correct
+  // if a program exists but its catalogue is empty, and it needs no upkeep
+  // when a new direct deal is signed.
+  // Existence, not a count: an exact count over a retailer-sized brand
+  // (TaylorMade ~7.5k rows) cost seconds for a yes/no answer.
+  const { data: directAny } = await supabase
+    .from('affiliate_products')
+    .select('id')
+    .eq('dormied_brand_slug', brand)
+    .eq('is_active', true)
+    .neq('source', 'amazon')
+    .limit(1);
+  const amazonOnly = !(directAny && directAny.length);
+
+  // Pull every in-stock, active row for the brand, then collapse in code.
+  // Paginating in SQL before collapsing would give wrong page sizes, since a
+  // page of rows can contain many variants of the same product.
+  // One row per product, already collapsed and filtered in SQL
+  // (shop_brand_products: in stock, active, new-only, price floor, direct vs
+  // Amazon precedence, variant winner). Reading every variant row and
+  // collapsing here took ~7-11s once Global Golf's feed sat behind a brand.
+  // Paged, since a large brand can still exceed PostgREST's 1,000-row cap.
+  const rows = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await supabase
+      .rpc('shop_brand_products', { p_brand: brand, p_min_price: minPrice, p_amazon_only: amazonOnly })
+      .range(from, from + 999);
+    if (error) throw new Error(error.message);
+    if (!data || !data.length) break;
+    rows.push(...data);
+    if (data.length < 1000) break;
+  }
+
+  // Gift cards are catalogue items but never a product we want to feature.
+  // Arccos ships 10 of them (up to $500), Pins & Aces 4 and Malbon 1, and a
+  // "Digital Gift Card - $500.00" card in a Shop Arccos carousel reads as a
+  // filler listing. Filtered here rather than in a sync because the syncs set
+  // is_active:true on every upsert, so a hand deactivation is undone nightly,
+  // and because this one place covers the Impact, Shopify, CJ and Amazon
+  // sources at once. Explicit ids= requests are unaffected: a gift card can
+  // only get into that list if someone put it there deliberately.
+  const GIFT_CARD = /(gift\s*card|e-?gift|giftcard)/i;
+  // Pre-owned retailer stock is for Shop This Bag only (ids= above), never a
+  // brand or article carousel.
+  const productRows = rows.filter(r =>
+    !(GIFT_CARD.test(r.name || '') || /gift\s*cards?/i.test(r.category || '')) &&
+    !isPreOwned(r.condition));
+
+  if (!productRows.length) return { ordered: [], retailerNames };
+
+  // Collapse: one winner per item_group_id. A null group is its own group
+  // (defensive — item_group_id is populated on 100% of current rows).
+  const winners = new Map();
+  for (const row of productRows) {
+    // Group ids are only unique within a program, so the key carries it.
+    const key = row.item_group_id ? `g:${row.program_id}:${row.item_group_id}` : `i:${row.id}`;
+    winners.set(key, betterOf(winners.get(key), row));
+  }
+
+  // Total order: newest first, id DESC (id makes the sort unique, so
+  // LIMIT/OFFSET is stable across pages).
+  //
+  // Prefer the MERCHANT's publish date where we have it. A feed-sourced
+  // catalog is ingested in one pass, so every row shares a first_seen_at and
+  // sorting on it alone would collapse to insertion order. Impact rows have
+  // no source_published_at and fall back to first_seen_at exactly as before.
+  const recencyOf = r => r.source_published_at || r.first_seen_at;
+  const byRecency = (a, b) => {
+    const ra = recencyOf(a), rb = recencyOf(b);
+    if (ra !== rb) return ra < rb ? 1 : -1;
+    return b.id - a.id;
+  };
+  // A brand sold both direct and through a retailer (Cobra direct plus Global
+  // Golf) is interleaved one-for-one, each program in its own recency order.
+  // Sorting the union by recency would let a retailer catalog ingested
+  // yesterday bury every direct product. Deterministic, so paging is stable.
+  const byProgram = new Map();
+  for (const r of winners.values()) {
+    if (!byProgram.has(r.program_id)) byProgram.set(r.program_id, []);
+    byProgram.get(r.program_id).push(r);
+  }
+  const lanes = [...byProgram.entries()]
+    .sort((a, b) => (retailerNames.has(a[0]) - retailerNames.has(b[0])) || (a[0] - b[0]))
+    .map(([, list]) => list.sort(byRecency));
+  // A retailer imports its whole catalogue at once, so recency cannot order
+  // it and a left-handed wedge could lead the carousel. Left-handed items go
+  // to the back of their own lane (stable, so paging stays deterministic).
+  const LEFT = /\bleft[-\s]?hand(ed)?\b|\blh\b/i;
+  for (const l of lanes) {
+    const right = l.filter(r => !LEFT.test(r.name || '')), left = l.filter(r => LEFT.test(r.name || ''));
+    l.splice(0, l.length, ...right, ...left);
+  }
+  const ordered = [];
+  for (let i = 0; lanes.some(l => i < l.length); i++) for (const l of lanes) if (i < l.length) ordered.push(l[i]);
+
+  return { ordered, retailerNames };
+}
+
+module.exports.brandFeed = brandFeed;
+module.exports.idsFeed   = idsFeed;
+module.exports.shape     = shape;
+module.exports.MAX_LIMIT = MAX_LIMIT;

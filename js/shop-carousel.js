@@ -44,6 +44,15 @@
 
   var loaded = [], offset = 0, total = null, fetching = false, exhausted = false;
 
+  // Static fallback written nightly by scripts/snapshot-shop.js, served by the
+  // CDN with no function or database behind it. Used whenever /api/shop fails
+  // or times out, so a database outage leaves the carousels up (prices older
+  // than STALE_HOURS stay hidden as usual) instead of removing every section.
+  var snapshot = null;   // full product list once loaded
+  var snapshotUrl = fixedIds
+    ? '/shop-snapshot/bag/' + encodeURIComponent(clickSlug) + '.json'
+    : '/shop-snapshot/brand/' + encodeURIComponent(slug) + '.json';
+
   function removeSection() { if (section && section.parentNode) section.parentNode.removeChild(section); }
 
   function esc(s) {
@@ -163,9 +172,61 @@
     syncArrows();
   }
 
+  function getJson(url) {
+    var ctrl = ('AbortController' in window) ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, FETCH_TIMEOUT);
+    return fetch(url, ctrl ? { signal: ctrl.signal } : undefined)
+      .then(function (r) { clearTimeout(timer); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); },
+            function (e) { clearTimeout(timer); throw e; });
+  }
+
+  // The snapshot holds the whole list, so it is ordered here the way the API
+  // would: the page's own id order for Shop This Bag, the pinned product first
+  // for a brand carousel.
+  function loadSnapshot() {
+    if (snapshot) return Promise.resolve(snapshot);
+    return getJson(snapshotUrl).then(function (d) {
+      var list = (d && d.products) || [];
+      if (fixedIds) {
+        var byId = {};
+        list.forEach(function (p) { byId[p.id] = p; });
+        list = fixedIds.split(',').map(function (id) { return byId[id]; }).filter(Boolean);
+      } else if (pinName) {
+        for (var i = 0; i < list.length; i++) {
+          if ((list[i].name || '').trim() === pinName) { list.unshift(list.splice(i, 1)[0]); break; }
+        }
+      }
+      snapshot = list;
+      return list;
+    });
+  }
+
+  function addItems(items) {
+    // A switch to the snapshot mid-scroll can overlap what the API already sent.
+    var seen = {};
+    loaded.forEach(function (p) { seen[p.id] = true; });
+    items = items.filter(function (p) { return !seen[p.id]; });
+    loaded = loaded.concat(items).slice(0, MAX_CARDS);
+    offset += items.length;
+    return items.length;
+  }
+
+  function fetchFromSnapshot() {
+    return loadSnapshot().then(function (list) {
+      total = list.length;
+      var added = addItems(list.slice(offset, offset + PAGE_SIZE));
+      if (!added || loaded.length >= MAX_CARDS || offset >= total) exhausted = true;
+      if (!loaded.length) { removeSection(); return; }
+      render();
+    });
+  }
+
   function fetchPage() {
     if (fetching || exhausted || loaded.length >= MAX_CARDS) return Promise.resolve();
     fetching = true;
+    if (snapshot) {
+      return fetchFromSnapshot().then(function () { fetching = false; }, function () { fetching = false; exhausted = true; });
+    }
     var ctrl = ('AbortController' in window) ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, FETCH_TIMEOUT);
     var url = fixedIds
@@ -196,9 +257,12 @@
       })
       .catch(function (e) {
         clearTimeout(timer);
-        exhausted = true;
-        // First page failed -> no section at all.
-        if (!loaded.length) { removeSection(); throw e; }
+        // The API failed or timed out: carry on from the static snapshot. Only
+        // if that fails too does a first-page failure remove the section.
+        return fetchFromSnapshot().catch(function () {
+          exhausted = true;
+          if (!loaded.length) { removeSection(); throw e; }
+        });
       })
       .then(function () { fetching = false; }, function () { fetching = false; });
   }
