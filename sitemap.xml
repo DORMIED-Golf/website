@@ -3148,7 +3148,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (695) ── -->
+  <!-- ── News articles (696) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -4087,6 +4087,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/callaway-logo-fall-polo-royalty-check-hero.jpg</image:loc>
       <image:title>The Callaway Logo on That Fall Polo Is a Royalty Check, Not a Product Decision</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/callaway-lpga-bag-iron/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/callaway-lpga-bag-iron-hero.jpg</image:loc>
+      <image:title>A Winning LPGA Bag With No Iron Longer Than a 6. Callaway Built the Club That Made It Possible.</image:title>
     </image:image>
   </url>
   <url>
@@ -10099,7 +10109,7 @@
   <!-- ── News pagination ── -->
   <url>
     <loc>https://dormied.com/news/page/10/</loc>
-    <lastmod>2026-08-01</lastmod>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10117,7 +10127,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/13/</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10219,7 +10229,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/3/</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10255,7 +10265,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/9/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
