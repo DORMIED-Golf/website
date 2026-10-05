@@ -112,6 +112,9 @@ const VARIANT_TERMS = new Set([
   // Long and arm-lock builds of a putter are a different club (Inovai 9.0
   // matched an "Inovai 9.0 Spud Neck Long Putter").
   'long', 'broomstick', 'belly', 'armlock', 'spud',
+  // PING's Cadence TR "Heavy" builds are a separate, heavier model ("Ketsch"
+  // matched "Ketsch Heavy").
+  'heavy',
 ]);
 
 const norm = s => String(s || '')
