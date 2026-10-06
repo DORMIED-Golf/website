@@ -803,6 +803,18 @@ async function generateNews() {
     console.log(`  ✔  news/page/${p}/index.html — ${pageArticles.length} articles`);
   }
 
+  // Pages past the new last page are left over from a larger archive (the
+  // Oct 2026 cleanup removed 238 articles, 29 pages -> 19). Left in place
+  // they stay crawlable and keep linking to removed articles, so they go.
+  const pageRoot = path.join(ROOT, 'news/page');
+  for (const name of fs.existsSync(pageRoot) ? fs.readdirSync(pageRoot) : []) {
+    const n = Number(name);
+    if (Number.isInteger(n) && n > totalPages) {
+      fs.rmSync(path.join(pageRoot, name), { recursive: true, force: true });
+      console.log(`  ✖  news/page/${n}/ removed (past last page ${totalPages})`);
+    }
+  }
+
   return { totalPages, articleCount: articles.length };
 }
 
