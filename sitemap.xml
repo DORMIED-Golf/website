@@ -3154,7 +3154,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (700) ── -->
+  <!-- ── News articles (701) ── -->
   <url>
     <loc>https://dormied.com/news/14-kbs-shafts-in-one-bag-at-the-dow-what-that-number-actually-tells-you-2026-06-17/</loc>
     <lastmod>2026-09-14</lastmod>
@@ -3813,6 +3813,16 @@
     <image:image>
       <image:loc>https://cimmmmnapdthqvtifpzr.supabase.co/storage/v1/object/public/dormied-articles/articles/blue-tees-rangefinder-price-hero.jpg</image:loc>
       <image:title>Nobody Wins a Rangefinder Price War. Blue Tees Bought Airtime Instead.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/blue-tees-rangefinders-subscription-tiers-software/</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/articles/blue-tees-rangefinders-subscription-tiers-software-hero.webp</image:loc>
+      <image:title>Two Rangefinders, Three Subscription Tiers: Blue Tees Is Selling Software Now</image:title>
     </image:image>
   </url>
   <url>
@@ -10191,7 +10201,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/16/</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10215,19 +10225,19 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/20/</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/21/</loc>
-    <lastmod>2026-05-22</lastmod>
+    <lastmod>2026-05-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10245,7 +10255,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/24/</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10263,13 +10273,19 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/27/</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-04-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://dormied.com/news/page/28/</loc>
     <lastmod>2026-04-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://dormied.com/news/page/29/</loc>
+    <lastmod>2026-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -10281,7 +10297,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/4/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
