@@ -2725,6 +2725,46 @@
       "source": "/news/bridgestones-quiet-tour-win-how-a-wind-test-in-ohio-built-a-scottish-open-2026-07-08/",
       "destination": "/brands/bridgestone-golf/",
       "permanent": true
+    },
+    {
+      "source": "/news/dormie-workshop-japan-invented-headcover",
+      "destination": "/brands/dormie-workshop/",
+      "permanent": true
+    },
+    {
+      "source": "/news/dormie-workshop-japan-invented-headcover/",
+      "destination": "/brands/dormie-workshop/",
+      "permanent": true
+    },
+    {
+      "source": "/news/ibkul-womens-line-dies-reorder-launch",
+      "destination": "/brands/ibkul/",
+      "permanent": true
+    },
+    {
+      "source": "/news/ibkul-womens-line-dies-reorder-launch/",
+      "destination": "/brands/ibkul/",
+      "permanent": true
+    },
+    {
+      "source": "/news/kbs-golf-tour-release-names-winner",
+      "destination": "/brands/kbs-golf/",
+      "permanent": true
+    },
+    {
+      "source": "/news/kbs-golf-tour-release-names-winner/",
+      "destination": "/brands/kbs-golf/",
+      "permanent": true
+    },
+    {
+      "source": "/news/taylormade-deal",
+      "destination": "/brands/taylormade/",
+      "permanent": true
+    },
+    {
+      "source": "/news/taylormade-deal/",
+      "destination": "/brands/taylormade/",
+      "permanent": true
     }
   ],
   "rewrites": [

@@ -1,9 +1,12 @@
 name: Post DORMIED Articles to X
 
 on:
-  schedule:
-    # Every 30 minutes
-    - cron: '*/30 * * * *'
+  # PAUSED 6 Oct 2026: features are tweeted by hand. Auto-posting stopped with
+  # the Golf Wire pipeline. A manual run posts EVERY published article not yet
+  # posted (up to the per-call cap), so check x_posted_at before using it.
+  # To resume, restore:
+  #   schedule:
+  #     - cron: '*/30 * * * *'
   workflow_dispatch: # Allow manual trigger from GitHub Actions UI
 
 jobs:
