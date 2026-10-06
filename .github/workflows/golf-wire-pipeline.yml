@@ -1,11 +1,13 @@
 name: Golf Wire Content Pipeline
 
 on:
-  schedule:
-    # Hourly, paired with MAX_ARTICLES_PER_RUN = 2 in scripts/generate-article.js.
-    # The old '0 */3 * * *' at 5 articles/run published in visible clumps; two an
-    # hour still leaves 48/day of capacity against an actual rate of 5-9.
-    - cron: '0 * * * *'
+  # PAUSED 6 Oct 2026: editorial focus moved to brand-specific features.
+  # Search data showed auto-generated wire stories averaging ~1 click each
+  # (74% never clicked) against ~10 for WITB pages and ~15 for explainers.
+  # Manual runs still work from the Actions tab. To resume the hourly schedule,
+  # restore:
+  #   schedule:
+  #     - cron: '0 * * * *'   # paired with MAX_ARTICLES_PER_RUN = 2
   workflow_dispatch:
     inputs:
       max_articles:
