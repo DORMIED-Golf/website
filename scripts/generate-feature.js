@@ -878,6 +878,59 @@ const FEATURES = {
       ]},
     },
   },
+  'what-is-fore-all': {
+    slug: 'what-is-fore-all',
+    title: "What Is Fore All? The Women's Golf Brand Built by Two Beginners",
+    titleTag: "What Is Fore All? Women's Golf Brand | DORMIED",
+    byline: 'Victoria H.',
+    authors: ['Victoria H.'],
+    category: 'Feature',
+    brandSlug: 'fore-all',
+    leadRole: 'bio',
+    lastUpdated: 'October 6, 2026',
+    dateModified: '2026-10-06T12:00:00.000Z',
+    publishedAt: '2026-10-06T12:00:00.000Z',
+    quickAnswer: "Fore All is a women's golf apparel brand from Salt Lake City, co-founded by Jen Clyde and Michelle Money after they built an audience posting videos of themselves learning the game. It sells apparel, bags, balls and accessories in inclusive sizing, mostly between about $100 and $160, and launched a Barbie collaboration with Mattel in June 2026.",
+    metaDescription: "Fore All is a Utah women's golf brand co-founded by Jen Clyde and Michelle Money. What it sells, what it costs, and its Barbie, LPGA and Khalhon collabs.",
+    seoKeywords: [
+      'what is fore all',
+      'fore all golf',
+      'fore all',
+      'who owns fore all',
+      'fore all barbie',
+      'fore all golf apparel',
+      'jen clyde fore all',
+      'fore all womens golf',
+    ],
+    keyTakeaways: [
+      "A Salt Lake City women's golf lifestyle brand co-founded by Jen Clyde (CEO) and Michelle Money, who built an audience learning golf on social media.",
+      'Launched in August 2021 with community events; first full line released 27 March 2023, with distribution through 30 Worldwide Golf Shops stores.',
+      'Most pieces cost about $100 to $160: polos $99.99 to $119.99, dresses $99.99 to $149.99, sweaters $159.99.',
+      'Collaborations with Barbie (Mattel), the LPGA, Cynthia Rowley and Khalhon put it between golf and fashion.',
+      'Up 18 places in a year in the DORMIED Index, with monthly searches up from 4,400 to 6,600.',
+    ],
+    subject: 'Fore All',
+    mdPath: path.join(ROOT, 'article-what-is-fore-all.md'),
+    imgBase: '/images/features/what-is-fore-all',
+    hero: { file: 'hero.webp', w: 1280, h: 720, alt: 'Three women on a tee box above a pine-lined valley in Fore All golf apparel, one beside a leather carry bag and one with a club over her shoulder.', caption: 'Photo by Fore All.' },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    sectionImages: {
+      'What Is the Fore All Brand?': { layout: 'single', images: [
+        { file: 'field.webp', w: 1280, h: 856, alt: 'A woman in a white sweater and green pleated skirt holding a club across her shoulders in a grass field, with friends gathered around a flagstick behind her.', caption: 'Fashion first, built to play in. Photo by Fore All.' },
+      ]},
+      'Who Founded and Owns Fore All?': { layout: 'single', images: [
+        { file: 'founders.webp', w: 965, h: 542, alt: 'Fore All co-founders Jen Clyde, left, in a green Fore All sweatshirt, and Michelle Money, right, in a white one, laughing outdoors.', caption: 'Co-founders Jen Clyde (left) and Michelle Money (right). Photo by Fore All.' },
+      ]},
+      'What Does Fore All Sell and What Does It Cost?': { layout: 'two-up', images: [
+        { file: 'group.webp', w: 1080, h: 720, alt: 'A group of women walking arm in arm down a fairway, several of them in Fore All apparel.', caption: 'A Fore All group on the course. Photo by Fore All.' },
+        { file: 'pink-buggy.webp', w: 1024, h: 683, alt: 'Two women in white golf outfits beside a pink vintage cart on a desert course lined with palm trees.', caption: 'Photo by Fore All.' },
+      ]},
+      'Which Brands Has Fore All Collaborated With?': { layout: 'two-up', images: [
+        { file: 'melrose-store.webp', w: 1280, h: 854, alt: 'A pink Fore All storefront with a large mural of a golfer on its side wall.', caption: 'The Fore All pop-up on Melrose Avenue. Photo by Fore All.' },
+        { file: 'pink-bus.webp', w: 1280, h: 854, alt: 'A pink Fore All bus parked on the street outside the pink storefront.', caption: 'The pink bus outside the pop-up. Photo by Fore All.' },
+      ]},
+    },
+  },
 };
 
 // ── Helpers ─────────────────────────────────────────────────────────────────────
