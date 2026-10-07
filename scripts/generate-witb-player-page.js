@@ -728,6 +728,8 @@ DORMIED voice rules (non-negotiable):
 - Do not assert precise switch dates the data does not support.
 - Do not use hedging phrases like "it seems" or "appears to".
 - No hyphens used as em dashes (do not write " - " as a pause; use commas or period breaks).
+- Never claim exclusivity about brands or components ("the only non-PING item", "the only component not carrying a Titleist stamp", "every club except the ball"). Shafts, grips, wedges and fairway woods are often other brands, and these claims were wrong in five of seven bags checked in Oct 2026. Name what the bag contains; do not assert what it lacks.
+- Do not state win counts, college programs or other career facts unless you are certain of them. Leave a fact out rather than approximate it.
 - Do NOT include the player's current OWGR rank number in the lede. The rank appears in the live page header and changes weekly -- naming it in the lede text will go stale. The bio should establish the player's career without citing a live ranking.
 
 PLAYER: ${player.name}
