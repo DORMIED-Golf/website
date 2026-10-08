@@ -1,38 +1,50 @@
 User-agent: *
-Allow: /
-
 # Affiliate click redirects — no crawl value, and crawling them would pollute
-# click analytics.
+# click analytics. Listed BEFORE "Allow: /" in every group: Google applies the
+# most specific rule, but some crawlers apply the first match, and with Allow
+# first those crawlers were let into /api/go/.
 Disallow: /api/go/
+Allow: /
 
 # Block admin / private paths if added later
 # Disallow: /admin/
 
 # ── AI / LLM crawlers — explicitly welcome ────────────────────────────────
 # DORMIED is an independent data platform. We welcome AI indexing.
+# A crawler with its own group ignores the * group above, so each group
+# repeats the /api/go/ block. Every content page stays open to them;
+# /api/go/ is only the affiliate click redirect.
 User-agent: GPTBot
+Disallow: /api/go/
 Allow: /
 
 User-agent: Google-Extended
+Disallow: /api/go/
 Allow: /
 
 User-agent: anthropic-ai
+Disallow: /api/go/
 Allow: /
 
 User-agent: ClaudeBot
+Disallow: /api/go/
 Allow: /
 
 User-agent: PerplexityBot
+Disallow: /api/go/
 Allow: /
 
 User-agent: YouBot
+Disallow: /api/go/
 Allow: /
 
 # ── Google Ads crawlers ───────────────────────────────────────────────────
 User-agent: Mediapartners-Google
+Disallow: /api/go/
 Allow: /
 
 User-agent: AdsBot-Google
+Disallow: /api/go/
 Allow: /
 
 # ── Sitemaps ──────────────────────────────────────────────────────────────
