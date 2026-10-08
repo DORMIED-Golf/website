@@ -967,8 +967,8 @@ const FEATURES = {
     subject: 'Payntr Golf',
     mdPath: path.join(ROOT, 'article-what-is-payntr-golf.md'),
     imgBase: '/images/features/what-is-payntr-golf',
-    hero: { file: 'hero.webp', w: 1280, h: 686, alt: 'Min Woo Lee balancing a white Payntr golf shoe on his fingertip in front of a desert golf course and mountains.', caption: 'Min Woo Lee, who joined Payntr in January 2026. Photo by PAYNTR Golf.' },
-    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    hero: { file: 'hero-v2.webp', w: 1280, h: 720, alt: 'Min Woo Lee crouching on a green to read a putt, his putter upright beside him, wearing white Payntr golf shoes.', caption: 'Min Woo Lee, who joined Payntr in January 2026. Photo by PAYNTR Golf.' },
+    ogImage: { file: 'og-v2.webp', w: 1200, h: 630 },
     sectionImages: {
       'Who Founded Payntr Golf and Who Owns It?': { layout: 'single', images: [
         { file: 'founders.webp', w: 1280, h: 854, alt: 'Three men standing together outdoors: Michael Glancy Jr. on the left, Jason Day in the centre and Mike Forsey on the right.', caption: 'Co-founder and creative director Michael Glancy Jr. (left), Jason Day (centre) and co-founder and president Mike Forsey (right), October 2024. Photo by PAYNTR Golf.' },
