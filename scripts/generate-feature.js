@@ -55,6 +55,9 @@ let SIDEBAR_MODULES_HTML = '';
 // brand has an active affiliate_programs row (empty string for every other brand).
 let BRAND_CARD_HTML = '';
 let SHOP_SECTION_HTML = '';
+// Marker the parser drops in front of the FAQ heading; buildPage swaps in
+// SHOP_SECTION_HTML there, or removes it when the feature has no carousel.
+const SHOP_BEFORE_FAQ = '<!--shop-before-faq-->';
 let TOP_STORIES_HTML = '';
 let FEATURED_HTML = '';
 
@@ -1156,6 +1159,9 @@ function parseMarkdown(md, F, dormiedData) {
       flushSection();
       const h = b.slice(3).trim();
       inFaq = (h.toLowerCase() === 'faq');
+      // The Shop carousel, when the feature has one, goes immediately before
+      // the FAQ rather than after the whole body (see SHOP_BEFORE_FAQ).
+      if (inFaq) out.push(SHOP_BEFORE_FAQ);
       words += h.split(/\s+/).length;
       // FAQ keeps its "## FAQ" marker in markdown so detection works; the
       // visible heading is a question like every other h2.
@@ -1200,6 +1206,10 @@ function parseMarkdown(md, F, dormiedData) {
 // ── Page template ────────────────────────────────────────────────────────────────
 function buildPage(F, parsed, dormiedLatestHtml) {
   const { lead, bodyHtml, wordCount, faqs } = parsed;
+  // Readers reach the catalog after the article and before the FAQ. With no
+  // FAQ there is no marker, and the carousel keeps its place after the body.
+  const shopInBody = !!SHOP_SECTION_HTML && bodyHtml.includes(SHOP_BEFORE_FAQ);
+  const bodyMain   = bodyHtml.replace(SHOP_BEFORE_FAQ, shopInBody ? SHOP_SECTION_HTML : '');
   const publishedAt   = F.publishedAt;
   const dateISO       = new Date(publishedAt).toISOString();
   // Never earlier than the publish date: a rebuild keeps the row's published_at,
@@ -1413,10 +1423,10 @@ function buildPage(F, parsed, dormiedLatestHtml) {
 ${takeawaysHtml}
             <div class="da-article-body">
               ${bioHtml}
-              ${bodyHtml}
+              ${bodyMain}
             </div>
 ${scbHtml({ slot: 'feature', pageType: 'feature', brandSlug: F.brandSlug || '', latestIssueUrl: latestScorecardUrl() })}
-${BRAND_CARD_HTML}${SHOP_SECTION_HTML}
+${BRAND_CARD_HTML}${shopInBody ? '' : SHOP_SECTION_HTML}
             <!-- ══ TAIL FEEDS (moved from sidebar; baked for crawlers) ══ -->
             <div class="tail-feeds">
               <section class="home-stories-section latest-feed-section sf-mobile" aria-labelledby="article-latest-m-heading">
