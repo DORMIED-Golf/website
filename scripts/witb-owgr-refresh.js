@@ -96,6 +96,8 @@ function normaliseName(raw) {
   // NFD decompose then strip combining marks (U+0300..U+036F)
   let s = raw.normalize('NFD').replace(/[̀-ͯ]/g, '');
   s = s.toLowerCase().trim();
+  // OWGR tags amateurs in the name itself: "Bowen Mauss(Am)".
+  s = s.replace(/\s*\(am\)\s*$/, '');
   // "Last, First" -> "first last"
   if (s.includes(',')) {
     const parts = s.split(',');
