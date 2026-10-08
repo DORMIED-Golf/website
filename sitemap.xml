@@ -35,7 +35,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -3172,7 +3172,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ── News articles (460) ── -->
+  <!-- ── News articles (461) ── -->
   <url>
     <loc>https://dormied.com/news/460-million-shots-later-shot-scope-finally-figured-out-what-golfers-2026-05-19/</loc>
     <lastmod>2026-09-13</lastmod>
@@ -7414,6 +7414,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://dormied.com/news/what-is-payntr-golf/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://dormied.com/images/features/what-is-payntr-golf/og.webp</image:loc>
+      <image:title>What Is Payntr Golf? The Shoe Brand From the Designer Behind Tiger&apos;s First Nike Golf Shoes</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dormied.com/news/what-is-public-drip-golf/</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>weekly</changefreq>
@@ -7807,7 +7817,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/15/</loc>
-    <lastmod>2026-05-22</lastmod>
+    <lastmod>2026-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -7819,7 +7829,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/17/</loc>
-    <lastmod>2026-05-13</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -7837,7 +7847,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/2/</loc>
-    <lastmod>2026-09-26</lastmod>
+    <lastmod>2026-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -7855,7 +7865,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/5/</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -7879,7 +7889,7 @@
   </url>
   <url>
     <loc>https://dormied.com/news/page/9/</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>

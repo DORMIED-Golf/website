@@ -39,6 +39,7 @@ const path = require('path');
 const vm   = require('vm');
 const { createClient } = require('@supabase/supabase-js');
 const feedBake = require('./feed-bake');
+const { fetchSellableBrandSlugs } = require('./lib/sellable-brands');
 const { signupBlockHtml: scbHtml } = require('./lib/signup-block.js');
 const { cssVersion } = require('./lib/css-version.js');
 const { js: jsVersion } = require('./lib/asset-version.js');
@@ -931,6 +932,56 @@ const FEATURES = {
       ]},
     },
   },
+  'what-is-payntr-golf': {
+    slug: 'what-is-payntr-golf',
+    title: "What Is Payntr Golf? The Shoe Brand From the Designer Behind Tiger's First Nike Golf Shoes",
+    titleTag: 'What Is Payntr Golf? Golf Shoe Brand | DORMIED',
+    byline: 'Adam R.',
+    authors: ['Adam R.'],
+    category: 'Feature',
+    brandSlug: 'payntr-golf',
+    leadRole: 'bio',
+    inlineCommerce: true,   // DORMIED Index card + Shop carousel after the body
+    lastUpdated: 'October 8, 2026',
+    dateModified: '2026-10-08T12:00:00.000Z',
+    publishedAt: '2026-10-08T12:00:00.000Z',
+    quickAnswer: "Payntr Golf is a Portland, Oregon golf shoe company founded by footwear veterans Mike Forsey, Michael Glancy Jr. and David Paynter, which designs shoes around the biomechanics of the swing. Forsey helped develop Tiger Woods' first Nike golf shoes. Its shoes cost about $160 to $240, and Jason Day and Min Woo Lee are its ambassadors.",
+    metaDescription: "Payntr Golf is a Portland golf shoe brand founded by Nike and Under Armour veterans. Who owns it, what it costs, and why Jason Day and Min Woo Lee wear it.",
+    seoKeywords: [
+      'what is payntr golf',
+      'payntr golf',
+      'payntr golf shoes',
+      'who owns payntr golf',
+      'payntr chef rx rs',
+      'min woo lee payntr',
+      'jason day payntr',
+      'payntr shoes price',
+    ],
+    keyTakeaways: [
+      'A Portland golf shoe company founded by Mike Forsey, Michael Glancy Jr. and David Paynter; first shoe released 16 February 2021.',
+      "Forsey engineered golf shoes for FootJoy, Reebok, Nike and Under Armour and helped develop the first golf shoes for Tiger Woods and Jordan Spieth.",
+      'Shoes cost about $160 to $240; Min Woo Lee\'s CHEF RX RS is $240 and Jason Day\'s Eighty Seven SC $220.',
+      'Owns the Payntr IP outright since 2025; MyGolfSpy reports Jason Day holds an equity stake.',
+      'Builds shoes with other brands, including Bad Birdie, Ghost Golf, Students, Jones and Khalhon.',
+    ],
+    subject: 'Payntr Golf',
+    mdPath: path.join(ROOT, 'article-what-is-payntr-golf.md'),
+    imgBase: '/images/features/what-is-payntr-golf',
+    hero: { file: 'hero.webp', w: 1280, h: 686, alt: 'Min Woo Lee balancing a white Payntr golf shoe on his fingertip in front of a desert golf course and mountains.', caption: 'Min Woo Lee, who joined Payntr in January 2026. Photo by PAYNTR Golf.' },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    sectionImages: {
+      'Who Founded Payntr Golf and Who Owns It?': { layout: 'single', images: [
+        { file: 'founders.webp', w: 1280, h: 854, alt: 'Three men standing together outdoors: Michael Glancy Jr. on the left, Jason Day in the centre and Mike Forsey on the right.', caption: 'Co-founder and creative director Michael Glancy Jr. (left), Jason Day (centre) and co-founder and president Mike Forsey (right), October 2024. Photo by PAYNTR Golf.' },
+      ]},
+      'What Does Payntr Sell and What Does It Cost?': { layout: 'single', images: [
+        { file: 'chef-rx-rs.webp', w: 1280, h: 860, alt: 'A white Payntr CHEF RX RS spiked golf shoe shown from the side and from the sole.', caption: 'The $240 CHEF RX RS, Min Woo Lee\'s first signature shoe. Photo by PAYNTR Golf.' },
+      ]},
+      'Which Tour Players Wear Payntr?': { layout: 'two-up', images: [
+        { file: 'team-2026.webp', w: 1400, h: 788, alt: 'Payntr Golf 2026 team graphic showing Jason Day, Min Woo Lee, Sam Burns and Isaiah Salinda in black and white.', caption: 'The 2026 team: Jason Day, Min Woo Lee, Sam Burns and Isaiah Salinda. Photo by PAYNTR Golf.' },
+        { file: 'min-woo-lee.webp', w: 1400, h: 788, alt: 'Min Woo Lee holding his finish after a drive in white golf shoes and grey trousers.', caption: 'Min Woo Lee. Photo by PAYNTR Golf.' },
+      ]},
+    },
+  },
 };
 
 // ── Helpers ─────────────────────────────────────────────────────────────────────
@@ -1576,13 +1627,12 @@ async function main() {
 `;
       }
 
-      const { data: prog } = await supabase
-        .from('affiliate_programs')
-        .select('dormied_brand_slug')
-        .eq('dormied_brand_slug', F.brandSlug)
-        .eq('status', 'active')
-        .maybeSingle();
-      if (prog) {
+      // Sellable = new, in-stock products from a direct deal OR a multi-brand
+      // retailer (Global Golf). Checking only for a direct affiliate_programs
+      // row left Payntr, sold only through Global Golf, without a carousel.
+      // Same list the brand pages use, so the two never disagree.
+      const sellable = await fetchSellableBrandSlugs(supabase);
+      if (sellable.has(F.brandSlug)) {
         SHOP_SECTION_HTML = `
             <!-- Shop ${escHtml(bName)} (affiliate) -->
             <section class="bp-shop-section" id="bp-shop-section" data-brand-slug="${escHtml(F.brandSlug)}" data-brand-name="${escHtml(bName)}" data-click-src="feature" data-click-slug="${escHtml(F.slug)}"${pinnedProductAttr(F.brandSlug, escHtml)}>
