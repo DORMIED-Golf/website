@@ -155,6 +155,9 @@ async function fetchOwgrRankings() {
     }
     return {
       rank:         entry.rank,
+      // Every player with no ranking points shares the last rank (#5027 on
+      // 9 Oct 2026, 4,541 players tied), which is not a ranking at all.
+      points:       Number(entry.pointsAverage) || 0,
       name:         entry.player?.fullName || `${entry.player?.firstName} ${entry.player?.lastName}`.trim(),
       country_code,
       nation,
@@ -185,8 +188,18 @@ async function main() {
   const owgrByNorm = new Map();
   for (const row of owgrRankings) {
     const key = normaliseName(row.name);
+    // Two OWGR players can share a name (Adam Scott: Australia #45 and a
+    // Scottish player in the thousands). The tour player we track is the
+    // better-ranked one, so keep that rather than whichever came last.
+    const prev = key && owgrByNorm.get(key);
+    if (prev && prev.rank <= row.rank) {
+      log(`  Name collision: "${row.name}" #${row.rank} ignored, keeping #${prev.rank}`);
+      continue;
+    }
+    if (prev) log(`  Name collision: "${row.name}" #${row.rank} replaces #${prev.rank}`);
     if (key) owgrByNorm.set(key, {
       rank:         row.rank,
+      points:       row.points,
       rawName:      row.name,
       country_code: row.country_code,
       nation:       row.nation,
@@ -227,11 +240,23 @@ async function main() {
   let updatedCount = 0;
   let errorCount   = 0;
 
+  // Guard against a repeat of 9 Oct 2026, when points never reached this
+  // loop and every player was written as unranked: refuse to run if most
+  // matched players appear to have no points.
+  const zeroPts = matched.filter(m => !(m.hit.points > 0)).length;
+  if (matched.length && zeroPts / matched.length > 0.5) {
+    console.error(`Refusing to write: ${zeroPts} of ${matched.length} matched players show 0 points, which means the points data is missing.`);
+    process.exit(1);
+  }
+
   for (const { player, hit } of matched) {
+    // Zero points = tied last, shown as "Unranked" rather than "#5027".
+    // The match still fills country and nation.
+    const rank = hit.points > 0 ? hit.rank : null;
     const { error: updErr } = await supabase
       .from('witb_players')
       .update({
-        owgr_rank:            hit.rank,
+        owgr_rank:            rank,
         owgr_rank_updated_at: now,
         country_code:         hit.country_code,
         nation:               hit.nation,
@@ -242,13 +267,13 @@ async function main() {
       warn(`Update failed for ${player.name}: ${updErr.message}`);
       errorCount++;
     } else {
-      const delta = (player.owgr_rank !== null && player.owgr_rank !== hit.rank)
+      const delta = (player.owgr_rank !== null && player.owgr_rank !== rank)
         ? ` (was #${player.owgr_rank})`
         : '';
       const flagNote = hit.nation
         ? ` [GB/${hit.nation}]`
         : (hit.country_code ? ` [${hit.country_code}]` : '');
-      log(`  Updated: ${player.name} -> #${hit.rank}${delta}${flagNote}`);
+      log(`  Updated: ${player.name} -> ${rank ? '#' + rank : 'unranked (0 points)'}${delta}${flagNote}`);
       updatedCount++;
     }
   }
