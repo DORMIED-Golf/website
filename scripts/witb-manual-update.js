@@ -338,6 +338,10 @@ async function main() {
   }
 }
 
+// Shared with scripts/witb-shaft-cleanup.js, which relinks rows whose shaft
+// text it corrects.
+module.exports = { inferShaftSlug, upsertShaft, upsertClubhead, slugify };
+
 // Only run when invoked directly. Without this, `require()`-ing this file for
 // inspection or testing executes it against production.
 if (require.main === module) {
