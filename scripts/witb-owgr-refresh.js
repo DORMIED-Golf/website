@@ -70,6 +70,14 @@ const DB_TO_OWGR_ALIAS = {
   // United States, born 2003-05-30.
   'ben james':          'benjamin james',
   'rico hoey':          'richard hoey',   // OWGR uses his legal name: owgr.com/playerprofile/richard-hoey-23504
+  // Found by the 9 Oct 2026 audit: ranked tour players OWGR lists under
+  // their full or legal names, each the only player of that name in the
+  // ranking and matching the country we track.
+  'nico echavarria':    'nicolas echavarria',      // Colombia
+  'zach bauchou':       'zachary bauchou',         // United States
+  'max steinlechner':   'maximilian steinlechner', // Austria
+  'will cannon':        'william cannon',          // United States
+  'kevin yu':           'chun-an yu',              // Chinese Taipei; OWGR uses his Chinese name
 };
 
 // ── Name Normalisation ────────────────────────────────────────────────────────

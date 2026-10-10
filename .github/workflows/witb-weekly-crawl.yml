@@ -73,6 +73,37 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: node scripts/witb-owgr-refresh.js
 
+      - name: Refresh rank lines on every player page
+        # One DB read; rewrites only the flag / rank / UPDATED line in each
+        # baked page with the generator's own buildOwgrLine(). On 6 Oct 2026
+        # the full rebuild below failed and 194 pages kept a week-old rank,
+        # some 1,000 places out, so ranks no longer depend on it.
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/refresh-witb-ranks.js
+
+      - name: Rebuild WITB players directory (ranks)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/generate-witb-players-page.js
+
+      - name: Commit and push ranks
+        # Committed on its own so a failure in the full rebuild below cannot
+        # hold back the week's rankings.
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add witb/players/
+          if git diff --cached --quiet; then
+            echo "Ranks unchanged"
+          else
+            git commit -m "WITB OWGR ranks: $(date -u '+%Y-%m-%d') [skip ci]"
+            git pull --rebase -X theirs origin main
+            git push
+          fi
+
       - name: Rebuild all WITB player pages
         # Regenerates every /witb/players/{slug}/index.html from the DB so a new
         # bag added by the scrape is reflected as the CURRENT BAG and the prior
@@ -110,6 +141,7 @@ jobs:
             echo "No changes — skipping commit"
           else
             git commit -m "WITB weekly rebuild + OWGR refresh: $(date -u '+%Y-%m-%d')"
+            git pull --rebase -X theirs origin main
             git push
           fi
 
