@@ -109,7 +109,7 @@ const RULES = [
   // that page. It survived 60+ commits because the button renders perfectly and
   // nothing else in the build looks at it -- the exact failure mode in this
   // file's header, repeated with a different hook.
-  { marker: 'id="nav-hamburger"', script: "getElementById('nav-hamburger')", minPages: 900, what: 'mobile nav hamburger' },
+  { marker: 'id="nav-hamburger"', script: "getElementById('nav-hamburger')", minPages: 800, what: 'mobile nav hamburger' }, // 851 pages after the Oct 2026 article prune
 ];
 
 /** Directories that are not part of the deploy artifact. */
