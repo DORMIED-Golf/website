@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-label="Every September, the index drains">
+<rect width="1200" height="600" fill="#060b06"/>
+<rect x="0.5" y="0.5" width="1199" height="599" fill="none" stroke="#1a2e1a"/>
+<text x="48" y="64" fill="#22c55e" font-family="'Barlow Condensed','Arial Narrow',Arial,sans-serif" font-size="34" font-weight="700" font-style="italic" letter-spacing="1">EVERY SEPTEMBER, THE INDEX DRAINS</text>
+<text x="48" y="98" fill="#8aa88a" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="17">Change in total searches across all 215 brands, August to September.</text>
+<line x1="100" x2="1152" y1="160" y2="160" stroke="#1a2e1a"/>
+<rect x="110" y="160" width="150" height="267.3" rx="2" fill="#14532d"/>
+<text x="185" y="461.3" text-anchor="middle" fill="#e2f0de" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="22" font-weight="700">-24.3%</text>
+<text x="185" y="144" text-anchor="middle" fill="#6b8f6b" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="17">SEP 2023</text>
+<rect x="340" y="160" width="150" height="62.7" rx="2" fill="#14532d"/>
+<text x="415" y="256.7" text-anchor="middle" fill="#e2f0de" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="22" font-weight="700">-5.7%</text>
+<text x="415" y="144" text-anchor="middle" fill="#6b8f6b" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="17">SEP 2024</text>
+<rect x="570" y="160" width="150" height="228.8" rx="2" fill="#14532d"/>
+<text x="645" y="422.8" text-anchor="middle" fill="#e2f0de" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="22" font-weight="700">-20.8%</text>
+<text x="645" y="144" text-anchor="middle" fill="#6b8f6b" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="17">SEP 2025</text>
+<rect x="800" y="160" width="150" height="338.8" rx="2" fill="#22c55e"/>
+<text x="875" y="532.8" text-anchor="middle" fill="#22c55e" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="22" font-weight="700">-30.8%</text>
+<text x="875" y="144" text-anchor="middle" fill="#6b8f6b" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="17">SEP 2026</text>
+<line x1="792" x2="958" y1="404.2" y2="404.2" stroke="#e2f0de" stroke-width="3" stroke-dasharray="8 6"/>
+<text x="968" y="410.2" fill="#e2f0de" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="16">-22.2% without</text>
+<text x="968" y="432.2" fill="#e2f0de" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="16">Good Good</text>
+<text x="1152" y="574" text-anchor="end" fill="#6b8f6b" font-family="'JetBrains Mono',Menlo,Consolas,monospace" font-size="15" letter-spacing="2">DORMIED INDEX</text>
+</svg>

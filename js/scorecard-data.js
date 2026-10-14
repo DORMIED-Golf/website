@@ -19,6 +19,272 @@ window.DORMIED_SCORECARD_DATA = {
 
   issues: [
 
+    /* ── OCTOBER 2026 ────────────────────────────────────────────────── */
+    {
+      "slug": "october-2026",
+      "title": "Good Good Fell 80% and Still Finished Third | The Scorecard | October 2026",
+      "subtitle": "Golf lost almost a third of its attention in September. It forgot the spikes and kept two things: a label it watched on 24 players for four days, and a brand it spent August arguing about.",
+      "date": "Oct 14, 2026",
+      "dateISO": "2026-10-14",
+      "monthLabel": "October 2026",
+      "images": {
+        "hero": {
+          "src": "/images/scorecard/october-2026/team-usa-medinah.jpg",
+          "og": "/images/scorecard/october-2026/og.jpg",
+          "w": 876,
+          "h": 584,
+          "alt": "U.S. Presidents Cup players in matching striped red B. Draddy polos embracing in celebration at Medinah",
+          "caption": "The U.S. team celebrates its 11th straight Presidents Cup, every player in B. Draddy. Photo by Today's Golfer."
+        },
+        "strip": [
+          {
+            "src": "/images/scorecard/october-2026/team-usa-medinah.jpg",
+            "label": "Team USA at Medinah, in B. Draddy"
+          },
+          {
+            "src": "/images/scorecard/october-2026/srixon-zxi-irons.jpg",
+            "label": "Srixon ZXi7 and ZXi5 irons"
+          },
+          {
+            "src": "/images/scorecard/october-2026/sentinel-bag-shag.jpg",
+            "label": "Sentinel Golf x Bag Shag"
+          }
+        ]
+      },
+      "toc": [
+        {
+          "id": "intro",
+          "label": "The Lede"
+        },
+        {
+          "id": "at-the-top",
+          "label": "At The Top"
+        },
+        {
+          "id": "the-biggest-move",
+          "label": "The Biggest Move"
+        },
+        {
+          "id": "the-field",
+          "label": "The Field"
+        },
+        {
+          "id": "the-drop-zone",
+          "label": "The Drop Zone"
+        },
+        {
+          "id": "the-long-game",
+          "label": "The Long Game"
+        },
+        {
+          "id": "global-dispatch",
+          "label": "Global Dispatch"
+        },
+        {
+          "id": "closing",
+          "label": "Closing"
+        }
+      ],
+      "sections": [
+        {
+          "id": "intro",
+          "heading": "The Lede: The Winner and the Loser Wore the Same Label",
+          "body": "<p>When <a href=\"/witb/players/jacob-bridgeman/\">Jacob Bridgeman</a> holed a four-foot par putt on the 18th at Medinah to clinch the Presidents Cup, the man he beat, <a href=\"/witb/players/min-woo-lee/\">Min Woo Lee</a>, was dressed by the same company. <a href=\"/brands/b-draddy/\">B. Draddy</a> outfitted both teams. Two weeks earlier it had dressed the American side at the Solheim Cup in the Netherlands, which lost to Europe 15-13. September belonged to team golf. The U.S. erased a three-point deficit on Sunday with a record 9½ singles points for its 11th straight Presidents Cup, and earlier in the month LIV Golf filed for Chapter 11. None of it rescued the index. Attention across all 215 brands fell 30.8%, the steepest drop of the year. Only 20 brands gained ground, the fewest of any month this year, and the total landed below January and February. September is when our game's attention drains out. What it keeps is the story, and this month it kept two very different kinds of brand.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/october-2026/every-september.svg",
+              "alt": "Bar chart of the change in total searches across the DORMIED Index from August to September: 2023 down 24.3%, 2024 down 5.7%, 2025 down 20.8%, 2026 down 30.8%, or 22.2% without Good Good Golf",
+              "caption": "The September hangover is seasonal. About eight points of this year's belong to one brand."
+            }
+          ]
+        },
+        {
+          "id": "at-the-top",
+          "heading": "At The Top: Titleist Takes the Crown Back. Good Good Won't Leave the Room.",
+          "body": "<p><a href=\"/brands/titleist/\">Titleist</a> is back in the top spot, where it has sat in eight of nine months this year. Its search volume fell 18.3%, which in this market counts as a good month: Titleist's share of all golf brand attention rose from 6.7% to 7.9%. <a href=\"/brands/taylormade/\">TaylorMade</a> climbed back to second at 67.2 despite a 32.8% fall. Then comes the number we promised to watch. <a href=\"/brands/good-good-golf/\">Good Good Golf</a> fell 80% and still finished third. <a href=\"/scorecard/september-2026/\">Last month's Long Game</a> laid out two outcomes. Settle below July, and notoriety becomes a liability that reprices every creator deal in golf. Settle above it, and the conclusion gets uncomfortable. Good Good settled at nearly double its July search volume and nine places higher, in the same month its CEO and president departed. One month in, with October still to come, that is the uncomfortable answer. The detail that makes it sting is <a href=\"/brands/callaway/\">Callaway</a>. The company that approved the ad and then ended the partnership fell 55.3% and landed exactly on its July search figure. The two finished tied at 54.7 alongside <a href=\"/brands/travismathew/\">TravisMathew</a>. The attention stayed with the brand that made the ad and left the one that approved it. Further down, <a href=\"/brands/holderness-bourne/\">Holderness & Bourne</a> retook 10th, matching its best rank ever, and <a href=\"/brands/vice-golf/\">Vice Golf</a> slipped to 12th.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/october-2026/good-good-vs-callaway.svg",
+              "alt": "Line chart of global monthly searches from June to September 2026: Callaway 135,000, 110,000, 246,000, then 110,000; Good Good Golf 60,500, 60,500, 550,000, then 110,000, against its July level of 60,500",
+              "caption": "Callaway fell back to exactly its July figure. Good Good settled at nearly double its own."
+            }
+          ]
+        },
+        {
+          "id": "the-biggest-move",
+          "heading": "The Biggest Move: B. Draddy Dressed Three Teams and Won the Month",
+          "body": "<p><a href=\"/brands/b-draddy/\">B. Draddy</a> rose 49.6% to 39th, the best rank in its history on our index, in a month when 155 brands went the other way. In the U.S. it jumped from 52nd to 28th, and it climbed in nine of our ten markets. When our news desk examined <a href=\"/news/b-draddy-reason-presidents-cup-keeps/\">why the Presidents Cup keeps picking B. Draddy</a> in August, the answer was 200 embroidery heads in Wisconsin, and the brand sat in the 60s with a flat reading. The uniforms had been revealed. The broadcast hadn't happened. It rose 22% in August, the month the Presidents Cup kit was unveiled, and 50% in September, when it was worn. The Solheim Cup doubled as the tournament debut of its new women's line, which is a hard room to launch in. Its parent, Summit Golf Brands, also owns <a href=\"/brands/fairway-and-greene/\">Fairway & Greene</a> and <a href=\"/brands/ep-ny/\">EP NY</a>, the women's label that opened our very first Drop Zone back in March.</p>\n<p>Now compare the team that actually won the Solheim Cup. <a href=\"/brands/ping/\">PING</a>, whose founders gave the event its name, has dressed Europe's side at every playing since 2021 and did it again at Bernardus. Its number fell 18.3%, in step with the rest of the top 20. For a club company, a uniform is a rounding error. For an apparel brand, it is the whole month. The last Ryder Cup handed its uniforms to Ralph Lauren and Loro Piana, fashion houses that don't need golf. The Presidents Cup and the American Solheim side chose a golf brand that does, and September showed why that matters to the brand. A major puts one bag on camera for one Sunday. A team event puts the same label on 24 chests for four days and sells the replica the same week.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/october-2026/b-draddy-rank.svg",
+              "alt": "Line chart of B. Draddy global rank by month in 2026: 72nd, 73rd, 75th, 78th, 73rd, 70th, 65th, 59th in August when the Presidents Cup kit was unveiled, and 39th in September when it was worn",
+              "caption": "Unveiled in August, worn in September. 39th is the best rank B. Draddy has held on the index."
+            }
+          ]
+        },
+        {
+          "id": "the-field",
+          "heading": "The Field: A Quiet Climber and a Blade With a Ship Date",
+          "body": "<p><a href=\"/brands/sentinel-golf/\">Sentinel Golf</a> rose 52.6% to 121st, its best rank ever, and its rank has improved every month since June. The accessories label builds things like shag bags with Madewell Products, the company behind the original Bag Shag. No single story explains the spike.</p>\n<p><a href=\"/brands/mclaren-golf/\">McLaren Golf</a> climbed 22.2% and 12 places back to 59th, its first gain since April, in the month <a href=\"/news/mclaren-golf-forged-cast-late-series/\">its Series 1 blade finally got a ship date</a>, five months after launch. That is exactly where it sat in June, so this isn't a recovery yet. It's a pulse, and it arrived with product news rather than a launch party.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/october-2026/sentinel-bag-shag.jpg",
+              "alt": "A Sentinel Golf shag bag: black fabric body with a side zip on an aluminium tube, under a cast Bag Shag handle",
+              "caption": "Sentinel's shag bag, built with Madewell Products under the original Bag Shag handle. Photo by Sentinel Golf."
+            },
+            {
+              "row": [
+                {
+                  "src": "/images/scorecard/october-2026/sentinel-vest.jpg",
+                  "alt": "A light grey Sentinel Golf hooded vest with a black zip and dark fleece lining",
+                  "w": 1600,
+                  "h": 1600
+                },
+                {
+                  "src": "/images/scorecard/october-2026/sentinel-carry-bag.jpg",
+                  "alt": "A tan Sentinel Golf carry bag with black leather trim and a curved stand leg",
+                  "w": 1600,
+                  "h": 1600
+                }
+              ],
+              "caption": "A hooded vest and a carry bag from the same accessories label. Photo by Sentinel Golf."
+            }
+          ]
+        },
+        {
+          "id": "the-drop-zone",
+          "heading": "The Drop Zone: The Summer's Spikes Came Due",
+          "body": "<p>Last month <a href=\"/brands/barstool-golf/\">Barstool Golf</a> and <a href=\"/brands/random-golf-club/\">Random Golf Club</a> each rose 50% while Good Good Golf collapsed, and we noted that nobody blamed the creator category. In September they gave it all back and then some, falling 56.1% and 45.5%. The halo left with the headlines. Our last three Biggest Move picks before this one fell too: <a href=\"/brands/prosendr/\">ProSENDR</a> by 45.8%, <a href=\"/brands/carnival-golf/\">Carnival Golf</a> by 70% and Good Good by 80%. Carnival's record July surge is mostly unwound, with the brand back at 185th against 199th in June. <a href=\"/brands/honors/\">Honors</a> and <a href=\"/brands/uneekor/\">Uneekor</a> both reversed hard after August spikes, down 64.1% and 33.1%. Spikes are loans. September is when they get called.</p>"
+        },
+        {
+          "id": "the-long-game",
+          "heading": "The Long Game: Srixon Gets the Launch Season TaylorMade Is Skipping",
+          "body": "<p><a href=\"/brands/srixon/\">Srixon</a> rose 22.2% to 11th, its best rank ever, in a month the index fell 30.8%. We called the Open bump for August and then reported it never came. It came in September, and it came with the clubs. The second-generation ZXi irons were announced on September 8 and the ZXi RKT woods two weeks later. <a href=\"/witb/players/shane-lowry/\">Shane Lowry</a> won the Irish Open by a record 11 shots with the new driver, and a week later <a href=\"/witb/players/j-j-spaun/\">J.J. Spaun</a> took the BMW PGA at Wentworth with Srixon irons and ball. The three unreleased clubs <a href=\"/witb/players/ryan-fox/\">Ryan Fox</a> won The Open with reach shelves on October 16. Srixon is now tied with Holderness & Bourne on DI at 30.1 and sits 11th on the tiebreak. Meanwhile TaylorMade has said it won't launch a new driver in 2027, which Golf Digest reckons will be its first year without one since 2001. Our call: Srixon cracks the top ten for the first time before January's launch season is over. A major won with unreleased clubs is a trailer. October 16 is the release.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/october-2026/srixon-zxi-irons.jpg",
+              "alt": "Srixon ZXi7 and ZXi5 7-irons side by side in front of a Srixon staff bag",
+              "caption": "The second-generation ZXi7 and ZXi5 irons, announced September 8 and on shelves October 16. Photo by Srixon."
+            },
+            {
+              "src": "/images/scorecard/october-2026/lowry-irish-open.jpg",
+              "alt": "Shane Lowry in a Srixon cap holding the Irish Open trophy aloft",
+              "caption": "Shane Lowry after his record 11-shot Irish Open win at Doonbeg. Photo by Getty Images."
+            }
+          ]
+        },
+        {
+          "id": "global-dispatch",
+          "heading": "Global Dispatch: Korea Didn't Get the Memo",
+          "body": "<p>South Korea was the only market on the index to grow in September, up 7.6%, or 8.7% with Good Good Golf stripped out. Two brands did almost all of it. <a href=\"/brands/pxg/\">PXG</a>, first in Korea, and <a href=\"/brands/malbon/\">Malbon</a>, third, added 1,420 of the market's 1,440 net new searches between them. Malbon is the striking one: down 32.7% globally, nearly doubled in Korea. <a href=\"/scorecard/march-2026/\">Our first issue</a> flagged PXG leading Korea while scoring 30.1 globally, and <a href=\"/scorecard/june-2026/\">in June</a> we wrote that Korea might be Malbon's core business rather than its hedge. September is the strongest evidence yet for both. The traffic runs the other way too. <a href=\"/brands/khalhon/\">Khalhon</a>, the Seoul label <a href=\"/news/what-is-khalhon/\">we profiled in September</a> for its Sean Wotherspoon capsule, rose 50%, and more than half of its searches came from the United States. A Los Angeles brand is growing in Seoul while a Seoul brand grows in America. In golf, the home market is no longer a safe guess for where a brand's growth lives.</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/october-2026/korea.svg",
+              "alt": "Bar chart of net new searches in South Korea from August to September 2026: Malbon plus 720, PXG plus 700, the other 213 brands combined plus 20, out of a market total of plus 1,440",
+              "caption": "Malbon and PXG added 1,420 of South Korea's 1,440 net new searches."
+            }
+          ]
+        },
+        {
+          "id": "closing",
+          "heading": "The Closing Note: Uniforms and Notoriety",
+          "body": "<p>When Jacob Bridgeman's putt dropped, half the players on the green at Medinah celebrated and half didn't, and the company on every one of their chests won either way. That is the cleanest version of what September taught. Our game lost almost a third of its attention in thirty days, and the biggest things it let go of were spikes: the halo brands, the record surges, the scandal's bystanders. What it held onto was a label it watched for four days on 24 players, and a brand it spent August arguing about. One kind of attention took two Presidents Cups and 200 embroidery heads in Wisconsin to build. The other arrived in an afternoon and hasn't left. Golf remembers what it wore and what it argued about. The spikes, it forgot by October.</p>\n<p class=\"scorecard-signature\">Adam and Travis, DORMIED</p>",
+          "images": [
+            {
+              "src": "/images/scorecard/october-2026/medinah-green.jpg",
+              "alt": "A U.S. player in a striped red polo and his caddie in a red Presidents Cup bib celebrating face to face on a green at Medinah",
+              "caption": "Medinah, Sunday. Whichever side you cheered, the polo was B. Draddy. Photo by Michael Reaves / Getty Images North America / AFP."
+            }
+          ]
+        }
+      ],
+      "brandMentions": [
+        "b-draddy",
+        "titleist",
+        "taylormade",
+        "good-good-golf",
+        "callaway",
+        "travismathew",
+        "holderness-bourne",
+        "vice-golf",
+        "fairway-and-greene",
+        "ep-ny",
+        "ping",
+        "sentinel-golf",
+        "mclaren-golf",
+        "barstool-golf",
+        "random-golf-club",
+        "prosendr",
+        "carnival-golf",
+        "honors",
+        "uneekor",
+        "srixon",
+        "pxg",
+        "malbon",
+        "khalhon"
+      ],
+      "playerMentions": [
+        {
+          "slug": "jacob-bridgeman",
+          "name": "Jacob Bridgeman"
+        },
+        {
+          "slug": "min-woo-lee",
+          "name": "Min Woo Lee"
+        },
+        {
+          "slug": "shane-lowry",
+          "name": "Shane Lowry"
+        },
+        {
+          "slug": "j-j-spaun",
+          "name": "J.J. Spaun"
+        },
+        {
+          "slug": "ryan-fox",
+          "name": "Ryan Fox"
+        }
+      ],
+      "indexSnapshot": [
+        {
+          "rank": 1,
+          "id": "titleist",
+          "name": "Titleist",
+          "di": 100,
+          "mom": -18.3
+        },
+        {
+          "rank": 2,
+          "id": "taylormade",
+          "name": "TaylorMade",
+          "di": 67.2,
+          "mom": -32.8
+        },
+        {
+          "rank": 3,
+          "id": "good-good-golf",
+          "name": "Good Good Golf",
+          "di": 54.7,
+          "mom": -80
+        },
+        {
+          "rank": 4,
+          "id": "callaway",
+          "name": "Callaway",
+          "di": 54.7,
+          "mom": -55.3
+        },
+        {
+          "rank": 5,
+          "id": "travismathew",
+          "name": "TravisMathew",
+          "di": 54.7,
+          "mom": -18.5
+        }
+      ]
+    },
+
+
     /* ── SEPTEMBER 2026 ────────────────────────────────────────────────── */
     {
       "slug": "september-2026",

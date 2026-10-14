@@ -5049,7 +5049,7 @@ details[open] .faq-question::after { content: '−'; }
 }
 .sc-archive-card {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -5059,9 +5059,9 @@ details[open] .faq-question::after { content: '−'; }
 }
 .sc-archive-card:hover { border-color: var(--border-lite); text-decoration: none; }
 .sc-archive-thumb {
-  flex: 0 0 120px;
-  width: 120px;
-  height: 90px;
+  flex: 0 0 240px;
+  width: 240px;
+  height: 160px;
   object-fit: cover;
   border-radius: var(--radius-sm);
   background: var(--bg-raised);
@@ -5580,7 +5580,7 @@ details[open] .faq-question::after { content: '−'; }
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .sc-archive-card { flex-direction: column; }
-  .sc-archive-thumb { width: 100%; height: 160px; flex: none; }
+  .sc-archive-thumb { width: 100%; height: 200px; flex: none; }
   .sc-prevnext { flex-direction: column; }
   .sc-prevnext-next { align-items: flex-start; text-align: left; }
   .sc-rankings-banner { flex-direction: column; align-items: flex-start; }

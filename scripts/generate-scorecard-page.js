@@ -312,6 +312,7 @@ ${rows}
 // characters a search result shows. Name the search title here when the fitted
 // shapes in main() would otherwise drop the hook entirely.
 const SEO_TITLE_OVERRIDE = {
+  'october-2026': 'Good Good Fell 80% and Still Finished Third | The Scorecard',
   'september-2026': 'Is All Publicity Good Good Publicity? | The Scorecard',
   'august-2026': 'The Index Crowned a Cartoon Mouse | The Scorecard',
 };
