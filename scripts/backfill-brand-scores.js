@@ -12,6 +12,13 @@
  *   node scripts/backfill-brand-scores.js            # full backfill
  *   node scripts/backfill-brand-scores.js --dry-run  # count rows, no DB writes
  *   node scripts/backfill-brand-scores.js --ranks-only  # skip inserts, just recompute ranks
+ *   node scripts/backfill-brand-scores.js --month=2026-09-01  # one month only (monthly update)
+ *
+ * --month writes only that month's rows (215 brands x 11 markets) and ranks
+ * them here, with the same RANK() semantics as compute_brand_score_ranks().
+ * The full backfill rewrites every row of history and then the RPC updates
+ * all ~100k of them again; that bulk write is what exhausts Supabase disk IO
+ * (see the /api/shop outages). Use --month for the monthly data update.
  */
 
 'use strict';
@@ -30,6 +37,11 @@ const BATCH_SIZE     = 500;   // rows per upsert batch
 
 const DRY_RUN    = process.argv.includes('--dry-run');
 const RANKS_ONLY = process.argv.includes('--ranks-only');
+const MONTH_ONLY = (process.argv.find(a => a.startsWith('--month=')) || '').replace('--month=', '') || null;
+if (MONTH_ONLY && !/^\d{4}-\d{2}-01$/.test(MONTH_ONLY)) {
+  console.error(`--month must be YYYY-MM-01, got "${MONTH_ONLY}"`);
+  process.exit(1);
+}
 
 const MONTH_MAP = {
   Jan: '01', Feb: '02', Mar: '03', Apr: '04',
@@ -162,6 +174,21 @@ async function main() {
     process.stdout.write(`\r  Extracted ${allRows.length} rows from ${allRows.length > 0 ? path.basename(file) : '...'}...`);
   }
 
+  if (MONTH_ONLY) {
+    allRows = allRows.filter(r => r.snapshot_month === MONTH_ONLY);
+    if (allRows.length === 0) throw new Error(`No rows for ${MONTH_ONLY} in js/brand-data`);
+    // RANK() OVER (PARTITION BY market ORDER BY monthly_searches DESC): ties
+    // share a rank and the next rank skips, matching the SQL function.
+    const byMarket = {};
+    for (const r of allRows) (byMarket[r.market] = byMarket[r.market] || []).push(r);
+    for (const rows of Object.values(byMarket)) {
+      rows.sort((a, b) => b.monthly_searches - a.monthly_searches);
+      rows.forEach((r, i) => {
+        r.rank = i > 0 && r.monthly_searches === rows[i - 1].monthly_searches ? rows[i - 1].rank : i + 1;
+      });
+    }
+  }
+
   console.log(`\n\nTotal rows to insert: ${allRows.length}`);
   console.log(`Parse errors: ${parseErrors}`);
 
@@ -198,7 +225,8 @@ async function main() {
   // so every full backfill inserted its rows and then died before ranking them,
   // leaving dormied_brand_scores with stale ranks and no error until the crash.
   // The --ranks-only path always called the right function, which is why it hid.
-  await computeRanks(sb);
+  if (MONTH_ONLY) console.log(`  Ranked ${MONTH_ONLY} in the upsert; other months untouched.`);
+  else await computeRanks(sb);
 
   // Final counts
   const { count } = await sb
