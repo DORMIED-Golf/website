@@ -935,6 +935,44 @@ const FEATURES = {
       ]},
     },
   },
+  // News piece from the Makefield Putters release (embargo 19 Oct 2026, 1pm
+  // ET). Makefield is not in the Index, so there is no brand tag, brand card
+  // or shop carousel. Every distance, speed and tech claim is attributed to
+  // Makefield in the text.
+  'kyle-berkshire-makefield-putters': {
+    slug: 'kyle-berkshire-makefield-putters',
+    title: "Kyle Berkshire, Golf's Longest Hitter, Signs With a Pennsylvania Putter Maker",
+    titleTag: 'Kyle Berkshire Signs With Makefield Putters | DORMIED',
+    byline: 'Travis R.',
+    authors: ['Travis R.'],
+    category: 'Feature',
+    brandSlug: '',
+    lastUpdated: 'October 19, 2026',
+    dateModified: '2026-10-19T19:45:00.000Z',
+    publishedAt: '2026-10-19T19:45:00.000Z',
+    keyTakeaways: [
+      'Four-time World Long Drive Champion Kyle Berkshire has signed with Makefield Putters, which mills its putters from a single block of steel in Bensalem, Pennsylvania.',
+      'He is gaming the Makefield VS in black with a KBS CT-Tour Double Bend shaft and a red Garsen Quad Tour grip, a setup Makefield sells through its website.',
+      'Makefield says its Radial Cusp Face removes the skid at the start of a putt, citing independent Quintic Ball Roll analysis; the release does not publish the results.',
+      'Berkshire has set a goal of playing the PGA Tour, and Makefield says he wants to be the first player to win a major with one of its putters.',
+    ],
+    metaDescription: 'Four-time World Long Drive Champion Kyle Berkshire joins Makefield Putters, gaming the Makefield VS as he chases the PGA Tour and a major.',
+    seoKeywords: [
+      'kyle berkshire putter',
+      'kyle berkshire makefield',
+      'makefield putters',
+      'makefield vs putter',
+      'what putter does kyle berkshire use',
+      'kyle berkshire pga tour',
+      'radial cusp face',
+    ],
+    subject: 'Kyle Berkshire',
+    mdPath: path.join(ROOT, 'article-kyle-berkshire-makefield-putters.md'),
+    imgBase: '/images/features/kyle-berkshire-makefield-putters',
+    hero: { file: 'hero.webp', w: 1600, h: 750, alt: 'Kyle Berkshire smiling in a white Cobra cap and a coral Puma polo against a dark backdrop with a purple panel.', caption: 'Kyle Berkshire, four-time World Long Drive Champion and Makefield\'s newest ambassador. Photo courtesy of Makefield Putters.' },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+  },
+
   'what-is-payntr-golf': {
     slug: 'what-is-payntr-golf',
     title: "What Is Payntr Golf? The Shoe Brand From the Designer Behind Tiger's First Nike Golf Shoes",
