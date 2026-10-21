@@ -12,8 +12,10 @@ on:
   workflow_run:
     workflows: ['Affiliate Catalog Sync']
     types: [completed]
-  schedule:
-    - cron: '30 11 * * *'
+  # PAUSED 2026-10-21: Supabase disk-IO budget exhausted (queries time out);
+  # daily runs kept draining it. Restore these two lines once the DB answers.
+  # schedule:
+  #   - cron: '30 11 * * *'
   workflow_dispatch:
 
 concurrency:
