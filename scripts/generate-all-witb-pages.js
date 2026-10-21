@@ -9,6 +9,17 @@
  *   node scripts/generate-all-witb-pages.js          # all 158 ranked players ordered by owgr_rank
  *   node scripts/generate-all-witb-pages.js --dry-run # list slugs, no generation
  *   node scripts/generate-all-witb-pages.js --from scottie-scheffler  # resume from slug
+ *   node scripts/generate-all-witb-pages.js --save-current=/tmp/witb-current.json
+ *       # record every player's current_bag_id and exit (run BEFORE the scrape)
+ *   node scripts/generate-all-witb-pages.js --changed-from=/tmp/witb-current.json
+ *       # rebuild only players whose current bag changed since that snapshot
+ *
+ * The weekly workflow uses the --save-current / --changed-from pair. Rebuilding
+ * every page reads the whole bag/item set ~300 times: it ran into the 3h job
+ * timeout on 13 and 20 Oct 2026 (cancelled, nothing committed) while draining
+ * the Supabase disk-IO budget. Rank lines are patched separately by
+ * refresh-witb-ranks.js, so a full rebuild is only needed for template changes,
+ * and those should be spread over days, not run in one go.
  *
  * Lede cache: generate-witb-player-page.js caches per slug:bag_date.
  * Pages are only regenerated with a fresh Opus call when the player's current bag changes.
@@ -41,6 +52,9 @@ async function main() {
   const dryRun  = args.includes('--dry-run');
   const fromIdx = args.indexOf('--from');
   const fromSlug = fromIdx >= 0 ? args[fromIdx + 1] : null;
+  const argVal   = name => (args.find(a => a.startsWith(`--${name}=`)) || '').slice(name.length + 3) || null;
+  const saveCurrent = argVal('save-current');
+  const changedFrom = argVal('changed-from');
 
   const sb = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
@@ -54,6 +68,13 @@ async function main() {
     .select('slug, name, owgr_rank, current_bag_id')
     .order('owgr_rank', { ascending: true, nullsFirst: false });
   if (error) throw new Error(`Could not load witb_players: ${error.message}`);
+
+  if (saveCurrent) {
+    const snap = Object.fromEntries(allPlayers.map(p => [p.slug, p.current_bag_id || null]));
+    fs.writeFileSync(saveCurrent, JSON.stringify(snap));
+    log(`Saved current bag ids for ${allPlayers.length} players to ${saveCurrent}`);
+    return;
+  }
 
   const bagIds = [...new Set(allPlayers.map(p => p.current_bag_id).filter(Boolean))];
   const bagDateMap = new Map();
@@ -76,6 +97,17 @@ async function main() {
   }
 
   let slugs = players.map(p => p.slug);
+
+  // --changed-from: only players whose current bag changed (or who are new)
+  // since the snapshot. A missing snapshot is an error, never a silent full run.
+  if (changedFrom) {
+    if (!fs.existsSync(changedFrom)) throw new Error(`--changed-from file not found: ${changedFrom}`);
+    const before = JSON.parse(fs.readFileSync(changedFrom, 'utf8'));
+    const nowBag = new Map(players.map(p => [p.slug, p.current_bag_id || null]));
+    slugs = slugs.filter(s => !(s in before) || before[s] !== nowBag.get(s));
+    log(`${slugs.length} player(s) with a new or changed current bag since the snapshot`);
+    if (!slugs.length) { log('Nothing to rebuild.'); return; }
+  }
 
   // --from: resume from a specific slug
   if (fromSlug) {

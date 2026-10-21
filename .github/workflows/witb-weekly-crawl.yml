@@ -43,6 +43,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Record current bags (before the scrape)
+        # Snapshot of every player's current_bag_id, so the rebuild below can
+        # regenerate only the pages whose bag the scrape actually changed.
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/generate-all-witb-pages.js --save-current="$RUNNER_TEMP/witb-current.json"
+
       - name: Run WITB scrape (scheduled weekly)
         if: github.event_name == 'schedule'
         env:
@@ -104,19 +112,19 @@ jobs:
             git push
           fi
 
-      - name: Rebuild all WITB player pages
-        # Regenerates every /witb/players/{slug}/index.html from the DB so a new
-        # bag added by the scrape is reflected as the CURRENT BAG and the prior
-        # bag moves into BAG HISTORY. Also refreshes OWGR ranks (read from DB,
-        # so this supersedes the old rank-only patch step). The lede cache
-        # (slug:bag_date) means only players whose current bag changed trigger an
-        # Opus call; unchanged players are cache hits and rebuild in ~2s each.
-        # Must run after witb-owgr-refresh.js so pages carry fresh ranks.
+      - name: Rebuild changed WITB player pages
+        # Regenerates /witb/players/{slug}/ only for players whose current bag
+        # the scrape changed (or who are new), so a new bag shows as CURRENT BAG
+        # and the old one moves into BAG HISTORY. Every other page already got
+        # this week's rank from the rank-line step above. This used to rebuild
+        # all ~300 pages: on 13 and 20 Oct 2026 it hit the 3h job timeout
+        # (cancelled, nothing committed) and drained the Supabase disk-IO
+        # budget, taking /api/shop down to its snapshot fallback.
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/generate-all-witb-pages.js
+        run: node scripts/generate-all-witb-pages.js --changed-from="$RUNNER_TEMP/witb-current.json"
 
       - name: Rebuild WITB players directory
         # Regenerates /witb/players/index.html (the player grid/listing).
