@@ -595,10 +595,14 @@
   /* ── MOST VIEWED BRANDS ───────────────────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────────────── */
   var SUPABASE_URL      = 'https://cimmmmnapdthqvtifpzr.supabase.co';
+  // DB rest switch (see api/_db-rest.js). While true, Supabase reads and
+  // writes are skipped and never settle, so baked content stays as is.
+  var DB_REST = true;
+  function sbFetch(u, o) { return DB_REST ? new Promise(function () {}) : fetch(u, o); }
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
 
   function fetchMostViewedBrands() {
-    return fetch(SUPABASE_URL + '/rest/v1/brand_views_7d?limit=20', {
+    return sbFetch(SUPABASE_URL + '/rest/v1/brand_views_7d?limit=20', {
       headers: {
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
@@ -683,7 +687,7 @@
     var hdrs = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY };
 
     // Single fetch: top 10 by view_count descending
-    return fetch(SUPABASE_URL + '/rest/v1/player_views_7d?select=player_id,view_count&order=view_count.desc&limit=10', {
+    return sbFetch(SUPABASE_URL + '/rest/v1/player_views_7d?select=player_id,view_count&order=view_count.desc&limit=10', {
       headers: hdrs
     })
     .then(function (r) { return r.ok ? r.json() : []; })

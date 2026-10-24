@@ -11,6 +11,10 @@
   'use strict';
 
   var SB_URL  = 'https://cimmmmnapdthqvtifpzr.supabase.co';
+  // DB rest switch (see api/_db-rest.js). While true, Supabase reads and
+  // writes are skipped and never settle, so baked content stays as is.
+  var DB_REST = true;
+  function sbFetch(u, o) { return DB_REST ? new Promise(function () {}) : fetch(u, o); }
   var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
 
   function escHtml(str) {
@@ -34,7 +38,7 @@
   function fetchArticles(params, cb) {
     var qs = Object.keys(params).map(function(k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
     var url = SB_URL + '/rest/v1/dormied_articles?select=id,brand_slug,title,meta_description,image_url,slug,published_at&status=eq.published&order=published_at.desc&limit=5&' + qs;
-    fetch(url, {
+    sbFetch(url, {
       headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON }
     })
     .then(function(r) { return r.ok ? r.json() : []; })

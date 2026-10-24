@@ -10,6 +10,10 @@
 
   // ── Supabase (public anon key — read-only) ─────────────────────────────────
   var SB_URL  = 'https://cimmmmnapdthqvtifpzr.supabase.co';
+  // DB rest switch (see api/_db-rest.js). While true, Supabase reads and
+  // writes are skipped and never settle, so baked content stays as is.
+  var DB_REST = true;
+  function sbFetch(u, o) { return DB_REST ? new Promise(function () {}) : fetch(u, o); }
   var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
 
   // ── HTML escape ────────────────────────────────────────────────────────────
@@ -176,7 +180,7 @@
       return;
     }
 
-    fetch(SB_URL + '/rest/v1/matchup_archive'
+    sbFetch(SB_URL + '/rest/v1/matchup_archive'
         + '?select=*'
         + '&date=eq.' + encodeURIComponent(dateStr)
         + '&limit=1', {

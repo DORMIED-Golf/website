@@ -15,6 +15,10 @@
   // Both values are safe to commit — the anon key is read-only public access.
   // Find them in: Supabase dashboard → Project Settings → API
   var SUPABASE_URL      = 'https://cimmmmnapdthqvtifpzr.supabase.co';
+  // DB rest switch (see api/_db-rest.js). While true, Supabase reads and
+  // writes are skipped and never settle, so baked content stays as is.
+  var DB_REST = true;
+  function sbFetch(u, o) { return DB_REST ? new Promise(function () {}) : fetch(u, o); }
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
 
   var FALLBACK_TEXT =
@@ -44,7 +48,7 @@
       + '?select=brand_id,explanation,change_percentage,top_market'
       + '&month=eq.' + yyyymm;
 
-    return fetch(url, {
+    return sbFetch(url, {
       headers: {
         'apikey':        SUPABASE_ANON_KEY,
         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
@@ -81,7 +85,7 @@
       + '&brand_id=eq.' + encodeURIComponent(brandId)
       + '&order=month.asc';
 
-    return fetch(url, {
+    return sbFetch(url, {
       headers: {
         'apikey':        SUPABASE_ANON_KEY,
         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,

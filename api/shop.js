@@ -30,6 +30,7 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const { DB_REST } = require('./_db-rest');
 const { retailerForAdvertiser, isPreOwned } = require('../lib/affiliate-retailers');
 
 const DEFAULT_LIMIT = 10;
@@ -167,6 +168,12 @@ module.exports = async (req, res) => {
     : [];
 
   if (!brand && !ids.length) return res.status(400).json({ error: 'brand or ids required' });
+
+  // DB rest: answer at once so the carousel goes straight to its snapshot.
+  if (DB_REST) {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(503).json({ error: 'resting' });
+  }
 
   const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {

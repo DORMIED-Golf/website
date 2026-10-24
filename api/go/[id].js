@@ -27,6 +27,12 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const { DB_REST } = require('../_db-rest');
+
+// The tracking URL lookup is a primary-key read, normally a few ms. Without a
+// deadline, a struggling database held buyers on a blank page for 90s before
+// bouncing them home (23 Oct 2026). Give up after this and send them on.
+const LOOKUP_DEADLINE_MS = 4000;
 
 // Impact click URLs conventionally accept subId params, but this is UNVERIFIED
 // against Impact's own docs. Leave false until manually confirmed; when false
@@ -48,7 +54,12 @@ module.exports = async (req, res) => {
     console.error('[go] DB not configured');
     return bounce('/');
   }
-  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  const ctrl  = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), LOOKUP_DEADLINE_MS);
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+    auth: { persistSession: false },
+    global: { fetch: (input, init = {}) => fetch(input, { ...init, signal: ctrl.signal }) },
+  });
 
   try {
     // Live read every request — never cached.
@@ -58,6 +69,7 @@ module.exports = async (req, res) => {
       .eq('id', id)
       .maybeSingle();
 
+    clearTimeout(timer);
     if (error) { console.error('[go] lookup error:', error.message); return bounce('/'); }
 
     // Missing or deactivated -> brand page if resolvable, else home.
@@ -83,8 +95,9 @@ module.exports = async (req, res) => {
       }
     }
 
-    // Log the click — must never block or fail the redirect.
-    try {
+    // Log the click — must never block or fail the redirect. Skipped while
+    // the DB is resting: Impact records the click on its side regardless.
+    if (!DB_REST) try {
       const { error: clickErr } = await supabase.from('affiliate_clicks').insert({
         product_id:         product.id,
         dormied_brand_slug: product.dormied_brand_slug,

@@ -11,6 +11,7 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const { DB_REST } = require('./_db-rest');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,6 +20,7 @@ module.exports = async (req, res) => {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (DB_REST) return res.status(204).end();   // DB rest: skip the click log
 
   const { url, title, source_name, image_url, brand_ids, pub_date } = req.body || {};
   if (!url || !title) return res.status(400).json({ error: 'url and title required' });

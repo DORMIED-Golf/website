@@ -7,6 +7,7 @@
 
 const Anthropic        = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
+const { DB_REST } = require('./_db-rest');
 
 function getSupabase() {
   const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
@@ -64,6 +65,7 @@ module.exports = async (req, res) => {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST')   return res.status(405).json({ error: 'Method not allowed' });
+  if (DB_REST) return res.status(503).json({ error: 'resting' });   // DB rest
 
   res.setHeader('Cache-Control', 'no-store');
 

@@ -14,6 +14,10 @@
 
   // Supabase — public anon key, read-only
   var SB_URL  = 'https://cimmmmnapdthqvtifpzr.supabase.co';
+  // DB rest switch (see api/_db-rest.js). While true, Supabase reads and
+  // writes are skipped and never settle, so baked content stays as is.
+  var DB_REST = true;
+  function sbFetch(u, o) { return DB_REST ? new Promise(function () {}) : fetch(u, o); }
   var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbW1tbW5hcGR0aHF2dGlmcHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzE3NTksImV4cCI6MjA4OTM0Nzc1OX0.yejRXgvODw3bMr3oA9IiNA-MIZsHHkxmDZouJmEgDfI';
 
   /* ── Author derivation ───────────────────────────────────────────────────
@@ -319,7 +323,7 @@
 
     if (!brandSlug) {
       // No brand filter — simple single fetch (homepage / news feed)
-      fetch(base + '&limit=' + lim, { headers: headers })
+      sbFetch(base + '&limit=' + lim, { headers: headers })
         .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
         .then(function (rows) { cb(transform(rows)); })
         .catch(function () { cb([]); });
@@ -332,7 +336,7 @@
     var secondaryUrl = base + '&secondary_brand_slugs=cs.%7B' + encodeURIComponent(brandSlug) + '%7D&limit=' + lim;
 
     function safeFetch(url) {
-      return fetch(url, { headers: headers })
+      return sbFetch(url, { headers: headers })
         .then(function (r) { return r.ok ? r.json() : []; })
         .catch(function () { return []; });
     }
@@ -440,7 +444,7 @@
 
     var cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-    fetch(SB_URL + '/rest/v1/article_clicks' +
+    sbFetch(SB_URL + '/rest/v1/article_clicks' +
           '?select=url,title,source_name,image_url,brand_ids,pub_date,click_count,last_clicked' +
           '&last_clicked=gte.' + encodeURIComponent(cutoff) +
           '&order=click_count.desc' +
@@ -474,7 +478,7 @@
         // at, so an unpublished piece with click history was being re-rendered
         // as a live link. Mirrors the same fix in scripts/feed-bake.js.
         var authorReq = slugs.length
-          ? fetch(SB_URL + '/rest/v1/dormied_articles?select=slug,author&status=eq.published&slug=in.(' +
+          ? sbFetch(SB_URL + '/rest/v1/dormied_articles?select=slug,author&status=eq.published&slug=in.(' +
                   encodeURIComponent(slugs.join(',')) + ')',
               { headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON } })
               .then(function (r) { return r.ok ? r.json() : null; })
@@ -672,7 +676,7 @@
       + '&featured=not.is.null'
       + '&order=featured.asc'
       + '&limit=' + FEATURED_LIMIT;
-    fetch(url, { headers: headers })
+    sbFetch(url, { headers: headers })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (rows) {
         cb((rows || []).map(function (a) {
