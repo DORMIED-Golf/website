@@ -935,6 +935,54 @@ const FEATURES = {
       ]},
     },
   },
+  // Brand explainer. All photos are Miura's own; the tee is from the May 2024
+  // Miura x Reigning Champ collection. Index figures are the September 2026
+  // snapshot; WITB counts are current bags on the 300 published player pages.
+  'is-miura-golf-worth-it': {
+    slug: 'is-miura-golf-worth-it',
+    title: 'Is Miura Golf Worth the Price? The Family Forge That Never Wanted to Be Big',
+    titleTag: 'Is Miura Golf Worth the Price? | DORMIED',
+    byline: 'Travis R.',
+    authors: ['Travis R.'],
+    category: 'Feature',
+    brandSlug: 'miura-golf',
+    leadRole: 'bio',
+    lastUpdated: 'October 21, 2026',
+    dateModified: '2026-10-21T19:00:00.000Z',
+    publishedAt: '2026-10-21T19:00:00.000Z',
+    quickAnswer: 'Miura is worth the price for a golfer who values the feel and consistency of a forged iron above distance or forgiveness technology, at about $310 to $450 a club. Its irons are forged by the Miura family in Himeji, Japan, where Katsuhiro Miura started in 1957, and new models arrive only every few years.',
+    keyTakeaways: [
+      'Worth it for players who prize forged feel and consistency and keep a set for years; not the obvious buy for a golfer chasing distance or forgiveness.',
+      'Irons cost about $310 to $450 a club on Miura\'s store as of October 2026: a seven-club MB-101 set is $2,170, a CB-302 or TC-202 set $2,450.',
+      'The Miura family owns and runs the Himeji forge; the Milstein family bought the global distribution rights in 2017, now held by its 8AM Golf portfolio.',
+      'Five of the 300 tour bags DORMIED tracks carry Miura clubs, and Miura has held 20th of 215 on the DORMIED Index for a year.',
+    ],
+    metaDescription: 'Miura irons cost $310 to $450 a club and are forged by one family in Himeji, Japan. Who they suit, who owns Miura, and why they cost what they do.',
+    seoKeywords: ['is miura golf worth it', 'miura golf', 'are miura irons worth it', 'how much are miura irons', 'who owns miura golf', 'where are miura clubs made', 'why are miura irons so expensive', 'miura reigning champ'],
+    subject: 'Miura Golf',
+    mdPath: path.join(ROOT, 'article-is-miura-golf-worth-it.md'),
+    imgBase: '/images/features/is-miura-golf-worth-it',
+    hero: { file: 'hero.webp', w: 1400, h: 800, alt: 'A craftsman in a leather apron working a glowing billet at an Otani forging press in the Miura factory.', caption: 'Forging at the Miura family\'s factory in Himeji, Japan. Photo by Miura.' },
+    ogImage: { file: 'og.webp', w: 1200, h: 630 },
+    sectionImages: {
+      'Is Miura Golf Worth the Price?': { layout: 'single', images: [
+        { file: 'cb-302-white-chrome.webp', w: 1600, h: 1068, alt: 'A Miura CB-302 iron in white chrome leaning against a rusted steel wall.', caption: 'The CB-302, here in its limited-edition white chrome finish. Photo by Miura.' },
+      ]},
+      'Who Is Behind Miura Golf?': { layout: 'single', images: [
+        { file: 'legacy.webp', w: 1340, h: 550, alt: 'Black and white portraits of the Miura family forgers, with the Miura logo and a red seal.', caption: 'The Miura family behind the Himeji forge. Photo by Miura.' },
+        { file: 'reigning-champ-tee.webp', w: 814, h: 543, alt: 'A golfer seen from behind in a black T-shirt printed with a laurel logo reading 1957 Miura, carrying clubs.', caption: 'A tee from the 2024 Miura x Reigning Champ collection, Miura\'s first collaboration outside golf. Photo by Miura.' },
+      ]},
+      'What Do Miura Irons Cost?': { layout: 'single', images: [
+        { file: 'km-700-tc-202.webp', w: 1340, h: 550, alt: 'A Miura TC-202 iron beside a KM-700 iron against a green background.', caption: 'The TC-202 ($350 a club) beside the KM-700 ($400). Photo by Miura.' },
+        { file: 'finishes.webp', w: 1340, h: 550, alt: 'Four Miura irons in different finishes resting on a wooden rail.', caption: 'Miura\'s finishes. The black QPQ versions cost $50 to $70 more a club. Photo by Miura.' },
+      ]},
+      'Why Are Miura Irons So Expensive?': { layout: 'two-up', images: [
+        { file: 'inspection.webp', w: 1440, h: 960, alt: 'Gloved hands inspecting a forged iron head in a dark workshop.', caption: 'Inspecting a forged head. Photo by Miura.' },
+        { file: 'design.webp', w: 1400, h: 800, alt: 'Hands measuring an iron head over hand-drawn design sketches.', caption: 'Design work over hand-drawn sketches. Photo by Miura.' },
+      ]},
+    },
+  },
+
   // News piece from the Makefield Putters release (embargo 19 Oct 2026, 1pm
   // ET). Makefield is not in the Index, so there is no brand tag, brand card
   // or shop carousel. Every distance, speed and tech claim is attributed to
