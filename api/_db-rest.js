@@ -14,4 +14,4 @@
  * ordinary page traffic kept querying it. Set back to false (here and in the
  * js/ files) once a one-row query answers quickly again.
  */
-module.exports = { DB_REST: true };
+module.exports = { DB_REST: false };

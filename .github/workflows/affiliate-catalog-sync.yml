@@ -5,10 +5,8 @@ name: Affiliate Catalog Sync
 # scheduled jobs (golf-wire-pipeline 0 */3, post-to-x */30,
 # witb-weekly-crawl Tue 13:00).
 on:
-  # PAUSED 2026-10-21: Supabase disk-IO budget exhausted (queries time out);
-  # daily runs kept draining it. Restore these two lines once the DB answers.
-  # schedule:
-  #   - cron: '0 8 * * *'
+  schedule:
+    - cron: '0 8 * * *'
   workflow_dispatch:
     inputs:
       dry_run:
