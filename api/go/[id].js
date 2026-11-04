@@ -49,6 +49,19 @@ module.exports = async (req, res) => {
 
   if (!Number.isFinite(id)) return bounce('/');
 
+  // Real buy clicks come from a DORMIED page, so the browser sends our page as
+  // the referrer. A crawler walking /api/go/{id} directly (ignoring robots.txt)
+  // sends none: 22,701 such hits from Sep 10 to Nov 4 2026, against 3,764 from
+  // our pages, with rotating old Chrome user agents. Each cost a DB read and a
+  // click-log insert (part of the Supabase disk-IO drain) and passed a fake
+  // click to Impact. Without a DORMIED referrer, go home without touching the
+  // DB or the retailer.
+  const ref = String(req.headers.referer || req.headers.referrer || '');
+  if (!/^https:\/\/(www\.)?dormied\.com\//i.test(ref)) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    return bounce('/');
+  }
+
   const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     console.error('[go] DB not configured');
